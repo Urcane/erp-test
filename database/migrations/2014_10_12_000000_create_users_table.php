@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('nik')->nullable();
             $table->string('kontak')->nullable();
             $table->string('sign_file')->nullable();
+            $table->string('foto_file')->nullable();
             $table->integer('status')->default(1);
             $table->rememberToken();
         });

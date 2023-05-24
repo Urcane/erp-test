@@ -1,28 +1,44 @@
-<div id="kt_app_toolbar" class="app-toolbar pt-6 pb-20 mb-10 bg-primary">
+<div id="kt_app_toolbar" class="app-toolbar pt-10 pb-20 bg-info bgi-no-repeat bgi-size-cover bgi-position-x-end" style="background-image:url('{{asset('sense')}}/media/svg/shapes/wave-bg-purple.svg');">
     <div id="kt_app_toolbar_container" class="app-container container-xxl">
-        <div class="row">
-            <div class="col-lg-12">
+        <div class="row pb-20">
+            <div class="col-lg-12 mb-20">
                 <div class="d-flex align-items-center">
-                    <ul class="breadcrumb breadcrumb-separatorless fw-semibold">
+                    <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-8">
                         <li class="breadcrumb-item text-white fw-bold lh-1">
                             <a href="{{route('dashboard')}}" class="text-white">
-                                <i class="fonticon-home text-white fs-3"></i>
+                                <i class="fa-solid fa-home text-white fs-8"></i>
                             </a>
                         </li>
+                        @hasSection('sub-title-apps')
                         <li class="breadcrumb-item">
-                            <i class="fa-solid fa-chevron-right text-white"></i>
+                            <i class="fa-solid fa-chevron-right text-white fs-8"></i>
                         </li>
-                        <li class="breadcrumb-item text-white fw-bold lh-1">Support Center</li>
+                        <li class="breadcrumb-item text-white fw-bold lh-1">@yield('sub-title-apps')</li>
+                        @endif
+                        <li class="breadcrumb-item">
+                            <i class="fa-solid fa-chevron-right text-white fs-8"></i>
+                        </li>
+                        <li class="breadcrumb-item text-white fw-bold lh-1">@yield('title-apps')</li>
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 mb-md-20 mb-10">
                 <div class="row">
-                    <div class="col-lg-8">
-                        
+                    <div class="col-lg-7 mb-9 mb-md-0">
+                        <div class="d-flex">
+                            <div class="symbol symbol-45px overflow-hidden me-5">
+                                <div class="symbol-label bg-light-info"><i class="@yield('icon-apps') text-info fs-1"></i></div>
+                            </div>
+                            <div>
+                                <span class="mb-0 fs-4 fw-bolder d-block text-white">@yield('title-apps')</span>
+                                <p class="mb-0 fs-6 fw-bold" style="color:#ad87ff">@yield('desc-apps')</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-lg-4">
-                        
+                    <div class="col-lg-5">
+                        <div class="row align-items-center justify-content-end">
+                            @yield('summary-page')
+                        </div>
                     </div>
                 </div>
             </div>

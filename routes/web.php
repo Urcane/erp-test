@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Sales\ProspektusController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -24,12 +25,12 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::prefix('cmt-employee')->group(function () {
             Route::get('/','index')->name('hc.emp.index');
-            Route::post('/store/employee','storeEmployee')->name('hc.emp.store');
+            Route::post('/store/employee','store')->name('hc.emp.store');
             
-            Route::get('/get-data/table/employee','getTableEmployee')->name('hc.emp-get-table-employee');
+            Route::get('/get-data/table/employee','getTableEmployee')->name('hc.emp.get-table-employee');
         });
     });
-    
+
 });
 
 require __DIR__ . '/auth.php';

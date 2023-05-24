@@ -69,8 +69,7 @@ return [
     'links' => [
         // public_path('storage') => storage_path('app/public'),    
         //segala file folder yang dibuat dinamis dari sistem,masuk ke sini. kalau tambah baru bikin storage link baru lagi habis itu stoagelink lagi
-        public_path('sense/media/archive') => storage_path('app/archive'),
-        public_path('sense/media/sign') => storage_path('app/sign'),
+        public_path('sense/media/foto_pegawai') => storage_path('app/foto_pegawai'),
     ],
 
 ];

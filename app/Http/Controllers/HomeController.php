@@ -13,9 +13,4 @@ class HomeController extends Controller
         return view('home');
     }
 
-    public function import(Request $request)
-    {
-        Excel::import(new UsersImport, $request->import);
-        return redirect()->back();
-    }
 }

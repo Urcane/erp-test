@@ -15,7 +15,7 @@ class DepartmentSeeder extends Seeder
     */
     public function run()
     {
-        $jenisDept = ['Commercial','Direksi','Finance & Administration','Operation ISP & Telco','Operation Digital Solution','Retal','HC & Legal'];
+        $jenisDept = ['Commercial','Direksi','Finance & Administration','Operation ISP & Telco','Operation Digital Solution','Retail','HC & Legal'];
         $aliasDept = ['CMR','DIR','FIN','TO','SDV','RET','HC'];
         
         $cmr = ['Manager Commercial','Account Manager','Admin Project','IMERS'];

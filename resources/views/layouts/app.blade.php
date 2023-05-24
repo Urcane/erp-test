@@ -2,24 +2,23 @@
 <html lang="en">
 <head>
 	<base href="../"/>
-	<title>@yield('title','Comtelindo Apps') | by Comtelindo ODS</title>
+	<title>@yield('title-apps','ERP Comtelindo') | ERP Comtelindo</title>
 	<meta charset="utf-8" />
-	<meta name="description" content="Comtelindo Apps DESC" />
-	<meta name="keywords" content="Comtelindo Apps" />
+	<meta name="description" content="ERP Comtelindo DESC" />
+	<meta name="keywords" content="ERP Comtelindo" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta property="og:locale" content="en_US" />
 	<meta property="og:type" content="article" />
-	<meta property="og:title" content="Comtelindo Apps by ODS" />
+	<meta property="og:title" content="ERP Comtelindo by ODS" />
 	<meta property="og:url" content="https://app.comtelindo.com" />
-	<meta property="og:site_name" content="Comtelindo | Comtelindo Apps" />
-	{{-- <link rel="canonical" href="https://preview.keenthemes.com/metronic8" /> --}}
+	<meta property="og:site_name" content="Comtelindo | ERP Comtelindo" />
+	<link rel="canonical" href="https://app.comtelindo.com" />
 	<link rel="canonical" href="https://app.comtelindo.com" />
 	<link rel="shortcut icon" href="{{asset('sense')}}/media/logos/favicon.ico" />
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" />
 	<link href="{{asset('sense')}}/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
-	
+
 	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
-	
 	<link href="{{asset('sense')}}/plugins/custom/signaturejs/css/jquery.signature.css" rel="stylesheet" type="text/css" />
 	
 	@stack('css')
@@ -35,9 +34,9 @@
 	<script src="{{asset('sense')}}/plugins/custom/signaturejs/js/jquery.signature.js"></script>
 	
 </head>
-<body id="kt_app_body" data-kt-app-layout="light-sidebar" data-kt-app-header-fixed="@yield('navbar-status','true')" 
+<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="@yield('navbar-status','false')" 
 data-kt-app-toolbar-fixed="@yield('toolbar-status','false')" data-kt-app-toolbar-enabled="@yield('toolbar-status','true')" 
-data-kt-app-sidebar-enabled="@yield('sidebar-status','false')" data-kt-app-sidebar-fixed="@yield('sidebar-status','false')" data-kt-app-sidebar-hoverable="@yield('sidebar-status','false')" data-kt-app-sidebar-push-header="@yield('sidebar-status2','false')" data-kt-app-sidebar-push-toolbar="@yield('sidebar-status2','false')" data-kt-app-sidebar-push-footer="@yield('sidebar-status','false')" 
+data-kt-app-sidebar-enabled="@yield('sidebar-status','false')" data-kt-app-sidebar-fixed="@yield('sidebar-status','false')" data-kt-app-sidebar-hoverable="@yield('sidebar-status','false')" data-kt-app-sidebar-push-header="@yield('sidebar-push','false')" data-kt-app-sidebar-push-toolbar="@yield('sidebar-push','false')" data-kt-app-sidebar-push-footer="@yield('sidebar-status','false')" 
 class="app-default page-loading-enabled page-loading">
 
 <script>
@@ -58,10 +57,6 @@ class="app-default page-loading-enabled page-loading">
 		document.documentElement.setAttribute("data-theme", themeMode); 
 	}
 </script>
-
-@php
-$today = Carbon\Carbon::now();
-@endphp
 
 <div class="page-loader">
 	<span class="spinner-border text-primary" role="status"></span>
@@ -87,7 +82,7 @@ $today = Carbon\Carbon::now();
 	</div>
 </div>
 
-<div id="kt_scrolltop" class="scrolltop bg-primary" data-kt-scrolltop="true">
+<div id="kt_scrolltop" class="scrolltop bg-info" data-kt-scrolltop="true">
 	<i class="fa-solid fa-arrow-up text-white"></i>
 </div>
 
@@ -96,8 +91,6 @@ $today = Carbon\Carbon::now();
 <script src="{{asset('sense')}}/js/scripts.bundle.js"></script>
 <script src="{{asset('sense')}}/plugins/custom/datatables/datatables.bundle.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-
-@stack('js')
 
 </body>
 </html>
