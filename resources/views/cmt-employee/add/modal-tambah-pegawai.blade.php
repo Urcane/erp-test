@@ -20,21 +20,21 @@
 							<input type="text" class="form-control form-control-solid" placeholder="" required name="name">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-4 mb-3">
+						<div class="col-lg-4 col-4 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">NIP</span>
 							</label>
 							<input type="number" class="form-control form-control-solid" placeholder="" required name="nip">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-4 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="fw-bold">NIK</span>
 							</label>
 							<input type="number" class="form-control form-control-solid" placeholder="" minlength="16" name="nik">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-4 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold text-dark">Telepon</span>
 							</label>
@@ -44,7 +44,7 @@
 							</div>
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-6 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold text-dark">Divisi</span>
 							</label>
@@ -56,7 +56,7 @@
 							</select>
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-6 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold text-dark">Penempatan</span>
 							</label>
@@ -71,14 +71,14 @@
 						<div class="col-lg-12 mb-3">
 							<div class="separator my-3"></div>
 						</div>
-						<div class="col-lg-8 mb-3">
+						<div class="col-lg-8 col-6 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Email</span>
 							</label>
 							<input type="email" class="form-control form-control-solid" placeholder="" required name="email">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-4 mb-3">
+						<div class="col-lg-4 col-6 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Role</span>
 							</label>
@@ -90,14 +90,14 @@
 							</select>
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-6 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Password</span>
 							</label>
 							<input type="password" class="form-control form-control-solid" placeholder="" confirmed required minlength="8" name="new_password">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-6 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Konfirmasi Password</span>
 							</label>

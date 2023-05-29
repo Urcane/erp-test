@@ -128,37 +128,16 @@
                                                         <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                             <th class="text-center w-50px">#</th>
                                                             <th class="text-center w-50px">#</th>
-                                                            <th class="w-300px">Perusahaan</th>
+                                                            <th class="w-250px">Perusahaan</th>
                                                             <th class="w-150px">Sales</th>
                                                             <th class="w-100px">Referensi</th>
                                                             <th class="">Kontak</th>
-                                                            <th class="w-150px">Status</th>
+                                                            <th class="w-100px">Status</th>
                                                             <th class="w-100px">Created</th>
                                                             <th class="w-100px text-center">#</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="fs-7">
-                                                        <tr>
-                                                            <td></td>
-                                                            <td class="text-center">1</td>
-                                                            <td>
-                                                                <span class="fw-bold d-block">PT. Nama Perusahaan</span>
-                                                                <p class="text-gray-500 mb-0">Alamat Perusahaan yang panjang itu nah nda tau lagi aku</p>
-                                                                <span class="text-gray-500">Balikpapan</span>
-                                                            </td>
-                                                            <td>Nama Sales</td>
-                                                            <td>Internal</td>
-                                                            <td>
-                                                                <span class="mb-0 fw-bold d-block">Nama Kontak</span>
-                                                                <span class="text-gray-500 d-block">+62093801980</span>
-                                                                <u class="text-primary"><a href="#!" class="text-primary fs-8" data-bs-toggle="modal">Tampilan kontak lain</a></u>
-                                                            </td>
-                                                            <td>
-                                                                <span class="badge badge-light-primary px-3 py-2">Lead</span>
-                                                            </td>
-                                                            <td>5/26/2023 18:10:20</td>
-                                                            <td></td>
-                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -167,7 +146,7 @@
                                     <div class="tab-pane fade" id="tab_prospect_content" role="tabpanel">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_lead">
+                                                <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_prospect">
                                                     <thead class="">
                                                         <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                             <th class="text-center w-50px">#</th>
@@ -236,19 +215,19 @@
         
         var pegawai_ids = [];
         
-        var getFilter = function(){
-            return {
-                'filterDivisi': $('#filter_divisi').val(),
-                'filterDepartment': $('#filter_department').val(),
-            }
-        }
+        // var getFilter = function(){
+        //     return {
+        //         'filterDivisi': $('#filter_divisi').val(),
+        //         'filterDepartment': $('#filter_department').val(),
+        //     }
+        // }
         
-        // $('body').on('click', '#tab_all', function () {
-        //     $('.tab_all_menu').show();
-        // });
-        // $('body').on('click', '#tab_prospect', function () {
-        //     $('.tab_all_menu').hide();
-        // });
+        $('body').on('click', '#tab_all', function () {
+            $('.tab_all_menu').show();
+        });
+        $('body').on('click', '#tab_prospect', function () {
+            $('.tab_all_menu').hide();
+        });
         
         window.tablePegawai  = $('#kt_table_lead')
         .DataTable({
@@ -268,10 +247,10 @@
                 });
             },
             ajax: {
-                url : "{{route('hc.emp.get-table-employee')}}",
-                data: function(data){
-                    data.filters = getFilter()
-                }
+                url : "{{route('com.lead.get-table-lead')}}",
+                // data: function(data){
+                //     data.filters = getFilter()
+                // }
             },
             language: {
                 "lengthMenu": "Show _MENU_",
@@ -282,10 +261,10 @@
             { 
                 extend: 'excel',
                 className: 'btn btn-light-success btn-sm ms-3',
-                title: 'Data Pegawai Comtelindo',
-                exportOptions: {
-                    columns: [1,8,9,3,10,4,5,6]
-                } 
+                title: 'Data Lead Comtelindo',
+                // exportOptions: {
+                //     columns: [1,8,9,3,10,4,5,6]
+                // } 
             },
             ],
             dom:
@@ -304,21 +283,18 @@
             columns: [
             { data: 'DT_RowChecklist', orderable: false, searchable: false},
             { data: 'DT_RowIndex'},
-            { data: 'emp'},
-            { data: 'nip',},
+            { data: 'customer'},
+            { data: 'sales_name'},
+            { data: 'reference_from',},
             { data: 'kontak',},
-            { data: 'dept',},
-            { data: 'div',},
+            { data: 'status',},
+            { data: 'created_at',},
             { data: 'action'},
-            { data: 'name', visible: false},
-            { data: 'email', visible: false},
-            { data: 'nik', visible: false},
             ],
             
             columnDefs: [
             {
                 targets: 0,
-                searchable : false,
                 className: 'text-center',
             },
             {
@@ -326,7 +302,7 @@
                 className: 'text-center',
             },
             {
-                targets: 7,
+                targets: 8,
                 orderable : false,
                 searchable : false,
                 className : 'text-center',
@@ -334,16 +310,16 @@
             ],
         });
         
-        $('#filter_department').change(function(){
-            tablePegawai.draw()  
-        });
-        $('#filter_divisi').change(function(){
-            tablePegawai.draw()  
-        });
-        $('body').on('click', '#btn_reset_filter', function () {
-            $('#filter_department').val("*").trigger("change")
-            $('#filter_divisi').val("*").trigger("change")
-        });
+        // $('#filter_department').change(function(){
+        //     tablePegawai.draw()  
+        // });
+        // $('#filter_divisi').change(function(){
+        //     tablePegawai.draw()  
+        // });
+        // $('body').on('click', '#btn_reset_filter', function () {
+        //     $('#filter_department').val("*").trigger("change")
+        //     $('#filter_divisi').val("*").trigger("change")
+        // });
         
         function removeFrom(array, item) {
             var index = array.indexOf(item);
@@ -357,28 +333,33 @@
         
         $("#kt_modal_tambah_lead_form").validate({
             messages: {
-                name: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Nama lengkap pegawai wajib diisi</span>",
+                customer_name: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Nama Perusahaan/Badan Usaha wajib diisi</span>",
                 },
-                email: {
+                customer_bussines_type: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib diisi</span>",
+                },
+                reference_from: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Referensi lead wajib diisi</span>",
+                },
+                customer_address: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Alamat perusahaan/badan usaha wajib diisi</span>",
+                },
+                customer_city: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib diisi</span>",
+                },
+                customer_contact_name: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Nama wajib diisi</span>",
+                },
+                customer_contact_job: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Jabatan wajib diisi</span>",
+                },
+                customer_contact_email: {
                     email: "<span class='fw-semibold fs-8 text-danger'>Email user belum sesusai format</span>",
                 },
-                nip: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>NIP pegawai wajib diisi</span>",
-                },
-                nik: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>NIK pegawai wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 16 karakter</span>",
-                },
-                kontak: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Kontak pegawai wajib diisi</span>",
+                customer_contact_phone: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
                     minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
-                },
-                role_id: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Role wajib dipilih</span>",
-                },
-                division_id: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Divisi wajib dipilih</span>",
                 },
             },
             submitHandler: function(form) {
@@ -388,7 +369,7 @@
                     data: formData,
                     processData: false,
                     contentType: false, 
-                    url: '{{route("hc.emp.store")}}',
+                    url: '{{route("com.lead.store-lead")}}',
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
@@ -406,87 +387,87 @@
             }
         });
         
-        $('body').on('click', '#btn_nonaktif_pegawai', function () {
-            $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
-            $('#containerUserNonAktif').html('');
-            const form_edit = $('#kt_modal_nonaktif_pegawai_form');
-            $.each(pegawai_ids, function(index, rowId) {
-                form_edit.find('#containerUserNonAktif').append(
-                $('<input>')
-                .attr('type', 'hidden')
-                .attr('name', 'pegawai_id[]')
-                .val(rowId)
-                );
-            });
-        });
+        // $('body').on('click', '#btn_nonaktif_pegawai', function () {
+        //     $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
+        //     $('#containerUserNonAktif').html('');
+        //     const form_edit = $('#kt_modal_nonaktif_pegawai_form');
+        //     $.each(pegawai_ids, function(index, rowId) {
+        //         form_edit.find('#containerUserNonAktif').append(
+        //         $('<input>')
+        //         .attr('type', 'hidden')
+        //         .attr('name', 'pegawai_id[]')
+        //         .val(rowId)
+        //         );
+        //     });
+        // });
         
-        $("#kt_modal_nonaktif_pegawai_form").validate({
-            submitHandler: function(form) {
-                var formData = new FormData(form);
-                $('#kt_modal_nonaktif_pegawai_submit').attr('disabled', 'disabled');
-                $.ajax({
-                    data: formData,
-                    processData: false,
-                    contentType: false, 
-                    url: '{{route("hc.emp.update-status")}}',
-                    type: "POST",
-                    dataType: 'json',
-                    success: function (data) {
-                        $('#kt_modal_nonaktif_pegawai_cancel').click();
-                        var oTable = $('#kt_table_lead').dataTable();
-                        pegawai_ids = [];
-                        oTable.fnDraw(false);
-                        toastr.success(data.status,'Selamat 🚀 !');
-                    },
-                    error: function (xhr, status, errorThrown) {
-                        $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
-                        const data = JSON.parse(xhr.responseText);
-                        toastr.error(errorThrown ,'Opps!');
-                    }
-                });
-            }
-        });
+        // $("#kt_modal_nonaktif_pegawai_form").validate({
+        //     submitHandler: function(form) {
+        //         var formData = new FormData(form);
+        //         $('#kt_modal_nonaktif_pegawai_submit').attr('disabled', 'disabled');
+        //         $.ajax({
+        //             data: formData,
+        //             processData: false,
+        //             contentType: false, 
+        //             url: '{{route("hc.emp.update-status")}}',
+        //             type: "POST",
+        //             dataType: 'json',
+        //             success: function (data) {
+        //                 $('#kt_modal_nonaktif_pegawai_cancel').click();
+        //                 var oTable = $('#kt_table_lead').dataTable();
+        //                 pegawai_ids = [];
+        //                 oTable.fnDraw(false);
+        //                 toastr.success(data.status,'Selamat 🚀 !');
+        //             },
+        //             error: function (xhr, status, errorThrown) {
+        //                 $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
+        //                 const data = JSON.parse(xhr.responseText);
+        //                 toastr.error(errorThrown ,'Opps!');
+        //             }
+        //         });
+        //     }
+        // });
         
-        $('body').on('click', '#btn_reset_password_pegawai', function () {
-            $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
-            $('#containerResetPasswordPegawai').html('');
-            const form_edit = $('#kt_modal_reset_password_pegawai_form');
-            $.each(pegawai_ids, function(index, rowId) {
-                form_edit.find('#containerResetPasswordPegawai').append(
-                $('<input>')
-                .attr('type', 'hidden')
-                .attr('name', 'pegawai_id[]')
-                .val(rowId)
-                );
-            });
-        });
+        // $('body').on('click', '#btn_reset_password_pegawai', function () {
+        //     $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
+        //     $('#containerResetPasswordPegawai').html('');
+        //     const form_edit = $('#kt_modal_reset_password_pegawai_form');
+        //     $.each(pegawai_ids, function(index, rowId) {
+        //         form_edit.find('#containerResetPasswordPegawai').append(
+        //         $('<input>')
+        //         .attr('type', 'hidden')
+        //         .attr('name', 'pegawai_id[]')
+        //         .val(rowId)
+        //         );
+        //     });
+        // });
         
-        $("#kt_modal_reset_password_pegawai_form").validate({
-            submitHandler: function(form) {
-                var formData = new FormData(form);
-                $('#kt_modal_reset_password_pegawai_submit').attr('disabled', 'disabled');
-                $.ajax({
-                    data: formData,
-                    processData: false,
-                    contentType: false, 
-                    url: '{{route("hc.emp.reset-password-pegawai")}}',
-                    type: "POST",
-                    dataType: 'json',
-                    success: function (data) {
-                        $('#kt_modal_reset_password_pegawai_cancel').click();
-                        var oTable = $('#kt_table_lead').dataTable();
-                        pegawai_ids = [];
-                        oTable.fnDraw(false);
-                        toastr.success(data.status,'Selamat 🚀 !');
-                    },
-                    error: function (xhr, status, errorThrown) {
-                        $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
-                        const data = JSON.parse(xhr.responseText);
-                        toastr.error(errorThrown ,'Opps!');
-                    }
-                });
-            }
-        });
+        // $("#kt_modal_reset_password_pegawai_form").validate({
+        //     submitHandler: function(form) {
+        //         var formData = new FormData(form);
+        //         $('#kt_modal_reset_password_pegawai_submit').attr('disabled', 'disabled');
+        //         $.ajax({
+        //             data: formData,
+        //             processData: false,
+        //             contentType: false, 
+        //             url: '{{route("hc.emp.reset-password-pegawai")}}',
+        //             type: "POST",
+        //             dataType: 'json',
+        //             success: function (data) {
+        //                 $('#kt_modal_reset_password_pegawai_cancel').click();
+        //                 var oTable = $('#kt_table_lead').dataTable();
+        //                 pegawai_ids = [];
+        //                 oTable.fnDraw(false);
+        //                 toastr.success(data.status,'Selamat 🚀 !');
+        //             },
+        //             error: function (xhr, status, errorThrown) {
+        //                 $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
+        //                 const data = JSON.parse(xhr.responseText);
+        //                 toastr.error(errorThrown ,'Opps!');
+        //             }
+        //         });
+        //     }
+        // });
         
     });
 </script>

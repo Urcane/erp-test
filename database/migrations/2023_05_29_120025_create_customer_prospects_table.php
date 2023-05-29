@@ -15,6 +15,11 @@ class CreateCustomerProspectsTable extends Migration
     {
         Schema::create('customer_prospects', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->constrained();
+            $table->string('prospect_update');
+            $table->string('prospect_next_action')->nullable();
+            $table->integer('status')->default(1); //1 prg 0 cancel 2 done
+            $table->softDeletes();
             $table->timestamps();
         });
     }

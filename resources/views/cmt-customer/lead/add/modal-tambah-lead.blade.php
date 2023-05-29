@@ -20,14 +20,14 @@
 							<input type="text" class="form-control form-control-solid" placeholder="" required name="customer_name">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-6 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Jenis Bisnis</span>
 							</label>
 							<input type="text" class="form-control form-control-solid" placeholder="" required name="customer_bussines_type">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-6 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Referensi Dari</span>
 							</label>
@@ -50,14 +50,14 @@
 						</div>
 						<div class="col-lg-12">
 							<div class="row">
-								<div class="col-lg-6 mb-3">
+								<div class="col-lg-6 col-6 mb-3">
 									<label class="d-flex align-items-center fs-6 form-label mb-2">
 										<span class="fw-bold">Lat</span>
 									</label>
 									<input type="text" class="form-control form-control-solid" placeholder="" name="lat">
 									<div class="fv-plugins-message-container invalid-feedback"></div>
 								</div>
-								<div class="col-lg-6 mb-3">
+								<div class="col-lg-6 col-6 mb-3">
 									<label class="d-flex align-items-center fs-6 form-label mb-2">
 										<span class="fw-bold">Lng</span>
 									</label>
@@ -76,21 +76,21 @@
 							<input type="text" class="form-control form-control-solid" placeholder="" required name="customer_contact_name">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-4 mb-3">
+						<div class="col-lg-4 col-4 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Jabatan</span>
 							</label>
 							<input type="text" class="form-control form-control-solid" placeholder="" required name="customer_contact_job">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-4 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="fw-bold">Email</span>
 							</label>
 							<input type="email" class="form-control form-control-solid" placeholder="" name="customer_contact_email">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
-						<div class="col-lg-6 mb-3">
+						<div class="col-lg-6 col-4 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold text-dark">Telepon</span>
 							</label>

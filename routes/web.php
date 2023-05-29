@@ -40,6 +40,11 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(CustomerController::class)->group(function () {
         Route::prefix('cmt-lead')->group(function () {
             Route::get('/','indexLead')->name('com.lead.index-lead');
+
+            Route::post('store/lead','storeLead')->name('com.lead.store-lead');
+
+            Route::get('/get-data/table/lead','getTableLead')->name('com.lead.get-table-lead');
+            
         });
     });
 
