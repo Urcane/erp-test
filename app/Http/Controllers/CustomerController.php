@@ -110,7 +110,7 @@ class CustomerController extends Controller
             })
             ->addColumn('DT_RowChecklist', function($check) {
                 if($check->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator'){
-                    return '<div class="text-center w-50px"><input name="pegawai_ids" type="checkbox" value="'.$check->id.'"></div>';
+                    return '<div class="text-center w-50px"><input name="lead_ids" type="checkbox" value="'.$check->id.'"></div>';
                 }else{
                     return '';
                 }

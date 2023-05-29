@@ -213,7 +213,7 @@
 <script>
     $(document ).ready(function() {
         
-        var pegawai_ids = [];
+        var lead_ids = [];
         
         // var getFilter = function(){
         //     return {
@@ -238,11 +238,11 @@
             responsive: false,
             aaSorting : [],
             drawCallback: function () {
-                $('body').on('click', 'input[name=\'pegawai_ids\']', function () {
+                $('body').on('click', 'input[name=\'lead_ids\']', function () {
                     if($(this).is(":checked")){
-                        pegawai_ids.push($(this).val());
+                        lead_ids.push($(this).val());
                     } else {
-                        removeFrom(pegawai_ids, $(this).val());
+                        removeFrom(lead_ids, $(this).val());
                     }
                 });
             },
@@ -391,7 +391,7 @@
         //     $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
         //     $('#containerUserNonAktif').html('');
         //     const form_edit = $('#kt_modal_nonaktif_pegawai_form');
-        //     $.each(pegawai_ids, function(index, rowId) {
+        //     $.each(lead_ids, function(index, rowId) {
         //         form_edit.find('#containerUserNonAktif').append(
         //         $('<input>')
         //         .attr('type', 'hidden')
@@ -415,7 +415,7 @@
         //             success: function (data) {
         //                 $('#kt_modal_nonaktif_pegawai_cancel').click();
         //                 var oTable = $('#kt_table_lead').dataTable();
-        //                 pegawai_ids = [];
+        //                 lead_ids = [];
         //                 oTable.fnDraw(false);
         //                 toastr.success(data.status,'Selamat 🚀 !');
         //             },
@@ -432,7 +432,7 @@
         //     $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
         //     $('#containerResetPasswordPegawai').html('');
         //     const form_edit = $('#kt_modal_reset_password_pegawai_form');
-        //     $.each(pegawai_ids, function(index, rowId) {
+        //     $.each(lead_ids, function(index, rowId) {
         //         form_edit.find('#containerResetPasswordPegawai').append(
         //         $('<input>')
         //         .attr('type', 'hidden')
@@ -456,7 +456,7 @@
         //             success: function (data) {
         //                 $('#kt_modal_reset_password_pegawai_cancel').click();
         //                 var oTable = $('#kt_table_lead').dataTable();
-        //                 pegawai_ids = [];
+        //                 lead_ids = [];
         //                 oTable.fnDraw(false);
         //                 toastr.success(data.status,'Selamat 🚀 !');
         //             },

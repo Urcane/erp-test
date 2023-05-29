@@ -23,7 +23,7 @@ class CreateCustomersTable extends Migration
             $table->string('customer_city');
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
-            $table->integer('prospect_status')->default(0);
+            $table->integer('prospect_status')->default(1); //0 batal , 1 prg, 2done
             $table->integer('customer_status')->default(0);
             $table->integer('status')->default(1);
             $table->softDeletes();
