@@ -29,9 +29,9 @@
 						</div>
 						<div class="col-lg-6 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
-								<span class="required fw-bold">NIK</span>
+								<span class="fw-bold">NIK</span>
 							</label>
-							<input type="number" class="form-control form-control-solid" placeholder="" minlength="16" required name="nik">
+							<input type="number" class="form-control form-control-solid" placeholder="" minlength="16" name="nik">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
 						<div class="col-lg-6 mb-3">
@@ -69,7 +69,7 @@
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
 						<div class="col-lg-12 mb-3">
-							<div class="separator separator-dashed my-3"></div>
+							<div class="separator my-3"></div>
 						</div>
 						<div class="col-lg-8 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">

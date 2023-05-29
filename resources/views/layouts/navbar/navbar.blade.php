@@ -24,24 +24,43 @@
                                 <div class="d-flex w-100 overflow-auto">
                                     <ul class="nav nav-stretch nav-line-tabs fw-bold fs-6 p-0 p-lg-10 flex-nowrap flex-grow-1">
                                         <li class="nav-item mx-lg-1">
-                                            <a class="nav-link py-3 py-lg-6 active text-active-primary" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_commercial">Commercial</a>
+                                            <a class="nav-link py-3 py-lg-6 active text-active-info border-active-info border-hover-info" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_commercial">Commercial</a>
                                         </li>
                                         <li class="nav-item mx-lg-1">
-                                            <a class="nav-link py-3 py-lg-6 text-active-primary" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_operation">Operation</a>
+                                            <a class="nav-link py-3 py-lg-6 text-active-warning border-active-warning border-hover-warning" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_operation">Operation</a>
                                         </li>
                                         <li class="nav-item mx-lg-1">
-                                            <a class="nav-link py-3 py-lg-6 text-active-primary" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_finance">Finance</a>
+                                            <a class="nav-link py-3 py-lg-6 text-active-success border-active-success border-hover-success" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_finance">Finance</a>
                                         </li>
                                         <li class="nav-item mx-lg-1">
-                                            <a class="nav-link py-3 py-lg-6 text-active-primary" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_hclegal">HC & Legal</a>
+                                            <a class="nav-link py-3 py-lg-6 text-active-primary border-active-primary border-hover-primary" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_hclegal">HC & Legal</a>
                                         </li>
                                         <li class="nav-item mx-lg-1">
-                                            <a class="nav-link py-3 py-lg-6 text-active-primary" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_direksi">BoD</a>
+                                            <a class="nav-link py-3 py-lg-6 text-active-dark border-active-dark border-hover-dark" href="#" data-bs-toggle="tab" data-bs-target="#kt_app_header_app_direksi">BoD</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="tab-content py-4 py-lg-8 px-lg-7">
                                     <div class="tab-pane w-lg-600px active show" id="kt_app_header_app_commercial">
+                                        <div class="row">
+                                            <div class="col-lg-12 mb-6 mb-lg-0">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0">
+                                                            <a href="{{route('com.lead.index-lead')}}" class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-solid fa-paper-plane text-info fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">CMT-LEAP</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Lead Dulu Prospek Kemudian</span>
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane w-lg-600px" id="kt_app_header_app_operation">
                                     </div>
@@ -57,7 +76,7 @@
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('hc.emp.index')}}" class="menu-link">
                                                                 <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
-                                                                    <i class="fa-solid fa-users text-primary"></i>
+                                                                    <i class="fa-solid fa-users text-primary fs-3"></i>
                                                                 </span>
                                                                 <span class="d-flex flex-column">
                                                                     <span class="fs-6 fw-bold text-dark">CMT-EMP</span>
@@ -172,7 +191,7 @@
                                     <img alt="Logo" src="{{asset('sense')}}/media/avatars/blank.png" />
                                 </div>
                                 <div class="d-flex flex-column">
-                                    <div class="fw-bold d-flex align-items-center fs-6">{{auth()->user()->name}}
+                                    <div class="fw-bolder d-flex align-items-center fs-6">{{auth()->user()->name}}
                                     </div>
                                     <span class="text-gray-500 fs-8">{{auth()->user()->email}}</span>
                                 </div>
@@ -180,7 +199,7 @@
                         </div>
                         <div class="separator my-2"></div>
                         <div class="menu-item px-5 my-0">
-                            <a href="#!" class="menu-link px-5 py-2">
+                            <a href="{{route('hc.emp.profile',['id'=>auth()->user()->id])}}" class="menu-link px-5 py-2">
                                 <span class="menu-title position-relative">Profile
                                 </span> 
                             </a>

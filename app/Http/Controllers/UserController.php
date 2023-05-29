@@ -7,9 +7,12 @@ use App\Models\Division;
 use App\Models\Team\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
+use Symfony\Component\HttpFoundation\File\File;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -22,6 +25,22 @@ class UserController extends Controller
         $dataRole = Role::all();
         $dataPlacement= Team::all();
         return view('cmt-employee.index',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
+    }
+    
+    public function profile($id)
+    {
+        $dataDivision = Division::all();
+        $dataRole = Role::all();
+        $dataPlacement= Team::all();
+        
+        $profile = DB::table('users')
+        ->join('teams','teams.id','users.team_id')
+        ->join('divisions','divisions.id','users.division_id')
+        ->join('model_has_roles','model_has_roles.model_id','users.id')
+        ->select('users.*','teams.team_name','divisions.divisi_name','model_has_roles.role_id as role_id')
+        ->where('users.id',$id)
+        ->first();
+        return view('cmt-employee.profile',compact('profile','dataDivision','dataRole','dataPlacement'));
     }
     
     public function store(Request $request)
@@ -40,6 +59,110 @@ class UserController extends Controller
                 'team_id'=>$request->team_id,
             ]);
             $create->assignRole($request->role_id);
+            
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼",
+            ]);
+        } 
+        catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json("Oopss, ada yang salah nih!", 500);
+        }
+    }
+    
+    public function update(Request $request)
+    {
+        $getUser = User::where('id',$request->user_id)->first();
+        try {
+            $file_sign = $request->pegawai_sign_url;
+            if ($file_sign != null && $file_sign != '') {
+                $image_parts = explode(";base64,", $file_sign);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);   
+                $file_sign = sys_get_temp_dir() . '/' . uniqid().'.'.$image_type;
+                file_put_contents($file_sign, $image_base64);
+                $tmpFile = new File($file_sign);
+                $file = new UploadedFile(
+                    $tmpFile->getPathname(),
+                    $tmpFile->getFilename(),
+                    $tmpFile->getMimeType(),
+                    0,
+                    true 
+                );
+                $file_sign = $file->store('sign_pegawai');
+            }else{
+                $file_sign = $getUser->sign_file;
+            }
+            
+            $updateUser = $getUser->update([
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'nip'=>$request->nip,
+                'nik'=>$request->nik,
+                'kontak'=>$request->kontak,
+                'team_id'=>$request->team_id,
+                'sign_file'=>$file_sign,
+            ]);
+            
+            DB::table('model_has_roles')->where('model_id',$request->user_id)->delete();
+            $getUser->assignRole($request->role_id);
+            
+            if($request->new_password != null){
+                $getUser->update([
+                    'password' => bcrypt($request->new_password)
+                ]);
+            }
+            
+            $getDept = Division::where('id',$request->division_id)->first();
+            $getUser->update([
+                'division_id'=>$request->division_id,
+                'department_id'=>$getDept->department_id,
+            ]);
+            
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼",
+            ]);
+        } 
+        catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json("Oopss, ada yang salah nih!", 500);
+        }
+    }
+
+    public function statusPegawai(Request $request)
+    {
+        try {
+            foreach ($request->pegawai_id as $id) {
+                if($request->status_pegawai != 0){
+                    $update = User::where('id',$id)->update([
+                        'status' => 1,
+                    ]);
+                }else{
+                    $update = User::where('id',$id)->update([
+                        'status' => 0,
+                    ]);
+                }
+            }
+            
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼",
+            ]);
+        } 
+        catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json("Oopss, ada yang salah nih!", 500);
+        }
+    }
+    
+    public function resetPasswordPegawai(Request $request)
+    {
+        try {
+            foreach ($request->pegawai_id as $id) {
+                    $update = User::where('id',$id)->update([
+                        'password' => bcrypt(12345678),
+                    ]);
+            }
             
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
@@ -90,7 +213,7 @@ class UserController extends Controller
                 </div>
                 <div>
                 <span class="mb-0 fw-bold d-block">'.$emp->name.'</span>
-                <a href="mailto:$emp->email" class="text-gray-500">'.$emp->email.'</a>
+                <a href="mailto:'.$emp->email.'" class="text-gray-500">'.$emp->email.'</a>
                 </div>
                 </div>
                 ';
@@ -109,17 +232,23 @@ class UserController extends Controller
                 return '<span class="badge px-3 py-2 badge-light-warning">'.$div->divisi_name.'</span>';
             })
             ->addColumn('action', function ($action) {
-                $mnue = '<li><a href="#kt_modal_edit_karyawan" data-bs-toggle="modal" class="btn_edit_karyawan dropdown-item py-2" data-id="'.$action->id.'"><i class="fa-solid fa-edit me-2"></i>Edit</a></li>';
-                
+                $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
                 return '     
                 <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 <ul class="dropdown-menu">
-                <li><span class="dropdown-item py-2">No Action</span></li>
+                '.$mnue.'
                 </ul>
                 ';
             })
+            ->addColumn('DT_RowChecklist', function($check) {
+                if($check->status != 0 && Auth::user()->id != $check->id && Auth::user()->getRoleNames()[0] == 'administrator'){
+                return '<div class="text-center w-50px"><input name="pegawai_ids" type="checkbox" value="'.$check->id.'"></div>';
+                }else{
+                    return '';
+                }
+            })
             ->addIndexColumn()
-            ->rawColumns(['dept','div','action','emp'])
+            ->rawColumns(['dept','div','action','emp','DT_RowChecklist'])
             ->make(true);
         }
     }

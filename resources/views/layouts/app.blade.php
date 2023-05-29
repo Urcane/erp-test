@@ -39,6 +39,14 @@ data-kt-app-toolbar-fixed="@yield('toolbar-status','false')" data-kt-app-toolbar
 data-kt-app-sidebar-enabled="@yield('sidebar-status','false')" data-kt-app-sidebar-fixed="@yield('sidebar-status','false')" data-kt-app-sidebar-hoverable="@yield('sidebar-status','false')" data-kt-app-sidebar-push-header="@yield('sidebar-push','false')" data-kt-app-sidebar-push-toolbar="@yield('sidebar-push','false')" data-kt-app-sidebar-push-footer="@yield('sidebar-status','false')" 
 class="app-default page-loading-enabled page-loading">
 
+<style>
+	.kbw-signature { 
+		width: 100%; 
+		height: 260px; 
+		border-radius:.475rem;
+	}
+</style>
+
 <script>
 	var defaultThemeMode = "system"; 
 	var themeMode; 
