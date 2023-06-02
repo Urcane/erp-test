@@ -16,15 +16,17 @@ class CreateCustomersTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('city_id')->constrained();
+            $table->foreignId('lead_reference_id')->constrained();
+            $table->foreignId('bussines_type_id')->constrained();
+            $table->integer('user_follow_up')->nullable();
             $table->string('customer_name');
-            $table->string('customer_bussines_type');
-            $table->string('reference_from');
             $table->string('customer_address');
-            $table->string('customer_city');
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
-            $table->integer('prospect_status')->default(1); //0 batal , 1 prg, 2done
-            $table->integer('customer_status')->default(0);
+            $table->integer('prospect_status')->nullable(); //0 batal, 1 prg, 2done
+            $table->integer('customer_status')->nullable(); //diupdate kalau PO masuk / eexsit customer
+            $table->integer('approval_manager')->nullable();
             $table->integer('status')->default(1);
             $table->softDeletes();
             $table->timestamps();

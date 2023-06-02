@@ -42,8 +42,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/','indexLead')->name('com.lead.index-lead');
 
             Route::post('store/lead','storeLead')->name('com.lead.store-lead');
+            Route::post('update/lead','updateLead')->name('com.lead.update-lead');
+            Route::post('tindak-lanjut/lead','tindakLanjutLead')->name('com.lead.tindak-lanjut-lead');
+            Route::post('update/prospect','updateProspect')->name('com.lead.update-prospect');
+            Route::post('batal/prospect','batalProspect')->name('com.lead.batal-prospect');
 
+            Route::get('/get-data/edit/lead/{id}','getEditLead')->name('com.lead.get-edit-lead');
             Route::get('/get-data/table/lead','getTableLead')->name('com.lead.get-table-lead');
+            Route::get('/get-data/table/prospect','getTableProspect')->name('com.prospect.get-table-prospect');
             
         });
     });

@@ -1,17 +1,18 @@
 
-<div class="modal fade" id="kt_modal_tambah_lead" aria-hidden="true">
+<div class="modal fade" id="kt_modal_edit_lead" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered mw-650px">
 		<div class="modal-content">
 			<div class="modal-header py-3">
-				<h5 class="fw-bolder">Tambah Lead Baru</h5>
+				<h5 class="fw-bolder">Edit Lead</h5>
 				<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
 					<i class="fas fa-times"></i>
 				</div>
 			</div>
 			<div class="modal-body mx-5 mx-lg-15 my-7">
-				<form id="kt_modal_tambah_lead_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+				<form id="kt_modal_edit_lead_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
 					@csrf
-					<div class="scroll-y me-n10 pe-10" id="kt_modal_tambah_lead_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_tambah_lead_header" data-kt-scroll-wrappers="#kt_modal_tambah_lead_scroll" data-kt-scroll-offset="300px">
+					<input type="hidden" name="lead_id">
+					<div class="scroll-y me-n10 pe-10" id="kt_modal_edit_lead_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_edit_lead_header" data-kt-scroll-wrappers="#kt_modal_edit_lead_scroll" data-kt-scroll-offset="300px">
 					<div class="row mb-9">
 						<div class="col-lg-12 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -24,7 +25,7 @@
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Jenis Bisnis</span>
 							</label>
-							<select class="drop-data form-select form-select-solid" data-control="select2" required name="bussines_type_id" id="bussines_type_id" data-dropdown-parent="#kt_modal_tambah_lead">
+							<select class="drop-data form-select form-select-solid" data-control="select2" required name="bussines_type_id" data-dropdown-parent="#kt_modal_edit_lead">
 								<option value="" selected hidden disabled>Pilih Dulu</option>
 								@foreach ($getBussines as $gb)
 								<option value="{{$gb->id}}">{{$gb->type_name}}</option>									
@@ -36,7 +37,7 @@
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Referensi Dari</span>
 							</label>
-							<select class="drop-data form-select form-select-solid" data-control="select2" required name="lead_reference_id" id="lead_reference_id" data-dropdown-parent="#kt_modal_tambah_lead">
+							<select class="drop-data form-select form-select-solid" data-control="select2" required name="lead_reference_id" data-dropdown-parent="#kt_modal_edit_lead">
 								<option value="" selected hidden disabled>Pilih Dulu</option>
 								@foreach ($getLead as $gl)
 								<option value="{{$gl->id}}">{{$gl->lead_reference_name}}</option>									
@@ -55,7 +56,7 @@
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Kota/Kabupaten</span>
 							</label>
-							<select class="drop-data form-select form-select-solid" data-control="select2" required name="city_id" id="city_id" data-dropdown-parent="#kt_modal_tambah_lead">
+							<select class="drop-data form-select form-select-solid" data-control="select2" required name="city_id" data-dropdown-parent="#kt_modal_edit_lead">
 								<option value="" selected hidden disabled>Pilih Dulu</option>
 								@foreach ($getCity as $gc)
 								<option value="{{$gc->id}}">{{$gc->city_name}}</option>									
@@ -118,8 +119,8 @@
 					</div>
 				</div>
 					<div class="text-center mt-9">
-						<button type="reset" id="kt_modal_tambah_lead_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-						<button type="submit" id="kt_modal_tambah_lead_submit" class="btn btn-sm btn-info w-lg-200px">
+						<button type="reset" id="kt_modal_edit_lead_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
+						<button type="submit" id="kt_modal_edit_lead_submit" class="btn btn-sm btn-info w-lg-200px">
 							<span class="indicator-label">Simpan</span>
 						</button>
 					</div>

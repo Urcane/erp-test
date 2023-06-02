@@ -36,41 +36,50 @@
                             </div>
                             <div class="col-lg-6 d-flex justify-content-end">
                                 @role('administrator')
-                                <div class="tab_all_menu">
+                                <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
-                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start pb-3" id="action_pegawai" data-kt-menu="true" style="">
+                                    <div class="menu menu-sub menu-sub-dropdown w-300px text-start pb-3" id="action_lead" data-kt-menu="true" style="">
                                         <div class="d-flex flex-column bgi-no-repeat rounded-top">
                                             <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Mass Action Options</span>
                                         </div>
                                         <div class="separator mb-6"></div>
                                         <div class="menu-item px-3">
-                                            <a href="#kt_modal_nonaktif_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_nonaktif_pegawai">
+                                            <a href="#kt_modal_tindak_lanjut_lead" data-bs-toggle="modal" class="menu-link" id="btn_tindak_lanjut_lead">
                                                 <span class="menu-icon">
-                                                    <i class="fa-solid fa-user-xmark text-danger"></i>
+                                                    <i class="fa-solid fa-building-circle-check text-gray-500"></i>
                                                 </span>
-                                                <span class="menu-title text-danger">Non Aktif Pegawai</span>
+                                                <span class="menu-title text-dark">Tindak Lanjut (Prospek)</span>
                                             </a>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="tab_all_menu_prospect" style="display:none">
+                                    <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
+                                    <div class="menu menu-sub menu-sub-dropdown w-300px text-start pb-3" id="action_prospect" data-kt-menu="true" style="">
+                                        <div class="d-flex flex-column bgi-no-repeat rounded-top">
+                                            <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Mass Action Options</span>
+                                        </div>
+                                        <div class="separator mb-6"></div>
                                         <div class="menu-item px-3">
-                                            <a href="#kt_modal_reset_password_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_reset_password_pegawai">
+                                            <a href="#kt_modal_batal_prospect" data-bs-toggle="modal" class="menu-link" id="btn_batal_prospect">
                                                 <span class="menu-icon">
-                                                    <i class="fa-solid fa-key text-gray-500"></i>
+                                                    <i class="fa-solid fa-building-circle-xmark text-danger"></i>
                                                 </span>
-                                                <span class="menu-title text-dark">Reset Password</span>
+                                                <span class="menu-title text-danger">Tutup/Batal Prospek</span>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
                                 @endrole
-                                <div class="tab_all_menu">
+                                {{-- <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-info btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-filter me-2"></i>Filter</button>
-                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start" id="filter_pegawai" data-kt-menu="true" style="">
+                                    <div class="menu menu-sub menu-sub-dropdown w-300px text-start" id="filter_pegawai" data-kt-menu="true" style="">
                                         <div class="d-flex flex-column bgi-no-repeat rounded-top">
                                             <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Filter Options</span>
                                         </div>
                                         <div class="separator mb-6"></div>
                                         <div class="row px-8 pb-6">
-                                            {{-- <div class="col-lg-12 mb-3">
+                                            <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 mb-2">
                                                     <span class="fw-bold textd-dark">Department</span>
                                                 </label>
@@ -91,15 +100,15 @@
                                                     <option value="{{$dd->id}}">{{$dd->divisi_name}}</option>									
                                                     @endforeach
                                                 </select>
-                                            </div> --}}
+                                            </div>
                                             <div class="col-lg-12 mt-6 text-end">
                                                 <button class="btn btn-sm btn-light" id="btn_reset_filter">Reset</button>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 @role('administrator')
-                                <div class="tab_all_menu">
+                                <div class="tab_all_menu_lead">
                                     <a href="#kt_modal_tambah_lead" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Lead Baru</a>
                                 </div>
                                 @endrole
@@ -130,11 +139,27 @@
                                                             <th class="text-center w-50px">#</th>
                                                             <th class="w-250px">Perusahaan</th>
                                                             <th class="w-150px">Sales</th>
-                                                            <th class="w-100px">Referensi</th>
+                                                            <th class="w-100px">Lead From</th>
+                                                            <th class="w-100px">Client Type</th>
                                                             <th class="">Kontak</th>
                                                             <th class="w-100px">Status</th>
                                                             <th class="w-100px">Created</th>
                                                             <th class="w-100px text-center">#</th>
+                                                            <th class="" hidden>Tahun</th>
+                                                            <th class="" hidden>Tanggal</th>
+                                                            <th class="" hidden>Week Number</th>
+                                                            <th class="" hidden>Company Name</th>
+                                                            <th class="" hidden>Kota/Kabupaten</th>
+                                                            <th class="" hidden>Alamat</th>
+                                                            <th class="" hidden>Lat</th>
+                                                            <th class="" hidden>Lng</th>
+                                                            <th class="" hidden>Contact Name</th>
+                                                            <th class="" hidden>Email</th>
+                                                            <th class="" hidden>Job Position</th>
+                                                            <th class="" hidden>Phone/WA</th>
+                                                            <th class="" hidden>Status</th>
+                                                            <th class="" hidden>Note</th>
+                                                            <th class="" hidden>Next Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="fs-7">
@@ -151,7 +176,7 @@
                                                         <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                             <th class="text-center w-50px">#</th>
                                                             <th class="text-center w-50px">#</th>
-                                                            <th class="w-300px">Perusahaan</th>
+                                                            <th class="w-200px">Perusahaan</th>
                                                             <th class="w-150px">Penindaklanjut</th>
                                                             <th class="">Progress</th>
                                                             <th class="w-150px">Next Action</th>
@@ -159,38 +184,6 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody class="fs-7">
-                                                        <tr>
-                                                            <td></td>
-                                                            <td class="text-center">1</td>
-                                                            <td>
-                                                                <span class="fw-bold d-block">PT. Nama Perusahaan</span>
-                                                                <p class="text-gray-500 mb-0">Alamat Perusahaan yang panjang itu nah nda tau lagi aku</p>
-                                                                <span class="text-gray-500">Balikpapan</span>
-                                                            </td>
-                                                            <td>Nama Sales</td>
-                                                            <td>
-                                                                <div class="timeline">
-                                                                    <div class="timeline-item">
-                                                                        <div class="timeline-line w-35px"></div>
-                                                                        <div class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                            <div class="symbol-label bg-light-warning">
-                                                                                <i class="fa-solid fa-clock text-warning"></i>    
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="timeline-content">
-                                                                            <div class="pe-5">
-                                                                                <span class="fw-bold d-block">Follow up Pak Rudi Tabuti terkait BOQ</span>
-                                                                                <p class="text-gray-500 mb-0">Updated : 5/29/23 18:20:20</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                Gatau apa
-                                                            </td>
-                                                            <td></td>
-                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -208,28 +201,28 @@
 
 @role('administrator')
 @include('cmt-customer.lead.add.modal-tambah-lead')
+@include('cmt-customer.lead.add.modal-edit-lead')
+@include('cmt-customer.lead.add.modal-tindak-lanjut-lead')
+@include('cmt-customer.lead.add.modal-update-prospect')
+@include('cmt-customer.lead.add.modal-batal-prospect')
 @endrole
 
 <script>
     $(document ).ready(function() {
         
         var lead_ids = [];
-        
-        // var getFilter = function(){
-        //     return {
-        //         'filterDivisi': $('#filter_divisi').val(),
-        //         'filterDepartment': $('#filter_department').val(),
-        //     }
-        // }
+        var prospect_ids = [];
         
         $('body').on('click', '#tab_all', function () {
-            $('.tab_all_menu').show();
+            $('.tab_all_menu_lead').show();
+            $('.tab_all_menu_prospect').hide();
         });
         $('body').on('click', '#tab_prospect', function () {
-            $('.tab_all_menu').hide();
+            $('.tab_all_menu_lead').hide();
+            $('.tab_all_menu_prospect').show();
         });
         
-        window.tablePegawai  = $('#kt_table_lead')
+        window.tableLead  = $('#kt_table_lead')
         .DataTable({
             processing: true,
             serverSide: true,
@@ -248,9 +241,6 @@
             },
             ajax: {
                 url : "{{route('com.lead.get-table-lead')}}",
-                // data: function(data){
-                //     data.filters = getFilter()
-                // }
             },
             language: {
                 "lengthMenu": "Show _MENU_",
@@ -262,9 +252,9 @@
                 extend: 'excel',
                 className: 'btn btn-light-success btn-sm ms-3',
                 title: 'Data Lead Comtelindo',
-                // exportOptions: {
-                //     columns: [1,8,9,3,10,4,5,6]
-                // } 
+                exportOptions: {
+                    columns: [1,10,11,12,3,4,13,5,14,16,17,15,18,19,20,21,22,23,24]
+                } 
             },
             ],
             dom:
@@ -285,13 +275,28 @@
             { data: 'DT_RowIndex'},
             { data: 'customer'},
             { data: 'sales_name'},
-            { data: 'reference_from',},
-            { data: 'kontak',},
+            { data: 'lead_reference_name',},
+            { data: 'bussines_type_name',},
+            { data: 'kontak', orderable: false, searchable: false},
             { data: 'status',},
             { data: 'created_at',},
             { data: 'action'},
-            ],
-            
+            { data: 'lead_year', visible:false},
+            { data: 'lead_date', visible:false},
+            { data: 'lead_week_number', visible:false},
+            { data: 'lead_company_name', visible:false},
+            { data: 'lead_company_city', visible:false},
+            { data: 'lead_company_address', visible:false},
+            { data: 'lead_company_lat', visible:false},
+            { data: 'lead_company_lng', visible:false},
+            { data: 'lead_company_contact_name', visible:false},
+            { data: 'lead_company_contact_email', visible:false},
+            { data: 'lead_company_contact_job', visible:false},
+            { data: 'lead_company_contact_phone', visible:false},
+            { data: 'lead_status', visible:false},
+            { data: 'lead_note', visible:false},
+            { data: 'lead_next_action', visible:false},
+            ],  
             columnDefs: [
             {
                 targets: 0,
@@ -302,7 +307,7 @@
                 className: 'text-center',
             },
             {
-                targets: 8,
+                targets: 9,
                 orderable : false,
                 searchable : false,
                 className : 'text-center',
@@ -310,43 +315,102 @@
             ],
         });
         
-        // $('#filter_department').change(function(){
-        //     tablePegawai.draw()  
-        // });
-        // $('#filter_divisi').change(function(){
-        //     tablePegawai.draw()  
-        // });
-        // $('body').on('click', '#btn_reset_filter', function () {
-        //     $('#filter_department').val("*").trigger("change")
-        //     $('#filter_divisi').val("*").trigger("change")
-        // });
-        
         function removeFrom(array, item) {
             var index = array.indexOf(item);
             if (index !== -1) array.splice(index, 1);
         }
         
+        function removeFromProspect(array, item) {
+            var index = array.indexOf(item);
+            if (index !== -1) array.splice(index, 1);
+        }
+        
+        window.tableProspect  = $('#kt_table_prospect')
+        .DataTable({
+            processing: true,
+            serverSide: true,
+            retrieve: true,
+            deferRender: true,
+            responsive: false,
+            aaSorting : [],
+            drawCallback: function () {
+                $('body').on('click', 'input[name=\'prospect_ids\']', function () {
+                    if($(this).is(":checked")){
+                        prospect_ids.push($(this).val());
+                    } else {
+                        removeFromProspect(prospect_ids, $(this).val());
+                    }
+                });
+            },
+            ajax: {
+                url : "{{route('com.prospect.get-table-prospect')}}",
+            },
+            language: {
+                "lengthMenu": "Show _MENU_",
+                "emptyTable" : "Tidak ada data terbaru 📁",
+                "zeroRecords": "Data tidak ditemukan 😞",
+            },
+            dom:
+            "<'row mb-2'" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l>" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+            ">" +
+            
+            "<'table-responsive'tr>" +
+            
+            "<'row'" +
+            "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+            "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+            ">",
+            
+            columns: [
+            { data: 'DT_RowChecklist', orderable: false, searchable: false},
+            { data: 'DT_RowIndex'},
+            { data: 'customer'},
+            { data: 'sales_name'},
+            { data: 'progress', orderable: false, searchable: false},
+            { data: 'next_action', orderable: false, searchable: false},
+            { data: 'action'},
+            ],  
+            columnDefs: [
+            {
+                targets: 0,
+                className: 'text-center',
+            },
+            {
+                targets: 1,
+                className: 'text-center',
+            },
+            {
+                targets: 6,
+                orderable : false,
+                searchable : false,
+                className : 'text-center',
+            },
+            ],
+        });
+        
         $('body').on('click', '.btn_tambah_lead', function () {
+            $('.drop-data').val("").trigger("change")
             $('#kt_modal_tambah_lead_form').trigger("reset")
             $('#kt_modal_tambah_lead_submit').removeAttr('disabled','disabled');
         });
-        
         $("#kt_modal_tambah_lead_form").validate({
             messages: {
                 customer_name: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nama Perusahaan/Badan Usaha wajib diisi</span>",
                 },
-                customer_bussines_type: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib diisi</span>",
+                bussines_type_id: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib dipilih</span>",
                 },
-                reference_from: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Referensi lead wajib diisi</span>",
+                lead_reference_id: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Referensi lead wajib dipilih</span>",
                 },
                 customer_address: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Alamat perusahaan/badan usaha wajib diisi</span>",
                 },
-                customer_city: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib diisi</span>",
+                city_id: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
                 },
                 customer_contact_name: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nama wajib diisi</span>",
@@ -387,87 +451,213 @@
             }
         });
         
-        // $('body').on('click', '#btn_nonaktif_pegawai', function () {
-        //     $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
-        //     $('#containerUserNonAktif').html('');
-        //     const form_edit = $('#kt_modal_nonaktif_pegawai_form');
-        //     $.each(lead_ids, function(index, rowId) {
-        //         form_edit.find('#containerUserNonAktif').append(
-        //         $('<input>')
-        //         .attr('type', 'hidden')
-        //         .attr('name', 'pegawai_id[]')
-        //         .val(rowId)
-        //         );
-        //     });
-        // });
+        $('table').on('click', '.btn_edit_lead', function () {
+            $('.drop-data').val("").trigger("change")
+            $('#kt_modal_edit_lead_form').trigger("reset")
+            $('#kt_modal_edit_lead_submit').removeAttr('disabled','disabled');
+            var id = $(this).data('id')
+            var form_edit = $('#kt_modal_edit_lead_form')
+            $.get(`{{url('')}}/cmt-lead/get-data/edit/lead/${id}`, function (data) {
+                form_edit.find("input[name='lead_id']").val(id)
+                form_edit.find("input[name='customer_name']").val(data.customer_name)
+                form_edit.find("select[name='bussines_type_id']").val(data.bussines_type_id).trigger('change');
+                form_edit.find("select[name='lead_reference_id']").val(data.lead_reference_id).trigger('change');
+                form_edit.find("textarea[name='customer_address']").val(data.customer_address)
+                form_edit.find("select[name='city_id']").val(data.city_id).trigger('change');
+                form_edit.find("input[name='lat']").val(data.lat)
+                form_edit.find("input[name='lng']").val(data.lng)
+                form_edit.find("input[name='customer_contact_name']").val(data.customer_contact_name)
+                form_edit.find("input[name='customer_contact_job']").val(data.customer_contact_job)
+                form_edit.find("input[name='customer_contact_email']").val(data.customer_contact_email)
+                form_edit.find("input[name='customer_contact_phone']").val(data.customer_contact_phone)
+            })
+        });
+        $("#kt_modal_edit_lead_form").validate({
+            messages: {
+                customer_name: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Nama Perusahaan/Badan Usaha wajib diisi</span>",
+                },
+                customer_bussines_type: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib diisi</span>",
+                },
+                reference_from: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Referensi lead wajib diisi</span>",
+                },
+                customer_address: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Alamat perusahaan/badan usaha wajib diisi</span>",
+                },
+                customer_city: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib diisi</span>",
+                },
+                customer_contact_name: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Nama wajib diisi</span>",
+                },
+                customer_contact_job: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Jabatan wajib diisi</span>",
+                },
+                customer_contact_email: {
+                    email: "<span class='fw-semibold fs-8 text-danger'>Email user belum sesusai format</span>",
+                },
+                customer_contact_phone: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                },
+            },
+            submitHandler: function(form) {
+                var formData = new FormData(form);
+                $('#kt_modal_edit_lead_submit').attr('disabled', 'disabled');
+                $.ajax({
+                    data: formData,
+                    processData: false,
+                    contentType: false, 
+                    url: '{{route("com.lead.update-lead")}}',
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#kt_modal_edit_lead_cancel').click();
+                        var oTable = $('#kt_table_lead').dataTable();
+                        oTable.fnDraw(false);
+                        toastr.success(data.status,'Selamat 🚀 !');
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        $('#kt_modal_edit_lead_submit').removeAttr('disabled','disabled');
+                        const data = JSON.parse(xhr.responseText);
+                        toastr.error(errorThrown ,'Opps!');
+                    }
+                });
+            }
+        });
         
-        // $("#kt_modal_nonaktif_pegawai_form").validate({
-        //     submitHandler: function(form) {
-        //         var formData = new FormData(form);
-        //         $('#kt_modal_nonaktif_pegawai_submit').attr('disabled', 'disabled');
-        //         $.ajax({
-        //             data: formData,
-        //             processData: false,
-        //             contentType: false, 
-        //             url: '{{route("hc.emp.update-status")}}',
-        //             type: "POST",
-        //             dataType: 'json',
-        //             success: function (data) {
-        //                 $('#kt_modal_nonaktif_pegawai_cancel').click();
-        //                 var oTable = $('#kt_table_lead').dataTable();
-        //                 lead_ids = [];
-        //                 oTable.fnDraw(false);
-        //                 toastr.success(data.status,'Selamat 🚀 !');
-        //             },
-        //             error: function (xhr, status, errorThrown) {
-        //                 $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
-        //                 const data = JSON.parse(xhr.responseText);
-        //                 toastr.error(errorThrown ,'Opps!');
-        //             }
-        //         });
-        //     }
-        // });
+        $('body').on('click', '#btn_tindak_lanjut_lead', function () {
+            $('#kt_modal_tindak_lanjut_lead_submit').removeAttr('disabled','disabled');
+            $('#containerTindakLanjutLead').html('');
+            const form_edit = $('#kt_modal_tindak_lanjut_lead_form');
+            $.each(lead_ids, function(index, rowId) {
+                form_edit.find('#containerTindakLanjutLead').append(
+                $('<input>')
+                .attr('type', 'hidden')
+                .attr('name', 'lead_id[]')
+                .val(rowId)
+                );
+            });
+        });
+        $("#kt_modal_tindak_lanjut_lead_form").validate({
+            messages: {
+                prospect_next_action: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Next Action wajib diisi</span>",
+                },
+            },
+            submitHandler: function(form) {
+                var formData = new FormData(form);
+                $('#kt_modal_tindak_lanjut_lead_submit').attr('disabled', 'disabled');
+                $.ajax({
+                    data: formData,
+                    processData: false,
+                    contentType: false, 
+                    url: '{{route("com.lead.tindak-lanjut-lead")}}',
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#kt_modal_tindak_lanjut_lead_cancel').click();
+                        toastr.success(data.status,'Selamat 🚀 !');
+                        location.reload();
+                        
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        $('#kt_modal_tindak_lanjut_lead_submit').removeAttr('disabled','disabled');
+                        const data = JSON.parse(xhr.responseText);
+                        toastr.error(errorThrown ,'Opps!');
+                    }
+                });
+            }
+        });
         
-        // $('body').on('click', '#btn_reset_password_pegawai', function () {
-        //     $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
-        //     $('#containerResetPasswordPegawai').html('');
-        //     const form_edit = $('#kt_modal_reset_password_pegawai_form');
-        //     $.each(lead_ids, function(index, rowId) {
-        //         form_edit.find('#containerResetPasswordPegawai').append(
-        //         $('<input>')
-        //         .attr('type', 'hidden')
-        //         .attr('name', 'pegawai_id[]')
-        //         .val(rowId)
-        //         );
-        //     });
-        // });
+        $('table').on('click', '.btn_update_prospect', function () {
+            $('#kt_modal_update_prospect_form').trigger("reset")
+            $('#kt_modal_update_prospect_submit').removeAttr('disabled','disabled');
+            var id = $(this).data('id')
+            var form_edit = $('#kt_modal_update_prospect_form')
+            $.get(`{{url('')}}/cmt-lead/get-data/edit/lead/${id}`, function (data) {
+                form_edit.find("input[name='lead_id']").val(id)
+            })
+        });
+        $("#kt_modal_update_prospect_form").validate({
+            messages: {
+                prospect_next_action: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Next Action wajib diisi</span>",
+                },
+                prospect_update: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Note/Update wajib diisi</span>",
+                },
+            },
+            submitHandler: function(form) {
+                var formData = new FormData(form);
+                $('#kt_modal_update_prospect_submit').attr('disabled', 'disabled');
+                $.ajax({
+                    data: formData,
+                    processData: false,
+                    contentType: false, 
+                    url: '{{route("com.lead.update-prospect")}}',
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#kt_modal_update_prospect_cancel').click();
+                        var oTable = $('#kt_table_prospect').dataTable();
+                        oTable.fnDraw(false);
+                        toastr.success(data.status,'Selamat 🚀 !');
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        $('#kt_modal_update_prospect_submit').removeAttr('disabled','disabled');
+                        const data = JSON.parse(xhr.responseText);
+                        toastr.error(errorThrown ,'Opps!');
+                    }
+                });
+            }
+        });
         
-        // $("#kt_modal_reset_password_pegawai_form").validate({
-        //     submitHandler: function(form) {
-        //         var formData = new FormData(form);
-        //         $('#kt_modal_reset_password_pegawai_submit').attr('disabled', 'disabled');
-        //         $.ajax({
-        //             data: formData,
-        //             processData: false,
-        //             contentType: false, 
-        //             url: '{{route("hc.emp.reset-password-pegawai")}}',
-        //             type: "POST",
-        //             dataType: 'json',
-        //             success: function (data) {
-        //                 $('#kt_modal_reset_password_pegawai_cancel').click();
-        //                 var oTable = $('#kt_table_lead').dataTable();
-        //                 lead_ids = [];
-        //                 oTable.fnDraw(false);
-        //                 toastr.success(data.status,'Selamat 🚀 !');
-        //             },
-        //             error: function (xhr, status, errorThrown) {
-        //                 $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
-        //                 const data = JSON.parse(xhr.responseText);
-        //                 toastr.error(errorThrown ,'Opps!');
-        //             }
-        //         });
-        //     }
-        // });
+        $('body').on('click', '#btn_batal_prospect', function () {
+            $('#kt_modal_batal_prospect_submit').removeAttr('disabled','disabled');
+            $('#containerBatalProspect').html('');
+            const form_edit = $('#kt_modal_batal_prospect_form');
+            $.each(prospect_ids, function(index, rowId) {
+                form_edit.find('#containerBatalProspect').append(
+                $('<input>')
+                .attr('type', 'text')
+                .attr('name', 'prospect_id[]')
+                .val(rowId)
+                );
+            });
+        });
+        $("#kt_modal_batal_prospect_form").validate({
+            messages: {
+                prospect_update: {
+                    required: "<span class='fw-semibold fs-8 text-danger'>Alasan pembatalan wajib diisi</span>",
+                },
+            },
+            submitHandler: function(form) {
+                var formData = new FormData(form);
+                $('#kt_modal_batal_prospect_submit').attr('disabled', 'disabled');
+                $.ajax({
+                    data: formData,
+                    processData: false,
+                    contentType: false, 
+                    url: '{{route("com.lead.batal-prospect")}}',
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#kt_modal_batal_prospect_cancel').click();
+                        toastr.success(data.status,'Selamat 🚀 !');
+                        location.reload();
+                        
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        $('#kt_modal_batal_prospect_submit').removeAttr('disabled','disabled');
+                        const data = JSON.parse(xhr.responseText);
+                        toastr.error(errorThrown ,'Opps!');
+                    }
+                });
+            }
+        });
         
     });
 </script>

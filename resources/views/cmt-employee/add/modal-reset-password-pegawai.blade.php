@@ -15,7 +15,7 @@
                         <div class="col-lg-12 text-center">
                             <i class="fas fa-exclamation-circle text-danger fs-3x mb-6"></i>
                             <span class="fs-1 fw-bolder text-dark d-block mb-1">Periksa Kembali!</span>
-                            <span class="fs-7 fw-semibold text-gray-500">Apa ada yakin ingin <b class="text-primary">mereset password</b> pegawai terpilih ?. Password yang sudah reset akan menjadi default kembali.</span>
+                            <span class="fs-7 fw-semibold text-gray-500">Apa ada yakin ingin <b class="text-primary">mereset password</b> pegawai terpilih ? Password yang sudah reset akan menjadi default kembali.</span>
                         </div>
                         <div id="containerResetPasswordPegawai">
 
