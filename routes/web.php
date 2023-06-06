@@ -1,9 +1,8 @@
 <?php
 
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\Sales\Leap\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Sales\ProspektusController;
 use App\Http\Controllers\UserController;
 
 /*

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Sales\Leap;
 
+use App\Http\Controllers\Controller;
 use App\Models\BussinesType;
 use App\Models\Customer\Customer;
 use App\Models\Customer\CustomerContact;
