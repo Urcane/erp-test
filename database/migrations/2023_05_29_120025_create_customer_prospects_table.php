@@ -18,8 +18,8 @@ class CreateCustomerProspectsTable extends Migration
             $table->foreignId('customer_id')->constrained();
             $table->string('prospect_update');
             $table->string('prospect_next_action')->nullable();
-            $table->integer('status')->default(1); //1 prg 0 cancel 2 done
-            $table->softDeletes();
+            $table->integer('status')->index()->default(1); //1 prg 0 cancel 2 done
+            $table->softDeletes()->index();
             $table->timestamps();
         });
     }

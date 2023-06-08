@@ -21,9 +21,9 @@ class CustomerController extends Controller
 {
     public function indexLead()
     {
-        $getLead = LeadReference::all();
-        $getCity = City::all();
-        $getBussines = BussinesType::all();
+        $getLead = LeadReference::get();
+        $getCity = City::get();
+        $getBussines = BussinesType::get();
         return view('cmt-customer.lead.index', compact('getLead','getBussines','getCity'));
     }
     
@@ -190,6 +190,14 @@ class CustomerController extends Controller
             ->select('customers.*','users.name as sales_name','customer_contacts.customer_contact_name','customer_contacts.customer_contact_phone','customer_contacts.customer_contact_email','customer_contacts.customer_contact_job','cities.city_name','lead_references.lead_reference_name','bussines_types.type_name as bussines_type_name')
             ->where('customers.deleted_at',null)
             ->orderBy('customers.id','DESC');
+
+            if ($range_date = $request->filters['range_date']) {
+                $range_date = collect(explode('-', $request->filters['range_date']))->map(function($item) {
+                    return Carbon::parse($item)->toDateString();
+                })->toArray();
+
+                $query->whereBetween('customers.created_at', $range_date);
+            }
             
             $query = $query->get();
             return DataTables::of($query)
@@ -239,7 +247,7 @@ class CustomerController extends Controller
             })
             ->addColumn('DT_RowChecklist', function($check) {
                 if($check->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $check->prospect_status == null){
-                    return '<div class="text-center w-50px"><input name="lead_ids" type="checkbox" value="'.$check->id.'"></div>';
+                    return '<div class="text-center w-50px"><input name="checkbox_lead_ids" type="checkbox" value="'.$check->id.'"></div>';
                 }else{
                     return '';
                 }
@@ -326,6 +334,14 @@ class CustomerController extends Controller
             ->where('customers.deleted_at',null)
             ->where('customers.prospect_status','!=',null)
             ->orderBy('customers.id','DESC');
+
+            if ($range_date = $request->filters['range_date']) {
+                $range_date = collect(explode('-', $request->filters['range_date']))->map(function($item) {
+                    return Carbon::parse($item)->toDateString();
+                })->toArray();
+
+                $query->whereBetween('customers.created_at', $range_date);
+            }
             
             $query = $query->get();
             return DataTables::of($query)
@@ -376,7 +392,7 @@ class CustomerController extends Controller
             })
             ->addColumn('DT_RowChecklist', function($check) {
                 if($check->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $check->user_follow_up == Auth::user()->id){
-                    return '<div class="text-center w-50px"><input name="prospect_ids" type="checkbox" value="'.$check->id.'"></div>';
+                    return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->id.'"></div>';
                 }else{
                     return '';
                 }

@@ -31,10 +31,14 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row mb-6 align-items-center">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 gap-3 d-flex align-items-center">
                                 <span class="fs-7 text-uppercase fw-bolder text-dark d-none d-md-block">List Lead/Prospek</span>
                             </div>
                             <div class="col-lg-6 d-flex justify-content-end">
+                                <div class="input-group w-150px w-md-250px mx-4">
+                                    <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
+                                    <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
+                                </div>
                                 @role('administrator')
                                 <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
@@ -209,6 +213,13 @@
 
 <script>
     $(document ).ready(function() {
+        function onlyUnique(value, index, array) {
+            return array.indexOf(value) === index;
+        }
+
+        $('input[name="range_date"]').daterangepicker({autoUpdateInput: false}, (from_date, to_date) => {
+            $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
+        }); 
         
         var lead_ids = [];
         var prospect_ids = [];
@@ -231,7 +242,8 @@
             responsive: false,
             aaSorting : [],
             drawCallback: function () {
-                $('body').on('click', 'input[name=\'lead_ids\']', function () {
+                lead_ids = [];
+                $('#kt_table_lead').on('click', 'input[name=\'checkbox_lead_ids\']', function () {
                     if($(this).is(":checked")){
                         lead_ids.push($(this).val());
                     } else {
@@ -241,6 +253,11 @@
             },
             ajax: {
                 url : "{{route('com.lead.get-table-lead')}}",
+                data: function(data) {
+                    data.filters = {
+                        'range_date': $('#range_date').val(),
+                    }
+                }
             },
             language: {
                 "lengthMenu": "Show _MENU_",
@@ -314,6 +331,11 @@
             },
             ],
         });
+
+        $('#range_date').on('apply.daterangepicker', function(ev, picker) {
+            tableLead.draw();
+            tableProspect.draw();
+        });
         
         function removeFrom(array, item) {
             var index = array.indexOf(item);
@@ -322,7 +344,7 @@
         
         function removeFromProspect(array, item) {
             var index = array.indexOf(item);
-            if (index !== -1) array.splice(index, 1);
+            while (index !== -1) array.splice(index, 1);
         }
         
         window.tableProspect  = $('#kt_table_prospect')
@@ -334,7 +356,8 @@
             responsive: false,
             aaSorting : [],
             drawCallback: function () {
-                $('body').on('click', 'input[name=\'prospect_ids\']', function () {
+                prospect_ids = [];
+                $('#kt_table_prospect').on('click', 'input[name=\'checkbox_prospect_ids\']', function () {
                     if($(this).is(":checked")){
                         prospect_ids.push($(this).val());
                     } else {
@@ -344,6 +367,11 @@
             },
             ajax: {
                 url : "{{route('com.prospect.get-table-prospect')}}",
+                data: function(data) {
+                    data.filters = {
+                        'range_date': $('#range_date').val(),
+                    }
+                }
             },
             language: {
                 "lengthMenu": "Show _MENU_",
@@ -532,7 +560,7 @@
             $('#kt_modal_tindak_lanjut_lead_submit').removeAttr('disabled','disabled');
             $('#containerTindakLanjutLead').html('');
             const form_edit = $('#kt_modal_tindak_lanjut_lead_form');
-            $.each(lead_ids, function(index, rowId) {
+            $.each(lead_ids.filter(onlyUnique), function(index, rowId) {
                 form_edit.find('#containerTindakLanjutLead').append(
                 $('<input>')
                 .attr('type', 'hidden')
@@ -604,6 +632,7 @@
                         $('#kt_modal_update_prospect_cancel').click();
                         var oTable = $('#kt_table_prospect').dataTable();
                         oTable.fnDraw(false);
+                        prospect_ids = [];
                         toastr.success(data.status,'Selamat 🚀 !');
                     },
                     error: function (xhr, status, errorThrown) {
@@ -622,7 +651,7 @@
             $.each(prospect_ids, function(index, rowId) {
                 form_edit.find('#containerBatalProspect').append(
                 $('<input>')
-                .attr('type', 'text')
+                .attr('type', 'hidden')
                 .attr('name', 'prospect_id[]')
                 .val(rowId)
                 );

@@ -19,16 +19,16 @@ class CreateCustomersTable extends Migration
             $table->foreignId('city_id')->constrained();
             $table->foreignId('lead_reference_id')->constrained();
             $table->foreignId('bussines_type_id')->constrained();
-            $table->integer('user_follow_up')->nullable();
-            $table->string('customer_name');
-            $table->string('customer_address');
+            $table->integer('user_follow_up')->index()->nullable();
+            $table->string('customer_name')->index();
+            $table->string('customer_address')->index();
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
-            $table->integer('prospect_status')->nullable(); //0 batal, 1 prg, 2done
-            $table->integer('customer_status')->nullable(); //diupdate kalau PO masuk / eexsit customer
-            $table->integer('approval_manager')->nullable();
-            $table->integer('status')->default(1);
-            $table->softDeletes();
+            $table->integer('prospect_status')->index()->nullable(); //0 batal, 1 prg, 2done
+            $table->integer('customer_status')->index()->nullable(); //diupdate kalau PO masuk / eexsit customer
+            $table->integer('approval_manager')->index()->nullable();
+            $table->integer('status')->index()->default(1);
+            $table->softDeletes()->index();
             $table->timestamps();
         });
     }

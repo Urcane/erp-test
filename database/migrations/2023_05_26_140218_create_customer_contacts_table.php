@@ -17,10 +17,10 @@ class CreateCustomerContactsTable extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained();
             $table->string('customer_contact_name');
-            $table->string('customer_contact_job');
-            $table->string('customer_contact_email')->nullable();
+            $table->string('customer_contact_job')->index();
+            $table->string('customer_contact_email')->index()->nullable();
             $table->string('customer_contact_phone');
-            $table->softDeletes();
+            $table->softDeletes()->index();
             $table->timestamps();
         });
     }
