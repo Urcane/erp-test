@@ -3,6 +3,7 @@
 use App\Http\Controllers\Sales\Leap\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Sales\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -50,6 +51,13 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/get-data/table/lead','getTableLead')->name('com.lead.get-table-lead');
             Route::get('/get-data/table/prospect','getTableProspect')->name('com.prospect.get-table-prospect');
             
+        });
+    });
+
+    Route::controller(ProjectManagementController::class)->group(function () {
+        Route::prefix('cmt-promag')->group(function () {
+            Route::get('/','index')->name('com.promag.index');
+            Route::get('/detail','detail')->name('com.promag.detail');
         });
     });
 
