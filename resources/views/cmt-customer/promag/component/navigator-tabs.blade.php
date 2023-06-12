@@ -9,15 +9,15 @@
             Overview
         </a>
     </li>
-    {{-- <li class="nav-item">
+    <li class="nav-item">
         <a
-            class="nav-link text-active-primary py-5 me-6"
-            href="https://preview.keenthemes.com/metronic8/demo30/../demo30/apps/projects/targets.html"
+            class="nav-link text-active-primary py-5 me-6 {{url()->current() == route('com.promag.detail.task-lists') ? 'active' : ''}}"
+            href="{{route('com.promag.detail.task-lists')}}"
         >
-            Targets
+            Task Lists
         </a>
     </li>
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a
             class="nav-link text-active-primary py-5 me-6"
             href="https://preview.keenthemes.com/metronic8/demo30/../demo30/apps/projects/budget.html"

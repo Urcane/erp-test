@@ -58,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/','index')->name('com.promag.index');
             Route::get('/detail','detail')->name('com.promag.detail');
             Route::get('/detail/files','files')->name('com.promag.detail.files');
+            Route::get('/detail/task-lists','taskLists')->name('com.promag.detail.task-lists');
         });
     });
 

@@ -22,4 +22,9 @@ class ProjectManagementController extends Controller
     {
         return view('cmt-customer.promag.pages.files');
     }
+
+    public function taskLists(Request $request)
+    {
+        return view('cmt-customer.promag.pages.task-lists');
+    }
 }
