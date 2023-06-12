@@ -43,7 +43,7 @@
                                             @include('cmt-customer.promag.component.navigator-tabs')
                                         </div>
                                     </div>
-                                    <div id="promag-detail-container">
+                                    <div id="promag-detail-containe">
                                         @yield('promag-detail-content')
                                     </div>
                                 </div>

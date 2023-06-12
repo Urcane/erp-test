@@ -171,7 +171,6 @@
 </div>
 
 @role('administrator')
-@include('cmt-customer.promag.modal.modal-detail-project-management')
 @endrole
 
 <script>
