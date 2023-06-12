@@ -3,23 +3,23 @@
 @section('promag-detail-content')
 <div class="row g-6 g-xl-9">
     <div class="col-lg-6">
-        @include('cmt-customer.promag.component.task-summary')
+        @include('cmt-customer.promag.component.overview.task-summary')
     </div>
     <div class="col-lg-6">
-        @include('cmt-customer.promag.component.task-overtime')
+        @include('cmt-customer.promag.component.overview.task-overtime')
     </div>
     <div class="col-lg-6">
-        @include('cmt-customer.promag.component.card-date')
+        @include('cmt-customer.promag.component.overview.card-date')
     </div>
     <div class="col-lg-6">
-        @include('cmt-customer.promag.component.summary-file')
+        @include('cmt-customer.promag.component.overview.summary-file')
     </div>
     <div class="col-lg-6">
-        @include('cmt-customer.promag.component.card-contributor')
+        @include('cmt-customer.promag.component.overview.card-contributor')
     </div>
     <div class="col-lg-6">
-        @include('cmt-customer.promag.component.task-recent')
+        @include('cmt-customer.promag.component.overview.task-recent')
     </div>
 </div>
-@include('cmt-customer.promag.component.table-project-spend')
+@include('cmt-customer.promag.component.overview.table-project-spend')
 @endsection
