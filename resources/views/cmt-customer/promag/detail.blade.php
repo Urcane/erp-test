@@ -56,6 +56,8 @@
     </div>
 </div>
 
+@include('cmt-customer.promag.modal.modal-views-users')
+
 
 <script>
     $(document ).ready(function() {
