@@ -17,4 +17,9 @@ class ProjectManagementController extends Controller
     {
         return view('cmt-customer.promag.pages.overview');
     }
+
+    public function files(Request $request)
+    {
+        return view('cmt-customer.promag.pages.files');
+    }
 }

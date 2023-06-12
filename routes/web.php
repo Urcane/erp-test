@@ -50,7 +50,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/get-data/edit/lead/{id}','getEditLead')->name('com.lead.get-edit-lead');
             Route::get('/get-data/table/lead','getTableLead')->name('com.lead.get-table-lead');
             Route::get('/get-data/table/prospect','getTableProspect')->name('com.prospect.get-table-prospect');
-            
         });
     });
 
@@ -58,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('cmt-promag')->group(function () {
             Route::get('/','index')->name('com.promag.index');
             Route::get('/detail','detail')->name('com.promag.detail');
+            Route::get('/detail/files','files')->name('com.promag.detail.files');
         });
     });
 
