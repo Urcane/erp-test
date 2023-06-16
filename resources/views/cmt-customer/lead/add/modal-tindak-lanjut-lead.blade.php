@@ -24,6 +24,20 @@
 							<input type="text" class="form-control form-control-solid" placeholder="" required name="prospect_next_action">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
+                        <div class="col-lg-8 mb-3">
+							<label class="d-flex align-items-center fs-6 form-label mb-2">
+								<span class="required fw-bold">Plan Date</span>
+							</label>
+							<input type="date" class="form-control form-control-solid" placeholder="Select Date" required name="next_action_plan_date">
+							<div class="fv-plugins-message-container invalid-feedback"></div>
+						</div>
+                        <div class="col-lg-4 mb-3">
+							<label class="d-flex align-items-center fs-6 form-label mb-2">
+								<span class="required fw-bold">Plan Time</span>
+							</label>
+							<input type="time" class="form-control form-control-solid" placeholder="Select Time" required name="next_action_plan_time">
+							<div class="fv-plugins-message-container invalid-feedback"></div>
+						</div>
                         <div id="containerTindakLanjutLead">
 
                         </div>

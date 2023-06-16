@@ -29,7 +29,9 @@ class AddDepartmentIdToUsers extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropConstrainedForeignId('team_id');
+            $table->dropConstrainedForeignId('division_id');
+            $table->dropConstrainedForeignId('department_id');
         });
     }
 }

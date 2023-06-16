@@ -181,6 +181,7 @@
                                                             <th class="text-center w-50px">#</th>
                                                             <th class="text-center w-50px">#</th>
                                                             <th class="w-200px">Perusahaan</th>
+                                                            <th class="w-200px">Title</th>
                                                             <th class="w-150px">Penindaklanjut</th>
                                                             <th class="">Progress</th>
                                                             <th class="w-150px">Next Action</th>
@@ -396,6 +397,7 @@
             { data: 'DT_RowChecklist', orderable: false, searchable: false},
             { data: 'DT_RowIndex'},
             { data: 'customer'},
+            { data: 'prospect_title'},
             { data: 'sales_name'},
             { data: 'progress', orderable: false, searchable: false},
             { data: 'next_action', orderable: false, searchable: false},
@@ -411,7 +413,7 @@
                 className: 'text-center',
             },
             {
-                targets: 6,
+                targets: -1,
                 orderable : false,
                 searchable : false,
                 className : 'text-center',
@@ -607,7 +609,7 @@
             var id = $(this).data('id')
             var form_edit = $('#kt_modal_update_prospect_form')
             $.get(`{{url('')}}/cmt-lead/get-data/edit/lead/${id}`, function (data) {
-                form_edit.find("input[name='lead_id']").val(id)
+                form_edit.find("input[name='customer_prospect_id']").val(id)
             })
         });
         $("#kt_modal_update_prospect_form").validate({

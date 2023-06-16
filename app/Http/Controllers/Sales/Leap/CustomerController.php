@@ -7,6 +7,7 @@ use App\Models\BussinesType;
 use App\Models\Customer\Customer;
 use App\Models\Customer\CustomerContact;
 use App\Models\Customer\CustomerProspect;
+use App\Models\Customer\CustomerProspectLog;
 use App\Models\LeadReference;
 use App\Models\Team\City;
 use App\Models\User;
@@ -98,10 +99,18 @@ class CustomerController extends Controller
                         'prospect_status' => 1,
                         'approval_manager' => 1,
                     ]);
+
+                    $temp_title = Carbon::now()->toDateString() . ' - Pembukaan Prospect';
                     $prospek = CustomerProspect::create([
                         'customer_id' => $id,
+                        'prospect_title' => $request->prospect_title ?? $temp_title,
+                    ]);
+
+                    $prospek_logs = CustomerProspectLog::create([
+                        'customer_prospect_id' => $prospek->id,
                         'prospect_update' => 'Lead telah ditindaklanjuti oleh '.$getUser->name,
                         'prospect_next_action' => $request->prospect_next_action,
+                        'next_action_plan_date' => Carbon::parse($request->next_action_plan_date . $request->next_action_plan_time)->toDateTimeString(),
                     ]);
                 }
             }
@@ -122,10 +131,11 @@ class CustomerController extends Controller
             $lead = Customer::where('id',$request->lead_id)->update([
                 'status' => $request->prospect_status,
             ]);
-            $prospek = CustomerProspect::create([
-                'customer_id' => $request->lead_id,
+            $prospek = CustomerProspectLog::create([
+                'customer_prospect_id' => $request->customer_prospect_id,
                 'prospect_update' => $request->prospect_update,
                 'prospect_next_action' => $request->prospect_next_action,
+                        'next_action_plan_date' => Carbon::parse($request->next_action_plan_date . $request->next_action_plan_time)->toDateTimeString(),
                 'status' => $request->prospect_status,
             ]);
             
@@ -246,7 +256,7 @@ class CustomerController extends Controller
                 ';
             })
             ->addColumn('DT_RowChecklist', function($check) {
-                if($check->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $check->prospect_status == null){
+                if($check->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator'){
                     return '<div class="text-center w-50px"><input name="checkbox_lead_ids" type="checkbox" value="'.$check->id.'"></div>';
                 }else{
                     return '';
@@ -330,7 +340,14 @@ class CustomerController extends Controller
             $query = DB::table('customers')
             ->join('users','users.id','customers.user_id')
             ->join('cities','cities.id','customers.city_id')
-            ->select('customers.*','users.name as sales_name','cities.city_name',)
+            ->join('customer_prospects', 'customer_prospects.customer_id', 'customers.id')
+            ->select(
+                'customers.*',
+                'users.name as sales_name',
+                'cities.city_name', 
+                'customer_prospects.prospect_title', 
+                'customer_prospects.id as prospect_id'
+            )
             ->where('customers.deleted_at',null)
             ->where('customers.prospect_status','!=',null)
             ->orderBy('customers.id','DESC');
@@ -353,7 +370,7 @@ class CustomerController extends Controller
                 ';
             })
             ->addColumn('progress', function ($progress){
-                $getProgress = CustomerProspect::where('customer_id',$progress->id)->orderBy('id','DESC')->limit(3)->get();
+                $getProgress = CustomerProspectLog::where('customer_prospect_id',$progress->prospect_id)->orderBy('id','DESC')->limit(3)->get();
                 $list = '';
                 foreach ($getProgress as $gp) {
                     if($gp->status == 1){
@@ -385,10 +402,15 @@ class CustomerController extends Controller
                 }
                 $return = '<div class="timeline">'.$list.'</div>';
                 return $return;
+                return 'ujicoba';
             })
             ->addColumn('next_action', function ($next_action){
-                $getLastAction = CustomerProspect::where('customer_id',$next_action->id)->orderBy('id','DESC')->first();
-                return $getLastAction->prospect_next_action;
+                $getLastAction = CustomerProspectLog::where('customer_prospect_id',$next_action->prospect_id)->orderBy('id','DESC')->first();
+                return 
+                '
+                    <span class="fw-bold d-block">'.$getLastAction->prospect_next_action.'</span>
+                    <p class="text-gray-500 mb-0">'.$getLastAction->next_action_plan_date.'</p>
+                ';
             })
             ->addColumn('DT_RowChecklist', function($check) {
                 if($check->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $check->user_follow_up == Auth::user()->id){
@@ -415,7 +437,7 @@ class CustomerController extends Controller
                 ';
             })
             ->addIndexColumn()
-            ->rawColumns(['DT_RowChecklist','customer','progress','action'])
+            ->rawColumns(['DT_RowChecklist','customer','progress','next_action','action'])
             ->make(true);
         }
     }

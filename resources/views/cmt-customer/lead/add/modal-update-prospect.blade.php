@@ -11,7 +11,7 @@
             <div class="modal-body mx-5 mx-lg-15 my-7">
                 <form id="kt_modal_update_prospect_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="lead_id">
+                    <input type="hidden" name="customer_prospect_id">
                     <div class="scroll-y me-n10 pe-10" id="kt_modal_update_prospect_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_update_prospect_header" data-kt-scroll-wrappers="#kt_modal_update_prospect_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
                         <div class="col-lg-8 col-8 mb-3">
@@ -32,6 +32,20 @@
                             </select>
                             <div class="fv-plugins-message-container invalid-feedback"></div>
                         </div>
+                        <div class="col-lg-8 mb-3">
+							<label class="d-flex align-items-center fs-6 form-label mb-2">
+								<span class="required fw-bold">Plan Date</span>
+							</label>
+							<input type="date" class="form-control form-control-solid" placeholder="Select Date" required name="next_action_plan_date">
+							<div class="fv-plugins-message-container invalid-feedback"></div>
+						</div>
+                        <div class="col-lg-4 mb-3">
+							<label class="d-flex align-items-center fs-6 form-label mb-2">
+								<span class="required fw-bold">Plan Time</span>
+							</label>
+							<input type="time" class="form-control form-control-solid" placeholder="Select Time" required name="next_action_plan_time">
+							<div class="fv-plugins-message-container invalid-feedback"></div>
+						</div>
                         <div class="col-lg-12 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Note Update</span>
