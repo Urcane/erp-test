@@ -363,6 +363,7 @@
                     } else {
                         removeFromProspect(prospect_ids, $(this).val());
                     }
+                    console.log(prospect_ids);
                 });
             },
             ajax: {

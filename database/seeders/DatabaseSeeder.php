@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
             TeamSeeder::class,
             DepartmentSeeder::class,
             UserSeeder::class,
+            ProjectSeeder::class,
         ]);
     }
 }

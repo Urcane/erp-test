@@ -124,7 +124,7 @@ class CustomerController extends Controller
             ]);
             $prospek = CustomerProspect::create([
                 'customer_id' => $request->lead_id,
-                'prospect_update' => $request->prospect_next_action,
+                'prospect_update' => $request->prospect_update,
                 'prospect_next_action' => $request->prospect_next_action,
                 'status' => $request->prospect_status,
             ]);
