@@ -607,9 +607,11 @@
             $('#kt_modal_update_prospect_form').trigger("reset")
             $('#kt_modal_update_prospect_submit').removeAttr('disabled','disabled');
             var id = $(this).data('id')
+            var prospectId = $(this).data('prospectid')
             var form_edit = $('#kt_modal_update_prospect_form')
             $.get(`{{url('')}}/cmt-lead/get-data/edit/lead/${id}`, function (data) {
-                form_edit.find("input[name='customer_prospect_id']").val(id)
+                form_edit.find("input[name='customer_prospect_id']").val(prospectId);
+                form_edit.find("input[name='lead_id']").val(id);
             })
         });
         $("#kt_modal_update_prospect_form").validate({

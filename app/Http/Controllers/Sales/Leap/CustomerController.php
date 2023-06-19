@@ -98,6 +98,7 @@ class CustomerController extends Controller
                         'user_follow_up' => Auth::user()->id,
                         'prospect_status' => 1,
                         'approval_manager' => 1,
+                        'status' => 1,
                     ]);
 
                     $temp_title = Carbon::now()->toDateString() . ' - Pembukaan Prospect';
@@ -128,14 +129,22 @@ class CustomerController extends Controller
     public function updateProspect(Request $request)
     {
         try {
-            $lead = Customer::where('id',$request->lead_id)->update([
+            $lead = Customer::where('id',$request->lead_id);
+            $lead->update([
                 'status' => $request->prospect_status,
             ]);
+
+            if ($request->prospect_status == 2 || $request->prospect_status == 0) {
+                $lead->update([
+                    'prospect_status' => 0,
+                ]);
+            }
+
             $prospek = CustomerProspectLog::create([
                 'customer_prospect_id' => $request->customer_prospect_id,
                 'prospect_update' => $request->prospect_update,
                 'prospect_next_action' => $request->prospect_next_action,
-                        'next_action_plan_date' => Carbon::parse($request->next_action_plan_date . $request->next_action_plan_time)->toDateTimeString(),
+                'next_action_plan_date' => Carbon::parse($request->next_action_plan_date . $request->next_action_plan_time)->toDateTimeString(),
                 'status' => $request->prospect_status,
             ]);
             
@@ -197,7 +206,17 @@ class CustomerController extends Controller
             ->join('lead_references','lead_references.id','customers.lead_reference_id')
             ->join('bussines_types','bussines_types.id','customers.bussines_type_id')
             ->join('customer_contacts','customer_contacts.customer_id','customers.id')
-            ->select('customers.*','users.name as sales_name','customer_contacts.customer_contact_name','customer_contacts.customer_contact_phone','customer_contacts.customer_contact_email','customer_contacts.customer_contact_job','cities.city_name','lead_references.lead_reference_name','bussines_types.type_name as bussines_type_name')
+            ->select(
+                'customers.*',
+                'users.name as sales_name',
+                'customer_contacts.customer_contact_name',
+                'customer_contacts.customer_contact_phone',
+                'customer_contacts.customer_contact_email',
+                'customer_contacts.customer_contact_job',
+                'cities.city_name',
+                'lead_references.lead_reference_name',
+                'bussines_types.type_name as bussines_type_name'
+            )
             ->where('customers.deleted_at',null)
             ->orderBy('customers.id','DESC');
 
@@ -256,7 +275,7 @@ class CustomerController extends Controller
                 ';
             })
             ->addColumn('DT_RowChecklist', function($check) {
-                if($check->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator'){
+                if(Auth::user()->getRoleNames()[0] == 'administrator' && $check->prospect_status == null){
                     return '<div class="text-center w-50px"><input name="checkbox_lead_ids" type="checkbox" value="'.$check->id.'"></div>';
                 }else{
                     return '';
@@ -346,11 +365,11 @@ class CustomerController extends Controller
                 'users.name as sales_name',
                 'cities.city_name', 
                 'customer_prospects.prospect_title', 
-                'customer_prospects.id as prospect_id'
+                'customer_prospects.id as prospect_id',
             )
             ->where('customers.deleted_at',null)
             ->where('customers.prospect_status','!=',null)
-            ->orderBy('customers.id','DESC');
+            ->orderBy('customer_prospects.id','DESC');
 
             if ($range_date = $request->filters['range_date']) {
                 $range_date = collect(explode('-', $request->filters['range_date']))->map(function($item) {
@@ -361,6 +380,10 @@ class CustomerController extends Controller
             }
             
             $query = $query->get();
+
+            $pluck_prospect_id = $query->pluck('prospect_id');
+            $getLogs = CustomerProspectLog::whereIn('customer_prospect_id',$pluck_prospect_id)->orderBy('id','DESC')->get();
+
             return DataTables::of($query)
             ->addColumn('customer', function ($customer){
                 return '
@@ -369,8 +392,8 @@ class CustomerController extends Controller
                 <span class="text-gray-500">'.$customer->city_name.'</span>
                 ';
             })
-            ->addColumn('progress', function ($progress){
-                $getProgress = CustomerProspectLog::where('customer_prospect_id',$progress->prospect_id)->orderBy('id','DESC')->limit(3)->get();
+            ->addColumn('progress', function ($progress) use($getLogs) {
+                $getProgress = $getLogs->where('customer_prospect_id', $progress->prospect_id)->slice(0,3);
                 $list = '';
                 foreach ($getProgress as $gp) {
                     if($gp->status == 1){
@@ -404,25 +427,29 @@ class CustomerController extends Controller
                 return $return;
                 return 'ujicoba';
             })
-            ->addColumn('next_action', function ($next_action){
-                $getLastAction = CustomerProspectLog::where('customer_prospect_id',$next_action->prospect_id)->orderBy('id','DESC')->first();
+            ->addColumn('next_action', function ($next_action) use ($getLogs){
+                $getLastAction = $getLogs->where('customer_prospect_id', $next_action->prospect_id)->first();
                 return 
                 '
                     <span class="fw-bold d-block">'.$getLastAction->prospect_next_action.'</span>
                     <p class="text-gray-500 mb-0">'.$getLastAction->next_action_plan_date.'</p>
                 ';
             })
-            ->addColumn('DT_RowChecklist', function($check) {
-                if($check->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $check->user_follow_up == Auth::user()->id){
-                    return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->id.'"></div>';
+            ->addColumn('DT_RowChecklist', function($check) use($getLogs) {
+                $latest_value_in_spesific_prospect_id = $getLogs->where('customer_prospect_id', $check->prospect_id)->first();
+                
+                if($latest_value_in_spesific_prospect_id->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $check->user_follow_up == Auth::user()->id){
+                    return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
                 }else{
                     return '';
                 }
             })
-            ->addColumn('action', function ($action) {
-                if($action->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $action->user_follow_up == Auth::user()->id){
+            ->addColumn('action', function ($action) use($getLogs) {
+                $latest_value_in_spesific_prospect_id = $getLogs->where('customer_prospect_id', $action->prospect_id)->first();
+
+                if($latest_value_in_spesific_prospect_id->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $action->user_follow_up == Auth::user()->id){
                     $mnue = '
-                    <li><a href="#kt_modal_update_prospect" class="dropdown-item py-2 btn_update_prospect" data-bs-toggle="modal" data-id="'.$action->id.'"><i class="fa-solid fa-list-check me-3"></i>Update Progress</a></li>
+                    <li><a href="#kt_modal_update_prospect" class="dropdown-item py-2 btn_update_prospect" data-bs-toggle="modal" data-prospectid="'.$action->prospect_id.'" data-id="'.$action->id.'"><i class="fa-solid fa-list-check me-3"></i>Update Progress</a></li>
                     ';
                 }else{
                     $mnue = '

@@ -11,6 +11,7 @@
             <div class="modal-body mx-5 mx-lg-15 my-7">
                 <form id="kt_modal_update_prospect_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="lead_id">
                     <input type="hidden" name="customer_prospect_id">
                     <div class="scroll-y me-n10 pe-10" id="kt_modal_update_prospect_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_update_prospect_header" data-kt-scroll-wrappers="#kt_modal_update_prospect_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
