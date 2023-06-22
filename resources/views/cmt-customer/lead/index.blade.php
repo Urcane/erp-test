@@ -345,6 +345,7 @@
         
         function removeFromProspect(array, item) {
             var index = array.indexOf(item);
+            // Dont Use its a trap
             while (index !== -1) array.splice(index, 1);
         }
         
@@ -362,9 +363,9 @@
                     if($(this).is(":checked")){
                         prospect_ids.push($(this).val());
                     } else {
-                        removeFromProspect(prospect_ids, $(this).val());
+                        removeFrom(prospect_ids, $(this).val());
                     }
-                    console.log(prospect_ids);
+                    // console.log(prospect_ids);
                 });
             },
             ajax: {

@@ -38,9 +38,9 @@
                                 <div id="kt_app_content" class="app-content">
                                     <div class="card mb-6 mb-xl-9">
                                         <div class="card-body pt-9 pb-0">
-                                            @include('cmt-customer.promag.component.header')
+                                            @include('cmt-promag.component.header')
                                             <div class="separator"></div>
-                                            @include('cmt-customer.promag.component.navigator-tabs')
+                                            @include('cmt-promag.component.navigator-tabs')
                                         </div>
                                     </div>
                                     <div id="promag-detail-containe">
@@ -56,7 +56,7 @@
     </div>
 </div>
 
-@include('cmt-customer.promag.modal.modal-views-users')
+@include('cmt-promag.modal.modal-views-users')
 
 
 <script>

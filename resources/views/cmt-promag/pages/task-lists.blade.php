@@ -1,4 +1,4 @@
-@extends('cmt-customer.promag.detail')
+@extends('cmt-promag.detail')
 
 @section('promag-detail-content')
 <div class="d-flex flex-wrap flex-stack pt-10 pb-8">
