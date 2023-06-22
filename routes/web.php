@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\Sales\Leap\CustomerController;
+use App\Http\Controllers\Sales\Customer\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Sales\ProjectManagement\ProjectManagementController;
+use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
+use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -62,6 +63,12 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    Route::controller(SurveyController::class)->group(function () {
+        Route::prefix('cmt-survey')->group(function () {
+            Route::get('/','index')->name('com.survey.index');
+            Route::get('/detail','detail')->name('com.survey.detail');
+        });
+    });
 });
 
 require __DIR__ . '/auth.php';
