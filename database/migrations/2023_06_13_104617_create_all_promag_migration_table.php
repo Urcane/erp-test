@@ -35,6 +35,14 @@ class CreateAllPromagMigrationTable extends Migration
             $table->timestamps();
         });
 
+        Schema::create('work_order_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->char('code', 2)->unique();
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
         Schema::create('work_lists', function (Blueprint $table) {
             $table->id();
 
@@ -162,7 +170,9 @@ class CreateAllPromagMigrationTable extends Migration
         Schema::dropIfExists('task_checklists');
         Schema::dropIfExists('task_attachments');
         Schema::dropIfExists('task_lists');
+
         Schema::dropIfExists('work_lists');
+        Schema::dropIfExists('work_order_categories');
         Schema::dropIfExists('work_progress_categories');
         Schema::dropIfExists('work_statuses');
         Schema::dropIfExists('user_has_models');
