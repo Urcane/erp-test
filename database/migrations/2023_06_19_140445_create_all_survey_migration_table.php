@@ -66,7 +66,7 @@ class CreateAllSurveyMigrationTable extends Migration
             $table->foreignId('type_of_survey_id')->comment('soft survey/hard survey')->constrained();
             $table->unsignedBigInteger('soft_surveyed_by')->nullable();
             $table->foreign('soft_surveyed_by')->references('id')->on('users');
-            $table->string('no_survey', 50)->index();
+            $table->string('no_survey', 50)->unique();
             $table->dateTime('survey_datetime');
             $table->decimal('lat', 16,12)
                 ->nullable()
@@ -74,9 +74,9 @@ class CreateAllSurveyMigrationTable extends Migration
             $table->decimal('lang', 16,12)
                 ->nullable()
                 ->comment('langitude site');
-            $table->string('closest_bts');
-            $table->boolean('covered_status')->index();
-            $table->string('notes');
+            $table->string('closest_bts')->nullable();
+            $table->boolean('covered_status')->default(0)->index();
+            $table->string('notes')->nullable();
             $table->timestamps();
         });
 
@@ -84,7 +84,7 @@ class CreateAllSurveyMigrationTable extends Migration
             $table->id();
             $table->foreignId('work_list_id')->nullable()->constrained();
             $table->foreignId('survey_request_id')->nullable()->constrained()->comment('fillable when type of wo is SR/Survey');
-            $table->string('no_wo', 50)->index();
+            $table->string('no_wo', 50)->unique();
             $table->string('task_description');
             $table->dateTime('start_date')->index();
             $table->dateTime('planning_due_date')->index();
@@ -96,10 +96,10 @@ class CreateAllSurveyMigrationTable extends Migration
                 ->comment('type of wo category with char(2)');
             $table->foreign('type_of_wo')->references('code')->on('work_order_categories');
 
-            $table->boolean('approved_status')->index();
+            $table->boolean('approved_status')->nullable()->index();
             $table->unsignedBigInteger('approved_by')->nullable();
             $table->foreign('approved_by')->references('id')->on('users');
-            $table->dateTime('approved_date')->index();
+            $table->dateTime('approved_date')->nullable()->index();
 
             $table->softDeletes()->index();
             $table->timestamps();

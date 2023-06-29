@@ -5,9 +5,11 @@ namespace Database\Seeders;
 use App\Models\Master\InternetServiceType;
 use App\Models\Master\ServiceType;
 use App\Models\Master\TransmissionMedia;
-use App\Models\MasterData\CameraType;
+use App\Models\Master\CameraType;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
 use Illuminate\Database\Seeder;
+
+use function PHPSTORM_META\map;
 
 class OpportunitySeeder extends Seeder
 {
@@ -18,7 +20,7 @@ class OpportunitySeeder extends Seeder
      */
     public function run()
     {
-        ServiceType::create([
+        collect([
             [
                 'name' => 'Internet',
             ],
@@ -37,33 +39,41 @@ class OpportunitySeeder extends Seeder
             [
                 'name' => 'IoT',
             ]
-        ]);
+        ])->map(function($item) {
+            ServiceType::create($item);
+        });
 
-        InternetServiceType::create([
+        collect([
             ['name' => 'Dedicated'],
             ['name' => 'Broadband'],
             ['name' => 'Metro'],
             ['name' => 'VPN'],
             ['name' => 'MPLS'],
-        ]);
+        ])->map(function($item) {
+            InternetServiceType::create($item);
+        });
 
-        TypeOfSurvey::create([
+        collect([
             ['name' => 'Soft Survey'],
             ['name' => 'Survey On Site']
-        ]);
+        ])->map(function($item) {
+            TypeOfSurvey::create($item);
+        });
 
-        TransmissionMedia::create([
+        collect([
             ['name' => 'FO'],
             ['name' => 'Radio'],
             ['name' => 'VSAT'],
-        ]);
+        ])->map(function($item) {
+            TransmissionMedia::create($item);
+        });
 
-        CameraType::create([
+        collect([
             ['name' => 'IPCAM'],
             ['name' => 'ANALOG'],
             ['name' => 'PTZ']
-        ]);
-
-        
+        ])->map(function($item) {
+            CameraType::create($item);
+        });
     }
 }

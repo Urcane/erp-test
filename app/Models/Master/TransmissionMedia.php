@@ -13,6 +13,7 @@ class TransmissionMedia extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+    protected $table = 'transmission_medias';
 
     function siteSurveys() : HasMany {
         return $this->hasMany(SiteSurvey::class);

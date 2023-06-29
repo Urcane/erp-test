@@ -4,6 +4,12 @@
 <i class="fa-solid fa-home text-white fs-8"></i>
 </a>
 </li>
+@hasSection('sub-title-apps-2')
+<li class="breadcrumb-item">
+<i class="fa-solid fa-chevron-right text-white fs-8"></i>
+</li>
+<li class="breadcrumb-item text-white fw-bold lh-1">@yield('sub-title-apps-2')</li>
+@endif
 @hasSection('sub-title-apps')
 <li class="breadcrumb-item">
 <i class="fa-solid fa-chevron-right text-white fs-8"></i>

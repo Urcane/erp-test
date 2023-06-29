@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\MasterData;
+namespace App\Models\Master;
 
 use App\Models\Opportunity\Survey\SiteSurveyCCTV;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

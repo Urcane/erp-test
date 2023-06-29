@@ -94,11 +94,109 @@ class="app-default page-loading-enabled page-loading">
 	<i class="fa-solid fa-arrow-up text-white"></i>
 </div>
 
-<script>var hostUrl = "{{asset('sense')}}/";</script>
+<script>
+	var hostUrl = "{{asset('sense')}}/";
+</script>
 <script src="{{asset('sense')}}/plugins/global/plugins.bundle.js"></script>
 <script src="{{asset('sense')}}/js/scripts.bundle.js"></script>
 <script src="{{asset('sense')}}/plugins/custom/datatables/datatables.bundle.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
+
+<script>
+	function generateDatatable({tableName, ajaxLink, columnData = [], elementName, functionCallback = () => {}, filters = null}) {
+        window[tableName]  = $(elementName)
+        .DataTable({
+            processing: true,
+            serverSide: true,
+            retrieve: true,
+            deferRender: true,
+            responsive: false,
+            aaSorting : [],
+            drawCallback: functionCallback,
+            ajax: {
+                url : ajaxLink,
+                data: function(data) {
+                    data.filters = filters
+                }
+            },
+            language: {
+                "lengthMenu": "Show _MENU_",
+                "emptyTable" : "Tidak ada data terbaru 📁",
+                "zeroRecords": "Data tidak ditemukan 😞",
+            },
+            dom:
+            "<'row mb-2'" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l>" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+            ">" +
+            
+            "<'table-responsive'tr>" +
+            
+            "<'row'" +
+            "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+            "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+            ">",
+            
+            columns: columnData,  
+            columnDefs: [
+            {
+                targets: 0,
+                className: 'text-center',
+            },
+            {
+                targets: -1,
+                orderable : false,
+                searchable : false,
+                className : 'text-center',
+            },
+            ],
+        });
+    }
+
+	function submitModal({modalName, tableName, ajaxLink, validationMessages = {}}) {
+        $(`#${modalName}_form`).validate({
+            messages: validationMessages,
+            submitHandler: function(form) {
+                var formData = new FormData(form);
+                $(`#${modalName}_submit`).attr('disabled', 'disabled');
+                $.ajax({
+                    data: formData,
+                    processData: false,
+                    contentType: false, 
+                    url: ajaxLink,
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        $(`#${modalName}_cancel`).click();
+                        var oTable = $(`#${tableName}`).dataTable();
+                        oTable.fnDraw(false);
+                        toastr.success(data.status,'Selamat 🚀 !');
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        $(`#${modalName}_submit`).removeAttr('disabled','disabled');
+                        const data = JSON.parse(xhr.responseText);
+                        toastr.error(errorThrown ,'Opps!');
+                        
+                        if (Object.keys(data.errors).length >= 1) {
+                            Object.keys(data.errors).forEach(keyError => {
+                                const error = data.errors[keyError];
+
+                                error.forEach(msg => {
+                                    toastr.error(msg, data.message);
+                                });
+                            });
+                            return
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+	function onlyUnique(value, index, array) {
+		return array.indexOf(value) === index;
+	}
+</script>
 </body>
 </html>

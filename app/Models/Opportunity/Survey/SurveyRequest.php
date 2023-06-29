@@ -33,11 +33,11 @@ class SurveyRequest extends Model
         return $this->belongsTo(CustomerProspect::class);
     }
 
-    function serviceTypes() : BelongsTo {
+    function serviceType() : BelongsTo {
         return $this->belongsTo(ServiceType::class);
     }
 
-    function typeOfSurveys() : BelongsTo {
+    function typeOfSurvey() : BelongsTo {
         return $this->belongsTo(TypeOfSurvey::class);
     }
 

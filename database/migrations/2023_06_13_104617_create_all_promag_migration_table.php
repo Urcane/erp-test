@@ -48,7 +48,7 @@ class CreateAllPromagMigrationTable extends Migration
 
             $table->string('no_project', 36)
                 ->nullable()
-                ->index()
+                ->unique()
                 ->comment('No Project dengan max varchar = 36');
 
             $table->string('work_name', 100)

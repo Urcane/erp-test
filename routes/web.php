@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/get-data/edit/lead/{id}','getEditLead')->name('com.lead.get-edit-lead');
             Route::get('/get-data/table/lead','getTableLead')->name('com.lead.get-table-lead');
             Route::get('/get-data/table/prospect','getTableProspect')->name('com.prospect.get-table-prospect');
+            Route::get('/get-data/table/prospect/done','getTableProspectDone')->name('com.prospect.get-table-prospect-only-done');
         });
     });
 
@@ -60,13 +61,20 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/detail','detail')->name('com.promag.detail');
             Route::get('/detail/files','files')->name('com.promag.detail.files');
             Route::get('/detail/task-lists','taskLists')->name('com.promag.detail.task-lists');
+
+            Route::post('/work-order/store','createWorkOrderSurvey')->name('com.work-order-survey.store');
+            Route::get('/get-data/table/work-order','getDatatableWorkOrder')->name('com.work-order.datatable');
         });
+
     });
 
     Route::controller(SurveyController::class)->group(function () {
         Route::prefix('cmt-survey')->group(function () {
             Route::get('/','index')->name('com.survey.index');
             Route::get('/detail','detail')->name('com.survey.detail');
+            Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
+
+            Route::get('/get-data/table/survey-request','getDatatableSurveyRequest')->name('com.survey-request.datatable');
         });
     });
 });

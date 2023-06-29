@@ -58,7 +58,7 @@
                                                             </a>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-6">
+                                                    {{-- <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('com.promag.index')}}" class="menu-link">
                                                                 <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
@@ -69,6 +69,58 @@
                                                                     <span class="fs-7 fw-semibold text-gray-500">Project Management</span>
                                                                 </span>
                                                             </a>
+                                                        </div>
+                                                    </div> --}}
+                                                    <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start" data-kt-menu-offset="10px, 10px">
+                                                            <a class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-solid fa-hand-holding-dollar text-info fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">CMT-OPPOR</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Opportunity</span>
+                                                                </span>
+                                                                <span class="menu-title"></span>
+                                                                <span class="svg-icon fs-3 rotate-180 ms-3 me-0">
+                                                                    <i class="fa-solid fa-chevron-down text-gray-600"></i>
+                                                                </span>
+                                                            </a>
+
+                                                            <div class="menu-sub menu-sub-dropdown p-3 w-200px">
+                                                                <div class="menu-item">
+                                                                    <a href="{{route('com.survey.index')}}" class="menu-link" >
+                                                                        <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
+                                                                            <i class="fa-solid fa-file-signature text-info fs-3"></i>
+                                                                        </span>
+                                                                        <span class="d-flex flex-column">
+                                                                            <span class="fs-7 fw-semibold text-gray-800">Survey</span>
+                                                                        </span>
+                                                                    </a>
+                                                                </div>
+    
+                                                                <div class="menu-item">
+                                                                    <a href="#" class="menu-link" >
+                                                                        <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
+                                                                            <i class="fa-solid fa-clipboard-list text-info fs-3"></i>
+                                                                        </span>
+                                                                        <span class="d-flex flex-column">
+                                                                            <span class="fs-7 fw-semibold text-gray-800">BOQ</span>
+                                                                        </span>
+                                                                    </a>
+                                                                </div>
+    
+                                                                <div class="menu-item">
+                                                                    <a href="#" class="menu-link" >
+                                                                        <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
+                                                                            <i class="fa-solid fa-file-invoice-dollar text-info fs-3"></i>
+                                                                        </span>
+                                                                        <span class="d-flex flex-column">
+                                                                            <span class="fs-7 fw-semibold text-gray-800">Quotation</span>
+                                                                        </span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

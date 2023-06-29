@@ -1,7 +1,8 @@
 @extends('layouts.app')
-@section('title-apps','CMT-PROMAG')
-@section('sub-title-apps','Commercial')
-@section('desc-apps','Pusing Kerja?, PROMAG solusi nya!')
+@section('title-apps','Survey')
+@section('sub-title-apps-2','Commercial')
+@section('sub-title-apps','CMT-OPPOR')
+@section('desc-apps','Survey, Survey, Survey Luar biasa!')
 @section('icon-apps','fa-solid fa-briefcase')
 
 @section('navbar')
@@ -53,104 +54,84 @@
                                     <div class="d-grid">
                                         <ul class="nav nav-tabs flex-nowrap text-nowrap">
                                             <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0 active" data-bs-toggle="tab" id="tab_all" href="#tab_all_content">Oppoturnity</a>
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0 active" data-bs-toggle="tab" id="tab_opportunity" href="#tab_opportunity_content">Oppoturnities</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="tab_prospect" href="#tab_prospect_content">Customer Project</a>
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="tab_survey_sent" href="#tab_survey_sent_content">Survey Requests</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0" data-bs-toggle="tab" id="tab_on_progress_survey" href="#tab_on_progress_survey_content">On Progress</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="tab_prospect" href="#tab_survey_done_content">Done</a>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="tab_all_content" role="tabpanel">
+                                    <div class="tab-pane fade show active" id="tab_opportunity_content" role="tabpanel">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <table class="table align-middle table-striped border table-rounded gy-5" id="kt_table_inp">
+                                                <table class="table align-middle table-striped border table-rounded gy-5" id="kt_table_opportunities">
                                                     <thead>
                                                         <tr class="fw-bold fs-7 text-muted text-uppercase">
-                                                            <th class="text-center w-50px">#</th>
-                                                            <th class="">Work List</th>
-                                                            <th class="w-150px">No Project</th>
-                                                            <th class="w-150px">PO/SPK/PKS</th>
-                                                            <th class="w-150px">Assigned</th>
-                                                            <th class="w-100px">Progress</th>
-                                                            <th class="w-100px">Status</th>
-                                                            <th class="w-100px text-center">#</th>
+                                                            <th class="text-center w-25px">#</th>
+                                                            <th class="w-25px">#</th>
+                                                            <th class="">Company Name</th>
+                                                            <th class="w-100px">Contact Name</th>
+                                                            <th class="w-100px">Prospected By</th>
+                                                            <th class="w-300px">Last Progress</th>
+                                                            <th class="w-300px">Last Next Action</th>
+                                                            <th class="w-50px text-center">#</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="fs-7">
-                                                        <tr>
-                                                            <td class="text-center">1</td>
-                                                            <td>
-                                                                <span class="fw-bold">Pembuatan Aplikasi Internal CMT - PT. COMTELINDO</span>
-                                                            </td>
-                                                            <td>C0167-TEL-20221201</td>
-                                                            <td>C0167-TEL-20221201</td>
-                                                            <td>
-                                                                <div class="symbol-group symbol-hover">
-                                                                    {{-- <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
-                                                                        <img src="{{asset('sense')}}/media/avatars/blank.png" alt="">
-                                                                    </div> --}}
-                                                                    <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
-                                                                        <div class="symbol-label bg-warning">
-                                                                            <span class="fs-7 text-white">E</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="symbol symbol-circle symbol-30px">
-                                                                        <div class="symbol-label bg-dark">
-                                                                            <span class="fs-7 text-inverse-dark">+0</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="symbol symbol-circle symbol-30px">
-                                                                        <a href="#!" data-bs-toggle="modal" >
-                                                                            <div class="symbol-label bg-light">
-                                                                                <span class="fs-7"><i class="fa-solid fa-user-plus"></i></span>
-                                                                            </div>
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex align-items-center w-100 mw-125px">  
-                                                                    <div class="progress h-6px w-100 me-2 bg-light-info">
-                                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 44%" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                    </div>
-                                                                    <span class="text-muted fs-8 fw-semibold">
-                                                                        44%
-                                                                    </span>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <span class="badge badge-light-info px-3 py-2">Progress</span>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                                <ul class="dropdown-menu w-150px">
-                                                                    {{-- <li><a href="{{route('gm.promag.detail',['id'=>'1'])}}" class="dropdown-item py-2"><i class="fa-solid fa-eye me-4"></i>Detail</a></li> --}}
-                                                                    <li><a href="{{route('com.promag.detail')}}" class="btn_edit_karyawan dropdown-item py-2" data-id="'.$action->id.'"><i class="fa-solid fa-pen me-4"></i>Edit</a></li>
-                                                                    <li><a class="dropdown-item py-2 text-success"><i class="fa-solid fa-bars-progress me-4 text-success"></i>Progress</a></li>
-                                                                    <div class="separator my-2"></div>
-                                                                    <li><a class="dropdown-item py-2"><i class="fa-solid fa-file-lines me-4"></i>Terbitkan <b class="text-warning">WO</b></a></li>
-                                                                </ul>
-                                                            </td>
-                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="tab_prospect_content" role="tabpanel">
+                                    <div class="tab-pane fade" id="tab_survey_sent_content" role="tabpanel">
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_prospect">
+                                                <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_survey_request">
                                                     <thead class="">
                                                         <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
+                                                            <th class="text-center w-25px">#</th>
                                                             <th class="text-center w-50px">#</th>
+                                                            <th class="w-200px">Company Name</th>
+                                                            <th class="w-200px">No Survey</th>
+                                                            <th class="w-150px">Service Type</th>
+                                                            <th class="w-200px">Type Of Survey</th>
+                                                            <th class="w-200px">Survey Datetime</th>
+                                                            <th class="w-100px">Latitude</th>
+                                                            <th class="w-100px">Langitude</th>
+                                                            <th class="w-100px">Closest BTS</th>
+                                                            <th class="w-100px">Covered Status</th>
+                                                            <th class="w-300px">Notes</th>
+                                                            <th class="w-100px text-center">#</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="fs-7">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="tab_on_progress_survey_content" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_on_progress_survey">
+                                                    <thead class="">
+                                                        <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
+                                                            <th class="text-center w-25px">#</th>
                                                             <th class="text-center w-50px">#</th>
-                                                            <th class="w-200px">Perusahaan</th>
-                                                            <th class="w-150px">Penindaklanjut</th>
-                                                            <th class="">Progress</th>
-                                                            <th class="w-150px">Next Action</th>
+                                                            <th class="w-200px">No. Work Order</th>
+                                                            <th class="w-200px">Task Description</th>
+                                                            <th class="w-200px">Start Date</th>
+                                                            <th class="w-200px">Due Date</th>
+                                                            <th class="w-200px">Status</th>
+                                                            <th class="w-200px">Approved Status</th>
                                                             <th class="w-100px text-center">#</th>
                                                         </tr>
                                                     </thead>
@@ -171,10 +152,164 @@
 </div>
 
 @role('administrator')
+@include('cmt-opportunity.survey.modal.modal-request-survey')
+@include('cmt-opportunity.survey.modal.modal-create-wo-survey')
 @endrole
 
 <script>
-    $(document ).ready(function() {
+    const prospectIds = [];
+    const surveyRequestIds = [];
+
+    const surveyRequestValidationMessages = {
+        no_survey: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Nama Perusahaan/Badan Usaha wajib diisi</span>",
+        },
+        service_type_id: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib dipilih</span>",
+        },
+        type_of_survey_id: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Referensi lead wajib dipilih</span>",
+        },
+        survey_date: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Alamat perusahaan/badan usaha wajib diisi</span>",
+        },
+        survey_time: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
+        },
+    };
+
+    const workOrderValidationMessages = {
+        survey_request_id: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
+        },
+        no_wo: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Nama Perusahaan/Badan Usaha wajib diisi</span>",
+        },
+        task_description: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib dipilih</span>",
+        },
+        start_date: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Referensi lead wajib dipilih</span>",
+        },
+        planning_due_date: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Alamat perusahaan/badan usaha wajib diisi</span>",
+        },
+    };
+
+    $(document).ready(function() {
+        generateDatatable({
+            tableName: "tableOpportunity",
+            elementName: "#kt_table_opportunities",
+            ajaxLink: "{{route('com.prospect.get-table-prospect-only-done')}}",
+            columnData: [
+                { data: 'DT_RowChecklist', orderable: false, searchable: false},
+                { data: 'DT_RowIndex'},
+                { data: 'customer.customer_name'},
+                { data: 'customer.customer_contact.customer_contact_name' },
+                { data: 'customer.user_follow_up.name' },
+                { data: 'progress_pretified'},
+                { data: 'next_action_pretified'},
+                { data: 'action' },
+            ]
+        });
+
+        $('body').on('click', '.btn_request_survey', function () {
+            const form_edit = $('#kt_modal_request_survey_form');
+            form_edit.find('#containerSelectedProspects').html('');
+            $('.drop-data').val("").trigger("change")
+            $('#kt_modal_request_survey_form').trigger("reset")
+            $('#kt_modal_request_survey_submit').removeAttr('disabled','disabled');
+
+            const prospectId = $(this).data('id');
+            prospectIds.push(prospectId);
+
+            $.each(prospectIds.filter(onlyUnique), function(index, rowId) {
+                form_edit.find('#containerSelectedProspects').append(
+                    $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'prospect_id[]')
+                    .val(rowId)
+                );
+            });
+        });
+
+        submitModal({
+            modalName: 'kt_modal_request_survey',
+            tableName: 'kt_table_opportunities',
+            ajaxLink: '{{route("com.survey-request.store")}}',
+            validationMessages: surveyRequestValidationMessages,
+        });
+    });
+
+    $('#tab_survey_sent').click(function () {
+        generateDatatable({
+            tableName: "tableSurveyRequest",
+            elementName: "#kt_table_survey_request",
+            ajaxLink: "{{route('com.survey-request.datatable')}}",
+            columnData: [
+                { data: 'DT_RowChecklist', orderable: false, searchable: false},
+                { data: 'DT_RowIndex'},
+                { data: 'customer_prospect.customer.customer_name'},
+                { data: 'no_survey' },
+                { data: 'service_type.name' },
+                { data: 'type_of_survey.name'},
+                { data: 'survey_datetime'},
+                { data: 'lat'},
+                { data: 'lang'},
+                { data: 'closest_bts'},
+                { data: 'covered_status_pretified'},
+                { data: 'notes'},
+                { data: 'action' },
+            ]
+        });
+
+        $('body').on('click', '.btn_create_wo_survey', function () {
+            const form_edit = $('#kt_modal_create_wo_survey_form');
+            form_edit.find('#containerSelectedSurveyRequests').html('');
+            $('.drop-data').val("").trigger("change")
+            $('#kt_modal_create_wo_survey_form').trigger("reset")
+            $('#kt_modal_create_wo_survey_submit').removeAttr('disabled','disabled');
+
+            const surveyRequestId = $(this).data('id');
+            surveyRequestIds.push(surveyRequestId);
+
+            $.each(surveyRequestIds.filter(onlyUnique), function(index, rowId) {
+                form_edit.find('#containerSelectedSurveyRequests').append(
+                    $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'survey_request_id[]')
+                    .val(rowId)
+                );
+            });
+        });
+
+        submitModal({
+            modalName: 'kt_modal_create_wo_survey',
+            tableName: 'kt_table_survey_request',
+            ajaxLink: "{{route('com.work-order-survey.store')}}",
+            validationMessages: workOrderValidationMessages,
+        })
     })    
+
+    $('#tab_on_progress_survey').click(function () {
+        generateDatatable({
+            tableName: "tableOnProgressSurvey",
+            elementName: "#kt_table_on_progress_survey",
+            ajaxLink: "{{ route('com.work-order.datatable') }}",
+            columnData: [
+                { data: 'DT_RowChecklist', orderable: false, searchable: false},
+                { data: 'DT_RowIndex'},
+                { data: 'no_wo'},
+                { data: 'task_description'},
+                { data: 'start_date'},
+                { data: 'planning_due_date'},
+                { data: 'status'},
+                { data: 'approved_status'},
+                { data: 'action' },
+            ]
+        });
+    })    
+
+    
 </script>
 @endsection

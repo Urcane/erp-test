@@ -20,7 +20,7 @@ class WorkOrder extends Model
         return $this->belongsTo(WorkList::class);
     }
 
-    function surveyRequests() : BelongsTo {
+    function surveyRequest() : BelongsTo {
         return $this->belongsTo(SurveyRequest::class);
     }
 

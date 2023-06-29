@@ -214,10 +214,6 @@
 
 <script>
     $(document ).ready(function() {
-        function onlyUnique(value, index, array) {
-            return array.indexOf(value) === index;
-        }
-
         $('input[name="range_date"]').daterangepicker({autoUpdateInput: false}, (from_date, to_date) => {
             $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
         }); 

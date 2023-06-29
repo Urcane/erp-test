@@ -12,10 +12,12 @@ use App\Models\LeadReference;
 use App\Models\Team\City;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
@@ -408,18 +410,18 @@ class CustomerController extends Controller
                     }
                     $list .= '
                     <div class="timeline-item">
-                    <div class="timeline-line w-35px"></div>
-                    <div class="timeline-icon symbol symbol-circle symbol-35px">
-                    <div class="symbol-label bg-light-'.$statusPrg.'">
-                    <i class="fa-solid '.$iconPrg.' text-'.$statusPrg.'"></i>    
-                    </div>
-                    </div>
-                    <div class="timeline-content">
-                    <div class="pe-5">
-                    <span class="fw-bold d-block">'.$gp->prospect_update.'</span>
-                    <p class="text-gray-500 mb-0">Updated : '.$gp->created_at.'</p>
-                    </div>
-                    </div>
+                        <div class="timeline-line w-35px"></div>
+                        <div class="timeline-icon symbol symbol-circle symbol-35px">
+                            <div class="symbol-label bg-light-'.$statusPrg.'">
+                                <i class="fa-solid '.$iconPrg.' text-'.$statusPrg.'"></i>    
+                            </div>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="pe-5">
+                                <span class="fw-bold d-block">'.$gp->prospect_update.'</span>
+                                <p class="text-gray-500 mb-0">Updated : '.$gp->created_at.'</p>
+                            </div>
+                        </div>
                     </div>
                     ';
                 }
@@ -465,6 +467,60 @@ class CustomerController extends Controller
             })
             ->addIndexColumn()
             ->rawColumns(['DT_RowChecklist','customer','progress','next_action','action'])
+            ->make(true);
+        }
+    }
+
+    function getTableProspectDone(Request $request) : JsonResponse {
+        if ($request->ajax()) {
+            $query = CustomerProspect::with([
+                'customer.customerContact', 
+                'customer.userFollowUp', 
+                'latestCustomerProspectLog'
+            ])->whereHas('customerProspectLogs', function ($logs) {
+                $logs->where('status', 2);
+            });
+
+            return DataTables::of($query->get())
+            ->addColumn('DT_RowChecklist', function($check) {
+                return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
+            })
+            ->addColumn('next_action_pretified', function ($query) {
+                return '
+                <span class="fw-bold d-block">'.$query->latestCustomerProspectLog->prospect_next_action.'</span>
+                <p class="text-gray-500 mb-0">'.$query->latestCustomerProspectLog->next_action_plan_date.'</p>
+                ';
+            })
+            ->addColumn('progress_pretified', function ($query) {
+                return '
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-line w-35px"></div>
+                        <div class="timeline-icon symbol symbol-circle symbol-35px">
+                            <div class="symbol-label bg-light-success">
+                                <i class="fa-solid fa-check text-success"></i>    
+                            </div>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="pe-5">
+                                <span class="fw-bold d-block">'.$query->latestCustomerProspectLog->prospect_update.'</span>
+                                <p class="text-gray-500 mb-0">Updated : '.$query->latestCustomerProspectLog->created_at.'</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ';
+            })
+            ->addColumn('action', function ($query) {
+                return '     
+                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                <ul class="dropdown-menu">
+                    <li><a href="#kt_modal_request_survey" class="dropdown-item py-2 btn_request_survey" data-bs-toggle="modal" data-id="'.$query->id.'"><i class="fa-solid fa-list-check me-3"></i>Request Survey</a></li>
+                </ul>
+                ';
+            })
+            ->addIndexColumn()
+            ->rawColumns(['DT_RowChecklist', 'action', 'next_action_pretified', 'progress_pretified'])
             ->make(true);
         }
     }
