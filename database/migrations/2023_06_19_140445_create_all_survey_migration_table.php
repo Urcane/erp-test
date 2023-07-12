@@ -27,6 +27,7 @@ class CreateAllSurveyMigrationTable extends Migration
         Schema::create('service_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('model_name')->nullable()->index();
             $table->softDeletes()->index();
             $table->timestamps();
         });

@@ -32,4 +32,12 @@ class SurveyRequestRepository
     function getAll(Request $request) : EloquentBuilder {
         return SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey');
     }
+
+    function getById(int $id) : EloquentBuilder {
+        return $this->getByIdWithoutRelationship($id)->with('customerProspect.customer', 'serviceType', 'typeOfSurvey');
+    }
+
+    function getByIdWithoutRelationship(int $id) : EloquentBuilder {
+        return SurveyRequest::where('id', $id);
+    }
 }

@@ -154,6 +154,8 @@
 @role('administrator')
 @include('cmt-opportunity.survey.modal.modal-request-survey')
 @include('cmt-opportunity.survey.modal.modal-create-wo-survey')
+@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-internet')
+@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-cctv')
 @endrole
 
 <script>
@@ -196,7 +198,44 @@
         },
     };
 
+    const surveyResultValidationMessages = {
+        survey_request_id: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
+        },
+        work_order_id: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Nama Perusahaan/Badan Usaha wajib diisi</span>",
+        },
+        service_type_id: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib dipilih</span>",
+        },
+    };
+
     $(document).ready(function() {
+        const surveyResultInternetElement = document.querySelector(".kt_stepper_survey_result_internet");
+        const surveyResultCctvElement = document.querySelector(".kt_stepper_survey_result_cctv");
+
+        const surveyResultInternetStepper = new KTStepper(surveyResultInternetElement);
+        const surveyResultCctvStepper = new KTStepper(surveyResultCctvElement);
+
+        surveyResultInternetStepper.on("kt.stepper.next", function (stepper) {
+            const state = $('#kt_modal_create_survey_result_internet_form').valid();
+            // if (state) {
+                stepper.goNext(); 
+            // }
+        });
+        surveyResultCctvStepper.on("kt.stepper.next", function (stepper) {
+            const state = $('#kt_modal_create_survey_result_cctv_form').valid();
+            // if (state) {
+                stepper.goNext(); 
+            // }
+        });
+        surveyResultInternetStepper.on("kt.stepper.previous", function (stepper) {
+            stepper.goPrevious(); 
+        });
+        surveyResultCctvStepper.on("kt.stepper.previous", function (stepper) {
+            stepper.goPrevious(); 
+        });
+
         generateDatatable({
             tableName: "tableOpportunity",
             elementName: "#kt_table_opportunities",
@@ -308,8 +347,26 @@
                 { data: 'action' },
             ]
         });
-    })    
 
-    
+        ['create_survey_result_cctv', 'create_survey_result_internet'].forEach(element => {
+            $('body').on('click', `.btn_${element}`, function () {
+                const form_edit = $(`#kt_modal_${element}_form`);
+                form_edit.find('#containerSelectedSurveyRequests').html('');
+                $('.drop-data').val("").trigger("change")
+                $(`#kt_modal_${element}_form`).trigger("reset")
+                $(`#kt_modal_${element}_submit`).removeAttr('disabled','disabled');
+
+                form_edit.find('input[name="survey_request_id"]').val($(this).data('surveyid'));
+                form_edit.find('input[name="work_order_id"]').val($(this).data('id'));
+            });
+
+            submitModal({
+                modalName: `kt_modal_${element}`,
+                tableName: 'kt_table_on_progress_survey',
+                ajaxLink: "{{route('com.survey-result.store')}}",
+                validationMessages: surveyResultValidationMessages,
+            })
+        });        
+    });
 </script>
 @endsection

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class SiteSurvey extends Model
@@ -21,12 +22,12 @@ class SiteSurvey extends Model
         return $this->morphMany(File::class, 'fileable');
     }
 
-    function siteSurveyCCTVs() : HasMany {
-        return $this->hasMany(SiteSurveyCCTV::class); 
+    function siteSurveyCCTV() : HasOne {
+        return $this->hasOne(SiteSurveyCCTV::class); 
     }
 
-    function siteSurveyInternets() : HasMany {
-        return $this->hasMany(SiteSurveyInternets::class);
+    function siteSurveyInternet() : HasOne {
+        return $this->hasOne(SiteSurveyInternets::class);
     }
 
     function surveyRequests() : BelongsTo {

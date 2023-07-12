@@ -14,6 +14,7 @@ class SiteSurveyCCTV extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $table = 'site_survey_cctvs';
 
     function siteSurveys() : BelongsTo {
         return $this->belongsTo(SiteSurvey::class);

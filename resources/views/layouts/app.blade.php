@@ -197,6 +197,14 @@ class="app-default page-loading-enabled page-loading">
 	function onlyUnique(value, index, array) {
 		return array.indexOf(value) === index;
 	}
+
+    $(".checkbox-real").on('change', function() {
+        if ($(this).is(':checked')) {
+            $(this).attr('value', 1);
+        } else {
+            $(this).attr('value', 0);
+        }        
+    });
 </script>
 </body>
 </html>

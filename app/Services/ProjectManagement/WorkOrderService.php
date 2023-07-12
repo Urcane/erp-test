@@ -41,16 +41,29 @@ class WorkOrderService
             ->addColumn('DT_RowChecklist', function($check) {
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
             })
+            ->editColumn('approved_status', function($query) {
+                if ($query->approved_status != null) {
+                    return $query->approved_status == 1 ? 'Approved' : 'Rejected';
+                }
+                return 'On Review...';
+            })
             ->addColumn('action', function ($query) {
                 $additionalMenu = "";
 
-                // if ($query->type_of_survey_id == 2) {
-                //     $additionalMenu .= "<li><a href=\"#kt_modal_create_wo_survey\" class=\"dropdown-item py-2 btn_create_wo_survey\" data-bs-toggle=\"modal\" data-id=\"'.$query->id.'\"><i class=\"fa-solid fa-list-check me-3\"></i>Terbit WO Survey</a></li>";
-                // }
+                if ($query->approved_status == 1) {
+                    if ($query->surveyRequest->service_type_id == 1) {
+                        $additionalMenu .= "<li><a href=\"#kt_modal_create_survey_result_internet\" class=\"dropdown-item py-2 btn_create_survey_result_internet\" data-bs-toggle=\"modal\" data-id=\"$query->id\" data-surveyid=\"$query->survey_request_id\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result Internet</a></li>";
+                    }
+
+                    if ($query->surveyRequest->service_type_id == 2) {
+                        $additionalMenu .= "<li><a href=\"#kt_modal_create_survey_result_cctv\" class=\"dropdown-item py-2 btn_create_survey_result_cctv\" data-bs-toggle=\"modal\" data-id=\"$query->id\" data-surveyid=\"$query->survey_request_id\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result CCTV</a></li>";
+                    }
+                }
 
                 return "
                 <button type=\"button\" class=\"btn btn-secondary btn-icon btn-sm\" data-kt-menu-placement=\"bottom-end\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"fa-solid fa-ellipsis-vertical\"></i></button>
                 <ul class=\"dropdown-menu\">
+                    $additionalMenu
                     <li><a href=\"#kt_modal_request_survey\" class=\"dropdown-item py-2 btn_request_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>
                 </ul>
                 ";
