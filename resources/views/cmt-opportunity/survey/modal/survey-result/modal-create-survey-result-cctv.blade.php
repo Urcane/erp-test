@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header pb-0 border-0 justify-content-end">
-                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                <div id="kt_modal_create_survey_result_cctv_cancel" class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
                     <i class="fas fa-times"></i>
                 </div>
             </div>

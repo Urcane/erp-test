@@ -6,6 +6,7 @@ use App\Models\Master\InternetServiceType;
 use App\Models\Master\ServiceType;
 use App\Models\Master\TransmissionMedia;
 use App\Models\Master\CameraType;
+use App\Models\Opportunity\Survey\SiteSurveyInternet;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
 use Illuminate\Database\Seeder;
 
@@ -23,9 +24,11 @@ class OpportunitySeeder extends Seeder
         collect([
             [
                 'name' => 'Internet',
+                'model_name' => 'App\Models\Opportunity\Survey\SiteSurveyInternet'
             ],
             [
                 'name' => 'CCTV',
+                'model_name' => 'App\Models\Opportunity\Survey\SiteSurveyCCTV'
             ],
             [
                 'name' => 'Aplikasi Web',

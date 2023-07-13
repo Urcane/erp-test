@@ -3,6 +3,8 @@
 namespace App\Models\Opportunity\Survey;
 
 use App\Models\Master\File;
+use App\Models\Master\InternetServiceType;
+use App\Models\Master\ServiceType;
 use App\Models\Master\TransmissionMedia;
 use App\Models\ProjectManagement\WorkOrder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,19 +32,23 @@ class SiteSurvey extends Model
         return $this->hasOne(SiteSurveyInternets::class);
     }
 
-    function surveyRequests() : BelongsTo {
+    function surveyRequest() : BelongsTo {
         return $this->belongsTo(SurveyRequest::class);
     }
 
-    function workOrders() : BelongsTo {
+    function workOrder() : BelongsTo {
         return $this->belongsTo(WorkOrder::class);
     }
 
-    function transmissionMedias() : BelongsTo {
+    function transmissionMedia() : BelongsTo {
         return $this->belongsTo(TransmissionMedia::class, 'trans_media_id');
     }
 
-    function internetServiceTypes() : BelongsTo {
-        return $this->belongsTo(internetServiceTypes::class);
+    function internetServiceType() : BelongsTo {
+        return $this->belongsTo(InternetServiceType::class);
+    }
+
+    function serviceType() : BelongsTo {
+        return $this->belongsTo(ServiceType::class);
     }
 }

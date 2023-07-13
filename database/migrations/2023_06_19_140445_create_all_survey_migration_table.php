@@ -115,6 +115,7 @@ class CreateAllSurveyMigrationTable extends Migration
             $table->id();
             $table->foreignId('survey_request_id')->constrained();
             $table->foreignId('work_order_id')->nullable()->constrained();
+            $table->foreignId('service_type_id')->nullable()->constrained();
             $table->foreignId('trans_media_id')->constrained('transmission_medias');
             $table->foreignId('internet_service_type_id')->nullable()->constrained();
             $table->string('existing_connection')->nullable();

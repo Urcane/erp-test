@@ -24,6 +24,7 @@ class SurveyResultRepository
         $siteSurvey = SiteSurvey::create([
             'survey_request_id' => $data->survey_request_id,
             'work_order_id' => $data->work_order_id,
+            'service_type_id' => $data->service_type_id,
             'trans_media_id' => $data->trans_media_id,
             'internet_service_type_id' => $data->internet_service_type_id,
             'existing_connection' => $data->existing_connection,
@@ -74,6 +75,6 @@ class SurveyResultRepository
     }
 
     function getAll(Request $request) : EloquentBuilder {
-        return SiteSurvey::with('customerProspect.customer', 'serviceType', 'typeOfSurvey');
+        return SiteSurvey::with('surveyRequest', 'workOrder', 'transmissionMedia', 'internetServiceType', 'serviceType');
     }
 }

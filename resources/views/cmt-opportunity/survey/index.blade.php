@@ -63,7 +63,7 @@
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0" data-bs-toggle="tab" id="tab_on_progress_survey" href="#tab_on_progress_survey_content">On Progress</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="tab_prospect" href="#tab_survey_done_content">Done</a>
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="tab_survey_done" href="#tab_survey_done_content">Done</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -132,6 +132,29 @@
                                                             <th class="w-200px">Due Date</th>
                                                             <th class="w-200px">Status</th>
                                                             <th class="w-200px">Approved Status</th>
+                                                            <th class="w-100px text-center">#</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="fs-7">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="tab_survey_done_content" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_survey_done">
+                                                    <thead class="">
+                                                        <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
+                                                            {{-- <th class="text-center w-25px">#</th> --}}
+                                                            <th class="text-center w-50px">#</th>
+                                                            <th class="">Task Name</th>
+                                                            <th class="w-200px">No. Survey Request</th>
+                                                            <th class="w-200px">No. Work Order</th>
+                                                            <th class="w-100px">Service Type</th>
+                                                            <th class="w-100px">Building Type</th>
+                                                            <th class="w-100px">Building Height</th>
                                                             <th class="w-100px text-center">#</th>
                                                         </tr>
                                                     </thead>
@@ -367,6 +390,24 @@
                 validationMessages: surveyResultValidationMessages,
             })
         });        
+    });
+
+    $('#tab_survey_done').click(function () {
+        generateDatatable({
+            tableName: "tableDoneSurvey",
+            elementName: "#kt_table_survey_done",
+            ajaxLink: "{{ route('com.survey-result.datatable') }}",
+            columnData: [
+                { data: 'DT_RowIndex'},
+                { data: 'work_order.task_description'},
+                { data: 'survey_request.no_survey'},
+                { data: 'work_order.no_wo'},
+                { data: 'service_type.name'},
+                { data: 'building_type'},
+                { data: 'building_height'},
+                { data: 'action' },
+            ]
+        });    
     });
 </script>
 @endsection

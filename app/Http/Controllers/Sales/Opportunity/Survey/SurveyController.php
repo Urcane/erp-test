@@ -108,4 +108,18 @@ class SurveyController extends Controller
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
     }
+
+    /**
+     * Get Datatable Survey Result
+     * 
+     * @param \Illuminate\Http\Request $request
+     * 
+     * @return \Yajra\DataTables\Facades\DataTables Return Datatables Yajra
+     */
+    function getDataTableSurveyResult(Request $request) : JsonResponse {
+        if ($request->ajax()) {
+            return $this->surveyResultService->renderDatatable($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
 }
