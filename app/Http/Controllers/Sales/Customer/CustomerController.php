@@ -19,8 +19,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
+use Spatie\Permission\Models\Role;
 
-class CustomerController extends Controller
+class CustomerController extends Controller    
 {
     public function indexLead()
     {
@@ -29,7 +30,7 @@ class CustomerController extends Controller
         $getBussines = BussinesType::get();
         return view('cmt-customer.lead.index', compact('getLead','getBussines','getCity'));
     }
-    
+     
     public function storeLead(Request $request)
     {
         try {
@@ -166,8 +167,8 @@ class CustomerController extends Controller
             $getUser = User::where('id',Auth::user()->id)->first();
             foreach ($request->prospect_id as $id) {
                 if($id != null){
-                    $prospek = CustomerProspect::create([
-                        'customer_id' => $id,
+                    $prospek = CustomerProspectLog::create([
+                        'customer_prospect_id' => $id,
                         'prospect_next_action' => $request->prospect_next_action,
                         'prospect_update' => $request->prospect_update.' '.$getUser->name,
                         'status' => $request->prospect_status,
