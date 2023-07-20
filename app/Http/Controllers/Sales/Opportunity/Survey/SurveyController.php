@@ -122,4 +122,20 @@ class SurveyController extends Controller
         }
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
+
+    /**
+     * Get Survey Request By Id
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * 
+     * @return Illuminate\Http\JsonResponse Returning JSON Response Data
+     */
+
+    function getSurveyRequestById(Request $request, int $id) : JsonResponse {
+        if ($request->ajax()) {
+            return response()->json($this->surveyRequestService->getSurveyRequestById($request, $id)->first(), 200);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(', 403);
+    }
 }

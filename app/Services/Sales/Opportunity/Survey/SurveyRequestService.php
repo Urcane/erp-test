@@ -6,6 +6,7 @@ use App\Http\Requests\Opportunity\Survey\SurveyRequest as SurveyFormRequest;
 use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Repositories\Sales\Opportunity\Survey\SurveyRequestRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -55,12 +56,16 @@ class SurveyRequestService
                 <button type=\"button\" class=\"btn btn-secondary btn-icon btn-sm\" data-kt-menu-placement=\"bottom-end\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"fa-solid fa-ellipsis-vertical\"></i></button>
                 <ul class=\"dropdown-menu\">
                     $additionalMenu
-                    <li><a href=\"#kt_modal_request_survey\" class=\"dropdown-item py-2 btn_request_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>
+                    <li><a href=\"#kt_modal_request_survey\" class=\"dropdown-item py-2 btn_edit_request_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>
                 </ul>
                 ";
             })
             ->addIndexColumn()
             ->rawColumns(['DT_RowChecklist', 'action', 'covered_status_pretified'])
             ->make(true);
+    }
+
+    function getSurveyRequestById(Request $request, int $id) : Builder {
+        return $this->surveyRequestRepository->getById($id);
     }
 }

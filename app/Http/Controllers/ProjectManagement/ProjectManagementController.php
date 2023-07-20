@@ -55,4 +55,11 @@ class ProjectManagementController extends Controller
     function getDataTableWorkOrder(Request $request) : JsonResponse {
         return $this->workOrderService->renderDatatable();
     }
+
+    function getWorkOrderById(Request $request, int $id) : JsonResponse {
+        if ($request->ajax()) {
+            return response()->json($this->workOrderService->getWorkOrderById($request, $id)->first(), 200);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(', 403);
+    }
 }
