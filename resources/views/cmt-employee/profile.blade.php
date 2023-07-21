@@ -124,14 +124,14 @@
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
                                         <span class="required fw-bold text-dark">NIP</span>
                                     </label>
-                                    <input type="number" class="form-control form-control-solid" placeholder="" required value="{{$profile->nip}}" name="nip">
+                                    <input type="number" class="form-control form-control-solid" placeholder="" required maxlength="18" minlength="18" value="{{$profile->nip}}" name="nip" onkeyup="this.value = this.value.replace(/\D/g, '')">
                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                 </div>
                                 <div class="col-lg-6 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
                                         <span class="fw-bold text-dark">NIK</span>
                                     </label>
-                                    <input type="number" class="form-control form-control-solid" placeholder="" minlength="16" value="{{$profile->nik}}" name="nik">
+                                    <input type="number" class="form-control form-control-solid" placeholder="" required maxlength="16" minlength="16" value="{{$profile->nik}}" name="nik" min="0" onkeyup="this.value = this.value.replace(/\D/g, '')">
                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                 </div>
                                 <div class="col-lg-6 mb-3">
@@ -294,10 +294,13 @@
                 },
                 nik: {
                     required: "<span class='fw-semibold fs-8 text-danger'>NIK pegawai wajib diisi</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'>NIK maksimal memiliki 16 karakter</span>",
                     minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 16 karakter</span>",
                 },
                 nip: {
                     required: "<span class='fw-semibold fs-8 text-danger'>NIP pegawai wajib diisi</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'>NIK maksimal memiliki 18 karakter</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 18 karakter</span>",
                 },
                 kontak: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Kontak pegawai wajib diisi</span>",
