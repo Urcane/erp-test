@@ -154,7 +154,7 @@ class="app-default page-loading-enabled page-loading">
         });
     }
 
-	function submitModal({modalName, tableName, ajaxLink, validationMessages = {}}) {
+	function submitModal({modalName, tableName, ajaxLink, anotherTableName = null,validationMessages = {}}) {
         $(`#${modalName}_form`).validate({
             messages: validationMessages,
             submitHandler: function(form) {
@@ -171,6 +171,11 @@ class="app-default page-loading-enabled page-loading">
                         $(`#${modalName}_cancel`).click();
                         var oTable = $(`#${tableName}`).dataTable();
                         oTable.fnDraw(false);
+
+                        if (typeof window[anotherTableName] !== 'undefined') {
+                            window[anotherTableName].draw();
+                        }
+
                         toastr.success(data.status,'Selamat 🚀 !');
                     },
                     error: function (xhr, status, errorThrown) {
@@ -205,6 +210,16 @@ class="app-default page-loading-enabled page-loading">
             $(this).attr('value', 0);
         }        
     });
+
+    function getFormattedDate(date) {
+        const month = ("0" + (date.getMonth() + 1)).slice(-2);
+        const day  = ("0" + (date.getDate())).slice(-2);
+        const year = date.getFullYear();
+        const hour =  ("0" + (date.getHours())).slice(-2);
+        const min =  ("0" + (date.getMinutes())).slice(-2);
+        const seg = ("0" + (date.getSeconds())).slice(-2);
+        return [year + "-" + month + "-" + day, hour + ":" +  min];
+    }
 </script>
 </body>
 </html>

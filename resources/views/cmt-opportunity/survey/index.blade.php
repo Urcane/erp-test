@@ -182,8 +182,8 @@
 @endrole
 
 <script>
-    const prospectIds = [];
-    const surveyRequestIds = [];
+    let prospectIds = [];
+    let surveyRequestIds = [];
 
     const surveyRequestValidationMessages = {
         no_survey: {
@@ -282,6 +282,7 @@
             $('#kt_modal_request_survey_form').trigger("reset")
             $('#kt_modal_request_survey_submit').removeAttr('disabled','disabled');
 
+            prospectIds = [];
             const prospectId = $(this).data('id');
             prospectIds.push(prospectId);
 
@@ -298,6 +299,7 @@
         submitModal({
             modalName: 'kt_modal_request_survey',
             tableName: 'kt_table_opportunities',
+            anotherTableName: 'tableSurveyRequest',
             ajaxLink: '{{route("com.survey-request.store")}}',
             validationMessages: surveyRequestValidationMessages,
         });
@@ -322,7 +324,43 @@
                 { data: 'covered_status_pretified'},
                 { data: 'notes'},
                 { data: 'action' },
-            ]
+            ],
+            functionCallback: () => {
+                $('body').on('click', '.btn_edit_request_survey', function () {
+                    $('.drop-data').val("").trigger("change")
+                    $('#kt_modal_request_survey_form').trigger("reset")
+                    $('#kt_modal_request_survey_submit').removeAttr('disabled','disabled');
+
+                    const id = $(this).data('id');
+                    const form_edit = $('#kt_modal_request_survey_form');
+                    form_edit.find('#containerSelectedProspects').html('');
+                    prospectIds = [];
+                    const surveyRequestId = $(this).data('id');
+
+                    $.get(`{{url('')}}/cmt-survey/survey-request/detail/${id}`, function (data) {
+                        form_edit.find('input[name="survey_request_id"]').val(surveyRequestId);
+                        form_edit.find('input[name="no_survey"]').val(data.no_survey);
+                        form_edit.find('select[name="type_of_survey_id"]').val(data.type_of_survey_id).trigger('change');
+                        form_edit.find('select[name="service_type_id"]').val(data.service_type_id).trigger('change');
+                        form_edit.find('input[name="survey_date"]').val(getFormattedDate(new Date(data.survey_datetime))[0]);
+                        form_edit.find('input[name="survey_time"]').val(getFormattedDate(new Date(data.survey_datetime))[1]);
+                        form_edit.find('input[name="lat"]').val(data.lat);
+                        form_edit.find('input[name="lang"]').val(data.lang);
+                        form_edit.find('input[name="closest_bts"]').val(data.closest_bts);
+                        form_edit.find('textarea[name="notes"]').val(data.notes);
+
+                        prospectIds.push(data.customer_prospect_id);
+                        $.each(prospectIds.filter(onlyUnique), function(index, rowId) {
+                            form_edit.find('#containerSelectedProspects').append(
+                                $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', 'prospect_id[]')
+                                .val(rowId)
+                            );
+                        });
+                    })
+                });
+            }
         });
 
         $('body').on('click', '.btn_create_wo_survey', function () {
@@ -332,6 +370,7 @@
             $('#kt_modal_create_wo_survey_form').trigger("reset")
             $('#kt_modal_create_wo_survey_submit').removeAttr('disabled','disabled');
 
+            surveyRequestIds = [];
             const surveyRequestId = $(this).data('id');
             surveyRequestIds.push(surveyRequestId);
 
@@ -348,6 +387,7 @@
         submitModal({
             modalName: 'kt_modal_create_wo_survey',
             tableName: 'kt_table_survey_request',
+            anotherTableName: 'tableOnProgressSurvey',
             ajaxLink: "{{route('com.work-order-survey.store')}}",
             validationMessages: workOrderValidationMessages,
         })
@@ -368,7 +408,38 @@
                 { data: 'status'},
                 { data: 'approved_status'},
                 { data: 'action' },
-            ]
+            ],
+            functionCallback: () => {
+                $('body').on('click', '.btn_edit_wo_survey', function () {
+                    $('.drop-data').val("").trigger("change")
+                    $('#kt_modal_create_wo_survey_form').trigger("reset")
+                    $('#kt_modal_create_wo_survey_submit').removeAttr('disabled','disabled');
+
+                    const id = $(this).data('id');
+                    const form_edit = $('#kt_modal_create_wo_survey_form');
+                    form_edit.find('#containerSelectedSurveyRequests').html('');
+                    surveyRequestIds = [];
+                    const workOrderId = $(this).data('id');
+
+                    $.get(`{{url('')}}/cmt-promag/work-order/detail/${id}`, function (data) {
+                        form_edit.find('input[name="work_order_id"]').val(workOrderId);
+                        form_edit.find('input[name="no_wo"]').val(data.no_wo);
+                        form_edit.find('input[name="task_description"]').val(data.task_description);
+                        form_edit.find('input[name="start_date"]').val(getFormattedDate(new Date(data.start_date))[0]);
+                        form_edit.find('input[name="planning_due_date"]').val(getFormattedDate(new Date(data.planning_due_date))[0]);
+
+                        surveyRequestIds.push(data.survey_request_id);
+                        $.each(surveyRequestIds.filter(onlyUnique), function(index, rowId) {
+                            form_edit.find('#containerSelectedSurveyRequests').append(
+                                $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', 'survey_request_id[]')
+                                .val(rowId)
+                            );
+                        });
+                    })
+                });
+            }
         });
 
         ['create_survey_result_cctv', 'create_survey_result_internet'].forEach(element => {
@@ -386,6 +457,7 @@
             submitModal({
                 modalName: `kt_modal_${element}`,
                 tableName: 'kt_table_on_progress_survey',
+                anotherTableName: 'tableDoneSurvey',
                 ajaxLink: "{{route('com.survey-result.store')}}",
                 validationMessages: surveyResultValidationMessages,
             })

@@ -16,7 +16,11 @@ class SurveyRequestRepository
     }
 
     function save($data) : SurveyRequest {
-        return SurveyRequest::create([
+        return SurveyRequest::updateOrCreate([
+            'id' => $data->survey_request_id,
+            'customer_prospect_id' => $data->prospectId,
+        ], 
+        [
             'customer_prospect_id' => $data->prospectId,
             'service_type_id' => $data->service_type_id,
             'type_of_survey_id' => $data->type_of_survey_id,
