@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class SurveyRequest extends Model
 {
@@ -43,5 +44,9 @@ class SurveyRequest extends Model
 
     function softSurveyedBy() : BelongsTo {
         return $this->belongsTo(User::class, 'soft_surveyed_by', 'id');
+    }
+
+    function itemableBillOfQuantities() : HasOne {
+        return $this->hasOne(ItemableBillOfQuantities::class);
     }
 }

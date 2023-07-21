@@ -25,4 +25,8 @@ class CustomerProspect extends Model
     function customer() : BelongsTo {
         return $this->belongsTo(Customer::class);
     }
+
+    function itemableBillOfQuantities() : HasOne {
+        return $this->hasOne(ItemableBillOfQuantities::class);
+    }
 }

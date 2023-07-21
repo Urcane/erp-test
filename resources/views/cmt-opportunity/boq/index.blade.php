@@ -204,8 +204,8 @@
                                                                 <th class="text-center w-25px">#</th>
                                                                 <th class="w-25px">#</th>
                                                                 <th class="">Company Name</th>
-                                                                <th class="w-200px">No. Work List</th>
-                                                                <th class="w-200px">Release Date</th>
+                                                                <th class="w-300px">Company Address</th>
+                                                                <th class="w-300px">Prospect Update</th>
                                                                 <th class="w-300px">Next Action</th>
                                                                 <th class="w-50px text-center">#</th>
                                                             </tr>
@@ -533,15 +533,15 @@ $(document).ready(function() {
        generateDatatable({
             tableName: "tableOpporunities",
             elementName: "#kt_table_opportunities",
-            ajaxLink: "{{ route('com.boq.get-table-prospect-only-done') }}",
+            ajaxLink: "{{ route('com.prospect.get-table-prospect-only-done') }}",
             columnData: [
                 { data: 'DT_RowChecklist', orderable: false, searchable: false},
                 { data: 'DT_RowIndex'},
-                { data: 'no_wo'},
-                { data: 'task_description'},
-                { data: 'start_date'},
-                { data: 'planning_due_date'},
-                { data: 'status'},
+                { data: 'customer.customer_contact.customer_contact_name'},
+                { data: 'customer.customer_contact.customer_contact_job'},
+                { data: 'customer.customer_contact.customer_contact_phone'},
+                { data: 'next_action_pretified'},
+                { data: 'progress_pretified'},
                 { data: 'action' },
             ]
         });
@@ -550,7 +550,7 @@ $(document).ready(function() {
           generateDatatable({
             tableName: "tableDoneSurvey",
             elementName: "#kt_table_survey",
-            ajaxLink: "{{ route('com.boq.survey-result.datatable') }}",
+            ajaxLink: "{{ route('com.survey-result.datatable') }}",
             columnData: [
                 { data: 'DT_RowIndex'},
                 { data: 'work_order.task_description'},
@@ -571,16 +571,13 @@ $(document).ready(function() {
             ajaxLink: "{{ route('com.boq.draft.datatable') }}",
             columnData: [
                 { data: 'DT_RowIndex'},
-                { data: 'itemable_bill_of_quantities.customer_company_id'},
-                { data: 'itemablePriceRequest.customer_contact_id'},
-                { data: 'itemablePriceRequest.customer_contact_id'},
-                { data: 'itemablePriceRequest.customer_contact_id'},
-                { data: 'itemablePriceRequest.work_list_id'},
+                { data: 'prospect.customer.customer_name'},
+                { data: 'prospect.customer.customer_address'},
+                { data: 'prospect.customer_prospect_logs.prospect_update'},
+                { data: 'prospect.customer_prospect_logs.prospect_next_action'},
                 { data: 'action' },
             ]
          });   
       });
 });
-
-
 </script>
