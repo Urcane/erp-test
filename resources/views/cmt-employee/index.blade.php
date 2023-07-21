@@ -93,7 +93,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-lg-12 mt-6 text-end">
-                                                <button class="btn btn-sm btn-light" id="btn_reset_filter">Reset</button>
+                                                <button class="btn btn-sm btn-warning" id="btn_reset_filter">Reset</button>
                                             </div>
                                         </div>
                                     </div>
@@ -260,6 +260,20 @@
         });
         
         $("#kt_modal_tambah_pegawai_form").validate({
+            rules: {
+                nip : {
+                    required: true,
+                    minlength: 18,
+                    maxlength: 18,
+                },  
+                kontak : {
+                    required: true,
+                    minlength: 9,
+                    maxlength: 13,
+                }
+             
+            },
+            
             messages: {
                 name: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nama lengkap pegawai wajib diisi</span>",
@@ -270,14 +284,17 @@
                 },
                 nip: {
                     required: "<span class='fw-semibold fs-8 text-danger'>NIP pegawai wajib diisi</span>",
+                    minlength : "<span class='fw-semibold fs-8 text-danger'>NIP minimal memiliki 18 karakter</span>",
+                    maxlength : "<span class='fw-semibold fs-8 text-danger'>NIP maksimal memiliki 18 karakter</span>",
                 },
                 nik: {
                     required: "<span class='fw-semibold fs-8 text-danger'>NIK pegawai wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 16 karakter</span>",
+                  
                 },
                 kontak: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Kontak pegawai wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
                 },
                 role_id: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Role wajib dipilih</span>",
@@ -325,6 +342,8 @@
         });
 
         $('body').on('click', '#btn_nonaktif_pegawai', function () {
+        
+  
             $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
             $('#containerUserNonAktif').html('');
             const form_edit = $('#kt_modal_nonaktif_pegawai_form');
@@ -342,28 +361,48 @@
             submitHandler: function(form) {
                 var formData = new FormData(form);
                 $('#kt_modal_nonaktif_pegawai_submit').attr('disabled', 'disabled');
+
+                var form_edit = $('#kt_modal_nonaktif_pegawai_form');
+            $.each(pegawai_ids, function(index, rowId) {
+                form_edit.find('#containerUserNonAktif').append(
+                $('<input>')
+                .attr('type', 'hidden')
+                .attr('name', 'pegawai_id[]')
+                .val(rowId)
+                );
+            });
+                
                 $.ajax({
-                    data: formData,
-                    processData: false,
-                    contentType: false, 
-                    url: '{{route("hc.emp.update-status")}}',
-                    type: "POST",
-                    dataType: 'json',
-                    success: function (data) {
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: '{{route("hc.emp.update-status")}}',
+                type: "POST",
+                dataType: 'json',
+                success: function(data) {
+
+                     // Check Selected Pegawai
+                    if (pegawai_ids.length === 0) {
                         $('#kt_modal_nonaktif_pegawai_cancel').click();
-                        var oTable = $('#kt_table_pegawai').dataTable();
-                        pegawai_ids = [];
-                        oTable.fnDraw(false);
-                        toastr.success(data.status,'Selamat 🚀 !');
-                    },
-                    error: function (xhr, status, errorThrown) {
-                        $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
-                        const data = JSON.parse(xhr.responseText);
-                        toastr.error(errorThrown ,'Opps!');
+                        toastr.error('Tidak Ada Data Pegawai Yang Dipilih', 'Opps!');
+                        return;
                     }
+
+                    $('#kt_modal_nonaktif_pegawai_cancel').click();
+                    var oTable = $('#kt_table_pegawai').dataTable();
+                    pegawai_ids = [];
+                    oTable.fnDraw(false);
+                    toastr.success(data.status, 'Selamat 🚀 !');
+                },
+                error: function(xhr, status, errorThrown) {
+                    $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled');
+                    const data = JSON.parse(xhr.responseText);
+                    toastr.error(errorThrown, 'Opps!');
+                }
                 });
             }
         });
+
 
         $('body').on('click', '#btn_reset_password_pegawai', function () {
             $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
@@ -391,6 +430,14 @@
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                         // Check Selected Pegawai
+                        if (pegawai_ids.length === 0) {
+                            $('#kt_modal_reset_password_pegawai_cancel').click();
+                            toastr.error('Tidak Ada Password Pegawai Yang Dipilih', 'Opps!');
+                            return;
+                        }
+
                         $('#kt_modal_reset_password_pegawai_cancel').click();
                         var oTable = $('#kt_table_pegawai').dataTable();
                         pegawai_ids = [];

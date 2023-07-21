@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
+use App\Http\Controllers\Sales\Opportunity\BOQ\BoqController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -63,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/detail/task-lists','taskLists')->name('com.promag.detail.task-lists');
 
             Route::post('/work-order/store','createWorkOrderSurvey')->name('com.work-order-survey.store');
+            Route::get('/work-order/detail/{id}','getWorkOrderById')->name('com.work-order.detail');
             Route::get('/get-data/table/work-order','getDatatableWorkOrder')->name('com.work-order.datatable');
         });
 
@@ -71,12 +73,22 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(SurveyController::class)->group(function () {
         Route::prefix('cmt-survey')->group(function () {
             Route::get('/','index')->name('com.survey.index');
-            Route::get('/detail/{id}','detail')->name('com.survey.detail');
+            Route::get('/survey-request/detail/{id}','getSurveyRequestById')->name('com.survey-request.detail');
             Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
             Route::post('/survey-result','storeSurveyResult')->name('com.survey-result.store');
             
             Route::get('/get-data/table/survey-request','getDatatableSurveyRequest')->name('com.survey-request.datatable');
             Route::get('/get-data/table/survey-result','getDatatableSurveyResult')->name('com.survey-result.datatable');
+        });
+    });
+
+    Route::controller(BoQController::class)->group(function () {
+        Route::prefix('cmt-boq')->group(function (){
+            Route::get('/','index')->name('com.boq.index');
+            Route::get('/form-boq','formBoQ')->name('com.boq.form-boq');
+            Route::get('/get-data/table/prospect/done','getTableProspectDone')->name('com.boq.get-table-prospect-only-done');
+            Route::get('/get-data/table/survey-result','getDatatableSurveyResult')->name('com.boq.survey-result.datatable');
+            Route::get('/get-data/table/draft-result','getDatatableDraft')->name('com.boq.draft.datatable');
         });
     });
 });

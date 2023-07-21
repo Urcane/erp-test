@@ -451,7 +451,9 @@
                 },
                 customer_contact_phone: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
+                
                 },
             },
             submitHandler: function(form) {
@@ -528,7 +530,8 @@
                 },
                 customer_contact_phone: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
                 },
             },
             submitHandler: function(form) {
@@ -586,6 +589,13 @@
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                        if(lead_ids.length === 0){
+                            $('#kt_modal_tindak_lanjut_lead_cancel').click();
+                             toastr.error('Tidak Ada Data Lead Yang Dipilih', 'Opps!');
+                        return;
+                        }
+
                         $('#kt_modal_tindak_lanjut_lead_cancel').click();
                         toastr.success(data.status,'Selamat 🚀 !');
                         location.reload();
@@ -676,6 +686,13 @@
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                        if(prospect_ids.length === 0){
+                            $('#kt_modal_batal_prospect_cancel').click();
+                             toastr.error('Tidak Ada Prospect Yang Dipilih', 'Opps!');
+                        return;
+                        }
+
                         $('#kt_modal_batal_prospect_cancel').click();
                         toastr.success(data.status,'Selamat 🚀 !');
                         location.reload();

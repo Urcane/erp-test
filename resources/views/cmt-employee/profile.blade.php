@@ -284,6 +284,19 @@
 <script>
     $(document ).ready(function() {
         $("#kt_profile_form").validate({
+            rules: {
+                nip : {
+                    required: true,
+                    minlength: 18,
+                    maxlength: 18,
+                },  
+                kontak : {
+                    required: true,
+                    minlength: 9,
+                    maxlength: 13,
+                }
+            },
+            
             messages: {
                 name: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nama lengkap pegawai wajib diisi</span>",
@@ -304,7 +317,8 @@
                 },
                 kontak: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Kontak pegawai wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
                 },
                 role_id: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Role wajib dipilih</span>",

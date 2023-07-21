@@ -5,6 +5,8 @@ namespace App\Services\ProjectManagement;
 use App\Http\Requests\ProjectManagement\WorkOrderRequest;
 use App\Repositories\ProjectManagement\WorkOrderRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -64,12 +66,16 @@ class WorkOrderService
                 <button type=\"button\" class=\"btn btn-secondary btn-icon btn-sm\" data-kt-menu-placement=\"bottom-end\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"fa-solid fa-ellipsis-vertical\"></i></button>
                 <ul class=\"dropdown-menu\">
                     $additionalMenu
-                    <li><a href=\"#kt_modal_request_survey\" class=\"dropdown-item py-2 btn_request_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>
+                    <li><a href=\"#kt_modal_create_wo_survey\" class=\"dropdown-item py-2 btn_edit_wo_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>
                 </ul>
                 ";
             })
             ->addIndexColumn()
             ->rawColumns(['DT_RowChecklist', 'action', 'covered_status_pretified'])
             ->make(true);
+    }
+
+    function getWorkOrderById(Request $request, int $id) : Builder {
+        return $this->workOrderRepository->getById($id);
     }
 }

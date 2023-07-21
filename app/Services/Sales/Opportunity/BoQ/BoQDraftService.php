@@ -1,39 +1,27 @@
 <?php
 
-namespace App\Services\Sales\Opportunity\Survey;
+namespace App\Services\Sales\Opportunity\BoQ;
 
-use App\Http\Requests\Opportunity\Survey\SurveyRequest as SurveyFormRequest;
-use App\Models\Opportunity\Survey\SurveyRequest;
-use App\Repositories\Sales\Opportunity\Survey\SurveyRequestRepository;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\JsonResponse;
+use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
-use Yajra\DataTables\Facades\DataTables;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repositories\Sales\Opportunity\BoQ\BoQDraftRepository;
 
-class SurveyRequestService 
+/**
+ * Class BoQDraftService
+ * @package App\Services
+ */
+class BoQDraftService
 {
-    protected $surveyRequestRepository;
-
-    public function __construct(SurveyRequestRepository $surveyRequestRepository) {
-        $this->surveyRequestRepository = $surveyRequestRepository;
-    }
-
-    function storeSurveyRequestData(SurveyFormRequest $request) {
-        $request_date = Carbon::parse($request->survey_date . ' ' . $request->survey_time)->toDateTimeString();
-
-        $surveyRequest = collect($request->prospect_id)
-            ->map(function($prospectId) use($request, $request_date) {
-                $data = $request->merge(["prospectId" => $prospectId])->merge(["request_date" => $request_date]);
-
-                return $this->surveyRequestRepository->save($data);
-            });
-
-        return $surveyRequest;
+    protected $BoQDraftRepository;
+    
+    public function __construct(BoQDraftRepository $BoQDraftRepository)
+    {
+        $this->BoQDraftRepository = $BoQDraftRepository;
     }
 
     function renderDatatable(Request $request) : JsonResponse {
-        $query = $this->surveyRequestRepository->getAll($request);
+        $query = $this->BoQDraftRepository->getAll($request);
 
         return DataTables::of($query)
             ->addColumn('DT_RowChecklist', function($check) {
@@ -56,16 +44,12 @@ class SurveyRequestService
                 <button type=\"button\" class=\"btn btn-secondary btn-icon btn-sm\" data-kt-menu-placement=\"bottom-end\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"fa-solid fa-ellipsis-vertical\"></i></button>
                 <ul class=\"dropdown-menu\">
                     $additionalMenu
-                    <li><a href=\"#kt_modal_request_survey\" class=\"dropdown-item py-2 btn_edit_request_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>
+                    <li><a href=\"#kt_modal_request_survey\" class=\"dropdown-item py-2 btn_request_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>
                 </ul>
                 ";
             })
             ->addIndexColumn()
             ->rawColumns(['DT_RowChecklist', 'action', 'covered_status_pretified'])
             ->make(true);
-    }
-
-    function getSurveyRequestById(Request $request, int $id) : Builder {
-        return $this->surveyRequestRepository->getById($id);
     }
 }
