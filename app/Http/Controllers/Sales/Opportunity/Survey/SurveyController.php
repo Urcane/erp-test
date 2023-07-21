@@ -9,6 +9,8 @@ use App\Models\Master\CameraType;
 use App\Models\Master\InternetServiceType;
 use App\Models\Master\ServiceType;
 use App\Models\Master\TransmissionMedia;
+use App\Models\Opportunity\Survey\SiteSurvey;
+use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
 use App\Models\ProjectManagement\WorkOrderCategory;
 use App\Services\Sales\Opportunity\Survey\SurveyRequestService;
@@ -46,6 +48,29 @@ class SurveyController extends Controller
         $cameraTypes = CameraType::get();
 
         return view('cmt-opportunity.survey.index', compact(
+            'serviceTypes',
+            'typeOfSurveys',
+            'typeOfWOs',
+            'transMedias',
+            'internetServiceTypes',
+            'cameraTypes'
+        ));
+    }
+
+    /**
+     * Show detail page of survey
+     * 
+     * @return Illuminate\Contracts\View\View
+     */
+    function detail(Request $request, SiteSurvey $id) : View {
+        $serviceTypes = ServiceType::get();
+        $typeOfSurveys = TypeOfSurvey::get();
+        $typeOfWOs = WorkOrderCategory::get();
+        $transMedias = TransmissionMedia::get();
+        $internetServiceTypes = InternetServiceType::get();
+        $cameraTypes = CameraType::get();
+
+        return view('cmt-opportunity.survey.pages.detail', compact(
             'serviceTypes',
             'typeOfSurveys',
             'typeOfWOs',

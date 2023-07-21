@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(SurveyController::class)->group(function () {
         Route::prefix('cmt-survey')->group(function () {
             Route::get('/','index')->name('com.survey.index');
+            Route::get('/detail/{id}', 'detail')->name('com.survey.detail');
             Route::get('/survey-request/detail/{id}','getSurveyRequestById')->name('com.survey-request.detail');
             Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
             Route::post('/survey-result','storeSurveyResult')->name('com.survey-result.store');
