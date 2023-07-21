@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
+use App\Http\Controllers\Sales\Opportunity\BOQ\BoqController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -77,6 +78,16 @@ Route::middleware(['auth'])->group(function () {
             
             Route::get('/get-data/table/survey-request','getDatatableSurveyRequest')->name('com.survey-request.datatable');
             Route::get('/get-data/table/survey-result','getDatatableSurveyResult')->name('com.survey-result.datatable');
+        });
+    });
+
+    Route::controller(BoQController::class)->group(function () {
+        Route::prefix('cmt-boq')->group(function (){
+            Route::get('/','index')->name('com.boq.index');
+            Route::get('/form-boq','formBoQ')->name('com.boq.form-boq');
+            Route::get('/get-data/table/prospect/done','getTableProspectDone')->name('com.boq.get-table-prospect-only-done');
+            Route::get('/get-data/table/survey-result','getDatatableSurveyResult')->name('com.boq.survey-result.datatable');
+            Route::get('/get-data/table/draft-result','getDatatableDraft')->name('com.boq.draft.datatable');
         });
     });
 });

@@ -112,7 +112,7 @@
 							</label>
 							<div class="input-group">
 								<span class="input-group-text border-0">+62</span>
-								<input type="number" class="form-control form-control-solid" required minlength="8" name="customer_contact_phone"/>
+								<input type="number" class="form-control form-control-solid" required minlength="9" maxlength="13" name="customer_contact_phone"/>
 							</div>
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
