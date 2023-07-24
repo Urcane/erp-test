@@ -164,6 +164,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row col-lg-7 mb-4 border border-gray-300 rounded">
+                                @include('cmt-promag.component.overview.summary-file')
+                            </div>
+                            <div class="row col-lg-5 mb-4 border border-gray-300 rounded">
+                                @include('cmt-promag.component.overview.task-recent')
+                            </div>
                         </div>
                     </div>
                 </div>
