@@ -25,7 +25,7 @@ class BoQDraftRepository
     }
 
     public function getAll(Request $request){
-        $dataDraftBoq = $this->model->with(['itemableBillOfQuantities', 'sales', 'prospect']);
+        $dataDraftBoq = $this->model->with(['itemableBillOfQuantities', 'sales', 'prospect.customer', 'prospect.customerProspectLogs']);
 
         return $dataDraftBoq;
     }

@@ -15,8 +15,7 @@ class BoQDraftService
 {
     protected $BoQDraftRepository;
     
-    public function __construct(BoQDraftRepository $BoQDraftRepository)
-    {
+    public function __construct(BoQDraftRepository $BoQDraftRepository) {
         $this->BoQDraftRepository = $BoQDraftRepository;
     }
 
@@ -26,12 +25,6 @@ class BoQDraftService
         return DataTables::of($query)
             ->addColumn('DT_RowChecklist', function($check) {
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
-            })
-            ->addColumn('covered_status_pretified', function($query) {
-                if ($query->covered_status) {
-                    return '<span class="badge badge-light-success">Covered</span>';
-                }
-                return '<span class="badge badge-light-warning">Belum Tercover</span>';
             })
             ->addColumn('action', function ($query) {
                 $additionalMenu = "";
@@ -49,7 +42,7 @@ class BoQDraftService
                 ";
             })
             ->addIndexColumn()
-            ->rawColumns(['DT_RowChecklist', 'action', 'covered_status_pretified'])
+            ->rawColumns(['DT_RowChecklist', 'action'])
             ->make(true);
     }
 }

@@ -102,9 +102,9 @@ class BoQController extends Controller
     }
 
     function getDatatableDraft(Request $request) : JsonResponse {
-        // if ($request->ajax()) {
+        if ($request->ajax()) {
             return $this->BoqDraftService->renderDatatable($request);
-        // }
-        // return response()->json('Oops, Somethin\' Just Broke :(');
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
     }
 }
