@@ -37,6 +37,8 @@
                                 <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Bill of Quantity</span>
                             </div>
                         </div>
+
+                        {{-- header company --}}
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
@@ -73,89 +75,97 @@
                                 </div>
 
                                 <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
-                                    <div class="d-flex justify-content-center mx-20 mb-5 mt-10">
-                                        <div class="w-20">
-                                            <label for="exampleFormControlInput1" class="required form-label">Item</label>
-                                            <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
-                                        </div>
-                                        
-                                        <div class="ms-10 w-20">
-                                            <label for="exampleFormControlInput1" class=" required form-label">Merk</label>
-                                            <div class="position-relative">
-                                                <div class=" position-absolute top-0"></div>
+                                    <div class="MultipleInput">
+                                        <div class="d-flex justify-content-center mx-20 mb-5 mt-10">
+                                            <div class="w-20">
+                                                <label for="exampleFormControlInput1" class="required form-label">Item</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
                                             </div>
-                                        </div>
-
-                                        <div class="ms-10 w-20">
-                                            <label for="exampleFormControlInput1" class=" required form-label">No Price</label>
-                                            <div class="position-relative">
-                                                <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                            
+                                            <div class="ms-10 w-20">
+                                                <label for="exampleFormControlInput1" class=" required form-label">Merk</label>
+                                                <div class="position-relative">
+                                                    <div class=" position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="ms-10 w-20">
+                                            <div class="ms-10 w-20">
+                                                <label for="exampleFormControlInput1" class=" required form-label">No Price</label>
+                                                <div class="position-relative">
+                                                    <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="ms-10 w-20">
                                                 <label for="exampleFormControlInput1" class="required form-label">Qty</label>
-                                            <div class="required position-relative">
-                                                <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                                <div class="position-relative">
+                                                    <div class=" position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="ms-10 w-20">
+                                                <label for="exampleFormControlInput1" class=" form-label">Total Price</label>
+                                                <div class="position-relative">
+                                                    <div class=" position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid" disabled>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        <div class="ms-10 w-20">
-                                            <label for="exampleFormControlInput1" class=" required form-label">Total Price</label>
-                                            <div class="position-relative">
-                                                <div class=" position-absolute top-0"></div>
+                                        <div class="d-flex justify-content-center mx-20 mb-5 mt-10 DuplicateRow">
+                                            <div class="w-20">
+                                                <label for="exampleFormControlInput1" class="required form-label">Item</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                            </div>
+                                            
+                                            <div class="ms-10 w-20">
+                                                <label for="exampleFormControlInput1" class="required form-label">Merk</label>
+                                                <div class="position-relative">
+                                                    <div class=" position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="ms-10 w-20">
+                                                <label for="exampleFormControlInput1" class="required form-label">No Price</label>
+                                                <div class="position-relative">
+                                                    <div class=" position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="ms-10 w-20">
+                                                <label for="exampleFormControlInput1" class="required form-label">Qty</label>
+                                                <div class="position-relative">
+                                                    <div class=" position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="ms-10 w-20">
+                                                <label for="exampleFormControlInput1" class=" form-label">Total Price</label>
+                                                <div class="position-relative">
+                                                    <div class=" position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid" disabled>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-center mx-20">
-                                        <div class="w-20">
-                                            <label for="exampleFormControlInput1" class="required form-label">Item</label>
-                                            <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
-                                        </div>
-                                        
-                                        <div class="ms-10 w-20">
-                                            <label for="exampleFormControlInput1" class="required form-label">Merk</label>
-                                            <div class="position-relative">
-                                                <div class=" position-absolute top-0"></div>
-                                                <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
-                                            </div>
-                                        </div>
+                                    {{-- <button type="button" id="additembtn" class="btn text-info btn-sm me-3">
+                                        <i class="fa-solid fa-plus text-info"></i> Add Item
+                                    </button> --}}
 
-                                        <div class="ms-10 w-20">
-                                            <label for="exampleFormControlInput1" class="required form-label">No Price</label>
-                                            <div class="position-relative">
-                                                <div class=" position-absolute top-0"></div>
-                                                <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="ms-10 w-20">
-                                            <label for="exampleFormControlInput1" class="required form-label">Qty</label>
-                                            <div class="position-relative">
-                                                <div class=" position-absolute top-0"></div>
-                                                <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="ms-10 w-20">
-                                            <label for="exampleFormControlInput1" class="required form-label">Total Price</label>
-                                            <div class="position-relative">
-                                                <div class=" position-absolute top-0"></div>
-                                                <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="ms-15 w-20 mt-3">
-                                        <a href="" data-bs-toggle="modal" class="btn text-info btn-sm me-3 "><i class="fa-solid fa-plus text-info"></i>Add Item</a>
-                                    </div>  
+                                        <a href="" data-bs-toggle="modal" class="btn text-info btn-sm me-3 additembtn"><i class="fa-solid fa-plus text-info"></i>Add Item</a>
+                                    </div>
+                                    
                                     <div class="d-flex justify-content-end mx-20">
                                         <div class="w-20 me-10">
                                            <span class="fw-bold">Total Amount : <span>Rp.0</span></span>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-center mt-6">
+                                    <div class="d-flex justify-content-center mt-6">    
                                         <div class=" me-5">
                                             <a href="#" class="btn btn-light-info">Discard</a>
                                         </div>
@@ -163,6 +173,7 @@
                                             <a href="{{ url ()->previous() }}" class="btn btn-info">Submit</a>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -402,9 +413,14 @@
 @include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-cctv') --}}
 @endrole
 
+<script>
+    $(document).ready(function() {
+        var items = 2
+        $(".additembtn").click(function() {
+            var items++;
+            $(".MultipleInput .DuplicateRow:last-child").clone().appendTo(".MultipleInput");
+        });
+    });
+ </script>
 
 @endsection
-
-<script >
-  
-  </script>

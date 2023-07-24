@@ -35,6 +35,8 @@ class BoQController extends Controller
 
     function formBoQ()
     {
+
+
         return view('cmt-opportunity.boq.pages.form-boq');
     }
 
