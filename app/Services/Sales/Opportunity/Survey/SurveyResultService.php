@@ -8,6 +8,7 @@ use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Repositories\Sales\Opportunity\Survey\SurveyRequestRepository;
 use App\Repositories\Sales\Opportunity\Survey\SurveyResultRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -55,5 +56,9 @@ class SurveyResultService
             ->addIndexColumn()
             ->rawColumns(['DT_RowChecklist', 'action'])
             ->make(true);
+    }
+
+    function getSurveyResultById(Request $request, int $id) : Builder {
+        return $this->surveyResultRepository->getById($request, $id);
     }
 }
