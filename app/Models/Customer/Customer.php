@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\Customer\CustomerContact;
+use App\Models\BussinesType;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
@@ -21,5 +23,9 @@ class Customer extends Model
 
     function userFollowUp() : BelongsTo {
         return $this->belongsTo(User::class, 'user_follow_up', 'id');
+    }
+
+    function bussinesType() : BelongsTo {
+        return $this->belongsTo(BussinesType::class, 'bussines_type_id', 'id');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Opportunity\BoQ;
 
+use App\Models\Customer\Customer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,7 +27,7 @@ class ItemablePriceRequests extends Model
     }
 
     function customerCompany() :BelongsTo {
-        return $this->belongsTo(CustomerCompany::class, 'customer_company_id', 'id');
+        return $this->belongsTo(Customer::class, 'customer_company_id', 'id');
     }
 
     function parentItemablePriceRequest() : BelongsTo{

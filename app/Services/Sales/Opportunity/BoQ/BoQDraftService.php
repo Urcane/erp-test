@@ -15,7 +15,7 @@ class BoQDraftService
 {
     protected $BoQDraftRepository;
     
-    public function __construct(BoQDraftRepository $BoQDraftRepository) {
+    function __construct(BoQDraftRepository $BoQDraftRepository) {
         $this->BoQDraftRepository = $BoQDraftRepository;
     }
 
@@ -41,8 +41,38 @@ class BoQDraftService
                 </ul>
                 ";
             })
+            ->addColumn('next_action_pretified', function ($query) {
+                return '
+                <span class="fw-bold d-block">'.$query->prospect->latestCustomerProspectLog->prospect_next_action.'</span>
+                <p class="text-gray-500 mb-0">'.$query->prospect->latestCustomerProspectLog->next_action_plan_date.'</p>
+                ';
+            })
+            ->addColumn('progress_pretified', function ($query) {
+                return '
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-line w-35px"></div>
+                        <div class="timeline-icon symbol symbol-circle symbol-35px">
+                            <div class="symbol-label bg-light-success">
+                                <i class="fa-solid fa-check text-success"></i>    
+                            </div>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="pe-5">
+                                <span class="fw-bold d-block">'.$query->prospect->latestCustomerProspectLog->prospect_update.'</span>
+                                <p class="text-gray-500 mb-0">Updated : '.$query->prospect->latestCustomerProspectLog->created_at.'</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                ';
+            })
             ->addIndexColumn()
-            ->rawColumns(['DT_RowChecklist', 'action'])
+            ->rawColumns(['DT_RowChecklist', 'action', 'next_action_pretified', 'progress_pretified'])
             ->make(true);
+    }
+
+    function getDataCompany(){
+        
     }
 }

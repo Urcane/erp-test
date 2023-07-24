@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Customer\Customer;
+use App\Models\Customer\CustomerProspectLog;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantities;
 
 class CustomerProspect extends Model
 {
