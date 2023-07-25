@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ProjectSeeder::class,
             OpportunitySeeder::class,
+            InventorySeeder::class,
         ]);
     }
 }

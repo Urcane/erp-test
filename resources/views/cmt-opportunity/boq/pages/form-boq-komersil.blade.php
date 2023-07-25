@@ -77,7 +77,8 @@
                                         <div class="w-10">
                                             <div class="position-relative">
                                                 <label for="exampleFormControlInput1" class="required form-label">Nama Perusahaan</label>
-                                                <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
+                                                {{-- <input type="text" class="form-control form-control-solid" placeholder="Example input"/> --}}
+                                             
                                             </div>
                                         </div>
                                         
