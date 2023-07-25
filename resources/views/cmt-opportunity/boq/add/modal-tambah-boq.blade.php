@@ -71,9 +71,9 @@
                                 </label>
                                 <select class="drop-data form-select form-select-solid" data-control="select2" required
                                     name="good_name" id="good_name" data-dropdown-parent="#kt_modal_tambah_boq"
-                                    data-url="{{ route('get_item_data') }}">
+                                    data-url="{{ route('get.merk.type') }}">
                                     <option value="" selected hidden disabled>Pilih Dulu</option>
-                                    @foreach ($getInventoryGoods as $gig)
+                                    @foreach ($dataForm as $gig)
                                         <option value="{{ $gig->id }}">{{ $gig->good_name }}</option>
                                     @endforeach
                                 </select>
@@ -82,30 +82,35 @@
                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
                             <div class="col-lg-6 col-6 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Jenis Item</span>
+                                    <span class=" fw-bold">Jenis Item</span>
                                 </label>
-                                <select class="drop-data form-select form-select-solid" data-control="select2" required
+                                {{-- <select class="drop-data form-select form-select-solid" data-control="select2" required
                                     name="good_type" id="good_type" data-dropdown-parent="#kt_modal_tambah_boq">
-                                    <option value="" selected hidden disabled>Pilih Dulu</option>
-                                </select>
+                                    <option value="" selected hidden disabled></option>
+                                </select> --}}
+                                
+                            <input class="form-control" type="text" name="good_type" id="good_type" disabled>
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                             </div>
+
+
 
                             <!-- Tambahkan atribut "data-url" pada select merek -->
                             <div class="col-lg-6 col-6 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Merek</span>
+                                    <span class=" fw-bold">Merek</span>
                                 </label>
-                                <select class="drop-data form-select form-select-solid" data-control="select2" required
+                                {{-- <select class="drop-data form-select form-select-solid" data-control="select2" required
                                     name="merk" id="merk" data-dropdown-parent="#kt_modal_tambah_boq">
-                                    <option value="" selected hidden disabled>Pilih Dulu</option>
-                                </select>
+                                    <option value="" selected hidden disabled></option>
+                                </select> --}}
+                            <input class="form-control" type="text" name="merk" id="merk" disabled>
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                             </div>
 
 
 
-                            <div class="col-lg-12 mb-3">
+                            {{-- <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Alamat</span>
                                 </label>
@@ -125,7 +130,7 @@
                                     @endforeach
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-lg-6 col-6 mb-3">

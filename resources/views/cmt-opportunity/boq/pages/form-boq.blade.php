@@ -26,6 +26,8 @@
 
 @section('content')
     {{-- FORM BOQ  --}}
+    {{-- @dd($dataForm) --}}
+    
     <div class="row justify-content-center">
         <div class="col-lg-12 mt-n20">
             <div class="row justify-content-center">
@@ -493,20 +495,19 @@
                     }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
                     success: function(response) {
                         // Mengisi select jenis item dengan data yang diterima dari server
-                        var $goodTypeSelect = $('#good_type');
-                        $goodTypeSelect.empty();
-                        $goodTypeSelect.append(
-                            '<option value="" selected hidden disabled>Pilih Dulu</option>');
-                        $goodTypeSelect.append('<option value="' + response.good_type + '">' +
-                            response.good_type + '</option>');
+                        // var $goodTypeSelect = $('#good_type');
+                        // $goodTypeSelect.val(response.good_type).prop('disabled', false);
+                        // // Mengisi select merek item dengan data yang diterima dari server
+                        // var $merkSelect = $('#merk');
+                        // $merkSelect.empty();
+                        // $merkSelect.append(
+                        //     '<option value="" selected hidden disabled>Pilih Dulu</option>');
+                        // $merkSelect.append('<option value="' + response.merk + '">' + response
+                        //     .merk + '</option>');
 
-                        // Mengisi select merek item dengan data yang diterima dari server
-                        var $merkSelect = $('#merk');
-                        $merkSelect.empty();
-                        $merkSelect.append(
-                            '<option value="" selected hidden disabled>Pilih Dulu</option>');
-                        $merkSelect.append('<option value="' + response.merk + '">' + response
-                            .merk + '</option>');
+                            $('#good_type').val(response.good_type).prop('disabled', true);
+                            $('#merk').val(response.merk).prop('disabled', true);
+                
                     },
                     error: function(error) {
                         console.log(error);
@@ -519,24 +520,3 @@
     </script>
 
 @endsection
-
-Route::get('/get_item_data', 'InventoryController@getItemData')->name('get_item_data');
-
-// app/Http/Controllers/InventoryController.php
-
-use App\Models\InventoryGood; // Ganti dengan namespace dan model yang sesuai dengan aplikasi Anda
-
-class InventoryController extends Controller
-{
-    public function getItemData(Request $request)
-    {
-        $itemId = $request->input('item_id');
-
-        // Mengambil data jenis dan merek item berdasarkan item yang dipilih
-        $itemData = InventoryGood::select('good_type', 'merk')
-            ->where('id', $itemId)
-            ->first();
-
-        return response()->json($itemData);
-    }
-}

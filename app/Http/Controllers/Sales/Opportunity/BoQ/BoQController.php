@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers\Sales\Opportunity\BoQ;
 
-use App\Models\Team\City;
-use App\Models\BussinesType;
 use Illuminate\Http\Request;
-use App\Models\LeadReference;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\User;
@@ -15,8 +12,9 @@ use App\Models\Customer\CustomerProspect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
-use App\Models\Inventory\InventoryGoods;
+use App\Models\Inventory\InventoryGood;
 use App\Services\Sales\Opportunity\Survey\SurveyResultService;
+use App\Services\Master\Inventory\InventoryService;
 
 class BoQController extends Controller
 {
@@ -28,7 +26,7 @@ class BoQController extends Controller
     public function __construct(
         SurveyResultService $surveyResultService,
         BoqDraftService $BoqDraftService,
-        InventoryGoods $InventoryGoods
+        InventoryService $InventoryService
     ) {
         $this->surveyResultService = $surveyResultService;
         $this->BoqDraftService = $BoqDraftService;
@@ -45,6 +43,27 @@ class BoQController extends Controller
         $dataForm = $this->InventoryService->getDataForm();
         return view('cmt-opportunity.boq.pages.form-boq',compact('dataForm'));
     }
+    
+    // public function getMerkType(Request $request)
+    // {
+    //     $itemId = $request->input('item_id');
+
+    //     // Mengambil data jenis dan merek item berdasarkan item yang dipilih
+    //     $itemData = InventoryGood::select('good_type', 'merk')->where('id', $itemId)->first();
+    //     return response()->json($itemData);
+
+        
+    // }
+    public function getMerkType(Request $request)
+    {
+        if ($request->ajax()) {
+             $itemId = $request->input('item_id');
+        $itemData = $this->InventoryService->getMerkType($itemId);
+        return response()->json($itemData);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
 
     function getDatatableDraft(Request $request) : JsonResponse {
         if ($request->ajax()) {
