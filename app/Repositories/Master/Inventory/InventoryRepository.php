@@ -3,7 +3,7 @@
 namespace App\Repositories\Master\Inventory;
 
 use Yajra\DataTables\Utilities\Request;
-use App\Models\Inventory\InventoryGoods;
+use App\Models\Inventory\InventoryGood;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 //use Your Model
 
@@ -19,12 +19,12 @@ class InventoryRepository
 
      protected $model;
 
-     function __construct(InventoryGoods $model ) {
+     function __construct(InventoryGood $model ) {
         $this->model = $model;
      }
 
-     function getAllData(Request $request) {
-        $dataFormInventory = $this->model->with(['inventoryGoodCategories.inventoryGoods']);
+     function getAllData() {
+        $dataFormInventory = $this->model->with(['inventoryGoodCategory.inventoryGood']);
         return $dataFormInventory;
      }
 }

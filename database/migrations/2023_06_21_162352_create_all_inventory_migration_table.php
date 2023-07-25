@@ -13,8 +13,6 @@ class CreateAllInventoryMigrationTable extends Migration
      */
     public function up()
     {
-        
-
         Schema::create('inventory_good_categories', function (Blueprint $table) {
             $table->id()->index();
             $table->string('name');
@@ -25,7 +23,7 @@ class CreateAllInventoryMigrationTable extends Migration
 
         Schema::create('inventory_goods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('good_category_id')->constrained('inventory_good_categories')->cascadeOnDelete();
+            $table->foreignId('good_category_id')->constrained('inventory_good_categories');
             $table->string('good_name');
             $table->string('code_name');
             $table->string('merk');
@@ -42,7 +40,8 @@ class CreateAllInventoryMigrationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventory_goods');
-        Schema::dropIfExists('inventory_good_categories');
+        Schema::dropIfExists('inventory_good');
+        Schema::dropIfExists('inventory_good_category');
+        
     }
 }

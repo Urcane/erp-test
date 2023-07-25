@@ -13,7 +13,6 @@ class CreateAllBoqMigrationTable extends Migration
      */
     public function up()
     {
-
         Schema::create('itemable_bill_of_quantities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('prospect_id')->constrained('customer_prospects');
@@ -46,8 +45,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->string('referenced_quotation_id')->constrained('itemable_quotation_parts');
             $table->timestamps();
         });
-        
-      
+
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('itemable_id')->constrained('itemable_quotation_parts');
@@ -69,6 +67,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->date('approval_finman_date')->nullable();
             $table->timestamps();
         });
+
         
         Schema::create('itemable_price_requests', function (Blueprint $table) {
             $table->id();
@@ -94,9 +93,9 @@ class CreateAllBoqMigrationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('itemable_bill_of_quantities');
         Schema::dropIfExists('itemable_price_requests');
         Schema::dropIfExists('items');
         Schema::dropIfExists('itemable_quotation_parts');
+        Schema::dropIfExists('itemable_bill_of_quantities');
     }
 }

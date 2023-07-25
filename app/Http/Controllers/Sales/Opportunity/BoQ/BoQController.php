@@ -11,7 +11,8 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Models\Customer\CustomerProspect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
-use App\Models\Inventory\InventoryGoods;
+use App\Models\Inventory\InventoryGood;
+use App\Services\Master\Inventory\InventoryService;
 use App\Services\Sales\Opportunity\Survey\SurveyResultService;
 use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
 
@@ -20,16 +21,16 @@ class BoQController extends Controller
 
     protected $surveyResultService;
     protected $BoqDraftService;
-    protected $InventoryGoods;
+    protected $InventoryService;
 
     public function __construct(
         SurveyResultService $surveyResultService,
         BoqDraftService $BoqDraftService,
-        InventoryGoods $InventoryGoods
+        InventoryService $InventoryService
     ) {
         $this->surveyResultService = $surveyResultService;
         $this->BoqDraftService = $BoqDraftService;
-        $this->InventoryGoods = $InventoryGoods;
+        $this->InventoryService = $InventoryService;
     }
 
     function index()
@@ -39,8 +40,7 @@ class BoQController extends Controller
 
     function formBoQ()
     {
-        $dataForm = $this->InventoryGoods->getDataForm();
-        $dataCompany = $this->BoqDraftService->getDataCompany();
+        $dataForm = $this->InventoryService->getDataForm();
         return view('cmt-opportunity.boq.pages.form-boq',compact('dataForm'));
     }
 

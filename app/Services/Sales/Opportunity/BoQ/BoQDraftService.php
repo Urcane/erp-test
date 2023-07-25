@@ -72,7 +72,4 @@ class BoQDraftService
             ->make(true);
     }
 
-    function getDataCompany(){
-        
-    }
 }

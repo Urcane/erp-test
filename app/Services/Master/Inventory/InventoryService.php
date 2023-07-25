@@ -17,8 +17,8 @@ class InventoryService
         $this->InventoryRepository = $InventoryRepository;
     }
 
-    function getDataForm(Request $request) {
-        $dataFormInventory = $this->InventoryRepository->getAllData($request);
+    function getDataForm() {
+        $dataFormInventory = $this->InventoryRepository->getAllData()->get();
         return $dataFormInventory;
     }
 }
