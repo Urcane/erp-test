@@ -13,24 +13,28 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
 use App\Models\Inventory\InventoryGood;
-use App\Services\Sales\Opportunity\Survey\SurveyResultService;
 use App\Services\Master\Inventory\InventoryService;
+use App\Services\Sales\Opportunity\Survey\SurveyResultService;
+use App\Services\Sales\Opportunity\BoQ\BoQService;
 
 class BoQController extends Controller
 {
 
     protected $surveyResultService;
-    protected $BoqDraftService;
+    protected $BoqService;
     protected $InventoryService;
+    protected $ItemService;
 
     public function __construct(
         SurveyResultService $surveyResultService,
-        BoqDraftService $BoqDraftService,
-        InventoryService $InventoryService
+        BoQService $BoqService,
+        InventoryService $InventoryService,
+        ItemService $ItemService
     ) {
         $this->surveyResultService = $surveyResultService;
-        $this->BoqDraftService = $BoqDraftService;
+        $this->BoqService = $BoqService;
         $this->InventoryService = $InventoryService;
+        $this->ItemService = $ItemService;
     }
 
     function index()
@@ -38,10 +42,30 @@ class BoQController extends Controller
         return view('cmt-opportunity.boq.index');
     }
 
-    function formBoQ()
+    function formBoQ($id)
     {
+        $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $id)->first();
+        if (!$dataCompany) {
+            return response()->json("Oopss, ada yang salah nih!", 500);
+        }
         $dataForm = $this->InventoryService->getDataForm();
-        return view('cmt-opportunity.boq.pages.form-boq',compact('dataForm'));
+    
+        return view('cmt-opportunity.boq.pages.form-boq', compact('dataForm', 'dataCompany'));
+    
+    }
+
+    function saveItemsBoQ(Request $request) : JsonResponse{
+        if ($request->ajax()) {
+             $this->ItemService->saveItemsBoQ($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
+    function createNewBoQ(Request $request) : JsonResponse {
+        if ($request->ajax()) {
+            $this->BoqService->createNewBoQ($request);
+       }
+       return response()->json('Oops, Somethin\' Just Broke :(');
     }
     
     // public function getMerkType(Request $request)
@@ -67,7 +91,7 @@ class BoQController extends Controller
 
     function getDatatableDraft(Request $request) : JsonResponse {
         if ($request->ajax()) {
-            return $this->BoqDraftService->renderDatatable($request);
+            return $this->BoqService->renderDatatable($request);
         }
         return response()->json('Oops, Somethin\' Just Broke :(');
     }

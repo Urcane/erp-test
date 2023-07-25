@@ -38,7 +38,7 @@
                             <div class="col-lg-6 d-flex justify-content-end">
                                 <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
                                     <div class="">
-                                        <a href="{{route('com.boq.form-boq')}}" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Create BoQ</a>
+                                        <a href="{{url('cmt-boq/form-boq/{id}')}}" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Create BoQ</a>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center">
