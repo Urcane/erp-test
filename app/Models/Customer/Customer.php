@@ -2,6 +2,7 @@
 
 namespace App\Models\Customer;
 
+use App\Models\Team\City;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,5 +22,9 @@ class Customer extends Model
 
     function userFollowUp() : BelongsTo {
         return $this->belongsTo(User::class, 'user_follow_up', 'id');
+    }
+
+    function city() : BelongsTo {
+        return $this->belongsTo(City::class);
     }
 }

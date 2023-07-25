@@ -187,49 +187,49 @@
 
     const surveyRequestValidationMessages = {
         no_survey: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Nama Perusahaan/Badan Usaha wajib diisi</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
         service_type_id: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib dipilih</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
         type_of_survey_id: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Referensi lead wajib dipilih</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
         survey_date: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Alamat perusahaan/badan usaha wajib diisi</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
         survey_time: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
     };
 
     const workOrderValidationMessages = {
         survey_request_id: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>Work Order has Broken Link, Please Refresh (unable to find survey request)</span>",
         },
         no_wo: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Nama Perusahaan/Badan Usaha wajib diisi</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
         task_description: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib dipilih</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
         start_date: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Referensi lead wajib dipilih</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
         planning_due_date: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Alamat perusahaan/badan usaha wajib diisi</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
     };
 
     const surveyResultValidationMessages = {
         survey_request_id: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>Survey Result has Broken Link, Please Refresh (unable to find survey request)</span>",
         },
         work_order_id: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Nama Perusahaan/Badan Usaha wajib diisi</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>Survey Result has Broken Link, Please Refresh (unable to find work order)</span>",
         },
         service_type_id: {
-            required: "<span class='fw-semibold fs-8 text-danger'>Jenis bisnis wajib dipilih</span>",
+            required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
         },
     };
 
@@ -242,15 +242,15 @@
 
         surveyResultInternetStepper.on("kt.stepper.next", function (stepper) {
             const state = $('#kt_modal_create_survey_result_internet_form').valid();
-            // if (state) {
+            if (state) {
                 stepper.goNext(); 
-            // }
+            }
         });
         surveyResultCctvStepper.on("kt.stepper.next", function (stepper) {
             const state = $('#kt_modal_create_survey_result_cctv_form').valid();
-            // if (state) {
+            if (state) {
                 stepper.goNext(); 
-            // }
+            }
         });
         surveyResultInternetStepper.on("kt.stepper.previous", function (stepper) {
             stepper.goPrevious(); 

@@ -63,18 +63,12 @@ class SurveyController extends Controller
      * @return Illuminate\Contracts\View\View
      */
     function detail(Request $request, int $id) : View {
-        $serviceTypes = ServiceType::get();
-        $typeOfSurveys = TypeOfSurvey::get();
-        $typeOfWOs = WorkOrderCategory::get();
         $transMedias = TransmissionMedia::get();
         $internetServiceTypes = InternetServiceType::get();
         $cameraTypes = CameraType::get();
         $query = $this->surveyResultService->getSurveyResultById($request, $id)->first();
-
+        
         return view('cmt-opportunity.survey.pages.detail', compact(
-            'serviceTypes',
-            'typeOfSurveys',
-            'typeOfWOs',
             'transMedias',
             'internetServiceTypes',
             'cameraTypes',
