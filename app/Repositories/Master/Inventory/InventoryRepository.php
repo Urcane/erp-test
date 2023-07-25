@@ -27,4 +27,5 @@ class InventoryRepository
         $dataFormInventory = $this->model->with(['inventoryGoodCategory.inventoryGood']);
         return $dataFormInventory;
      }
+    
 }

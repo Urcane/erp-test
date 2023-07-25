@@ -38,7 +38,8 @@ class CreateAllBoqMigrationTable extends Migration
         
         Schema::create('itemable_quotation_parts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_list_id')->constrained('itemable_bill_of_quantities');
+            $table->foreignId('prospect_id')->constrained('customer_prospects');
+            $table->foreignId('survey_request_id')->nullable();
             $table->string('no_quotation');
             $table->string('description');
             $table->bigInteger('total_price')->digits(20);

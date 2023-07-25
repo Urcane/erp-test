@@ -2,25 +2,25 @@
 
 namespace App\Services\Sales\Opportunity\BoQ;
 
-use Yajra\DataTables\DataTables;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Repositories\Sales\Opportunity\BoQ\BoQDraftRepository;
+use App\Repositories\Sales\Opportunity\BoQ\BoQRepository;
 
 /**
  * Class BoQDraftService
  * @package App\Services
  */
-class BoQDraftService
+class BoqService
 {
-    protected $BoQDraftRepository;
+    protected $BoQRepository;
     
-    function __construct(BoQDraftRepository $BoQDraftRepository) {
-        $this->BoQDraftRepository = $BoQDraftRepository;
+    function __construct(BoQRepository $BoQRepository) {
+        $this->BoQRepository = $BoQRepository;
     }
 
     function renderDatatable(Request $request) : JsonResponse {
-        $query = $this->BoQDraftRepository->getAll($request);
+        $query = $this->BoQRepository->getAll($request);
 
         return DataTables::of($query)
             ->addColumn('DT_RowChecklist', function($check) {
@@ -32,7 +32,6 @@ class BoQDraftService
                 if ($query->type_of_survey_id == 2) {
                     $additionalMenu .= "<li><a href=\"#kt_modal_create_wo_survey\" class=\"dropdown-item py-2 btn_create_wo_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Terbit WO Survey</a></li>";
                 }
-
                 return "
                 <button type=\"button\" class=\"btn btn-secondary btn-icon btn-sm\" data-kt-menu-placement=\"bottom-end\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"fa-solid fa-ellipsis-vertical\"></i></button>
                 <ul class=\"dropdown-menu\">
@@ -72,4 +71,8 @@ class BoQDraftService
             ->make(true);
     }
 
+    function createNewBoQ(Request $request) : JsonResponse{
+        $saveBoQ = $this->BoQRepository->createBoQ($request);
+        return $saveBoQ;
+    }
 }

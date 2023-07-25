@@ -482,7 +482,6 @@ class CustomerController extends Controller
             ])->whereHas('customerProspectLogs', function ($logs) {
                 $logs->where('status', 2);
             });
-
             return DataTables::of($query->get())
             ->addColumn('DT_RowChecklist', function($check) {
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
@@ -517,7 +516,12 @@ class CustomerController extends Controller
                 return '     
                 <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 <ul class="dropdown-menu">
+
                     <li><a href="#kt_modal_request_survey" class="dropdown-item py-2 btn_request_survey" data-bs-toggle="modal" data-id="'.$query->id.'"><i class="fa-solid fa-list-check me-3"></i>Request Survey</a></li>
+                    
+                    <li><a href="' . url("cmt-boq/form-boq/" . $query->id) . '" class="dropdown-item py-2">
+                    <i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
+
                 </ul>
                 ';
             })
