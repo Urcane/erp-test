@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Sales\Opportunity\BoQ;
 
+use App\Models\Team\City;
+use App\Models\BussinesType;
 use Illuminate\Http\Request;
+use App\Models\LeadReference;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\User;
@@ -10,9 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Customer\CustomerProspect;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
 use App\Services\Sales\Opportunity\Survey\SurveyResultService;
-use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
 
 class BoQController extends Controller
 {
@@ -35,9 +38,13 @@ class BoQController extends Controller
 
     function formBoQ()
     {
+        // $getInventoryGoods =  ::get();  ngambil nama-nama barang di 
 
 
-        return view('cmt-opportunity.boq.pages.form-boq');
+        $getLead = LeadReference::get();
+        $getCity = City::get();
+        $getBussines = BussinesType::get();
+        return view('cmt-opportunity.boq.pages.form-boq', compact('getLead','getBussines','getCity'));
     }
 
     function getTableProspectDone(Request $request) : JsonResponse {
