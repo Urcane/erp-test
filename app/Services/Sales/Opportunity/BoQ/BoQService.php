@@ -2,10 +2,12 @@
 
 namespace App\Services\Sales\Opportunity\BoQ;
 
+use App\Models\Opportunity\BoQ\Items;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repositories\Sales\Opportunity\BoQ\BoQRepository;
+use App\Services\Master\Item\ItemService;
 
 /**
  * Class BoQDraftService
@@ -14,9 +16,11 @@ use App\Repositories\Sales\Opportunity\BoQ\BoQRepository;
 class BoqService
 {
     protected $BoQRepository;
+    protected $itemService;
     
-    function __construct(BoQRepository $BoQRepository) {
+    function __construct(BoQRepository $BoQRepository, ItemService $itemService) {
         $this->BoQRepository = $BoQRepository;
+        $this->itemService = $itemService;
     }
 
     function renderDatatable(Request $request) : JsonResponse {
@@ -73,6 +77,7 @@ class BoqService
 
     function createNewBoQ(Request $request) : JsonResponse{
         $saveBoQ = $this->BoQRepository->createBoQ($request);
+        $saveItems = $this->itemService->saveItems($request, $saveBoQ->itemableBillOfQuantities());
         return $saveBoQ;
     }
 }

@@ -32,8 +32,8 @@ class BoQRepository
 
     function createBoQ($request) {
         return $this->model->updateOrCreate([
-            //  'prospect_id' => $request->,
-            //  'survey_request_id' => $request->,
+             'prospect_id' => $request->prospect_id, // input blade di isi dengan id prospect ($dataCompany->id) yang di hidden
+             'survey_request_id' => $request->survey_request_id,
              'sales_id' => $request->sales_id,
              'technician_id' => $request->technician_id,
              'procurement_id' => $request->procurement_id,

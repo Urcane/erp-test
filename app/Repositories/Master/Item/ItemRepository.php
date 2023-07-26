@@ -22,10 +22,10 @@ class ItemRepository
         $this->model = $model;
     }
 
-    function saveItems($request) {
-        return $this->model->updateOrCreate([
-           //  'itemable_id' => $request->,
-           //  'itemable_type' => $request->,
+    function saveItems($request, $references) {
+        // 'itemable_id' => $request->itemable_bill_of_quantities_id, // prospect_id di ambil dari input blade yg di hidden, sehingga data tetap terpassing namun tidak mengubah tampilan
+        // 'itemable_type' => $request->itemable_type, //itemable_type di ambil dari input blade itemable_bill_of_quantities yg di hidden, sehingga data tetap terpassing namun tidak mengubah tampilan
+        return $references->updateOrCreate([
             'item_inventory_id' => $request->item_inventory_id,
             'item_detail' => $request->item_detail,
             'quantity' => $request->quantity,

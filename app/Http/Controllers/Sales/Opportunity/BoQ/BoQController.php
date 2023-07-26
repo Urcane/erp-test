@@ -37,21 +37,17 @@ class BoQController extends Controller
         $this->ItemService = $ItemService;
     }
 
-    function index()
-    {
+    function index() {
         return view('cmt-opportunity.boq.index');
     }
 
-    function formBoQ($id)
-    {
+    function formBoQ($id){
         $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $id)->first();
         if (!$dataCompany) {
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
         $dataForm = $this->InventoryService->getDataForm();
-    
-        return view('cmt-opportunity.boq.pages.form-boq', compact('dataForm', 'dataCompany'));
-    
+        return view('cmt-opportunity.boq.pages.form-boq', compact('dataForm', 'dataCompany')); 
     }
 
     function saveItemsBoQ(Request $request) : JsonResponse{
