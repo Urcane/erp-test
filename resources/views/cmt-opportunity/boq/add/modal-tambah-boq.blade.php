@@ -1,6 +1,7 @@
 <div class="modal fade" id="kt_modal_tambah_boq" aria-hidden="true">
     {{--  cek id --}}
 
+    {{-- @dd($dataCompany) --}}
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header py-3">
@@ -88,12 +89,9 @@
                                     name="good_type" id="good_type" data-dropdown-parent="#kt_modal_tambah_boq">
                                     <option value="" selected hidden disabled></option>
                                 </select> --}}
-                                
-                            <input class="form-control" type="text" name="good_type" id="good_type" disabled>
+                                <input class="form-control" type="text" name="good_type" id="good_type" disabled>
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                             </div>
-
-
 
                             <!-- Tambahkan atribut "data-url" pada select merek -->
                             <div class="col-lg-6 col-6 mb-3">
@@ -104,8 +102,8 @@
                                     name="merk" id="merk" data-dropdown-parent="#kt_modal_tambah_boq">
                                     <option value="" selected hidden disabled></option>
                                 </select> --}}
-                            <input class="form-control" type="text" name="merk" id="merk" disabled>
-                                <div class="fv-plugins-message-container invalid-feedback"></div>
+                                <input class="form-control" type="text" name="merk" id="merk" disabled>
+                                {{-- <div class="fv-plugins-message-container invalid-feedback"></div> --}}
                             </div>
 
 
@@ -131,30 +129,70 @@
                                 </select>
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                             </div> --}}
+                            <div class="col-lg-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class=" fw-bold">Detail Item</span>
+                                </label>
+                                <input class="form-control" type="text" name="detail" id="detail" disabled>
+                            </div>
+
+
+                            <div class="col-lg-12 mb-3">
+                                <div class="separator my-3"></div>
+                            </div>
+
                             <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-lg-6 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="fw-bold">Lat</span>
+                                            <span class="required fw-bold">Harga Beli</span>
                                         </label>
-                                        <input type="text" class="form-control form-control-solid" placeholder=""
-                                            name="lat">
+                                        <input type="number" class="form-control form-control-solid required" required
+                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
+                                            name="purchase_price">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                     <div class="col-lg-6 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="fw-bold">Lng</span>
+                                            <span class="required fw-bold">Quantity</span>
                                         </label>
-                                        <input type="text" class="form-control form-control-solid" placeholder=""
-                                            name="lng">
+                                        <input type="number" class="form-control form-control-solid required" required
+                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount()" name="quantity">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-12 mb-3">
-                                <div class="separator my-3"></div>
+
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-6 col-6 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="required fw-bold">Jasa antar</span>
+                                        </label>
+                                        <input type="number" class="form-control form-control-solid required" required
+                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
+                                            name="purchase_delivery">
+                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-lg-6 col-6 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="fw-bold">Toko Referensi</span>
+                                        </label>
+                                        <input type="text" class="form-control form-control-solid"
+                                            name="purchase_reference">
+                                        {{-- <div class="fv-plugins-message-container invalid-feedback"></div> --}}
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-lg-8 mb-3">
+
+                            <div class="d-flex justify-content-end ">
+                                <div class="w-20 me-10">
+                                    <span class="fw-bold">Total Amount : Rp. <span name="total"
+                                            id="total"></span></span>
+                                </div>
+                            </div>
+
+                            {{-- <div class="col-lg-8 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Nama Kontak</span>
                                 </label>
@@ -188,7 +226,7 @@
                                         minlength="9" maxlength="13" name="customer_contact_phone" />
                                 </div>
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 

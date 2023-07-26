@@ -16,7 +16,7 @@ use App\Models\Inventory\InventoryGood;
 use App\Services\Master\Inventory\InventoryService;
 use App\Services\Sales\Opportunity\Survey\SurveyResultService;
 use App\Services\Sales\Opportunity\BoQ\BoQService;
-
+use App\Services\Master\Item\ItemService;
 class BoQController extends Controller
 {
 
@@ -68,16 +68,6 @@ class BoQController extends Controller
        return response()->json('Oops, Somethin\' Just Broke :(');
     }
     
-    // public function getMerkType(Request $request)
-    // {
-    //     $itemId = $request->input('item_id');
-
-    //     // Mengambil data jenis dan merek item berdasarkan item yang dipilih
-    //     $itemData = InventoryGood::select('good_type', 'merk')->where('id', $itemId)->first();
-    //     return response()->json($itemData);
-
-        
-    // }
     public function getMerkType(Request $request)
     {
         if ($request->ajax()) {

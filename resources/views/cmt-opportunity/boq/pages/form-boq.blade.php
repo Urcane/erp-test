@@ -25,9 +25,9 @@
 @endsection
 
 @section('content')
-    {{-- FORM BOQ  --}}
-    {{-- @dd($dataForm) --}}
-    
+    {{-- FORM BOQ --}}
+    {{-- @dd($dataCompany) --}}
+
     <div class="row justify-content-center">
         <div class="col-lg-12 mt-n20">
             <div class="row justify-content-center">
@@ -44,42 +44,163 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        <div class="d-flex justify-content-center mx-20 my-10">
-                                            <div class="w-35">
-                                                <label for="exampleFormControlInput1" class="required form-label">Company
-                                                    Name</label>
-                                                <input type="email" class="form-control form-control-solid"
-                                                    placeholder="Example input" />
+                                        {{-- baris 1 --}}
+                                        <div class="d-flex justify-content-between mx-20 my-8">
+                                            <div class="w-75">
+                                                <label for="" class="form-label">Nama Perusahaan</label>
+                                                <input type="text" class="form-control form-control-solid" disabled
+                                                    value="{{ $dataCompany->customer->customer_name }}">
                                             </div>
 
                                             <div class="ms-10 w-25">
-                                                <label for="exampleFormControlInput1"
-                                                    class="form-label required">Project</label>
+                                                <label for="" class="form-label">Tenggat
+                                                    Waktu</label>
                                                 <div class="position-relative">
                                                     <div class=" position-absolute top-0"></div>
-                                                    <input type="text" class="form-control form-control-solid"
-                                                        placeholder="Example input" />
-                                                </div>
-                                            </div>
-
-                                            {{-- <div class="ms-10 w-25">
-                                            <label for="exampleFormControlInput1" class="form-label required">No Project</label>
-                                            <div class="position-relative">
-                                                <div class=" position-absolute top-0"></div>
-                                                <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
-                                            </div>
-                                        </div> --}}
-
-                                            <div class="ms-10 w-25">
-                                                <label for="exampleFormControlInput1" class="form-label required">Due
-                                                    Date</label>
-                                                <div class="position-relative">
-                                                    <div class=" position-absolute top-0"></div>
-                                                    <input type="date" class="form-control form-control-solid"
-                                                        placeholder="Example input" />
+                                                    <input type="date" class="form-control form-control-solid" />
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {{-- baris2 --}}
+                                        <div class="d-flex justify-content-between mx-20 my-8">
+                                            <div class="w-50">
+                                                <label for="" class="form-label">Alamat Perusahaan</label>
+                                                <textarea class="form-control form-control-solid" disabled rows="2" required style="resize:none">{{ $dataCompany->customer->customer_address }}</textarea>
+                                            </div>
+
+                                            <div class="w-25">
+                                                <label for="" class="form-label">Jenis
+                                                    Project</label>
+                                                <input type="text" class="form-control form-control-solid" placeholder=""
+                                                    disabled value="{{ $dataCompany->customer->bussinesType->type_name }}">
+                                            </div>
+                                        </div>
+
+                                        {{-- baris 3 lat lng --}}
+                                        <div class="d-flex justify-content-around mx-15 my-8">
+                                            <div class="w-25">
+                                                <label for="" class=" form-label">Lat</label>
+                                                <input type="text" class="form-control form-control-solid" placeholder=""
+                                                    disabled value="{{ $dataCompany->customer->lat }}" name=" ">
+                                            </div>
+
+                                            <div class="w-25">
+                                                <label for="" class="form-label">Lng</label>
+                                                <input type="text" class="form-control form-control-solid" placeholder=""
+                                                    disabled value="{{ $dataCompany->customer->lng }}" name="">
+                                            </div>
+                                        </div>
+
+                                        {{-- baris 4 contatct --}}
+                                        <div class="d-flex justify-content-around mx-20 my-8">
+                                            <div class="w-9vw">
+                                                <label for="" class=" form-label">Nama Kontak Customer</label>
+                                                <input type="text" class="form-control form-control-solid" placeholder=""
+                                                    disabled
+                                                    value="{{ $dataCompany->customer->customerContact->customer_contact_name }}"
+                                                    name="">
+                                            </div>
+
+                                            <div class="w-9vw">
+                                                <label for="" class="form-label">Jabatan
+                                                    Customer</label>
+                                                <input type="text" class="form-control form-control-solid" placeholder=""
+                                                    disabled
+                                                    value="{{ $dataCompany->customer->customerContact->customer_contact_job }}"
+                                                    name="">
+                                            </div>
+                                            <div class="w-9vw">
+                                                <label for="" class=" form-label">Email Customer</label>
+                                                <input type="email" class="form-control form-control-solid" placeholder=""
+                                                    disabled
+                                                    value="{{ $dataCompany->customer->customerContact->customer_contact_email }}"
+                                                    name="">
+                                            </div>
+
+                                            <div class="w-9vw">
+                                                <label for="" class="form-label">No Kontak
+                                                    Customer</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text border-0" id="">+62</span>
+                                                    <input type="number" class="form-control form-control-solid" disabled
+                                                        minlength="8"
+                                                        value="{{ $dataCompany->customer->customerContact->customer_contact_phone }}"
+                                                        name="" />
+                                                </div>
+                                            </div>
+
+                                            {{-- <div class="w-9vw">
+                                                <label for=""
+                                                    class="required form-label">Manpower</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control form-control-solid"
+                                                        placeholder="" required min="1" minlength="1" placeholder=""
+                                                        value="" name="manpower"
+                                                        oninput="validateAndFormatNumber(this)">
+                                                    <span class="input-group-text border-0">Orang</span>
+                                                </div>
+                                            </div> --}}
+
+                                        </div>
+                                        {{-- baris 3 --}}
+                                        {{-- <div class="d-flex justify-content-between mx-20 my-8 mt-10px">
+                                            <div class="w-9vw">
+                                                <label for="" class="required form-label">Lama
+                                                    Pengadaan Barang</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control form-control-solid"
+                                                        placeholder="" required min="1" minlength="1" placeholder=""
+                                                        value="" name="pengadaan_barang"
+                                                        oninput="validateAndFormatNumber(this)">
+                                                    <span
+                                                        class="input-group-text border-0">Hari</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="w-9vw">
+                                                <label for="" class="required form-label">Lama
+                                                    Pengiriman Barang</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control form-control-solid"
+                                                        placeholder="" required min="1" minlength="1" placeholder=""
+                                                        value="" name="pengiriman_barang"
+                                                        oninput="validateAndFormatNumber(this)">
+                                                    <span
+                                                        class="input-group-text border-0">Hari</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="w-9vw">
+                                                <label for="" class="required form-label">Lama
+                                                    Perjalanan Tim</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control form-control-solid"
+                                                        placeholder="" required min="1" minlength="1" placeholder=""
+                                                        value="" name="perjalanan_tim"
+                                                        oninput="validateAndFormatNumber(this)">
+                                                    <span
+                                                        class="input-group-text border-0">Hari</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="w-9vw">
+                                                <label for="" class="required form-label">Manpower</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control form-control-solid"
+                                                        placeholder="" required min="1" minlength="1" placeholder=""
+                                                        value="" name="manpower"
+                                                        oninput="validateAndFormatNumber(this)">
+                                                    <span
+                                                        class="input-group-text border-0">Orang</span>
+                                                </div>
+                                            </div>
+                                        </div> --}}
+
+                                        {{-- baris 4 --}}
+
+
+
                                     </div>
 
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
@@ -87,13 +208,31 @@
 
                                             <div class="d-flex justify-content-center mx-20 mb-5 mt-10 DuplicateRow">
                                                 <div class="w-20">
-                                                    <label for="exampleFormControlInput1" class=" form-label">Item</label>
-                                                    <input type="text" class="form-control form-control-solid"
+                                                    <label for="" class=" form-label">Item</label>
+                                                    <input type="text" class="form-control form-control-solid" name="content[]['good_id']"
                                                         placeholder="Example input" />
                                                 </div>
 
                                                 <div class="ms-10 w-20">
-                                                    <label for="exampleFormControlInput1" class=" form-label">Merk</label>
+                                                    <label for="" class=" form-label">Merk</label>
+                                                    <div class="position-relative">
+                                                        <div class=" position-absolute top-0"></div>
+                                                        <input type="text" class="form-control form-control-solid" name="content[]['good_merk']"
+                                                            placeholder="Example input" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="ms-10 w-20">
+                                                    <label for="" class=" form-label">Price</label>
+                                                    <div class="position-relative">
+                                                        <div class=" position-absolute top-0"></div>
+                                                        <input type="text" class="form-control form-control-solid" name="content[]['price']"
+                                                            placeholder="Example input" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="ms-10 w-20">
+                                                    <label for="" class=" form-label">Qty</label>
                                                     <div class="position-relative">
                                                         <div class=" position-absolute top-0"></div>
                                                         <input type="text" class="form-control form-control-solid"
@@ -102,25 +241,7 @@
                                                 </div>
 
                                                 <div class="ms-10 w-20">
-                                                    <label for="exampleFormControlInput1" class=" form-label">Price</label>
-                                                    <div class="position-relative">
-                                                        <div class=" position-absolute top-0"></div>
-                                                        <input type="text" class="form-control form-control-solid"
-                                                            placeholder="Example input" />
-                                                    </div>
-                                                </div>
-
-                                                <div class="ms-10 w-20">
-                                                    <label for="exampleFormControlInput1" class=" form-label">Qty</label>
-                                                    <div class="position-relative">
-                                                        <div class=" position-absolute top-0"></div>
-                                                        <input type="text" class="form-control form-control-solid"
-                                                            placeholder="Example input" />
-                                                    </div>
-                                                </div>
-
-                                                <div class="ms-10 w-20">
-                                                    <label for="exampleFormControlInput1" class=" form-label">Total
+                                                    <label for="" class=" form-label">Total
                                                         Price</label>
                                                     <div class="position-relative">
                                                         <div class=" position-absolute top-0"></div>
@@ -189,12 +310,12 @@
                                 <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
                                     <div class="d-flex justify-content-center mx-20 my-10">
                                         <div class="w-25">
-                                            <label for="exampleFormControlInput1" class="required form-label">Company Name</label>
+                                            <label for="" class="required form-label">Company Name</label>
                                             <input type="email" class="form-control form-control-solid" placeholder="Example input"/>
                                         </div>
                                         
                                         <div class="ms-10 w-25">
-                                            <label for="exampleFormControlInput1" class="form-label required">Project</label>
+                                            <label for="" class="form-label required">Project</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -202,7 +323,7 @@
                                         </div>
 
                                         <div class="ms-10 w-25">
-                                            <label for="exampleFormControlInput1" class="form-label required">No Project</label>
+                                            <label for="" class="form-label required">No Project</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -210,7 +331,7 @@
                                         </div>
 
                                         <div class="ms-10 w-25">
-                                            <label for="exampleFormControlInput1" class="form-label required">Project</label>
+                                            <label for="" class="form-label required">Project</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="date" class="form-control form-control-solid" placeholder="Example input"/>
@@ -224,13 +345,13 @@
                                     <div class="d-flex justify-content-center mx-20 mb-5 mt-10 mx-20 my-10">
                                         <div class="w-10">
                                             <div class="position-relative">
-                                                <label for="exampleFormControlInput1" class="required form-label">Nama Perusahaan</label>
+                                                <label for="" class="required form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
                                             </div>
                                         </div>
                                         
                                         <div class="ms-10 w-10">
-                                            <label for="exampleFormControlInput1" class="required form-label">Site</label>
+                                            <label for="" class="required form-label">Site</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -238,7 +359,7 @@
                                         </div>
 
                                         <div class="ms-10 w-10">
-                                            <label for="exampleFormControlInput1" class="form-label required">Layanan</label>
+                                            <label for="" class="form-label required">Layanan</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -246,7 +367,7 @@
                                         </div>
 
                                         <div class="ms-10 w-10">
-                                            <label for="exampleFormControlInput1" class="form-label required">Newlink</label>
+                                            <label for="" class="form-label required">Newlink</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -254,7 +375,7 @@
                                         </div>
 
                                         <div class="ms-10 w-10">
-                                            <label for="exampleFormControlInput1" class="form-label required">Vendor</label>
+                                            <label for="" class="form-label required">Vendor</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -262,7 +383,7 @@
                                         </div>
 
                                         <div class="ms-10 w-10">
-                                            <label for="exampleFormControlInput1" class="form-label required">Total Monthly</label>
+                                            <label for="" class="form-label required">Total Monthly</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -278,12 +399,12 @@
                                     <span class="lh-xxl mt-3 ms-5 fw-bolder text-dark text-uppercase d-none d-md-block">OTC AKSESORIS DAN MATERIAL INSTALASI</span>
                                     <div class="d-flex justify-content-center mx-20 mb-5 mt-10">
                                         <div class="w-15">
-                                            <label for="exampleFormControlInput1" class="required form-label">Nama Barang</label>
+                                            <label for="" class="required form-label">Nama Barang</label>
                                             <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
                                         </div>
                                         
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Site</label>
+                                            <label for="" class="form-label required">Site</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -291,7 +412,7 @@
                                         </div>
 
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Layanan</label>
+                                            <label for="" class="form-label required">Layanan</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -299,7 +420,7 @@
                                         </div>
 
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Qty</label>
+                                            <label for="" class="form-label required">Qty</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -307,7 +428,7 @@
                                         </div>
 
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Material dan Acc</label>
+                                            <label for="" class="form-label required">Material dan Acc</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -315,7 +436,7 @@
                                         </div>
 
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Total</label>
+                                            <label for="" class="form-label required">Total</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -324,12 +445,12 @@
                                     </div>
                                     <div class="d-flex justify-content-center mx-20">
                                         <div class="w-15">
-                                            <label for="exampleFormControlInput1" class="required form-label">Nama Barang</label>
+                                            <label for="" class="required form-label">Nama Barang</label>
                                             <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
                                         </div>
                                         
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Site</label>
+                                            <label for="" class="form-label required">Site</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -337,7 +458,7 @@
                                         </div>
 
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Layanan</label>
+                                            <label for="" class="form-label required">Layanan</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -345,7 +466,7 @@
                                         </div>
 
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Qty</label>
+                                            <label for="" class="form-label required">Qty</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -353,7 +474,7 @@
                                         </div>
 
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Material dan Acc</label>
+                                            <label for="" class="form-label required">Material dan Acc</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -361,7 +482,7 @@
                                         </div>
 
                                         <div class="ms-10 w-15">
-                                            <label for="exampleFormControlInput1" class="form-label required">Total</label>
+                                            <label for="" class="form-label required">Total</label>
                                             <div class="position-relative">
                                                 <div class=" position-absolute top-0"></div>
                                                 <input type="text" class="form-control form-control-solid" placeholder="Example input"/>
@@ -404,13 +525,40 @@
 
 
     <script>
-        $(document).ready(function() {
+        function validateAndFormatNumber(input) {
+            // Mengambil nilai input tanpa karakter non-digit
+            let inputValue = input.value.replace(/\D/g, '');
 
-            // var items = 1;
-            // $(".additembtn").click(function() {
-            //     items++; // Increment the variable without "var"
-            //     $(".MultipleInput .DuplicateRow:last-child").clone().appendTo(".MultipleInput");
-            // });
+            // Pastikan nilai input tidak kosong
+            if (inputValue.length > 0) {
+                // Pastikan nilai input tidak diawali dengan angka 0
+                if (inputValue[0] === '0') {
+                    // Jika nilai input diawali dengan angka 0, hapus angka 0 di awal
+                    inputValue = inputValue.slice(1);
+                }
+            }
+
+            // Mengatur nilai input kembali dengan angka yang telah diformat
+            input.value = inputValue;
+        };
+
+        function calculateTotalAmount() {
+            // Mengambil nilai dari masing-masing input
+            const purchasePrice = parseFloat(document.getElementsByName('purchase_price')[0].value);
+            const quantity = parseInt(document.getElementsByName('quantity')[0].value);
+            const purchaseDelivery = parseFloat(document.getElementsByName('purchase_delivery')[0].value);
+
+            // Melakukan perhitungan total
+            const totalAmount = purchasePrice * quantity + purchaseDelivery;
+
+            // Menampilkan total dalam format dengan tanda titik setiap 3 digit dari kanan
+            const formattedTotal = new Intl.NumberFormat().format(totalAmount);
+
+            // Mengatur nilai total pada elemen dengan id 'total'
+            document.getElementById('total').textContent = formattedTotal;
+        }
+
+        $(document).ready(function() {
 
             // Function Tambah BOQ
             $('body').on('click', '.btn_tambah_lead', function() {
@@ -452,32 +600,16 @@
 
                     },
                 },
-
                 submitHandler: function(form) {
                     var formData = new FormData(form);
+                    console.log(formData);
+                    console.log(form)
                     $('#kt_modal_tambah_boq_submit').attr('disabled', 'disabled');
-                    $.ajax({
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        // bikin routenya ntar
-                        url: '{{ route('com.lead.store-lead') }}',
-                        type: "POST",
-                        dataType: 'json',
-                        success: function(data) {
-                            $('#kt_modal_tambah_boq_cancel').click();
-                            // cek nama tabel db nya
-                            var oTable = $('#kt_table_lead').dataTable();
-                            oTable.fnDraw(false);
-                            toastr.success(data.status, 'Selamat 🚀 !');
-                        },
-                        error: function(xhr, status, errorThrown) {
-                            $('#kt_modal_tambah_boq_submit').removeAttr('disabled',
-                                'disabled');
-                            const data = JSON.parse(xhr.responseText);
-                            toastr.error(errorThrown, 'Opps!');
-                        }
-                    });
+                    $('input[name="halohalo"]').val(formData.good_name);
+                    $('input[name="halohalo"]').val(formData.good_name);
+                    $('input[name="halohalo"]').val(formData.good_name);
+                    $('input[name="halohalo"]').val(formData.good_name);
+                    $('input[name="halohalo"]').val(formData.good_name);
                 }
             });
 
@@ -505,17 +637,16 @@
                         // $merkSelect.append('<option value="' + response.merk + '">' + response
                         //     .merk + '</option>');
 
-                            $('#good_type').val(response.good_type).prop('disabled', true);
-                            $('#merk').val(response.merk).prop('disabled', true);
-                
+                        $('#good_type').val(response.good_type).prop('disabled', true);
+                        $('#merk').val(response.merk).prop('disabled', true);
+                        $('#detail').val(response.description).prop('disabled', true);
+
                     },
                     error: function(error) {
                         console.log(error);
                     }
                 });
             });
-
-
         });
     </script>
 

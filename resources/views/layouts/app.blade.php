@@ -45,6 +45,16 @@ class="app-default page-loading-enabled page-loading">
 		height: 260px; 
 		border-radius:.475rem;
 	}
+    
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+ }
+
+ input[type="number"] {
+   -moz-appearance: textfield; /* Firefox */
+ }
 </style>
 
 <script>

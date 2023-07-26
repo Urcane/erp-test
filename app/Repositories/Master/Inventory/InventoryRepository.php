@@ -31,7 +31,7 @@ class InventoryRepository
    public function getMerkTypeByItemId(int $itemId)
     {
         // Fetch "jenis" (good_type) and "merek" (merk) data based on the item ID
-        $itemData = InventoryGood::select('good_type', 'merk')->where('id', $itemId)->first();
+        $itemData = InventoryGood::select('good_type', 'merk','description')->where('id', $itemId)->first();
         return $itemData;
     }
 }

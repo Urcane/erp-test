@@ -100,6 +100,7 @@
                         <form id="kt_profile_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" value="{{$profile->id}}" name="user_id">
+                            {{-- personal information --}}
                             <div class="row p-6">
                                 <div class="col-lg-12 mb-9">
                                     <div class="d-flex align-items-center">
