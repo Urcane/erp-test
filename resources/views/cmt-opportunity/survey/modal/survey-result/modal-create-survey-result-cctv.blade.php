@@ -10,6 +10,9 @@
                 <form id="kt_modal_create_survey_result_cctv_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
                     {{-- <input type="hidden" name="type_of_wo" value="SR"> --}}
+                    <input type="hidden" name="site_survey_id" value="">
+                    <input type="hidden" name="site_survey_cctv_id" value="">
+                    <input type="hidden" name="site_survey_internet_id" value="">
                     <input type="hidden" name="survey_request_id" value="">
                     <input type="hidden" name="work_order_id" value="">
                     <input type="hidden" name="service_type_id" value="2">
@@ -42,6 +45,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if ($unfileable ?? false)
+                                    <div></div>
+                                    @else
                                     <div class="stepper-item mx-8" data-kt-stepper-element="nav">
                                         <div class="stepper-wrapper d-flex align-items-center">
                                             <div class="stepper-icon w-30px h-30px">
@@ -51,6 +57,7 @@
                                         </div>
                                         <div class="stepper-line h-35px"></div>
                                     </div>
+                                    @endif
                                 </div>
                                 
                                 <div class="w-lg-500px mx-auto">
@@ -209,6 +216,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if ($unfileable ?? false)
+                                        <div class="flex-column"></div>
+                                        @else
                                         <div class="flex-column" data-kt-stepper-element="content">
                                             <div class="row">
                                                 <div class="col-lg-12 mb-3">
@@ -221,6 +231,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
                                     <div class="mt-6 d-flex flex-stack">
                                         <div class="me-2">
