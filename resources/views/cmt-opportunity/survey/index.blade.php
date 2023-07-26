@@ -177,6 +177,7 @@
 @role('administrator')
 @include('cmt-opportunity.survey.modal.modal-request-survey')
 @include('cmt-opportunity.survey.modal.modal-create-wo-survey')
+@include('cmt-opportunity.survey.modal.modal-create-soft-survey')
 @include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-internet')
 @include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-cctv')
 @endrole
@@ -218,6 +219,12 @@
         },
         planning_due_date: {
             required: "<span class='fw-semibold fs-8 text-danger'>This Field is required</span>",
+        },
+    };
+
+    const softSurveyValidationMessages = {
+        survey_request_id: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Work Order has Broken Link, Please Refresh (unable to find survey request)</span>",
         },
     };
 
@@ -384,12 +391,92 @@
             });
         });
 
+        $('body').on('click', '.btn_create_soft_survey', function () {
+            let random_string = generateRandomString(4);
+
+            const form_edit = $('#kt_modal_create_soft_survey_form');
+            form_edit.find('#containerSelectedSurveyRequests').html('');
+            $('.drop-data').val("").trigger("change")
+            $('#kt_modal_create_soft_survey_form').trigger("reset")
+            $('#kt_modal_create_soft_survey_submit').removeAttr('disabled','disabled');
+
+            surveyRequestIds = [];
+            const surveyRequestId = $(this).data('id');
+            surveyRequestIds.push(surveyRequestId);
+
+            $.each(surveyRequestIds.filter(onlyUnique), function(index, rowId) {
+                form_edit.find('#containerSelectedSurveyRequests').append(
+                    $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'survey_request_id[]')
+                    .val(rowId)
+                );
+            });
+
+            $(`.file-soft-survey-item-initial`).change(function(){
+                imageReadURL(this);
+            });
+
+            form_edit.on('click', '.btn_add_more_soft_survey_item', function () {
+                form_edit.find('#containerSoftSurveyItems').append(
+                    `
+                    <div class="row soft-survey-item">
+                        <div class="col-lg-12 mb-3">
+                            <div class="separator my-3 text-center text-gray-800">Soft Survey Item</div>
+                        </div>
+                        <div class="col-lg-10 mb-3">
+                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="required fw-bold">Lampiran</span>
+                            </label>
+                            <input type="file" class="form-control form-control-solid file-soft-survey-item-${random_string}" placeholder="" required accept="image/*" name="content[]['file_soft_survey_internet']">
+                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                            <img id="containerImage" class="img-fluid m-5" src="#" alt="File Image" hidden="hidden"/>
+                        </div>
+                        <div class="col-lg-2 my-9">
+                            <button type="button" class="btn btn-sm btn-icon btn-danger clear-soft-survey-item-${random_string}"><i class="fa-solid fa-eraser"></i></button>
+                        </div>
+                        <div class="col-lg-10 mb-3">
+                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="required fw-bold">Deskripsi Pekerjaan</span>
+                            </label>
+                            <textarea class="form-control form-control-solid h-100px" placeholder="Fill Notes" name="content[]['description']"></textarea>
+                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                        </div>
+                    </div>
+                    `
+                )
+
+                $(`.file-soft-survey-item-${random_string}`).change(function(){
+                    imageReadURL(this);
+                });
+
+                $(`.clear-soft-survey-item-${random_string}`).click(function () {
+                    $(this).parent().parent().remove();
+                    console.log(random_string)
+                    random_string = generateRandomString(4);
+
+                    $('#countable_soft_survey_items').html($('.soft-survey-item').length + 1);
+                })
+
+                $('#countable_soft_survey_items').html($('.soft-survey-item').length + 1);
+                random_string = generateRandomString(4);
+            })
+        });
+
         submitModal({
             modalName: 'kt_modal_create_wo_survey',
             tableName: 'kt_table_survey_request',
             anotherTableName: 'tableOnProgressSurvey',
             ajaxLink: "{{route('com.work-order-survey.store')}}",
             validationMessages: workOrderValidationMessages,
+        })
+
+        submitModal({
+            modalName: 'kt_modal_create_soft_survey',
+            tableName: 'kt_table_survey_request',
+            anotherTableName: 'tableOnProgressSurvey',
+            ajaxLink: "{{route('com.soft-survey.store')}}",
+            validationMessages: softSurveyValidationMessages,
         })
     })    
 

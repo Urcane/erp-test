@@ -220,6 +220,33 @@ class="app-default page-loading-enabled page-loading">
         const seg = ("0" + (date.getSeconds())).slice(-2);
         return [year + "-" + month + "-" + day, hour + ":" +  min];
     }
+
+    
+    function generateRandomString(length) {
+        const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        const charactersLength = characters.length;
+        for ( let i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        return result;
+    }
+
+    function imageReadURL(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                $(input).parent().find('#containerImage').attr('src', e.target.result);
+                $(input).parent().find('#containerImage').removeAttr('hidden');
+                console.log($(input).parent().find('#containerImage'));
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
 </script>
 </body>
 </html>

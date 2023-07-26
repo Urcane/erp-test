@@ -159,4 +159,8 @@ class SurveyController extends Controller
         }
         return response()->json('Oops, Somethin\' Just Broke :(', 403);
     }
+
+    function storeSoftSurvey(Request $request) {
+        dd($request->all());
+    }
 }
