@@ -477,7 +477,6 @@ class CustomerController extends Controller
             $query = CustomerProspect::with([
                 'customer.customerContact', 
                 'customer.userFollowUp', 
-                'customer.bussinesType',
                 'latestCustomerProspectLog'
             ])->whereHas('customerProspectLogs', function ($logs) {
                 $logs->where('status', 2);

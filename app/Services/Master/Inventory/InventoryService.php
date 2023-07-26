@@ -24,5 +24,9 @@ class InventoryService
         return $dataFormInventory;
     }
     
-    
+    public function getMerkType(int $itemId)
+    {
+        $itemData = $this->InventoryRepository->getMerkTypeByItemId($itemId);
+        return $itemData;
+    }
 }

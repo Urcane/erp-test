@@ -86,11 +86,11 @@
                                                   <tr class="fw-bold fs-7 text-muted text-uppercase">
                                                     <th class="w-25px">#</th>
                                                     <th class="w-25px">#</th>
-                                                    <th class="">Company Name</th>
-                                                    <th class="w-100px">Company Contact</th>
-                                                    <th class="w-100px">Business Type</th>
-                                                    <th class="w-300px">Next Action</th>
-                                                    <th class="w-300px">Progress</th>
+                                                    <th class="">No Wo</th>
+                                                    <th class="w-100px">Task Desc</th>
+                                                    <th class="w-100px">Start Date</th>
+                                                    <th class="w-300px">Planning Due Date</th>
+                                                    <th class="w-300px">Status</th>
                                                     <th class="w-50px text-center">#</th>
                                                 </tr>
                                                 </thead>
@@ -538,8 +538,8 @@ $(document).ready(function() {
                 { data: 'DT_RowChecklist', orderable: false, searchable: false},
                 { data: 'DT_RowIndex'},
                 { data: 'customer.customer_contact.customer_contact_name'},
+                { data: 'customer.customer_contact.customer_contact_job'},
                 { data: 'customer.customer_contact.customer_contact_phone'},
-                { data: 'customer.bussines_type.type_name'},
                 { data: 'next_action_pretified'},
                 { data: 'progress_pretified'},
                 { data: 'action' },
@@ -570,12 +570,11 @@ $(document).ready(function() {
             elementName: "#kt_table_draft_boq",
             ajaxLink: "{{ route('com.boq.draft.datatable') }}",
             columnData: [
-                { data: 'DT_RowChecklist'},
                 { data: 'DT_RowIndex'},
-                { data: 'prospect.customer.customer_contact.customer_contact_name'},
-                { data: 'prospect.customer.customer_contact.customer_contact_phone'},
-                { data: 'next_action_pretified'},
-                { data: 'progress_pretified'},
+                { data: 'prospect.customer.customer_name'},
+                { data: 'prospect.customer.customer_address'},
+                { data: 'prospect.customer_prospect_logs.prospect_update'},
+                { data: 'prospect.customer_prospect_logs.prospect_next_action'},
                 { data: 'action' },
             ]
          });   

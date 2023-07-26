@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Customer\CustomerProspect;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
 use App\Models\Inventory\InventoryGood;
 use App\Services\Master\Inventory\InventoryService;
-use App\Services\Master\Item\ItemService;
 use App\Services\Sales\Opportunity\Survey\SurveyResultService;
 use App\Services\Sales\Opportunity\BoQ\BoQService;
 
@@ -63,6 +63,27 @@ class BoQController extends Controller
        }
        return response()->json('Oops, Somethin\' Just Broke :(');
     }
+    
+    // public function getMerkType(Request $request)
+    // {
+    //     $itemId = $request->input('item_id');
+
+    //     // Mengambil data jenis dan merek item berdasarkan item yang dipilih
+    //     $itemData = InventoryGood::select('good_type', 'merk')->where('id', $itemId)->first();
+    //     return response()->json($itemData);
+
+        
+    // }
+    public function getMerkType(Request $request)
+    {
+        if ($request->ajax()) {
+             $itemId = $request->input('item_id');
+        $itemData = $this->InventoryService->getMerkType($itemId);
+        return response()->json($itemData);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
 
     function getDatatableDraft(Request $request) : JsonResponse {
         if ($request->ajax()) {
