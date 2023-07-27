@@ -271,7 +271,7 @@
                 { data: 'customer.user_follow_up.name' },
                 { data: 'progress_pretified'},
                 { data: 'next_action_pretified'},
-                { data: 'action' },
+                { data: 'actionSurvey' },
             ]
         });
 

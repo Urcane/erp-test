@@ -17,10 +17,6 @@ class ItemableQuotationParts extends Model
         return $this->morphMany(Items::class, 'itemable');
     }
 
-    function items() : HasOne{
-        return $this->hasOne(Items::class);
-    }
-
     function parentItemableQuotationParts() : BelongsTo{
         return $this->BelongsTo(this::class, 'referenced_quotation_id', 'id');
     }

@@ -7,62 +7,77 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Inventory\InventoryGood;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Customer\CustomerProspect;
+use App\Services\Master\Item\ItemService;
+use App\Services\Sales\Opportunity\BoQ\BoQService;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Services\Master\Inventory\InventoryService;
 use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
-use App\Models\Inventory\InventoryGood;
-use App\Services\Master\Inventory\InventoryService;
 use App\Services\Sales\Opportunity\Survey\SurveyResultService;
-use App\Services\Sales\Opportunity\BoQ\BoQService;
 
 class BoQController extends Controller
 {
 
     protected $surveyResultService;
-    protected $BoqService;
+    protected 
+    $BoqService;
     protected $InventoryService;
     protected $ItemService;
+    protected $references;
+    protected $customerProspect;
 
     public function __construct(
         SurveyResultService $surveyResultService,
         BoQService $BoqService,
         InventoryService $InventoryService,
-        ItemService $ItemService
+        ItemService $ItemService,
+        CustomerProspect $customerProspect
     ) {
         $this->surveyResultService = $surveyResultService;
         $this->BoqService = $BoqService;
         $this->InventoryService = $InventoryService;
         $this->ItemService = $ItemService;
+        $this->customerProspect = $customerProspect;
     }
 
     function index() {
         return view('cmt-opportunity.boq.index');
     }
 
-    function formBoQ($id){
-        $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $id)->first();
-        if (!$dataCompany) {
-            return response()->json("Oopss, ada yang salah nih!", 500);
+    function formBoQ($id = null)
+    {
+        $dataForm = $this->InventoryService->getDataForm();   
+        if ($id === null) {
+            $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->get();
+        }  else {
+            $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->find($id); 
+            if (!$dataCompany) {
+                return response()->json("Oopss, ada yang salah nih!", 500);
+            }
         }
-        $dataForm = $this->InventoryService->getDataForm();
         return view('cmt-opportunity.boq.pages.form-boq', compact('dataForm', 'dataCompany')); 
     }
-
-    function saveItemsBoQ(Request $request) : JsonResponse{
-        if ($request->ajax()) {
-             $this->ItemService->saveItemsBoQ($request);
-        }
-        return response()->json('Oops, Somethin\' Just Broke :(');
-    }
-
+    
     function createNewBoQ(Request $request) : JsonResponse {
         if ($request->ajax()) {
+            if (!$this->customerProspect->where('id', $request->prospect_id)->exists()) {
+                return response()->json(['Prospect ID Tidak Ditemukan 😥'], 404);
+            }
             $this->BoqService->createNewBoQ($request);
+            return response()->json('Data Tersimpan 🎂');
        }
        return response()->json('Oops, Somethin\' Just Broke :(');
     }
+
+    // function saveItemsBoQ(Request $request, $references) : JsonResponse{
+    //     if ($request->ajax()) {
+    //          $this->ItemService->saveItems($request, $references);
+    //     }
+    //     return response()->json('Oops, Somethin\' Just Broke :(');
+    // }
     
     // public function getMerkType(Request $request)
     // {
@@ -74,7 +89,7 @@ class BoQController extends Controller
 
         
     // }
-    public function getMerkType(Request $request)
+    function getMerkType(Request $request)
     {
         if ($request->ajax()) {
              $itemId = $request->input('item_id');

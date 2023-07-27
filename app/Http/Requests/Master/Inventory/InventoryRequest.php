@@ -26,12 +26,11 @@ class InventoryRequest extends FormRequest
         return [
              //  'itemable_id' => $data->,
             //  'itemable_type' => $data->,
-            'item_inventory_id' => 'required | exists:inventory_goods,id' ,
-            'item_detail' => 'required | max:255',
-            'quantity' => 'reqeuired | numeric',
-            'purchase_price' => 'required | numeric',
-            'purchase_delivery_charge' => 'required | numeric',
-            'purchase_refrence' => 'required',
+            'item_inventory_id' => 'exists:inventory_goods,id' ,
+            'item_detail' => 'max:255',
+            'quantity' => 'numeric',
+            'purchase_price' => 'numeric',
+            'purchase_delivery_charge' => 'numeric',
         ];
     }
 }

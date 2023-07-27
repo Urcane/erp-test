@@ -1,3 +1,20 @@
+@if ($dataCompany instanceof \Illuminate\Support\Collection)
+    <!-- Jika dataCompany adalah koleksi dari CustomerProspect -->
+    @foreach ($dataCompany as $company)
+        <h2>Form dengan ID: {{ $company->id }}</h2>
+        <p>Nama Customer: {{ $company->customer->name }}</p>
+        <!-- Tampilkan informasi lainnya sesuai kebutuhan -->
+    @endforeach
+@elseif ($dataCompany instanceof \App\CustomerProspect)
+    <!-- Jika dataCompany adalah objek CustomerProspect -->
+    <h2>Form dengan ID: {{ $dataCompany->id }}</h2>
+    <p>Nama Customer: {{ $dataCompany->customer->name }}</p>
+    <!-- Tampilkan informasi lainnya sesuai kebutuhan -->
+@else
+    <!-- Jika dataCompany bukan objek maupun koleksi dari CustomerProspect (mungkin null) -->
+    <h2>Form baru tanpa ID</h2>
+@endif
+
 @extends('layouts.app')
 @section('title-apps','BOQ')
 @section('sub-title-apps-2','Commercial')

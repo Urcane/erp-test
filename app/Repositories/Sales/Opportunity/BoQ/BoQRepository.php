@@ -26,7 +26,7 @@ class BoQRepository
     }
 
     function getAll(Request $request){
-        $dataBoq = $this->model->with(['itemableBillOfQuantities', 'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog']);
+        $dataBoq = $this->model->with(['itemableBillOfQuantities', 'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
         return $dataBoq;
     }
 

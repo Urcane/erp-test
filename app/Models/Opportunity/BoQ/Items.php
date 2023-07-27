@@ -22,10 +22,6 @@ class Items extends Model
         return $this->belongsTo(ItemInventory::class, 'item_inventory_id', 'id');
     }
 
-    function itemableId() : BelongsTo {
-        return $this->belongsTo(ItemableQuotationParts::class, 'itemable_id', 'id');
-    }
-
     function parentItems() : BelongsTo{
         return $this->belongsTo(this::class, 'itemable_id', 'id');
     }

@@ -2,12 +2,13 @@
 
 namespace App\Services\Sales\Opportunity\BoQ;
 
-use App\Models\Opportunity\BoQ\Items;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\Opportunity\BoQ\Items;
+use App\Models\Customer\CustomerProspect;
+use App\Services\Master\Item\ItemService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repositories\Sales\Opportunity\BoQ\BoQRepository;
-use App\Services\Master\Item\ItemService;
 
 /**
  * Class BoQDraftService
@@ -17,10 +18,12 @@ class BoqService
 {
     protected $BoQRepository;
     protected $itemService;
+    protected $customerProspect;
     
-    function __construct(BoQRepository $BoQRepository, ItemService $itemService) {
+    function __construct(BoQRepository $BoQRepository, ItemService $itemService, CustomerProspect $customerProspect) {
         $this->BoQRepository = $BoQRepository;
         $this->itemService = $itemService;
+        $this->customerProspect = $customerProspect;
     }
 
     function renderDatatable(Request $request) : JsonResponse {
@@ -77,7 +80,8 @@ class BoqService
 
     function createNewBoQ(Request $request) : JsonResponse{
         $saveBoQ = $this->BoQRepository->createBoQ($request);
-        $saveItems = $this->itemService->saveItems($request, $saveBoQ->itemableBillOfQuantities());
-        return $saveBoQ;
+        $saveItems = $this->itemService->saveItems($request, $saveBoQ->itemableBillOfQuantities()); //$saveBoQ->ID
+        return new JsonResponse(['message' => 'Data berhasil disimpan'], 200);
     }
 }
+

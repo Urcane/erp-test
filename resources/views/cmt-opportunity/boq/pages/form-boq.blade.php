@@ -48,10 +48,15 @@
                                             <div class="w-35">
                                                 <label for="exampleFormControlInput1" class="required form-label">Company
                                                     Name</label>
-                                                <input type="email" class="form-control form-control-solid"
-                                                    placeholder="Example input" />
-                                            </div>
 
+                                                @if(request()->is('cmt-boq/form-boq'))
+                                                    @foreach ($dataCompany as $data)
+                                                                <p>{{ $data->customer->customer_name }}</p>
+                                                    @endforeach
+                                                @elseif(request()->is('cmt-boq/form-boq/*'))
+                                                    <p>{{ $dataCompany->customer->customer_name }}</p>
+                                                @endif
+                                            </div>
                                             <div class="ms-10 w-25">
                                                 <label for="exampleFormControlInput1"
                                                     class="form-label required">Project</label>
