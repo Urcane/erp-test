@@ -69,7 +69,8 @@ class SurveyResultRepository
     }
 
     function saveSiteSurveyInternet(SiteSurvey $siteSurvey, SurveyResultInternetRequest $data) : SiteSurveyInternet {
-        return $siteSurveyInternet = SiteSurveyInternet::create([
+
+        return $siteSurveyInternet = SiteSurveyInternet::updateOrCreate([
             'id' => $data->site_survey_internet_id
         ],[
             'site_survey_id' => $siteSurvey->id,
