@@ -29,7 +29,7 @@ class SiteSurvey extends Model
     }
 
     function siteSurveyInternet() : HasOne {
-        return $this->hasOne(SiteSurveyInternets::class);
+        return $this->hasOne(SiteSurveyInternet::class);
     }
 
     function surveyRequest() : BelongsTo {

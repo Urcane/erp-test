@@ -9,6 +9,8 @@ use App\Models\Master\CameraType;
 use App\Models\Master\InternetServiceType;
 use App\Models\Master\ServiceType;
 use App\Models\Master\TransmissionMedia;
+use App\Models\Opportunity\Survey\SiteSurvey;
+use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
 use App\Models\ProjectManagement\WorkOrderCategory;
 use App\Services\Sales\Opportunity\Survey\SurveyRequestService;
@@ -52,6 +54,25 @@ class SurveyController extends Controller
             'transMedias',
             'internetServiceTypes',
             'cameraTypes'
+        ));
+    }
+
+    /**
+     * Show detail page of survey
+     * 
+     * @return Illuminate\Contracts\View\View
+     */
+    function detail(Request $request, int $id) : View {
+        $transMedias = TransmissionMedia::get();
+        $internetServiceTypes = InternetServiceType::get();
+        $cameraTypes = CameraType::get();
+        $query = $this->surveyResultService->getSurveyResultById($request, $id)->first();
+        
+        return view('cmt-opportunity.survey.pages.detail', compact(
+            'transMedias',
+            'internetServiceTypes',
+            'cameraTypes',
+            'query'
         ));
     }
 
@@ -137,5 +158,9 @@ class SurveyController extends Controller
             return response()->json($this->surveyRequestService->getSurveyRequestById($request, $id)->first(), 200);
         }
         return response()->json('Oops, Somethin\' Just Broke :(', 403);
+    }
+
+    function storeSoftSurvey(Request $request) {
+        dd($request->all());
     }
 }

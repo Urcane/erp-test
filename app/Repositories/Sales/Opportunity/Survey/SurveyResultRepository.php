@@ -21,7 +21,9 @@ class SurveyResultRepository
     }
 
     function save($data, $modelType) : EloquentBuilder {
-        $siteSurvey = SiteSurvey::create([
+        $siteSurvey = SiteSurvey::updateOrCreate([
+            'id' => $data->site_survey_id,
+        ],[
             'survey_request_id' => $data->survey_request_id,
             'work_order_id' => $data->work_order_id,
             'service_type_id' => $data->service_type_id,
@@ -53,7 +55,9 @@ class SurveyResultRepository
     }
 
     function saveSiteSurveyCCTV(SiteSurvey $siteSurvey, SurveyResultCCTVRequest $data) : SiteSurveyCCTV {
-        return $siteSurveyCCTV = SiteSurveyCCTV::create([
+        return $siteSurveyCCTV = SiteSurveyCCTV::updateOrCreate([
+            'id' => $data->site_survey_cctv_id
+        ],[
             'site_survey_id' => $siteSurvey->id,
             'camera_type_id' => $data->camera_type_id,
             'quantity_service_use' => $data->quantity_service_use,
@@ -66,6 +70,8 @@ class SurveyResultRepository
 
     function saveSiteSurveyInternet(SiteSurvey $siteSurvey, SurveyResultInternetRequest $data) : SiteSurveyInternet {
         return $siteSurveyInternet = SiteSurveyInternet::create([
+            'id' => $data->site_survey_internet_id
+        ],[
             'site_survey_id' => $siteSurvey->id,
             'quantity_service_use' => $data->quantity_service_use,
             'user_needs' => $data->user_needs,
@@ -76,5 +82,13 @@ class SurveyResultRepository
 
     function getAll(Request $request) : EloquentBuilder {
         return SiteSurvey::with('surveyRequest', 'workOrder', 'transmissionMedia', 'internetServiceType', 'serviceType');
+    }
+
+    function getById(Request $request, int $id) : EloquentBuilder {
+        return $this->getByIdWithoutRelationship($request, $id)->with('siteSurveyCCTV.cameraType','siteSurveyInternet', 'surveyRequest.customerProspect.customer.customerContact', 'surveyRequest.customerProspect.customer.city', 'workOrder', 'transmissionMedia', 'internetServiceType', 'serviceType');
+    }
+
+    function getByIdWithoutRelationship(Request $request, int $id) : EloquentBuilder {
+        return SiteSurvey::where('id', $id);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Customer;
 
+use App\Models\Team\City;
 use App\Models\User;
 use App\Models\BussinesType;
 use Illuminate\Database\Eloquent\Model;
@@ -26,5 +27,9 @@ class Customer extends Model
 
     function bussinesType() : BelongsTo {
         return $this->belongsTo(BussinesType::class, 'bussines_type_id', 'id');
+    }
+    
+    function city() : BelongsTo {
+        return $this->belongsTo(City::class);
     }
 }
