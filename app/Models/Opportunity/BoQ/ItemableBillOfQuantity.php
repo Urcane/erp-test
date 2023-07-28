@@ -11,13 +11,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class ItemableBillOfQuantities extends Model
+class ItemableBillOfQuantity extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
-    function itemableBillOfQuantities() : MorphMany{
-        return $this->morphMany(Items::class, 'itemable');
+    function itemableBillOfQuantity() : MorphMany{
+        return $this->morphMany(Item::class, 'itemable');
+    }
+
+    function itemableBillOfQuantityLog() : HasOne{
+        return $this->hasOne(ItemableBillOfQuantityLog::class, 'id', 'itemable_bill_of_quantity_id');
     }
 
     function prospect() : BelongsTo {
@@ -40,11 +44,11 @@ class ItemableBillOfQuantities extends Model
         return $this->belongsTo(User::class, 'procurement_id');
     }
 
-    function parentItemableBillOfQuantities() : BelongsTo{
+    function parentItemableBillOfQuantity() : BelongsTo{
         return $this->belongsTo(this::class, 'reference_bill_of_quantity_id', 'id');
     }
 
-    function childItemableBillOfQuantities() : HasOne{
+    function childItemableBillOfQuantity() : HasOne{
         return $this->hasOne(this::class, 'reference_bill_of_quantity_id', 'id');
     }
 }

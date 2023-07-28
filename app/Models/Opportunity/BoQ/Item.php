@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Items extends Model
+class Item extends Model
 {
     use HasFactory;
     protected $guarded = [];
@@ -22,11 +22,11 @@ class Items extends Model
         return $this->belongsTo(ItemInventory::class, 'item_inventory_id', 'id');
     }
 
-    function parentItems() : BelongsTo{
+    function parentItem() : BelongsTo{
         return $this->belongsTo(this::class, 'itemable_id', 'id');
     }
 
-    function childItems() : HasOne{
+    function childItem() : HasOne{
         return $this->hasOne(this::class, 'itemable_id', 'id');
     }
 }

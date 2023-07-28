@@ -62,8 +62,9 @@
                                                     class="form-label required">Project</label>
                                                 <div class="position-relative">
                                                     <div class=" position-absolute top-0"></div>
-                                                    <input type="text" class="form-control form-control-solid"
-                                                        placeholder="Example input" />
+                                                    @foreach ($salesEmployees as $sales)
+                                                    <p>{{ $sales->name }}</p>
+                                                    @endforeach
                                                 </div>
                                             </div>
 

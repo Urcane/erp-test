@@ -8,20 +8,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class ItemableQuotationParts extends Model
+class ItemableQuotationPart extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
     function itemableQuotation() : MorphMany{
-        return $this->morphMany(Items::class, 'itemable');
+        return $this->morphMany(Item::class, 'itemable');
     }
 
-    function parentItemableQuotationParts() : BelongsTo{
+    function parentItemableQuotationPart() : BelongsTo{
         return $this->BelongsTo(this::class, 'referenced_quotation_id', 'id');
     }
 
-    function childrenItemableQuotationParts() : BelongsTo{
+    function childrenItemableQuotationPart() : BelongsTo{
         return $this->belongsTo(this::class, 'referenced_quotation_id', 'id');
     }
 }

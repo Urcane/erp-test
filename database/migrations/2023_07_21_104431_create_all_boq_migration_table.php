@@ -22,11 +22,11 @@ class CreateAllBoqMigrationTable extends Migration
             $table->foreignId('technician_id')->constrained('users');
             $table->foreignId('procurement_id')->constrained('users');
             $table->bigInteger('gpm')->digits(20)->nullable();
-            $table->bigInteger('modal')->digits(20);
-            $table->bigInteger('npm')->digits(20);
-            $table->integer('percentage')->digits(4);
-            $table->integer('manpower')->digits(4);
-            $table->string('is_draft')->nullable();
+            $table->bigInteger('modal')->digits(20)->nullable();
+            $table->bigInteger('npm')->digits(20)->nullable();
+            $table->integer('percentage')->digits(4)->nullable();
+            $table->integer('manpower')->digits(4)->nullable();
+            $table->string('is_draft');
             $table->boolean('approval_manager')->nullable();
             $table->date('approval_manager_date')->nullable();
             $table->boolean('approval_director')->nullable();
@@ -34,6 +34,16 @@ class CreateAllBoqMigrationTable extends Migration
             $table->boolean('approval_finman')->nullable();
             $table->date('approval_finman_date')->nullable();
             $table->integer('reference_bill_of_quantity_id')->nullable()->digits(4)->constrained('itemable_bill_of_quantities');
+            $table->timestamps();
+        });
+
+        Schema::create('itemable_bill_of_quantities_logs', function (Blueprint $table)  {
+            $table->id();
+            $table->foreignId('bill_of_quantities_id')->constrained('itemable_bill_of_quantities');
+            $table->string('bill_of_quantity_update');
+            $table->string('bill_of_quantity_next_action');
+            $table->dateTime('next_action_plan_date');
+            $table->integer('status')->default(1)->index(); //1 prg 0 cancel 2 done
             $table->timestamps();
         });
         
@@ -95,6 +105,7 @@ class CreateAllBoqMigrationTable extends Migration
     public function down()
     {
         Schema::dropIfExists('itemable_bill_of_quantities');
+        Schema::dropIfExists('itemable_bill_of_quantities_logs');
         Schema::dropIfExists('itemable_price_requests');
         Schema::dropIfExists('items');
         Schema::dropIfExists('itemable_quotation_parts');

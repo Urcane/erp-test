@@ -28,19 +28,22 @@ class BoQController extends Controller
     protected $ItemService;
     protected $references;
     protected $customerProspect;
+    protected $employees;
 
     public function __construct(
         SurveyResultService $surveyResultService,
         BoQService $BoqService,
         InventoryService $InventoryService,
         ItemService $ItemService,
-        CustomerProspect $customerProspect
+        CustomerProspect $customerProspect,
+        User $employees
     ) {
         $this->surveyResultService = $surveyResultService;
         $this->BoqService = $BoqService;
         $this->InventoryService = $InventoryService;
         $this->ItemService = $ItemService;
         $this->customerProspect = $customerProspect;
+        $this->employees = $employees;
     }
 
     function index() {
@@ -49,16 +52,20 @@ class BoQController extends Controller
 
     function formBoQ($id = null)
     {
-        $dataForm = $this->InventoryService->getDataForm();   
+        $dataForm = $this->InventoryService->getDataForm();  
+        $salesEmployees =   $this->employees->where('department_id', 1)->get();
+        $technicianEmployees =   $this->employees->where('department_id', 4)->get();
+        $procurementEmployees =   $this->employees->where('department_id', 3)->get();
         if ($id === null) {
-            $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->get();
+            $dataCompany = $this->BoqService->getFormWithoutID();
         }  else {
-            $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->find($id); 
+              $dataCompany = $this->BoqService->getFormWithID($id);
             if (!$dataCompany) {
                 return response()->json("Oopss, ada yang salah nih!", 500);
             }
         }
-        return view('cmt-opportunity.boq.pages.form-boq', compact('dataForm', 'dataCompany')); 
+        // dd($salesEmployees);
+        return view('cmt-opportunity.boq.pages.form-boq', compact('dataForm', 'dataCompany', 'salesEmployees', 'technicianEmployees', 'procurementEmployees')); 
     }
     
     function createNewBoQ(Request $request) : JsonResponse {
@@ -72,29 +79,12 @@ class BoQController extends Controller
        return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
-    // function saveItemsBoQ(Request $request, $references) : JsonResponse{
-    //     if ($request->ajax()) {
-    //          $this->ItemService->saveItems($request, $references);
-    //     }
-    //     return response()->json('Oops, Somethin\' Just Broke :(');
-    // }
-    
-    // public function getMerkType(Request $request)
-    // {
-    //     $itemId = $request->input('item_id');
-
-    //     // Mengambil data jenis dan merek item berdasarkan item yang dipilih
-    //     $itemData = InventoryGood::select('good_type', 'merk')->where('id', $itemId)->first();
-    //     return response()->json($itemData);
-
-        
-    // }
     function getMerkType(Request $request)
     {
         if ($request->ajax()) {
              $itemId = $request->input('item_id');
-        $itemData = $this->InventoryService->getMerkType($itemId);
-        return response()->json($itemData);
+             $itemData = $this->InventoryService->getMerkType($itemId);
+            return response()->json($itemData);
         }
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
@@ -103,6 +93,13 @@ class BoQController extends Controller
     function getDatatableDraft(Request $request) : JsonResponse {
         if ($request->ajax()) {
             return $this->BoqService->renderDatatable($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
+    function cancelBoQ(Request $request) : JsonResponse {
+        if ($request->ajax()) {
+            return $this->BoqService->cancelBoQ($request);
         }
         return response()->json('Oops, Somethin\' Just Broke :(');
     }

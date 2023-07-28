@@ -23,18 +23,25 @@ class ItemRepository
     }
 
     function saveItems($request, $references) {
-        // 'itemable_id' => $request->itemable_bill_of_quantities_id, // prospect_id di ambil dari input blade yg di hidden, sehingga data tetap terpassing namun tidak mengubah tampilan
-        // 'itemable_type' => $request->itemable_type, //itemable_type di ambil dari input blade itemable_bill_of_quantities yg di hidden, sehingga data tetap terpassing namun tidak mengubah tampilan
-        return $references->updateOrCreate([
-            'item_inventory_id' => $request->item_inventory_id,
-            'item_detail' => $request->item_detail,
-            'quantity' => $request->quantity,
-            'purchase_price' => $request->purchase_price,
-            'purchase_delivery_charge' => $request->purchase_delivery_charge,
-            'purchase_refrence' => $request->purchase_refrence,
-            'process_status' => $request->process_status,
-            'is_monthly' => $request->is_monthly,
-            'vendor_charge' => $request->vendor_charge,
-        ]);
+
+        $allItems = $request->input('items');
+        
+        if (!is_array($allItems) ) {
+            return response()->json('Oopss, ada yang salah nih!', 500);
+        }
+
+        foreach ($allItems as $item) {
+            $this->model->updateOrCreate([
+                'item_inventory_id' => $item['item_inventory_id'],
+                'item_detail' => $item['item_detail'],
+                'quantity' => $item['quantity'],
+                'purchase_price' => $item['purchase_price'],
+                'purchase_delivery_charge' => $item['purchase_delivery_charge'],
+                'purchase_refrence' => $item['purchase_refrence'],
+                'process_status' => $item['process_status'],
+                'is_monthly' => $item['is_monthly'],
+                'vendor_charge' => $item['vendor_charge'],
+            ]);
+        }
     }
 }

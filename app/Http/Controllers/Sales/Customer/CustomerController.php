@@ -178,7 +178,6 @@ class CustomerController extends Controller
                     ]);
                 }
             }
-            
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
@@ -524,10 +523,9 @@ class CustomerController extends Controller
             ->addColumn('actionBoq', function ($query) {
                 $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/form-boq/" . $query->id) . '" class="dropdown-item py-2">
+                                <li><a href="' . url("cmt-boq/form-boq?prospect_id=" . $query->id) . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
                             </ul>';
-            
                 return $actions;
             })
             
