@@ -29,4 +29,10 @@ class InventoryService
         $itemData = $this->InventoryRepository->getMerkTypeByItemId($itemId);
         return $itemData;
     }
+
+    public function getSurveyCompany(int $prospect_id)
+    {
+        $surveyCompanyData = $this->InventoryRepository->getSurveyCompanyByProspectId($prospect_id);
+        return $surveyCompanyData;
+    }
 }

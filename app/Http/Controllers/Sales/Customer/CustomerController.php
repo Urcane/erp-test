@@ -519,7 +519,7 @@ class CustomerController extends Controller
             
                 // Check if the current URL is 'cmt-boq'
                 if ($isUrlBoQ) {
-                    $actions .= '<li><a href="' . url("cmt-boq/form-boq/" . $query->id) . '" class="dropdown-item py-2">
+                    $actions .= '<li><a href="' . url("cmt-boq/form-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>';
                 } else {
                     $actions .= '<li><a href="#kt_modal_request_survey" class="dropdown-item py-2 btn_request_survey" data-bs-toggle="modal" data-id="'.$query->id.'">

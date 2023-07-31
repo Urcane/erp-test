@@ -21,50 +21,6 @@
                         data-kt-scroll-wrappers="#kt_modal_tambah_boq_scroll" data-kt-scroll-offset="300px">
                         <div class="row mb-9">
 
-                            {{-- <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Nama Item</span>
-                                </label>
-								<select class="drop-data form-select form-select-solid" data-control="select2" required
-                                    name="good_name" id="good_name"
-                                    data-dropdown-parent="#kt_modal_tambah_boq">
-                                    <option value="" selected hidden disabled>Pilih Dulu</option>
-                                    @foreach ($getInventoryGoods as $gig)
-                                        <option value="{{ $gig->id }}">{{ $gig->good_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-lg-6 col-6 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Jenis Item</span>
-                                </label>
-                                <select class="drop-data form-select form-select-solid" data-control="select2" required
-                                    name="good_type" id="good_type"
-                                    data-dropdown-parent="#kt_modal_tambah_boq">
-                                    <option value="" selected hidden disabled>Pilih Dulu</option>
-                                    @foreach ($getInventoryGoods as $gig)
-                                        <option value="{{ $gig->id }}">{{ $gig->good_type }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div>
-
-                            <div class="col-lg-6 col-6 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Merek</span>
-                                </label>
-                                <select class="drop-data form-select form-select-solid" data-control="select2" required
-                                    name="merk" id="merk"
-                                    data-dropdown-parent="#kt_modal_tambah_boq">
-                                    <option value="" selected hidden disabled>Pilih Dulu</option>
-                                    @foreach ($getInventoryGoods as $gig)
-                                        <option value="{{ $gig->id }}">{{ $gig->merk }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div> --}}
-
                             <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -106,34 +62,18 @@
                                 {{-- <div class="fv-plugins-message-container invalid-feedback"></div> --}}
                             </div>
 
-
-
-                            {{-- <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Alamat</span>
-                                </label>
-                                <textarea class="form-control form-control-solid" placeholder="" rows="2" required name="customer_address"
-                                    style="resize:none"></textarea>
-                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div>
-                            <div class="col-lg-6 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Kota/Kabupaten</span>
-                                </label>
-                                <select class="drop-data form-select form-select-solid" data-control="select2" required
-                                    name="city_id" id="city_id" data-dropdown-parent="#kt_modal_tambah_boq">
-                                    <option value="" selected hidden disabled>Pilih Dulu</option>
-                                    @foreach ($getCity as $gc)
-                                        <option value="{{ $gc->id }}">{{ $gc->city_name }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div> --}}
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class=" fw-bold">Detail Item</span>
+                                    <span class=" fw-bold">Detail Item inventory</span>
                                 </label>
                                 <input class="form-control" type="text" name="detail" id="detail" disabled>
+                            </div>
+
+                            <div class="col-lg-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class=" fw-bold">Detail Item project</span>
+                                </label>
+                                <input class="form-control" type="text" name="item_detail" id="item_detail" >
                             </div>
 
 
@@ -148,7 +88,7 @@
                                             <span class="required fw-bold">Harga Beli</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
                                             name="purchase_price">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
@@ -170,7 +110,7 @@
                                             <span class="required fw-bold">Jasa antar</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
                                             name="purchase_delivery">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
@@ -187,46 +127,11 @@
 
                             <div class="d-flex justify-content-end ">
                                 <div class="w-20 me-10">
-                                    <span class="fw-bold">Total Amount : Rp. <span name="total"
-                                            id="total"></span></span>
+                                    <span class="fw-bold">Total Amount : Rp. <span id="total"></span></span>
+                                    <input type="number" class="form-control form-control-solid total" name="total" value=""/>
                                 </div>
                             </div>
 
-                            {{-- <div class="col-lg-8 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Nama Kontak</span>
-                                </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="" required
-                                    name="customer_contact_name">
-                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div>
-                            <div class="col-lg-4 col-4 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Jabatan</span>
-                                </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="" required
-                                    name="customer_contact_job">
-                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div>
-                            <div class="col-lg-6 col-4 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="fw-bold">Email</span>
-                                </label>
-                                <input type="email" class="form-control form-control-solid" placeholder=""
-                                    name="customer_contact_email">
-                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div>
-                            <div class="col-lg-6 col-4 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold text-dark">Telepon</span>
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text border-0">+62</span>
-                                    <input type="number" class="form-control form-control-solid" required
-                                        minlength="9" maxlength="13" name="customer_contact_phone" />
-                                </div>
-                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                            </div> --}}
                         </div>
                     </div>
 

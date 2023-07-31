@@ -42,12 +42,15 @@ class BoQController extends Controller
         return view('cmt-opportunity.boq.index');
     }
 
-    function formBoQ($id)
+    function formBoQ(Request $request)
     {
+
+        // mau ada url atau engga tetap kirim tabel prospect berdasarkan id
+
+
+        $id = $request->query('prospect_id');
+        // kondisi url ada
         $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $id)->first();
-        if (!$dataCompany) {
-            return response()->json("Oopss, ada yang salah nih!", 500);
-        }
         $dataForm = $this->InventoryService->getDataForm();
     
         return view('cmt-opportunity.boq.pages.form-boq', compact('dataForm', 'dataCompany'));
@@ -74,6 +77,16 @@ class BoQController extends Controller
              $itemId = $request->input('item_id');
         $itemData = $this->InventoryService->getMerkType($itemId);
         return response()->json($itemData);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
+    public function getSurveyCompany(Request $request)
+    {
+        if ($request->ajax()) {
+             $prospectId = $request->input('prospect_Id');
+        $allData = $this->InventoryService->getSurveyCompany($prospectId);
+        return response()->json($allData);
         }
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
