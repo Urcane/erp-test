@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sales\Opportunity\Survey;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Opportunity\Survey\SoftSurveyRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyRequest as SurveyFormRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
 use App\Models\Master\CameraType;
@@ -10,9 +11,11 @@ use App\Models\Master\InternetServiceType;
 use App\Models\Master\ServiceType;
 use App\Models\Master\TransmissionMedia;
 use App\Models\Opportunity\Survey\SiteSurvey;
+use App\Models\Opportunity\Survey\SoftSurvey;
 use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
 use App\Models\ProjectManagement\WorkOrderCategory;
+use App\Services\Sales\Opportunity\Survey\SoftSurveyService;
 use App\Services\Sales\Opportunity\Survey\SurveyRequestService;
 use App\Services\Sales\Opportunity\Survey\SurveyResultService;
 use Illuminate\Contracts\View\View;
@@ -25,13 +28,16 @@ class SurveyController extends Controller
 
     protected $surveyRequestService;
     protected $surveyResultService;
+    protected $softSurveyService;
 
     public function __construct(
         SurveyRequestService $surveyRequestService, 
-        SurveyResultService $surveyResultService
+        SurveyResultService $surveyResultService,
+        SoftSurveyService $softSurveyService
     ) {
         $this->surveyRequestService = $surveyRequestService;
         $this->surveyResultService = $surveyResultService;
+        $this->softSurveyService = $softSurveyService;
     }
 
     /**
@@ -160,7 +166,16 @@ class SurveyController extends Controller
         return response()->json('Oops, Somethin\' Just Broke :(', 403);
     }
 
-    function storeSoftSurvey(Request $request) {
-        dd($request->all());
+    function storeSoftSurvey(SoftSurveyRequest $request) {
+        try {
+            $result = $this->softSurveyService->storeSoftSurvey($request);
+
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼"
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json("Oopss, ada yang salah nih!", 500);
+        }
     }
 }

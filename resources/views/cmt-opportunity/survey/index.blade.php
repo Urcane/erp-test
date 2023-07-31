@@ -428,7 +428,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Lampiran</span>
                             </label>
-                            <input type="file" class="form-control form-control-solid file-soft-survey-item-${random_string}" placeholder="" required accept="image/*" name="content[]['file_soft_survey_internet']">
+                            <input type="file" class="form-control form-control-solid file-soft-survey-item-${random_string}" placeholder="" required accept="image/*" name="content[][file_soft_survey_internet]">
                             <div class="fv-plugins-message-container invalid-feedback"></div>
                             <img id="containerImage" class="img-fluid m-5" src="#" alt="File Image" hidden="hidden"/>
                         </div>
@@ -439,7 +439,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Deskripsi Pekerjaan</span>
                             </label>
-                            <textarea class="form-control form-control-solid h-100px" placeholder="Fill Notes" name="content[]['description']"></textarea>
+                            <textarea class="form-control form-control-solid h-100px" placeholder="Fill Notes" name="content[][description]"></textarea>
                             <div class="fv-plugins-message-container invalid-feedback"></div>
                         </div>
                     </div>

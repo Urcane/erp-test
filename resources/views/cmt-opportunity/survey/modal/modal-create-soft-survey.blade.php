@@ -12,6 +12,7 @@
             <div class="modal-body mx-5 mx-lg-15 my-7">
                 <form id="kt_modal_create_soft_survey_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="soft_survey_id">
                     <div class="scroll-y me-n10 pe-10" id="kt_modal_create_soft_survey_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_create_soft_survey_header" data-kt-scroll-wrappers="#kt_modal_create_soft_survey_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
                         <div class="col-lg-12 text-center mb-9">
@@ -26,7 +27,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Lampiran</span>
                             </label>
-                            <input type="file" class="form-control form-control-solid file-soft-survey-item-initial" placeholder="" required accept="image/*" name="content[]['file_soft_survey_internet']">
+                            <input type="file" class="form-control form-control-solid file-soft-survey-item-initial" placeholder="" required accept="image/*" name="content[][file_soft_survey_internet]">
                             <div class="fv-plugins-message-container invalid-feedback"></div>
                             <img id="containerImage" class="img-fluid m-5" src="#" alt="File Image" hidden="hidden"/>
                         </div>
@@ -34,7 +35,7 @@
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Deskripsi Pekerjaan</span>
 							</label>
-                            <textarea class="form-control form-control-solid h-100px" placeholder="Fill Notes" name="content[]['description']"></textarea>
+                            <textarea class="form-control form-control-solid h-100px" placeholder="Fill Notes" name="content[][description]"></textarea>
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
                         <div class="col-lg-12 mb-3">
