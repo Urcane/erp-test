@@ -77,7 +77,7 @@
                                                 <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterDepartment" id="filter_department" data-dropdown-parent="#filter_pegawai">
                                                     <option value="*">Semua Department</option>
                                                     @foreach ($dataDepartment as $dp)
-                                                    <option value="{{$dp->id}}">{{$dp->department_name}}</option>									
+                                                    <option value="{{$dp->id}}">{{$dp->department_name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -88,7 +88,7 @@
                                                 <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterDivisi" id="filter_divisi" data-dropdown-parent="#filter_pegawai">
                                                     <option value="*">Semua Divisi</option>
                                                     @foreach ($dataDivision as $dd)
-                                                    <option value="{{$dd->id}}">{{$dd->divisi_name}}</option>									
+                                                    <option value="{{$dd->id}}">{{$dd->divisi_name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -100,7 +100,7 @@
                                 </div>
                                 @role('administrator')
                                 <div>
-                                    <a href="#kt_modal_tambah_pegawai" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
+                                    <a href="{{ route('hc.emp.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
                                 </div>
                                 @endrole
                             </div>
@@ -145,14 +145,14 @@
     $(document ).ready(function() {
 
         var pegawai_ids = [];
-        
+
         var getFilter = function(){
             return {
                 'filterDivisi': $('#filter_divisi').val(),
                 'filterDepartment': $('#filter_department').val(),
             }
-        }   
-        
+        }
+
         window.tablePegawai  = $('#kt_table_pegawai')
         .DataTable({
             processing: true,
@@ -182,13 +182,13 @@
                 "zeroRecords": "Data tidak ditemukan 😞",
             },
             buttons: [
-            { 
+            {
                 extend: 'excel',
                 className: 'btn btn-light-success btn-sm ms-3',
                 title: 'Data Pegawai Comtelindo',
                 exportOptions: {
                     columns: [1,8,9,3,10,4,5,6]
-                } 
+                }
             },
             ],
             dom:
@@ -196,14 +196,14 @@
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
             ">" +
-            
+
             "<'table-responsive'tr>" +
-            
+
             "<'row'" +
             "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
             "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
             ">",
-            
+
             columns: [
             { data: 'DT_RowChecklist', orderable: false, searchable: false},
             { data: 'DT_RowIndex'},
@@ -236,12 +236,12 @@
             },
             ],
         });
-        
+
         $('#filter_department').change(function(){
-            tablePegawai.draw()  
+            tablePegawai.draw()
         });
         $('#filter_divisi').change(function(){
-            tablePegawai.draw()  
+            tablePegawai.draw()
         });
         $('body').on('click', '#btn_reset_filter', function () {
             $('#filter_department').val("*").trigger("change")
@@ -252,13 +252,13 @@
             var index = array.indexOf(item);
             if (index !== -1) array.splice(index, 1);
         }
-        
-        $('body').on('click', '.btn_tambah_pegawai', function () {
-            $('.drop-data').val("").trigger("change")
-            $('#kt_modal_tambah_pegawai_form').trigger("reset")
-            $('#kt_modal_tambah_pegawai_submit').removeAttr('disabled','disabled');
-        });
-        
+
+        // $('body').on('click', '.btn_tambah_pegawai', function () {
+        //     $('.drop-data').val("").trigger("change")
+        //     $('#kt_modal_tambah_pegawai_form').trigger("reset")
+        //     $('#kt_modal_tambah_pegawai_submit').removeAttr('disabled','disabled');
+        // });
+
         $("#kt_modal_tambah_pegawai_form").validate({
             messages: {
                 name: {
@@ -304,7 +304,7 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("hc.emp.store")}}',
                     type: "POST",
                     dataType: 'json',
@@ -345,7 +345,7 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("hc.emp.update-status")}}',
                     type: "POST",
                     dataType: 'json',
@@ -386,7 +386,7 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("hc.emp.reset-password-pegawai")}}',
                     type: "POST",
                     dataType: 'json',
@@ -405,7 +405,7 @@
                 });
             }
         });
-        
+
     });
 </script>
 

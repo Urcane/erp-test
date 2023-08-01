@@ -19,21 +19,22 @@ use App\Http\Controllers\UserController;
 */
 
 Route::middleware(['auth'])->group(function () {
-    
+
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');
     });
-    
+
     Route::controller(UserController::class)->group(function () {
         Route::prefix('cmt-employee')->group(function () {
             Route::get('/','index')->name('hc.emp.index');
             Route::get('/{id}/profile','profile')->name('hc.emp.profile');
 
+            Route::GET('/create/employee','create')->name('hc.emp.create');
             Route::post('/store/employee','store')->name('hc.emp.store');
             Route::post('/update/employee','update')->name('hc.emp.update');
             Route::post('/update-status/employee','statusPegawai')->name('hc.emp.update-status');
             Route::post('/reset-password-pegawai/employee','resetPasswordPegawai')->name('hc.emp.reset-password-pegawai');
-            
+
             Route::get('/get-data/table/employee','getTableEmployee')->name('hc.emp.get-table-employee');
         });
     });
@@ -77,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
             Route::post('/soft-survey','storeSoftSurvey')->name('com.soft-survey.store');
             Route::post('/survey-result','storeSurveyResult')->name('com.survey-result.store');
-            
+
             Route::get('/get-data/table/survey-request','getDatatableSurveyRequest')->name('com.survey-request.datatable');
             Route::get('/get-data/table/survey-result','getDatatableSurveyResult')->name('com.survey-result.datatable');
         });

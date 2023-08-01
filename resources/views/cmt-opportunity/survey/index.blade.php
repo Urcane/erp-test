@@ -43,7 +43,18 @@
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center">
-                                        
+                                        @role('administrator')
+                                        <div>
+                                            <a href="#kt_modal_request_survey" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
+                                        </div>
+                                        <div>
+                                            <a href="#kt_modal_create_wo_survey" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
+                                        </div>
+                                        <div>
+                                            <a href="#kt_modal_create_survey_result_internet" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
+                                        </div>
+
+                                        @endrole
                                     </div>
                                 </div>
                             </div>
@@ -250,20 +261,20 @@
         surveyResultInternetStepper.on("kt.stepper.next", function (stepper) {
             const state = $('#kt_modal_create_survey_result_internet_form').valid();
             if (state) {
-                stepper.goNext(); 
+                stepper.goNext();
             }
         });
         surveyResultCctvStepper.on("kt.stepper.next", function (stepper) {
             const state = $('#kt_modal_create_survey_result_cctv_form').valid();
             if (state) {
-                stepper.goNext(); 
+                stepper.goNext();
             }
         });
         surveyResultInternetStepper.on("kt.stepper.previous", function (stepper) {
-            stepper.goPrevious(); 
+            stepper.goPrevious();
         });
         surveyResultCctvStepper.on("kt.stepper.previous", function (stepper) {
-            stepper.goPrevious(); 
+            stepper.goPrevious();
         });
 
         generateDatatable({
@@ -478,7 +489,7 @@
             ajaxLink: "{{route('com.soft-survey.store')}}",
             validationMessages: softSurveyValidationMessages,
         })
-    })    
+    })
 
     $('#tab_on_progress_survey').click(function () {
         generateDatatable({
@@ -548,7 +559,7 @@
                 ajaxLink: "{{route('com.survey-result.store')}}",
                 validationMessages: surveyResultValidationMessages,
             })
-        });        
+        });
     });
 
     $('#tab_survey_done').click(function () {
@@ -566,7 +577,7 @@
                 { data: 'building_height'},
                 { data: 'action' },
             ]
-        });    
+        });
     });
 </script>
 @endsection
