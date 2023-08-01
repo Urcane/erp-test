@@ -69,21 +69,21 @@ class CreateAllSurveyMigrationTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('gsm_booster_natural_frequencies', function (Blueprint $table) {
+        Schema::create('gb_natural_frequencies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->softDeletes()->index();
             $table->timestamps();
         });
 
-        Schema::create('gsm_booster_repeater_types', function (Blueprint $table) {
+        Schema::create('gb_repeater_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->softDeletes()->index();
             $table->timestamps();
         });
 
-        Schema::create('gsm_booster_connectivity_datas', function (Blueprint $table) {
+        Schema::create('gb_connectivity_datas', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->softDeletes()->index();
@@ -112,7 +112,7 @@ class CreateAllSurveyMigrationTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('transportation_acceses', function (Blueprint $table) {
+        Schema::create('transportation_accesses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->softDeletes()->index();
@@ -300,13 +300,13 @@ class CreateAllSurveyMigrationTable extends Migration
             $table->foreignId('customer_id')->constrained();
             $table->foreignId('customer_contact_id')->constrained();
             $table->foreignId('work_order_id')->nullable()->constrained();
-            $table->foreignId('gsm_booster_natural_frequency_id')->constrained();
+            $table->foreignId('gb_natural_frequency_id')->constrained();
             $table->bigInteger('natural_signal_rsrp')->nullable();
             $table->bigInteger('natural_signal_rsrq')->nullable();
-            $table->foreignId('gsm_booster_repeater_type_id')->constrained();
+            $table->foreignId('gb_repeater_type_id')->constrained();
             $table->enum('anthena_donor_type', ['PERIODIK', 'GRID', 'OMNI'])->index();
             $table->enum('anthena_service', ['OMNI', 'SECTORAL', 'PLANNER'])->index();
-            $table->foreignId('gsm_booster_conectivity_data_id')->constrained();
+            $table->foreignId('gb_connectivity_data_id')->constrained();
             $table->date('survey_date')->index();
             $table->foreignId('site_survey_outdoor_area_id')->constrained();
             $table->foreignId('site_survey_indoor_area_id')->constrained();
@@ -393,7 +393,7 @@ class CreateAllSurveyMigrationTable extends Migration
         //     $table->timestamps();
         // });
 
-        // Schema::create('gsm_booster_outdoor_areas', function (Blueprint $table) {
+        // Schema::create('gb_outdoor_areas', function (Blueprint $table) {
         //     $table->id();
         //     $table->boolean('tower_available_status')->default(0)->index();
         //     $table->string('tower_available_status_note')->nullable();
@@ -408,7 +408,7 @@ class CreateAllSurveyMigrationTable extends Migration
         //     $table->timestamps();
         // });
 
-        // Schema::create('gsm_booster_indoor_areas', function (Blueprint $table) {
+        // Schema::create('gb_indoor_areas', function (Blueprint $table) {
         //     $table->id();
         //     $table->boolean('room_status')->default(0)->index();
         //     $table->string('room_status_note')->nullable();
@@ -430,7 +430,7 @@ class CreateAllSurveyMigrationTable extends Migration
         //     $table->timestamps();
         // });
 
-        // Schema::create('gsm_booster_other_areas', function (Blueprint $table) {
+        // Schema::create('gb_other_areas', function (Blueprint $table) {
         //     $table->id();
         //     $table->foreignId('transportation_access_id')->constrained();
         //     $table->foreignId('building_type_id')->constrained();
@@ -446,18 +446,35 @@ class CreateAllSurveyMigrationTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('site_survey_coordinates');
+        Schema::dropIfExists('site_survey_gsm_boosters');
         Schema::dropIfExists('site_survey_cctvs');
         Schema::dropIfExists('site_survey_internets');
-        Schema::dropIfExists('soft_surveys');
-        Schema::dropIfExists('site_surveys');
-
+        Schema::dropIfExists('site_survey_other_areas');
+        Schema::dropIfExists('site_survey_indoor_areas');
+        Schema::dropIfExists('site_survey_outdoor_areas');
+        
+        // Schema::dropIfExists('site_surveys');
         Schema::dropIfExists('work_orders');
-
+        
+        Schema::dropIfExists('soft_surveys');
         Schema::dropIfExists('survey_requests');
-        Schema::dropIfExists('camera_types');
-        Schema::dropIfExists('transmission_medias');
+        // Schema::dropIfExists('camera_types');
+        // Schema::dropIfExists('transmission_medias');
+        Schema::dropIfExists('building_types');
+        Schema::dropIfExists('transportation_accesses');
         Schema::dropIfExists('type_of_surveys');
+        Schema::dropIfExists('power_sources');
+        Schema::dropIfExists('outdoor_cable_types');
+        Schema::dropIfExists('gb_connectivity_datas');
+        Schema::dropIfExists('gb_repeater_types');
+        Schema::dropIfExists('gb_natural_frequencies');
+        Schema::dropIfExists('cctv_storage_capacities');
+        Schema::dropIfExists('cctv_record_durations');
+        Schema::dropIfExists('site_survey_interfaces');
+        Schema::dropIfExists('internet_bandwidths');
         Schema::dropIfExists('internet_service_types');
+        Schema::dropIfExists('site_survey_service_types');
         Schema::dropIfExists('service_types');
         Schema::dropIfExists('files');
     }

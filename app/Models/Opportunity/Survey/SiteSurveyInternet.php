@@ -11,8 +11,4 @@ class SiteSurveyInternet extends Model
     use HasFactory;
 
     protected $guarded = [];
-
-    function siteSuveys() : BelongsTo {
-        return $this->belongsTo(SiteSurvey::class);
-    }
 }

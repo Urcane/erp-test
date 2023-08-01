@@ -6,11 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Opportunity\Survey\SoftSurveyRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyRequest as SurveyFormRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
-use App\Models\Master\CameraType;
-use App\Models\Master\InternetServiceType;
+use App\Models\Opportunity\Survey\Master\SiteSurveyServiceType;
 use App\Models\Master\ServiceType;
-use App\Models\Master\TransmissionMedia;
-use App\Models\Opportunity\Survey\SiteSurvey;
 use App\Models\Opportunity\Survey\SoftSurvey;
 use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
@@ -49,17 +46,13 @@ class SurveyController extends Controller
         $serviceTypes = ServiceType::get();
         $typeOfSurveys = TypeOfSurvey::get();
         $typeOfWOs = WorkOrderCategory::get();
-        $transMedias = TransmissionMedia::get();
-        $internetServiceTypes = InternetServiceType::get();
-        $cameraTypes = CameraType::get();
+        $siteSurveyServiceTypes = SiteSurveyServiceType::get();
 
-        return view('cmt-opportunity.survey.index', compact(
+        return view('cmt-opportunity.survey.pages.survey-request', compact(
             'serviceTypes',
             'typeOfSurveys',
             'typeOfWOs',
-            'transMedias',
-            'internetServiceTypes',
-            'cameraTypes'
+            'siteSurveyServiceTypes',
         ));
     }
 
@@ -69,15 +62,11 @@ class SurveyController extends Controller
      * @return Illuminate\Contracts\View\View
      */
     function detail(Request $request, int $id) : View {
-        $transMedias = TransmissionMedia::get();
-        $internetServiceTypes = InternetServiceType::get();
-        $cameraTypes = CameraType::get();
+        $siteSurveyServiceTypes = SiteSurveyServiceType::get();
         $query = $this->surveyResultService->getSurveyResultById($request, $id)->first();
         
         return view('cmt-opportunity.survey.pages.detail', compact(
-            'transMedias',
-            'internetServiceTypes',
-            'cameraTypes',
+            'SiteSurveyServiceTypes',
             'query'
         ));
     }

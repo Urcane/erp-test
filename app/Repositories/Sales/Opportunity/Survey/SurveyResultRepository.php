@@ -82,11 +82,11 @@ class SurveyResultRepository
     }
 
     function getAll(Request $request) : EloquentBuilder {
-        return SiteSurvey::with('surveyRequest', 'workOrder', 'transmissionMedia', 'internetServiceType', 'serviceType');
+        return SiteSurvey::with('surveyRequest', 'workOrder', 'siteSurveyServiceType', 'serviceType');
     }
 
     function getById(Request $request, int $id) : EloquentBuilder {
-        return $this->getByIdWithoutRelationship($request, $id)->with('siteSurveyCCTV.cameraType','siteSurveyInternet', 'surveyRequest.customerProspect.customer.customerContact', 'surveyRequest.customerProspect.customer.city', 'workOrder', 'transmissionMedia', 'internetServiceType', 'serviceType');
+        return $this->getByIdWithoutRelationship($request, $id)->with('siteSurveyCCTV','siteSurveyInternet', 'surveyRequest.customerProspect.customer.customerContact', 'surveyRequest.customerProspect.customer.city', 'workOrder', 'siteSurveyServiceType', 'serviceType');
     }
 
     function getByIdWithoutRelationship(Request $request, int $id) : EloquentBuilder {
