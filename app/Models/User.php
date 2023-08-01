@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasProject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -39,4 +40,39 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    function userBank(): HasOne
+    {
+        return $this->hasOne(Employee\UserBank::class);
+    }
+
+    function userBpjs(): HasOne
+    {
+        return $this->hasOne(Employee\UserBpjs::class);
+    }
+
+    function userEmployment(): HasOne
+    {
+        return $this->hasOne(Employee\UserEmployment::class);
+    }
+
+    function userIdentity(): HasOne
+    {
+        return $this->hasOne(Employee\userIdentity::class);
+    }
+
+    function userPersonalData(): HasOne
+    {
+        return $this->hasOne(Employee\userPersonalData::class);
+    }
+
+    function userSalary(): HasOne
+    {
+        return $this->hasOne(Employee\userSalary::class);
+    }
+
+    function userTax(): HasOne
+    {
+        return $this->hasOne(Employee\userTax::class);
+    }
 }
