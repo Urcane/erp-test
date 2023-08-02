@@ -14,7 +14,38 @@ class UserEmployment extends Model
     protected $table = 'user_employment';
     protected $guarded = [];
 
-    function user() : BelongsTo {
-        return $this->BelongsTo(User::class);
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function employmentStatus(): BelongsTo
+    {
+        return $this->belongsTo(EmploymentStatus::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function jobPosition(): BelongsTo
+    {
+        return $this->belongsTo(JobPosition::class);
+    }
+
+    public function jobLevel(): BelongsTo
+    {
+        return $this->belongsTo(JobLevel::class);
+    }
+
+    public function workingSchedule(): BelongsTo
+    {
+        return $this->belongsTo(WorkingSchedule::class);
+    }
+
+    public function approvalLine(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

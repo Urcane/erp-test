@@ -14,7 +14,18 @@ class UserSalary extends Model
     protected $table = 'user_salary';
     protected $guarded = [];
 
-    function user() : BelongsTo {
-        return $this->BelongsTo(User::class);
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function paymentSchedule(): BelongsTo
+    {
+        return $this->belongsTo(PaymentSchedule::class);
+    }
+
+    public function prorateSetting(): BelongsTo
+    {
+        return $this->belongsTo(ProrateSetting::class);
     }
 }
