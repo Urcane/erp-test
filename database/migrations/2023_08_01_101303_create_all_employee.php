@@ -216,6 +216,13 @@ class CreateAllEmployee extends Migration
         Schema::dropIfExists('user_salary');
         Schema::dropIfExists('user_bank');
         Schema::dropIfExists('user_tax');
-        Schema::dropIfExists('user_bpjs');
+        Schema::dropIfExists('branches');
+        Schema::dropIfExists('job_positions');
+        Schema::dropIfExists('job_levels');
+        Schema::dropIfExists('working_schedules');
+        Schema::dropIfExists('employment_statuses');
+        Schema::dropIfExists('payment_schedules');
+        Schema::dropIfExists('prorate_settings');
+        Schema::dropIfExists('tax_statuses');
     }
 }
