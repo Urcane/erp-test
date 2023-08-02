@@ -24,7 +24,7 @@ class UserController extends Controller
         $dataUser = User::where('status',1)->get();
         $dataRole = Role::all();
         $dataPlacement= Team::all();
-        return view('cmt-employee.index',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
+        return view('hc.cmt-employee.index',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
     }
 
     public function profile($id)
@@ -33,14 +33,9 @@ class UserController extends Controller
         $dataRole = Role::all();
         $dataPlacement= Team::all();
 
-        $profile = DB::table('users')
-        ->join('teams','teams.id','users.team_id')
-        ->join('divisions','divisions.id','users.division_id')
-        ->join('model_has_roles','model_has_roles.model_id','users.id')
-        ->select('users.*','teams.team_name','divisions.divisi_name','model_has_roles.role_id as role_id')
-        ->where('users.id',$id)
-        ->first();
-        return view('cmt-employee.profile',compact('profile','dataDivision','dataRole','dataPlacement'));
+        $user = User::whereId($id)->first();
+
+        return view('hc.cmt-employee.profile',compact('user','dataDivision','dataRole','dataPlacement'));
     }
 
     public function create() {
@@ -49,7 +44,7 @@ class UserController extends Controller
         $dataUser = User::where('status',1)->get();
         $dataRole = Role::all();
         $dataPlacement= Team::all();
-        return view('cmt-employee.add.form-tambah-pegawai',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
+        return view('hc.cmt-employee.form-tambah-pegawai',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
     }
 
     public function store(Request $request)

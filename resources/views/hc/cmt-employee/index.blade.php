@@ -136,9 +136,9 @@
 </div>
 
 @role('administrator')
-@include('cmt-employee.add.modal-tambah-pegawai')
-@include('cmt-employee.add.modal-nonaktif-pegawai')
-@include('cmt-employee.add.modal-reset-password-pegawai')
+{{-- @include('hc.cmt-employee.add.modal-tambah-pegawai') --}}
+@include('hc.cmt-employee.add.modal-nonaktif-pegawai')
+@include('hc.cmt-employee.add.modal-reset-password-pegawai')
 @endrole
 
 <script>
@@ -259,44 +259,81 @@
         //     $('#kt_modal_tambah_pegawai_submit').removeAttr('disabled','disabled');
         // });
 
-        $("#kt_modal_tambah_pegawai_form").validate({
+        $("#kt_create_emp_form").validate({
             messages: {
-                name: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Nama lengkap pegawai wajib diisi</span>",
-                },
-                email: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Email user wajib diisi</span>",
-                    email: "<span class='fw-semibold fs-8 text-danger'>Email user belum sesusai format</span>",
-                },
-                nip: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>NIP pegawai wajib diisi</span>",
-                },
-                nik: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>NIK pegawai wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 16 karakter</span>",
-                },
-                kontak: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Kontak pegawai wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
-                },
-                role_id: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Role wajib dipilih</span>",
-                },
-                division_id: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Divisi wajib dipilih</span>",
-                },
-                team_id: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Penempatan wajib dipilih</span>",
-                },
-                new_password: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Password wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Password minimal memiliki 8 karakter</span>",
-                    confirmed: "<span class='fw-semibold fs-8 text-danger'>Password tidak sama</span>",
-                },
-                new_password_confirmation: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Konfirmasi password wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Konfirmasi password minimal memiliki 8 karakter</span>",
-                },
+                // first_name : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Nama Depan pegawai wajib diisi</span>",
+                // },
+                // email: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Email user wajib diisi</span>",
+                //     email: "<span class='fw-semibold fs-8 text-danger'>Email user belum sesusai format</span>",
+                // },
+                // birthdate :{
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Tanggal lahir pegawai wajib diisi</span>",
+                // },
+                // maritial_status :{
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Status pernihakahan pegawai wajib diisi</span>",
+                // },
+                // religion :{
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Agama pegawai wajib diisi</span>",
+                // },
+                // employee_id : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Nomor Induk Pegawai wajib diisi</span>",
+                // }
+                // employment_status : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Status pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // join_date : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Tanggal bergabung pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // end_status_date : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Tanggal berhenti pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // branch : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Cabang pegawai mendaftar dalam perusahaan wajib diisi</span>",
+                // }
+                // organization : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Organisasi pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // job_position : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Posisi pekerjaan pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // job_level : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Level pekerjaan pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // jht_cost : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Level pekerjaan pegawai dalam perusahaan wajib diisi</span>",
+                // }
+
+
+
+
+                // nip: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>NIP pegawai wajib diisi</span>",
+                // },
+                // nik: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>NIK pegawai wajib diisi</span>",
+                //     minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 16 karakter</span>",
+                // },
+
+                // role_id: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Role wajib dipilih</span>",
+                // },
+                // division_id: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Divisi wajib dipilih</span>",
+                // },
+                // team_id: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Penempatan wajib dipilih</span>",
+                // },
+                // new_password: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Password wajib diisi</span>",
+                //     minlength: "<span class='fw-semibold fs-8 text-danger'>Password minimal memiliki 8 karakter</span>",
+                //     confirmed: "<span class='fw-semibold fs-8 text-danger'>Password tidak sama</span>",
+                // },
+                // new_password_confirmation: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Konfirmasi password wajib diisi</span>",
+                //     minlength: "<span class='fw-semibold fs-8 text-danger'>Konfirmasi password minimal memiliki 8 karakter</span>",
+                // },
             },
             submitHandler: function(form) {
                 var formData = new FormData(form);

@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Attendance\AttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +37,12 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/reset-password-pegawai/employee','resetPasswordPegawai')->name('hc.emp.reset-password-pegawai');
 
             Route::get('/get-data/table/employee','getTableEmployee')->name('hc.emp.get-table-employee');
+        });
+    });
+
+    Route::controller(AttendanceController::class)->group(function () {
+        Route::prefix('cmt-attendance')->group(function () {
+            Route::get('/','index')->name('hc.att.index');
         });
     });
 

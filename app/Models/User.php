@@ -41,6 +41,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    function division(): HasOne
+    {
+        return $this->hasOne(Division::class);
+    }
+
+    function team(): HasOne
+    {
+        return $this->hasOne(Team\Team::class, "id", "team_id");
+    }
+
     function userBank(): HasOne
     {
         return $this->hasOne(Employee\UserBank::class);
