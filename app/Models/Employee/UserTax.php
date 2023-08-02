@@ -14,7 +14,13 @@ class UserTax extends Model
     protected $table = 'user_tax';
     protected $guarded = [];
 
-    function user() : BelongsTo {
-        return $this->BelongsTo(User::class);
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function taxStatus(): BelongsTo
+    {
+        return $this->belongsTo(TaxStatus::class);
     }
 }

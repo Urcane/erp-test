@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class UserBpjs extends Model
 {
     use HasFactory;
@@ -13,7 +14,8 @@ class UserBpjs extends Model
     protected $table = 'user_bpjs';
     protected $guarded = [];
 
-    function user() : BelongsTo {
-        return $this->BelongsTo(User::class);
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

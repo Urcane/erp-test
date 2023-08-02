@@ -14,7 +14,8 @@ class UserIdentity extends Model
     protected $table = 'user_identity';
     protected $guarded = [];
 
-    function user() : BelongsTo {
-        return $this->BelongsTo(User::class);
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

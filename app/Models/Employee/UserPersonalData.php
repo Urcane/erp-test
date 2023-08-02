@@ -14,7 +14,8 @@ class UserPersonalData extends Model
     protected $table = 'user_personal_data';
     protected $guarded = [];
 
-    function user() : BelongsTo {
-        return $this->BelongsTo(User::class);
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
