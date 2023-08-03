@@ -18,6 +18,7 @@ class Constants
     public $taxMethod = ["Gross", "Gross up", "Netto"];
     public $taxSalary = ["Taxable", "Non-taxable"];
     public $jaminanPensiunCost = ["Not paid", "By company", "By Employee"];
+    public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
 
     // only view
     public $identityType = ["KTP", "SIM", "Passport"];

@@ -38,7 +38,7 @@ class CreateAllEmployee extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->string("type", 10)->nullable();
-            $table->integer("number")->nullable();
+            $table->string("number", 25)->nullable();
             $table->date("expire_date")->nullable(); //null jika permanent
             $table->string("postal_code", 6)->nullable();
             $table->string("citizen_id_address", 100)->nullable();
@@ -156,7 +156,7 @@ class CreateAllEmployee extends Migration
         Schema::create('user_bank', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->string("name", 20)->nullable();
+            $table->string("name", 55)->nullable();
             $table->string("number", 20)->nullable();
             $table->string("holder_name", 35)->nullable();
             $table->softDeletes()->index();
