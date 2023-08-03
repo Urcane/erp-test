@@ -41,9 +41,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    function division(): HasOne
+    function division()
     {
-        return $this->hasOne(Division::class);
+        return $this->belongsTo(Division::class);
     }
 
     function team(): HasOne
@@ -68,21 +68,21 @@ class User extends Authenticatable
 
     function userIdentity(): HasOne
     {
-        return $this->hasOne(Employee\userIdentity::class);
+        return $this->hasOne(Employee\UserIdentity::class);
     }
 
     function userPersonalData(): HasOne
     {
-        return $this->hasOne(Employee\userPersonalData::class);
+        return $this->hasOne(Employee\UserPersonalData::class);
     }
 
     function userSalary(): HasOne
     {
-        return $this->hasOne(Employee\userSalary::class);
+        return $this->hasOne(Employee\UserSalary::class);
     }
 
     function userTax(): HasOne
     {
-        return $this->hasOne(Employee\userTax::class);
+        return $this->hasOne(Employee\UserTax::class);
     }
 }
