@@ -1,3 +1,8 @@
+            "dataBranch",
+            "dataJobPosition",
+            "dataJobLevel",
+            "dataWorkingSchedule",
+
 <section class="row">
     <div class="col-lg-12 mb-9">
         <h4>Employment Data</h4>
@@ -16,10 +21,12 @@
             <span class="required fw-bold">Employment Status</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="employment_status" required name="employment_status" @unlessrole("administrator") disabled @endunlessrole>
-            <option value="" selected hidden disabled>Employment Status</option>
-            <option value="Status 1" >Status 1</option>
-            <option value="Status 2" >Status 2</option>
-            <option value="Status 3" >Status 3</option>
+            @if ($user->userEmployment->employmentStatus->name ?? "" == "")
+                <option value="" selected hidden disabled>Select employment status</option>
+            @endif
+            @foreach ($dataEmploymentStatus as $option)
+                <option value="{{$option->name}}" @if ($user->userEmployment->employmentStatus->name ?? "" == $option->name) selected @endif>{{$option->name}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -44,8 +51,12 @@
             <span class="required fw-bold">Branch</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="branch" required name="branch" id="branch" @unlessrole("administrator") disabled @endunlessrole>
-            <option value="Pusat" >Pusat</option>
-            <option value="Cabang" >Cabang</option>
+            @if (!$user->userEmployment->branch)
+                <option value="" selected hidden disabled>Select employment status</option>
+            @endif
+            @foreach ($dataBranch as $option)
+                <option value="{{$option->name}}" @if (($user->userEmployment->branch->name ?? false) == $option->name) selected @endif>{{$option->name}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -54,6 +65,12 @@
             <span class="required fw-bold">Organization</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="organization" required name="organization" id="organization" @unlessrole("administrator") disabled @endunlessrole>
+            @if (!$user->userEmployment->branch)
+                <option value="" selected hidden disabled>Select employment status</option>
+            @endif
+            @foreach ($dataBranch as $option)
+                <option value="{{$option->name}}" @if ($user->userEmployment->branch->name ?? "" == $option->name) selected @endif>{{$option->name}}</option>
+            @endforeach
             <option value="" selected hidden disabled>Select Organization</option>
             <option value="Organization 1" >Organization 1</option>
             <option value="Organization 2" >Organization 2</option>

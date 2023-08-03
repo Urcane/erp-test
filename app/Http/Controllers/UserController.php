@@ -6,6 +6,14 @@ use App\Models\Department;
 use App\Models\Division;
 use App\Models\Team\Team;
 use App\Models\User;
+use App\Models\Employee\EmploymentStatus;
+use App\Models\Employee\Branch;
+use App\Models\Employee\JobPosition;
+use App\Models\Employee\JobLevel;
+use App\Models\Employee\WorkingSchedule;
+
+use App\Constants;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -29,22 +37,45 @@ class UserController extends Controller
 
     public function profile($id)
     {
-        $dataDivision = Division::all();
         $dataRole = Role::all();
-        $dataPlacement= Team::all();
-
+        $allOptions = new Constants();
         $user = User::whereId($id)->first();
+        $dataEmploymentStatus = EmploymentStatus::all();
+        $dataBranch = Branch::all();
+        $dataJobPosition= JobPosition::all();
+        $dataJobLevel = JobLevel::all();
+        $dataWorkingSchedule = WorkingSchedule::all();
 
-        return view('hc.cmt-employee.profile',compact('user','dataDivision','dataRole','dataPlacement'));
+        return view('hc.cmt-employee.profile',compact(
+            'user',
+            "dataRole",
+            'allOptions',
+            "dataEmploymentStatus",
+            "dataBranch",
+            "dataJobPosition",
+            "dataJobLevel",
+            "dataWorkingSchedule",
+        ));
     }
 
     public function create() {
-        $dataDivision = Division::all();
-        $dataDepartment = Department::all();
-        $dataUser = User::where('status',1)->get();
+        $dataEmploymentStatus = EmploymentStatus::all();
         $dataRole = Role::all();
-        $dataPlacement= Team::all();
-        return view('hc.cmt-employee.form-tambah-pegawai',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
+        $allOptions = new Constants();
+        $dataBranch = Branch::all();
+        $dataJobPosition= JobPosition::all();
+        $dataJobLevel = JobLevel::all();
+        $dataWorkingSchedule = WorkingSchedule::all();
+
+        return view('hc.cmt-employee.form-tambah-pegawai',compact(
+            'dataRole',
+            'allOptions',
+            "dataEmploymentStatus",
+            "dataBranch",
+            "dataJobPosition",
+            "dataJobLevel",
+            "dataWorkingSchedule",
+        ));
     }
 
     public function store(Request $request)

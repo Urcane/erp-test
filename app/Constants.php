@@ -4,6 +4,7 @@ namespace App;
 
 class Constants
 {
+    // database related
     public $maritalStatus = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
     public $gender = ["Laki-laki", "Perempuan"];
     public $bloodType = ["A", "B", "AB", "O"];
@@ -17,4 +18,19 @@ class Constants
     public $taxMethod = ["Gross", "Gross up", "Netto"];
     public $taxSalary = ["Taxable", "Non-taxable"];
     public $jaminanPensiunCost = ["Not paid", "By company", "By Employee"];
+
+    // only view
+    public $identityType = ["KTP", "SIM", "Passport"];
+    public $bankName = [
+        "Bank Mandiri",
+        "Bank Rakyat Indonesia (BRI)",
+        "Bank Central Asia (BCA)",
+        "Bank Negara Indonesia (BNI)",
+        "Bank Tabungan Negara (BTN)",
+        "CIMB Niaga",
+        "Bank Syariah Indonesia (BSI)",
+        "Permata Bank",
+        "OCBC NISP",
+        "Panin Bank",
+    ];
 }

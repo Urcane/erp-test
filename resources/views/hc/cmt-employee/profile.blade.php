@@ -37,7 +37,7 @@
                                 <table class="table g-1">
                                     <tr>
                                         <td class="w-25px"><i class="fa-solid fa-phone text-gray-500"></i></td>
-                                        <td class=""><span>+62 {{$user->kontak}}</span></td>
+                                        <td class=""><span>+62 {{$user->kontak ?? "-"}}</span></td>
                                     </tr>
                                     <tr>
                                         <td class="w-25px"><i class="fa-solid fa-envelope text-gray-500"></i></td>
@@ -56,7 +56,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
                             <span class="fs-8 flex-grow-1 fw-bold">NIK</span>
-                            @if ($user->userIdentity->number != null)
+                            @if ($user->userIdentity != null)
                             <i class="fa-solid fa-check-circle fs-5 text-success"></i>
                             @else
                             <i class="fa-solid fa-times-circle fs-5 text-danger"></i>

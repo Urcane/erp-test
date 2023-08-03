@@ -47,11 +47,12 @@
             <span class="required fw-bold">Marital Status</span>
         </label>
         <select required class="drop-data form-select form-select-solid" data-control="maritial_status" name="maritial_status">
-            <option value="" selected hidden disabled>Select Status</option>
-            <option value="Belum Kawin" >Belum Kawin</option>
-            <option value="Kawin" >Kawin</option>
-            <option value="Cerai Hidup" >Cerai Hidup</option>
-            <option value="Cerai Mati" >Cerai Mati</option>
+            @if ($user->userPersonalData->marital_status ?? "" == "")
+                <option value="" selected hidden disabled>Select Status</option>
+            @endif
+            @foreach ($allOptions->maritalStatus as $option)
+                <option value="{{$option}}" @if ($user->userPersonalData->marital_status ?? "" == $option) selected @endif>{{$option}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -59,9 +60,10 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2">
             <span class="fw-bold">Gender</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="status" name="status">
-            <option value="Laki-laki" >Laki-laki</option>
-            <option value="Perempuan" >Perempuan</option>
+        <select class="drop-data form-select form-select-solid" data-control="gender" name="gender">
+            @foreach ($allOptions->gender as $option)
+                <option value="{{$option}}" @if ($user->userPersonalData->gender ?? "" == $option) selected @endif>{{$option}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -71,13 +73,12 @@
             <span class="required fw-bold">Religion</span>
         </label>
         <select required class="drop-data form-select form-select-solid" data-control="religion" name="religion">
-            <option value="" selected hidden disabled>Select Religion</option>
-            <option value="Islam" >Islam</option>
-            <option value="Kristen" >Kristen</option>
-            <option value="Katolik" >Katolik</option>
-            <option value="Buddha" >Buddha</option>
-            <option value="Hindu" >Hindu</option>
-            <option value="Konghucu" >Konghucu</option>
+            @if ($user->userPersonalData->religion ?? "" == "")
+                <option value="" selected hidden disabled>Select Religion</option>
+            @endif
+            @foreach ($allOptions->religion as $option)
+                <option value="{{$option}}" @if ($user->userPersonalData->religion ?? "" == $option) selected @endif>{{$option}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -86,11 +87,12 @@
             <span class="fw-bold">Blood Type</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="blood_type" name="blood_type">
-            <option value="" selected hidden disabled>Select Blood Type</option>
-            <option value="A" >A</option>
-            <option value="B" >B</option>
-            <option value="AB" >AB</option>
-            <option value="O" >O</option>
+            @if ($user->userPersonalData->blood_type ?? "" == "")
+                <option value="" selected hidden disabled>Select blood type</option>
+            @endif
+            @foreach ($allOptions->bloodType as $option)
+                <option value="{{$option}}" @if ($user->userPersonalData->blood_type ?? "" == $option) selected @endif>{{$option}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>

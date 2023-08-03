@@ -12,7 +12,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">Rp.</span>
             </div>
-            <input type="number" class="form-control form-control-solid" required placeholder="0" name="basic_salary" id="basic_salary" @unlessrole("administrator") disabled @endunlessrole>
+            <input type="number" value="{{$user->userSalary->basic_salary ?? ""}}" class="form-control form-control-solid" required placeholder="0" name="basic_salary" id="basic_salary" @unlessrole("administrator") disabled @endunlessrole>
         </div><br>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
