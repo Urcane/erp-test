@@ -173,7 +173,7 @@ class EmployeeSeeder extends Seeder
                     null
                 ),
                 "user_bank" => $this->makeBank(
-                    "BCA",
+                    0,
                     1274517631,
                     "Agus Pramudia Perwitasari"
                 ),
@@ -247,7 +247,7 @@ class EmployeeSeeder extends Seeder
                     null
                 ),
                 "user_bank" => $this->makeBank(
-                    "BCA",
+                    0,
                     1274517631,
                     "Agus Pramudia Perwitasari"
                 ),
@@ -321,7 +321,7 @@ class EmployeeSeeder extends Seeder
                     null
                 ),
                 "user_bank" => $this->makeBank(
-                    "BCA",
+                    0,
                     1274517631,
                     "Agus Pramudia Perwitasari"
                 ),
@@ -395,7 +395,7 @@ class EmployeeSeeder extends Seeder
                     null
                 ),
                 "user_bank" => $this->makeBank(
-                    "BCA",
+                    0,
                     1274517631,
                     "Agus Pramudia Perwitasari"
                 ),
@@ -494,7 +494,7 @@ class EmployeeSeeder extends Seeder
     private function makeBank($name, $number, $holder)
     {
         return [
-            "name" => $name,
+            "name" => $this->constants->bankName[$name],
             "number" => $number,
             "holder_name" => $holder
         ];

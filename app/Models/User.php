@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasProject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,48 +42,83 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    function division(): HasOne
+    public function division(): HasOne
     {
         return $this->hasOne(Division::class);
     }
 
-    function team(): HasOne
+    public function team(): HasOne
     {
         return $this->hasOne(Team\Team::class, "id", "team_id");
     }
 
-    function userBank(): HasOne
+    public function userBank(): HasOne
     {
         return $this->hasOne(Employee\UserBank::class);
     }
 
-    function userBpjs(): HasOne
+    public function userBpjs(): HasOne
     {
         return $this->hasOne(Employee\UserBpjs::class);
     }
 
-    function userEmployment(): HasOne
+    public function userEmployment(): HasOne
     {
         return $this->hasOne(Employee\UserEmployment::class);
     }
 
-    function userIdentity(): HasOne
+    public function userIdentity(): HasOne
     {
-        return $this->hasOne(Employee\userIdentity::class);
+        return $this->hasOne(Employee\UserIdentity::class);
     }
 
-    function userPersonalData(): HasOne
+    public function userPersonalData(): HasOne
     {
-        return $this->hasOne(Employee\userPersonalData::class);
+        return $this->hasOne(Employee\UserPersonalData::class);
     }
 
-    function userSalary(): HasOne
+    public function userSalary(): HasOne
     {
-        return $this->hasOne(Employee\userSalary::class);
+        return $this->hasOne(Employee\UserSalary::class);
     }
 
-    function userTax(): HasOne
+    public function userTax(): HasOne
     {
-        return $this->hasOne(Employee\userTax::class);
+        return $this->hasOne(Employee\UserTax::class);
+    }
+
+    public function userFamily(): HasMany
+    {
+        return $this->hasMany(PersonalInfo\UserFamily::class);
+    }
+
+    public function userEmegencyContact(): HasMany
+    {
+        return $this->hasMany(PersonalInfo\UserEmergencyContact::class);
+    }
+
+    public function userAdditionalInformation(): HasMany
+    {
+        return $this->hasMany(PersonalInfo\UserAdditionalInformation::class);
+    }
+
+    public function userFormalEducation(): HasMany
+    {
+        return $this->hasMany(PersonalInfo\UserFormalEducation::class);
+    }
+
+    public function userNonFormalEducation(): HasMany
+    {
+        return $this->hasMany(PersonalInfo\UserNonFormalEducation::class);
+    }
+
+    public function userWorkingExperience(): HasMany
+    {
+        return $this->hasMany(PersonalInfo\UserWorkingExperience::class);
+    }
+
+    public function userAttendance(): HasMany
+    {
+        return $this->hasMany(Attendance\UserAttendance::class);
     }
 }
