@@ -7,10 +7,13 @@ use App\Models\Division;
 use App\Models\Team\Team;
 use App\Models\User;
 use App\Models\Employee\EmploymentStatus;
+use App\Models\Employee\UserPersonalData;
 use App\Models\Employee\Branch;
 use App\Models\Employee\JobPosition;
 use App\Models\Employee\JobLevel;
 use App\Models\Employee\WorkingSchedule;
+use App\Models\Employee\PaymentSchedule;
+use App\Models\Employee\ProrateSetting;
 
 use App\Constants;
 
@@ -32,11 +35,13 @@ class UserController extends Controller
         $dataUser = User::where('status',1)->get();
         $dataRole = Role::all();
         $dataPlacement= Team::all();
+
         return view('hc.cmt-employee.index',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
     }
 
     public function profile($id)
     {
+        $dataDivision = Division::all();
         $dataRole = Role::all();
         $allOptions = new Constants();
         $user = User::whereId($id)->first();
@@ -46,19 +51,26 @@ class UserController extends Controller
         $dataJobLevel = JobLevel::all();
         $dataWorkingSchedule = WorkingSchedule::all();
 
+        $dataPaymentSchedule = PaymentSchedule::all();
+        $dataProrateSetting = ProrateSetting::all();
+
         return view('hc.cmt-employee.profile',compact(
             'user',
             "dataRole",
+            'dataDivision',
             'allOptions',
             "dataEmploymentStatus",
             "dataBranch",
             "dataJobPosition",
             "dataJobLevel",
             "dataWorkingSchedule",
+            "dataPaymentSchedule",
+            "dataProrateSetting",
         ));
     }
 
     public function create() {
+        $dataDivision = Division::all();
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataRole = Role::all();
         $allOptions = new Constants();
@@ -67,7 +79,11 @@ class UserController extends Controller
         $dataJobLevel = JobLevel::all();
         $dataWorkingSchedule = WorkingSchedule::all();
 
+        $dataPaymentSchedule = PaymentSchedule::all();
+        $dataProrateSetting = ProrateSetting::all();
+
         return view('hc.cmt-employee.form-tambah-pegawai',compact(
+            'dataDivision',
             'dataRole',
             'allOptions',
             "dataEmploymentStatus",
@@ -75,6 +91,8 @@ class UserController extends Controller
             "dataJobPosition",
             "dataJobLevel",
             "dataWorkingSchedule",
+            "dataPaymentSchedule",
+            "dataProrateSetting",
         ));
     }
 
@@ -108,7 +126,7 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $getUser = User::where('id',$request->user_id)->first();
-        try {
+        // try {
             $file_sign = $request->pegawai_sign_url;
             if ($file_sign != null && $file_sign != '') {
                 $image_parts = explode(";base64,", $file_sign);
@@ -133,15 +151,24 @@ class UserController extends Controller
             $updateUser = $getUser->update([
                 'name'=>$request->name,
                 'email'=>$request->email,
-                'nip'=>$request->nip,
-                'nik'=>$request->nik,
                 'kontak'=>$request->kontak,
-                'team_id'=>$request->team_id,
                 'sign_file'=>$file_sign,
             ]);
 
-            DB::table('model_has_roles')->where('model_id',$request->user_id)->delete();
-            $getUser->assignRole($request->role_id);
+            dd($updateUser);
+            $updateUserPersonalData = $updateUser->userPersonalData->update([
+                "birthdate" => $request->birthdate,
+                "place_of_birth" => $request->place_of_birth,
+                "maritial_status" => $request->maritial_status,
+                "gender" => $request->gender,
+                "blood_type" => $request->blood_type,
+                "religion" => $request->religion,
+            ]);
+
+            if ($request->role_id) {
+                DB::table('model_has_roles')->where('model_id',$request->user_id)->delete();
+                $getUser->assignRole($request->role_id);
+            }
 
             if($request->new_password != null){
                 $getUser->update([
@@ -149,20 +176,14 @@ class UserController extends Controller
                 ]);
             }
 
-            $getDept = Division::where('id',$request->division_id)->first();
-            $getUser->update([
-                'division_id'=>$request->division_id,
-                'department_id'=>$getDept->department_id,
-            ]);
-
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        }
-        catch (\Throwable $th) {
-            Log::error($th);
-            return response()->json("Oopss, ada yang salah nih!", 500);
-        }
+        // }
+        // catch (\Throwable $th) {
+        //     Log::error($th);
+        //     return response()->json("Oopss, ada yang salah nih!", 500);
+        // }
     }
 
     public function statusPegawai(Request $request)

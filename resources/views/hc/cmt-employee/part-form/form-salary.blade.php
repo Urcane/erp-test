@@ -21,8 +21,12 @@
             <span class="fw-bold">Salary Type</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="salary_type" name="salary_type" id="salary_type" @unlessrole("administrator") disabled @endunlessrole>
-            <option value="Monthly" >Monthly</option>
-            <option value="Yearly" >Yearly</option>
+            @if ($user->userSalary->salary_type ?? "" == "")
+                <option value="" selected hidden disabled>Select salary type</option>
+            @endif
+            @foreach ($allOptions->salaryType as $option)
+                <option value="{{$option}}" @if ($user->userSalary->salary_type ?? "" == $option) selected @endif>{{$option}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -32,8 +36,12 @@
             <span class="fw-bold">Payment Schedule</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="payment_schedule" name="payment_schedule" id="payment_schedule" @unlessrole("administrator") disabled @endunlessrole>
-            <option value="Payment Schedule 1" >Payment Schedule 1</option>
-            <option value="Payment Schedule 2" >Payment Schedule 2</option>
+            @if ($user->userSalary->salary_type ?? "" == "")
+                <option value="" selected hidden disabled>Select peyment schedule</option>
+            @endif
+            @foreach ($dataPaymentSchedule as $option)
+                <option value="{{$option->id}}" @if ($user->userSalary->payment_schedule_id ?? "" == $option->id) selected @endif>{{$option->name}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -42,10 +50,12 @@
             <span class="fw-bold">Prorate Setting</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="prorate_setting" name="prorate_setting" id="prorate_setting" @unlessrole("administrator") disabled @endunlessrole>
-            <option value="" selected hidden disabled>Select Prorate Setting</option>
-            <option value="Prorate Setting 1" >Prorate Setting 1</option>
-            <option value="Prorate Setting 2" >Prorate Setting 2</option>
-            <option value="Prorate Setting 3" >Prorate Setting 3</option>
+            @if ($user->userSalary->salary_type ?? "" == "")
+                <option value="" selected hidden disabled>Select prorate setting</option>
+            @endif
+            @foreach ($dataProrateSetting as $option)
+                <option value="{{$option->id}}" @if ($user->userSalary->prorate_setting_id ?? "" == $option->id) selected @endif>{{$option->name}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -55,8 +65,8 @@
             <span class="fw-bold">Allowed for Overtime</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="allowed_for_overtime" name="allowed_for_overtime" id="allowed_for_overtime" @unlessrole("administrator") disabled @endunlessrole>
-            <option value="1" >Iya</option>
-            <option value="0" >Tidak</option>
+            <option value="1" @if (($user->userSalary->allow_for_overtime ?? "") == "1") selected @endif>Iya</option>
+            <option value="0" @if (($user->userSalary->allow_for_overtime ?? "") == "0") selected @endif>Tidak</option>
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>

@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     public function division(): HasOne
     {
-        return $this->hasOne(Division::class);
+        return $this->belongsTo(Division::class);
     }
 
     public function team(): HasOne

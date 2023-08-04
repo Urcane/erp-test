@@ -7,7 +7,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2">
             <span class="required fw-bold">Nama Lengkap</span>
         </label>
-        <input type="text" value="{{ $user->name ?? "" }}" id="first_name" class="form-control form-control-solid" placeholder="First Name" required name="first_name">
+        <input type="text" value="{{ $user->name ?? "" }}" id="name" class="form-control form-control-solid" placeholder="First Name" required name="name">
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
 

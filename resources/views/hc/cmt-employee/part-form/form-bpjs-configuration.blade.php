@@ -8,7 +8,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="ketenagakerjaan_number">
             <span class= fw-bold">BPJS Ketenagakerjaan Number</span>
         </label>
-        <input type="number" class="form-control form-control-solid" placeholder="BPJS Ketenagakerjaan Number" name="ketenagakerjaan_number" id="ketenagakerjaan_number" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="number" value="{{$user->userBpjs->ketenagakerjaan_number ?? ""}}" class="form-control form-control-solid" placeholder="BPJS Ketenagakerjaan Number" name="ketenagakerjaan_number" id="ketenagakerjaan_number" @unlessrole("administrator") disabled @endunlessrole>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
     <div class="col-lg-6 mb-3">
@@ -28,7 +28,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="ketenagakerjaan_date">
             <span class= fw-bold">BPJS Ketenagakerjaan Date</span>
         </label>
-        <input type="date" class="form-control form-control-solid" placeholder="BPJS Ketenagakerjaan Date" name="ketenagakerjaan_date" id="ketenagakerjaan_date" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="date" value="{{$user->userBpjs->ketenagakerjaan_date ?? ""}}" class="form-control form-control-solid" placeholder="BPJS Ketenagakerjaan Date" name="ketenagakerjaan_date" id="ketenagakerjaan_date" @unlessrole("administrator") disabled @endunlessrole>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
 
@@ -36,7 +36,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="kesehatan_number">
             <span class= fw-bold">BPJS Kesehatan Number</span>
         </label>
-        <input type="number" class="form-control form-control-solid" placeholder="BPJS Kesehatan Number" name="kesehatan_number" id="kesehatan_number" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="number" value="{{$user->userBpjs->kesehatan_number ?? ""}}" class="form-control form-control-solid" placeholder="BPJS Kesehatan Number" name="kesehatan_number" id="kesehatan_number" @unlessrole("administrator") disabled @endunlessrole>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
     <div class="col-lg-6 mb-3">
@@ -54,9 +54,9 @@
 
     <div class="col-lg-6 mb-3">
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="kesehatan_date">
-            <span class= fw-bold">BPJS Kesehatan Date</span>
+            <span class= fw-bold">BPJS Tanggal Kesehatan</span>
         </label>
-        <input type="date" class="form-control form-control-solid" placeholder="BPJS Kesehatan Date" name="kesehatan_date" id="kesehatan_date" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="date" value="{{$user->userBpjs->kesehatan_date ?? ""}}" class="form-control form-control-solid" placeholder="BPJS Kesehatan Date" name="kesehatan_date" id="kesehatan_date" @unlessrole("administrator") disabled @endunlessrole>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
     <div class="col-lg-6 mb-3">
@@ -97,7 +97,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="jaminan_pensiun_date">
             <span class= fw-bold">Jaminan Pensiun Date</span>
         </label>
-        <input type="date" class="form-control form-control-solid" placeholder="Jaminan Pensiun Date" name="jaminan_pensiun_date" id="jaminan_pensiun_date" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="date" value="{{$user->userBpjs->jaminan_pensiun_date ?? ""}}" class="form-control form-control-solid" placeholder="Jaminan Pensiun Date" name="jaminan_pensiun_date" id="jaminan_pensiun_date" @unlessrole("administrator") disabled @endunlessrole>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
 </section>

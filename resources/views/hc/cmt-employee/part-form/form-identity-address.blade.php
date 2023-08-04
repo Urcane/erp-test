@@ -9,10 +9,12 @@
             <span class="fw-bold">Identity Type</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="indentity_type" name="indentity_type">
-            <option value="" selected hidden disabled>Identity Type</option>
-            <option value="Type 1" >Type 1</option>
-            <option value="Type 2" >Type 2</option>
-            <option value="TYpe 3" >TYpe 3</option>
+            @if (($user->userIdentity->type ?? "") == "")
+                <option value="" selected hidden disabled>Select tipe identitas</option>
+            @endif
+            @foreach ($allOptions->identityType as $option)
+                <option value="{{$option}}" @if (($user->userIdentity->type ?? "") == $option) selected @endif>{{$option}}</option>
+            @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
