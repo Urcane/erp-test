@@ -60,9 +60,17 @@ class CreateAllPersonalInfo extends Migration
             $table->timestamps();
         });
 
+        Schema::create('non_formal_education_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string("name", 45);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
         Schema::create('user_non_formal_educations', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
+            $table->foreignId("category_id")->constrained("non_formal_education_categories");
             $table->string("name", 50);
             $table->string("held_by", 35);
             $table->date("expired_date")->nullable(); //null jika permanent

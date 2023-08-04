@@ -41,8 +41,8 @@ class CreateAllEmployee extends Migration
             $table->string("number", 25)->nullable();
             $table->date("expire_date")->nullable(); //null jika permanent
             $table->string("postal_code", 6)->nullable();
-            $table->string("citizen_id_address", 100)->nullable();
-            $table->string("residential_address", 100)->nullable();
+            $table->string("citizen_id_address", 200)->nullable();
+            $table->string("residential_address", 200)->nullable();
             $table->softDeletes()->index();
             $table->timestamps();
         });
