@@ -155,11 +155,10 @@ class UserController extends Controller
                 'sign_file'=>$file_sign,
             ]);
 
-            dd($updateUser);
-            $updateUserPersonalData = $updateUser->userPersonalData->update([
+            $updateUserPersonalData = $getUser->userPersonalData->update([
                 "birthdate" => $request->birthdate,
                 "place_of_birth" => $request->place_of_birth,
-                "maritial_status" => $request->maritial_status,
+                "marital_status" => $request->maritial_status,
                 "gender" => $request->gender,
                 "blood_type" => $request->blood_type,
                 "religion" => $request->religion,

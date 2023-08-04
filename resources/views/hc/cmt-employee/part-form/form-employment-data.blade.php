@@ -42,10 +42,10 @@
     </div>
 
     <div class="col-lg-6 mb-3">
-        <label class="d-flex align-items-center fs-6 form-label mb-2" for="branch">
+        <label class="d-flex align-items-center fs-6 form-label mb-2" for="branch_id">
             <span class="required fw-bold">Branch</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="branch" required name="branch" id="branch" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="branch_id" required name="branch_id" id="branch_id" @unlessrole("administrator") disabled @endunlessrole>
             @if (($user->userEmployment->branch->name ?? "") == "")
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif
@@ -56,10 +56,10 @@
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
     <div class="col-lg-6 mb-3">
-        <label class="d-flex align-items-center fs-6 form-label mb-2" for="organization">
-            <span class="required fw-bold">Organization</span>
+        <label class="d-flex align-items-center fs-6 form-label mb-2" for="division_id">
+            <span class="required fw-bold">Divition</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="organization" required name="organization" id="organization" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="division_id" required name="division_id" id="division_id" @unlessrole("administrator") disabled @endunlessrole>
             @if (($user->division->name ?? "") == "")
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif

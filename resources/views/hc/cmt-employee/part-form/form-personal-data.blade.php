@@ -51,7 +51,7 @@
                 <option value="" selected hidden disabled>Select Status</option>
             @endif
             @foreach ($allOptions->maritalStatus as $option)
-                <option value="{{$option}}" @if ($user->userPersonalData->marital_status ?? "" == $option) selected @endif>{{$option}}</option>
+                <option value="{{$option}}" @if (($user->userPersonalData->marital_status ?? "") == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -62,7 +62,7 @@
         </label>
         <select class="drop-data form-select form-select-solid" data-control="gender" name="gender">
             @foreach ($allOptions->gender as $option)
-                <option value="{{$option}}" @if ($user->userPersonalData->gender ?? "" == $option) selected @endif>{{$option}}</option>
+                <option value="{{$option}}" @if (($user->userPersonalData->gender ?? "") == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -77,7 +77,7 @@
                 <option value="" selected hidden disabled>Select Religion</option>
             @endif
             @foreach ($allOptions->religion as $option)
-                <option value="{{$option}}" @if ($user->userPersonalData->religion ?? "" == $option) selected @endif>{{$option}}</option>
+                <option value="{{$option}}" @if (($user->userPersonalData->religion ?? "") == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -91,7 +91,7 @@
                 <option value="" selected hidden disabled>Select blood type</option>
             @endif
             @foreach ($allOptions->bloodType as $option)
-                <option value="{{$option}}" @if ($user->userPersonalData->blood_type ?? "" == $option) selected @endif>{{$option}}</option>
+                <option value="{{$option}}" @if (($user->userPersonalData->blood_type ?? "") == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
