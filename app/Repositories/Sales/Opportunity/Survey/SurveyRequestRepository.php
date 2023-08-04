@@ -34,7 +34,20 @@ class SurveyRequestRepository
     }
 
     function getAll(Request $request) : EloquentBuilder {
-        return SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey');
+        $filters = $request->filters;
+        $model = $this->model;
+        
+        if ($filters['status'] == 'ST') {
+            $model = $model->unProcess();
+        }
+        if ($filters['status'] == 'PR') {
+            $model = $model->onProcess();
+        }
+        if ($filters['status'] == 'DN') {
+            $model = $model->done();
+        }
+
+        return $model->with('customerProspect.customer', 'serviceType', 'typeOfSurvey');
     }
 
     function getById(int $id) : EloquentBuilder {
