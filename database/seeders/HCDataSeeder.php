@@ -480,7 +480,7 @@ class HCDataSeeder extends Seeder
     private function makeBank($name, $number, $holder)
     {
         return [
-            "name" => $this->constants->bankName[$name],
+            "name" => $this->constants->bank_name[$name],
             "number" => $number,
             "holder_name" => $holder
         ];
