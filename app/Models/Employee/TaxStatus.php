@@ -12,7 +12,7 @@ class TaxStatus extends Model
 
     protected $guarded = [];
 
-    public function userTax(): HasMany
+    public function userTaxs(): HasMany
     {
         return $this->hasMany(UserTax::class);
     }

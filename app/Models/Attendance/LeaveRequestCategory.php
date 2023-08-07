@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Models\Employee;
+namespace App\Models\Attendance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class JobLevel extends Model
+class LeaveRequestCategory extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function userEmployment(): HasMany
+    public function userLeaveRequests(): HasMany
     {
-        return $this->hasMany(UserEmployment::class);
+        return $this->hasMany(UserLeaveRequest::class);
     }
 }

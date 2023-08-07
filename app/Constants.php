@@ -4,11 +4,14 @@ namespace App;
 
 class Constants
 {
+    // only database
+    public $attendanceStatus = ["kerja", "libur", "cuti", "izin", "sakit"]; // [0] as default
+
     // database related
     public $maritalStatus = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
     public $gender = ["Laki-laki", "Perempuan"];
     public $bloodType = ["A", "B", "AB", "O"];
-    public $religion = ["Islam", "Kristen", "Buddha", "Hindu", "Konghucu", "Katolik"];
+    public $religion = ["Islam", "Kristen", "Buddha", "Hindu", "Konghucu", "Katolik", "Lainnya"];
     public $paymentType = ["Monthly", "Weekly"];
     public $day = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
     public $month = [

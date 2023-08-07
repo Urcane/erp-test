@@ -12,8 +12,6 @@ use App\Models\Employee\UserPersonalData;
 use App\Models\Employee\UserSalary;
 use App\Models\Employee\UserTax;
 use App\Models\Employee\Branch;
-use App\Models\Employee\JobLevel;
-use App\Models\Employee\JobPosition;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
@@ -41,23 +39,6 @@ class EmployeeSeeder extends Seeder
             "Pusat", "Cabang"
         ])->map(function ($data) {
             Branch::create([
-                "name" => $data
-            ]);
-        });
-
-        collect([
-            "Manager", "Karyawan"
-        ])->map(function ($data) {
-            JobLevel::create([
-                "name" => $data
-            ]);
-        });
-
-        collect([
-            "Software Engineer", "PLN"
-        ])->map(function ($data) {
-            JobPosition::create([
-                "parent_id" => null,
                 "name" => $data
             ]);
         });

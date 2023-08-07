@@ -12,7 +12,7 @@ class Branch extends Model
 
     protected $guarded = [];
 
-    public function userEmployment(): HasMany
+    public function userEmployments(): HasMany
     {
         return $this->hasMany(UserEmployment::class);
     }
