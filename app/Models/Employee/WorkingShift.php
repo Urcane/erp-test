@@ -2,25 +2,25 @@
 
 namespace App\Models\Employee;
 
-use App\Models\Day;
+use App\Models\Attendance\UserShiftRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class WorkingSchedule extends Model
+class WorkingShift extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function workingShifts(): BelongsToMany
+    public function workingSchedules(): BelongsToMany
     {
-        return $this->belongsToMany(WorkingShift::class, 'working_schedule_shifts');
+        return $this->belongsToMany(WorkingSchedule::class, 'working_schedule_shifts');
     }
 
-    public function dayOffs(): BelongsToMany
+    public function userShiftRequests(): HasMany
     {
-        return $this->belongsToMany(Day::class, 'working_schedule_day_offs');
+        return $this->hasMany(UserShiftRequest::class);
     }
 }

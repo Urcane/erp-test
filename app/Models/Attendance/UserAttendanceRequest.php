@@ -2,13 +2,11 @@
 
 namespace App\Models\Attendance;
 
-use App\Models\User;
-use App\Models\Employee\WorkingSchedule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class UserAttendance extends Model
+class UserAttendanceRequest extends Model
 {
     use HasFactory;
 
@@ -17,5 +15,10 @@ class UserAttendance extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }

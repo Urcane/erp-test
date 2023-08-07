@@ -22,13 +22,11 @@ class EmployeeController extends Controller
 {
     private $constants;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->constants = new Constants();
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             // user
             'name' => 'required|string',
@@ -208,5 +206,70 @@ class EmployeeController extends Controller
         });
 
         return $transaction;
+    }
+
+    public function updateIdentity(Request $request)
+    {
+        $request->validate([
+            'identity_type' => 'nullable|string|max:10',
+            'identity_number' => 'nullable|string|max:25',
+            'identity_expire_date' => 'nullable|date',
+            'postal_code' => 'nullable|string|max:6',
+            'citizen_id_address' => 'nullable|string|max:100',
+            'residential_address' => 'nullable|string|max:100',
+        ]);
+
+        UserIdentity::where('user_id', $request->user_id)->update([
+            'identity_type' => $request->identity_type,
+            'identity_number' => $request->identity_number,
+            'identity_expire_date' => $request->identity_expire_date,
+            'postal_code' => $request->postal_code,
+            'citizen_id_address' => $request->citizen_id_address,
+            'residential_address' => $request->residential_address,
+        ]);
+
+        return response()->json([
+            "status" => "Yeay Berhasil!! 💼",
+        ]);
+    }
+
+    public function updateEmployment(Request $request)
+    {
+        $request->validate([
+            // update on table user
+            "department_id" => 'required|exists:departments,id',
+            'division_id' => 'required|exists:divisions,id',
+            'role_id' => 'required|exists:roles,id',
+            'team_id' => 'nullable|exists:teams,id',
+
+            // update on table user employement
+            'employee_id' => 'required|string|max:35',
+            'employment_status_id' => 'required|exists:employment_statuses,id',
+            'join_date' => 'required|date',
+            'end_date' => 'nullable|date',
+            'branch_id' => 'nullable|exists:branches,id',
+            'grade' => 'required|string|max:40',
+            'class' => 'required|string|max:40',
+            'working_schedule_id' => 'required|exists:working_schedules,id',
+            'approval_line' => 'nullable|exists:users,id',
+            'barcode' => 'nullable|string|max:255',
+        ]);
+
+        User::whereId($request->user_id)->update([
+
+        ]);
+
+        UserEmployment::where('user_id', $request->user_id)->update([
+            'identity_type' => $request->identity_type,
+            'identity_number' => $request->identity_number,
+            'identity_expire_date' => $request->identity_expire_date,
+            'postal_code' => $request->postal_code,
+            'citizen_id_address' => $request->citizen_id_address,
+            'residential_address' => $request->residential_address,
+        ]);
+
+        return response()->json([
+            "status" => "Yeay Berhasil!! 💼",
+        ]);
     }
 }

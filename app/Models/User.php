@@ -5,13 +5,13 @@ namespace App\Models;
 use App\Traits\HasProject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
@@ -88,38 +88,68 @@ class User extends Authenticatable
         return $this->hasOne(Employee\UserTax::class);
     }
 
-    public function userFamily(): HasMany
+    public function userFamilies(): HasMany
     {
         return $this->hasMany(PersonalInfo\UserFamily::class);
     }
 
-    public function userEmegencyContact(): HasMany
+    public function userEmegencyContacts(): HasMany
     {
         return $this->hasMany(PersonalInfo\UserEmergencyContact::class);
     }
 
-    public function userAdditionalInformation(): HasMany
+    public function userAdditionalInformations(): HasMany
     {
         return $this->hasMany(PersonalInfo\UserAdditionalInformation::class);
     }
 
-    public function userFormalEducation(): HasMany
+    public function userFormalEducations(): HasMany
     {
         return $this->hasMany(PersonalInfo\UserFormalEducation::class);
     }
 
-    public function userNonFormalEducation(): HasMany
+    public function userNonFormalEducations(): HasMany
     {
         return $this->hasMany(PersonalInfo\UserNonFormalEducation::class);
     }
 
-    public function userWorkingExperience(): HasMany
+    public function userWorkingExperiences(): HasMany
     {
         return $this->hasMany(PersonalInfo\UserWorkingExperience::class);
     }
 
-    public function userAttendance(): HasMany
+    public function userAttendances(): HasMany
     {
         return $this->hasMany(Attendance\UserAttendance::class);
+    }
+
+    public function userAttendanceRequests(): HasMany
+    {
+        return $this->hasMany(Attendance\UserAttendanceRequest::class);
+    }
+
+    public function userLeaveQuotas(): HasMany
+    {
+        return $this->hasMany(Attendance\UserLeaveQuota::class);
+    }
+
+    public function userLeaveQuotaHistories(): HasMany
+    {
+        return $this->hasMany(Attendance\UserLeaveQuotaHistory::class);
+    }
+
+    public function userLeaveRequests(): HasMany
+    {
+        return $this->hasMany(Attendance\UserLeaveRequest::class);
+    }
+
+    public function userOvertimeRequests(): HasMany
+    {
+        return $this->hasMany(Attendance\UserOvertimeRequest::class);
+    }
+
+    public function userShiftRequests(): HasMany
+    {
+        return $this->hasMany(Attendance\UserShiftRequest::class);
     }
 }

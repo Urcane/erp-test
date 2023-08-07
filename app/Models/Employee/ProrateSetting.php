@@ -12,7 +12,7 @@ class ProrateSetting extends Model
 
     protected $guarded = [];
 
-    public function userSalary(): HasMany
+    public function userSalaries(): HasMany
     {
         return $this->hasMany(UserSalary::class);
     }

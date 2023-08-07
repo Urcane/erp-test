@@ -21,48 +21,7 @@ class CreateAllEmployee extends Migration
 
     public function up()
     {
-        Schema::create('user_personal_data', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("user_id")->constrained("users");
-            $table->date("birthdate");
-            $table->string("place_of_birth", 35)->nullable();
-            $table->enum("marital_status", $this->constants->marital_status);
-            $table->enum("gender", $this->constants->gender);
-            $table->enum("blood_type", $this->constants->blood_type)->nullable();
-            $table->enum("religion", $this->constants->religion);
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
-        Schema::create('user_identity', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("user_id")->constrained("users");
-            $table->string("type", 10)->nullable();
-            $table->string("number", 25)->nullable();
-            $table->date("expire_date")->nullable(); //null jika permanent
-            $table->string("postal_code", 6)->nullable();
-            $table->string("citizen_id_address", 200)->nullable();
-            $table->string("residential_address", 200)->nullable();
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
         Schema::create('branches', function (Blueprint $table) {
-            $table->id();
-            $table->string("name", 40);
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
-        Schema::create('job_positions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("parent_id")->nullable()->constrained("job_positions");
-            $table->string("name", 40);
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
-        Schema::create('job_levels', function (Blueprint $table) {
             $table->id();
             $table->string("name", 40);
             $table->softDeletes()->index();
@@ -72,39 +31,48 @@ class CreateAllEmployee extends Migration
         Schema::create('working_schedules', function (Blueprint $table) {
             $table->id();
             $table->string("name", 40);
-            $table->time("working_start_time");
-            $table->time("working_end_time");
-            $table->time("break_start_time");
-            $table->time("break_end_time");
+            $table->tinyInteger("late_check_in")->default(5); // in minute
+            $table->tinyInteger("late_check_out")->default(5); // in minute
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('working_shifts', function (Blueprint $table) {
+            $table->id();
+            $table->string("name", 40);
+            $table->time("working_start");
+            $table->time("working_end");
+            $table->time("break_start");
+            $table->time("break_end");
             $table->time("overtime_before")->nullable();
             $table->time("overtime_after")->nullable();
             $table->softDeletes()->index();
             $table->timestamps();
         });
 
-        Schema::create('employment_statuses', function (Blueprint $table) {
+        Schema::create('working_schedule_shifts', function (Blueprint $table) {
             $table->id();
-            $table->string("name", 40);
-            $table->softDeletes()->index();
+            $table->foreignId("working_schedule_id")->constrained("working_schedules");
+            $table->foreignId("working_shift_id")->constrained("working_shifts");
             $table->timestamps();
         });
 
-        Schema::create('user_employment', function (Blueprint $table) {
+        Schema::create('days', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("user_id")->constrained("users");
-            $table->string("employee_id", 35);
-            $table->foreignId("employment_status_id")->constrained("employment_statuses");
-            $table->date("join_date");
-            $table->date("end_date")->nullable()->default(null);
-            $table->date("resign_date")->nullable()->default(null);
-            $table->foreignId("branch_id")->nullable()->constrained("branches");
-            $table->foreignId("job_position_id")->constrained("job_positions");
-            $table->foreignId("job_level_id")->constrained("job_levels");
-            $table->string("grade", 40);
-            $table->string("class", 40);
+            $table->string("name", 10);
+            $table->timestamps();
+        });
+
+        Schema::create('working_schedule_day_offs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("day_id")->constrained("days");
             $table->foreignId("working_schedule_id")->constrained("working_schedules");
-            $table->foreignId("approval_line")->nullable()->constrained("users");
-            $table->string("barcode")->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('employment_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->string("name", 40);
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -138,6 +106,57 @@ class CreateAllEmployee extends Migration
             $table->timestamps();
         });
 
+        Schema::create('tax_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->string("name", 40);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('user_personal_data', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("user_id")->constrained("users");
+            $table->date("birthdate");
+            $table->string("place_of_birth", 35)->nullable();
+            $table->enum("marital_status", $this->constants->marital_status);
+            $table->enum("gender", $this->constants->gender);
+            $table->enum("blood_type", $this->constants->blood_type)->nullable();
+            $table->enum("religion", $this->constants->religion);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('user_identity', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("user_id")->constrained("users");
+            $table->string("type", 10)->nullable();
+            $table->string("number", 25)->nullable();
+            $table->date("expire_date")->nullable(); //null jika permanent
+            $table->string("postal_code", 6)->nullable();
+            $table->string("citizen_id_address", 200)->nullable();
+            $table->string("residential_address", 200)->nullable();
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('user_employment', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("user_id")->constrained("users");
+            $table->string("employee_id", 35);
+            $table->foreignId("employment_status_id")->constrained("employment_statuses");
+            $table->date("join_date");
+            $table->date("end_date")->nullable()->default(null);
+            $table->date("resign_date")->nullable()->default(null);
+            $table->foreignId("branch_id")->nullable()->constrained("branches");
+            $table->string("grade", 40);
+            $table->string("class", 40);
+            $table->foreignId("working_schedule_shift_id")->constrained("working_schedule_shifts");
+            $table->foreignId("approval_line")->nullable()->constrained("users");
+            $table->string("barcode")->nullable();
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
         Schema::create('user_salary', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
@@ -159,13 +178,6 @@ class CreateAllEmployee extends Migration
             $table->string("name", 55)->nullable();
             $table->string("number", 20)->nullable();
             $table->string("holder_name", 35)->nullable();
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
-        Schema::create('tax_statuses', function (Blueprint $table) {
-            $table->id();
-            $table->string("name", 40);
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -210,6 +222,16 @@ class CreateAllEmployee extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('days');
+        Schema::dropIfExists('working_schedule_day_off');
+        Schema::dropIfExists('working_shifts');
+        Schema::dropIfExists('working_schedules');
+        Schema::dropIfExists('working_schedule_shifts');
+        Schema::dropIfExists('employment_statuses');
+        Schema::dropIfExists('payment_schedules');
+        Schema::dropIfExists('prorate_settings');
+        Schema::dropIfExists('tax_statuses');
+
         Schema::dropIfExists('user_personal_data');
         Schema::dropIfExists('user_identity');
         Schema::dropIfExists('user_employment');
@@ -217,12 +239,5 @@ class CreateAllEmployee extends Migration
         Schema::dropIfExists('user_bank');
         Schema::dropIfExists('user_tax');
         Schema::dropIfExists('branches');
-        Schema::dropIfExists('job_positions');
-        Schema::dropIfExists('job_levels');
-        Schema::dropIfExists('working_schedules');
-        Schema::dropIfExists('employment_statuses');
-        Schema::dropIfExists('payment_schedules');
-        Schema::dropIfExists('prorate_settings');
-        Schema::dropIfExists('tax_statuses');
     }
 }

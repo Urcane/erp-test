@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Models\Employee;
+namespace App\Models\Attendance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class JobPosition extends Model
+class UserLeaveQuota extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function userEmployment(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(UserEmployment::class);
+        return $this->belongsTo(User::class);
     }
 }

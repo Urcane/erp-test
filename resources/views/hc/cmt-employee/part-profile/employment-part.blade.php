@@ -2,6 +2,7 @@
     @role("administrator")
     <form id="kt_employment_content_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" value="{{$user->id}}" name="user_id">
         @endrole
         @include("hc.cmt-employee.part-form.form-employment-data")
         @role("administrator")

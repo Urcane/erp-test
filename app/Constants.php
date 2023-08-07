@@ -4,11 +4,14 @@ namespace App;
 
 class Constants
 {
+    // only database
+    public $attendanceStatus = ["kerja", "libur", "cuti", "izin", "sakit"]; // [0] as default
+
     // database related
     public $marital_status = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
     public $gender = ["Laki-laki", "Perempuan"];
     public $blood_type = ["A", "B", "AB", "O"];
-    public $religion = ["Islam", "Kristen", "Buddha", "Hindu", "Konghucu", "Katolik"];
+    public $religion = ["Islam", "Kristen", "Buddha", "Hindu", "Konghucu", "Katolik", "Lainnya"];
     public $payment_type = ["Monthly", "Weekly"];
     public $day = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
     public $month = [
@@ -21,8 +24,8 @@ class Constants
     public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
 
     // only view
-    public $identityType = ["KTP", "SIM", "Passport"];
-    public $bankName = [
+    public $identity_type = ["KTP", "SIM", "Passport"];
+    public $bank_name = [
         "Bank Mandiri",
         "Bank Rakyat Indonesia (BRI)",
         "Bank Central Asia (BCA)",

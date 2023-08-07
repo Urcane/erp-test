@@ -29,19 +29,9 @@ class UserEmployment extends Model
         return $this->belongsTo(Branch::class);
     }
 
-    public function jobPosition(): BelongsTo
+    public function workingScheduleShift(): BelongsTo
     {
-        return $this->belongsTo(JobPosition::class);
-    }
-
-    public function jobLevel(): BelongsTo
-    {
-        return $this->belongsTo(JobLevel::class);
-    }
-
-    public function workingSchedule(): BelongsTo
-    {
-        return $this->belongsTo(WorkingSchedule::class);
+        return $this->belongsTo(WorkingScheduleShift::class, 'working_schedule_shift_id');
     }
 
     public function approvalLine(): BelongsTo

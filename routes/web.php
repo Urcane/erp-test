@@ -95,7 +95,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('cmt-employee')->group(function () {
             Route::post('/store/employee', 'store')->name('hc.emp.store');
             Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
-            Route::post('/update/employee/employment', 'updateemployment')->name('hc.emp.update.employment');
+            Route::post('/update/employee/employment', 'updateEmployment')->name('hc.emp.update.employment');
             Route::post('/update/employee/salary', 'updateSalary')->name('hc.emp.update.salary');
             Route::post('/update/employee/bank', 'updateBank')->name('hc.emp.update.bank');
             Route::post('/update/employee/tax', 'updateTax')->name('hc.emp.update.tax');

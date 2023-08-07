@@ -26,8 +26,8 @@
                     {{-- Personal data --}}
                     <form id="kt_personal_data_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                         @csrf
-                        @endrole
                         <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
+                        @endrole
                         @include("hc.cmt-employee.part-form.form-personal-data")
                         <div class="col-lg-12 mb-3">
                             <div class="row">
@@ -121,8 +121,9 @@
         <div class="tab-pane fade" id="identity_address" role="tabpanel">
             <div class="row p-4">
                 @role("administrator")
-                <form id="kt_identity_address_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                <form id="kt_identity_address_form" method="post" action="{{route("hc.emp.update.identity")}}" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" value="{{$user->id}}" name="user_id">
                     @endrole
                     @include("hc.cmt-employee.part-form.form-identity-address")
 
