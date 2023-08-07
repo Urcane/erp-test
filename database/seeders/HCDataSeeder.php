@@ -18,8 +18,10 @@ use App\Models\Employee\TaxStatus;
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\EmploymentStatus;
 use App\Constants;
+use App\Models\Employee\WorkingScheduleShift;
+use App\Models\Employee\WorkingShift;
 
-class EmployeeSeeder extends Seeder
+class HCDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -40,20 +42,6 @@ class EmployeeSeeder extends Seeder
         ])->map(function ($data) {
             Branch::create([
                 "name" => $data
-            ]);
-        });
-
-        collect([
-            ["Default", 8, 17, 12, 13, null, null]
-        ])->map(function ($data) {
-            WorkingSchedule::create([
-                "name" => $data[0],
-                "working_start_time" => Carbon::createFromTime($data[1], 0),
-                "working_end_time" => Carbon::createFromTime($data[2], 0),
-                "break_start_time" => Carbon::createFromTime($data[3], 0),
-                "break_end_time" => Carbon::createFromTime($data[4], 0),
-                "overtime_before" => Carbon::createFromTime($data[5], 0) ?? null,
-                "overtime_after" => Carbon::createFromTime($data[6], 0) ?? null,
             ]);
         });
 
@@ -103,9 +91,36 @@ class EmployeeSeeder extends Seeder
             "Permanent", "Internship"
         ])->map(function ($data) {
             EmploymentStatus::create([
-                "name" => $data
+                "name" => $data,
             ]);
         });
+
+        collect([
+            ["Shift1", "08:00:00", "17:00:00", "12:00:00", "13:00:00"]
+        ])->map(function ($data) {
+            WorkingShift::create([
+                "name" => $data[0],
+                "working_start" => Carbon::createFromFormat('H:i:s', $data[1]),
+                "working_end" => Carbon::createFromFormat('H:i:s', $data[2]),
+                "break_start" => Carbon::createFromFormat('H:i:s', $data[3]),
+                "break_end" => Carbon::createFromFormat('H:i:s', $data[4]),
+            ]);
+        });
+
+        collect([
+            ["Default", 5, 5]
+        ])->map(function ($data) {
+            WorkingSchedule::create([
+                "name" => $data[0],
+                "late_check_in" => $data[1],
+                "late_check_out" => $data[2],
+            ]);
+        });
+
+        WorkingScheduleShift::create([
+            "working_schedule_id" => 1,
+            "working_shift_id" => 1
+        ]);
 
         collect([
             [
@@ -134,8 +149,6 @@ class EmployeeSeeder extends Seeder
                     "2021-09-09",
                     null,
                     null,
-                    1,
-                    1,
                     1,
                     "AAA",
                     "AAA",
@@ -209,8 +222,6 @@ class EmployeeSeeder extends Seeder
                     null,
                     null,
                     1,
-                    1,
-                    1,
                     "AAA",
                     "AAA",
                     1,
@@ -283,8 +294,6 @@ class EmployeeSeeder extends Seeder
                     null,
                     null,
                     1,
-                    1,
-                    1,
                     "AAA",
                     "AAA",
                     1,
@@ -356,8 +365,6 @@ class EmployeeSeeder extends Seeder
                     "2021-09-09",
                     null,
                     null,
-                    1,
-                    1,
                     1,
                     "AAA",
                     "AAA",
@@ -439,7 +446,7 @@ class EmployeeSeeder extends Seeder
         ];
     }
 
-    private function makeEmployment($employee, $status, $join, $end, $resign, $branch, $jobPosition, $jobLevel, $grade, $class, $schedule, $approval, $barcode)
+    private function makeEmployment($employee, $status, $join, $end, $resign, $branch, $grade, $class, $schedule, $approval, $barcode)
     {
         return [
             "employee_id" => $employee,
@@ -448,11 +455,9 @@ class EmployeeSeeder extends Seeder
             "end_date" => date('Y-m-d', strtotime($end)) ?? null,
             "resign_date" => date('Y-m-d', strtotime($resign)) ?? null,
             "branch_id" => $branch,
-            "job_position_id" => $jobPosition,
-            "job_level_id" => $jobLevel,
             "grade" => $grade,
             "class" => $class,
-            "working_schedule_id" => $schedule,
+            "working_schedule_shift_id" => $schedule,
             "approval_line" => $approval,
             "barcode" => $barcode
         ];
