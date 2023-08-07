@@ -20,7 +20,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mx-5 mx-lg-15 my-9">
-                            <form id="kt_create_emp_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                            <form method="post" action="{{route('hc.emp.store')}}" id="kt_create_emp_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row rounded">
                                     <div class="col-lg-1">
@@ -72,7 +72,9 @@
 
                                         {{-- form --}}
                                         <div class=" mx-auto border border-2 border-secondary p-10 rounded">
-
+                                            @if($errors->any())
+                                                {!! implode('', $errors->all('<div>:message</div>')) !!}
+                                            @endif
                                             <div class="mb-10">
                                                 <div class="flex-column current" data-kt-stepper-element="content">
                                                     <div class="row">

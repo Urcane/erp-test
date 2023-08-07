@@ -112,7 +112,7 @@ class EmployeeSeeder extends Seeder
             PaymentSchedule::create([
                 "parent_id" => null,
                 "name" => $data[0],
-                "payment_type" => $this->constants->paymentType[$data[1]],
+                "payment_type" => $this->constants->payment_type[$data[1]],
                 "payroll_date" => $data[2],
                 "tax_with_salary" => $data[3]
             ] + $additionalData);
@@ -439,9 +439,9 @@ class EmployeeSeeder extends Seeder
         return [
             "birthdate" => date('Y-m-d', strtotime($birthdate)),
             "place_of_birth" => $place,
-            "marital_status" => $this->constants->maritalStatus[$marital],
+            "marital_status" => $this->constants->marital_status[$marital],
             "gender" => $this->constants->gender[$gender],
-            "blood_type" => $this->constants->bloodType[$blood] ?? null,
+            "blood_type" => $this->constants->blood_type[$blood] ?? null,
             "religion" => $this->constants->religion[$religion]
         ];
     }
@@ -481,7 +481,7 @@ class EmployeeSeeder extends Seeder
     {
         return [
             "basic_salary" => $basic,
-            "salary_type" => $this->constants->salaryType[$type] ?? null,
+            "salary_type" => $this->constants->salary_type[$type] ?? null,
             "payment_schedule_id" => $schedule,
             "prorate_setting_id" => $prorate,
             "allow_for_overtime" => $allow,
@@ -505,8 +505,8 @@ class EmployeeSeeder extends Seeder
         return [
             "npwp" => $npwp,
             "pktp_status" => $pktp,
-            "tax_method" => $this->constants->taxMethod[$method] ?? null,
-            "tax_salary" =>  $this->constants->taxSalary[$salary] ?? null,
+            "tax_method" => $this->constants->tax_method[$method] ?? null,
+            "tax_salary" =>  $this->constants->tax_salary[$salary] ?? null,
             "taxable_date" => date('Y-m-d', strtotime($taxable)) ?? null,
             "tax_status_id" => $status,
             "beginning_netto" => $beginning,
@@ -525,7 +525,7 @@ class EmployeeSeeder extends Seeder
             "kesehatan_date" => date('Y-m-d', strtotime($date2)) ?? null,
             "kesehatan_cost" => $cost1,
             "jht_cost" => $cost2,
-            "jaminan_pensiun_cost" => $this->constants->jaminanPensiunCost[$cost3] ?? null,
+            "jaminan_pensiun_cost" => $this->constants->jaminan_pensiun_cost[$cost3] ?? null,
             "jaminan_pensiun_date" => date('Y-m-d', strtotime($date3)) ?? null
         ];
     }

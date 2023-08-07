@@ -28,7 +28,7 @@ class CreateAllPersonalInfo extends Migration
             $table->string("relationship", 20);
             $table->date("birthday");
             $table->string("nik", 17);
-            $table->enum("marital_status", $this->constants->maritalStatus);
+            $table->enum("marital_status", $this->constants->marital_status);
             $table->enum("gender", $this->constants->gender);
             $table->string("job", 50);
             $table->enum("religion", $this->constants->religion);

@@ -81,20 +81,11 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold text-dark">Role</span>
                             </label>
-                            @role('administrator')
-                            <select class="drop-data form-select form-select-solid" data-control="select2" required name="role_id">
+                            <select class="drop-data form-select form-select-solid" data-control="select2" @unlessrole("administrator") disabled @endunlessrole>
                                 @foreach ($dataRole as $dr)
-                                <option value="{{$dr->name}}" {{$dr->id == $user->role_id  ? 'selected' : ''}}>{{$dr->name}}</option>
+                                <option value="{{$dr->id}}" {{$dr->id == $user->role_id  ? 'selected' : ''}}>{{$dr->name}}</option>
                                 @endforeach
                             </select>
-                            @else
-                            <select class="drop-data form-select form-select-solid" data-control="select2" disabled>
-                                @foreach ($dataRole as $dr)
-                                <option value="{{$dr->name}}" {{$dr->id == $user->role_id  ? 'selected' : ''}}>{{$dr->name}}</option>
-                                @endforeach
-                            </select>
-                            <input type="hidden" name="role_id" value="{{$user->role_id}}">
-                            @endrole
                             <div class="fv-plugins-message-container invalid-feedback"></div>
                         </div>
                         <div class="col-lg-12 mb-3">
@@ -331,7 +322,7 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    url: '{{route("hc.emp.update")}}',
+                    url: '{{route("hc.emp.update.personal")}}',
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {

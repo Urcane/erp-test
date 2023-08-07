@@ -33,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::GET('/create/employee', 'create')->name('hc.emp.create');
             // Route::post('/store/employee','store')->name('hc.emp.store');
-            Route::post('/update/employee', 'update')->name('hc.emp.update');
+            Route::post('/update/employee/personal', 'update')->name('hc.emp.update.personal');
             Route::post('/update-status/employee', 'statusPegawai')->name('hc.emp.update-status');
             Route::post('/reset-password-pegawai/employee', 'resetPasswordPegawai')->name('hc.emp.reset-password-pegawai');
 
@@ -94,6 +94,12 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(EmployeeController::class)->group(function () {
         Route::prefix('cmt-employee')->group(function () {
             Route::post('/store/employee', 'store')->name('hc.emp.store');
+            Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
+            Route::post('/update/employee/employment', 'updateemployment')->name('hc.emp.update.employment');
+            Route::post('/update/employee/salary', 'updateSalary')->name('hc.emp.update.salary');
+            Route::post('/update/employee/bank', 'updateBank')->name('hc.emp.update.bank');
+            Route::post('/update/employee/tax', 'updateTax')->name('hc.emp.update.tax');
+            Route::post('/update/employee/bpjs', 'updateBpjs')->name('hc.emp.update.bpjs');
         });
     });
 });

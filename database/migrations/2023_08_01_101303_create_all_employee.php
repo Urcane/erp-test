@@ -26,9 +26,9 @@ class CreateAllEmployee extends Migration
             $table->foreignId("user_id")->constrained("users");
             $table->date("birthdate");
             $table->string("place_of_birth", 35)->nullable();
-            $table->enum("marital_status", $this->constants->maritalStatus);
+            $table->enum("marital_status", $this->constants->marital_status);
             $table->enum("gender", $this->constants->gender);
-            $table->enum("blood_type", $this->constants->bloodType)->nullable();
+            $table->enum("blood_type", $this->constants->blood_type)->nullable();
             $table->enum("religion", $this->constants->religion);
             $table->softDeletes()->index();
             $table->timestamps();
@@ -113,7 +113,7 @@ class CreateAllEmployee extends Migration
             $table->id();
             $table->foreignId("parent_id")->nullable()->constrained("payment_schedules");
             $table->string("name", 40);
-            $table->enum("payment_type", $this->constants->paymentType);
+            $table->enum("payment_type", $this->constants->payment_type);
             $table->tinyInteger("payroll_date");
             $table->boolean("tax_with_salary");
             // Monthly
@@ -142,7 +142,7 @@ class CreateAllEmployee extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->integer("basic_salary");
-            $table->enum("salary_type", $this->constants->salaryType)->nullable();
+            $table->enum("salary_type", $this->constants->salary_type)->nullable();
             $table->foreignId("payment_schedule_id")->nullable()->constrained("payment_schedules");
             $table->foreignId("prorate_setting_id")->nullable()->constrained("prorate_settings");
             $table->boolean("allow_for_overtime")->default(0);
@@ -175,8 +175,8 @@ class CreateAllEmployee extends Migration
             $table->foreignId("user_id")->constrained("users");
             $table->string("npwp", 18)->nullable();
             $table->string("pktp_status", 25);
-            $table->enum("tax_method", $this->constants->taxMethod)->nullable();
-            $table->enum("tax_salary", $this->constants->taxSalary)->nullable();
+            $table->enum("tax_method", $this->constants->tax_method)->nullable();
+            $table->enum("tax_salary", $this->constants->tax_salary)->nullable();
             $table->date("taxable_date")->nullable();
             $table->foreignId("tax_status_id")->nullable()->constrained("tax_statuses");
             $table->integer("beginning_netto")->nullable();
@@ -196,7 +196,7 @@ class CreateAllEmployee extends Migration
             $table->date("kesehatan_date")->nullable();
             $table->string("kesehatan_cost", 20)->nullable();
             $table->string("jht_cost", 20)->nullable();
-            $table->enum("jaminan_pensiun_cost", $this->constants->jaminanPensiunCost)->nullable();
+            $table->enum("jaminan_pensiun_cost", $this->constants->jaminan_pensiun_cost)->nullable();
             $table->date("jaminan_pensiun_date")->nullable();
             $table->softDeletes()->index();
             $table->timestamps();

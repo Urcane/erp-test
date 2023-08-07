@@ -9,11 +9,12 @@ use App\Models\User;
 use App\Models\Employee\EmploymentStatus;
 use App\Models\Employee\UserPersonalData;
 use App\Models\Employee\Branch;
-use App\Models\Employee\JobPosition;
-use App\Models\Employee\JobLevel;
+// use App\Models\Employee\JobPosition;
+// use App\Models\Employee\JobLevel;
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
+use App\Models\Employee\TaxStatus;
 
 use App\Constants;
 
@@ -41,14 +42,17 @@ class UserController extends Controller
 
     public function profile($id)
     {
+        $dataDepartment = Department::all();
         $dataDivision = Division::all();
+
         $dataRole = Role::all();
         $allOptions = new Constants();
         $user = User::whereId($id)->first();
+        $users = User::get();
+        $dataTeam = Team::get();
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataBranch = Branch::all();
-        $dataJobPosition= JobPosition::all();
-        $dataJobLevel = JobLevel::all();
+        $dataTaxStatus = TaxStatus::all();
         $dataWorkingSchedule = WorkingSchedule::all();
 
         $dataPaymentSchedule = PaymentSchedule::all();
@@ -56,13 +60,15 @@ class UserController extends Controller
 
         return view('hc.cmt-employee.profile',compact(
             'user',
+            'users',
             "dataRole",
-            'dataDivision',
+            "dataTeam",
+            "dataTaxStatus",
+            'dataDepartment',
+            "dataDivision",
             'allOptions',
             "dataEmploymentStatus",
             "dataBranch",
-            "dataJobPosition",
-            "dataJobLevel",
             "dataWorkingSchedule",
             "dataPaymentSchedule",
             "dataProrateSetting",
@@ -70,26 +76,33 @@ class UserController extends Controller
     }
 
     public function create() {
+
+        $dataDepartment = Department::all();
         $dataDivision = Division::all();
+        $user = null;
+        $users = User::get();
+        $dataTeam = Team::get();
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataRole = Role::all();
         $allOptions = new Constants();
         $dataBranch = Branch::all();
-        $dataJobPosition= JobPosition::all();
-        $dataJobLevel = JobLevel::all();
         $dataWorkingSchedule = WorkingSchedule::all();
+        $dataTaxStatus = TaxStatus::all();
 
         $dataPaymentSchedule = PaymentSchedule::all();
         $dataProrateSetting = ProrateSetting::all();
 
         return view('hc.cmt-employee.form-tambah-pegawai',compact(
-            'dataDivision',
+            'user',
+            'users',
+            'dataDepartment',
+            "dataDivision",
+            "dataTeam",
+            "dataTaxStatus",
             'dataRole',
             'allOptions',
             "dataEmploymentStatus",
             "dataBranch",
-            "dataJobPosition",
-            "dataJobLevel",
             "dataWorkingSchedule",
             "dataPaymentSchedule",
             "dataProrateSetting",
@@ -126,7 +139,7 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $getUser = User::where('id',$request->user_id)->first();
-        // try {
+        try {
             $file_sign = $request->pegawai_sign_url;
             if ($file_sign != null && $file_sign != '') {
                 $image_parts = explode(";base64,", $file_sign);
@@ -178,11 +191,11 @@ class UserController extends Controller
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        // }
-        // catch (\Throwable $th) {
-        //     Log::error($th);
-        //     return response()->json("Oopss, ada yang salah nih!", 500);
-        // }
+        }
+        catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json("Oopss, ada yang salah nih!", 500);
+        }
     }
 
     public function statusPegawai(Request $request)
