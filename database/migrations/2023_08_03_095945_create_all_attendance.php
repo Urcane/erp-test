@@ -42,7 +42,7 @@ class CreateAllAttendance extends Migration
         Schema::create('user_attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->date("date");
+            $table->date("date")->index();
             $table->enum("status", $this->constants->attendanceStatus)->default($this->constants->attendanceStatus[0]);
             $table->time("working_start_time");
             $table->time("working_end_time");
