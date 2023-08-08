@@ -7,7 +7,9 @@ use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Attendance\AttendanceController;
-use App\Http\Controllers\HC\Employee\ProfileController;
+use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\Profile\EmergencyContactController;
+use App\Http\Controllers\Profile\FamilyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,7 +93,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(ProfileController::class)->group(function () {
         Route::prefix('cmt-employee-profile')->group(function () {
-            Route::post('/store/employee', 'store')->name('hc.emp.store');
+            Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
+            Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
             Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
             Route::post('/update/employee/employment', 'updateEmployment')->name('hc.emp.update.employment');
             Route::post('/update/employee/salary', 'updateSalary')->name('hc.emp.update.salary');
@@ -99,8 +102,19 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/update/employee/tax', 'updateTax')->name('hc.emp.update.tax');
             Route::post('/update/employee/bpjs', 'updateBpjs')->name('hc.emp.update.bpjs');
 
-            Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
-            Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
+            Route::post('/store/employee', 'store')->name('hc.emp.store');
+        });
+    });
+
+    Route::controller(FamilyController::class)->group(function () {
+        Route::prefix('cmt-employee-family')->group(function () {
+            Route::get('/get-data/table/family', 'getTableFamily')->name('hc.emp.get-table-family');
+        });
+    });
+
+    Route::controller(EmergencyContactController::class)->group(function () {
+        Route::prefix('cmt-employee-emergency-contact')->group(function () {
+            Route::get('/get-data/table/emergency/contact', 'getTableEmergencyContact')->name('hc.emp.get-table-emergency-contact');
         });
     });
 });

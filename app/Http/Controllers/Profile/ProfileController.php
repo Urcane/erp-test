@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\HC\Employee;
+namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -8,6 +8,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Illuminate\Http\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 use App\Constants;
 use App\Models\User;
@@ -27,6 +29,12 @@ use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
+
+use App\Models\Employee\WorkingSchedule;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Facades\DataTables;
 
 class ProfileController extends Controller
 {
@@ -252,7 +260,7 @@ class ProfileController extends Controller
         ));
     }
 
-    public function update(Request $request) {
+    public function updatePersonal(Request $request) {
         $getUser = User::where('id',$request->user_id)->first();
         // try {
             $file_sign = $request->pegawai_sign_url;

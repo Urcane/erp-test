@@ -139,64 +139,12 @@
 
         <div class="tab-pane fade" id="family_content" role="tabpanel">
             <div class="row p-4">
-
-                {{-- Family Cotent --}}
-                <div class="col-lg-6 mb-9">
-                    <h4>Family Data</h4>
-                    <span class="fs-7 fw-semibold text-gray-500">Your family data information</span>
-                </div>
-                <div class="col-lg-6 d-flex justify-content-end">
-                    <div>
-                        <button class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Add Family</button>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <table class="table align-top table-striped border table-rounded gy-5" id="tb_family_content">
-                        <thead class="">
-                            <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                <th class="text-center w-50px">#</th>
-                                <th class="">Nama</th>
-                                <th class="w-150px">Relationship</th>
-                                <th class="w-150px">Birthday</th>
-                                <th class="w-150px">NIK</th>
-                                <th class="w-150px">Marital Status</th>
-                                <th class="w-100px">#</th>
-                            </tr>
-                        </thead>
-                        <tbody class="fs-7">
-                        </tbody>
-                    </table>
-                </div>
+                @include("hc.cmt-employee.part-profile.part-personal.family-part")
             </div>
         </div>
         <div class="tab-pane fade" id="emergency_contact_content" role="tabpanel">
             <div class="row p-4">
-
-                {{-- Emergency Contact Content --}}
-                <div class="col-lg-6 mb-9">
-                    <h4>Emergency Contact</h4>
-                    <span class="fs-7 fw-semibold text-gray-500">Your emergency contact information</span>
-                </div>
-                <div class="col-lg-6 d-flex justify-content-end">
-                    <div>
-                        <button class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Add Emergency Contact</button>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <table class="table align-top table-striped border table-rounded gy-5" id="tb_emergency_contact_content">
-                        <thead class="">
-                            <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                <th class="text-center w-50px">#</th>
-                                <th class="">Nama</th>
-                                <th class="w-150px">Relationship</th>
-                                <th class="w-150px">Phone Number</th>
-                                <th class="w-100px">#</th>
-                            </tr>
-                        </thead>
-                        <tbody class="fs-7">
-                        </tbody>
-                    </table>
-                </div>
+                @include("hc.cmt-employee.part-profile.part-personal.emergency-contact-part")
             </div>
         </div>
         <div class="tab-pane fade" id="education_experience_content" role="tabpanel">
