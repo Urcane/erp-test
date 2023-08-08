@@ -7,7 +7,7 @@ use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Attendance\AttendanceController;
-use App\Http\Controllers\HC\EmployeeController;
+use App\Http\Controllers\HC\Employee\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,11 +29,9 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::prefix('cmt-employee')->group(function () {
             Route::get('/', 'index')->name('hc.emp.index');
-            Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
 
             Route::GET('/create/employee', 'create')->name('hc.emp.create');
             // Route::post('/store/employee','store')->name('hc.emp.store');
-            Route::post('/update/employee/personal', 'update')->name('hc.emp.update.personal');
             Route::post('/update-status/employee', 'statusPegawai')->name('hc.emp.update-status');
             Route::post('/reset-password-pegawai/employee', 'resetPasswordPegawai')->name('hc.emp.reset-password-pegawai');
 
@@ -91,8 +89,8 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(EmployeeController::class)->group(function () {
-        Route::prefix('cmt-employee')->group(function () {
+    Route::controller(ProfileController::class)->group(function () {
+        Route::prefix('cmt-employee-profile')->group(function () {
             Route::post('/store/employee', 'store')->name('hc.emp.store');
             Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
             Route::post('/update/employee/employment', 'updateEmployment')->name('hc.emp.update.employment');
@@ -100,6 +98,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/update/employee/bank', 'updateBank')->name('hc.emp.update.bank');
             Route::post('/update/employee/tax', 'updateTax')->name('hc.emp.update.tax');
             Route::post('/update/employee/bpjs', 'updateBpjs')->name('hc.emp.update.bpjs');
+
+            Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
+            Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
         });
     });
 });

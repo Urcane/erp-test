@@ -1,15 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\HC;
+namespace App\Http\Controllers\HC\Employee;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 use App\Constants;
 use App\Models\User;
+use App\Models\Department;
+use App\Models\Division;
+use App\Models\Team\Team;
 use App\Models\Employee\UserBank;
 use App\Models\Employee\UserBpjs;
 use App\Models\Employee\UserEmployment;
@@ -17,8 +21,14 @@ use App\Models\Employee\UserIdentity;
 use App\Models\Employee\UserPersonalData;
 use App\Models\Employee\UserSalary;
 use App\Models\Employee\UserTax;
+use App\Models\Employee\EmploymentStatus;
+use App\Models\Employee\Branch;
+use App\Models\Employee\WorkingScheduleShift;
+use App\Models\Employee\PaymentSchedule;
+use App\Models\Employee\ProrateSetting;
+use App\Models\Employee\TaxStatus;
 
-class EmployeeController extends Controller
+class ProfileController extends Controller
 {
     private $constants;
 
@@ -61,7 +71,7 @@ class EmployeeController extends Controller
             'branch_id' => 'nullable|exists:branches,id',
             'grade' => 'required|string|max:40',
             'class' => 'required|string|max:40',
-            'working_schedule_id' => 'required|exists:working_schedules,id',
+            'working_schedule_shift_id' => 'required|exists:working_schedules,id',
             'approval_line' => 'nullable|exists:users,id',
             'barcode' => 'nullable|string|max:255',
 
@@ -149,7 +159,7 @@ class EmployeeController extends Controller
                 'branch_id' => $request->branch_id,
                 'grade' => $request->grade,
                 'class' => $request->class,
-                'working_schedule_id' => $request->working_schedule_id,
+                'working_schedule_shift_id' => $request->working_schedule_shift_id,
                 'approval_line' => $request->approval_line,
                 'barcode' => $request->barcode,
             ]);
@@ -200,16 +210,110 @@ class EmployeeController extends Controller
             ]);
 
             return response()->json([
-                "status" => "success",
-                "message" => "berhasil menambahkan employee"
-            ], 201);
+            "status" => "success",
+            "message" => "berhasil menambahkan employee"
+        ], 201);
         });
 
         return $transaction;
     }
 
-    public function updateIdentity(Request $request)
-    {
+    public function profile($id) {
+        $dataDepartment = Department::all();
+        $dataDivision = Division::all();
+
+        $dataRole = Role::all();
+        $allOptions = new Constants();
+        $user = User::whereId($id)->first();
+        $users = User::get();
+        $dataTeam = Team::get();
+        $dataEmploymentStatus = EmploymentStatus::all();
+        $dataBranch = Branch::all();
+        $dataTaxStatus = TaxStatus::all();
+        $dataWorkingScheduleShift = WorkingScheduleShift::all();
+
+        $dataPaymentSchedule = PaymentSchedule::all();
+        $dataProrateSetting = ProrateSetting::all();
+
+        return view('hc.cmt-employee.profile',compact(
+            'user',
+            'users',
+            "dataRole",
+            "dataTeam",
+            "dataTaxStatus",
+            'dataDepartment',
+            "dataDivision",
+            'allOptions',
+            "dataEmploymentStatus",
+            "dataBranch",
+            "dataWorkingScheduleShift",
+            "dataPaymentSchedule",
+            "dataProrateSetting",
+        ));
+    }
+
+    public function update(Request $request) {
+        $getUser = User::where('id',$request->user_id)->first();
+        // try {
+            $file_sign = $request->pegawai_sign_url;
+            if ($file_sign != null && $file_sign != '') {
+                $image_parts = explode(";base64,", $file_sign);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $file_sign = sys_get_temp_dir() . '/' . uniqid().'.'.$image_type;
+                file_put_contents($file_sign, $image_base64);
+                $tmpFile = new File($file_sign);
+                $file = new UploadedFile(
+                    $tmpFile->getPathname(),
+                    $tmpFile->getFilename(),
+                    $tmpFile->getMimeType(),
+                    0,
+                    true
+                );
+                $file_sign = $file->store('sign_pegawai');
+            }else{
+                $file_sign = $getUser->sign_file;
+            }
+
+            $updateUser = $getUser->update([
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'kontak'=>$request->kontak,
+                'sign_file'=>$file_sign,
+            ]);
+
+            $updateUserPersonalData = $getUser->userPersonalData->update([
+                "birthdate" => $request->birthdate,
+                "place_of_birth" => $request->place_of_birth,
+                "marital_status" => $request->marital_status,
+                "gender" => $request->gender,
+                "blood_type" => $request->blood_type,
+                "religion" => $request->religion,
+            ]);
+
+            if ($request->role_id) {
+                DB::table('model_has_roles')->where('model_id',$request->user_id)->delete();
+                $getUser->assignRole($request->role_id);
+            }
+
+            if($request->new_password != null){
+                $getUser->update([
+                    'password' => bcrypt($request->new_password)
+                ]);
+            }
+
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼",
+            ]);
+        // }
+        // catch (\Throwable $th) {
+        //     Log::error($th);
+        //     return response()->json("Oopss, ada yang salah nih!", 500);
+        // }
+    }
+
+    public function updateIdentity(Request $request) {
         $request->validate([
             'identity_type' => 'nullable|string|max:10',
             'identity_number' => 'nullable|string|max:25',
@@ -220,21 +324,22 @@ class EmployeeController extends Controller
         ]);
 
         UserIdentity::where('user_id', $request->user_id)->update([
-            'identity_type' => $request->identity_type,
-            'identity_number' => $request->identity_number,
-            'identity_expire_date' => $request->identity_expire_date,
+            'type' => $request->identity_type,
+            'number' => $request->identity_number,
+            'expire_date' => $request->identity_expire_date,
             'postal_code' => $request->postal_code,
             'citizen_id_address' => $request->citizen_id_address,
             'residential_address' => $request->residential_address,
         ]);
 
         return response()->json([
-            "status" => "Yeay Berhasil!! 💼",
-        ]);
+            "status" => "success",
+            "message" => "berhasil menambahkan employee"
+        ], 201);
     }
 
-    public function updateEmployment(Request $request)
-    {
+    public function updateEmployment(Request $request) {
+        // dd($request);
         $request->validate([
             // update on table user
             "department_id" => 'required|exists:departments,id',
@@ -250,26 +355,147 @@ class EmployeeController extends Controller
             'branch_id' => 'nullable|exists:branches,id',
             'grade' => 'required|string|max:40',
             'class' => 'required|string|max:40',
-            'working_schedule_id' => 'required|exists:working_schedules,id',
+            'working_schedule_shift_id' => 'required|exists:working_schedules,id',
             'approval_line' => 'nullable|exists:users,id',
             'barcode' => 'nullable|string|max:255',
         ]);
 
-        User::whereId($request->user_id)->update([
+        $user = User::whereId($request->user_id);
 
+        $user->update([
+            "department_id" => $request->department_id,
+            'division_id' => $request->division_id,
+            'team_id' => $request->team_id,
         ]);
 
+        $user->first()->assignRole($request->role_id);
+
         UserEmployment::where('user_id', $request->user_id)->update([
-            'identity_type' => $request->identity_type,
-            'identity_number' => $request->identity_number,
-            'identity_expire_date' => $request->identity_expire_date,
-            'postal_code' => $request->postal_code,
-            'citizen_id_address' => $request->citizen_id_address,
-            'residential_address' => $request->residential_address,
+            'employee_id' => $request->employee_id,
+            'employment_status_id' => $request->employment_status_id,
+            'join_date' => $request->join_date,
+            'end_date' => $request->end_date,
+            'branch_id' => $request->branch_id,
+            'grade' => $request->grade,
+            'class' => $request->class,
+            'working_schedule_shift_id' => $request->working_schedule_shift_id,
+            'approval_line' => $request->approval_line,
+            'barcode' => $request->barcode,
         ]);
 
         return response()->json([
-            "status" => "Yeay Berhasil!! 💼",
+            "status" => "success",
+            "message" => "berhasil menambahkan employee"
+        ], 201);;
+    }
+
+    public function updateSalary(Request $request) {
+        $request->validate([
+            'basic_salary' => 'required|integer',
+            'salary_type' => ['nullable', Rule::in($this->constants->salary_type)],
+            'payment_schedule_id' => 'nullable|exists:payment_schedules,id',
+            'prorate_setting_id' => 'nullable|exists:prorate_settings,id',
+            'allow_for_overtime' => 'required|boolean',
+            'overtime_working_day' => 'nullable|string|max:10',
+            'overtime_day_off' => 'nullable|string|max:10',
+            'overtime_national_holiday' => 'nullable|string|max:10',
         ]);
+
+        UserSalary::where('user_id', $request->user_id)->update([
+            'basic_salary' => $request->basic_salary,
+            'salary_type' => $request->salary_type,
+            'payment_schedule_id' => $request->payment_schedule_id,
+            'prorate_setting_id' => $request->prorate_setting_id,
+            'allow_for_overtime' => $request->allow_for_overtime,
+            'overtime_working_day' => $request->overtime_working_day,
+            'overtime_day_off' => $request->overtime_day_off,
+            'overtime_national_holiday' => $request->overtime_national_holiday,
+        ]);
+
+        return response()->json([
+            "status" => "success",
+            "message" => "berhasil menambahkan employee"
+        ], 201);
+    }
+
+    public function updateBank(Request $request) {
+        $request->validate([
+            'bank_name' => 'nullable|string|max:55',
+            'bank_number' => 'nullable|string|max:20',
+            'bank_holder_name' => 'nullable|string|max:35',
+        ]);
+
+        UserBank::where('user_id', $request->user_id)->update([
+            'name' => $request->bank_name,
+            'number' => $request->bank_number,
+            'holder_name' => $request->bank_holder_name,
+        ]);
+
+        return response()->json([
+            "status" => "success",
+            "message" => "berhasil menambahkan employee"
+        ], 201);
+    }
+
+    public function updateTax(Request $request) {
+        $request->validate([
+            'npwp' => 'nullable|string|max:18',
+            'pktp' => 'required|string|max:25',
+            'tax_method' => ['nullable', Rule::in($this->constants->tax_method)],
+            'tax_salary' => ['nullable', Rule::in($this->constants->tax_salary)],
+            'taxable_date' => 'nullable|date',
+            'tax_status_id' => 'nullable|exists:tax_statuses,id',
+            'beginning_netto' => 'nullable|integer',
+            'pph21_paid' => 'nullable|integer',
+        ]);
+
+        UserTax::where('user_id', $request->user_id)->update([
+            'npwp' => $request->npwp,
+            'pktp_status' => $request->pktp,
+            'tax_method' => $request->tax_method,
+            'tax_salary' => $request->tax_salary,
+            'taxable_date' => $request->taxable_date,
+            'tax_status_id' => $request->tax_status_id,
+            'beginning_netto' => $request->beginning_netto,
+            'pph21_paid' => $request->pph21_paid,
+        ]);
+
+        return response()->json([
+            "status" => "success",
+            "message" => "berhasil menambahkan employee"
+        ], 201);
+    }
+
+    public function updateBpjs(Request $request) {
+        $request->validate([
+            'ketenagakerjaan_number' => 'nullable|string|max:12',
+            'ketenagakerjaan_npp' => 'nullable|string|max:15',
+            'ketenagakerjaan_date' => 'nullable|date',
+            'kesehatan_number' => 'nullable|string|max:14',
+            'kesehatan_family' => 'nullable|string|max:20',
+            'kesehatan_date' => 'nullable|date',
+            'kesehatan_cost' => 'nullable|string|max:20',
+            'jht_cost' => 'nullable|string|max:20',
+            'jaminan_pensiun_cost' => ['nullable', Rule::in($this->constants->jaminan_pensiun_cost)],
+            'jaminan_pensiun_date' => 'nullable|date',
+        ]);
+
+        UserBpjs::where('user_id', $request->user_id)->update([
+            'ketenagakerjaan_number' => $request->ketenagakerjaan_number,
+            'ketenagakerjaan_npp' => $request->ketenagakerjaan_npp,
+            'ketenagakerjaan_date' => $request->ketenagakerjaan_date,
+            'kesehatan_number' => $request->kesehatan_number,
+            'kesehatan_family' => $request->kesehatan_family,
+            'kesehatan_date' => $request->kesehatan_date,
+            'kesehatan_cost' => $request->kesehatan_cost,
+            'jht_cost' => $request->jht_cost,
+            'jaminan_pensiun_cost' => $request->jaminan_pensiun_cost,
+            'jaminan_pensiun_date' => $request->jaminan_pensiun_date,
+        ]);
+
+        return response()->json([
+            "status" => "success",
+            "message" => "berhasil menambahkan employee"
+        ], 201);
     }
 }

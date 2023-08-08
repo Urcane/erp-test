@@ -9,12 +9,11 @@ use App\Models\User;
 use App\Models\Employee\EmploymentStatus;
 use App\Models\Employee\UserPersonalData;
 use App\Models\Employee\Branch;
-// use App\Models\Employee\JobPosition;
-// use App\Models\Employee\JobLevel;
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
+use App\Models\Employee\WorkingScheduleShift;
 
 use App\Constants;
 
@@ -40,41 +39,6 @@ class UserController extends Controller
         return view('hc.cmt-employee.index',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
     }
 
-    public function profile($id)
-    {
-        $dataDepartment = Department::all();
-        $dataDivision = Division::all();
-
-        $dataRole = Role::all();
-        $allOptions = new Constants();
-        $user = User::whereId($id)->first();
-        $users = User::get();
-        $dataTeam = Team::get();
-        $dataEmploymentStatus = EmploymentStatus::all();
-        $dataBranch = Branch::all();
-        $dataTaxStatus = TaxStatus::all();
-        $dataWorkingSchedule = WorkingSchedule::all();
-
-        $dataPaymentSchedule = PaymentSchedule::all();
-        $dataProrateSetting = ProrateSetting::all();
-
-        return view('hc.cmt-employee.profile',compact(
-            'user',
-            'users',
-            "dataRole",
-            "dataTeam",
-            "dataTaxStatus",
-            'dataDepartment',
-            "dataDivision",
-            'allOptions',
-            "dataEmploymentStatus",
-            "dataBranch",
-            "dataWorkingSchedule",
-            "dataPaymentSchedule",
-            "dataProrateSetting",
-        ));
-    }
-
     public function create() {
 
         $dataDepartment = Department::all();
@@ -86,7 +50,7 @@ class UserController extends Controller
         $dataRole = Role::all();
         $allOptions = new Constants();
         $dataBranch = Branch::all();
-        $dataWorkingSchedule = WorkingSchedule::all();
+        $dataWorkingScheduleShift = WorkingScheduleShift::all();
         $dataTaxStatus = TaxStatus::all();
 
         $dataPaymentSchedule = PaymentSchedule::all();
@@ -103,14 +67,13 @@ class UserController extends Controller
             'allOptions',
             "dataEmploymentStatus",
             "dataBranch",
-            "dataWorkingSchedule",
+            "dataWorkingScheduleShift",
             "dataPaymentSchedule",
             "dataProrateSetting",
         ));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         try {
             $getDiv = Division::where('id',$request->division_id)->first();
             $create = User::create([
@@ -136,67 +99,7 @@ class UserController extends Controller
         }
     }
 
-    public function update(Request $request)
-    {
-        $getUser = User::where('id',$request->user_id)->first();
-        try {
-            $file_sign = $request->pegawai_sign_url;
-            if ($file_sign != null && $file_sign != '') {
-                $image_parts = explode(";base64,", $file_sign);
-                $image_type_aux = explode("image/", $image_parts[0]);
-                $image_type = $image_type_aux[1];
-                $image_base64 = base64_decode($image_parts[1]);
-                $file_sign = sys_get_temp_dir() . '/' . uniqid().'.'.$image_type;
-                file_put_contents($file_sign, $image_base64);
-                $tmpFile = new File($file_sign);
-                $file = new UploadedFile(
-                    $tmpFile->getPathname(),
-                    $tmpFile->getFilename(),
-                    $tmpFile->getMimeType(),
-                    0,
-                    true
-                );
-                $file_sign = $file->store('sign_pegawai');
-            }else{
-                $file_sign = $getUser->sign_file;
-            }
 
-            $updateUser = $getUser->update([
-                'name'=>$request->name,
-                'email'=>$request->email,
-                'kontak'=>$request->kontak,
-                'sign_file'=>$file_sign,
-            ]);
-
-            $updateUserPersonalData = $getUser->userPersonalData->update([
-                "birthdate" => $request->birthdate,
-                "place_of_birth" => $request->place_of_birth,
-                "marital_status" => $request->maritial_status,
-                "gender" => $request->gender,
-                "blood_type" => $request->blood_type,
-                "religion" => $request->religion,
-            ]);
-
-            if ($request->role_id) {
-                DB::table('model_has_roles')->where('model_id',$request->user_id)->delete();
-                $getUser->assignRole($request->role_id);
-            }
-
-            if($request->new_password != null){
-                $getUser->update([
-                    'password' => bcrypt($request->new_password)
-                ]);
-            }
-
-            return response()->json([
-                "status" => "Yeay Berhasil!! 💼",
-            ]);
-        }
-        catch (\Throwable $th) {
-            Log::error($th);
-            return response()->json("Oopss, ada yang salah nih!", 500);
-        }
-    }
 
     public function statusPegawai(Request $request)
     {

@@ -12,7 +12,7 @@
             @if (($user->userIdentity->type ?? "") == "" && old('identity_type') == null)
                 <option value="" selected hidden disabled>Select tipe identitas</option>
             @endif
-            @foreach ($allOptions->identityType as $option)
+            @foreach ($allOptions->identity_type as $option)
                 <option value="{{$option}}" @if (($user->userIdentity->type ?? old('identity_type')) == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>

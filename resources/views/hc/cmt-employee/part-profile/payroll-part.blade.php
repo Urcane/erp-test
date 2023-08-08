@@ -21,8 +21,12 @@
                 <div class="row">
                     {{-- salary --}}
                     @role("administrator")
-                    <form id="kt_salary_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                    <form method="post" action="{{ route("hc.emp.update.salary") }}" id="kt_salary_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                         @csrf
+                        @if($errors->any())
+                            {!! implode('', $errors->all('<div>:message</div>')) !!}
+                        @endif
+                        <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
                         @endrole
                         @include("hc.cmt-employee.part-form.form-salary")
                         @role("administrator")
@@ -37,8 +41,12 @@
         <div class="tab-pane fade" id="tax_configuration_content" role="tabpanel">
             <div class="row p-4">
                 @role("administrator")
-                <form id="kt_tax_configuration_content_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                <form method="post" action="{{ route("hc.emp.update.tax") }}" id="kt_tax_configuration_content_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
+                    @if($errors->any())
+                        {!! implode('', $errors->all('<div>:message</div>')) !!}
+                    @endif
+                    <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
                     @endrole
                     @include("hc.cmt-employee.part-form.form-tax-configuration")
                     @role("administrator")
@@ -52,8 +60,12 @@
         <div class="tab-pane fade" id="bpjs_configuration_content" role="tabpanel">
             <div class="row p-4">
                 @role("administrator")
-                <form id="kt_bpjs_configuration_content_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                <form method="post" action="{{ route("hc.emp.update.bpjs") }}" id="kt_bpjs_configuration_content_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
+                    @if($errors->any())
+                        {!! implode('', $errors->all('<div>:message</div>')) !!}
+                    @endif
+                    <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
                     @endrole
                     @include("hc.cmt-employee.part-form.form-bpjs-configuration")
                     @role("administrator")
@@ -67,8 +79,12 @@
         <div class="tab-pane fade" id="bank_account_content" role="tabpanel">
             <div class="row p-4">
                 @role("administrator")
-                <form id="kt_bank_account_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                <form method="post" action="{{ route("hc.emp.update.bank") }}" id="kt_bank_account_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
+                    @if($errors->any())
+                        {!! implode('', $errors->all('<div>:message</div>')) !!}
+                    @endif
+                    <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
                     @endrole
                     @include("hc.cmt-employee.part-form.form-bank-account")
                     @role("administrator")

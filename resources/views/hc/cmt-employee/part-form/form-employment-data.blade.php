@@ -144,15 +144,15 @@
     </div>
 
     <div class="col-lg-6 mb-3">
-        <label class="d-flex align-items-center fs-6 form-label mb-2" for="working_schedule_id">
+        <label class="d-flex align-items-center fs-6 form-label mb-2" for="working_schedule_shift_id">
             <span class="required fw-bold">Schedule</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="working_schedule_id" required name="working_schedule_id" id="working_schedule_id" @unlessrole("administrator") disabled @endunlessrole>
-            @if (($user->userEmployment->workingSchedule->name ?? old('working_schedule_id')) == null)
+        <select class="drop-data form-select form-select-solid" data-control="working_schedule_shift_id" required name="working_schedule_shift_id" id="working_schedule_shift_id" @unlessrole("administrator") disabled @endunlessrole>
+            @if (($user->userEmployment->workingSchedule->name ?? old('working_schedule_shift_id')) == null)
                 <option value="" selected hidden disabled>Select job level</option>
             @endif
-            @foreach ($dataWorkingSchedule as $option)
-                <option value="{{$option->id}}" @if (($user->userEmployment->working_schedule_id ?? old('working_schedule_id')) == $option->id) selected @endif>{{$option->name}}</option>
+            @foreach ($dataWorkingScheduleShift as $option)
+                <option value="{{$option->id}}" @if (($user->userEmployment->working_schedule_shift_id ?? old('working_schedule_shift_id')) == $option->id) selected @endif>{{$option->workingSchedule->name . ", " . $option->workingShift->name}}</option>
             @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>

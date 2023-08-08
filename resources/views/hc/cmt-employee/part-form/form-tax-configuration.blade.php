@@ -9,7 +9,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="npwp">
             <span class= fw-bold">NPWP</span>
         </label>
-        <input type="text" value="{{$user->userTax->npwp ?? old('npwp')}}" pattern="[0-9]{2}.[0-9]{3}.[0-9]{3}.[0-9]{1}-[0-9]{3}.[0-9]{3}" class="form-control form-control-solid" placeholder="00.000.000.0-000.000" name="npwp" id="npwp" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="text" value="{{$user->userTax->npwp ?? old('npwp')}}" class="form-control form-control-solid" placeholder="00.000.000.0-000.000" name="npwp" id="npwp" @unlessrole("administrator") disabled @endunlessrole>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
     <div class="col-lg-6 mb-3">
