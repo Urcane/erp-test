@@ -8,8 +8,8 @@ use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Attendance\AttendanceController;
 use App\Http\Controllers\Profile\ProfileController;
-use App\Http\Controllers\Profile\EmergencyContactController;
-use App\Http\Controllers\Profile\FamilyController;
+use App\Http\Controllers\Profile\PersonalController;
+use App\Http\Controllers\Profile\TimeManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,8 +94,6 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ProfileController::class)->group(function () {
         Route::prefix('cmt-employee-profile')->group(function () {
             Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
-            Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
-            Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
             Route::post('/update/employee/employment', 'updateEmployment')->name('hc.emp.update.employment');
             Route::post('/update/employee/salary', 'updateSalary')->name('hc.emp.update.salary');
             Route::post('/update/employee/bank', 'updateBank')->name('hc.emp.update.bank');
@@ -106,15 +104,25 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(FamilyController::class)->group(function () {
-        Route::prefix('cmt-employee-family')->group(function () {
+    Route::controller(PersonalController::class)->group(function () {
+        Route::prefix('cmt-employee-personal')->group(function () {
             Route::get('/get-data/table/family', 'getTableFamily')->name('hc.emp.get-table-family');
+            Route::get('/get-data/table/emergency/contact', 'getTableEmergencyContact')->name('hc.emp.get-table-emergency-contact');
+            Route::get('/get-data/table/education/formal', 'getTableFormalEducation')->name('hc.emp.get-table-formal-education');
+            Route::get('/get-data/table/education/nonformal', 'getTableNonFormalEducation')->name('hc.emp.get-table-non-formal-education');
+            Route::get('/get-data/table/experience', 'getTableExperience')->name('hc.emp.get-table-experience');
+
+            Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
+            Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
         });
     });
 
-    Route::controller(EmergencyContactController::class)->group(function () {
-        Route::prefix('cmt-employee-emergency-contact')->group(function () {
-            Route::get('/get-data/table/emergency/contact', 'getTableEmergencyContact')->name('hc.emp.get-table-emergency-contact');
+    Route::controller(TimeManagementController::class)->group(function () {
+        Route::prefix('cmt-employee-time-management')->group(function () {
+            Route::get('/get-data/table/request/attendance', 'getRequestAttendance')->name('hc.emp.get-table-request-attendance');
+            Route::get('/get-data/table/request/shift', 'getRequestShift')->name('hc.emp.get-table-request-shift');
+            Route::get('/get-data/table/request/overtime', 'getRequestOvertime')->name('hc.emp.get-table-request-overtime');
+            Route::get('/get-data/table/request/timeof', 'getRequestTimeOf')->name('hc.emp.get-table-request-timeoff');
         });
     });
 });

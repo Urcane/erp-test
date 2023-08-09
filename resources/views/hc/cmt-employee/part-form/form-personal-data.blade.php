@@ -47,7 +47,7 @@
             <span class="required fw-bold">Marital Status</span>
         </label>
         <select required class="drop-data form-select form-select-solid" data-control="maritial_status" name="marital_status">
-            @if (($user->userPersonalData->marital_status ?? "") == "" && old('basic_salary') == null)
+            @if (($user->userPersonalData->marital_status ?? "") == "" && old('maritial_status') == null)
                 <option value="" selected hidden disabled>Select Status</option>
             @endif
             @foreach ($allOptions->marital_status as $option)
@@ -73,7 +73,7 @@
             <span class="required fw-bold">Religion</span>
         </label>
         <select required class="drop-data form-select form-select-solid" data-control="religion" name="religion">
-            @if (($user->userPersonalData->religion ?? "") == "" && old('basic_salary') == null)
+            @if (($user->userPersonalData->religion ?? "") == "" && old('religion') == null)
                 <option value="" selected hidden disabled>Select Religion</option>
             @endif
             @foreach ($allOptions->religion as $option)
@@ -87,7 +87,7 @@
             <span class="fw-bold">Blood Type</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="blood_type" name="blood_type">
-            @if (($user->userPersonalData->blood_type ?? "") == "" && old('basic_salary') == null)
+            @if (($user->userPersonalData->blood_type ?? "") == "" && old('blood_type') == null)
                 <option value="" selected hidden disabled>Select blood type</option>
             @endif
             @foreach ($allOptions->blood_type as $option)
