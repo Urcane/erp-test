@@ -1,6 +1,10 @@
 @extends('cmt-opportunity.survey.index')
 
 @section('survey-content')
+@php
+    $selected_side_bar_content = 'main'
+@endphp
+
 <div class="row mb-6 align-items-center">
     <div class="col-lg-6 gap-3 d-flex align-items-center">
         <span class="fs-7 text-uppercase fw-bolder text-dark d-none d-md-block">List Project / Work</span>

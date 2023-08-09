@@ -4,9 +4,12 @@ namespace App\Repositories\Sales\Opportunity\Survey;
 
 use App\Http\Requests\Opportunity\Survey\SurveyResult\SurveyResultCCTVRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyResult\SurveyResultInternetRequest;
+use App\Models\Master\ServiceType;
 use App\Models\Opportunity\Survey\SiteSurvey;
 use App\Models\Opportunity\Survey\SiteSurveyCCTV;
 use App\Models\Opportunity\Survey\SiteSurveyInternet;
+use App\Models\Opportunity\Survey\SurveyRequest;
+use Exception;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -82,7 +85,14 @@ class SurveyResultRepository
     }
 
     function getAll(Request $request) : EloquentBuilder {
-        return SiteSurvey::with('surveyRequest', 'workOrder', 'siteSurveyServiceType', 'serviceType');
+        $model = ServiceType::find($request->filters['service_type_id'])->model_name;
+        if ($model == null) {
+            throw new Exception("Model not found", 403);
+        }
+
+        $model = new $model;
+        
+        return $model::with('surveyRequest', 'workOrder', 'siteSurveyServiceType', 'serviceType');
     }
 
     function getById(Request $request, int $id) : EloquentBuilder {

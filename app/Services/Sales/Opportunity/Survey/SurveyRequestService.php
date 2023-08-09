@@ -45,7 +45,7 @@ class SurveyRequestService
                 }
                 return '<span class="badge badge-light-warning">Belum Tercover</span>';
             })
-            ->addColumn('action', function ($query) {
+            ->addColumn('action', function ($query) use($request) {
                 $additionalMenu = "";
 
                 if ($query->type_of_survey_id == 2) {

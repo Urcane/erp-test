@@ -4,6 +4,12 @@
             <span class="menu-heading fw-bold text-uppercase fs-7">Survey</span>
         </div>
     </div> --}}
+
+    @php
+    if (!isset($selected_side_bar_content)) {
+        $selected_side_bar_content = '';
+    }
+    @endphp
     <div class="scroll-y me-n7 pe-7" id="kt_arc_scroll_menu_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: true, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_arc_scroll_menu_header" data-kt-scroll-wrappers="#kt_arc_scroll_menu_scroll" data-kt-scroll-offset="300px" style="max-height: 616px;">
         <div class="menu-item">
             <div class="menu-content">
@@ -11,7 +17,7 @@
             </div>
         </div>
         <div class="menu-item">
-            <a class="menu-link fw-semibold text-primary" href="#">
+            <a class="menu-link fw-semibold @if($selected_side_bar_content == 'main') text-primary @else text-dark @endif" href="{{route('com.survey.index')}}">
                 <span class="menu-icon">
                     <i class="fas fa-home"></i>
                 </span>
@@ -24,7 +30,7 @@
             </div>
         </div>
         <div class="menu-item">
-            <a class="menu-link text-dark fw-semibold" href="#">
+            <a class="menu-link fw-semibold @if($selected_side_bar_content == 'soft-survey') text-primary @else text-dark @endif" href="{{route('com.soft-survey.index')}}">
                 <span class="menu-icon">
                     <i class="fa-solid fa-file-lines"></i>
                 </span>
@@ -46,7 +52,7 @@
             </span>
             <div class="menu-sub menu-sub-accordion">
                 <div class="menu-item">
-                    <a class="menu-link text-dark fw-semibold menu-site-survey" href="#">
+                    <a class="menu-link fw-semibold menu-site-survey @if($selected_side_bar_content == 'site-survey-internet') text-primary @else text-dark @endif" href="{{route('com.site-survey.internet.index')}}">
                         <span class="menu-icon">
                             <i class="bullet bullet-dot"></i>
                         </span>
@@ -54,7 +60,7 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link text-dark fw-semibold menu-site-survey" href="#">
+                    <a class="menu-link fw-semibold menu-site-survey @if($selected_side_bar_content == 'site-survey-cctv') text-primary @else text-dark @endif" href="{{route('com.site-survey.cctv.index')}}">
                         <span class="menu-icon">
                             <i class="bullet bullet-dot"></i>
                         </span>
@@ -62,7 +68,7 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link text-dark fw-semibold menu-site-survey" href="#">
+                    <a class="menu-link fw-semibold menu-site-survey @if($selected_side_bar_content == 'site-survey-cctv') text-primary @else text-dark @endif" href="{{route('com.site-survey.gb.index')}}">
                         <span class="menu-icon">
                             <i class="bullet bullet-dot"></i>
                         </span>

@@ -57,6 +57,82 @@ class SurveyController extends Controller
     }
 
     /**
+     * Show index of soft survey page
+     * 
+     * @return Illuminate\Contracts\View\View
+     */
+    function indexSoftSurvey() : View {
+        $serviceTypes = ServiceType::get();
+        $typeOfSurveys = TypeOfSurvey::get();
+        $typeOfWOs = WorkOrderCategory::get();
+        $siteSurveyServiceTypes = SiteSurveyServiceType::get();
+
+        return view('cmt-opportunity.survey.pages.soft-survey', compact(
+            'serviceTypes',
+            'typeOfSurveys',
+            'typeOfWOs',
+            'siteSurveyServiceTypes',
+        ));
+    }
+
+    /**
+     * Show index of site survey internet page
+     * 
+     * @return Illuminate\Contracts\View\View
+     */
+    function indexSurveyResultInternet() : View {
+        $serviceTypes = ServiceType::get();
+        $typeOfSurveys = TypeOfSurvey::get();
+        $typeOfWOs = WorkOrderCategory::get();
+        $siteSurveyServiceTypes = SiteSurveyServiceType::get();
+
+        return view('cmt-opportunity.survey.pages.site-survey.internet', compact(
+            'serviceTypes',
+            'typeOfSurveys',
+            'typeOfWOs',
+            'siteSurveyServiceTypes',
+        ));
+    }
+    
+    /**
+     * Show index of site survey cctv page
+     * 
+     * @return Illuminate\Contracts\View\View
+     */
+    function indexSurveyResultCctv() : View {
+        $serviceTypes = ServiceType::get();
+        $typeOfSurveys = TypeOfSurvey::get();
+        $typeOfWOs = WorkOrderCategory::get();
+        $siteSurveyServiceTypes = SiteSurveyServiceType::get();
+
+        return view('cmt-opportunity.survey.pages.site-survey.cctv', compact(
+            'serviceTypes',
+            'typeOfSurveys',
+            'typeOfWOs',
+            'siteSurveyServiceTypes',
+        ));
+    }
+
+    /**
+     * Show index of site survey cctv page
+     * 
+     * @return Illuminate\Contracts\View\View
+     */
+    function indexSurveyResultGb() : View {
+        $serviceTypes = ServiceType::get();
+        $typeOfSurveys = TypeOfSurvey::get();
+        $typeOfWOs = WorkOrderCategory::get();
+        $siteSurveyServiceTypes = SiteSurveyServiceType::get();
+
+        return view('cmt-opportunity.survey.pages.site-survey.gsm-booster', compact(
+            'serviceTypes',
+            'typeOfSurveys',
+            'typeOfWOs',
+            'siteSurveyServiceTypes',
+        ));
+    }
+
+    /**
      * Show detail page of survey
      * 
      * @return Illuminate\Contracts\View\View

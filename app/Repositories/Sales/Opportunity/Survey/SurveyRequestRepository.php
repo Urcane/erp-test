@@ -47,6 +47,14 @@ class SurveyRequestRepository
             $model = $model->done();
         }
 
+        if (isset($filters['only-soft-survey']) && $filters['only-soft-survey'] == 'true') {
+            $model->where('type_of_survey_id', 1);
+        }
+
+        if (isset($filters['only-site-survey']) && $filters['only-site-survey'] == 'true') {
+            $model->where('type_of_survey_id', 2);
+        }
+
         return $model->with('customerProspect.customer', 'serviceType', 'typeOfSurvey');
     }
 

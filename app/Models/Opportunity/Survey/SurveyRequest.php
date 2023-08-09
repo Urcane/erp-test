@@ -54,22 +54,18 @@ class SurveyRequest extends Model
     }
 
     function scopeUnProcess($query) {
-        return $query->doesnthave('workOrders');
+        return $query->doesnthave('workOrders')->doesnthave('softSurveys');
     }
 
     function scopeOnProcess($query) {
-        return $query->has('workOrders')
-                    ->doesnthave('softSurveys')
-                    ->orDoesnthave('siteSurveyInternets')
-                    ->orDoesnthave('siteSurveyCCTVs')
-                    ->orDoesnthave('siteSurveyGSMBoosters');
+        return $query->whereHas('workOrders', function($q) {
+            $q->where('status', 'PR');
+        });
     }
 
     function scopeDone($query) {
-        return $query->has('workOrders')
-                    ->has('softSurveys')
-                    ->orHas('siteSurveyInternets')
-                    ->orHas('siteSurveyCCTVs')
-                    ->orHas('siteSurveyGSMBoosters');
+        return $query->has('softSurveys')->orWhereHas('workOrders', function($q) {
+            $q->where('status', 'DN');
+        });
     }
 }

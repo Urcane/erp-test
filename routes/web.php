@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/work-order/store','createWorkOrderSurvey')->name('com.work-order-survey.store');
             Route::get('/work-order/detail/{id}','getWorkOrderById')->name('com.work-order.detail');
             Route::get('/get-data/table/work-order','getDatatableWorkOrder')->name('com.work-order.datatable');
+            Route::get('/get-data/table/work-order-survey','getDataTableWorkOrderSurvey')->name('com.work-order-survey.datatable');
         });
 
     });
@@ -72,6 +73,10 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(SurveyController::class)->group(function () {
         Route::prefix('cmt-survey')->group(function () {
             Route::get('/','index')->name('com.survey.index');
+            Route::get('/soft-survey','indexSoftSurvey')->name('com.soft-survey.index');
+            Route::get('/survey-result-internet','indexSurveyResultInternet')->name('com.site-survey.internet.index');
+            Route::get('/survey-result-cctv','indexSurveyResultCctv')->name('com.site-survey.cctv.index');
+            Route::get('/survey-result-gb','indexSurveyResultGb')->name('com.site-survey.gb.index');
             Route::get('/detail/{id}', 'detail')->name('com.survey.detail');
             Route::get('/survey-request/detail/{id}','getSurveyRequestById')->name('com.survey-request.detail');
             Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
