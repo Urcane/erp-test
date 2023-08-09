@@ -110,6 +110,9 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(PersonalController::class)->group(function () {
         Route::prefix('cmt-employee-personal')->group(function () {
             Route::get('/get-data/table/family', 'getTableFamily')->name('hc.emp.get-table-family');
+            Route::post('/createUpdate/employee/family', 'createUpdateFamily')->name('hc.emp.create-update-family');
+            Route::post('/delete/employee/family', 'deleteFamily')->name('hc.emp.delete-family');
+
             Route::get('/get-data/table/emergency/contact', 'getTableEmergencyContact')->name('hc.emp.get-table-emergency-contact');
             Route::get('/get-data/table/education/formal', 'getTableFormalEducation')->name('hc.emp.get-table-formal-education');
             Route::get('/get-data/table/education/nonformal', 'getTableNonFormalEducation')->name('hc.emp.get-table-non-formal-education');

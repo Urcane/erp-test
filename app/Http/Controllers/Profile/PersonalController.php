@@ -17,35 +17,122 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Constants;
 use App\Models\User;
 use App\Models\Employee\UserIdentity;
+use App\Models\PersonalInfo\UserFamily;
 
 
 class PersonalController extends Controller
 {
-    public function getTableFamily(Request $request) {
-        if (request()->ajax()) {
-            $query = DB::table('user_families')
-            ->where('user_id',$request->user_id)
-            ->orderBy('id','DESC');
+    private $constants;
 
-            $query = $query->get();
-            return DataTables::of($query)
-            ->addColumn('action', function ($action) {
-                $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                return '
-                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <ul class="dropdown-menu">
-                '.$mnue.'
-                </ul>
-                ';
-            })
-            ->addColumn('DT_RowChecklist', function($check) {
-                return '<div class="text-center w-50px"><input name="family_ids" type="checkbox" value="'.$check->id.'"></div>';
-            })
-            ->addIndexColumn()
-            ->rawColumns(['action','DT_RowChecklist'])
-            ->make(true);
-        }
+    public function __construct()
+    {
+        $this->constants = new Constants();
     }
+
+    // family
+    // {
+        public function getTableFamily(Request $request) {
+            if (request()->ajax()) {
+                $query = DB::table('user_families')
+                ->where('user_id',$request->user_id)
+                ->orderBy('id','DESC');
+
+                $query = $query->get();
+                return DataTables::of($query)
+                ->addColumn('action', function ($action) {
+                    $edit = '
+                    <li>
+                        <div class="btn-edit" id="btn-'. $action->id . '">
+                            <a href="#modal_create_family" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
+                        </div>
+                    </li>
+
+                    <script>
+                        $("#btn-'. $action->id . '").click(function() {
+                            $("[name=\'name\']").val("'. $action->name .'")
+                            $("[name=\'nik\']").val("'. $action->nik .'")
+                            $("[name=\'relationship\']").val("'. $action->relationship .'")
+                            $("[name=\'birthdate\']").val("'. $action->birthdate .'")
+                            $("[name=\'family_id\']").val("'. $action->id .'")
+                            $("[name=\'gender\'] option").each(function() {
+                                if ($(this).val() == "'. $action->gender .'") {
+                                    $(this).prop("selected", true);
+                                }
+                            });
+                            $("[name=\'marital_status\'] option").each(function() {
+                                if ($(this).val() == "'. $action->marital_status .'") {
+                                    $(this).prop("selected", true);
+                                }
+                            });
+                            $("[name=\'religion\'] option").each(function() {
+                                if ($(this).val() == "'. $action->religion .'") {
+                                    $(this).prop("selected", true);
+                                }
+                            });
+                            $("[name=\'job\']").val("'. $action->job .'")
+                        });
+                    </script>
+                    ';
+                    $delete = '<li><button data-family_id="' . $action->id . '" onclick="deleteFamily(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</button></li>';
+                    return '
+                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <ul class="dropdown-menu">
+                    '.$edit.'
+                    '.$delete.'
+                    </ul>
+                    ';
+                })
+                ->addColumn('DT_RowChecklist', function($check) {
+                    return '<div class="text-center w-50px"><input name="family_ids" type="checkbox" value="'.$check->id.'"></div>';
+                })
+                ->addIndexColumn()
+                ->rawColumns(['action','DT_RowChecklist'])
+                ->make(true);
+            }
+        }
+
+        public function createUpdateFamily(Request $request) {
+            $request->validate([
+                'name' => 'required',
+                'nik' => 'required',
+                'relationship' => 'required',
+                'gender' => ['required', Rule::in($this->constants->gender)],
+                'birthdate' => 'required|date',
+                'marital_status' => ['required', Rule::in($this->constants->marital_status)],
+                'religion' => ['required', Rule::in($this->constants->religion)],
+                'job' => 'required',
+            ]);
+
+            UserFamily::updateOrCreate(
+            [
+                "id" => $request->family_id,
+            ], [
+                "user_id" => $request->user_id,
+                'name' => $request->name,
+                'nik' => $request->nik,
+                'relationship' => $request->relationship,
+                'gender' => $request->gender,
+                'birthdate' => $request->birthdate,
+                'marital_status' => $request->marital_status,
+                'religion' => $request->religion,
+                'job' => $request->job,
+            ]);
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil disimpan",
+            ], 200);;
+        }
+
+        public function deleteFamily(Request $request) {
+            UserFamily::whereId("$request->family_id")->delete();
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil dihapus",
+            ], 200);;
+        }
+    // }
 
     public function getTableEmergencyContact(Request $request) {
         if (request()->ajax()) {
