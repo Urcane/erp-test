@@ -44,6 +44,9 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
             Route::get('/', 'index')->name('hc.att.index');
+
+            Route::get('/get-data/table/attendance', 'getTableAttendance')->name('hc.att.get-table-attendance');
+            Route::get('/test/{id}', 'attend');
         });
     });
 

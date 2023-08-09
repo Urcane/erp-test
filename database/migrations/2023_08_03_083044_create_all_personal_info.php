@@ -21,6 +21,14 @@ class CreateAllPersonalInfo extends Migration
 
     public function up()
     {
+
+        Schema::create('non_formal_education_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string("name", 45);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
         Schema::create('user_families', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
@@ -52,17 +60,10 @@ class CreateAllPersonalInfo extends Migration
             $table->string("name", 50);
             $table->enum("grade", $this->constants->grade);
             $table->string("major", 40);
-            $table->tinyInteger("start_year");
-            $table->tinyInteger("end_year");
+            $table->year("start_year");
+            $table->year("end_year");
             $table->string("score", 8);
             $table->text("certificate")->nullable();
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
-        Schema::create('non_formal_education_categories', function (Blueprint $table) {
-            $table->id();
-            $table->string("name", 45);
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -74,8 +75,8 @@ class CreateAllPersonalInfo extends Migration
             $table->string("name", 50);
             $table->string("held_by", 35);
             $table->date("expired_date")->nullable(); //null jika permanent
-            $table->tinyInteger("start_year");
-            $table->tinyInteger("end_year");
+            $table->year("start_year");
+            $table->year("end_year");
             $table->tinyInteger("duration"); // by day
             $table->integer("fee");
             $table->text("certificate")->nullable();
@@ -111,6 +112,8 @@ class CreateAllPersonalInfo extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('non_formal_education_categories');
+
         Schema::dropIfExists('user_families');
         Schema::dropIfExists('user_emergency_contacts');
         Schema::dropIfExists('user_formal_educations');

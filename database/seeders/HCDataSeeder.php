@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Employee\UserBank;
 use App\Models\Employee\UserBpjs;
 use App\Models\Employee\UserEmployment;
@@ -18,6 +19,7 @@ use App\Models\Employee\TaxStatus;
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\EmploymentStatus;
 use App\Constants;
+use App\Models\Attendance\UserAttendance;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Employee\WorkingShift;
 
@@ -194,6 +196,12 @@ class HCDataSeeder extends Seeder
                     null,
                     null,
                 ),
+                "user_attendance" => $this->makeAttendance(
+                    "2023-07-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                )
             ],
             [
                 "user_id" => [
@@ -266,6 +274,12 @@ class HCDataSeeder extends Seeder
                     null,
                     null,
                 ),
+                "user_attendance" => $this->makeAttendance(
+                    "2023-07-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                )
             ],
             [
                 "user_id" => [
@@ -338,6 +352,12 @@ class HCDataSeeder extends Seeder
                     null,
                     null,
                 ),
+                "user_attendance" => $this->makeAttendance(
+                    "2023-07-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                )
             ],
             [
                 "user_id" => [
@@ -410,6 +430,12 @@ class HCDataSeeder extends Seeder
                     null,
                     null,
                 ),
+                "user_attendance" => $this->makeAttendance(
+                    "2023-07-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                )
             ],
         ])->map(function ($data) {
             UserBank::create($data["user_bank"] + $data["user_id"]);
@@ -419,6 +445,16 @@ class HCDataSeeder extends Seeder
             UserPersonalData::create($data["user_personal_data"] + $data["user_id"]);
             UserSalary::create($data["user_salary"] + $data["user_id"]);
             UserTax::create($data["user_tax"] + $data["user_id"]);
+
+            $workingSchedule = User::whereId($data["user_id"])->first()->userEmployment->workingScheduleShift->workingSchedule;
+
+            foreach ($data["user_attendance"] as $attendance) {
+                UserAttendance::create($attendance + $data["user_id"] + [
+                    "late_check_in" => $workingSchedule->late_check_in,
+                    "late_check_out" => $workingSchedule->late_check_out,
+                ]);
+            }
+
         });
     }
 
@@ -514,5 +550,29 @@ class HCDataSeeder extends Seeder
             "jaminan_pensiun_cost" => $this->constants->jaminan_pensiun_cost[$cost3] ?? null,
             "jaminan_pensiun_date" => date('Y-m-d', strtotime($date3)) ?? null
         ];
+    }
+
+    private function makeAttendance($start, $end, $workingStartTime, $workingEndTime)
+    {
+        $data = [];
+        $startDate = Carbon::parse($start);
+        $endDate = Carbon::parse($end);
+
+        $currentDate = $startDate->copy();
+
+        while ($currentDate->lte($endDate)) {
+            array_push($data, [
+                'date' => $currentDate->format('Y-m-d'),
+                'attendance_code' => $this->constants->attendance_code[0],
+                'working_start_time' => $workingStartTime,
+                'working_end_time' => $workingEndTime,
+                'check_in' => Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(0, 10), 0),
+                'check_out' => Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 10), 0),
+            ]);
+
+            $currentDate->addDay();
+        }
+
+        return $data;
     }
 }

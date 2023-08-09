@@ -42,10 +42,14 @@ class CreateAllAttendance extends Migration
         Schema::create('user_attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->date("date");
-            $table->enum("status", $this->constants->attendanceStatus)->default($this->constants->attendanceStatus[0]);
+            $table->date("date")->index();
+            $table->enum("attendance_code", $this->constants->attendance_code)->default($this->constants->attendance_code[0]);
+            $table->string("day_off_code", 10)->nullable();
             $table->time("working_start_time");
             $table->time("working_end_time");
+            $table->tinyInteger("late_check_in");
+            $table->tinyInteger("late_check_out");
+            $table->integer("overtime")->nullable();
             $table->timestamp("check_in")->nullable();
             $table->timestamp("check_out")->nullable();
             $table->softDeletes()->index();
@@ -56,6 +60,7 @@ class CreateAllAttendance extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->foreignId("approved_by")->nullable()->constrained("users");
+            $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->date("date");
             $table->text("notes")->nullable();
             $table->timestamp("check_in")->nullable();
@@ -75,6 +80,7 @@ class CreateAllAttendance extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->foreignId("approved_by")->nullable()->constrained("users");
+            $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
             $table->date("start_date");
             $table->date("end_date");
@@ -100,6 +106,7 @@ class CreateAllAttendance extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->foreignId("approved_by")->nullable()->constrained("users");
+            $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->date("date");
             $table->time("overtime_before");
             $table->time("overtime_after");
@@ -114,6 +121,7 @@ class CreateAllAttendance extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->foreignId("approved_by")->nullable()->constrained("users");
+            $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->foreignId("working_shift_id")->constrained("working_shifts");
             $table->date("date");
             $table->text("notes")->nullable();

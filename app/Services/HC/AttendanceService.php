@@ -2,14 +2,21 @@
 
 namespace App\Services\HC;
 
-// use App\Repositories\Master\FileRepository;
+use App\Utils\ErrorHandler;
 use Illuminate\Database\Eloquent\Model;
+use App\Exceptions\InvariantError;
 
 class AttendanceService
 {
-    // protected $fileRepository;
+    private $errorHandler;
 
-    // public function __construct(FileRepository $fileRepository) {
-    //     $this->fileRepository = $fileRepository;
-    // }
+    public function __construct()
+    {
+        $this->errorHandler = new ErrorHandler;
+    }
+
+    public function FunctionName()
+    {
+
+    }
 }
