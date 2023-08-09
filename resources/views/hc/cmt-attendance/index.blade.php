@@ -23,6 +23,9 @@
                             <div class="col-lg-6">
                                 <span class="fs-7 text-uppercase fw-bolder text-dark d-none d-md-block">List Attendance</span>
                             </div>
+
+                            {{-- Button --}}
+
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
@@ -31,21 +34,20 @@
                                         <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
                                             <th class="text-center w-50px">#</th>
                                             <th class="text-center w-50px">#</th>
-                                            <th class="">Nama Pegawai</th>
-                                            <th class="w-150px"></th>
-                                            <th class="w-150px">Date</th>
-                                            <th class="w-150px">Shift</th>
-                                            <th class="w-150px">Schedule In</th>
-                                            <th class="w-150px">Schedule Out</th>
-                                            <th class="w-150px">Clock In</th>
-                                            <th class="w-150px">Clock Out</th>
-                                            <th class="w-150px">Overtime</th>
-                                            <th class="w-150px">Attendance Code</th>
-                                            <th class="w-150px">Time Off</th>
+                                            <th class="w-400px">Nama Pegawai</th>
+                                            <div class="overflow-x-auto">
+                                                <th class="w-150px">Nip</th>
+                                                <th class="w-150px">Date</th>
+                                                <th class="w-150px">Shift</th>
+                                                <th class="w-150px text-center">Schedule In</th>
+                                                <th class="w-150px text-center">Schedule Out</th>
+                                                <th class="w-250px text-center">Clock In</th>
+                                                <th class="w-250px text-center">Clock Out</th>
+                                                <th class="w-150px">Overtime</th>
+                                                <th class="w-150px">Attendance Code</th>
+                                                <th class="w-150px">Time Off Code</th>
+                                            </div>
                                             <th class="w-100px">#</th>
-                                            <th class="" hidden>Nama Pegawai</th>
-                                            <th class="" hidden>Email</th>
-                                            <th class="" hidden>NIK</th>
                                         </tr>
                                     </thead>
                                     <tbody class="fs-7">
@@ -62,7 +64,7 @@
 
 <script>
     $(document ).ready(function() {
-        window.tablePegawai  = $('#kt_table_pegawai')
+        window.tableAttendance  = $('#kt_table_attendance')
         .DataTable({
             processing: true,
             serverSide: true,
@@ -80,10 +82,10 @@
                 });
             },
             ajax: {
-                url : "{{route('hc.emp.get-table-employee')}}",
-                data: function(data){
-                    data.filters = getFilter()
-                }
+                url : "{{route('hc.att.get-table-attendance')}}",
+                // data: function(data){
+                //     data.filters = getFilter()
+                // }
             },
             language: {
                 "lengthMenu": "Show _MENU_",
@@ -91,14 +93,14 @@
                 "zeroRecords": "Data tidak ditemukan 😞",
             },
             buttons: [
-            {
-                extend: 'excel',
-                className: 'btn btn-light-success btn-sm ms-3',
-                title: 'Data Pegawai Comtelindo',
-                exportOptions: {
-                    columns: [1,8,9,3,10,4,5,6]
-                }
-            },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-light-success btn-sm ms-3',
+                    title: 'Data Absen Pegawai Comtelindo',
+                    exportOptions: {
+                        columns: [1,2,3,4,5,6,7,8,9,10,11,12]
+                    }
+                },
             ],
             dom:
             "<'row mb-2'" +
@@ -114,36 +116,39 @@
             ">",
 
             columns: [
-            { data: 'DT_RowChecklist', orderable: false, searchable: false},
-            { data: 'DT_RowIndex'},
-            { data: 'emp'},
-            { data: 'nip',},
-            { data: 'kontak',},
-            { data: 'dept',},
-            { data: 'div',},
-            { data: 'action'},
-            { data: 'name', visible: false},
-            { data: 'email', visible: false},
-            { data: 'nik', visible: false},
+                { data: 'DT_RowChecklist', orderable: false, searchable: false},
+                { data: 'DT_RowIndex'},
+                { data: 'name'},
+                { data: 'nip' },
+                { data: 'date' },
+                { data: 'shift' },
+                { data: 'schedule_in' },
+                { data: 'schedule_out' },
+                { data: 'clock_in' },
+                { data: 'clock_out' },
+                { data: 'overtime' },
+                { data: 'attendance_code' },
+                { data: 'time_off_code' },
+                { data: 'action'}
             ],
 
-            columnDefs: [
-            {
-                targets: 0,
-                searchable : false,
-                className: 'text-center',
-            },
-            {
-                targets: 1,
-                className: 'text-center',
-            },
-            {
-                targets: 7,
-                orderable : false,
-                searchable : false,
-                className : 'text-center',
-            },
-            ],
+            // columnDefs: [
+            //     {
+            //         targets: 0,
+            //         searchable : false,
+            //         className: 'text-center',
+            //     },
+            //     {
+            //         targets: 1,
+            //         className: 'text-center',
+            //     },
+            //     {
+            //         targets: 7,
+            //         orderable : false,
+            //         searchable : false,
+            //         className : 'text-center',
+            //     },
+            // ],
         });
     });
 </script>

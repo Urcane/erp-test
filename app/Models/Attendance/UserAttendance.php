@@ -12,6 +12,11 @@ class UserAttendance extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'clock_in' => 'time',
+        'clock_out' => 'time',
+    ];
+
     protected $guarded = [];
 
     public function user(): BelongsTo

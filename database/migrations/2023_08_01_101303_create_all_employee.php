@@ -142,8 +142,8 @@ class CreateAllEmployee extends Migration
         Schema::create('user_employment', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->string("employee_id", 35);
             $table->foreignId("employment_status_id")->constrained("employment_statuses");
+            $table->string("employee_id", 35);
             $table->date("join_date");
             $table->date("end_date")->nullable()->default(null);
             $table->date("resign_date")->nullable()->default(null);

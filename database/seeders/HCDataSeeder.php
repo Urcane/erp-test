@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Employee\UserBank;
 use App\Models\Employee\UserBpjs;
 use App\Models\Employee\UserEmployment;
@@ -445,8 +446,13 @@ class HCDataSeeder extends Seeder
             UserSalary::create($data["user_salary"] + $data["user_id"]);
             UserTax::create($data["user_tax"] + $data["user_id"]);
 
+            $workingSchedule = User::whereId($data["user_id"])->first()->userEmployment->workingScheduleShift->workingSchedule;
+
             foreach ($data["user_attendance"] as $attendance) {
-                UserAttendance::create($attendance + $data["user_id"]);
+                UserAttendance::create($attendance + $data["user_id"] + [
+                    "late_check_in" => $workingSchedule->late_check_in,
+                    "late_check_out" => $workingSchedule->late_check_out,
+                ]);
             }
 
         });
@@ -557,7 +563,7 @@ class HCDataSeeder extends Seeder
         while ($currentDate->lte($endDate)) {
             array_push($data, [
                 'date' => $currentDate->format('Y-m-d'),
-                'status' => $this->constants->attendanceStatus[0],
+                'attendance_code' => $this->constants->attendance_code[0],
                 'working_start_time' => $workingStartTime,
                 'working_end_time' => $workingEndTime,
                 'check_in' => Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(0, 10), 0),

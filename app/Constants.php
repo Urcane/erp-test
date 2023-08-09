@@ -4,9 +4,6 @@ namespace App;
 
 class Constants
 {
-    // only database
-    public $attendanceStatus = ["kerja", "libur", "cuti", "izin", "sakit"]; // [0] as default
-
     // database related
     public $marital_status = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
     public $gender = ["Laki-laki", "Perempuan"];
@@ -22,6 +19,14 @@ class Constants
     public $tax_salary = ["Taxable", "Non-taxable"];
     public $jaminan_pensiun_cost = ["Not paid", "By company", "By Employee"];
     public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
+    public $approve_status = ["Waiting", "Approved", "Rejected"]; // [0] as default
+
+    public $attendance_code = [
+        "work_day",     // Regular working day
+        "leave",         // Leaves including personal, sick, etc.
+        "off_schedule", // Day not on working schedule
+        "holiday",      // Public or company-recognized holiday
+    ]; // [0] as default, [1] always be for personal, sick, etc
 
     // only view
     public $identity_type = ["KTP", "SIM", "Passport"];
@@ -82,4 +87,22 @@ class Constants
         "JHT Cost 2",
         "JHT Cost 3",
     ];
+
+    public $attendance_code_view = [
+        "Kerja", // Regular working day
+        "Izin/Cuti", // Leaves including personal, sick, etc.
+        "Libur", // Day not on working schedule
+        "Libur", // Public or company-recognized holiday
+    ];
+
+    public function attendanceCodeTranslator($code)
+    {
+        $index = array_search($code, $this->attendance_code);
+
+        if ($index !== false && isset($this->attendance_code_view[$index])) {
+            return $this->attendance_code_view[$index];
+        }
+
+        return null;
+    }
 }
