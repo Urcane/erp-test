@@ -7,15 +7,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+ 
 
-use App\Models\Inventory\InventoryGood;
-use Yajra\DataTables\Facades\DataTables;
-use App\Models\Customer\CustomerProspect;
-use App\Services\Master\Item\ItemService;
-use App\Services\Sales\Opportunity\BoQ\BoQService;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Services\Master\Inventory\InventoryService;
-use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
+
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyRequestRequest;
 use App\Http\Controllers\Controller;
