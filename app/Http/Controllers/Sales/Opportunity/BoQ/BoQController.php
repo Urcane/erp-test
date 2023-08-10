@@ -4,98 +4,174 @@ namespace App\Http\Controllers\Sales\Opportunity\BoQ;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
-use Yajra\DataTables\Facades\DataTables;
-use App\Models\Customer\CustomerProspect;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
+
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
+use App\Http\Requests\Opportunity\Survey\SurveyRequestRequest;
+use App\Http\Controllers\Controller;
+
 use App\Models\Inventory\InventoryGood;
+use App\Models\Opportunity\BoQ\Items;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantities;
+use App\Models\Customer\CustomerProspect;
+use App\Models\Opportunity\Survey\SurveyRequest;
+
+use Yajra\DataTables\Facades\DataTables;
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 use App\Services\Master\Inventory\InventoryService;
-use App\Services\Sales\Opportunity\Survey\SurveyResultService;
-use App\Services\Sales\Opportunity\BoQ\BoQService;
 use App\Services\Master\Item\ItemService;
+use App\Services\Sales\Opportunity\BoQ\BoQService;
+use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
+use App\Services\Sales\Opportunity\Survey\SurveyResultService;
+
+
 class BoQController extends Controller
 {
-
+    
     protected $surveyResultService;
     protected $BoqService;
     protected $InventoryService;
     protected $ItemService;
-
+    
     public function __construct(
         SurveyResultService $surveyResultService,
         BoQService $BoqService,
         InventoryService $InventoryService,
         ItemService $ItemService
-    ) {
-        $this->surveyResultService = $surveyResultService;
-        $this->BoqService = $BoqService;
-        $this->InventoryService = $InventoryService;
-        $this->ItemService = $ItemService;
-    }
+        ) {
+            $this->surveyResultService = $surveyResultService;
+            $this->BoqService = $BoqService;
+            $this->InventoryService = $InventoryService;
+            $this->ItemService = $ItemService;
+        }
+        
+        function index()
+        {
+            return view('cmt-opportunity.boq.index');
+        }
+        
+        function formBoQ(Request $request)
+        {
+            // Ambil nilai prospect_id dari query string
+            $prospectId = $request->query('prospect_id');
+            $surveyRequestId = $request->query('survey_request_id');
 
-    function index()
-    {
-        return view('cmt-opportunity.boq.index');
-    }
-
-    function formBoQ(Request $request)
-    {
-
-        // mau ada url atau engga tetap kirim tabel prospect berdasarkan id
 
 
-        $id = $request->query('prospect_id');
-        // kondisi url ada
-        $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $id)->first();
-        $dataForm = $this->InventoryService->getDataForm();
+            // Jika ada prospect_id dari query string, gunakan untuk mendapatkan semua data Company dan semua prospect id
+            if ($prospectId || $surveyRequestId) {
+                // kondisi url ada
+
+                // Retrieve the items related to the specified prospectId
+                $dataItems = ItemableBillOfQuantities::with('itemableBillOfQuantities','itemableBillOfQuantities.inventoryGood')->where("prospect_id", $prospectId)->get();
+            
+                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantities')->get();
+                $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
+                $dataForm = $this->InventoryService->getDataForm();
+            
+                // Pass all the required data to the view
+                return view('cmt-opportunity.boq.pages.form-boq', compact('dataItems', 'dataForm', 'dataCompany', 'dataProspect'));
     
-        return view('cmt-opportunity.boq.pages.form-boq', compact('dataForm', 'dataCompany'));
-    
-    }
-
-    function saveItemsBoQ(Request $request) : JsonResponse{
-        if ($request->ajax()) {
-             $this->ItemService->saveItemsBoQ($request);
+            } else {
+                // Jika tidak ada prospect_id dari query string, gunakan inputan prospect_title untuk mendapatkan data company yang relevan
+                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantities')->get();
+                $dataForm = $this->InventoryService->getDataForm();
+                // dd($dataProspect);
+                
+                return view('cmt-opportunity.boq.pages.form-boq', compact('dataProspect','dataForm'));
+            }
         }
-        return response()->json('Oops, Somethin\' Just Broke :(');
-    }
+        
+        function formUpdateBoQ(Request $request)
+        {
+            // Ambil nilai prospect_id dari query string
+            $prospectId = $request->query('prospect_id');
+            $surveyRequestId = $request->query('survey_request_id');
+            $surveyRequestId = $request->query('survey_request_id');
 
-    function createNewBoQ(Request $request) : JsonResponse {
-        if ($request->ajax()) {
-            $this->BoqService->createNewBoQ($request);
-       }
-       return response()->json('Oops, Somethin\' Just Broke :(');
-    }
-    
-    public function getMerkType(Request $request)
-    {
-        if ($request->ajax()) {
-             $itemId = $request->input('item_id');
-        $itemData = $this->InventoryService->getMerkType($itemId);
-        return response()->json($itemData);
+            // Jika ada prospect_id dari query string, gunakan untuk mendapatkan semua data Company dan semua prospect id
+            if ($prospectId || $surveyRequestId) {
+                // kondisi url ada
+
+                // Retrieve the items related to the specified prospectId
+                $dataItems = ItemableBillOfQuantities::with('itemableBillOfQuantities','itemableBillOfQuantities.inventoryGood')->where("prospect_id", $prospectId)->get();
+            
+                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantities')->get();
+                $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
+                $dataForm = $this->InventoryService->getDataForm();
+            
+                // Pass all the required data to the view
+                return view('cmt-opportunity.boq.pages.form-update-boq', compact('dataItems', 'dataForm', 'dataCompany', 'dataProspect'));
+            } 
         }
-        return response()->json('Oops, Somethin\' Just Broke :(');
-    }
 
-    public function getSurveyCompany(Request $request)
-    {
-        if ($request->ajax()) {
-             $prospectId = $request->input('prospect_Id');
-        $allData = $this->InventoryService->getSurveyCompany($prospectId);
-        return response()->json($allData);
+
+        public function getSurveyCompanyItemInventory(Request $request)
+        {
+            try {
+                // Your existing code...
+                if ($request->ajax()) {
+                    $prospect_id = $request->query('prospect_id');
+                    // dd($prospect_id);
+                    // Get the primary key (id) in SurveyRequest based on the foreign key prospect_id
+                    $surveyId = SurveyRequest::where('customer_prospect_id', $prospect_id);
+                    
+                    // If no matching SurveyRequest found, return null or handle it as needed
+                    if (!$surveyId) {
+                        $surveyId = null;
+                    }
+                    
+                    $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospect_id)->first();
+                    
+                    $dataItems = ItemableBillOfQuantities::with('itemableBillOfQuantities','itemableBillOfQuantities.inventoryGood')->where("prospect_id", $prospect_id)->get();
+                    // Gabungkan data dari 3 database ke dalam satu array
+                    $combinedData = [
+                        'survey' => $surveyId,
+                        'dataCompany' => $dataCompany,
+                        'dataItems' => $dataItems
+                    ];
+                    return response()->json($combinedData);
+                }
+            } catch (Exception $e) {
+                // Log the error for debugging purposes
+                \Log::error('Error in getSurveyCompanyItemInventory: ' . $e->getMessage());
+                
+                // Return an error response (optional)
+                return response()->json(['error' => 'An error occurred'], 500);
+            }
         }
-        return response()->json('Oops, Somethin\' Just Broke :(');
-    }
-
-
-    function getDatatableDraft(Request $request) : JsonResponse {
-        if ($request->ajax()) {
-            return $this->BoqService->renderDatatable($request);
+        
+        function saveItemsBoQ(Request $request) : JsonResponse{
+            if ($request->ajax()) {
+                return $this->BoqService->saveItemsBoQ($request);
+            }
+            return response()->json('Oops, Somethin\' Just Broke :(');
         }
-        return response()->json('Oops, Somethin\' Just Broke :(');
+        
+        function createNewBoQ(Request $request) : JsonResponse {
+            if ($request->ajax()) {
+                return $this->BoqService->createNewBoQ($request);
+            }
+            return response()->json('Oops, Somethin\' Just Broke :(');
+        }
+        
+        public function getMerkType(Request $request) {
+            if ($request->ajax()) {
+                $itemId = $request->input('item_id') ?? $request->item_id;
+                $itemData = $this->InventoryService->getMerkType($itemId);
+                return response()->json($itemData);
+            }
+            return response()->json('Oops, Somethin\' Just Broke :(');
+        }
+        
+        function getDatatableDraft(Request $request) : JsonResponse {
+            if ($request->ajax()) {
+                return $this->BoqService->renderDatatable($request);
+            }
+            return response()->json('Oops, Somethin\' Just Broke :(');
+        }
     }
-}

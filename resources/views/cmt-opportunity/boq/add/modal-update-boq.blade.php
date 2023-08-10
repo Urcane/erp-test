@@ -1,24 +1,21 @@
-<div class="modal fade" id="kt_modal_tambah_boq" aria-hidden="true">
-    {{--  cek id --}}
-
-    {{-- @dd($dataCompany) --}}
+<div class="modal fade" id="kt_modal_update_boq" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header py-3">
-                <h5 class="fw-bolder">Tambah Item Baru</h5>
+                <h5 class="fw-bolder">Update Item</h5>
                 <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
                     <i class="fas fa-times"></i>
                 </div>
             </div>
 
             <div class="modal-body mx-5 mx-lg-15 my-7">
-                <form id="kt_modal_tambah_boq_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
+                <form id="kt_modal_update_boq_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
                     enctype="multipart/form-data">
                     @csrf
-                    <div class="scroll-y me-n10 pe-10" id="kt_modal_tambah_boq_scroll" data-kt-scroll="true"
+                    <div class="scroll-y me-n10 pe-10" id="kt_modal_update_boq_scroll" data-kt-scroll="true"
                         data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
-                        data-kt-scroll-dependencies="#kt_modal_tambah_boq_header"
-                        data-kt-scroll-wrappers="#kt_modal_tambah_boq_scroll" data-kt-scroll-offset="300px">
+                        data-kt-scroll-dependencies="#kt_modal_update_boq_header"
+                        data-kt-scroll-wrappers="#kt_modal_update_boq_scroll" data-kt-scroll-offset="300px">
                         <div class="row mb-9">
 
                             <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
@@ -26,7 +23,7 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Nama Item</span>
                                 </label>
-                                <select class="form-select form-select-solid drop-data" data-control="select2" required data-placeholder="Select an Item" name="good_name" id="good_name" data-dropdown-parent="#kt_modal_tambah_boq"
+                                <select class="form-select form-select-solid drop-data" data-control="select2" required data-placeholder="Select an Item" name="good_name" id="good_name_update" data-dropdown-parent="#kt_modal_update_boq"
                                 data-url="{{ route('get.merk.type') }}">
                                     <option></option>
                                     @foreach ($dataForm as $gig)
@@ -40,7 +37,7 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class=" fw-bold">Jenis Item</span>
                                 </label>
-                                <input class="form-control" type="text" name="good_type" id="good_type" disabled>
+                                <input class="form-control" type="text" name="good_type" id="good_type_update" disabled>
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                             </div>
 
@@ -49,19 +46,14 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class=" fw-bold">Merek</span>
                                 </label>
-                                {{-- <select class="drop-data form-select form-select-solid" data-control="select2" required
-                                    name="merk" id="merk" data-dropdown-parent="#kt_modal_tambah_boq">
-                                    <option value="" selected hidden disabled></option>
-                                </select> --}}
-                                <input class="form-control" type="text" name="merk" id="merk" disabled>
-                                {{-- <div class="fv-plugins-message-container invalid-feedback"></div> --}}
+                                <input class="form-control" type="text" name="merk" id="merk_update" disabled>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class=" fw-bold">Detail Item inventory</span>
                                 </label>
-                                <input class="form-control" type="text" name="detail" id="detail" disabled>
+                                <input class="form-control" type="text" name="detail" id="detail_update" disabled>
                             </div>
 
                             <div class="col-lg-12 mb-3">
@@ -115,7 +107,6 @@
                                         </label>
                                         <input type="text" class="form-control form-control-solid"
                                             name="purchase_reference">
-                                        {{-- <div class="fv-plugins-message-container invalid-feedback"></div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -131,9 +122,9 @@
                     </div>
 
                     <div class="text-center mt-9">
-                        <button type="reset" id="kt_modal_tambah_boq_cancel"
+                        <button type="reset" id="kt_modal_update_boq_cancel"
                             class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="kt_modal_tambah_boq_submit"
+                        <button type="submit" id="kt_modal_update_boq_submit"
                             class="btn btn-sm btn-info w-lg-200px">
                             <span class="indicator-label">Simpan</span>
                         </button>

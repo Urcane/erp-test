@@ -2,12 +2,13 @@
 
 namespace App\Models\Opportunity\BoQ;
 
-use App\Models\Opportunity\Quotation\ItemableQuotationParts;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Opportunity\Quotation\ItemableQuotationParts;
+use App\Models\Inventory\InventoryGood;
 
 class Items extends Model
 {
@@ -18,8 +19,8 @@ class Items extends Model
         return $this->morphTo('itemable');
     }
 
-    function itemInventory() : BelongsTo{
-        return $this->belongsTo(ItemInventory::class, 'item_inventory_id', 'id');
+    function inventoryGood() : BelongsTo{
+        return $this->belongsTo(InventoryGood::class, 'item_inventory_id', 'id');
     }
 
     function itemableId() : BelongsTo {

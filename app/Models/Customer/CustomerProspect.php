@@ -2,12 +2,15 @@
 
 namespace App\Models\Customer;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Customer\Customer;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\Customer\CustomerProspectLog;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantities;
 
 class CustomerProspect extends Model
 {
@@ -27,6 +30,6 @@ class CustomerProspect extends Model
     }
 
     function itemableBillOfQuantities() : HasOne {
-        return $this->hasOne(ItemableBillOfQuantities::class);
+        return $this->hasOne(ItemableBillOfQuantities::class,'prospect_id');
     }
 }

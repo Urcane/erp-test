@@ -21,20 +21,4 @@ class ItemRepository
     {
         $this->model = $model;
     }
-
-    function saveItems($request) {
-        return $this->model->updateOrCreate([
-           //  'itemable_id' => $request->,
-           //  'itemable_type' => $request->,
-            'item_inventory_id' => $request->item_inventory_id,
-            'item_detail' => $request->item_detail,
-            'quantity' => $request->quantity,
-            'purchase_price' => $request->purchase_price,
-            'purchase_delivery_charge' => $request->purchase_delivery_charge,
-            'purchase_refrence' => $request->purchase_refrence,
-            'process_status' => $request->process_status,
-            'is_monthly' => $request->is_monthly,
-            'vendor_charge' => $request->vendor_charge,
-        ]);
-    }
 }

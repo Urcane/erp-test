@@ -30,25 +30,25 @@ class InventoryRepository
         return $dataFormInventory;
      }
 
-   public function getMerkTypeByItemId(int $itemId)
-    {
+     function getMerkTypeByItemId(int $itemId) {
         // Fetch "jenis" (good_type) and "merek" (merk) data based on the item ID
         $itemData = InventoryGood::select('good_type', 'merk','description')->where('id', $itemId)->first();
         return $itemData;
-    }
+     }
 
-    public function getSurveyCompanyByProspectId(int $prospect_id)
-    {
-        // Gunakan method find() untuk mencari data berdasarkan survey_id
-        $survey = Survey::find($surveyId);
+     function getSurveyCompanyByProspectId(int $prospect_id) {
+        // Get the primary key (id) in SurveyRequest based on the foreign key prospect_id
+        $surveyId = SurveyRequest::where('customer_prospect_id', $prospect_id)->pluck('id')->first();
 
-        // Jika data dengan survey_id tersebut tidak ditemukan
-        if (!$survey) {
-            // Berikan nilai null atau lakukan sesuai kebutuhan Anda
-            $survey = null;
+        // If no matching SurveyRequest found, return null or handle it as needed
+        if (!$surveyId) {
+            return null;
         }
 
-        $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $id)->first();
+        // Get the SurveyRequest record based on the primary key
+        $survey = SurveyRequest::find($surveyId);
+
+        $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospect_id)->first();
 
         // Gabungkan data dari dua database ke dalam satu array
         $combinedData = [
@@ -57,5 +57,5 @@ class InventoryRepository
         ];
 
         return $combinedData;
-    }
+     }
 }

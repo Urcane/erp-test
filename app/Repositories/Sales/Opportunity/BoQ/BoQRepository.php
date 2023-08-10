@@ -3,6 +3,7 @@
 namespace App\Repositories\Sales\Opportunity\BoQ;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Opportunity\BoQ\Items;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantities;
@@ -30,25 +31,77 @@ class BoQRepository
         return $dataBoq;
     }
 
-    function createBoQ($request) {
-        return $this->model->updateOrCreate([
-            //  'prospect_id' => $request->,
-            //  'survey_request_id' => $request->,
-             'sales_id' => $request->sales_id,
-             'technician_id' => $request->technician_id,
-             'procurement_id' => $request->procurement_id,
-             'gpm' => $request->gpm,
-             'modal' => $request->modal,
-             'npm' => $request->npm,
-             'percentage' => $request->percentage,
-             'manpower' => $request->manpower,
-             'is_draft' => $request->is_draft,
-             'approval_manager' => $request->approval_manager,
-             'approval_manager_date' => $request->approval_manager_date,
-             'approval_director' => $request->approval_director,
-             'approval_director_date' => $request->approval_director_date,
-             'approval_finman' => $request->approval_finman,
-             'approval_finman_date' => $request->approval_finman_date,
-         ]);
-    }
+    public function saveItemsBoQ(Request $request)
+    {
+        try {
+            // Start a database transaction
+            DB::beginTransaction();
+
+            // Get the data for the itemable boq from the request
+            $boqData = [
+                'prospect_id' => $request->input('boq.prospect_id'),
+                'survey_request_id' => $request->input('boq.survey_request_id'),
+                // Tambahkan properti lain untuk data itemable boq
+            ];
+            
+            // Cari atau buat itemable boq berdasarkan 'prospect_id'
+            $itemableBoq = ItemableBillOfQuantities::updateOrCreate(
+                ['prospect_id' => $boqData['prospect_id']],
+                $boqData
+            );
+            
+            // // If provided, delete the associated items for the provided itemableBoqId
+            if (isset($itemableBoq->id)) {
+                // Get the IDs of items associated with the provided itemable boq ID
+                $itemIds = Items::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
+                // Delete the associated items
+                Items::whereIn('id', $itemIds)->delete();
+            }
+
+            // Dapatkan data untuk semua item dari request
+            $itemsData = $request->input('items');
+
+            foreach ($itemsData as $itemData) {
+                // Buat array yang berisi kriteria pencarian berdasarkan 'id' (jika id ada dalam $itemData)
+                $criteria = [
+                    'itemable_id' => $itemableBoq->id,
+                    'itemable_type' => $itemableBoq->itemable_type,
+                    // dan lain-lain... (jika ada kriteria lainnya yang unik)
+                ];
+
+                // Jika id ada dalam $itemData, tambahkan 'id' ke dalam kriteria pencarian
+                if (isset($itemData['id'])) {
+                    $criteria['id'] = $itemData['id'];
+                }
+            
+                // Buat array yang berisi data untuk menciptakan item baru atau data perubahan
+                $data = [
+                    'quantity' => $itemData['quantity'],
+                    'purchase_price' => $itemData['purchase_price'],
+                    'total_price' => $itemData['total_price'],
+                    'purchase_delivery_charge' => $itemData['purchase_delivery'],
+                    'purchase_refrence' => $itemData['purchase_reference'],
+                    'item_inventory_id' => $itemData['item_inventory_id'],
+                    'item_detail' => $itemData['item_detail'],
+                    'itemable_id' => $itemableBoq->id,
+                    'itemable_type' => 'App\Models\Opportunity\BoQ\ItemableBillOfQuantities',
+                    // dan lain-lain...
+                ];
+            
+                // Cari atau buat item berdasarkan kriteria, dan asosiasikan dengan itemable boq
+                $item = Items::updateOrCreate($criteria, $data);
+                // dd($item); aman
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            return response()->json(['message' => 'BoQ and items successfully created.'], 200);
+        } catch (Exception $e) {
+            // Something went wrong, rollback the transaction
+            DB::rollback();
+            return response()->json(['error' => $e], 500);
+        }
+    }   
+
 }

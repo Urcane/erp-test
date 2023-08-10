@@ -75,4 +75,9 @@ class BoqService
         $saveBoQ = $this->BoQRepository->createBoQ($request);
         return $saveBoQ;
     }
+
+    function saveItemsBoQ(Request $request) : JsonResponse{
+        $saveBoQ = $this->BoQRepository->saveItemsBoQ($request);
+        return $saveBoQ;
+    }
 }

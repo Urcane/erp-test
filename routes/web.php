@@ -87,10 +87,14 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(BoQController::class)->group(function () {
         Route::prefix('cmt-boq')->group(function (){
             Route::get('/','index')->name('com.boq.index');
-            Route::get('/form-boq','formBoQ')->name('com.boq.form-boq');
             Route::get('/get-data/table/draft-result','getDatatableDraft')->name('com.boq.draft.datatable');
+            
+            Route::get('/form-boq','formBoQ')->name('com.boq.form-boq');
+            Route::get('/form-update-boq','formUpdateBoQ')->name('com.boq.form-update-boq');
             Route::get('/get-merk-type','getMerkType')->name('get.merk.type');
-            Route::get('/get-survey-company','getSurveyCompany')->name('get.survey.company');
+            Route::get('/get-survey-company-item-inventory','getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory');
+
+            Route::post('/save-items-boq','saveItemsBoQ')->name('com.boq.save.boq');
         });
     });
 });

@@ -2,14 +2,15 @@
 
 namespace App\Models\Opportunity\BoQ;
 
-use App\Http\Requests\Opportunity\Survey\SurveyRequest;
-use App\Models\Customer\CustomerProspect;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Opportunity\BoQ\Items;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Customer\CustomerProspect;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Http\Requests\Opportunity\Survey\SurveyRequest;
 
 class ItemableBillOfQuantities extends Model
 {
@@ -17,8 +18,16 @@ class ItemableBillOfQuantities extends Model
     protected $guarded = [];
 
     function itemableBillOfQuantities() : MorphMany{
-        return $this->morphMany(Items::class, 'itemable');
+        return $this->morphMany(Items::class, 'itemable','itemable_type', 'itemable_id');
     }
+    
+    // public function items(): MorphMany
+    // {
+    //     // Mengembalikan hasil relasi "MorphMany" dengan model "Items"
+    //     // 'itemable_id' dan 'itemable_type' adalah kolom yang digunakan
+    //     // untuk mengidentifikasi polimorfik relasi pada tabel "items"
+    //     return $this->morphMany(Items::class, 'itemable', 'itemable_type', 'itemable_id');
+    // }
 
     function prospect() : BelongsTo {
         return $this->belongsTo(CustomerProspect::class, 'prospect_id', 'id');
