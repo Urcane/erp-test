@@ -59,7 +59,7 @@ class CreateAllAttendance extends Migration
         Schema::create('user_attendance_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("approved_by")->nullable()->constrained("users");
+            $table->foreignId("approval_line")->nullable()->constrained("users");
             $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->date("date");
             $table->text("notes")->nullable();
@@ -79,7 +79,7 @@ class CreateAllAttendance extends Migration
         Schema::create('user_leave_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("approved_by")->nullable()->constrained("users");
+            $table->foreignId("approval_line")->nullable()->constrained("users");
             $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
             $table->date("start_date");
@@ -94,7 +94,7 @@ class CreateAllAttendance extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->string("leave_category", 60);
-            $table->string("approved_by", 100);
+            $table->string("approval_line", 100);
             $table->tinyInteger("leave_quota_taken");
             $table->date("start_date");
             $table->date("end_date");
@@ -105,7 +105,7 @@ class CreateAllAttendance extends Migration
         Schema::create('user_overtime_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("approved_by")->nullable()->constrained("users");
+            $table->foreignId("approval_line")->nullable()->constrained("users");
             $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->date("date");
             $table->time("overtime_before");
@@ -120,7 +120,7 @@ class CreateAllAttendance extends Migration
         Schema::create('user_shift_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("approved_by")->nullable()->constrained("users");
+            $table->foreignId("approval_line")->nullable()->constrained("users");
             $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->foreignId("working_shift_id")->constrained("working_shifts");
             $table->date("date");

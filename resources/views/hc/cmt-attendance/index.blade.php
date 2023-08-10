@@ -19,14 +19,21 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-6 align-items-center">
+                        <div class="row mb-6">
                             <div class="col-lg-6">
                                 <span class="fs-4 text-uppercase fw-bolder text-dark d-none d-md-block">List Attendance</span>
                             </div>
 
-                            {{-- Button --}}
+                            <div class="col-lg-6 d-flex justify-content-end"> <!-- Added classes here -->
+                                <div class="input-group w-150px w-md-250px mx-4">
+                                    <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
+                                    <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
+                                </div>
+                            </div>
+
 
                         </div>
+
                         <div class="row">
                             <div class="col-lg-12">
                                 <table class="table align-top border table-rounded gy-5" id="kt_table_attendance">
@@ -84,6 +91,10 @@
     };
 
     $(document ).ready(function() {
+        $('input[name="range_date"]').daterangepicker({autoUpdateInput: false}, (from_date, to_date) => {
+            $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
+        });
+
         window.tableAttendance  = $('#kt_table_attendance')
         .DataTable({
             processing: true,
@@ -103,9 +114,11 @@
             },
             ajax: {
                 url : "{{route('hc.att.get-table-attendance')}}",
-                // data: function(data){
-                //     data.filters = getFilter()
-                // }
+                data: function(data) {
+                    data.filters = {
+                        'range_date': $('#range_date').val(),
+                    }
+                }
             },
             language: {
                 "lengthMenu": "Show _MENU_",
@@ -208,6 +221,11 @@
             //         className : 'text-center',
             //     },
             // ],
+        });
+
+        $('#range_date').on('apply.daterangepicker', function(ev, picker) {
+            tableAttendance.draw();
+            tableAttendance.draw();
         });
     });
 </script>

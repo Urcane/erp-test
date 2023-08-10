@@ -21,7 +21,7 @@ class UserLeaveRequest extends Model
 
     public function approvedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'approval_line');
     }
 
     public function leaveRequestCategory(): BelongsTo

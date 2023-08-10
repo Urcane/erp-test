@@ -17,7 +17,7 @@ use App\Http\Controllers\Api\UserController;
 */
 
 Route::controller(UserController::class)->group(function () {
-    Route::get('/login', 'login');
+    Route::post('/login', 'login');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -29,7 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::controller(AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
-            Route::get('/check', 'checkAttendance');
+            Route::get('/history', 'getAttendanceHistory');
+            Route::get('/history/today', 'getAttendanceToday');
             Route::post('/attend', 'makeAttend');
         });
     });

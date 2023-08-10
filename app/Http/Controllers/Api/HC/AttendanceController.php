@@ -27,7 +27,7 @@ class AttendanceController extends Controller
         $this->constants = new Constants();
     }
 
-    public function checkAttendance(Request $request)
+    public function getAttendanceToday(Request $request)
     {
         try {
             $today = Carbon::now()->toDateString();
@@ -53,6 +53,29 @@ class AttendanceController extends Controller
                     "attendance_code_view" => $this->constants->attendanceCodeTranslator($attendanceToday->attendance_code),
                     "check_in" => $attendanceToday->check_in,
                     "check_out" => $attendanceToday->check_out
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getAttendanceHistory(Request $request)
+    {
+        try {
+            $page = $request->page ?? 1;
+            $itemCount = $request->itemCount ?? 10;
+
+            $attendance = UserAttendance::where('user_id', $request->user()->id)->paginate($itemCount, ['*'], 'page', $page);
+
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "currentPage" => $attendance->currentPage(),
+                    "itemCount" => $itemCount,
+                    "attendance" => $attendance->items(),
                 ]
             ]);
         } catch (\Throwable $th) {
