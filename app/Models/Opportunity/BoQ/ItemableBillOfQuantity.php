@@ -19,13 +19,13 @@ class ItemableBillOfQuantity extends Model
     use HasFactory;
     protected $guarded = [];
 
-    function itemableBillOfQuantities() : MorphMany{
-        return $this->morphMany(Items::class, 'itemable','itemable_type', 'itemable_id');
+    function itemableBillOfQuantity() : MorphMany{
+        return $this->morphMany(Item::class, 'itemable','itemable_type', 'itemable_id');
     }
 
-    // function itemableBillOfQuantityLog() : HasOne{
-    //     return $this->hasOne(ItemableBillOfQuantityLog::class, 'id', 'itemable_bill_of_quantity_id');
-    // }
+    function itemableBillOfQuantityLog() : HasOne{
+        return $this->hasOne(ItemableBillOfQuantityLog::class, 'id', 'itemable_bill_of_quantity_id');
+    }
     
     // public function items(): MorphMany
     // {

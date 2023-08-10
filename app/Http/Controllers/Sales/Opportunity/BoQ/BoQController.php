@@ -15,8 +15,8 @@ use App\Http\Requests\Opportunity\Survey\SurveyRequestRequest;
 use App\Http\Controllers\Controller;
 
 use App\Models\Inventory\InventoryGood;
-use App\Models\Opportunity\BoQ\Items;
-use App\Models\Opportunity\BoQ\ItemableBillOfQuantities;
+use App\Models\Opportunity\BoQ\Item;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Customer\CustomerProspect;
 use App\Models\Opportunity\Survey\SurveyRequest;
 
@@ -90,9 +90,9 @@ class BoQController extends Controller
                 // kondisi url ada
 
                 // Retrieve the items related to the specified prospectId
-                $dataItems = ItemableBillOfQuantities::with('itemableBillOfQuantities','itemableBillOfQuantities.inventoryGood')->where("prospect_id", $prospectId)->get();
+                $dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospectId)->get();
             
-                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantities')->get();
+                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->get();
                 $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
                 $dataForm = $this->InventoryService->getDataForm();
             
@@ -101,7 +101,7 @@ class BoQController extends Controller
     
             } else {
                 // Jika tidak ada prospect_id dari query string, gunakan inputan prospect_title untuk mendapatkan data company yang relevan
-                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantities')->get();
+                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->get();
                 $dataForm = $this->InventoryService->getDataForm();
                 // dd($dataProspect);
                 
@@ -121,9 +121,9 @@ class BoQController extends Controller
                 // kondisi url ada
 
                 // Retrieve the items related to the specified prospectId
-                $dataItems = ItemableBillOfQuantities::with('itemableBillOfQuantities','itemableBillOfQuantities.inventoryGood')->where("prospect_id", $prospectId)->get();
+                $dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospectId)->get();
             
-                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantities')->get();
+                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->get();
                 $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
                 $dataForm = $this->InventoryService->getDataForm();
             
@@ -131,7 +131,6 @@ class BoQController extends Controller
                 return view('cmt-opportunity.boq.pages.form-update-boq', compact('dataItems', 'dataForm', 'dataCompany', 'dataProspect'));
             } 
         }
-
 
         public function getSurveyCompanyItemInventory(Request $request)
         {
@@ -150,7 +149,7 @@ class BoQController extends Controller
                     
                     $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospect_id)->first();
                     
-                    $dataItems = ItemableBillOfQuantities::with('itemableBillOfQuantities','itemableBillOfQuantities.inventoryGood')->where("prospect_id", $prospect_id)->get();
+                    $dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospect_id)->get();
                     // Gabungkan data dari 3 database ke dalam satu array
                     $combinedData = [
                         'survey' => $surveyId,
@@ -167,21 +166,7 @@ class BoQController extends Controller
                 return response()->json(['error' => 'An error occurred'], 500);
             }
         }
-        
-        function saveItemsBoQ(Request $request) : JsonResponse{
-            if ($request->ajax()) {
-                return $this->BoqService->saveItemsBoQ($request);
-            }
-            return response()->json('Oops, Somethin\' Just Broke :(');
-        }
-        
-        function createNewBoQ(Request $request) : JsonResponse {
-            if ($request->ajax()) {
-                return $this->BoqService->createNewBoQ($request);
-            }
-            return response()->json('Oops, Somethin\' Just Broke :(');
-        }
-        
+
         public function getMerkType(Request $request) {
             if ($request->ajax()) {
                 $itemId = $request->input('item_id') ?? $request->item_id;

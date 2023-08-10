@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Opportunity\BoQ\ItemableBillOfQuantities;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 
 class CustomerProspect extends Model
 {
@@ -29,7 +29,7 @@ class CustomerProspect extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    function itemableBillOfQuantities() : HasOne {
-        return $this->hasOne(ItemableBillOfQuantities::class,'prospect_id');
+    function itemableBillOfQuantity() : HasOne {
+        return $this->hasOne(ItemableBillOfQuantity::class,'prospect_id');
     }
 }
