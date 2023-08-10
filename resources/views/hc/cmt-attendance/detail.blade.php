@@ -26,7 +26,13 @@
                                 </span>
                             </div>
 
-                            {{-- Button --}}
+                            <div class="col-lg-6 d-flex justify-content-end">
+                                <div class="input-group w-150px w-md-250px mx-4">
+                                    <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
+                                    <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
+                                </div>
+                            </div>
+
 
                         </div>
                         <div class="row">
@@ -82,6 +88,10 @@
     };
 
     $(document ).ready(function() {
+        $('input[name="range_date"]').daterangepicker({autoUpdateInput: false}, (from_date, to_date) => {
+            $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
+        });
+
         window.tableAttendance  = $('#kt_table_attendance')
         .DataTable({
             processing: true,
@@ -102,7 +112,8 @@
             ajax: {
                 url : "{{route('hc.att.get-table-attendance-detail')}}",
                 data: function(data){
-                    data.user_id = {{$user->id}}
+                    data.user_id = {{$user->id}},
+                    data.dateFilter = $('#range_date').val();
                 }
             },
             language: {
@@ -136,16 +147,16 @@
             columns: [
                 { data: 'DT_RowChecklist', orderable: false, searchable: false},
                 { data: 'DT_RowIndex'},
-                { data: 'date' },
-                { data: 'shift' },
-                { data: 'schedule_in' },
-                { data: 'schedule_out' },
-                { data: 'clock_in' },
-                { data: 'clock_out' },
-                { data: 'overtime' },
-                { data: 'attendance_code' },
-                { data: 'time_off_code' },
-                { data: 'action'}
+                { data: 'date' , orderable: true, searchable: true},
+                { data: 'shift' , orderable: true, searchable: true},
+                { data: 'schedule_in' , orderable: true, searchable: true},
+                { data: 'schedule_out' , orderable: true, searchable: true},
+                { data: 'clock_in' , orderable: true, searchable: true},
+                { data: 'clock_out' , orderable: true, searchable: true},
+                { data: 'overtime' , orderable: true, searchable: true},
+                { data: 'attendance_code' , orderable: true, searchable: true},
+                { data: 'time_off_code' , orderable: true, searchable: true},
+                { data: 'action', orderable: false, searchable: false}
             ],
             createdRow: function(row, data, dataIndex) {
                 const {
@@ -204,6 +215,11 @@
             //         className : 'text-center',
             //     },
             // ],
+        });
+
+        $('#range_date').on('apply.daterangepicker', function(ev, picker) {
+            tableAttendance.draw();
+            tableAttendance.draw();
         });
     });
 </script>

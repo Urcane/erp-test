@@ -24,7 +24,7 @@
                                 <span class="fs-4 text-uppercase fw-bolder text-dark d-none d-md-block">List Attendance</span>
                             </div>
 
-                            <div class="col-lg-6 d-flex justify-content-end"> <!-- Added classes here -->
+                            <div class="col-lg-6 d-flex justify-content-end">
                                 <div class="input-group w-150px w-md-250px mx-4">
                                     <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
                                     <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
@@ -115,10 +115,8 @@
             ajax: {
                 url : "{{route('hc.att.get-table-attendance')}}",
                 data: function(data) {
-                    data.filters = {
-                        'range_date': $('#range_date').val(),
-                    }
-                }
+                    data.dateFilter = $('#range_date').val();
+                },
             },
             language: {
                 "lengthMenu": "Show _MENU_",

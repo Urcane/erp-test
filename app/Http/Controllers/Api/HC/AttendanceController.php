@@ -45,6 +45,19 @@ class AttendanceController extends Controller
             //     ]);
             // }
 
+            if (!$attendanceToday) {
+                return response()->json([
+                    "status" => "success",
+                    "data" => [
+                        "date" => $today,
+                        "attendance_code" => null,
+                        "attendance_code_view" => null,
+                        "check_in" => null,
+                        "check_out" => null
+                    ]
+                ]);
+            }
+
             return response()->json([
                 "status" => "success",
                 "data" => [
@@ -129,8 +142,8 @@ class AttendanceController extends Controller
                     'user_id' => $request->user()->id,
                     'date' => $today,
                     'attendance_code' => $this->constants->attendance_code[0],
-                    'working_start_time' => $workingShift->working_start,
-                    'working_end_time' => $workingShift->working_end,
+                    'working_start' => $workingShift->working_start,
+                    'working_end' => $workingShift->working_end,
                     'late_check_in' => $workingSchedule->late_check_in,
                     'late_check_out' => $workingSchedule->late_check_out,
                     'check_in' => $timestamp,
@@ -139,29 +152,34 @@ class AttendanceController extends Controller
 
                 return response()->json([
                     "status" => "success",
-                    "message" => "Berhasil Melakukan Check in"
+                    "message" => "Berhasil Melakukan Check in ($now)"
                 ], 201);
             } else {
                 if ($attendanceToday->check_in && $attendanceToday->check_out) {
                     throw new InvariantError("Anda sudah melakukan check in dan check out, Hubungi Admin jika ini kesalahan");
                 } elseif ($attendanceToday->check_in) {
-                    $overtime = $attendanceToday->working_end_time;
+                    $overtime = null;
+                    $now->format('H:i:s');
+
+                    if ($now->format('H:i:s') > $attendanceToday->working_end) {
+                        $overtime = Carbon::parse($attendanceToday->working_end)->diffInMinutes($now->format('H:i:s'));
+                    }
 
                     $attendanceToday->update([
                         'check_out' => $timestamp,
-                        'overtime' => Carbon::parse($overtime)->diffInMinutes($today)
+                        'overtime' => $overtime
                     ]);
 
                     return response()->json([
                         "status" => "success",
-                        "message" => "Berhasil Melakukan Check Out"
+                        "message" => "Berhasil Melakukan Check Out ($now)"
                     ], 201);
                 } else {
                     $attendanceToday->update(['check_in' => $timestamp]);
 
                     return response()->json([
                         "status" => "success",
-                        "message" => "Berhasil Melakukan Check in"
+                        "message" => "Berhasil Melakukan Check in ($now)"
                     ], 201);
                 }
             }

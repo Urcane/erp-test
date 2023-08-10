@@ -34,10 +34,20 @@ class AttendanceController extends Controller
         return view('hc.cmt-attendance.index', compact(['attendanceCode']));
     }
 
-    public function getTableAttendance()
+    public function getTableAttendance(Request $request)
     {
         if (request()->ajax()) {
-            $userAttendances = UserAttendance::has('user.userEmployment')->orderBy('date', 'desc');
+            $userAttendances = UserAttendance::has('user.userEmployment');
+
+            if ($range_date = $request->dateFilter) {
+                $range_date = collect(explode('-', $request->dateFilter))->map(function($item) {
+                    return Carbon::parse($item)->toDateString();
+                })->toArray();
+
+                $userAttendances = $userAttendances->whereBetween('date', $range_date)->orderBy('date', 'desc');
+            } else {
+                $userAttendances = $userAttendances->orderBy('date', 'desc');
+            }
 
             return DataTables::of($userAttendances)
                 ->addColumn('DT_RowChecklist', function ($check) {
@@ -117,7 +127,17 @@ class AttendanceController extends Controller
     public function getTableAttendanceDetail(Request $request)
     {
         if (request()->ajax()) {
-            $userAttendances = UserAttendance::where('user_id', $request->user_id)->orderBy('date', 'desc');
+            $userAttendances = UserAttendance::where('user_id', $request->user_id);
+
+            if ($range_date = $request->dateFilter) {
+                $range_date = collect(explode('-', $request->dateFilter))->map(function($item) {
+                    return Carbon::parse($item)->toDateString();
+                })->toArray();
+
+                $userAttendances = $userAttendances->whereBetween('date', $range_date)->orderBy('date', 'desc');
+            } else {
+                $userAttendances = $userAttendances->orderBy('date', 'desc');
+            }
 
             return DataTables::of($userAttendances)
                 ->addColumn('DT_RowChecklist', function ($check) {
