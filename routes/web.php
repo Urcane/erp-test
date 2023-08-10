@@ -6,7 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\Attendance\AttendanceController;
+use App\Http\Controllers\HC\Attendance\AttendanceController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\PersonalController;
 use App\Http\Controllers\Profile\TimeManagementController;
@@ -44,9 +44,10 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
             Route::get('/', 'index')->name('hc.att.index');
+            Route::get('/{id}', 'show')->name('hc.att.detail');
 
             Route::get('/get-data/table/attendance', 'getTableAttendance')->name('hc.att.get-table-attendance');
-            Route::get('/test/{id}', 'attend');
+            Route::get('/get-data/table/attendance/detail', 'getTableAttendanceDetail')->name('hc.att.get-table-attendance-detail');
         });
     });
 

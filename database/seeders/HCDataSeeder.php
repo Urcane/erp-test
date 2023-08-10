@@ -197,7 +197,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "2023-07-01",
+                    "2023-05-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -275,7 +275,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "2023-07-01",
+                    "2023-05-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -353,7 +353,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "2023-07-01",
+                    "2023-05-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -431,7 +431,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "2023-07-01",
+                    "2023-05-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -556,18 +556,22 @@ class HCDataSeeder extends Seeder
     {
         $data = [];
         $startDate = Carbon::parse($start);
-        $endDate = Carbon::parse($end);
+        $endDate = Carbon::parse($end)->subDay();
 
         $currentDate = $startDate->copy();
 
         while ($currentDate->lte($endDate)) {
             array_push($data, [
                 'date' => $currentDate->format('Y-m-d'),
-                'attendance_code' => $this->constants->attendance_code[0],
-                'working_start_time' => $workingStartTime,
-                'working_end_time' => $workingEndTime,
-                'check_in' => Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(0, 10), 0),
-                'check_out' => Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 10), 0),
+                'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 3)],
+                'working_start' => $workingStartTime,
+                'working_end' => $workingEndTime,
+                'check_in' => random_int(1, 101) <= 92 ?
+                    Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(0, 5), 0)
+                    : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(6, 10), 0),
+                'check_out' => random_int(1, 101) <= 92 ?
+                    Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 5), 0)
+                    : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 16, random_int(50, 54), 0),
             ]);
 
             $currentDate->addDay();

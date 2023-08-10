@@ -34,7 +34,7 @@ class CreateAllPersonalInfo extends Migration
             $table->foreignId("user_id")->constrained("users");
             $table->string("name", 45);
             $table->string("relationship", 20);
-            $table->date("birthday");
+            $table->date("birthdate");
             $table->string("nik", 17);
             $table->enum("marital_status", $this->constants->marital_status);
             $table->enum("gender", $this->constants->gender);
@@ -89,8 +89,8 @@ class CreateAllPersonalInfo extends Migration
             $table->foreignId("user_id")->constrained("users");
             $table->string("name", 50);
             $table->string("position", 50);
-            $table->date("start_day");
-            $table->date("end_day")->nullable(); //null jika masih bekerja
+            $table->date("start_date");
+            $table->date("end_date")->nullable(); //null jika masih bekerja
             $table->softDeletes()->index();
             $table->timestamps();
         });

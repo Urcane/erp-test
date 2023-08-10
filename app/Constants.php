@@ -4,6 +4,20 @@ namespace App;
 
 class Constants
 {
+    // database only
+    public $attendance_code = [
+        "work_day",     // Regular working day
+        "leave",         // Leaves including personal, sick, etc.
+        "off_schedule", // Day not on working schedule
+        "holiday",      // Public or company-recognized holiday
+    ]; // [0] as default, [1] always be for personal, sick, etc
+
+    public $attend_status = [
+        "on_time",
+        "late_check_in",
+
+    ];
+
     // database related
     public $marital_status = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
     public $gender = ["Laki-laki", "Perempuan"];
@@ -21,12 +35,7 @@ class Constants
     public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
     public $approve_status = ["Waiting", "Approved", "Rejected"]; // [0] as default
 
-    public $attendance_code = [
-        "work_day",     // Regular working day
-        "leave",         // Leaves including personal, sick, etc.
-        "off_schedule", // Day not on working schedule
-        "holiday",      // Public or company-recognized holiday
-    ]; // [0] as default, [1] always be for personal, sick, etc
+
 
     // only view
     public $identity_type = ["KTP", "SIM", "Passport"];

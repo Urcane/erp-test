@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\HC\AttendanceController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::controller(UserController::class)->group(function () {
+    Route::get('/login', 'login');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::controller(UserController::class)->group(function () {
+        Route::prefix('user')->group(function () {
+            Route::get('/me', 'getUserProfile');
+        });
+    });
+
+    Route::controller(AttendanceController::class)->group(function () {
+        Route::prefix('cmt-attendance')->group(function () {
+            Route::get('/check', 'checkAttendance');
+            Route::post('/attend', 'makeAttend');
+        });
+    });
 });

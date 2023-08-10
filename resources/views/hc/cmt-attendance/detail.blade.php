@@ -21,7 +21,9 @@
                     <div class="card-body">
                         <div class="row mb-6 align-items-center">
                             <div class="col-lg-6">
-                                <span class="fs-4 text-uppercase fw-bolder text-dark d-none d-md-block">List Attendance</span>
+                                <span class="fs-4 text-uppercase fw-bolder text-dark d-none d-md-block">
+                                    Attendance: {{$user->name}} - {{$user->userEmployment->employee_id}}
+                                </span>
                             </div>
 
                             {{-- Button --}}
@@ -34,19 +36,15 @@
                                         <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
                                             <th class="text-center w-50px">#</th>
                                             <th class="text-center w-50px">#</th>
-                                            <th class="w-400px">Nama Pegawai</th>
-                                            <div class="overflow-x-auto">
-                                                <th class="w-150px">Nip</th>
-                                                <th class="w-150px">Date</th>
-                                                <th class="w-150px">Shift</th>
-                                                <th class="w-150px text-center">Schedule In</th>
-                                                <th class="w-150px text-center">Schedule Out</th>
-                                                <th class="w-250px text-center">Clock In</th>
-                                                <th class="w-250px text-center">Clock Out</th>
-                                                <th class="w-150px">Overtime</th>
-                                                <th class="w-150px">Attendance Code</th>
-                                                <th class="w-150px">Time Off Code</th>
-                                            </div>
+                                            <th class="w-150px">Date</th>
+                                            <th class="w-150px">Shift</th>
+                                            <th class="w-150px text-center">Schedule In</th>
+                                            <th class="w-150px text-center">Schedule Out</th>
+                                            <th class="w-250px text-center">Clock In</th>
+                                            <th class="w-250px text-center">Clock Out</th>
+                                            <th class="w-150px">Overtime</th>
+                                            <th class="w-150px">Attendance Code</th>
+                                            <th class="w-150px">Time Off Code</th>
                                             <th class="w-100px">#</th>
                                         </tr>
                                     </thead>
@@ -102,10 +100,10 @@
                 });
             },
             ajax: {
-                url : "{{route('hc.att.get-table-attendance')}}",
-                // data: function(data){
-                //     data.filters = getFilter()
-                // }
+                url : "{{route('hc.att.get-table-attendance-detail')}}",
+                data: function(data){
+                    data.user_id = {{$user->id}}
+                }
             },
             language: {
                 "lengthMenu": "Show _MENU_",
@@ -118,7 +116,7 @@
                     className: 'btn btn-light-success btn-sm ms-3',
                     title: 'Data Absen Pegawai Comtelindo',
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10,11,12]
+                        columns: [1,2,3,4,5,6,7,8,9,10]
                     }
                 },
             ],
@@ -137,19 +135,17 @@
 
             columns: [
                 { data: 'DT_RowChecklist', orderable: false, searchable: false},
-                { data: 'DT_RowIndex', searchable: false},
-                { data: 'name', orderable: true, searchable: true},
-                { data: 'nip' , orderable: true, searchable: true},
-                { data: 'date' , orderable: true, searchable: true},
-                { data: 'shift' , orderable: true, searchable: true},
-                { data: 'schedule_in' , orderable: true, searchable: true},
-                { data: 'schedule_out' , orderable: true, searchable: true},
-                { data: 'clock_in' , orderable: true, searchable: true},
-                { data: 'clock_out' , orderable: true, searchable: true},
-                { data: 'overtime' , orderable: true, searchable: true},
-                { data: 'attendance_code' , orderable: true, searchable: true},
-                { data: 'time_off_code' , orderable: true, searchable: true},
-                { data: 'action', orderable: false, searchable: false}
+                { data: 'DT_RowIndex'},
+                { data: 'date' },
+                { data: 'shift' },
+                { data: 'schedule_in' },
+                { data: 'schedule_out' },
+                { data: 'clock_in' },
+                { data: 'clock_out' },
+                { data: 'overtime' },
+                { data: 'attendance_code' },
+                { data: 'time_off_code' },
+                { data: 'action'}
             ],
             createdRow: function(row, data, dataIndex) {
                 const {
