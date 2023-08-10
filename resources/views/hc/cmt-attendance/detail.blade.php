@@ -179,8 +179,12 @@
                     return $(row).css('background-color', 'rgba(192, 192, 192, 0.4)');
                 }
 
-                if ((!checkIn.isValid() || !checkOut.isValid()) && moment(date).isBefore(moment(), 'day')) {
-                    return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
+                if (!checkIn.isValid() || !checkOut.isValid()) {
+                    if (moment(date).isBefore(moment(), 'day')) {
+                        $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
+                    } else if (moment(date).isSame(moment(), 'day')) {
+                        return;
+                    }
                 }
 
                 const isLateCheckIn = checkTimeIsAfter(
