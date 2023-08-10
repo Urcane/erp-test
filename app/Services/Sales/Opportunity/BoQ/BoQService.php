@@ -73,11 +73,11 @@ class BoqService
             ->make(true);
     }
 
-    function createNewBoQ(Request $request) : JsonResponse{
-        $saveBoQ = $this->BoQRepository->createBoQ($request);
-        $saveItems = $this->itemService->saveItems($request, $saveBoQ->itemableBillOfQuantities()); //$saveBoQ->ID
-        return new JsonResponse(['message' => 'Data berhasil disimpan'], 200);
-    }
+    // function createNewBoQ(Request $request) : JsonResponse{
+    //     $saveBoQ = $this->BoQRepository->createBoQ($request);
+    //     $saveItems = $this->itemService->saveItems($request, $saveBoQ->itemableBillOfQuantities()); //$saveBoQ->ID
+    //     return new JsonResponse(['message' => 'Data berhasil disimpan'], 200);
+    // }
 
     function getFormWithoutID()  {
         $dataFormWithId = $this->BoQRepository->getDataWithoutId()->get();

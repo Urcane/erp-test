@@ -203,8 +203,7 @@
                                                     <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_draft_boq">
                                                         <thead class="">
                                                             <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                                                <th class="text-center w-25px">#</th>
-                                                                <th class="w-25px">#</th>
+                                                                <th class="text-center w-50px">#</th>
                                                                 <th class="">Company Name</th>
                                                                 <th class="w-300px">Company Address</th>
                                                                 <th class="w-300px">Prospect Title</th>
@@ -633,39 +632,40 @@
             ]
         });
 
-        // $('#tab_survey').click(function() {
-        //     generateDatatable({
-        //         tableName: "tableDoneSurvey",
-        //         elementName: "#kt_table_survey",
-        //         ajaxLink: "{{ route('com.survey-result.datatable') }}",
-        //         columnData: [
-        //             { data: 'DT_RowIndex' },
-        //             { data: 'work_order.task_description' },
-        //             { data: 'survey_request.no_survey' },
-        //             { data: 'work_order.no_wo' },
-        //             { data: 'service_type.name' },
-        //             { data: 'building_type' },
-        //             { data: 'building_height' },
-        //             { data: 'action' },
-        //         ]
-        //     });
-        // });
+        $('#tab_survey').click(function() {
+            generateDatatable({
+                tableName: "tableDoneSurvey",
+                elementName: "#kt_table_survey",
+                ajaxLink: "{{ route('com.survey-result.datatable') }}",
+                columnData: [
+                    { data: 'DT_RowIndex' },
+                    { data: 'work_order.task_description' },
+                    { data: 'survey_request.no_survey' },
+                    { data: 'work_order.no_wo' },
+                    { data: 'service_type.name' },
+                    { data: 'building_type' },
+                    { data: 'building_height' },
+                    { data: 'action' },
+                ]
+            });
+        });
 
-    //   $('#tab_draft').click(function () {
-    //       generateDatatable({
-    //         tableName: "tableDraftBoq",
-    //         elementName: "#kt_table_draft_boq",
-    //         ajaxLink: "{{ route('com.boq.draft.datatable') }}",
-    //         columnData: [
-    //             // { data: 'DT_RowChecklist'},
-    //             { data: 'DT_RowIndex'},
-    //             { data: 'prospect.customer.customer_name'},
-    //             { data: 'prospect.customer.customer_address'},
-    //             { data: 'prospect.customer_prospect_logs.prospect_update'},
-    //             { data: 'prospect.customer_prospect_logs.prospect_next_action'},
-    //             { data: 'action' },
-    //         ]
-    //      });   
-    //   });
+      $('#tab_draft').click(function () {
+          generateDatatable({
+            tableName: "tableDraftBoq",
+            elementName: "#kt_table_draft_boq",
+            ajaxLink: "{{ route('com.boq.draft.datatable') }}",
+            columnData: [
+                // { data: 'DT_RowChecklist'},
+                { data: 'DT_RowIndex'},
+                { data: 'prospect.customer.customer_name'},
+                { data: 'prospect.customer.customer_address'},
+                { data: 'prospect.prospect_title'},
+                { data: 'progress_pretified'},
+                { data: 'next_action_pretified'},
+                { data: 'action' },
+            ]
+         });   
+      });
 });
 </script>

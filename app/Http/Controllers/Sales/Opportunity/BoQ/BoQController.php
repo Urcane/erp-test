@@ -2,32 +2,33 @@
 
 namespace App\Http\Controllers\Sales\Opportunity\BoQ;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
  
 
 
-use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
-use App\Http\Requests\Opportunity\Survey\SurveyRequestRequest;
-use App\Http\Controllers\Controller;
+use App\Models\Opportunity\BoQ\Item;
+use Illuminate\Foundation\Auth\User;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Inventory\InventoryGood;
-use App\Models\Opportunity\BoQ\Item;
-use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\Customer\CustomerProspect;
+use App\Services\Master\Item\ItemService;
 use App\Models\Opportunity\Survey\SurveyRequest;
 
-use Yajra\DataTables\Facades\DataTables;
+use App\Services\Sales\Opportunity\BoQ\BoQService;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use App\Services\Master\Inventory\InventoryService;
-use App\Services\Master\Item\ItemService;
-use App\Services\Sales\Opportunity\BoQ\BoQService;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
+use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
+use App\Http\Requests\Opportunity\Survey\SurveyRequestRequest;
 use App\Services\Sales\Opportunity\Survey\SurveyResultService;
 
 
@@ -160,7 +161,7 @@ class BoQController extends Controller
                 }
             } catch (Exception $e) {
                 // Log the error for debugging purposes
-                \Log::error('Error in getSurveyCompanyItemInventory: ' . $e->getMessage());
+                Log::error('Error in getSurveyCompanyItemInventory: ' . $e->getMessage());
                 
                 // Return an error response (optional)
                 return response()->json(['error' => 'An error occurred'], 500);
