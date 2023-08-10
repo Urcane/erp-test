@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Opportunity\Quotation\ItemableQuotationParts;
 use App\Models\Inventory\InventoryGood;
 
-class Items extends Model
+class Item extends Model
 {
     use HasFactory;
     protected $guarded = [];
@@ -23,15 +23,11 @@ class Items extends Model
         return $this->belongsTo(InventoryGood::class, 'item_inventory_id', 'id');
     }
 
-    function itemableId() : BelongsTo {
-        return $this->belongsTo(ItemableQuotationParts::class, 'itemable_id', 'id');
-    }
-
-    function parentItems() : BelongsTo{
+    function parentItem() : BelongsTo{
         return $this->belongsTo(this::class, 'itemable_id', 'id');
     }
 
-    function childItems() : HasOne{
+    function childItem() : HasOne{
         return $this->hasOne(this::class, 'itemable_id', 'id');
     }
 }

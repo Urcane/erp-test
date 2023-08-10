@@ -178,7 +178,6 @@ class CustomerController extends Controller
                     ]);
                 }
             }
-            
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
@@ -478,7 +477,8 @@ class CustomerController extends Controller
                 'itemableBillOfQuantities',
                 'customer.customerContact', 
                 'customer.userFollowUp', 
-                'latestCustomerProspectLog'
+                'latestCustomerProspectLog',
+                'customer.bussinesType'
             ])->whereHas('customerProspectLogs', function ($logs) {
                 $logs->where('status', 2);
             });
@@ -512,11 +512,21 @@ class CustomerController extends Controller
                 </div>
                 ';
             })
-            ->addColumn('action', function ($query) {
-                $isUrlBoQ = route('com.boq.index');
-            
+            ->addColumn('actionSurvey', function ($query) {
                 $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <ul class="dropdown-menu">';
+                            <ul class="dropdown-menu">
+                                <li><a href="#kt_modal_request_survey" class="dropdown-item py-2 btn_request_survey" data-bs-toggle="modal" data-id="'.$query->id.'">
+                                <i class="fa-solid fa-list-check me-3"></i>Request Survey</a></li>
+                            </ul>';
+            
+                return $actions;
+            })
+            ->addColumn('actionBoq', function ($query) {
+                $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#kt_modal_request_survey" class="dropdown-item py-2 btn_request_survey" data-bs-toggle="modal" data-id="'.$query->id.'">
+                                <i class="fa-solid fa-list-check me-3"></i>Request Survey</a></li>
+                            </ul>';
             
                 // Check if the current URL is 'cmt-boq'
                 if ($isUrlBoQ) {
@@ -528,19 +538,24 @@ class CustomerController extends Controller
                         $actions .= '<li><a href="' . url("cmt-boq/form-update-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>';
                     }
-
-
                 } else {
                     $actions .= '<li><a href="#kt_modal_request_survey" class="dropdown-item py-2 btn_request_survey" data-bs-toggle="modal" data-id="'.$query->id.'">
                                 <i class="fa-solid fa-list-check me-3"></i>Request Survey</a></li>';
                 }
-            
                 $actions .= '</ul>';
+                return $actions;
+            })
+            ->addColumn('actionBoq', function ($query) {
+                $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="' . url("cmt-boq/form-boq?prospect_id=" . $query->id) . '" class="dropdown-item py-2">
+                                <i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
+                            </ul>';
                 return $actions;
             })
             
             ->addIndexColumn()
-            ->rawColumns(['DT_RowChecklist', 'action', 'next_action_pretified', 'progress_pretified'])
+            ->rawColumns(['DT_RowChecklist', 'actionSurvey', 'actionBoq', 'next_action_pretified', 'progress_pretified'])
             ->make(true);
         }
     }

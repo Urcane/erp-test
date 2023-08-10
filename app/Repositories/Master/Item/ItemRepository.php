@@ -21,4 +21,27 @@ class ItemRepository
     {
         $this->model = $model;
     }
+
+    function saveItems($request, $references) {
+
+        $allItems = $request->input('items');
+        
+        if (!is_array($allItems) ) {
+            return response()->json('Oopss, ada yang salah nih!', 500);
+        }
+
+        foreach ($allItems as $item) {
+            $this->model->updateOrCreate([
+                'item_inventory_id' => $item['item_inventory_id'],
+                'item_detail' => $item['item_detail'],
+                'quantity' => $item['quantity'],
+                'purchase_price' => $item['purchase_price'],
+                'purchase_delivery_charge' => $item['purchase_delivery_charge'],
+                'purchase_refrence' => $item['purchase_refrence'],
+                'process_status' => $item['process_status'],
+                'is_monthly' => $item['is_monthly'],
+                'vendor_charge' => $item['vendor_charge'],
+            ]);
+        }
+    }
 }

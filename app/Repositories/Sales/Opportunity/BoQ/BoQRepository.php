@@ -5,9 +5,11 @@ namespace App\Repositories\Sales\Opportunity\BoQ;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Opportunity\BoQ\Items;
+use App\Models\Customer\CustomerProspect;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantities;
-
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantityLog;
 
 //use Your Model
 
@@ -21,16 +23,19 @@ class BoQRepository
      *  Return the model
      */
     protected $model;
+    protected $modelLog;
+    protected $customerProspect;
 
-    function __construct(ItemableBillOfQuantities $model){
+    function __construct(ItemableBillOfQuantity $model, CustomerProspect $customerProspect, ItemableBillOfQuantityLog $modelLog){
         $this->model = $model;
+        $this->modelLog = $modelLog;
+        $this->customerProspect = $customerProspect;
     }
 
     function getAll(Request $request){
-        $dataBoq = $this->model->with(['itemableBillOfQuantities', 'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog']);
+        $dataBoq = $this->model->with(['itemableBillOfQuantityLog' ,'itemableBillOfQuantity', 'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
         return $dataBoq;
-    }
-
+    }    
     public function saveItemsBoQ(Request $request)
     {
         try {
@@ -104,4 +109,17 @@ class BoQRepository
         }
     }   
 
+    function getDataWithoutId()  {
+        $dataWithId = $this->customerProspect->with(['customer.customerContact' ,'customer.bussinesType' ])();
+        return $dataWithId;
+    }
+
+    function getDataWithId($id)  {
+        $dataWithId = $this->customerProspect->with(['customer.customerContact' ,'customer.bussinesType' ]);
+        return $dataWithId;
+    }
+
+    function cancelBoQ() {
+        // $dataBoQ
+    }
 }

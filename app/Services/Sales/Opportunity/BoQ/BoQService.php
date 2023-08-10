@@ -4,8 +4,12 @@ namespace App\Services\Sales\Opportunity\BoQ;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Models\Opportunity\BoQ\Items;
+use App\Models\Customer\CustomerProspect;
+use App\Services\Master\Item\ItemService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repositories\Sales\Opportunity\BoQ\BoQRepository;
+use Nette\Utils\Json;
 
 /**
  * Class BoQDraftService
@@ -14,9 +18,13 @@ use App\Repositories\Sales\Opportunity\BoQ\BoQRepository;
 class BoqService
 {
     protected $BoQRepository;
+    protected $itemService;
+    protected $customerProspect;
     
-    function __construct(BoQRepository $BoQRepository) {
+    function __construct(BoQRepository $BoQRepository, ItemService $itemService, CustomerProspect $customerProspect) {
         $this->BoQRepository = $BoQRepository;
+        $this->itemService = $itemService;
+        $this->customerProspect = $customerProspect;
     }
 
     function renderDatatable(Request $request) : JsonResponse {
@@ -27,18 +35,12 @@ class BoqService
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
             })
             ->addColumn('action', function ($query) {
-                $additionalMenu = "";
-
-                if ($query->type_of_survey_id == 2) {
-                    $additionalMenu .= "<li><a href=\"#kt_modal_create_wo_survey\" class=\"dropdown-item py-2 btn_create_wo_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Terbit WO Survey</a></li>";
-                }
-                return "
-                <button type=\"button\" class=\"btn btn-secondary btn-icon btn-sm\" data-kt-menu-placement=\"bottom-end\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"fa-solid fa-ellipsis-vertical\"></i></button>
-                <ul class=\"dropdown-menu\">
-                    $additionalMenu
-                    <li><a href=\"#kt_modal_request_survey\" class=\"dropdown-item py-2 btn_request_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>
-                </ul>
-                ";
+                return 
+                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="' . url("cmt-boq/form-boq/" . $query->prospect_id) . '" class="dropdown-item py-2">
+                                <i class="fa-solid fa-list-check me-3"></i>Edit</a></li>
+                            </ul>';
             })
             ->addColumn('next_action_pretified', function ($query) {
                 return '
@@ -73,7 +75,22 @@ class BoqService
 
     function createNewBoQ(Request $request) : JsonResponse{
         $saveBoQ = $this->BoQRepository->createBoQ($request);
-        return $saveBoQ;
+        $saveItems = $this->itemService->saveItems($request, $saveBoQ->itemableBillOfQuantities()); //$saveBoQ->ID
+        return new JsonResponse(['message' => 'Data berhasil disimpan'], 200);
+    }
+
+    function getFormWithoutID()  {
+        $dataFormWithId = $this->BoQRepository->getDataWithoutId()->get();
+        return $dataFormWithId;
+    }
+
+    function getFormWithID($id)      {
+        $dataFormWithId = $this->BoQRepository->getDataWithId($id)->where('id', $id)->first();
+        return $dataFormWithId;
+    }
+
+    function cancelBoQ(Request $request)  {
+        $batalBoQ = $this->BoQRepository->cancelBoQ($request);
     }
 
     function saveItemsBoQ(Request $request) : JsonResponse{
@@ -81,3 +98,4 @@ class BoqService
         return $saveBoQ;
     }
 }
+

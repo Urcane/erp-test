@@ -89,6 +89,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/','index')->name('com.boq.index');
             Route::get('/get-data/table/draft-result','getDatatableDraft')->name('com.boq.draft.datatable');
             
+            Route::post('/batal-boq','batalBoQ')->name('com.boq.batal-boq');
             Route::get('/form-boq','formBoQ')->name('com.boq.form-boq');
             Route::get('/form-update-boq','formUpdateBoQ')->name('com.boq.form-update-boq');
             Route::get('/get-merk-type','getMerkType')->name('get.merk.type');

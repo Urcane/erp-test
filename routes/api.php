@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +14,8 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::controller(BoQController::class)->group(function () {
+    Route::prefix('cmt-boq')->group(function (){
+        Route::post('/form-boq','createNewBoQ')->name('com.boq.boq.store');
+    });
 });

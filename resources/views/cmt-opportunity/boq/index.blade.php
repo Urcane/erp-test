@@ -25,94 +25,77 @@
 @endsection
 
 @section('content')
-    <div class="row justify-content-center">
-        <div class="col-lg-12 mt-n20">
-            <div class="row justify-content-center">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row mb-6 align-items-center">
-                                <div class="col-lg-6 gap-3 d-flex align-items-center">
-                                    <span class="fs-7 text-uppercase fw-bolder text-dark d-none d-md-block">List Project /
-                                        Work</span>
-                                </div>
-                                <div class="col-lg-6 d-flex justify-content-end">
-                                    <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
-                                        <div class="">
-                                            <a href="{{ url('cmt-boq/form-boq') }}"
-                                                class="btn btn-info btn-sm me-3 btn_tambah_lead"><i
-                                                    class="fa-solid fa-plus"></i>Create BoQ</a>
-                                        </div>
+<div class="row justify-content-center">
+    <div class="col-lg-12 mt-n20">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-6 align-items-center">
+                            <div class="col-lg-6 gap-3 d-flex align-items-center">
+                                <span class="fs-7 text-uppercase fw-bolder text-dark d-none d-md-block">List Project / Work</span>
+                            </div>
+                            <div class="col-lg-6 d-flex justify-content-end">
+                                <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
+                                    <div class="">
+                                        <a href="{{url('cmt-boq/form-boq')}}" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Create BoQ</a>
                                     </div>
+                                </div>
+                                <div class="d-flex align-items-center">
                                     <div class="d-flex align-items-center">
-                                        <div class="d-flex align-items-center">
-
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-6 hover-scroll-x">
-                                        <div class="d-grid">
-                                            <ul class="nav nav-tabs flex-nowrap text-nowrap">
-                                                <li class="nav-item">
-                                                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0 active"
-                                                        data-bs-toggle="tab" id="tab_opportunity"
-                                                        href="#tab_opportunity_content">Oppoturnities</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0"
-                                                        data-bs-toggle="tab" id="tab_survey"
-                                                        href="#tab_survey_content">Survey</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0"
-                                                        data-bs-toggle="tab" id="tab_draft" href="#tab_draft_content">Draft
-                                                        BoQ</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0"
-                                                        data-bs-toggle="tab" id="tab_commercial"
-                                                        href="#tab_commercial_content">BoQ Commercial</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0"
-                                                        data-bs-toggle="tab" id="tab_boq_done"
-                                                        href="#tab_boq_done_content">Done</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0"
-                                                        data-bs-toggle="tab" id="tab_cancel"
-                                                        href="#tab_boq_cancel_content">Cancel</a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-6 hover-scroll-x">
+                                    <div class="d-grid">
+                                        <ul class="nav nav-tabs flex-nowrap text-nowrap">
+                                            <li class="nav-item">
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0 active" data-bs-toggle="tab" id="tab_opportunity" href="#tab_opportunity_content">Oppoturnities</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="tab_survey" href="#tab_survey_content">Survey</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="tab_draft" href="#tab_draft_content">Draft BoQ</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0" data-bs-toggle="tab" id="tab_commercial" href="#tab_commercial_content">BoQ Commercial</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="tab_boq_done" href="#tab_boq_done_content">Done</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0" data-bs-toggle="tab" id="tab_cancel" href="#tab_boq_cancel_content">Cancel</a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <div class="tab-content" id="myTabContent">
-
-                                        {{-- TAB OPPORTUNITY --}}
-                                        <div class="tab-pane fade show active" id="tab_opportunity_content" role="tabpanel">
-                                            <div class="row">
-                                                <div class="table-responsive">
-                                                    <div class="col-lg-12">
-                                                        <table
-                                                            class="table align-middle table-striped border table-rounded gy-5"
-                                                            id="kt_table_opportunities">
-                                                            <thead>
-                                                                <tr class="fw-bold fs-7 text-muted text-uppercase">
-                                                                    <th class="w-25px">#</th>
-                                                                    <th class="w-25px">#</th>
-                                                                    <th class="">No Wo</th>
-                                                                    <th class="w-100px">Task Desc</th>
-                                                                    <th class="w-100px">Start Date</th>
-                                                                    <th class="w-300px">Planning Due Date</th>
-                                                                    <th class="w-300px">Status</th>
-                                                                    <th class="w-50px text-center">#</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="fs-7">
-                                                                {{-- <tr>
+                                </div>
+                                <div class="tab-content" id="myTabContent">
+                                  
+                                    {{-- TAB OPPORTUNITY --}}
+                                    <div class="tab-pane fade show active" id="tab_opportunity_content" role="tabpanel">
+                                        <div class="row">
+                                          <div class="table-responsive">
+                                            <div class="col-lg-12">
+                                              <table class="table align-middle table-striped border table-rounded gy-5" id="kt_table_opportunities">
+                                                <thead>
+                                                  <tr class="fw-bold fs-7 text-muted text-uppercase">
+                                                    <th class="w-25px">#</th>
+                                                    <th class="w-25px">#</th>
+                                                    <th class="">Company Name</th>
+                                                    <th class="w-100px">Company Contact</th>
+                                                    <th class="w-100px">Business Type</th>
+                                                    <th class="w-300px">Next Action</th>
+                                                    <th class="w-300px">Status</th>
+                                                    <th class="w-50px text-center">#</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody class="fs-7">
+                                                  {{-- <tr>
                                                     <td>
                                                        <span></span>
                                                     </td>
@@ -206,33 +189,32 @@
                                                               </ul>
                                                           </td>
                                                         </tr> --}}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
+                                                      </tbody>
+                                                </table>
                                             </div>
+                                           </div>
                                         </div>
-                                        {{-- TAB DRAFT  --}}
-                                        <div class="tab-pane fade" id="tab_draft_content" role="tabpanel">
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="table-responsive">
-                                                        <table
-                                                            class="table align-top table-striped border table-rounded gy-5"
-                                                            id="kt_table_draft_boq">
-                                                            <thead class="">
-                                                                <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                                                    <th class="text-center w-25px">#</th>
-                                                                    <th class="w-25px">#</th>
-                                                                    <th class="">Company Name</th>
-                                                                    <th class="w-300px">Company Address</th>
-                                                                    <th class="w-300px">Prospect Update</th>
-                                                                    <th class="w-300px">Next Action</th>
-                                                                    <th class="w-50px text-center">#</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="fs-7">
-                                                                {{-- <tr>
+                                    </div>
+                                    {{-- TAB DRAFT  --}}
+                                    <div class="tab-pane fade" id="tab_draft_content" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="table-responsive">
+                                                    <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_draft_boq">
+                                                        <thead class="">
+                                                            <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
+                                                                <th class="text-center w-25px">#</th>
+                                                                <th class="w-25px">#</th>
+                                                                <th class="">Company Name</th>
+                                                                <th class="w-300px">Company Address</th>
+                                                                <th class="w-300px">Prospect Title</th>
+                                                                <th class="w-300px">Next Action</th>
+                                                                <th class="w-300px">Prospect Update</th>
+                                                                <th class="w-50px text-center">#</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="fs-7">
+                                                            {{-- <tr>
                                                                 <td class="text-center">
                                                                     <div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>
                                                                 </td>
@@ -638,32 +620,15 @@
             tableName: "tableOpporunities",
             elementName: "#kt_table_opportunities",
             ajaxLink: "{{ route('com.prospect.get-table-prospect-only-done') }}",
-            columnData: [{
-                    data: 'DT_RowChecklist',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'DT_RowIndex'
-                },
-                {
-                    data: 'customer.customer_contact.customer_contact_name'
-                },
-                {
-                    data: 'customer.customer_contact.customer_contact_job'
-                },
-                {
-                    data: 'customer.customer_contact.customer_contact_phone'
-                },
-                {
-                    data: 'next_action_pretified'
-                },
-                {
-                    data: 'progress_pretified'
-                },
-                {
-                    data: 'action'
-                },
+            columnData: [
+                { data: 'DT_RowChecklist', orderable: false, searchable: false},
+                { data: 'DT_RowIndex'},
+                { data: 'customer.customer_contact.customer_contact_name'},
+                { data: 'customer.customer_contact.customer_contact_phone'},
+                { data: 'customer.bussines_type.type_name'},
+                { data: 'next_action_pretified'},
+                { data: 'progress_pretified'},
+                { data: 'actionBoq' },
             ]
         });
 
@@ -700,31 +665,21 @@
             });
         });
 
-        $('#tab_draft').click(function() {
-            generateDatatable({
-                tableName: "tableDraftBoq",
-                elementName: "#kt_table_draft_boq",
-                ajaxLink: "{{ route('com.boq.draft.datatable') }}",
-                columnData: [{
-                        data: 'DT_RowIndex'
-                    },
-                    {
-                        data: 'prospect.customer.customer_name'
-                    },
-                    {
-                        data: 'prospect.customer.customer_address'
-                    },
-                    {
-                        data: 'prospect.customer_prospect_logs.prospect_update'
-                    },
-                    {
-                        data: 'prospect.customer_prospect_logs.prospect_next_action'
-                    },
-                    {
-                        data: 'action'
-                    },
-                ]
-            });
-        });
-    });
+      $('#tab_draft').click(function () {
+          generateDatatable({
+            tableName: "tableDraftBoq",
+            elementName: "#kt_table_draft_boq",
+            ajaxLink: "{{ route('com.boq.draft.datatable') }}",
+            columnData: [
+                // { data: 'DT_RowChecklist'},
+                { data: 'DT_RowIndex'},
+                { data: 'prospect.customer.customer_name'},
+                { data: 'prospect.customer.customer_address'},
+                { data: 'prospect.customer_prospect_logs.prospect_update'},
+                { data: 'prospect.customer_prospect_logs.prospect_next_action'},
+                { data: 'action' },
+            ]
+         });   
+      });
+});
 </script>

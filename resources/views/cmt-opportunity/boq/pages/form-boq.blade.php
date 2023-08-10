@@ -48,74 +48,21 @@
                                 <div class="col-lg-12">
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
                                         {{-- baris Rilll --}}
-
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                            <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
-                                            @csrf
-                                            <div class="col-lg-5 col-6 mb-3">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                    <span class="required fw-bold">Judul Prospect</span>
-                                                </label>
-                                                <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" required name="prospect_id" id="prospect_id"
-                                                    data-url="{{ route('get.survey.company.item.inventory') }}">
-                                                    <option id="dataProspectId" value="{{ $dataCompany->id ?? null }}"
-                                                        selected>
-                                                        {{ $dataCompany->prospect_title ?? 'Pilih Prospect' }}
-                                                        {{ $dataCompany->customer->customer_name ?? null }}</option>
-                                                    @foreach ($dataProspect as $gp)
-                                                        <option value="{{ $gp->id }}">{{ $gp->prospect_title }} -
-                                                            {{ $gp->customer->customer_name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <div id="error-prospect"></div>
+                                        <div class="d-flex justify-content-center mx-20 my-10">
+                                            <div class="w-35">
+                                                <label for="exampleFormControlInput1" class="required form-label">Company
+                                                    Name</label>
+                                                <input type="email" class="form-control form-control-solid"
+                                                    placeholder="Example input" />
                                             </div>
 
-                                            <!-- Tambahkan atribut "data-url" pada select jenis item -->
-                                            <div class="col-lg-5 col-6 mb-3">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                    <span class=" fw-bold">Survey ID</span>
-                                                </label>
-                                                <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" required name="survey_request_id"
-                                                    id="survey_request_id">
-                                                    <option value="" selected disabled>Pilih Survey</option>
-                                                </select>
-                                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                                            </div>
-                                        </div>
-
-                                        {{-- baris Rilll --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class="form-label">Nama Perusahaan</label>
-                                                <input type="text" class="form-control form-control-solid" disabled
-                                                    name="customer_name" id="customer_name"
-                                                    value="{{ $dataCompany->customer->customer_name ?? null }}">
-                                            </div>
-
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class=" form-label">Nama Kontak Customer</label>
-                                                <input type="text" class="form-control form-control-solid" placeholder=""
-                                                    disabled name="customer_contact_name" id="customer_contact_name"
-                                                    value="{{ $dataCompany->customer->customerContact->customer_contact_name ?? null }}"
-                                                    name="">
-                                            </div>
-
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class="form-label">No Kontak
-                                                    Customer</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text border-0" id="">+62</span>
-                                                    <input type="number" class="form-control form-control-solid" disabled
-                                                        minlength="8" name="customer_contact_phone"
-                                                        id="customer_contact_phone"
-                                                        value="{{ $dataCompany->customer->customerContact->customer_contact_phone ?? null }}"
-                                                        name="" />
+                                            <div class="ms-10 w-25">
+                                                <label for="exampleFormControlInput1"
+                                                    class="form-label required">Project</label>
+                                                <div class="position-relative">
+                                                    <div class=" position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        placeholder="Example input" />
                                                 </div>
                                             </div>
 

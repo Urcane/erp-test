@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ItemablePriceRequests extends Model
+class ItemablePriceRequest extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
     function itemablePriceRequest() : MorphMany{
-        return $this->morphMany(Items::class, 'itemable');
+        return $this->morphMany(Item::class, 'itemable');
     }
 
     function workList() : BelongsTo{

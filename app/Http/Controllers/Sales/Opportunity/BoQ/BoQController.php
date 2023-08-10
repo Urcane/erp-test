@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Inventory\InventoryGood;
+use Yajra\DataTables\Facades\DataTables;
+use App\Models\Customer\CustomerProspect;
+use App\Services\Master\Item\ItemService;
+use App\Services\Sales\Opportunity\BoQ\BoQService;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Services\Master\Inventory\InventoryService;
+use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyRequestRequest;
 use App\Http\Controllers\Controller;
@@ -37,16 +45,24 @@ class BoQController extends Controller
     protected $InventoryService;
     protected $ItemService;
     
+    protected $references;
+    protected $customerProspect;
+    protected $employees;
+
     public function __construct(
         SurveyResultService $surveyResultService,
         BoQService $BoqService,
         InventoryService $InventoryService,
-        ItemService $ItemService
+        ItemService $ItemService,
+        CustomerProspect $customerProspect,
+        User $employees
         ) {
             $this->surveyResultService = $surveyResultService;
             $this->BoqService = $BoqService;
             $this->InventoryService = $InventoryService;
             $this->ItemService = $ItemService;
+            $this->customerProspect = $customerProspect;
+            $this->employees = $employees;
         }
         
         function index()
@@ -56,6 +72,19 @@ class BoQController extends Controller
         
         function formBoQ(Request $request)
         {
+// punya kepin
+            // $dataForm = $this->InventoryService->getDataForm();  
+            // $salesEmployees =   $this->employees->where('department_id', 1)->get();
+            // $technicianEmployees =   $this->employees->where('department_id', 4)->get();
+            // $procurementEmployees =   $this->employees->where('department_id', 3)->get();
+            // if ($id === null) {
+            //     $dataCompany = $this->BoqService->getFormWithoutID();
+            // }  else {
+            //       $dataCompany = $this->BoqService->getFormWithID($id);
+            //     if (!$dataCompany) {
+            //         return response()->json("Oopss, ada yang salah nih!", 500);
+            //     }
+
             // Ambil nilai prospect_id dari query string
             $prospectId = $request->query('prospect_id');
             $surveyRequestId = $request->query('survey_request_id');
@@ -171,6 +200,13 @@ class BoQController extends Controller
         function getDatatableDraft(Request $request) : JsonResponse {
             if ($request->ajax()) {
                 return $this->BoqService->renderDatatable($request);
+            }
+            return response()->json('Oops, Somethin\' Just Broke :(');
+        }
+        
+        function cancelBoQ(Request $request) : JsonResponse {
+            if ($request->ajax()) {
+                return $this->BoqService->cancelBoQ($request);
             }
             return response()->json('Oops, Somethin\' Just Broke :(');
         }
