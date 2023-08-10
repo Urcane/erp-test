@@ -10,6 +10,7 @@ class NonFormalEducationCategory extends Model
 {
     use HasFactory;
 
+    protected $table = 'non_formal_education_categories';
     protected $guarded = [];
 
     public function userNonFormalEducation(): HasMany

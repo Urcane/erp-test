@@ -11,6 +11,7 @@ class UserWorkingExperience extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_working_experiences';
     protected $guarded = [];
 
     public function user(): BelongsTo

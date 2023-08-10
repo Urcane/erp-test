@@ -11,6 +11,7 @@ class UserFormalEducation extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_formal_educations';
     protected $guarded = [];
 
     public function user(): BelongsTo

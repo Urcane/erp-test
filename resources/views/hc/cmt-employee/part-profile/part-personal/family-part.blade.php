@@ -17,7 +17,7 @@
                     <div class="row mb-9">
                         <div class="col-lg-12 text-center mb-9">
                             <span class="fs-1 fw-bolder text-dark d-block mb-1">Form Family</span>
-                            <span class="fs-7 fw-semibold text-gray-500">Tambahkan keanggotaan keluarga anda</span>
+                            <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span>
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -144,7 +144,7 @@
 
 
 <script>
-    var dataTable;
+    var dataTableFamily;
 
     function deleteFamily(family_id) {
         $.ajax({
@@ -155,7 +155,7 @@
             type: 'POST',
             data: { family_id : family_id},
             success: function(data) {
-                dataTable.ajax.reload();
+                dataTableFamily.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {
@@ -167,6 +167,7 @@
 
     $(".btn_tambah_pegawai").on( "click", function() {
         $("[name='family_id']").val("")
+        $("input:not([name='user_id'])").val("")
     })
 
     $( "#family" ).on( "click", function() {
