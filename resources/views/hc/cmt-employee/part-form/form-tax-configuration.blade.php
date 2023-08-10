@@ -17,11 +17,11 @@
             <span class="required fw-bold">PTKP Status</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="pktp" required name="pktp" id="pktp" @unlessrole("administrator") disabled @endunlessrole>
-            @if (($user->userTax->pktp ?? old('pktp')) == null)
+            @if (($user->userTax->pktp_status ?? old('pktp')) == null)
                 <option value="" selected hidden disabled>Select PTKP Status</option>
             @endif
             @foreach ($allOptions->pktp as $pktp)
-                <option value="{{$pktp}}" @if (($user->userTax->pktp ?? old('pktp')) == $pktp) selected @endif>{{$pktp}}</option>
+                <option value="{{$pktp}}" @if (($user->userTax->pktp_status ?? old('pktp')) == $pktp) selected @endif>{{$pktp}}</option>
             @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>

@@ -121,7 +121,7 @@
         <div class="tab-pane fade" id="identity_address" role="tabpanel">
             <div class="row p-4">
                 @role("administrator")
-                <form id="kt_identity_address_form" method="post" action="{{route("hc.emp.update.identity")}}" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                <form id="kt_identity_address_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" value="{{$user->id}}" name="user_id">
                     @endrole
@@ -132,6 +132,28 @@
                         <button type="submit" id="kt_identity_address_submit" class="btn btn-info btn-sm w-md-200px w-100">Simpan</button>
                     </div>
                 </form>
+
+                <script>
+                    $('#kt_identity_address_form').submit(function(event) {
+                        event.preventDefault();
+                        var formData = $(this).serialize();
+                        $.ajax({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            url: "{{ route('hc.emp.update.identity') }}",
+                            type: 'POST',
+                            data: formData,
+                            success: function(data) {
+                                toastr.success(data.message,'Selamat 🚀 !');
+                            },
+                            error: function(xhr, status, error) {
+                                const data = JSON.parse(xhr.responseText);
+                                toastr.error(errorThrown ,'Opps!');
+                            }
+                        });
+                    });
+                </script>
                 @endrole
                 {{-- Content --}}
             </div>
@@ -149,7 +171,9 @@
         </div>
         <div class="tab-pane fade" id="education_experience_content" role="tabpanel">
             <div class="row p-4">
-                @include("hc.cmt-employee.part-profile.part-personal.education-experience")
+                @include("hc.cmt-employee.part-profile.part-personal.formal-education")
+                @include("hc.cmt-employee.part-profile.part-personal.non-formal-education")
+                @include("hc.cmt-employee.part-profile.part-personal.working-experience")
             </div>
         </div>
     </div>

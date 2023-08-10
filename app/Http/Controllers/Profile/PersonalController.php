@@ -17,135 +17,474 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Constants;
 use App\Models\User;
 use App\Models\Employee\UserIdentity;
+use App\Models\PersonalInfo\UserFamily;
+use App\Models\PersonalInfo\UserEmergencyContact;
+use App\Models\PersonalInfo\UserFormalEducation;
+use App\Models\PersonalInfo\UserNonFormalEducation;
+use App\Models\PersonalInfo\UserWorkingExperience;
 
 
 class PersonalController extends Controller
 {
-    public function getTableFamily(Request $request) {
-        if (request()->ajax()) {
-            $query = DB::table('user_families')
-            ->where('user_id',$request->user_id)
-            ->orderBy('id','DESC');
+    private $constants;
 
-            $query = $query->get();
-            return DataTables::of($query)
-            ->addColumn('action', function ($action) {
-                $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                return '
-                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <ul class="dropdown-menu">
-                '.$mnue.'
-                </ul>
-                ';
-            })
-            ->addColumn('DT_RowChecklist', function($check) {
-                return '<div class="text-center w-50px"><input name="family_ids" type="checkbox" value="'.$check->id.'"></div>';
-            })
-            ->addIndexColumn()
-            ->rawColumns(['action','DT_RowChecklist'])
-            ->make(true);
-        }
+    public function __construct()
+    {
+        $this->constants = new Constants();
     }
 
-    public function getTableEmergencyContact(Request $request) {
-        if (request()->ajax()) {
-            $query = DB::table('user_emergency_contacts')
-            ->where('user_id',$request->user_id)
-            ->orderBy('id','DESC');
+    // family
+    // {
+        public function getTableFamily(Request $request) {
+            if (request()->ajax()) {
+                $query = DB::table('user_families')
+                ->where('user_id',$request->user_id)
+                ->orderBy('id','DESC');
 
-            $query = $query->get();
-            return DataTables::of($query)
-            ->addColumn('action', function ($action) {
-                $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                return '
-                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <ul class="dropdown-menu">
-                '.$mnue.'
-                </ul>
-                ';
-            })
-            ->addColumn('DT_RowChecklist', function($check) {
-                return '<div class="text-center w-50px"><input name="emergency_contact_ids" type="checkbox" value="'.$check->id.'"></div>';
-            })
-            ->addIndexColumn()
-            ->rawColumns(['action','DT_RowChecklist'])
-            ->make(true);
+                $query = $query->get();
+                return DataTables::of($query)
+                ->addColumn('action', function ($action) {
+                    $edit = '
+                    <li>
+                        <div class="btn-edit" id="btn-'. $action->id . '">
+                            <a href="#modal_create_family" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
+                        </div>
+                    </li>
+
+                    <script>
+                        $("#btn-'. $action->id . '").click(function() {
+                            $("[name=\'name\']").val("'. $action->name .'")
+                            $("[name=\'nik\']").val("'. $action->nik .'")
+                            $("[name=\'relationship\']").val("'. $action->relationship .'")
+                            $("[name=\'birthdate\']").val("'. $action->birthdate .'")
+                            $("[name=\'family_id\']").val("'. $action->id .'")
+                            $("[name=\'gender\'] option").each(function() {
+                                if ($(this).val() == "'. $action->gender .'") {
+                                    $(this).prop("selected", true);
+                                }
+                            });
+                            $("[name=\'marital_status\'] option").each(function() {
+                                if ($(this).val() == "'. $action->marital_status .'") {
+                                    $(this).prop("selected", true);
+                                }
+                            });
+                            $("[name=\'religion\'] option").each(function() {
+                                if ($(this).val() == "'. $action->religion .'") {
+                                    $(this).prop("selected", true);
+                                }
+                            });
+                            $("[name=\'job\']").val("'. $action->job .'")
+                        });
+                    </script>
+                    ';
+                    $delete = '<li><button data-family_id="' . $action->id . '" onclick="deleteFamily(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</button></li>';
+                    return '
+                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <ul class="dropdown-menu">
+                    '.$edit.'
+                    '.$delete.'
+                    </ul>
+                    ';
+                })
+                ->addColumn('DT_RowChecklist', function($check) {
+                    return '<div class="text-center w-50px"><input name="family_ids" type="checkbox" value="'.$check->id.'"></div>';
+                })
+                ->addIndexColumn()
+                ->rawColumns(['action','DT_RowChecklist'])
+                ->make(true);
+            }
         }
-    }
 
-    public function getTableFormalEducation(Request $request) {
-        if (request()->ajax()) {
-            $query = DB::table('user_formal_educations')
-            ->where('user_id',$request->user_id)
-            ->orderBy('id','DESC');
+        public function createUpdateFamily(Request $request) {
+            $request->validate([
+                'name' => 'required',
+                'nik' => 'required',
+                'relationship' => 'required',
+                'gender' => ['required', Rule::in($this->constants->gender)],
+                'birthdate' => 'required|date',
+                'marital_status' => ['required', Rule::in($this->constants->marital_status)],
+                'religion' => ['required', Rule::in($this->constants->religion)],
+                'job' => 'required',
+            ]);
 
-            $query = $query->get();
-            return DataTables::of($query)
-            ->addColumn('action', function ($action) {
-                $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                return '
-                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <ul class="dropdown-menu">
-                '.$mnue.'
-                </ul>
-                ';
-            })
-            ->addIndexColumn()
-            ->rawColumns(['action','DT_RowChecklist'])
-            ->make(true);
+            UserFamily::updateOrCreate(
+            [
+                "id" => $request->family_id,
+            ], [
+                "user_id" => $request->user_id,
+                'name' => $request->name,
+                'nik' => $request->nik,
+                'relationship' => $request->relationship,
+                'gender' => $request->gender,
+                'birthdate' => $request->birthdate,
+                'marital_status' => $request->marital_status,
+                'religion' => $request->religion,
+                'job' => $request->job,
+            ]);
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil disimpan",
+            ], 200);;
         }
-    }
 
-    public function getTableNonFormalEducation(Request $request) {
-        if (request()->ajax()) {
-            $query = DB::table('user_non_formal_educations')
-            ->where('user_id',$request->user_id)
-            ->orderBy('id','DESC');
+        public function deleteFamily(Request $request) {
+            UserFamily::whereId("$request->family_id")->delete();
 
-            $query = $query->get();
-            return DataTables::of($query)
-            ->addColumn('action', function ($action) {
-                $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                return '
-                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <ul class="dropdown-menu">
-                '.$mnue.'
-                </ul>
-                ';
-            })
-            ->addColumn('expired_date', function ($education) {
-                $data = $education->expired_date ?? "-";
-                return $data;
-            })
-
-            ->addIndexColumn()
-            ->rawColumns(['action','DT_RowChecklist'])
-            ->make(true);
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil dihapus",
+            ], 200);;
         }
-    }
+    // }
 
-    public function getTableExperience(Request $request) {
-        if (request()->ajax()) {
-            $query = DB::table('user_working_experiences')
-            ->where('user_id',$request->user_id)
-            ->orderBy('id','DESC');
+    // emergency contact
+    // {
+        public function getTableEmergencyContact(Request $request) {
+            if (request()->ajax()) {
+                $query = DB::table('user_emergency_contacts')
+                ->where('user_id',$request->user_id)
+                ->orderBy('id','DESC');
 
-            $query = $query->get();
-            return DataTables::of($query)
-            ->addColumn('action', function ($action) {
-                $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                return '
-                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <ul class="dropdown-menu">
-                '.$mnue.'
-                </ul>
-                ';
-            })
-            ->addIndexColumn()
-            ->rawColumns(['action','DT_RowChecklist'])
-            ->make(true);
+                $query = $query->get();
+                return DataTables::of($query)
+                ->addColumn('action', function ($action) {
+                    $edit = '
+                    <li>
+                        <div class="btn-edit" id="btn-'. $action->id . '">
+                            <a href="#modal_create_emergency_contact" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
+                        </div>
+                    </li>
+
+                    <script>
+                        $("#btn-'. $action->id . '").click(function() {
+                            $("[name=\'id\']").val("'. $action->id .'")
+                            $("[name=\'name\']").val("'. $action->name .'")
+                            $("[name=\'phone\']").val("'. $action->phone .'")
+                            $("[name=\'relationship\']").val("'. $action->relationship .'")
+                        });
+                    </script>
+                    ';
+                    $delete = '<li><button onclick="deleteEmergencyContact(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</button></li>';
+                    return '
+                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <ul class="dropdown-menu">
+                    '.$edit.'
+                    '.$delete.'
+                    </ul>
+                    ';
+                })
+                ->addColumn('DT_RowChecklist', function($check) {
+                    return '<div class="text-center w-50px"><input name="emergency_contact_ids" type="checkbox" value="'.$check->id.'"></div>';
+                })
+                ->addIndexColumn()
+                ->rawColumns(['action','DT_RowChecklist'])
+                ->make(true);
+            }
         }
-    }
+
+        public function createUpdateEmergencyContact(Request $request) {
+            $request->validate([
+                'name' => 'required',
+                'phone' => 'required',
+                'relationship' => 'required',
+            ]);
+
+            UserEmergencyContact::updateOrCreate(
+            [
+                "id" => $request->id,
+            ], [
+                'user_id' => $request->user_id,
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'relationship' => $request->relationship,
+            ]);
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil disimpan",
+            ], 200);
+        }
+
+        public function deleteEmergencyContact(Request $request) {
+            UserEmergencyContact::whereId("$request->id")->delete();
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil dihapus",
+            ], 200);
+        }
+    // }
+
+    // formal education
+    // {
+        public function getTableFormalEducation(Request $request) {
+            if (request()->ajax()) {
+                $query = DB::table('user_formal_educations')
+                ->where('user_id',$request->user_id)
+                ->orderBy('id','DESC');
+
+                $query = $query->get();
+                return DataTables::of($query)
+                ->addColumn('action', function ($action) {
+                    $edit = '
+                    <li>
+                        <div class="btn-edit" id="btn-'. $action->id . '">
+                            <a href="#modal_create_formal_education" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
+                        </div>
+                    </li>
+
+                    <script>
+                        $("#btn-'. $action->id . '").click(function() {
+                            $("[name=\'id\']").val("'. $action->id .'")
+                            $("[name=\'name\']").val("'. $action->name .'")
+                            $("[name=\'major\']").val("'. $action->major .'")
+                            $("[name=\'start_year\']").val("'. $action->start_year .'")
+                            $("[name=\'end_year\']").val("'. $action->end_year .'")
+                            $("[name=\'score\']").val("'. $action->score .'")
+                            $("[name=\'grade\'] option").each(function() {
+                                if ($(this).val() == "'. $action->grade .'") {
+                                    $(this).prop("selected", true);
+                                }
+                            });
+                        });
+                    </script>
+                    ';
+                    $delete = '<li><button onclick="deleteFormalEducation(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</button></li>';
+                    return '
+                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <ul class="dropdown-menu">
+                    '.$edit.'
+                    '.$delete.'
+                    </ul>
+                    ';
+                })
+                ->addIndexColumn()
+                ->rawColumns(['action','DT_RowChecklist'])
+                ->make(true);
+            }
+        }
+
+        public function createUpdateFormalEducation(Request $request) {
+            $request->validate([
+                'name' => 'required',
+                'grade' => ['required', Rule::in($this->constants->grade)],
+                'major' => 'required',
+                'start_year' => 'required',
+                'end_year' => 'required',
+                'score' => 'required',
+            ]);
+
+            UserFormalEducation::updateOrCreate(
+            [
+                "id" => $request->id,
+            ], [
+                'user_id' => $request->user_id,
+                'name' => $request->name,
+                'grade' => $request->grade,
+                'major' => $request->major,
+                'start_year' => $request->start_year,
+                'end_year' => $request->end_year,
+                'score' => $request->score,
+                'certificate' => "No",
+            ]);
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil disimpan",
+            ], 200);
+        }
+
+        public function deleteFormalEducation(Request $request) {
+            UserFormalEducation::whereId("$request->id")->delete();
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil dihapus",
+            ], 200);
+        }
+    // }
+
+    // non formal education
+    // {
+        public function getTableNonFormalEducation(Request $request) {
+            if (request()->ajax()) {
+                $query = DB::table('user_non_formal_educations')
+                ->where('user_id',$request->user_id)
+                ->orderBy('id','DESC');
+
+                $query = $query->get();
+                return DataTables::of($query)
+                ->addColumn('action', function ($action) {
+                    $edit = '
+                    <li>
+                        <div class="btn-edit" id="btn-non-'. $action->id . '">
+                            <a href="#modal_create_non_formal_education" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
+                        </div>
+                    </li>
+
+                    <script>
+                        $("#btn-non-'. $action->id . '").click(function() {
+                            $("[name=\'id\']").val("'. $action->id .'")
+                            $("[name=\'name\']").val("'. $action->name .'")
+                            $("[name=\'held_by\']").val("'. $action->held_by .'")
+                            $("[name=\'expired_date\']").val("'. $action->expired_date .'")
+                            $("[name=\'start_year\']").val("'. $action->start_year .'")
+                            $("[name=\'end_year\']").val("'. $action->end_year .'")
+                            $("[name=\'duration\']").val("'. $action->duration .'")
+                            $("[name=\'fee\']").val("'. $action->fee .'")
+                            $("[name=\'category_id\'] option").each(function() {
+                                if ($(this).val() == "'. $action->category_id .'") {
+                                    console.log("Asdf")
+                                    $(this).prop("selected", true);
+                                }
+                            });
+                        });
+                    </script>
+                    ';
+                    $delete = '<li><button onclick="deleteNonFormalEducation(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</button></li>';
+                    return '
+                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <ul class="dropdown-menu">
+                    '.$edit.'
+                    '.$delete.'
+                    </ul>
+                    ';
+                })
+                ->addColumn('expired_date', function ($education) {
+                    $data = $education->expired_date ?? "-";
+                    return $data;
+                })
+
+                ->addIndexColumn()
+                ->rawColumns(['action','DT_RowChecklist'])
+                ->make(true);
+            }
+        }
+
+        public function createUpdateNonFormalEducation(Request $request) {
+            $request->validate([
+                'category_id' => 'required',
+                'name' => 'required',
+                'user_id' => "required",
+                'name' => "required",
+                'held_by' => "required",
+                'start_year' => "required",
+                'end_year' => "required",
+                'duration' => "required",
+                'fee' => "required",
+            ]);
+
+            UserNonFormalEducation::updateOrCreate(
+            [
+                "id" => $request->id,
+            ], [
+                'category_id' => $request->category_id,
+                'user_id' => $request->user_id,
+                'name' => $request->name,
+                'held_by' => $request->held_by,
+                'expired_date' => $request->expired_date,
+                'start_year' => $request->start_year,
+                'end_year' => $request->end_year,
+                'duration' => $request->duration,
+                'fee' => $request->fee,
+                'certificate' => "No",
+            ]);
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil disimpan",
+            ], 200);
+        }
+
+        public function deleteNonFormalEducation(Request $request) {
+            UserNonFormalEducation::whereId("$request->id")->delete();
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil dihapus",
+            ], 200);
+        }
+    // }
+
+    // work experience
+    // {
+        public function getTableExperience(Request $request) {
+            if (request()->ajax()) {
+                $query = DB::table('user_working_experiences')
+                ->where('user_id',$request->user_id)
+                ->orderBy('id','DESC');
+
+                $query = $query->get();
+                return DataTables::of($query)
+                ->addColumn('action', function ($action) {
+                    $edit = '
+                    <li>
+                        <div class="btn-edit" id="btn-work-'. $action->id . '">
+                            <a href="#modal_create_work_experience" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
+                        </div>
+                    </li>
+
+                    <script>
+                        $("#btn-work-'. $action->id . '").click(function() {
+                            $("[name=\'id\']").val("'. $action->id .'")
+                            $("[name=\'name\']").val("'. $action->name .'")
+                            $("[name=\'position\']").val("'. $action->position .'")
+                            $("[name=\'start_date\']").val("'. $action->start_date .'")
+                            $("[name=\'end_date\']").val("'. $action->end_date .'")
+                        });
+                    </script>
+                    ';
+                    $delete = '<li><button onclick="deleteWorkExperience(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</button></li>';
+                    return '
+                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <ul class="dropdown-menu">
+                    '.$edit.'
+                    '.$delete.'
+                    </ul>
+                    ';
+                })
+
+                ->addIndexColumn()
+                ->rawColumns(['action','DT_RowChecklist'])
+                ->make(true);
+            }
+        }
+
+        public function createUpdateWorkExperience(Request $request) {
+            $request->validate([
+                'name' => 'required',
+                'position' => "required",
+                'start_date' => "required",
+                'end_date' => "required",
+            ]);
+
+            UserWorkingExperience::updateOrCreate(
+            [
+                "id" => $request->id,
+            ], [
+                'user_id' => $request->user_id,
+                'name' => $request->name,
+                'position' => $request->position,
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+            ]);
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil disimpan",
+            ], 200);
+        }
+
+        public function deleteWorkExperience(Request $request) {
+            UserWorkingExperience::whereId("$request->id")->delete();
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil dihapus",
+            ], 200);
+        }
+    // }
 
     public function updatePersonal(Request $request) {
         $getUser = User::where('id',$request->user_id)->first();
@@ -229,7 +568,7 @@ class PersonalController extends Controller
 
         return response()->json([
             "status" => "success",
-            "message" => "berhasil menambahkan employee"
+            "message" => "Data berhasil disimpan"
         ], 201);
     }
 }

@@ -1,4 +1,4 @@
-<div class="modal fade" id="modal_create_emergency_contact" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_create_work_experience" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header pb-0 border-0 justify-content-end">
@@ -7,33 +7,39 @@
                 </div>
             </div>
             <div class="modal-body mx-5 mx-lg-15 mb-7">
-                <form id="modal_create_emergency_contact_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                <form id="modal_create_work_experience_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="user_id" value="{{$user->id}}">
                     <input type="hidden" name="id" value="">
-                    <div class="scroll-y me-n10 pe-10" id="modal_create_emergency_contact_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_create_emergency_contact_header" data-kt-scroll-wrappers="#modal_create_emergency_contact_scroll" data-kt-scroll-offset="300px">
+                    <div class="scroll-y me-n10 pe-10" id="modal_create_work_experience_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_create_work_experience_header" data-kt-scroll-wrappers="#modal_create_work_experience_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
                         <div class="col-lg-12 text-center mb-9">
-                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Emergency Contact</span>
-                            <span class="fs-7 fw-semibold text-gray-500">Nomor yang dapat dihubungi dalam keadaan darurat</span>
+                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Working Experience</span>
+                            <span class="fs-7 fw-semibold text-gray-500">Riwayat atau pengalaman pekerjaan anda</span>
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class="required fw-bold">Nama</span>
+                                <span class="required fw-bold">Company</span>
                             </label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Name" required name="name">
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class="required fw-bold">Relationship</span>
-                            </label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Hubungan dengan anda" required name="relationship">
+                            <input type="text" class="form-control form-control-solid" placeholder="Nama perusahaan" required name="name">
                         </div>
                         <div class="col-lg-12 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
-								<span class="required fw-bold">Phone</span>
+								<span class="required fw-bold">Position</span>
 							</label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Nomor yang dapat dihubungi" required name="phone">
+                            <input type="text" class="form-control form-control-solid" placeholder="Posisi yang ditempati selama bekerja" required name="position">
+						</div>
+                        <div class="col-lg-12 mb-3">
+							<label class="d-flex align-items-center fs-6 form-label mb-2">
+								<span class="required fw-bold">Start Date</span>
+							</label>
+                            <input type="date" class="form-control form-control-solid" placeholder="tanggal mulai kerja" required name="start_date">
+						</div>
+                        <div class="col-lg-12 mb-3">
+							<label class="d-flex align-items-center fs-6 form-label mb-2">
+								<span class="required fw-bold">End Date</span>
+							</label>
+                            <input type="date" class="form-control form-control-solid" placeholder="Tanggal selesai kerja" required name="end_date">
 						</div>
                         <div id="containerSelectedSurveyRequests">
 
@@ -41,8 +47,8 @@
                     </div>
                 </div>
                     <div class="text-center mt-9">
-                        <button type="reset" id="modal_create_emergency_contact_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="modal_create_emergency_contact_submit" class="btn btn-sm btn-info w-lg-200px" data-bs-dismiss="modal">
+                        <button type="reset" id="modal_create_work_experience_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="modal_create_work_experience_submit" class="btn btn-sm btn-info w-lg-200px">
                             <span class="indicator-label">Simpan</span>
                         </button>
                     </div>
@@ -52,27 +58,26 @@
     </div>
 </div>
 
-{{-- Emergency Contact Content --}}
-<div class="col-lg-6 mb-9">
-    <h4>Emergency Contact</h4>
-    <span class="fs-7 fw-semibold text-gray-500">Your emergency contact information</span>
+{{-- Working experience content --}}
+<div class="col-lg-6 mb-9 mt-9">
+    <h4>Working Experience</h4>
+    <span class="fs-7 fw-semibold text-gray-500">Your working experience information</span>
 </div>
-<div class="col-lg-6 d-flex justify-content-end">
+<div class="col-lg-6 d-flex justify-content-end mt-9">
     <div>
-        <a href="#modal_create_emergency_contact" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_contact"><i class="fa-solid fa-plus"></i>Add Emergency Contact</a>
+        <a href="#modal_create_work_experience" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_working_exp"><i class="fa-solid fa-plus"></i>Add Working Experience</a>
     </div>
 </div>
 <div class="col-lg-12">
-    <table class="table align-top table-striped border table-rounded gy-5" id="tb_emergency_contact_content">
+    <table class="table align-top table-striped border table-rounded gy-5" id="tb_experience_content">
         <thead class="">
             <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                 <th class="text-center w-50px">#</th>
-                <th class="text-center w-50px">#</th>
-                <th class="">Nama</th>
-                <th class="w-150px">Relationship</th>
-                <th class="w-150px">Phone Number</th>
+                <th class="">Company</th>
+                <th class="w-150px">Position</th>
+                <th class="w-150px">From</th>
+                <th class="w-150px">To</th>
                 <th class="w-100px">#</th>
-
             </tr>
         </thead>
         <tbody class="fs-7">
@@ -81,18 +86,18 @@
 </div>
 
 <script>
-    var dataTableEmergencyContact;
+    var dataTableWork;
 
-    function deleteEmergencyContact(id) {
+    function deleteWorkExperience(id) {
         $.ajax({
-            url: "{{ route('hc.emp.delete-emergency-contact') }}",
+            url: "{{ route('hc.emp.delete-work-experience') }}",
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             type: 'POST',
             data: { id : id},
             success: function(data) {
-                dataTableEmergencyContact.ajax.reload();
+                dataTableWork.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {
@@ -102,30 +107,22 @@
         });
     }
 
-    $(".btn_tambah_contact").on( "click", function() {
+    $(".btn_working_exp").on( "click", function() {
         $("[name='id']").val("")
         $("input:not([name='user_id'])").val("")
     })
 
-    $( "#emergency_contact" ).on( "click", function() {
-        dataTable = $('#tb_emergency_contact_content').DataTable({
+    $( "#education_experience" ).on( "click", function() {
+        // table experience
+        dataTableWork = $('#tb_experience_content').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
             deferRender: true,
             responsive: false,
             aaSorting : [],
-            drawCallback: function () {
-                $('body').on('click', 'input[name=\'emergency_contact_ids\']', function () {
-                    if($(this).is(":checked")){
-                        emergency_contactids.push($(this).val());
-                    } else {
-                        removeFrom(emergency_contactids, $(this).val());
-                    }
-                });
-            },
             ajax: {
-                url : "{{route('hc.emp.get-table-emergency-contact')}}",
+                url : "{{route('hc.emp.get-table-experience')}}",
                 data: function(data){
                     data.user_id = {{$user->id}}
                 }
@@ -135,16 +132,7 @@
                 "emptyTable" : "Tidak ada data terbaru 📁",
                 "zeroRecords": "Data tidak ditemukan 😞",
             },
-            buttons: [
-            // {
-            //     extend: 'excel',
-            //     className: 'btn btn-light-success btn-sm ms-3',
-            //     title: 'Data Pegawai Comtelindo',
-            //     exportOptions: {
-            //         columns: [1,8,9,3,10,4,5,6]
-            //     }
-            // },
-            ],
+            buttons: [],
             dom:
             "<'row mb-2'" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
@@ -159,28 +147,28 @@
             ">",
 
             columns: [
-            { data: 'DT_RowChecklist', orderable: false, searchable: false},
             { data: 'DT_RowIndex'},
             { data: 'name'},
-            { data: 'relationship',},
-            { data: 'phone',},
+            { data: 'position'},
+            { data: 'start_date'},
+            { data: 'end_date'},
             { data: 'action'},
             ],
         });
     })
 
-    $('#modal_create_emergency_contact_form').submit(function(event) {
+    $('#modal_create_work_experience_form').submit(function(event) {
         event.preventDefault();
         var formData = $(this).serialize();
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "{{ route('hc.emp.create-update-emergency-contact') }}",
+            url: "{{ route('hc.emp.create-update-work-experience') }}",
             type: 'POST',
             data: formData,
             success: function(data) {
-                dataTable.ajax.reload();
+                dataTableWork.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {

@@ -214,7 +214,7 @@ class EmployeeController extends Controller
 
                 return response()->json([
                     "status" => "success",
-                    "message" => "berhasil menambahkan employee"
+                    "message" => "Data berhasil disimpan"
                 ], 201);
             } catch (\Exception $e) {
                 DB::rollback();

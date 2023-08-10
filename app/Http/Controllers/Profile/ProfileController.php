@@ -29,6 +29,7 @@ use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
+use App\Models\PersonalInfo\NonFormalEducationCategory;
 
 use App\Models\Employee\WorkingSchedule;
 
@@ -219,7 +220,7 @@ class ProfileController extends Controller
 
             return response()->json([
             "status" => "success",
-            "message" => "berhasil menambahkan employee"
+            "message" => "Data berhasil disimpan"
         ], 201);
         });
 
@@ -240,12 +241,14 @@ class ProfileController extends Controller
         $dataTaxStatus = TaxStatus::all();
         $dataWorkingScheduleShift = WorkingScheduleShift::all();
 
+        $dataNonFormalEducationCategory = NonFormalEducationCategory::all();
         $dataPaymentSchedule = PaymentSchedule::all();
         $dataProrateSetting = ProrateSetting::all();
 
         return view('hc.cmt-employee.profile',compact(
             'user',
             'users',
+            "dataNonFormalEducationCategory",
             "dataRole",
             "dataTeam",
             "dataTaxStatus",
@@ -261,7 +264,6 @@ class ProfileController extends Controller
     }
 
     public function updateEmployment(Request $request) {
-        // dd($request);
         $request->validate([
             // update on table user
             "department_id" => 'required|exists:departments,id',
@@ -306,9 +308,9 @@ class ProfileController extends Controller
         ]);
 
         return response()->json([
-            "status" => "success",
-            "message" => "berhasil menambahkan employee"
-        ], 201);;
+            'status' => "success",
+            'message' => "Data berhasil disimpan",
+        ], 200);
     }
 
     public function updateSalary(Request $request) {
@@ -336,7 +338,7 @@ class ProfileController extends Controller
 
         return response()->json([
             "status" => "success",
-            "message" => "berhasil menambahkan employee"
+            "message" => "Data berhasil disimpan"
         ], 201);
     }
 
@@ -355,7 +357,7 @@ class ProfileController extends Controller
 
         return response()->json([
             "status" => "success",
-            "message" => "berhasil menambahkan employee"
+            "message" => "Data berhasil disimpan"
         ], 201);
     }
 
@@ -384,7 +386,7 @@ class ProfileController extends Controller
 
         return response()->json([
             "status" => "success",
-            "message" => "berhasil menambahkan employee"
+            "message" => "Data berhasil disimpan"
         ], 201);
     }
 
@@ -417,7 +419,7 @@ class ProfileController extends Controller
 
         return response()->json([
             "status" => "success",
-            "message" => "berhasil menambahkan employee"
+            "message" => "Data berhasil disimpan"
         ], 201);
     }
 }

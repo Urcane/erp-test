@@ -11,6 +11,7 @@ class UserNonFormalEducation extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_non_formal_educations';
     protected $guarded = [];
 
     public function user(): BelongsTo

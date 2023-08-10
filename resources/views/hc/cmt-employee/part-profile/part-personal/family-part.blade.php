@@ -1,4 +1,6 @@
-<div class="modal fade" id="kt_modal_create_wo_survey" tabindex="-1" aria-hidden="true">
+<meta name="csrf-token" content="{{ csrf_token() }}" />
+
+<div class="modal fade" id="modal_create_family" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header pb-0 border-0 justify-content-end">
@@ -7,15 +9,15 @@
                 </div>
             </div>
             <div class="modal-body mx-5 mx-lg-15 mb-7">
-                <form id="kt_modal_create_wo_survey_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                <form id="modal_create_family_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
-                    {{-- <input type="hidden" name="work_order_id">
-                    <input type="hidden" name="type_of_wo" value="SR"> --}}
-                    <div class="scroll-y me-n10 pe-10" id="kt_modal_create_wo_survey_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_create_wo_survey_header" data-kt-scroll-wrappers="#kt_modal_create_wo_survey_scroll" data-kt-scroll-offset="300px">
+                    <input type="hidden" name="user_id" value="{{$user->id}}">
+                    <input type="hidden" name="family_id" value="">
+                    <div class="scroll-y me-n10 pe-10" id="modal_create_family_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_create_family_header" data-kt-scroll-wrappers="#modal_create_family_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
                         <div class="col-lg-12 text-center mb-9">
                             <span class="fs-1 fw-bolder text-dark d-block mb-1">Form Family</span>
-                            <span class="fs-7 fw-semibold text-gray-500">Tambahkan keanggotaan keluarga anda</span>
+                            <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span>
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -39,7 +41,7 @@
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Gender</span>
 							</label>
-                            <select class="drop-data form-select form-select-solid" data-control="gender" name="gender">
+                            <select class="drop-data form-select form-select-solid" data-control="gender" name="gender" required>
                                 @foreach ($allOptions->gender as $option)
                                     <option value="{{$option}}" @if (old('gender') == $option) selected @endif>{{$option}}</option>
                                 @endforeach
@@ -56,7 +58,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Marital Status</span>
                             </label>
-                            <select required class="drop-data form-select form-select-solid" data-control="maritial_status" name="marital_status">
+                            <select required class="drop-data form-select form-select-solid" data-control="marital_status" name="marital_status">
                                 @foreach ($allOptions->marital_status as $option)
                                     <option value="{{$option}}" @if (old('marital_status') == $option) selected @endif>{{$option}}</option>
                                 @endforeach
@@ -82,7 +84,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="fw-bold">Kategori Work Order</span>
                             </label>
-							<select class="drop-data form-select form-select-solid" data-control="select2" required name="type_of_wo" data-dropdown-parent="#kt_modal_create_wo_survey">
+							<select class="drop-data form-select form-select-solid" data-control="select2" required name="type_of_wo" data-dropdown-parent="#modal_create_family">
                                 <option value="" selected hidden disabled>Pilih Dulu</option>
                                 @foreach ($typeOfWOs as $typeOfWO)
                                 <option value="{{$typeOfWO->code}}">{{$typeOfWO->name}}</option>
@@ -96,8 +98,8 @@
                     </div>
                 </div>
                     <div class="text-center mt-9">
-                        <button type="reset" id="kt_modal_create_wo_survey_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="kt_modal_create_wo_survey_submit" class="btn btn-sm btn-info w-lg-200px">
+                        <button type="reset" id="modal_create_family_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="modal_create_family_submit" class="btn btn-sm btn-info w-lg-200px" data-bs-dismiss="modal">
                             <span class="indicator-label">Simpan</span>
                         </button>
                     </div>
@@ -115,7 +117,7 @@
 </div>
 <div class="col-lg-6 d-flex justify-content-end">
     <div>
-        <a href="#kt_modal_create_wo_survey" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Add Family</a>
+        <a href="#modal_create_family" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Add Family</a>
     </div>
 </div>
 <div class="col-lg-12">
@@ -124,7 +126,7 @@
             <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                 <th class="text-center w-50px">#</th>
                 <th class="text-center w-50px">#</th>
-                <th class="">Nama</th>
+                <th class="btn-edit">Nama</th>
                 <th class="w-150px">Relationship</th>
                 <th class="w-150px">Birthday</th>
                 <th class="w-150px">NIK</th>
@@ -142,14 +144,41 @@
 
 
 <script>
+    var dataTableFamily;
+
+    function deleteFamily(family_id) {
+        $.ajax({
+            url: "{{ route('hc.emp.delete-family') }}",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            data: { family_id : family_id},
+            success: function(data) {
+                dataTableFamily.ajax.reload();
+                toastr.success(data.message,'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = JSON.parse(xhr.responseText);
+                toastr.error(errorThrown ,'Opps!');
+            }
+        });
+    }
+
+    $(".btn_tambah_pegawai").on( "click", function() {
+        $("[name='family_id']").val("")
+        $("input:not([name='user_id'])").val("")
+    })
+
     $( "#family" ).on( "click", function() {
-        $('#tb_family_content').DataTable({
+        dataTable = $('#tb_family_content').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
             deferRender: true,
             responsive: false,
             aaSorting : [],
+            buttons: [],
             drawCallback: function () {
                 $('body').on('click', 'input[name=\'family_ids\']', function () {
                     if($(this).is(":checked")){
@@ -170,16 +199,6 @@
                 "emptyTable" : "Tidak ada data terbaru 📁",
                 "zeroRecords": "Data tidak ditemukan 😞",
             },
-            buttons: [
-            // {
-            //     extend: 'excel',
-            //     className: 'btn btn-light-success btn-sm ms-3',
-            //     title: 'Data Pegawai Comtelindo',
-            //     exportOptions: {
-            //         columns: [1,8,9,3,10,4,5,6]
-            //     }
-            // },
-            ],
             dom:
             "<'row mb-2'" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
@@ -198,7 +217,7 @@
             { data: 'DT_RowIndex'},
             { data: 'name'},
             { data: 'relationship',},
-            { data: 'birthday',},
+            { data: 'birthdate',},
             { data: 'nik',},
             { data: 'marital_status',},
             { data: 'gender',},
@@ -226,4 +245,23 @@
             ],
         });
     })
+
+    $('#modal_create_family_form').submit(function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            url: "{{ route('hc.emp.create-update-family') }}",
+            type: 'POST',
+            data: formData,
+            success: function(data) {
+                dataTable.ajax.reload();
+                toastr.success(data.message,'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = JSON.parse(xhr.responseText);
+                toastr.error(errorThrown ,'Opps!');
+            }
+        });
+    });
+
 </script>
