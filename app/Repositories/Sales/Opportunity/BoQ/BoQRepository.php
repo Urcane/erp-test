@@ -4,12 +4,12 @@ namespace App\Repositories\Sales\Opportunity\BoQ;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Opportunity\BoQ\Items;
+use App\Models\Opportunity\BoQ\Item;
 use App\Models\Customer\CustomerProspect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
-use App\Models\Opportunity\BoQ\ItemableBillOfQuantities;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantityLog;
+use App\Models\Inventory\InventoryGood;
 
 //use Your Model
 
@@ -50,7 +50,7 @@ class BoQRepository
             ];
             
             // Cari atau buat itemable boq berdasarkan 'prospect_id'
-            $itemableBoq = ItemableBillOfQuantities::updateOrCreate(
+            $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
                 ['prospect_id' => $boqData['prospect_id']],
                 $boqData
             );
@@ -58,9 +58,9 @@ class BoQRepository
             // // If provided, delete the associated items for the provided itemableBoqId
             if (isset($itemableBoq->id)) {
                 // Get the IDs of items associated with the provided itemable boq ID
-                $itemIds = Items::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
+                $itemIds = Item::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
                 // Delete the associated items
-                Items::whereIn('id', $itemIds)->delete();
+                Item::whereIn('id', $itemIds)->delete();
             }
 
             // Dapatkan data untuk semua item dari request
@@ -94,7 +94,7 @@ class BoQRepository
                 ];
             
                 // Cari atau buat item berdasarkan kriteria, dan asosiasikan dengan itemable boq
-                $item = Items::updateOrCreate($criteria, $data);
+                $item = Item::updateOrCreate($criteria, $data);
                 // dd($item); aman
             }
 
@@ -121,5 +121,16 @@ class BoQRepository
 
     function cancelBoQ() {
         // $dataBoQ
+    }
+
+    function getItemName() {
+        $item = $this->model->itemableBillOfQuantity;
+
+        if ($item instanceof InventoryGoods) {
+            $inventoryGoods = $item->name;
+            return $inventoryGoods;
+        }
+
+        return null;
     }
 }
