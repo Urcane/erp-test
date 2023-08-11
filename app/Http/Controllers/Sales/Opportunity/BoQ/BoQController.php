@@ -60,14 +60,12 @@ class BoQController extends Controller
             $this->employees = $employees;
         }
         
-        function index()
-        {
+        function index() {
             return view('cmt-opportunity.boq.index');
         }
         
-        function formBoQ(Request $request)
-        {
-// punya kepin
+        function formBoQ(Request $request) {
+            // punya kepin
             // $dataForm = $this->InventoryService->getDataForm();  
             // $salesEmployees =   $this->employees->where('department_id', 1)->get();
             // $technicianEmployees =   $this->employees->where('department_id', 4)->get();
@@ -109,9 +107,15 @@ class BoQController extends Controller
                 return view('cmt-opportunity.boq.pages.form-boq', compact('dataProspect','dataForm'));
             }
         }
+
+        function saveItemsBoQ(Request $request) : JsonResponse {
+            if ($request->ajax()) {
+                return $this->BoqService->saveItemsBoQ($request);
+            }
+            return response()->json('Oops, Somethin\' Just Broke :(');
+        }
         
-        function formUpdateBoQ(Request $request)
-        {
+        function formUpdateBoQ(Request $request){
             // Ambil nilai prospect_id dari query string
             $prospectId = $request->query('prospect_id');
             $surveyRequestId = $request->query('survey_request_id');
@@ -133,8 +137,7 @@ class BoQController extends Controller
             } 
         }
 
-        public function getSurveyCompanyItemInventory(Request $request)
-        {
+        public function getSurveyCompanyItemInventory(Request $request){
             try {
                 // Your existing code...
                 if ($request->ajax()) {
@@ -177,17 +180,11 @@ class BoQController extends Controller
             return response()->json('Oops, Somethin\' Just Broke :(');
         }
         
-        function getDatatableDraft(Request $request) : JsonResponse {
+        function getDatatable(Request $request) : JsonResponse {
             if ($request->ajax()) {
                 return $this->BoqService->renderDatatable($request);
             }
             return response()->json('Oops, Somethin\' Just Broke :(');
         }
         
-        function cancelBoQ(Request $request) : JsonResponse {
-            if ($request->ajax()) {
-                return $this->BoqService->cancelBoQ($request);
-            }
-            return response()->json('Oops, Somethin\' Just Broke :(');
-        }
     }

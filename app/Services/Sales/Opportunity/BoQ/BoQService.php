@@ -49,15 +49,32 @@ class BoqService
                 ';
             })
             ->addColumn('progress_pretified', function ($query) {
+                $timelineIcon = '';
+                if ($query->is_draft) {
+                    $timelineIcon = '<div class="timeline-icon symbol symbol-circle symbol-35px">
+                                        <div class="symbol-label bg-light-info">
+                                            <i class="fa-solid fa-pencil text-info"></i>    
+                                        </div>
+                                    </div>';
+                } elseif ($query->is_done) {
+                    $timelineIcon = '<div class="timeline-icon symbol symbol-circle symbol-35px">
+                                        <div class="symbol-label bg-light-success">
+                                            <i class="fa-solid fa-check text-success"></i>    
+                                        </div>
+                                    </div>';
+                } else {
+                    $timelineIcon = '<div class="timeline-icon symbol symbol-circle symbol-35px">
+                                        <div class="symbol-label bg-light-danger">
+                                            <i class="fa-solid fa-times text-danger"></i>    
+                                        </div>
+                                    </div>';
+                }
+                
                 return '
                 <div class="timeline">
                     <div class="timeline-item">
                         <div class="timeline-line w-35px"></div>
-                        <div class="timeline-icon symbol symbol-circle symbol-35px">
-                            <div class="symbol-label bg-light-success">
-                                <i class="fa-solid fa-check text-success"></i>    
-                            </div>
-                        </div>
+                        '.$timelineIcon.'
                         <div class="timeline-content">
                             <div class="pe-5">
                                 <span class="fw-bold d-block">'.$query->prospect->latestCustomerProspectLog->prospect_update.'</span>
@@ -73,12 +90,6 @@ class BoqService
             ->make(true);
     }
 
-    // function createNewBoQ(Request $request) : JsonResponse{
-    //     $saveBoQ = $this->BoQRepository->createBoQ($request);
-    //     $saveItems = $this->itemService->saveItems($request, $saveBoQ->itemableBillOfQuantities()); //$saveBoQ->ID
-    //     return new JsonResponse(['message' => 'Data berhasil disimpan'], 200);
-    // }
-
     function getFormWithoutID()  {
         $dataFormWithId = $this->BoQRepository->getDataWithoutId()->get();
         return $dataFormWithId;
@@ -87,10 +98,6 @@ class BoqService
     function getFormWithID($id)      {
         $dataFormWithId = $this->BoQRepository->getDataWithId($id)->where('id', $id)->first();
         return $dataFormWithId;
-    }
-
-    function cancelBoQ(Request $request)  {
-        $batalBoQ = $this->BoQRepository->cancelBoQ($request);
     }
 
     function saveItemsBoQ(Request $request) : JsonResponse{

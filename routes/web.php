@@ -87,7 +87,7 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(BoQController::class)->group(function () {
         Route::prefix('cmt-boq')->group(function (){
             Route::get('/','index')->name('com.boq.index');
-            Route::get('/get-data/table/draft-result','getDatatableDraft')->name('com.boq.draft.datatable');
+            Route::get('/get-data/table/data-result','getDatatable')->name('com.boq.render.datatable');
             
             Route::post('/batal-boq','batalBoQ')->name('com.boq.batal-boq');
             Route::get('/form-boq','formBoQ')->name('com.boq.form-boq');

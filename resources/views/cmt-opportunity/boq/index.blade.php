@@ -95,50 +95,6 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody class="fs-7">
-                                                  {{-- <tr>
-                                                    <td>
-                                                       <span></span>
-                                                    </td>
-                                                    <td>1</td>
-                                                    <td> 
-                                                        <span class="fw-normal d-block">Project 1</span>
-                                                    </td>
-                                                    <td>PRJ001</td>
-                                                    <td>John Doe</td>
-                                                    <td>
-                                                        <span href="#" class="btn btn-light-success btn-sm"><i class="fa-solid fa-check"></i>Selesai</span>
-                                                    </td>
-                                                    <td>
-                                                        <span>2023-07-18 08:51:48</span>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a href="#kt_modal_update_prospect" class="dropdown-item py-2 btn_update_prospect" data-bs-toggle="modal" data-prospectid="'.$action->prospect_id.'" data-id="'.$action->id.'"><i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
-                                                        </ul>
-                                                    </td>
-                                                  </tr>
-                                                  <tr>
-                                                    <td class="text-center">
-                                                        <div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>
-                                                    </td>
-                                                    <td>2</td>
-                                                    <td>
-                                                        <span class="fw-normal d-block">Project 2</span>
-                                                    </td>
-                                                    <td>PRJ002</td>
-                                                    <td>Jane Smith</td>
-                                                    <td>
-                                                        <span href="#" class="btn btn-light-warning btn-sm"><i class="fas fa-envelope-open-text fs-6"></i> Survey</span>
-                                                    </td>
-                                                    <td>2023-07-25</td>
-                                                    <td class="text-center">
-                                                        <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a href="#kt_modal_update_prospect" class="dropdown-item py-2 btn_update_prospect" data-bs-toggle="modal" data-prospectid="'.$action->prospect_id.'" data-id="'.$action->id.'"><i class="fa-solid fa-list-check me-3"></i>Update Progress</a></li>
-                                                        </ul>
-                                                    </td>
-                                                  </tr> --}}
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -168,27 +124,6 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody class="fs-7">
-                                                                {{-- <tr>
-                                                          <td class="text-center">
-                                                              <div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>
-                                                          </td>
-                                                          <td>2</td>
-                                                          <td>
-                                                              <span class="fw-normal d-block">Project 2</span>
-                                                          </td>
-                                                          <td>PRJ002</td>
-                                                          <td>Jane Smith</td>
-                                                          <td>
-                                                              <span href="#" class="btn btn-light-warning btn-sm"><i class="fas fa-envelope-open-text fs-6"></i> Survey</span>
-                                                          </td>
-                                                          <td>2023-07-18 08:51:48</td>
-                                                          <td class="text-center">
-                                                              <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                              <ul class="dropdown-menu">
-                                                                  <li><a href="#kt_modal_update_prospect" class="dropdown-item py-2 btn_update_prospect" data-bs-toggle="modal" data-prospectid="'.$action->prospect_id.'" data-id="'.$action->id.'"><i class="fa-solid fa-list-check me-3"></i>Update Progress</a></li>
-                                                              </ul>
-                                                          </td>
-                                                        </tr> --}}
                                                       </tbody>
                                                 </table>
                                             </div>
@@ -203,7 +138,7 @@
                                                     <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_draft_boq">
                                                         <thead class="">
                                                             <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                                                <th class="text-center w-50px">#</th>
+                                                                <th class="text-center w-75px">#</th>
                                                                 <th class="">Company Name</th>
                                                                 <th class="w-300px">Company Address</th>
                                                                 <th class="w-300px">Prospect Title</th>
@@ -213,58 +148,6 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody class="fs-7">
-                                                            {{-- <tr>
-                                                                <td class="text-center">
-                                                                    <div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>
-                                                                </td>
-                                                                <td>1</td>
-                                                                <td>
-                                                                    <span class="fw-normal d-block">Project 1</span>
-                                                                </td>
-                                                                <td>PRJ001</td>
-                                                                <td>
-                                                                    <div class="timeline">
-                                                                        <div class="timeline">
-                                                                            <div class="timeline-item">
-                                                                              <div class="timeline-line w-35px"></div>
-                                                                              <div class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                                <div class="symbol-label bg-light-success">
-                                                                                  <i class="fa-solid fa-check text-success"></i>
-                                                                                </div>
-                                                                              </div>
-                                                                              <div class="timeline-content">
-                                                                                <div class="pe-5">
-                                                                                  <span class="fw-bold d-block">Approval Manager</span>
-                                                                                  <p class="text-gray-500 mb-0">Updated: 13 Mei 2023</p>
-                                                                                </div>
-                                                                              </div>
-                                                                            </div>
-                                                                            
-                                                                            <div class="timeline-item">
-                                                                              <div class="timeline-line w-35px"></div>
-                                                                              <div class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                                <div class="symbol-label bg-light-info">
-                                                                                  <i class="fa-regular fa-clock text-info"></i>
-                                                                                </div>
-                                                                              </div>
-                                                                              <div class="timeline-content">
-                                                                                <div class="pe-5">
-                                                                                  <span class="fw-bold d-block">Approval Manager</span>
-                                                                                  <p class="text-gray-500 mb-0">Updated: 13 Mei 2023</p>
-                                                                                </div>
-                                                                              </div>
-                                                                            </div>
-                                                                          </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Review</td>
-                                                                <td class="text-center">
-                                                                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                                    <ul class="dropdown-menu">
-                                                                        <li><a href="#kt_modal_update_prospect" class="dropdown-item py-2 btn_update_prospect" data-bs-toggle="modal" data-prospectid="'.$action->prospect_id.'" data-id="'.$action->id.'"><i class="fa-solid fa-list-check me-3"></i>Update Progress</a></li>
-                                                                    </ul>
-                                                                </td>
-                                                            </tr> --}}
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -281,7 +164,7 @@
                                                             id="kt_table_commercial">
                                                             <thead class="">
                                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                                                    <th class="text-center w-25px">#</th>
+                                                                    <th class="text-center w-75px">#</th>
                                                                     <th class="w-25px">#</th>
                                                                     <th class="">Project Name</th>
                                                                     <th class="w-200px">No. Project</th>
@@ -291,128 +174,6 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody class="fs-7">
-                                                                <tr>
-                                                                    <td class="text-center">
-                                                                        <div class="text-center w-50px"><input
-                                                                                name="checkbox_prospect_ids"
-                                                                                type="checkbox"
-                                                                                value="'.$check->prospect_id.'"></div>
-                                                                    </td>
-                                                                    <td>1</td>
-                                                                    <td>
-                                                                        <span class="fw-normal d-block">Project 1</span>
-                                                                    </td>
-                                                                    <td>PRJ001</td>
-                                                                    <td>
-                                                                        <div class="timeline">
-                                                                            <div class="timeline">
-                                                                                <div class="timeline-item">
-                                                                                    <div class="timeline-line w-35px">
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                                        <div
-                                                                                            class="symbol-label bg-light-success">
-                                                                                            <i
-                                                                                                class="fa-solid fa-check text-success"></i>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="timeline-content">
-                                                                                        <div class="pe-5">
-                                                                                            <span
-                                                                                                class="fw-bold d-block">Approval
-                                                                                                Manager</span>
-                                                                                            <p class="text-gray-500 mb-0">
-                                                                                                Updated: 13 Mei 2023</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div class="timeline-item">
-                                                                                    <div class="timeline-line w-35px">
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                                        <div
-                                                                                            class="symbol-label bg-light-info">
-                                                                                            <i
-                                                                                                class="fa-regular fa-clock text-info"></i>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="timeline-content">
-                                                                                        <div class="pe-5">
-                                                                                            <span
-                                                                                                class="fw-bold d-block">Approval
-                                                                                                Manager</span>
-                                                                                            <p class="text-gray-500 mb-0">
-                                                                                                Updated: 13 Mei 2023</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="timeline-item">
-                                                                                    <div class="timeline-line w-35px">
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                                        <div
-                                                                                            class="symbol-label bg-light-info">
-                                                                                            <i
-                                                                                                class="fa-regular fa-clock text-info"></i>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="timeline-content">
-                                                                                        <div class="pe-5">
-                                                                                            <span
-                                                                                                class="fw-bold d-block">Approval
-                                                                                                Manager</span>
-                                                                                            <p class="text-gray-500 mb-0">
-                                                                                                Updated: 13 Mei 2023</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="timeline-item">
-                                                                                    <div class="timeline-line w-35px">
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                                        <div
-                                                                                            class="symbol-label bg-light-info">
-                                                                                            <i
-                                                                                                class="fa-regular fa-clock text-info"></i>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="timeline-content">
-                                                                                        <div class="pe-5">
-                                                                                            <span
-                                                                                                class="fw-bold d-block">Approval
-                                                                                                Manager</span>
-                                                                                            <p class="text-gray-500 mb-0">
-                                                                                                Updated: 13 Mei 2023</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Review</td>
-                                                                    <td class="text-center">
-                                                                        <button type="button"
-                                                                            class="btn btn-secondary btn-icon btn-sm"
-                                                                            data-kt-menu-placement="bottom-end"
-                                                                            data-bs-toggle="dropdown"
-                                                                            aria-expanded="false"><i
-                                                                                class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                                        <ul class="dropdown-menu">
-                                                                            <li><a href="#kt_modal_update_prospect"
-                                                                                    class="dropdown-item py-2 btn_update_prospect"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-prospectid="'.$action->prospect_id.'"
-                                                                                    data-id="'.$action->id.'"><i
-                                                                                        class="fa-solid fa-list-check me-3"></i>Update
-                                                                                    Progress</a></li>
-                                                                        </ul>
-                                                                    </td>
-                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -426,10 +187,10 @@
                                                     <div class="table-responsive">
                                                         <table
                                                             class="table align-top table-striped border table-rounded gy-5"
-                                                            id="kt_table_boq-done">
+                                                            id="kt_table_boq_done">
                                                             <thead class="">
                                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                                                    <th class="text-center w-25px">#</th>
+                                                                    <th class="text-center w-75px">#</th>
                                                                     <th class="w-25px">#</th>
                                                                     <th class="">Project Name</th>
                                                                     <th class="w-200px">No. Project</th>
@@ -439,84 +200,6 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody class="fs-7">
-                                                                <tr>
-                                                                    <td class="text-center">
-                                                                        <div class="text-center w-50px"><input
-                                                                                name="checkbox_prospect_ids"
-                                                                                type="checkbox"
-                                                                                value="'.$check->prospect_id.'"></div>'
-                                                                    </td>
-                                                                    <td>1</td>
-                                                                    <td>
-                                                                        <span class="fw-normal d-block">Project 1</span>
-                                                                    </td>
-                                                                    <td>PRJ001</td>
-                                                                    <td>
-                                                                        <div class="timeline">
-                                                                            <div class="timeline">
-                                                                                <div class="timeline-item">
-                                                                                    <div class="timeline-line w-35px">
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                                        <div
-                                                                                            class="symbol-label bg-light-success">
-                                                                                            <i
-                                                                                                class="fa-solid fa-check text-success"></i>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="timeline-content">
-                                                                                        <div class="pe-5">
-                                                                                            <span
-                                                                                                class="fw-bold d-block">Done</span>
-                                                                                            <p class="text-gray-500 mb-0">
-                                                                                                Updated: 13 Mei 2023</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div class="timeline-item">
-                                                                                    <div class="timeline-line w-35px">
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                                        <div
-                                                                                            class="symbol-label bg-light-info">
-                                                                                            <i
-                                                                                                class="fa-regular fa-clock text-info"></i>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="timeline-content">
-                                                                                        <div class="pe-5">
-                                                                                            <span
-                                                                                                class="fw-bold d-block">Done</span>
-                                                                                            <p class="text-gray-500 mb-0">
-                                                                                                Updated: 13 Mei 2023</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>Next to Quotation</td>
-                                                                    <td class="text-center">
-                                                                        <button type="button"
-                                                                            class="btn btn-secondary btn-icon btn-sm"
-                                                                            data-kt-menu-placement="bottom-end"
-                                                                            data-bs-toggle="dropdown"
-                                                                            aria-expanded="false"><i
-                                                                                class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                                        <ul class="dropdown-menu">
-                                                                            <li><a href="#kt_modal_update_prospect"
-                                                                                    class="dropdown-item py-2 btn_update_prospect"
-                                                                                    data-bs-toggle="modal"
-                                                                                    data-prospectid="'.$action->prospect_id.'"
-                                                                                    data-id="'.$action->id.'"><i
-                                                                                        class="fa-solid fa-list-check me-3"></i>Update
-                                                                                    Progress</a></li>
-                                                                        </ul>
-                                                                    </td>
-                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -530,7 +213,7 @@
                                                     <div class="table-responsive">
                                                         <table
                                                             class="table align-top table-striped border table-rounded gy-5"
-                                                            id="kt_table_boq-done">
+                                                            id="kt_table_boq_cancel">
                                                             <thead class="">
                                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                                     <th class="text-center w-25px">#</th>
@@ -543,47 +226,6 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody class="fs-7">
-                                                                <tr>
-                                                                    <td class="text-center">
-                                                                        <div class="text-center w-50px"><input
-                                                                                name="checkbox_prospect_ids"
-                                                                                type="checkbox"
-                                                                                value="'.$check->prospect_id.'"></div>'
-                                                                    </td>
-                                                                    <td>1</td>
-                                                                    <td>
-                                                                        <span class="fw-normal d-block">Project 2</span>
-                                                                    </td>
-                                                                    <td>PRJ002</td>
-                                                                    <td>
-                                                                        <div class="timeline">
-                                                                            <div class="timeline">
-                                                                                <div class="timeline-item">
-                                                                                    <div class="timeline-line w-35px">
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="timeline-icon symbol symbol-circle symbol-35px">
-                                                                                        <div
-                                                                                            class="symbol-label bg-light-danger">
-                                                                                            <i
-                                                                                                class="fa-solid fa-xmark text-danger"></i>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="timeline-content">
-                                                                                        <div class="pe-5">
-                                                                                            <span
-                                                                                                class="fw-bold d-block">Canceled</span>
-                                                                                            <p class="text-gray-500 mb-0">
-                                                                                                Updated: 13 Mei 2023</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>No Action</td>
-                                                                    <td></td>
-                                                                </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -654,7 +296,73 @@
           generateDatatable({
             tableName: "tableDraftBoq",
             elementName: "#kt_table_draft_boq",
-            ajaxLink: "{{ route('com.boq.draft.datatable') }}",
+            ajaxLink: "{{ route('com.boq.render.datatable') }}",
+            filters: {
+                is_draft: true,
+            },
+            columnData: [
+                // { data: 'DT_RowChecklist'},
+                { data: 'DT_RowIndex'},
+                { data: 'prospect.customer.customer_name'},
+                { data: 'prospect.customer.customer_address'},
+                { data: 'prospect.prospect_title'},
+                { data: 'progress_pretified'},
+                { data: 'next_action_pretified'},
+                { data: 'action' },
+            ]
+         });   
+      });
+
+      $('#tab_commercial').click(function () {
+          generateDatatable({
+            tableName: "tableCommercialBoq",
+            elementName: "#kt_table_commercial",
+            ajaxLink: "{{ route('com.boq.render.datatable') }}",
+            filters: {
+                is_draft: false,
+            },
+            columnData: [
+                // { data: 'DT_RowChecklist'},
+                { data: 'DT_RowIndex'},
+                { data: 'prospect.customer.customer_name'},
+                { data: 'prospect.customer.customer_address'},
+                { data: 'prospect.prospect_title'},
+                { data: 'progress_pretified'},
+                { data: 'next_action_pretified'},
+                { data: 'action' },
+            ]
+         });   
+      });
+
+      $('#tab_boq_done').click(function () {
+        generateDatatable({
+            tableName: "tableDoneBoq",
+            elementName: "#kt_table_boq_done",
+            ajaxLink: "{{ route('com.boq.render.datatable') }}",
+            filters: {
+                is_done: true,
+            },
+            columnData: [
+                // { data: 'DT_RowChecklist'},
+                { data: 'DT_RowIndex'},
+                { data: 'prospect.customer.customer_name'},
+                { data: 'prospect.customer.customer_address'},
+                { data: 'prospect.prospect_title'},
+                { data: 'progress_pretified'},
+                { data: 'next_action_pretified'},
+                { data: 'action' },
+            ]
+         });   
+      });
+
+      $('#tab_cancel').click(function () {
+        generateDatatable({
+            tableName: "tableCancelBoq",
+            elementName: "#kt_table_boq_cancel",
+            ajaxLink: "{{ route('com.boq.render.datatable') }}",
+            filters: {
+                is_done: false,
+            },
             columnData: [
                 // { data: 'DT_RowChecklist'},
                 { data: 'DT_RowIndex'},

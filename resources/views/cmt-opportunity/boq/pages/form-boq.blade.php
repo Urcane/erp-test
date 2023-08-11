@@ -53,7 +53,9 @@
                                                 <label for="exampleFormControlInput1" class="required form-label">Company
                                                     Name</label>
                                                 <input type="email" class="form-control form-control-solid"
-                                                    placeholder="Example input" />
+                                                placeholder=""
+                                                disabled name="type_name" id="type_name"
+                                                value="{{ $dataCompany->customer->customer_name ?? null }}" />
                                             </div>
 
                                             <div class="ms-10 w-25">
@@ -62,7 +64,9 @@
                                                 <div class="position-relative">
                                                     <div class=" position-absolute top-0"></div>
                                                     <input type="text" class="form-control form-control-solid"
-                                                        placeholder="Example input" />
+                                                    placeholder=""
+                                                    disabled name="type_name" id="type_name"
+                                                    value="{{ $dataCompany->customer->customer_address ?? null }}"/>
                                                 </div>
                                             </div>
 
