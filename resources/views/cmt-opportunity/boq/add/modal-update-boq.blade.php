@@ -60,7 +60,7 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class=" fw-bold">Detail Item project</span>
                                 </label>
-                                <input class="form-control" type="text" name="item_detail" id="item_detail" >
+                                <input class="form-control" type="text" name="item_detail" id="item_detail_update" >
                             </div>
 
 
@@ -75,8 +75,8 @@
                                             <span class="required fw-bold">Harga Beli</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update');"
-                                            name="purchase_price">
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update', 'update');"
+                                            name="purchase_price_update" id="purchase_price_update">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                     <div class="col-lg-6 col-6 mb-3">
@@ -84,7 +84,8 @@
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update');" name="quantity">
+                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update', 'update');" 
+                                            name="quantity_update" id="quantity_update">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                 </div>
@@ -97,8 +98,8 @@
                                             <span class="required fw-bold">Jasa antar</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update');"
-                                            name="purchase_delivery">
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update', 'update');"
+                                            name="purchase_delivery_update" id="purchase_delivery_charge_update">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                     <div class="col-lg-6 col-6 mb-3">
@@ -106,7 +107,7 @@
                                             <span class="fw-bold">Toko Referensi</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid"
-                                            name="purchase_reference">
+                                            name="purchase_reference" id="purchase_refrence_update">
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +115,7 @@
                             <div class="d-flex justify-content-end ">
                                 <div class="w-20 me-10">
                                     <span class="fw-bold">Total Amount : Rp. <span id="total_update"></span></span>
-                                    <input type="hidden" class="form-control form-control-solid total" name="total" value=""/>
+                                    <input type="text" class="form-control form-control-solid total" name="total_update" id="total_price_update" value=""/>
                                 </div>
                             </div>
 
@@ -129,6 +130,11 @@
                             <span class="indicator-label">Simpan</span>
                         </button>
                     </div>
+
+                    <div>
+                        <input type="text" id="uniq_id" name="uniq_id" value="">
+                    </div>
+
                 </form>
             </div>
         </div>

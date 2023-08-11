@@ -178,7 +178,7 @@
                                                                     <input type="number"
                                                                         class="form-control form-control-solid" disabled
                                                                         name="content[][quantity]"
-                                                                        value="{{ $relatedItem->purchase_price ?? null }}" />
+                                                                        value="{{ $relatedItem->quantity ?? null }}" />
                                                                 </div>
                                                             </div>
 
@@ -218,9 +218,15 @@
                                                                     <ul class="dropdown-menu">
                                                                         <li type="button" class="btn-update-boq-modal"
                                                                             data-random-string="{{ $random_string }}"
-                                                                            data-item-id="{{ $relatedItem->item_inventory_id }}">
+                                                                            data-item-id="{{ $relatedItem->item_inventory_id }}"
+                                                                            data-quantity="{{ $relatedItem->quantity }}"
+                                                                            data-total_price="{{ $relatedItem->total_price }}"
+                                                                            data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
+                                                                            data-purchase_price="{{ $relatedItem->purchase_price }}"
+                                                                            data-purchase_refrence="{{ $relatedItem->purchase_refrence }}"
+                                                                            data-item_detail="{{ $relatedItem->item_detail }}">
                                                                             <a class="dropdown-item py-2">
-                                                                                <i class="fa-solid fa-edit me-3"></i> Edit
+                                                                                <i class="fa-solid fa-edit me-3"></i>Edit
                                                                                 Item</a>
                                                                         </li>
                                                                         <li type="button" class="clear-soft-survey-item"
@@ -231,18 +237,18 @@
                                                                         </li>
                                                                     </ul>
                                                                 </div>
-
                                                             </div>
+
                                                             <div>
-                                                                <input type="hidden" name="content[][id]" disabled
+                                                                <input type="text" name="content[][id]" disabled
                                                                     value="{{ $relatedItem->id ?? null }}" />
-                                                                <input type="hidden" name="content[][item_inventory_id]"
+                                                                <input type="text" name="content[][item_inventory_id]"
                                                                     disabled
                                                                     value="{{ $relatedItem->item_inventory_id ?? null }}" />
-                                                                <input type="hidden" name="content[][purchase_reference]"
+                                                                <input type="text" name="content[][purchase_reference]"
                                                                     disabled
                                                                     value="{{ $relatedItem->purchase_refrence ?? null }}" />
-                                                                <input type="hidden" name="content[][item_detail]"
+                                                                <input type="text" name="content[][item_detail]"
                                                                     disabled
                                                                     value="{{ $relatedItem->item_detail ?? null }}" />
                                                             </div>
@@ -293,10 +299,6 @@
     @role('administrator')
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
         @include('cmt-opportunity.boq.add.modal-update-boq')
-        {{-- @include('cmt-opportunity.survey.modal.modal-request-survey')
-@include('cmt-opportunity.survey.modal.modal-create-wo-survey')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-internet')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-cctv') --}}
     @endrole
 
 
@@ -319,18 +321,18 @@
         };
 
         //  function kalkulasi total di Modal
-        function calculateTotalAmount(totalElementId) {
+        function calculateTotalAmount(totalElementId, modal) {
             // Mengambil nilai dari masing-masing input menggunakan querySelector
-            const purchasePrice = parseFloat(document.querySelector(`#${totalElementId} [name='purchase_price']`).value);
-            const quantity = parseInt(document.querySelector(`#${totalElementId} [name='quantity']`).value);
-            const purchaseDelivery = parseFloat(document.querySelector(`#${totalElementId} [name='purchase_delivery']`).value);
+            const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${modal}']`).value);
+            const quantity = parseInt(document.querySelector(`[name='quantity_${modal}']`).value);
+            const purchaseDelivery = parseFloat(document.querySelector(`[name='purchase_delivery_${modal}']`).value);
 
 
             // Cek jika nilai purchasePrice dan quantity adalah angka
             if (isNaN(purchasePrice) || isNaN(quantity)) {
                 // Jika ada input yang belum diisi atau bukan angka, tampilkan hasil kosong dan return
                 document.getElementById(totalElementId).textContent = "";
-                const hiddenTotalInput = document.querySelector(totalElementId);
+                const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
                 hiddenTotalInput.value = ""; // Set the hidden input value to empty string
                 return;
             }
@@ -347,25 +349,23 @@
             // 9,007,199,254,740,991 maksimal karakter number
             if (totalAmount.toString().length > 15) {
                 document.getElementById(totalElementId).textContent = "Melewati limit angka";
-                const hiddenTotalInput = document.querySelector(totalElementId);
+                const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
                 hiddenTotalInput.value = ""; // Set the hidden input value to empty string
                 return;
             }
 
             // Menampilkan total dalam format dengan tanda titik setiap 3 digit dari kanan
-            const totalAmountWithCommas = new Intl.NumberFormat("rid").format(totalAmount);
+            const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
 
             // Mengatur nilai total pada elemen dengan id 'totalDisplay'
             document.getElementById(totalElementId).textContent = totalAmountWithCommas;
 
             // Mengatur nilai total pada elemen dengan class 'total' (hidden input)
-            const hiddenTotalInput = document.querySelector(totalElementId);
+            const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
             hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
         }
 
-
         $(document).ready(function() {
-
 
             // function Submit BOQ page BENERAN wkwkw
             $('#submit-all-items').on('click', function(event) {
@@ -469,9 +469,28 @@
                 var randomString = $(this).data('random-string');
                 var itemId = parseInt($(this).data('item-id'));
 
+                var quantity = $(this).data('quantity');
+                var total_price = ($(this).data('total_price'));
+                var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                var purchase_price = ($(this).data('purchase_price'));
+                var purchase_refrence = $(this).data('purchase_refrence');
+                var item_detail = ($(this).data('item_detail'));
+                console.log(randomString, itemId, quantity, total_price, purchase_delivery_charge,
+                    purchase_price, purchase_refrence, item_detail);
+
                 $('#good_name_update').val(itemId).trigger('change');
 
                 $('#kt_modal_update_boq').modal('show');
+
+                $('#uniq_id').val(randomString);
+
+                $('#item_detail_update').val(item_detail);
+                $('#purchase_refrence_update').val(purchase_refrence);
+                $('#purchase_price_update').val(purchase_price);
+                $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
+                $('#total_price_update').val(total_price);
+                $('#quantity_update').val(quantity);
+                document.getElementById('total_update').textContent = total_price;
             });
 
             // Handler untuk peristiwa "change" pada select item
@@ -499,8 +518,73 @@
             });
 
             // Funcion Submit Update BOQ 
+            $("#kt_modal_update_boq_form").validate({
+                messages: {
+                    good_name: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
+                    },
+                    purchase_price: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
+                        minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
+                    },
+                    quantity: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
+                        minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
+                    },
+                    purchase_delivery: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Jasa antar wajib diisi</span>",
+                        minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
+                    },
+                },
+                submitHandler: function(form) {
+                    event.preventDefault();
+
+                    // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
+                    var selectedItemId = $('#good_name_update').val();
+                    var itemName = $('#good_name_update option:selected').text();
+                    var itemMerk = $('#merk_update').val();
+
+                    // Membuat elemen input tersembunyi untuk nama barang
+                    var itemNameInput = $('<input>').attr({
+                        type: 'hidden',
+                        name: 'content[][good_name]',
+                        value: itemName
+                    });
+
+                    // Menambahkan elemen input tersembunyi ke dalam form
+                    $(form).append(itemNameInput);
 
 
+                    var formData = new FormData(form);
+
+                    const uniq_id = formData.get('uniq_id');
+
+                    const item = document.querySelectorAll(
+                        `.MultipleItem .file-soft-boq-item-${uniq_id}`);
+
+                    // console.log(items);
+                    // console.log(uniq_id);
+                    // console.log(form);
+
+                    $('[name="content[][good_name]"]', item).val(itemName);
+                    $('[name="content[][good_merk]"]', item).val(itemMerk);
+                    $('[name="content[][purchase_price]"]', item).val(formData.get('purchase_price_update'));
+                    $('[name="content[][quantity]"]', item).val(formData.get('quantity_update'));
+                    $('[name="content[][purchase_delivery]"]', item).val(formData.get('purchase_delivery_update'));
+                    $('[name="content[][purchase_reference]"]', item).val(formData.get('purchase_reference'));
+                    $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
+                    $('[name="content[][total_price]"]', item).val(formData.get('total_update'));
+                    $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
+                    
+                    // Bersihkan input setelah item ditambahkan
+                    form.reset();
+
+                    // // Tutup modal
+                    $('#kt_modal_update_boq').modal('hide');
+
+                    updateTotalSum();
+                }
+            });
 
 
             // Function Tambah BOQ modal
@@ -537,7 +621,6 @@
             // Function Hapus Item Frontend
             $('.MultipleItem').on('click', '.clear-soft-survey-item', function() {
                 var random_string = $(this).data('random-string');
-                // console.log(random_string);
                 $(this).closest('.file-soft-boq-item-' + random_string).remove();
                 updateTotalSum();
             });
@@ -601,7 +684,7 @@
                             <label for="" class="form-label">Price</label>
                             <div class="position-relative">
                                 <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price')}" />
+                                <input type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
                             </div>
                         </div>
 
@@ -609,7 +692,7 @@
                             <label for="" class="form-label">Qty</label>
                             <div class="position-relative">
                                 <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity')}" />
+                                <input type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity_tambah')}" />
                             </div>
                         </div>
 
@@ -617,7 +700,7 @@
                             <label for="" class="form-label">Jasa Antar</label>
                             <div class="position-relative">
                                 <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery')}" />
+                                <input type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
                                 </div>
                         </div>
                         
@@ -626,7 +709,7 @@
                                 <label for="" class="form-label">Total Price</label>
                                 <div class="position-relative">
                                     <div class="position-absolute top-0"></div>
-                                    <input type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total')}" />
+                                    <input type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total_tambah')}" />
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center align-items-center" style="flex-basis: 14%; min-width: 30px;">
@@ -650,9 +733,9 @@
                             </div>
                         </div>  
                         <div>
-                            <input type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
-                            <input type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
-                            <input type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
+                            <input type="text" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
+                            <input type="text" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
+                            <input type="text" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
                         </div>
                     </div>`;
 
@@ -660,7 +743,6 @@
                     // Function Hapus per Item
                     $('.MultipleItem').on('click', `.clear-soft-survey-item-${random_string}`,
                         function() {
-                            console.log(random_string);
                             $(this).parent().parent().parent().parent().remove();
                             updateTotalSum();
                         });
@@ -687,7 +769,6 @@
                     updateTotalSum();
                 }
             });
-
 
             // // Calculate and update total sum on page load
             updateTotalSum();

@@ -83,8 +83,8 @@
                                             <span class="required fw-bold">Harga Beli</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total');"
-                                            name="purchase_price">
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_tambah', 'tambah');"
+                                            name="purchase_price_tambah">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                     <div class="col-lg-6 col-6 mb-3">
@@ -92,7 +92,7 @@
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total');" name="quantity">
+                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_tambah', 'tambah');" name="quantity_tambah">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                 </div>
@@ -105,8 +105,8 @@
                                             <span class="required fw-bold">Jasa antar</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total');"
-                                            name="purchase_delivery">
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_tambah', 'tambah');"
+                                            name="purchase_delivery_tambah">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                     <div class="col-lg-6 col-6 mb-3">
@@ -121,8 +121,8 @@
 
                             <div class="d-flex justify-content-end ">
                                 <div class="w-20 me-10">
-                                    <span class="fw-bold">Total Amount : Rp. <span id="total"></span></span>
-                                    <input type="hidden" class="form-control form-control-solid total" name="total" value=""/>
+                                    <span class="fw-bold">Total Amount : Rp. <span id="total_tambah"></span></span>
+                                    <input type="hidden" class="form-control form-control-solid total" name="total_tambah" value=""/>
                                 </div>
                             </div>
 

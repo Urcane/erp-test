@@ -109,7 +109,6 @@ class BoQController extends Controller
             $surveyRequestId = $request->query('survey_request_id');
 
             $dataItems = ItemableBillOfQuantity::with('itemable.inventoryGood')->where("prospect_id",$prospectId)->get();
-
             $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->get();
             $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
             $dataForm = $this->InventoryService->getDataForm();
@@ -131,7 +130,6 @@ class BoQController extends Controller
                     }
                     
                     $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospect_id)->first();
-                    
                     $dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospect_id)->get();
            
                     $combinedData = [
@@ -147,16 +145,18 @@ class BoQController extends Controller
             }
         }
 
-        public function getMerkType(Request $request) {
+        public function getMerkType(Request $request) 
+        { 
             if ($request->ajax()) {
-                $itemId = $request->input('item_id') ?? $request->item_id;
+                $itemId = $request->input('item_id') ?? $request->item_id; 
                 $itemData = $this->InventoryService->getMerkType($itemId);
                 return response()->json($itemData);
             }
             return response()->json('Oops, Somethin\' Just Broke :(');
         }
         
-        function getDatatable(Request $request) : JsonResponse {
+        function getDatatable(Request $request) : JsonResponse 
+        {
             if ($request->ajax()) {
                 return $this->BoqService->renderDatatable($request);
             }
