@@ -43,8 +43,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
-            Route::get('/', 'index')->name('hc.att.index');
-            Route::get('/{id}', 'show')->name('hc.att.detail');
+            Route::get('/list', 'index')->name('hc.att.index');
+            Route::get('/list/{id}', 'show')->name('hc.att.detail');
+
+            Route::get('/summaries', 'getAttendanceSummaries')->name('hc.att.all-summaries');
+            Route::get('/summaries/user', 'getAttendanceSummariesById')->name('hc.att.user-summaries');
 
             Route::get('/get-data/table/attendance', 'getTableAttendance')->name('hc.att.get-table-attendance');
             Route::get('/get-data/table/attendance/detail', 'getTableAttendanceDetail')->name('hc.att.get-table-attendance-detail');
