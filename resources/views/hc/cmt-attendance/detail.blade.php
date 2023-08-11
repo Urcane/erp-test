@@ -223,7 +223,7 @@
                 {
                     extend: 'excel',
                     className: 'btn btn-light-success btn-sm ms-3',
-                    title: 'Data Absen Pegawai Comtelindo',
+                    title: 'Data Absen {{$user->name}}',
                     exportOptions: {
                         columns: [1,2,3,4,5,6,7,8,9,10]
                     }
@@ -244,7 +244,7 @@
 
             columns: [
                 { data: 'DT_RowChecklist', orderable: false, searchable: false},
-                { data: 'DT_RowIndex'},
+                { data: 'DT_RowIndex', orderable: false, searchable: false},
                 { data: 'date' , orderable: true, searchable: true},
                 { data: 'shift' , orderable: true, searchable: true},
                 { data: 'schedule_in' , orderable: true, searchable: true},

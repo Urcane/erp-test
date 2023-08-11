@@ -244,7 +244,7 @@
 
             columns: [
                 { data: 'DT_RowChecklist', orderable: false, searchable: false},
-                { data: 'DT_RowIndex', searchable: false},
+                { data: 'DT_RowIndex', orderable: false, searchable: false},
                 { data: 'name', orderable: true, searchable: true},
                 { data: 'nip' , orderable: true, searchable: true},
                 { data: 'date' , orderable: true, searchable: true},

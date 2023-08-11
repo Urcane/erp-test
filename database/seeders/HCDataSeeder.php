@@ -197,7 +197,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "2015-01-01",
+                    "1990-01-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -275,7 +275,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "2015-01-01",
+                    "1990-01-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -353,7 +353,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "2015-01-01",
+                    "1990-01-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -431,7 +431,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "2015-01-01",
+                    "1990-01-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -559,18 +559,31 @@ class HCDataSeeder extends Seeder
         $currentDate = $startDate->copy();
 
         while ($currentDate->lte($endDate)) {
+            random_int(1, 200) <= 198 ?
             array_push($data, [
                 'date' => $currentDate->format('Y-m-d'),
-                'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 3)],
+                'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 101) <= 90 ? 1 : random_int(2,3)],
                 'shift_name' => "Shift 1",
                 'working_start' => $workingStartTime,
                 'working_end' => $workingEndTime,
                 'check_in' => random_int(1, 101) <= 90 ?
                     Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(0, 5), 0)
                     : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(6, 10), 0),
-                'check_out' => random_int(1, 101) <= 90 ?
+                'check_out' => random_int(1, 101) <= 80 ?
                     Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 5), 0)
                     : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 16, random_int(50, 54), 0),
+            ]) : array_push($data, [
+                'date' => $currentDate->format('Y-m-d'),
+                'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 3)],
+                'shift_name' => "Shift 1",
+                'working_start' => $workingStartTime,
+                'working_end' => $workingEndTime,
+                'check_in' => random_int(1, 101) <= 20 ?
+                    null
+                    : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(6, 10), 0),
+                'check_out' => random_int(1, 101) <= 90 ?
+                    Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 5), 0)
+                    : null,
             ]);
 
             $currentDate->addDay();
