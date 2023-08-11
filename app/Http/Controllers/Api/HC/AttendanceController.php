@@ -142,6 +142,7 @@ class AttendanceController extends Controller
                     'user_id' => $request->user()->id,
                     'date' => $today,
                     'attendance_code' => $this->constants->attendance_code[0],
+                    'shift_name' => $workingShift->name,
                     'working_start' => $workingShift->working_start,
                     'working_end' => $workingShift->working_end,
                     'late_check_in' => $workingSchedule->late_check_in,

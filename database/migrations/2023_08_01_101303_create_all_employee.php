@@ -175,8 +175,6 @@ class CreateAllEmployee extends Migration
             $table->date("end_date")->nullable()->default(null);
             $table->date("resign_date")->nullable()->default(null);
             $table->foreignId("sub_branch_id")->nullable()->constrained("sub_branches");
-            $table->string("grade", 40);
-            $table->string("class", 40);
             $table->foreignId("working_schedule_shift_id")->constrained("working_schedule_shifts");
             $table->foreignId("approval_line")->nullable()->constrained("users");
             $table->string("barcode")->nullable();

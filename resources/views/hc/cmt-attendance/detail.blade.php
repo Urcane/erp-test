@@ -19,22 +19,74 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-6 align-items-center">
-                            <div class="col-lg-6">
-                                <span class="fs-4 text-uppercase fw-bolder text-dark d-none d-md-block">
-                                    Attendance: {{$user->name}} - {{$user->userEmployment->employee_id}}
-                                </span>
-                            </div>
 
-                            <div class="col-lg-6 d-flex justify-content-end">
-                                <div class="input-group w-150px w-md-250px mx-4">
-                                    <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
-                                    <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
+                        <div class="flex-grow-1 text-center mb-6">
+                            <span class="fs-4 text-uppercase fw-bolder text-dark d-none d-md-block">
+                                Attendance: {{$user->name}} - {{$user->userEmployment->employee_id}}
+                            </span>
+                        </div>
+
+                        <div class="row border rounded p-4 mb-4 justify-content-center">
+                            <div class="col-3">
+                                <p class="fw-bold fs-6 mb-2">Present</p>
+                                <div class="ms-1 row">
+                                    <div class="col">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="on-time">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">On Time</div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="late-clock-in">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">Late Clock In</div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="early-clock-out">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">Early Clock Out</div>
+                                    </div>
                                 </div>
                             </div>
-
-
+                            <div class="col-1"></div>
+                            <div class="col-4">
+                                <p class="fw-bold fs-6 mb-2">Not Present</p>
+                                <div class="ms-1 row">
+                                    <div class="col">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="absent">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">Absent</div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="no-clock-in">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">No Clock In</div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="no-clock-out">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">No Clock Out</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-3">
+                                <p class="fw-bold fs-6 mb-2">Away</p>
+                                <div class="ms-1 row">
+                                    <div class="col-4">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="day-off">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">Day Off</div>
+                                    </div>
+                                    <div class="col-1"></div>
+                                    <div class="col-4">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="time-off">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">Time Off</div>
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="d-flex justify-content-end mb-2">
+                            <div class="input-group w-150px w-md-250px mx-4">
+                                <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
+                                <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-lg-12">
                                 <table class="table align-top border table-rounded gy-5" id="kt_table_attendance">
@@ -91,6 +143,52 @@
         $('input[name="range_date"]').daterangepicker({autoUpdateInput: false}, (from_date, to_date) => {
             $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
         });
+
+        function deleteSummaries() {
+            $('#on-time').html("-");
+            $('#late-clock-in').html("-");
+            $('#early-clock-out').html("-");
+            $('#absent').html("-");
+            $('#no-clock-in').html("-");
+            $('#no-clock-out').html("-");
+            $('#day-off').html("-");
+            $('#time-off').html("-");
+        }
+
+        function renderSummaries() {
+            $.ajax({
+                url: "{{route('hc.att.user-summaries')}}",
+                method: 'GET',
+                data: {
+                    userId: {{$user->id}},
+                    dateFilter: $('#range_date').val()
+                },
+                success: function(data) {
+                    const {
+                        onTimeCount,
+                        lateCheckInCount,
+                        earlyCheckOutCount,
+                        absent,
+                        noCheckInCount,
+                        noCheckOutCount,
+                        dayOffCount,
+                        timeOffCount
+                    } = data;
+
+                    $('#on-time').html(onTimeCount);
+                    $('#late-clock-in').html(lateCheckInCount);
+                    $('#early-clock-out').html(earlyCheckOutCount);
+                    $('#absent').html(absent);
+                    $('#no-clock-in').html(noCheckInCount);
+                    $('#no-clock-out').html(noCheckOutCount);
+                    $('#day-off').html(dayOffCount);
+                    $('#time-off').html(timeOffCount);
+                },
+                error: function(xhr, status, error) {
+                    deleteSummaries();
+                }
+            });
+        }
 
         window.tableAttendance  = $('#kt_table_attendance')
         .DataTable({
@@ -223,8 +321,11 @@
 
         $('#range_date').on('apply.daterangepicker', function(ev, picker) {
             tableAttendance.draw();
-            tableAttendance.draw();
+            deleteSummaries();
+            renderSummaries();
         });
+
+        renderSummaries();
     });
 </script>
 
