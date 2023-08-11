@@ -57,15 +57,15 @@
     </div>
 
     <div class="col-lg-6 mb-3">
-        <label class="d-flex align-items-center fs-6 form-label mb-2" for="branch_id">
+        <label class="d-flex align-items-center fs-6 form-label mb-2" for="sub_branch_id">
             <span class="required fw-bold">Branch</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="branch_id" required name="branch_id" id="branch_id" @unlessrole("administrator") disabled @endunlessrole>
-            @if (($user->userEmployment->branch_id ?? "") == "" && old('branch_id') == null)
+        <select class="drop-data form-select form-select-solid" data-control="sub_branch_id" required name="sub_branch_id" id="sub_branch_id" @unlessrole("administrator") disabled @endunlessrole>
+            @if (($user->userEmployment->sub_branch_id ?? "") == "" && old('sub_branch_id') == null)
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif
-            @foreach ($dataBranch as $option)
-                <option value="{{$option->id}}" @if (($user->userEmployment->branch_id ?? old('branch_id')) == $option->id) selected @endif>{{$option->name}}</option>
+            @foreach ($dataSubBranch as $option)
+                <option value="{{$option->id}}" @if (($user->userEmployment->sub_branch_id ?? old('sub_branch_id')) == $option->id) selected @endif>{{$option->name}}</option>
             @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -109,35 +109,6 @@
             @endif
             @foreach ($dataRole as $option)
                 <option value="{{$option->id}}" @if (!is_null($user) && $user->getRoleNames()[0] == $option->name || old('role_id') == $option->id) selected @endif>{{$option->name}}</option>
-            @endforeach
-        </select>
-        <div class="fv-plugins-message-container invalid-feedback"></div>
-    </div>
-
-    <div class="col-lg-6 mb-3">
-        <label class="d-flex align-items-center fs-6 form-label mb-2" for="grade">
-            <span class="required fw-bold">Grade</span>
-        </label>
-        <select class="drop-data form-select form-select-solid" data-control="grade" required name="grade" id="grade" @unlessrole("administrator") disabled @endunlessrole>
-            @if (($user->userEmployment->grade ?? old('grade')) == null)
-            <option value="" selected hidden disabled>Select Grade</option>
-            @endif
-            @foreach ($allOptions->grade as $grade)
-                <option value="{{$grade}}" @if (($user->userEmployment->grade ?? old('grade')) == $grade) selected @endif>{{$grade}}</option>
-            @endforeach
-        </select>
-        <div class="fv-plugins-message-container invalid-feedback"></div>
-    </div>
-    <div class="col-lg-6 mb-3">
-        <label class="d-flex align-items-center fs-6 form-label mb-2" for="class">
-            <span class="required fw-bold">Class</span>
-        </label>
-        <select class="drop-data form-select form-select-solid" data-control="class" required name="class" id="class" @unlessrole("administrator") disabled @endunlessrole>
-            @if (($user->userEmployment->class ?? old('class')) == null)
-            <option value="" selected hidden disabled>Select Class</option>
-            @endif
-            @foreach ($allOptions->class as $class)
-                <option value="{{$class}}" @if (($user->userEmployment->class ?? old('class')) == $class) selected @endif>{{$class}}</option>
             @endforeach
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>

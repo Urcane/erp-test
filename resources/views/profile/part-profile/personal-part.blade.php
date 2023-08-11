@@ -161,19 +161,19 @@
 
         <div class="tab-pane fade" id="family_content" role="tabpanel">
             <div class="row p-4">
-                @include("hc.cmt-employee.part-profile.part-personal.family-part")
+                @include("profile.part-profile.part-personal.family-part")
             </div>
         </div>
         <div class="tab-pane fade" id="emergency_contact_content" role="tabpanel">
             <div class="row p-4">
-                @include("hc.cmt-employee.part-profile.part-personal.emergency-contact-part")
+                @include("profile.part-profile.part-personal.emergency-contact-part")
             </div>
         </div>
         <div class="tab-pane fade" id="education_experience_content" role="tabpanel">
             <div class="row p-4">
-                @include("hc.cmt-employee.part-profile.part-personal.formal-education")
-                @include("hc.cmt-employee.part-profile.part-personal.non-formal-education")
-                @include("hc.cmt-employee.part-profile.part-personal.working-experience")
+                @include("profile.part-profile.part-personal.formal-education")
+                @include("profile.part-profile.part-personal.non-formal-education")
+                @include("profile.part-profile.part-personal.working-experience")
             </div>
         </div>
     </div>
@@ -222,7 +222,6 @@
                     dataType: 'json',
                     success: function (data) {
                         toastr.success(data.status,'Selamat 🚀 !');
-                        location.reload();
                     },
                     error: function (xhr, status, errorThrown) {
                         $('#kt_personal_data_submit').removeAttr('disabled','disabled');

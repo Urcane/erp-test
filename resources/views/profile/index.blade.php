@@ -133,42 +133,42 @@
 
                                     {{-- Personal --}}
                                     <div class="tab-pane fade show active" id="personal_content" role="tabpanel">
-                                        @include('hc.cmt-employee.part-profile.personal-part')
+                                        @include('profile.part-profile.personal-part')
                                     </div>
 
                                     {{-- Employment Conten --}}
                                     <div class="tab-pane fade" id="employment_content" role="tabpanel">
-                                        @include('hc.cmt-employee.part-profile.employment-part')
+                                        @include('profile.part-profile.employment-part')
                                     </div>
 
                                     {{-- Payroll Content --}}
                                     <div class="tab-pane fade" id="payroll_content" role="tabpanel">
-                                        @include('hc.cmt-employee.part-profile.payroll-part')
+                                        @include('profile.part-profile.payroll-part')
                                     </div>
 
                                     {{-- Time Management Content --}}
                                     <div class="tab-pane fade" id="time_management_content" role="tabpanel">
-                                        @include('hc.cmt-employee.part-profile.time-management-part')
+                                        @include('profile.part-profile.time-management-part')
                                     </div>
 
                                     {{-- Finance Content --}}
                                     <div class="tab-pane fade" id="finance_content" role="tabpanel">
-                                        @include('hc.cmt-employee.part-profile.finance')
+                                        @include('profile.part-profile.finance')
                                     </div>
 
                                     {{-- Files Content --}}
                                     <div class="tab-pane fade" id="files_content" role="tabpanel">
-                                        @include('hc.cmt-employee.part-profile.file-part')
+                                        @include('profile.part-profile.file-part')
                                     </div>
 
                                     {{-- Assets Content --}}
                                     <div class="tab-pane fade" id="assets_content" role="tabpanel">
-                                        @include('hc.cmt-employee.part-profile.assets-part')
+                                        @include('profile.part-profile.assets-part')
                                     </div>
 
                                     {{-- History Content --}}
                                     <div class="tab-pane fade" id="history_content" role="tabpanel">
-                                        @include('hc.cmt-employee.part-profile.history-part')
+                                        @include('profile.part-profile.history-part')
                                     </div>
                                 </div>
                             </div>

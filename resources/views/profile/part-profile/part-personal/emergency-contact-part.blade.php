@@ -83,32 +83,13 @@
 <script>
     var dataTableEmergencyContact;
 
-    function deleteEmergencyContact(id) {
-        $.ajax({
-            url: "{{ route('hc.emp.delete-emergency-contact') }}",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            data: { id : id},
-            success: function(data) {
-                dataTableEmergencyContact.ajax.reload();
-                toastr.success(data.message,'Selamat 🚀 !');
-            },
-            error: function(xhr, status, error) {
-                const data = JSON.parse(xhr.responseText);
-                toastr.error(errorThrown ,'Opps!');
-            }
-        });
-    }
-
     $(".btn_tambah_contact").on( "click", function() {
         $("[name='id']").val("")
         $("input:not([name='user_id'])").val("")
     })
 
     $( "#emergency_contact" ).on( "click", function() {
-        dataTable = $('#tb_emergency_contact_content').DataTable({
+        dataTableEmergencyContact = $('#tb_emergency_contact_content').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
@@ -169,6 +150,25 @@
         });
     })
 
+    function deleteEmergencyContact(id) {
+        $.ajax({
+            url: "{{ route('hc.emp.delete-emergency-contact') }}",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            data: { id : id},
+            success: function(data) {
+                dataTableEmergencyContact.ajax.reload();
+                toastr.success(data.message,'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = JSON.parse(xhr.responseText);
+                toastr.error(errorThrown ,'Opps!');
+            }
+        });
+    }
+
     $('#modal_create_emergency_contact_form').submit(function(event) {
         event.preventDefault();
         var formData = $(this).serialize();
@@ -180,7 +180,7 @@
             type: 'POST',
             data: formData,
             success: function(data) {
-                dataTable.ajax.reload();
+                dataTableEmergencyContact.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {

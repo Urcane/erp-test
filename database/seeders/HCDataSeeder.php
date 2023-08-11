@@ -13,6 +13,7 @@ use App\Models\Employee\UserPersonalData;
 use App\Models\Employee\UserSalary;
 use App\Models\Employee\UserTax;
 use App\Models\Employee\Branch;
+use App\Models\Employee\SubBranch;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
@@ -39,11 +40,35 @@ class HCDataSeeder extends Seeder
 
     public function run()
     {
+        $branch = Branch::create([
+            "industry" => "Teknologi",
+            "company_size" => "0-50 Employee",
+            "company_taxable_date" => "10 June 2003",
+            "head_office_initial" => "Kantor Pusat",
+            "umr" => "3.324.000",
+            "bpjs_ketenagakerjaan" => "0000000000",
+            "jaminan_kecelakaan_kerja" => "1-0.24%",
+        ]);
         collect([
-            "Pusat", "Cabang"
+            ["PT Group Utama", "0812331223", "Jakarta", "Jakarta", "Jln Sidoarjo RT 15 No 15", "1234324123133", "PT Group Utama", "12334345234", "Bowo", "Kode KLU", "9fThLIMy32MWG1dEizgVNSlha5HQKUsjvN0ZKkxH.png", $branch->id, null, "GroupUtama@gmail.com"],
+            ["PT Anak Balikpapan", "093248439535", "Balikpapan", "Kalimantan timur", "Jln Sidoarjo RT 15 No 15", "1234324123133", "PT Anak Balikpapan", "12334345234", "Bowo", "Kode KLU", "9fThLIMy32MWG1dEizgVNSlha5HQKUsjvN0ZKkxH.png", null, 1, "balikpapan@gmail.com"],
+            ["PT Anak Samarinda", "093248439535", "Samarinda", "Kalimantan timur", "Jln Sidoarjo RT 15 No 15", "1234324123133", "PT Anak Samarinda", "12334345234", "Bowo", "Kode KLU", "9fThLIMy32MWG1dEizgVNSlha5HQKUsjvN0ZKkxH.png", null, 1, "samarinda@gmail.com"]
         ])->map(function ($data) {
-            Branch::create([
-                "name" => $data
+            SubBranch::create([
+                "name"=> $data[0],
+                "phone_number"=> $data[1],
+                "city"=> $data[2],
+                "province"=> $data[3],
+                "address"=> $data[4],
+                "npwp"=> $data[5],
+                "tax_name"=> $data[6],
+                "tax_person_npwp"=> $data[7],
+                "tax_person_name"=> $data[8],
+                "klu"=> $data[9],
+                "signature"=> $data[10],
+                "branch_id"=> $data[11],
+                "parent_id"=> $data[12],
+                "email"=> $data[13],
             ]);
         });
 
@@ -229,7 +254,7 @@ class HCDataSeeder extends Seeder
                     "2021-09-09",
                     null,
                     null,
-                    1,
+                    2,
                     "AAA",
                     "AAA",
                     1,
@@ -307,7 +332,7 @@ class HCDataSeeder extends Seeder
                     "2021-09-09",
                     null,
                     null,
-                    1,
+                    2,
                     "AAA",
                     "AAA",
                     1,
@@ -385,7 +410,7 @@ class HCDataSeeder extends Seeder
                     "2021-09-09",
                     null,
                     null,
-                    1,
+                    3,
                     "AAA",
                     "AAA",
                     1,
@@ -490,7 +515,7 @@ class HCDataSeeder extends Seeder
             "join_date" => date('Y-m-d', strtotime($join)),
             "end_date" => date('Y-m-d', strtotime($end)) ?? null,
             "resign_date" => date('Y-m-d', strtotime($resign)) ?? null,
-            "branch_id" => $branch,
+            "sub_branch_id" => $branch,
             "grade" => $grade,
             "class" => $class,
             "working_schedule_shift_id" => $schedule,

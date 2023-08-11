@@ -24,7 +24,7 @@ use App\Models\Employee\UserPersonalData;
 use App\Models\Employee\UserSalary;
 use App\Models\Employee\UserTax;
 use App\Models\Employee\EmploymentStatus;
-use App\Models\Employee\Branch;
+use App\Models\Employee\SubBranch;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
@@ -77,9 +77,7 @@ class ProfileController extends Controller
             'employment_status_id' => 'required|exists:employment_statuses,id',
             'join_date' => 'required|date',
             'end_date' => 'nullable|date',
-            'branch_id' => 'nullable|exists:branches,id',
-            'grade' => 'required|string|max:40',
-            'class' => 'required|string|max:40',
+            'sub_branch_id' => 'nullable|exists:sub_branches,id',
             'working_schedule_shift_id' => 'required|exists:working_schedules,id',
             'approval_line' => 'nullable|exists:users,id',
             'barcode' => 'nullable|string|max:255',
@@ -165,9 +163,7 @@ class ProfileController extends Controller
                 'employment_status_id' => $request->employment_status_id,
                 'join_date' => $request->join_date,
                 'end_date' => $request->end_date,
-                'branch_id' => $request->branch_id,
-                'grade' => $request->grade,
-                'class' => $request->class,
+                'sub_branch_id' => $request->sub_branch_id,
                 'working_schedule_shift_id' => $request->working_schedule_shift_id,
                 'approval_line' => $request->approval_line,
                 'barcode' => $request->barcode,
@@ -237,7 +233,7 @@ class ProfileController extends Controller
         $users = User::get();
         $dataTeam = Team::get();
         $dataEmploymentStatus = EmploymentStatus::all();
-        $dataBranch = Branch::all();
+        $dataSubBranch = SubBranch::all();
         $dataTaxStatus = TaxStatus::all();
         $dataWorkingScheduleShift = WorkingScheduleShift::all();
 
@@ -245,7 +241,7 @@ class ProfileController extends Controller
         $dataPaymentSchedule = PaymentSchedule::all();
         $dataProrateSetting = ProrateSetting::all();
 
-        return view('hc.cmt-employee.profile',compact(
+        return view('profile.index',compact(
             'user',
             'users',
             "dataNonFormalEducationCategory",
@@ -256,7 +252,7 @@ class ProfileController extends Controller
             "dataDivision",
             'allOptions',
             "dataEmploymentStatus",
-            "dataBranch",
+            "dataSubBranch",
             "dataWorkingScheduleShift",
             "dataPaymentSchedule",
             "dataProrateSetting",
@@ -276,9 +272,7 @@ class ProfileController extends Controller
             'employment_status_id' => 'required|exists:employment_statuses,id',
             'join_date' => 'required|date',
             'end_date' => 'nullable|date',
-            'branch_id' => 'nullable|exists:branches,id',
-            'grade' => 'required|string|max:40',
-            'class' => 'required|string|max:40',
+            'sub_branch_id' => 'nullable|exists:sub_branches,id',
             'working_schedule_shift_id' => 'required|exists:working_schedules,id',
             'approval_line' => 'nullable|exists:users,id',
             'barcode' => 'nullable|string|max:255',
@@ -299,9 +293,7 @@ class ProfileController extends Controller
             'employment_status_id' => $request->employment_status_id,
             'join_date' => $request->join_date,
             'end_date' => $request->end_date,
-            'branch_id' => $request->branch_id,
-            'grade' => $request->grade,
-            'class' => $request->class,
+            'sub_branch_id' => $request->sub_branch_id,
             'working_schedule_shift_id' => $request->working_schedule_shift_id,
             'approval_line' => $request->approval_line,
             'barcode' => $request->barcode,

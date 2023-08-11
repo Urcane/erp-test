@@ -4,7 +4,7 @@ namespace App\Models\Employee;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Branch extends Model
 {
@@ -12,8 +12,8 @@ class Branch extends Model
 
     protected $guarded = [];
 
-    public function userEmployments(): HasMany
+    public function subBranch(): HasOne
     {
-        return $this->hasMany(UserEmployment::class);
+        return $this->hasMany(SubBranch::class);
     }
 }
