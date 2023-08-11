@@ -19,8 +19,9 @@ class ItemableBillOfQuantity extends Model
     use HasFactory;
     protected $guarded = [];
 
-    function itemableBillOfQuantity() : MorphMany{
-        return $this->morphMany(Item::class, 'itemable','itemable_id', 'id');
+    function itemable(): MorphMany
+    {
+        return $this->morphMany(Item::class, 'itemable');
     }
 
     function itemableBillOfQuantityLog() : HasOne{

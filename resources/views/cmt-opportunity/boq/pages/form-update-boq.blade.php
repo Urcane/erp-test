@@ -28,7 +28,7 @@
     {{-- FORM BOQ --}}
     {{-- @dd($dataCompany) --}}
     {{-- @dd($dataProspect)  --}}
-    @dd($dataItems)
+    {{-- @dd($dataItems) --}}
 
 
     <div class="row justify-content-center">
@@ -134,7 +134,7 @@
                                                 @foreach ($dataItems as $itemableBillOfQuantity)
                                                     <!-- Display data from $itemableBillOfQuantity -->
 
-                                                    @foreach ($itemableBillOfQuantity->itemableBillOfQuantities as $relatedItem)
+                                                    @foreach ($itemableBillOfQuantity->itemable as $relatedItem)
                                                         <!-- Display data from $relatedItem -->
                                                         @php
                                                             $random_string = \Illuminate\Support\Str::random(4);

@@ -67,17 +67,18 @@ class BoQRepository
             $itemsData = $request->input('items');
 
             foreach ($itemsData as $itemData) {
-                // Buat array yang berisi kriteria pencarian berdasarkan 'id' (jika id ada dalam $itemData)
+                // // Buat array yang berisi kriteria pencarian berdasarkan 'id' (jika id ada dalam $itemData)
                 $criteria = [
+                    // 'id' => $itemData->id
                     'itemable_id' => $itemableBoq->id,
                     'itemable_type' => $itemableBoq->itemable_type,
                     // dan lain-lain... (jika ada kriteria lainnya yang unik)
                 ];
 
                 // Jika id ada dalam $itemData, tambahkan 'id' ke dalam kriteria pencarian
-                if (isset($itemData['id'])) {
-                    $criteria['id'] = $itemData['id'];
-                }
+                // if (isset($itemData['id'])) {
+                //     $criteria['id'] = $itemData['id'];
+                // }
             
                 // Buat array yang berisi data untuk menciptakan item baru atau data perubahan
                 $data = [
@@ -88,14 +89,16 @@ class BoQRepository
                     'purchase_refrence' => $itemData['purchase_reference'],
                     'item_inventory_id' => $itemData['item_inventory_id'],
                     'item_detail' => $itemData['item_detail'],
-                    'itemable_id' => $itemableBoq->id,
-                    'itemable_type' => 'App\Models\Opportunity\BoQ\ItemableBillOfQuantities',
+                    // 'itemable_id' => $itemableBoq->id,
+                    // 'itemable_type' => 'App\Models\Opportunity\BoQ\ItemableBillOfQuantities',
                     // dan lain-lain...
                 ];
             
-                // Cari atau buat item berdasarkan kriteria, dan asosiasikan dengan itemable boq
-                $item = Item::updateOrCreate($criteria, $data);
-                // dd($item); aman
+                // // Cari atau buat item berdasarkan kriteria, dan asosiasikan dengan itemable boq
+                // $item = Item::updateOrCreate($criteria, $data);
+                // // dd($item); aman
+
+                $itemableBoq->itemable()->updateOrCreate($criteria, $data);
             }
 
             // Commit the transaction
