@@ -57,10 +57,10 @@
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $dataCompany->prospect_title }} - {{ $dataCompany->customer->customer_name }}">
+                                                    placeholder="{{ $dataCompany->prospect_title ?? null}} {{ $dataCompany->customer->customer_name ?? null }}">
 
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    name="prospect_id" id="prospect_id" value="{{ $dataCompany->id }}">
+                                                    name="prospect_id" id="prospect_id" value="{{ $dataCompany->id ?? null }}">
 
                                                 <div id="error-prospect"></div>
                                             </div>
@@ -87,7 +87,7 @@
                                                 <label for="" class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     name="customer_name" id="customer_name"
-                                                    value="{{ $dataCompany->customer->customer_name }}">
+                                                    value="{{ $dataCompany->customer->customer_name ?? null }}">
                                             </div>
 
                                             <div class=""
@@ -95,7 +95,7 @@
                                                 <label for="" class=" form-label">Nama Kontak Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
-                                                    value="{{ $dataCompany->customer->customerContact->customer_contact_name }}"
+                                                    value="{{ $dataCompany->customer->customerContact->customer_contact_name ?? null }}"
                                                     name="">
                                             </div>
 
@@ -108,7 +108,7 @@
                                                     <input type="number" class="form-control form-control-solid" disabled
                                                         minlength="8" name="customer_contact_phone"
                                                         id="customer_contact_phone"
-                                                        value="{{ $dataCompany->customer->customerContact->customer_contact_phone }}"
+                                                        value="{{ $dataCompany->customer->customerContact->customer_contact_phone ?? null }}"
                                                         name="" />
                                                 </div>
                                             </div>
@@ -118,7 +118,7 @@
                                                 <label for="" class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
-                                                    value="{{ $dataCompany->customer->bussinesType->type_name }}">
+                                                    value="{{ $dataCompany->customer->bussinesType->type_name ?? null }}">
                                             </div>
                                         </div>
                                     </div>

@@ -83,7 +83,7 @@
                                             <span class="required fw-bold">Harga Beli</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total');"
                                             name="purchase_price">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
@@ -92,7 +92,7 @@
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount()" name="quantity">
+                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total');" name="quantity">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                 </div>
@@ -105,7 +105,7 @@
                                             <span class="required fw-bold">Jasa antar</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total');"
                                             name="purchase_delivery">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
@@ -115,7 +115,6 @@
                                         </label>
                                         <input type="text" class="form-control form-control-solid"
                                             name="purchase_reference">
-                                        {{-- <div class="fv-plugins-message-container invalid-feedback"></div> --}}
                                     </div>
                                 </div>
                             </div>

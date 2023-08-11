@@ -75,7 +75,7 @@
                                             <span class="required fw-bold">Harga Beli</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update');"
                                             name="purchase_price">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
@@ -84,7 +84,7 @@
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount()" name="quantity">
+                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update');" name="quantity">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
                                             <span class="required fw-bold">Jasa antar</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount()"
+                                            min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update');"
                                             name="purchase_delivery">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
@@ -113,7 +113,7 @@
 
                             <div class="d-flex justify-content-end ">
                                 <div class="w-20 me-10">
-                                    <span class="fw-bold">Total Amount : Rp. <span id="total"></span></span>
+                                    <span class="fw-bold">Total Amount : Rp. <span id="total_update"></span></span>
                                     <input type="hidden" class="form-control form-control-solid total" name="total" value=""/>
                                 </div>
                             </div>

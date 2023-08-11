@@ -319,17 +319,18 @@
         };
 
         //  function kalkulasi total di Modal
-        function calculateTotalAmount() {
-            // Mengambil nilai dari masing-masing input
-            const purchasePrice = parseFloat(document.getElementsByName('purchase_price')[0].value);
-            const quantity = parseInt(document.getElementsByName('quantity')[0].value);
-            const purchaseDelivery = parseFloat(document.getElementsByName('purchase_delivery')[0].value);
+        function calculateTotalAmount(totalElementId) {
+            // Mengambil nilai dari masing-masing input menggunakan querySelector
+            const purchasePrice = parseFloat(document.querySelector(`#${totalElementId} [name='purchase_price']`).value);
+            const quantity = parseInt(document.querySelector(`#${totalElementId} [name='quantity']`).value);
+            const purchaseDelivery = parseFloat(document.querySelector(`#${totalElementId} [name='purchase_delivery']`).value);
+
 
             // Cek jika nilai purchasePrice dan quantity adalah angka
             if (isNaN(purchasePrice) || isNaN(quantity)) {
                 // Jika ada input yang belum diisi atau bukan angka, tampilkan hasil kosong dan return
-                document.getElementById('total').textContent = "";
-                const hiddenTotalInput = document.querySelector('.total');
+                document.getElementById(totalElementId).textContent = "";
+                const hiddenTotalInput = document.querySelector(totalElementId);
                 hiddenTotalInput.value = ""; // Set the hidden input value to empty string
                 return;
             }
@@ -345,8 +346,8 @@
             // Cek jika totalAmount melebihi 12 karakter
             // 9,007,199,254,740,991 maksimal karakter number
             if (totalAmount.toString().length > 15) {
-                document.getElementById('total').textContent = "Melewati limit angka";
-                const hiddenTotalInput = document.querySelector('.total');
+                document.getElementById(totalElementId).textContent = "Melewati limit angka";
+                const hiddenTotalInput = document.querySelector(totalElementId);
                 hiddenTotalInput.value = ""; // Set the hidden input value to empty string
                 return;
             }
@@ -355,12 +356,13 @@
             const totalAmountWithCommas = new Intl.NumberFormat("rid").format(totalAmount);
 
             // Mengatur nilai total pada elemen dengan id 'totalDisplay'
-            document.getElementById('total').textContent = totalAmountWithCommas;
+            document.getElementById(totalElementId).textContent = totalAmountWithCommas;
 
             // Mengatur nilai total pada elemen dengan class 'total' (hidden input)
-            const hiddenTotalInput = document.querySelector('.total');
+            const hiddenTotalInput = document.querySelector(totalElementId);
             hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
         }
+
 
         $(document).ready(function() {
 
@@ -441,6 +443,7 @@
                     $('#error-item').empty();
                 }
                 console.log(items);
+
                 // Send the data to the server using AJAX
                 $.ajax({
                     url: "{{ route('com.boq.save.boq') }}",
@@ -466,12 +469,8 @@
                 var randomString = $(this).data('random-string');
                 var itemId = parseInt($(this).data('item-id'));
 
-                // console.log("Random String:", randomString);
-                // console.log("Item ID:", itemId)
-
                 $('#good_name_update').val(itemId).trigger('change');
 
-                // Show the "Update BOQ" modal
                 $('#kt_modal_update_boq').modal('show');
             });
 
@@ -577,7 +576,6 @@
                         value: itemName
                     });
 
-
                     // Append the hidden input to the form
                     $(form).append(itemNameInput);
                     // console.log(form);
@@ -671,18 +669,8 @@
                     $('.MultipleItem').on('click', '.btn-update-boq-modal', function() {
                         var randomString = $(this).data('random-string');
                         var itemId = $(this).data('item-id');
-
-                        console.log("Random String:", randomString);
-                        console.log("Item ID:", itemId)
-                        // Your existing code to reset modal form and enable elements
-                        // $('.drop-data').val("").trigger("change");
-                        // $('#kt_modal_update_boq_form').trigger("reset");
-                        // $('#kt_modal_update_boq_submit').removeAttr('disabled', 'disabled');
-
-                        // Show the "Update BOQ" modal
+                        $('#good_name_update').val(itemId).trigger('change');
                         $('#kt_modal_update_boq').modal('show');
-
-                        // You can now use the randomString and itemId as needed;
                     });
 
                     // Tambahkan item baru ke div "MultipleItem"

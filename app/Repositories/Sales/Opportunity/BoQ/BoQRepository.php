@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Sales\Opportunity\BoQ;
 
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Opportunity\BoQ\Item;
@@ -27,31 +26,16 @@ class BoQRepository
     protected $modelLog;
     protected $customerProspect;
 
-    function __construct(ItemableBillOfQuantity $model, CustomerProspect $customerProspect, ItemableBillOfQuantityLog $modelLog){
+    function __construct(ItemableBillOfQuantity $model, CustomerProspect $customerProspect, ItemableBillOfQuantityLog $modelLog)
+    {
         $this->model = $model;
         $this->modelLog = $modelLog;
         $this->customerProspect = $customerProspect;
     }
 
-    function getAll(Request $request){
-        $dataBoq = $this->model->with([ 'itemableBillOfQuantity', 'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
-
-        if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'true') {
-            $dataBoq;
-        }
-
-        if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'false') {
-            $dataBoq->where('is_draft',0);
-        }
-
-        if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'true') {
-            $dataBoq->where('is_done',1);
-        }
-
-        if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'false') {
-            $dataBoq->where('is_done',0);
-        }
-        
+    function getAll(Request $request)
+    {
+        $dataBoq = $this->model->with(['itemableBillOfQuantityLog' ,'itemableBillOfQuantity', 'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
         return $dataBoq;
     }    
 
@@ -65,7 +49,6 @@ class BoQRepository
             $boqData = [
                 'prospect_id' => $request->input('boq.prospect_id'),
                 'survey_request_id' => $request->input('boq.survey_request_id'),
-                // Tambahkan properti lain untuk data itemable boq
             ];
             
             // Cari atau buat itemable boq berdasarkan 'prospect_id'
@@ -74,30 +57,26 @@ class BoQRepository
                 $boqData
             );
             
-            // // If provided, delete the associated item for the provided itemableBoqId
+            // If provided, delete the associated items for the provided itemableBoqId
             if (isset($itemableBoq->id)) {
-                // Get the IDs of items associated with the provided itemable boq ID
                 $itemIds = Item::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
-                // Delete the associated items
                 Item::whereIn('id', $itemIds)->delete();
             }
 
             // Dapatkan data untuk semua item dari request
-            $itemsData = $request->input('item');
+            $itemsData = $request->input('items');
 
             foreach ($itemsData as $itemData) {
-                // // Buat array yang berisi kriteria pencarian berdasarkan 'id' (jika id ada dalam $itemData)
+                // Buat array yang berisi kriteria pencarian berdasarkan 'id' (jika id ada dalam $itemData)
                 $criteria = [
-                    // 'id' => $itemData->id
                     'itemable_id' => $itemableBoq->id,
-                    'itemable_type' => $itemableBoq->itemable_type,
-                    // dan lain-lain... (jika ada kriteria lainnya yang unik)
+                    'itemable_type' => $itemableBoq->itemable_type, 
                 ];
 
                 // Jika id ada dalam $itemData, tambahkan 'id' ke dalam kriteria pencarian
-                // if (isset($itemData['id'])) {
-                //     $criteria['id'] = $itemData['id'];
-                // }
+                if (isset($itemData['id'])) {
+                    $criteria['id'] = $itemData['id'];
+                }
             
                 // Buat array yang berisi data untuk menciptakan item baru atau data perubahan
                 $data = [
@@ -108,36 +87,40 @@ class BoQRepository
                     'purchase_refrence' => $itemData['purchase_reference'],
                     'item_inventory_id' => $itemData['item_inventory_id'],
                     'item_detail' => $itemData['item_detail'],
-                    // 'itemable_id' => $itemableBoq->id,
-                    // 'itemable_type' => 'App\Models\Opportunity\BoQ\ItemableBillOfQuantities',
-                    // dan lain-lain...
                 ];
             
-                // // Cari atau buat item berdasarkan kriteria, dan asosiasikan dengan itemable boq
                 // $item = Item::updateOrCreate($criteria, $data);
-                // // dd($item); aman
-
                 $itemableBoq->itemable()->updateOrCreate($criteria, $data);
             }
-
             // Commit the transaction
             DB::commit();
 
-            return response()->json(['message' => 'BoQ and item successfully created.'], 200);
-        } catch (Exception $e) {
-            // Something went wrong, rollback the transaction
+            return response()->json(['message' => 'BoQ and items successfully created.'], 200);
+        } catch (Exception $e) { 
             DB::rollback();
             return response()->json(['error' => $e], 500);
         }
     }   
 
-    function getDataWithoutId()  {
+    function getDataWithoutId()  
+    {
         $dataWithId = $this->customerProspect->with(['customer.customerContact' ,'customer.bussinesType' ])();
         return $dataWithId;
     }
 
-    function getDataWithId($id)  {
+    function getDataWithId($id)  
+    {
         $dataWithId = $this->customerProspect->with(['customer.customerContact' ,'customer.bussinesType' ]);
         return $dataWithId;
+    }
+  
+    function getItemName() 
+    {
+        $item = $this->model->itemableBillOfQuantity; 
+        if ($item instanceof InventoryGoods) {
+            $inventoryGoods = $item->name;
+            return $inventoryGoods;
+        } 
+        return null;
     }
 }
