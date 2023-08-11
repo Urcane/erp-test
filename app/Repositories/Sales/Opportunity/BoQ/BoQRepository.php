@@ -10,6 +10,7 @@ use App\Models\Customer\CustomerProspect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantityLog;
+use App\Models\Inventory\InventoryGood;
 
 //use Your Model
 
@@ -75,27 +76,28 @@ class BoQRepository
             
             // // If provided, delete the associated item for the provided itemableBoqId
             if (isset($itemableBoq->id)) {
-                // Get the IDs of item associated with the provided itemable boq ID
+                // Get the IDs of items associated with the provided itemable boq ID
                 $itemIds = Item::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
-                // Delete the associated item
+                // Delete the associated items
                 Item::whereIn('id', $itemIds)->delete();
             }
 
             // Dapatkan data untuk semua item dari request
-            $itemData = $request->input('item');
+            $itemsData = $request->input('item');
 
-            foreach ($itemData as $itemData) {
-                // Buat array yang berisi kriteria pencarian berdasarkan 'id' (jika id ada dalam $itemData)
+            foreach ($itemsData as $itemData) {
+                // // Buat array yang berisi kriteria pencarian berdasarkan 'id' (jika id ada dalam $itemData)
                 $criteria = [
+                    // 'id' => $itemData->id
                     'itemable_id' => $itemableBoq->id,
                     'itemable_type' => $itemableBoq->itemable_type,
                     // dan lain-lain... (jika ada kriteria lainnya yang unik)
                 ];
 
                 // Jika id ada dalam $itemData, tambahkan 'id' ke dalam kriteria pencarian
-                if (isset($itemData['id'])) {
-                    $criteria['id'] = $itemData['id'];
-                }
+                // if (isset($itemData['id'])) {
+                //     $criteria['id'] = $itemData['id'];
+                // }
             
                 // Buat array yang berisi data untuk menciptakan item baru atau data perubahan
                 $data = [
@@ -106,14 +108,16 @@ class BoQRepository
                     'purchase_refrence' => $itemData['purchase_reference'],
                     'item_inventory_id' => $itemData['item_inventory_id'],
                     'item_detail' => $itemData['item_detail'],
-                    'itemable_id' => $itemableBoq->id,
-                    'itemable_type' => 'App\Models\Opportunity\BoQ\ItemableBillOfQuantity',
+                    // 'itemable_id' => $itemableBoq->id,
+                    // 'itemable_type' => 'App\Models\Opportunity\BoQ\ItemableBillOfQuantities',
                     // dan lain-lain...
                 ];
             
-                // Cari atau buat item berdasarkan kriteria, dan asosiasikan dengan itemable boq
-                $item = Item::updateOrCreate($criteria, $data);
-                // dd($item); aman
+                // // Cari atau buat item berdasarkan kriteria, dan asosiasikan dengan itemable boq
+                // $item = Item::updateOrCreate($criteria, $data);
+                // // dd($item); aman
+
+                $itemableBoq->itemable()->updateOrCreate($criteria, $data);
             }
 
             // Commit the transaction

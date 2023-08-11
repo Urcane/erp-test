@@ -3,7 +3,7 @@
 namespace App\Models\Opportunity\BoQ;
 
 use App\Models\User;
-use App\Models\Opportunity\BoQ\Items;
+use App\Models\Opportunity\BoQ\Item;
 use App\Models\Customer\CustomerProspect;
 
 use Illuminate\Database\Eloquent\Model;
@@ -19,8 +19,9 @@ class ItemableBillOfQuantity extends Model
     use HasFactory;
     protected $guarded = [];
 
-    function itemableBillOfQuantity() : MorphMany{
-        return $this->morphMany(Item::class, 'itemable','itemable_type', 'itemable_id');
+    function itemable(): MorphMany
+    {
+        return $this->morphMany(Item::class, 'itemable');
     }
 
     function itemableBillOfQuantityLog() : HasOne{

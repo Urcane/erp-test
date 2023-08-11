@@ -15,19 +15,27 @@ class Item extends Model
     use HasFactory;
     protected $guarded = [];
 
-    function itemable() : MorphTo{
-        return $this->morphTo('itemable');
+    public function itemable(): MorphTo {
+        return $this->morphTo();
     }
 
-    function inventoryGood() : BelongsTo{
+    public function inventoryGood(): BelongsTo {
         return $this->belongsTo(InventoryGood::class, 'item_inventory_id', 'id');
     }
 
-    function parentItem() : BelongsTo{
+    // function itemable() : MorphTo {
+    //     return $this->morphTo('itemable');
+    // }
+
+    // function inventoryGood() : BelongsTo{
+    //     return $this->belongsTo(InventoryGood::class, 'item_inventory_id', 'id');
+    // }
+
+    function parentItem() : BelongsTo {
         return $this->belongsTo(this::class, 'itemable_id', 'id');
     }
 
-    function childItem() : HasOne{
+    function childItem() : HasOne {
         return $this->hasOne(this::class, 'itemable_id', 'id');
     }
 }

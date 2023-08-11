@@ -6,30 +6,28 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
- 
 
-
+use App\Models\Inventory\InventoryGood;
+use App\Models\Customer\CustomerProspect;
 use App\Models\Opportunity\BoQ\Item;
+use App\Models\Opportunity\Survey\SurveyRequest;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
+
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 
-use App\Models\Inventory\InventoryGood;
 use Yajra\DataTables\Facades\DataTables;
-use App\Models\Customer\CustomerProspect;
-use App\Services\Master\Item\ItemService;
-use App\Models\Opportunity\Survey\SurveyRequest;
-
-use App\Services\Sales\Opportunity\BoQ\BoQService;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+use App\Services\Master\Item\ItemService;
 use App\Services\Master\Inventory\InventoryService;
-use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
-use App\Services\Sales\Opportunity\BoQ\BoQDraftService;
+use App\Services\Sales\Opportunity\BoQ\BoQService;
+use App\Services\Sales\Opportunity\Survey\SurveyResultService;
+
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyRequestRequest;
-use App\Services\Sales\Opportunity\Survey\SurveyResultService;
 
 
 class BoQController extends Controller
@@ -51,14 +49,15 @@ class BoQController extends Controller
         ItemService $ItemService,
         CustomerProspect $customerProspect,
         User $employees
-        ) {
+        ) 
+    {
             $this->surveyResultService = $surveyResultService;
             $this->BoqService = $BoqService;
             $this->InventoryService = $InventoryService;
             $this->ItemService = $ItemService;
             $this->customerProspect = $customerProspect;
             $this->employees = $employees;
-        }
+    }
         
         function index() {
             return view('cmt-opportunity.boq.index');
@@ -89,14 +88,13 @@ class BoQController extends Controller
                 // kondisi url ada
 
                 // Retrieve the items related to the specified prospectId
-                $dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospectId)->get();
-            
+                
                 $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->get();
                 $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
                 $dataForm = $this->InventoryService->getDataForm();
             
                 // Pass all the required data to the view
-                return view('cmt-opportunity.boq.pages.form-boq', compact('dataItems', 'dataForm', 'dataCompany', 'dataProspect'));
+                return view('cmt-opportunity.boq.pages.form-boq', compact('dataForm', 'dataCompany', 'dataProspect'));
     
             } else {
                 // Jika tidak ada prospect_id dari query string, gunakan inputan prospect_title untuk mendapatkan data company yang relevan
@@ -115,29 +113,28 @@ class BoQController extends Controller
             return response()->json('Oops, Somethin\' Just Broke :(');
         }
         
-        function formUpdateBoQ(Request $request){
+        function formUpdateBoQ(Request $request) {
             // Ambil nilai prospect_id dari query string
             $prospectId = $request->query('prospect_id');
             $surveyRequestId = $request->query('survey_request_id');
-            $surveyRequestId = $request->query('survey_request_id');
 
             // Jika ada prospect_id dari query string, gunakan untuk mendapatkan semua data Company dan semua prospect id
-            if ($prospectId || $surveyRequestId) {
-                // kondisi url ada
+           
+            // kondisi url ada
 
-                // Retrieve the items related to the specified prospectId
-                $dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospectId)->get();
-            
-                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->get();
-                $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
-                $dataForm = $this->InventoryService->getDataForm();
-            
-                // Pass all the required data to the view
-                return view('cmt-opportunity.boq.pages.form-update-boq', compact('dataItems', 'dataForm', 'dataCompany', 'dataProspect'));
-            } 
+            // Retrieve the items related to the specified prospectId
+            // $dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospectId)->get(); 
+            $dataItems = ItemableBillOfQuantity::with('itemable.inventoryGood')->where("prospect_id",$prospectId)->get();
+
+            $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->get();
+            $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
+            $dataForm = $this->InventoryService->getDataForm();
+        
+            // Pass all the required data to the view
+            return view('cmt-opportunity.boq.pages.form-update-boq', compact('dataItems', 'dataForm', 'dataCompany', 'dataProspect'));
         }
 
-        public function getSurveyCompanyItemInventory(Request $request){
+        public function getSurveyCompanyItemInventory(Request $request) {
             try {
                 // Your existing code...
                 if ($request->ajax()) {
@@ -188,3 +185,4 @@ class BoQController extends Controller
         }
         
     }
+    

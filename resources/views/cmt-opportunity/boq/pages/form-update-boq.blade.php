@@ -131,10 +131,10 @@
                                             {{-- inputan dari modal masuk kesni --}}
                                             @if (isset($dataItems))
 
-                                                @foreach ($dataItems as $itemableBillOfQuantities)
-                                                    <!-- Display data from $itemableBillOfQuantities -->
+                                                @foreach ($dataItems as $itemableBillOfQuantity)
+                                                    <!-- Display data from $itemableBillOfQuantity -->
 
-                                                    @foreach ($itemableBillOfQuantities->itemableBillOfQuantities as $relatedItem)
+                                                    @foreach ($itemableBillOfQuantity->itemable as $relatedItem)
                                                         <!-- Display data from $relatedItem -->
                                                         @php
                                                             $random_string = \Illuminate\Support\Str::random(4);
@@ -367,7 +367,7 @@
 
             // function Submit BOQ page BENERAN wkwkw
             $('#submit-all-items').on('click', function(event) {
-                // event.preventDefault();
+                event.preventDefault();
 
                 // Get Prospect ID and Survey ID from the HTML elements
                 var prospect_id = $('#prospect_id').val();

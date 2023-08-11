@@ -17,7 +17,7 @@ class ItemRepository
      */
     protected $model;
 
-    public function model(Items $model)
+    public function model(Item $model)
     {
         $this->model = $model;
     }
