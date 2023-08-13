@@ -74,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('cmt-survey')->group(function () {
             Route::get('/','index')->name('com.survey.index');
             Route::get('/soft-survey','indexSoftSurvey')->name('com.soft-survey.index');
+            Route::get('/soft-survey/{surveyRequest}','detailSoftSurvey')->name('com.soft-survey.detail');
             Route::get('/survey-result-internet','indexSurveyResultInternet')->name('com.site-survey.internet.index');
             Route::get('/survey-result-cctv','indexSurveyResultCctv')->name('com.site-survey.cctv.index');
             Route::get('/survey-result-gb','indexSurveyResultGb')->name('com.site-survey.gb.index');

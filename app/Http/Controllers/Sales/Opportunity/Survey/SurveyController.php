@@ -243,4 +243,14 @@ class SurveyController extends Controller
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
     }
+
+    function detailSoftSurvey(Request $request, SurveyRequest $surveyRequest) : View {
+        $surveyRequest = $surveyRequest->with('softSurveys.attachment')->first();
+        $siteSurveyServiceTypes = SiteSurveyServiceType::get();
+        
+        return view('cmt-opportunity.survey.pages.soft-survey-detail', compact(
+            'siteSurveyServiceTypes',
+            'surveyRequest'
+        ));
+    }
 }
