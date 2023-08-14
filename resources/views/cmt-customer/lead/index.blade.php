@@ -39,7 +39,7 @@
                                     <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
                                     <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
                                 </div>
-                                @role('administrator')
+                                {{-- @role('administrator') --}}
                                 <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
                                     <div class="menu menu-sub menu-sub-dropdown w-300px text-start pb-3" id="action_lead" data-kt-menu="true" style="">
@@ -74,7 +74,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endrole
+                                {{-- @endrole --}}
                                 {{-- <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-info btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-filter me-2"></i>Filter</button>
                                     <div class="menu menu-sub menu-sub-dropdown w-300px text-start" id="filter_pegawai" data-kt-menu="true" style="">
@@ -111,11 +111,11 @@
                                         </div>
                                     </div>
                                 </div> --}}
-                                @role('administrator')
+                                {{-- @role('administrator') --}}
                                 <div class="tab_all_menu_lead">
                                     <a href="#kt_modal_tambah_lead" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Lead Baru</a>
                                 </div>
-                                @endrole
+                                {{-- @endrole --}}
                             </div>
                         </div>
                         <div class="row">
@@ -204,13 +204,13 @@
     </div>
 </div>
 
-@role('administrator')
+{{-- @role('administrator') --}}
 @include('cmt-customer.lead.add.modal-tambah-lead')
 @include('cmt-customer.lead.add.modal-edit-lead')
 @include('cmt-customer.lead.add.modal-tindak-lanjut-lead')
 @include('cmt-customer.lead.add.modal-update-prospect')
 @include('cmt-customer.lead.add.modal-batal-prospect')
-@endrole
+{{-- @endrole --}}
 
 <script>
     $(document ).ready(function() {
