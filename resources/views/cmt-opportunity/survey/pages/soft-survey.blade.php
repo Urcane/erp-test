@@ -285,6 +285,7 @@
                 { data: 'closest_bts'},
                 { data: 'covered_status_pretified'},
                 { data: 'notes'},
+                { data: 'action'},
             ],
         });
     });
