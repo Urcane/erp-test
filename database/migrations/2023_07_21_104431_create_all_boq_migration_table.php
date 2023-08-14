@@ -60,7 +60,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->bigInteger('npm')->digits(20)->nullable();
             $table->integer('percentage')->digits(4)->nullable();
             $table->integer('manpower')->digits(4)->nullable();
-            $table->boolean('is_draft')->default(0);
+            $table->boolean('is_draft')->default(1);
             $table->boolean('is_done')->nullable();
             $table->boolean('approval_manager')->nullable();
             $table->date('approval_manager_date')->nullable();

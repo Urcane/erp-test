@@ -23,11 +23,6 @@ class ItemableBillOfQuantity extends Model
     {
         return $this->morphMany(Item::class, 'itemable');
     }
-
-    function itemableBillOfQuantityLog() : HasOne{
-        return $this->hasOne(ItemableBillOfQuantityLog::class, 'id', 'itemable_bill_of_quantity_id');
-    }
-    
     // public function items(): MorphMany
     // {
     //     // Mengembalikan hasil relasi "MorphMany" dengan model "Items"

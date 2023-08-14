@@ -56,20 +56,25 @@ class BoqService
                                             <i class="fa-solid fa-pencil text-info"></i>    
                                         </div>
                                     </div>';
-                } elseif ($query->is_done) {
+                } elseif ($query->is_done === 1) {
                     $timelineIcon = '<div class="timeline-icon symbol symbol-circle symbol-35px">
                                         <div class="symbol-label bg-light-success">
                                             <i class="fa-solid fa-check text-success"></i>    
                                         </div>
                                     </div>';
-                } else {
+                } elseif ($query->is_done === 0) {
                     $timelineIcon = '<div class="timeline-icon symbol symbol-circle symbol-35px">
                                         <div class="symbol-label bg-light-danger">
                                             <i class="fa-solid fa-times text-danger"></i>    
                                         </div>
                                     </div>';
+                } else {
+                    $timelineIcon = '<div class="timeline-icon symbol symbol-circle symbol-35px">
+                    <div class="symbol-label bg-light-info">
+                        <i class="fa-solid fa-pencil text-info"></i>    
+                    </div>
+                </div>';
                 }
-                
                 return '
                 <div class="timeline">
                     <div class="timeline-item">

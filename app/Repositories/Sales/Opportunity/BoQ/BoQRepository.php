@@ -2,14 +2,15 @@
 
 namespace App\Repositories\Sales\Opportunity\BoQ;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Opportunity\BoQ\Item;
+use App\Models\Inventory\InventoryGood;
 use App\Models\Customer\CustomerProspect;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantityLog;
-use App\Models\Inventory\InventoryGood;
 
 //use Your Model
 
@@ -23,24 +24,42 @@ class BoQRepository
      *  Return the model
      */
     protected $model;
-    protected $modelLog;
+
     protected $customerProspect;
 
-    function __construct(ItemableBillOfQuantity $model, CustomerProspect $customerProspect, ItemableBillOfQuantityLog $modelLog)
+    function __construct(ItemableBillOfQuantity $model, CustomerProspect $customerProspect )
     {
         $this->model = $model;
-        $this->modelLog = $modelLog;
         $this->customerProspect = $customerProspect;
     }
 
-    function getAll(Request $request)
-    {
-        $dataBoq = $this->model->with(['itemableBillOfQuantityLog' ,'itemableBillOfQuantity', 'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
+    function getAll(Request $request){
+        $dataBoq = $this->model->with([  'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
+
+        if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'true' ) {
+            $dataBoq->where('is_draft',1)->wherenull('is_done');
+        }
+
+        if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'false') {
+            $dataBoq->where('is_draft',0)->wherenull('is_done');
+        }
+
+        if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'true') {
+            $dataBoq->where('is_done',1);
+        }
+
+        if (isset($request->filters['is_done']) && $request->filters['is_done'] == null) {
+            $dataBoq->where('is_done',null);
+        }
+        if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'false') {
+            $dataBoq->where('is_done',0);
+        }
+        
+        
         return $dataBoq;
     }    
 
-    public function saveItemsBoQ(Request $request)
-    {
+    public function saveItemsBoQ(Request $request){
         try {
             // Start a database transaction
             DB::beginTransaction();
@@ -102,25 +121,15 @@ class BoQRepository
         }
     }   
 
-    function getDataWithoutId()  
-    {
+    function getDataWithoutId(){
         $dataWithId = $this->customerProspect->with(['customer.customerContact' ,'customer.bussinesType' ])();
         return $dataWithId;
     }
 
-    function getDataWithId($id)  
-    {
+    function getDataWithId($id){
         $dataWithId = $this->customerProspect->with(['customer.customerContact' ,'customer.bussinesType' ]);
         return $dataWithId;
     }
   
-    function getItemName() 
-    {
-        $item = $this->model->itemableBillOfQuantity; 
-        if ($item instanceof InventoryGoods) {
-            $inventoryGoods = $item->name;
-            return $inventoryGoods;
-        } 
-        return null;
-    }
+   
 }
