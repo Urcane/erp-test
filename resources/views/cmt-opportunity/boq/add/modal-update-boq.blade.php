@@ -115,7 +115,7 @@
                             <div class="d-flex justify-content-end ">
                                 <div class="w-20 me-10">
                                     <span class="fw-bold">Total Amount : Rp. <span id="total_update"></span></span>
-                                    <input type="text" class="form-control form-control-solid total" name="total_update" id="total_price_update" value=""/>
+                                    <input type="hidden" class="form-control form-control-solid total" name="total_update" id="total_price_update" value=""/>
                                 </div>
                             </div>
 
@@ -132,7 +132,7 @@
                     </div>
 
                     <div>
-                        <input type="text" id="uniq_id" name="uniq_id" value="">
+                        <input type="hidden" id="uniq_id" name="uniq_id" value="">
                     </div>
 
                 </form>

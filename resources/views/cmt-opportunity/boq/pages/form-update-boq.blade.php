@@ -59,7 +59,7 @@
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     placeholder="{{ $dataCompany->prospect_title }} - {{ $dataCompany->customer->customer_name }}">
 
-                                                <input type="text" class="form-control form-control-solid" disabled
+                                                <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="prospect_id" value="{{ $dataCompany->id }}">
 
                                                 <div id="error-prospect"></div>
@@ -240,15 +240,15 @@
                                                             </div>
 
                                                             <div>
-                                                                <input type="text" name="content[][id]" disabled
+                                                                <input type="hidden" name="content[][id]" disabled
                                                                     value="{{ $relatedItem->id ?? null }}" />
-                                                                <input type="text" name="content[][item_inventory_id]"
+                                                                <input type="hidden" name="content[][item_inventory_id]"
                                                                     disabled
                                                                     value="{{ $relatedItem->item_inventory_id ?? null }}" />
-                                                                <input type="text" name="content[][purchase_reference]"
+                                                                <input type="hidden" name="content[][purchase_reference]"
                                                                     disabled
                                                                     value="{{ $relatedItem->purchase_refrence ?? null }}" />
-                                                                <input type="text" name="content[][item_detail]"
+                                                                <input type="hidden" name="content[][item_detail]"
                                                                     disabled
                                                                     value="{{ $relatedItem->item_detail ?? null }}" />
                                                             </div>
@@ -287,6 +287,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -366,7 +367,6 @@
         }
 
         $(document).ready(function() {
-
             // function Submit BOQ page BENERAN wkwkw
             $('#submit-all-items').on('click', function(event) {
                 event.preventDefault();
@@ -568,14 +568,17 @@
 
                     $('[name="content[][good_name]"]', item).val(itemName);
                     $('[name="content[][good_merk]"]', item).val(itemMerk);
-                    $('[name="content[][purchase_price]"]', item).val(formData.get('purchase_price_update'));
+                    $('[name="content[][purchase_price]"]', item).val(formData.get(
+                        'purchase_price_update'));
                     $('[name="content[][quantity]"]', item).val(formData.get('quantity_update'));
-                    $('[name="content[][purchase_delivery]"]', item).val(formData.get('purchase_delivery_update'));
-                    $('[name="content[][purchase_reference]"]', item).val(formData.get('purchase_reference'));
+                    $('[name="content[][purchase_delivery]"]', item).val(formData.get(
+                        'purchase_delivery_update'));
+                    $('[name="content[][purchase_reference]"]', item).val(formData.get(
+                        'purchase_reference'));
                     $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
                     $('[name="content[][total_price]"]', item).val(formData.get('total_update'));
                     $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
-                    
+
                     // Bersihkan input setelah item ditambahkan
                     form.reset();
 
@@ -720,7 +723,16 @@
                                 
                                     <ul class="dropdown-menu">
                                         <li type="button" class="btn-update-boq-modal" 
-                                            data-random-string="${random_string}" data-item-id="${formData.get('good_name')}">
+                                            data-random-string="${random_string}" 
+                                            data-item-id="${formData.get('good_name')}"
+
+                                            data-quantity="${formData.get('quantity_tambah')}"
+                                            data-total_price="${formData.get('total_tambah')}"
+                                            data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
+                                            data-purchase_price="${formData.get('purchase_price_tambah')}"
+                                            data-purchase_refrence="${formData.get('purchase_reference')}"
+                                            data-item_detail="${formData.get('item_detail')}"">                                            
+                                            
                                             <a class="dropdown-item py-2">
                                             <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
                                         </li>
@@ -733,9 +745,9 @@
                             </div>
                         </div>  
                         <div>
-                            <input type="text" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
-                            <input type="text" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
-                            <input type="text" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
+                            <input type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
+                            <input type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
+                            <input type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
                         </div>
                     </div>`;
 
@@ -745,14 +757,37 @@
                         function() {
                             $(this).parent().parent().parent().parent().remove();
                             updateTotalSum();
-                        });
-
+                    });
+                    
                     // Function Update BOQ modal
                     $('.MultipleItem').on('click', '.btn-update-boq-modal', function() {
+
                         var randomString = $(this).data('random-string');
-                        var itemId = $(this).data('item-id');
+                        var itemId = parseInt($(this).data('item-id'));
+                        var quantity = $(this).data('quantity');
+                        var total_price = $(this).data('total_price');
+                        var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                        var purchase_price = $(this).data('purchase_price');
+                        var purchase_refrence = $(this).data('purchase_refrence');
+                        var item_detail = $(this).data('item_detail');
+
+                        console.log(randomString, itemId, quantity, total_price,
+                            purchase_delivery_charge,
+                            purchase_price, purchase_refrence, item_detail);
+
                         $('#good_name_update').val(itemId).trigger('change');
+
                         $('#kt_modal_update_boq').modal('show');
+
+                        $('#uniq_id').val(randomString);
+
+                        $('#item_detail_update').val(item_detail);
+                        $('#purchase_refrence_update').val(purchase_refrence);
+                        $('#purchase_price_update').val(purchase_price);
+                        $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
+                        $('#total_price_update').val(total_price);
+                        $('#quantity_update').val(quantity);
+                        document.getElementById('total_update').textContent = total_price;
                     });
 
                     // Tambahkan item baru ke div "MultipleItem"
