@@ -278,11 +278,12 @@ class CustomerController extends Controller
                 ';
             })
             ->addColumn('DT_RowChecklist', function($check) {
-                if(Auth::user()->getRoleNames()[0] == 'administrator' && $check->prospect_status == null){
+                // Auth::user()->getRoleNames()[0] == 'administrator' && 
+                if($check->prospect_status == null){
                     return '<div class="text-center w-50px"><input name="checkbox_lead_ids" type="checkbox" value="'.$check->id.'"></div>';
-                }else{
-                    return '';
-                }
+                // }else{
+                    // return '';
+                // }
             })
             //kebutuhan export
             ->addColumn('lead_year', function ($lead_year){
@@ -441,7 +442,8 @@ class CustomerController extends Controller
             ->addColumn('DT_RowChecklist', function($check) use($getLogs) {
                 $latest_value_in_spesific_prospect_id = $getLogs->where('customer_prospect_id', $check->prospect_id)->first();
                 
-                if($latest_value_in_spesific_prospect_id->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $check->user_follow_up == Auth::user()->id){
+                // Auth::user()->getRoleNames()[0] == 'administrator' && 
+                if($latest_value_in_spesific_prospect_id->status == 1 && $check->user_follow_up == Auth::user()->id){
                     return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
                 }else{
                     return '';
@@ -450,7 +452,8 @@ class CustomerController extends Controller
             ->addColumn('action', function ($action) use($getLogs) {
                 $latest_value_in_spesific_prospect_id = $getLogs->where('customer_prospect_id', $action->prospect_id)->first();
 
-                if($latest_value_in_spesific_prospect_id->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $action->user_follow_up == Auth::user()->id){
+                // Auth::user()->getRoleNames()[0] == 'administrator' && 
+                if($latest_value_in_spesific_prospect_id->status == 1 && $action->user_follow_up == Auth::user()->id){
                     $mnue = '
                     <li><a href="#kt_modal_update_prospect" class="dropdown-item py-2 btn_update_prospect" data-bs-toggle="modal" data-prospectid="'.$action->prospect_id.'" data-id="'.$action->id.'"><i class="fa-solid fa-list-check me-3"></i>Update Progress</a></li>
                     ';
