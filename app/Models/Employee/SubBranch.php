@@ -17,11 +17,11 @@ class SubBranch extends Model
         return $this->hasMany(UserEmployment::class);
     }
 
-    public function branch() : Belangsto {
-        return $this->belongsTo(Branch::class);
+    public function branch() : Belongsto {
+        return $this->belongsTo(Branch::class, );
     }
 
-    public function parent() : Belangsto {
+    public function parent() : Belongsto {
         return $this->belongsTo(SubBranch::class, "parent_id");
     }
 

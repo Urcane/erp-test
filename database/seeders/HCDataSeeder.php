@@ -43,9 +43,8 @@ class HCDataSeeder extends Seeder
         $branch = Branch::create([
             "industry" => "Teknologi",
             "company_size" => "0-50 Employee",
-            "company_taxable_date" => "10 June 2003",
+            "company_taxable_date" => "2023-08-14",
             "head_office_initial" => "Kantor Pusat",
-            "umr" => "3.324.000",
             "bpjs_ketenagakerjaan" => "0000000000",
             "jaminan_kecelakaan_kerja" => "1-0.24%",
         ]);
@@ -65,6 +64,7 @@ class HCDataSeeder extends Seeder
                 "tax_person_npwp"=> $data[7],
                 "tax_person_name"=> $data[8],
                 "klu"=> $data[9],
+                "umr" => "3324000",
                 "signature"=> $data[10],
                 "branch_id"=> $data[11],
                 "parent_id"=> $data[12],
@@ -222,7 +222,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "1990-01-01",
+                    "2020-02-02",
                     now(),
                     "08:00:00",
                     "17:00:00"

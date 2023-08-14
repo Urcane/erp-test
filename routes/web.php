@@ -147,21 +147,27 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(Settings\Company\CompanyInfoController::class)->group(function () {
             Route::prefix('company-info')->group(function () {
                 Route::get('/', 'index')->name('hc.setting.company-info.index');
-                Route::get('/update', 'update')->name('hc.setting.company-info.update');
+                Route::post('/update', 'update')->name('hc.setting.company-info.update');
             });
         });
         Route::controller(Settings\Company\BranchController::class)->group(function () {
             Route::prefix('branch')->group(function () {
                 Route::get('/', 'index')->name('hc.setting.branch.index');
+                Route::get('/table/branch', 'getTableBranch')->name('hc.emp.getTableBranch');
                 Route::get('/create', 'create')->name('hc.setting.branch.create');
-                Route::get('/update', 'update')->name('hc.setting.branch.update');
+                Route::get('/edit/{id}', 'edit')->name('hc.setting.branch.edit');
+                Route::post('/create/update', 'createUpdate')->name('hc.setting.branch.createUpdate');
+                Route::post('/delete', 'delete')->name('hc.setting.branch.delete');
             });
         });
-        Route::controller(CompanyInfoController::class)->group(function () {
-
-        });
-        Route::controller(CompanyInfoController::class)->group(function () {
-
+        Route::controller(Settings\Company\OrganizationController::class)->group(function () {
+            Route::prefix('organization')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.organization.index');
+                Route::get('/table/organization', 'getTableOrganization')->name('hc.emp.getTableOrganization');
+                Route::get('/edit/{id}', 'edit')->name('hc.setting.organization.edit');
+                Route::post('/create/update', 'createUpdate')->name('hc.setting.organization.createUpdate');
+                Route::post('/delete', 'delete')->name('hc.setting.organization.delete');
+            });
         });
     });
 

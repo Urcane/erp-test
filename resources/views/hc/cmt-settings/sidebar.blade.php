@@ -17,7 +17,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.company-info.index")}}">Company Info</a></li>
                             <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.branch.index")}}">Branch</a></li>
-                            <li><a class="dropdown-item py-2 px-5" href="#">Organization</a></li>
+                            <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.organization.index")}}">Organization</a></li>
                             <li><a class="dropdown-item py-2 px-5" href="#">Job Level</a></li>
                             <li><a class="dropdown-item py-2 px-5" href="#">Job Position</a></li>
                             <li><a class="dropdown-item py-2 px-5" href="#">File Category</a></li>
