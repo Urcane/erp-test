@@ -6,8 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Opportunity\Survey\SoftSurveyRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyRequest as SurveyFormRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
+use App\Models\Master\BuildingType;
+use App\Models\Master\InternetBandwidth;
+use App\Models\Master\OutdoorCableType;
+use App\Models\Master\PowerSource;
 use App\Models\Opportunity\Survey\Master\SiteSurveyServiceType;
 use App\Models\Master\ServiceType;
+use App\Models\Master\TransportationAccess;
+use App\Models\Opportunity\Survey\SiteSurveyInternet;
 use App\Models\Opportunity\Survey\SoftSurvey;
 use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
@@ -192,6 +198,12 @@ class SurveyController extends Controller
     function createSurveyResult(Request $request, WorkOrder $workOrder) : View {
         $surveyRequest = SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey')->findOrFail($request->query('surveyRequestId'));
         $serviceTypes = ServiceType::get();
+        $internetBandwidths = InternetBandwidth::get(); 
+        $siteSurveyInterfaces = SiteSurveyInternet::get();
+        $powerSources = PowerSource::get();
+        $outdoorCableTypes = OutdoorCableType::get();
+        $transportationAccesses = TransportationAccess::get();
+        $buildingTypes = BuildingType::get();
         
         foreach ($serviceTypes as $serviceType) {
             if ($serviceType->model_name != NULL) {
@@ -207,7 +219,13 @@ class SurveyController extends Controller
         return view($view, compact(
             'surveyRequest',
             'workOrder',
-            'siteSurveyServiceTypes'
+            'siteSurveyServiceTypes',
+            'internetBandwidths',
+            'siteSurveyInterfaces',
+            'powerSources',
+            'outdoorCableTypes',
+            'transportationAccesses',
+            'buildingTypes'
         ));
     }
 

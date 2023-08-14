@@ -104,7 +104,7 @@
                                         <div class="row mt-3">
                                             @foreach ($siteSurveyServiceTypes as $siteSurveyServiceType)
                                             <div class="col-lg-2 mb-3">
-                                                <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="site_survey_service_type[]" id="site_survey_service_type" value="{{$siteSurveyServiceType->id}}">
+                                                <input type="checkbox" class="form-check-input checkbox-real my-auto" placeholder="" name="site_survey_service_type[]" id="site_survey_service_type" value="{{$siteSurveyServiceType->id}}">
                                                 <label class="fs-6 form-check-label mb-2" for="site_survey_service_type[]">
                                                     <span class="fw-bold">{{$siteSurveyServiceType->name}}</span>
                                                 </label>
@@ -114,6 +114,63 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row mb-3">
+                                    <div class="col-lg-2">
+                                        <label class="d-flex align-items-center fs-6 form-label h-100">
+                                            <span class="fw-bold my-auto">Lokal Akses : </span>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-10">
+                                        <input type="text" disabled="disabled" class="form-control form-control-solid" placeholder="" name="customer_name" value="">
+                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-lg-2">
+                                        <label class="d-flex align-items-center fs-6 form-label h-100">
+                                            <span class="fw-bold my-auto">Internet Bandwidth : </span>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-10">
+                                        <div class="row mt-3">
+                                            @foreach ($internetBandwidths as $internetBandwidth)
+                                            <div class="col-lg-2 mb-3">
+                                                <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="internet_bandwidth[]" id="internet_bandwidth" value="{{$internetBandwidth->id}}">
+                                                <label class="fs-6 form-check-label mb-2" for="internet_bandwidth[]">
+                                                    <span class="fw-bold">{{$internetBandwidth->name}}</span>
+                                                </label>
+                                                <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-lg-2">
+                                        <label class="d-flex align-items-center fs-6 form-label h-100">
+                                            <span class="fw-bold my-auto">Interface : </span>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-10">
+                                        <div class="row mt-3">
+                                            @foreach ($siteSurveyInterfaces as $siteSurveyInterface)
+                                            <div class="col-lg-2 mb-3">
+                                                <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="site_survey_interface[]" id="site_survey_interface" value="{{$siteSurveyInterface->id}}">
+                                                <label class="fs-6 form-check-label mb-2" for="site_survey_interface[]">
+                                                    <span class="fw-bold">{{$siteSurveyInterface->name}}</span>
+                                                </label>
+                                                <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="separator mb-6"></div>
+                                @include('cmt-opportunity.survey.component.outdoor-form')
+                                <div class="separator mb-6"></div>
+                                @include('cmt-opportunity.survey.component.indoor-form')
+                                <div class="separator mb-6"></div>
+                                @include('cmt-opportunity.survey.component.other-form')
                             </div>
                         </div>
                     </div>
