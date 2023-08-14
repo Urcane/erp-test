@@ -10,6 +10,7 @@ use App\Http\Controllers\HC\Attendance\AttendanceController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\PersonalController;
 use App\Http\Controllers\Profile\TimeManagementController;
+use App\Http\Controllers\HC\Settings;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,6 +140,28 @@ Route::middleware(['auth'])->group(function () {
 
             Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
             Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
+        });
+    });
+
+    Route::prefix('cmt-employee-settings')->group(function () {
+        Route::controller(Settings\Company\CompanyInfoController::class)->group(function () {
+            Route::prefix('company-info')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.company-info.index');
+                Route::get('/update', 'update')->name('hc.setting.company-info.update');
+            });
+        });
+        Route::controller(Settings\Company\BranchController::class)->group(function () {
+            Route::prefix('branch')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.branch.index');
+                Route::get('/create', 'create')->name('hc.setting.branch.create');
+                Route::get('/update', 'update')->name('hc.setting.branch.update');
+            });
+        });
+        Route::controller(CompanyInfoController::class)->group(function () {
+
+        });
+        Route::controller(CompanyInfoController::class)->group(function () {
+
         });
     });
 

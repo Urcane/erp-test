@@ -88,25 +88,6 @@
 <script>
     var dataTableWork;
 
-    function deleteWorkExperience(id) {
-        $.ajax({
-            url: "{{ route('hc.emp.delete-work-experience') }}",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            data: { id : id},
-            success: function(data) {
-                dataTableWork.ajax.reload();
-                toastr.success(data.message,'Selamat 🚀 !');
-            },
-            error: function(xhr, status, error) {
-                const data = JSON.parse(xhr.responseText);
-                toastr.error(errorThrown ,'Opps!');
-            }
-        });
-    }
-
     $(".btn_working_exp").on( "click", function() {
         $("[name='id']").val("")
         $("input:not([name='user_id'])").val("")
@@ -156,6 +137,25 @@
             ],
         });
     })
+
+    function deleteWorkExperience(id) {
+        $.ajax({
+            url: "{{ route('hc.emp.delete-work-experience') }}",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            data: { id : id},
+            success: function(data) {
+                dataTableWork.ajax.reload();
+                toastr.success(data.message,'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = JSON.parse(xhr.responseText);
+                toastr.error(errorThrown ,'Opps!');
+            }
+        });
+    }
 
     $('#modal_create_work_experience_form').submit(function(event) {
         event.preventDefault();

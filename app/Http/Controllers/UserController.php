@@ -8,7 +8,7 @@ use App\Models\Team\Team;
 use App\Models\User;
 use App\Models\Employee\EmploymentStatus;
 use App\Models\Employee\UserPersonalData;
-use App\Models\Employee\Branch;
+use App\Models\Employee\SubBranch;
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
@@ -49,7 +49,7 @@ class UserController extends Controller
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataRole = Role::all();
         $allOptions = new Constants();
-        $dataBranch = Branch::all();
+        $dataSubBranch = SubBranch::all();
         $dataWorkingScheduleShift = WorkingScheduleShift::all();
         $dataTaxStatus = TaxStatus::all();
 
@@ -66,7 +66,7 @@ class UserController extends Controller
             'dataRole',
             'allOptions',
             "dataEmploymentStatus",
-            "dataBranch",
+            "dataSubBranch",
             "dataWorkingScheduleShift",
             "dataPaymentSchedule",
             "dataProrateSetting",

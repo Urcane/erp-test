@@ -10,7 +10,6 @@
             </div>
             <div class="modal-body mx-5 mx-lg-15 mb-7">
                 <form id="modal_create_family_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
-                    @csrf
                     <input type="hidden" name="user_id" value="{{$user->id}}">
                     <input type="hidden" name="family_id" value="">
                     <div class="scroll-y me-n10 pe-10" id="modal_create_family_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_create_family_header" data-kt-scroll-wrappers="#modal_create_family_scroll" data-kt-scroll-offset="300px">
@@ -146,24 +145,6 @@
 <script>
     var dataTableFamily;
 
-    function deleteFamily(family_id) {
-        $.ajax({
-            url: "{{ route('hc.emp.delete-family') }}",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: 'POST',
-            data: { family_id : family_id},
-            success: function(data) {
-                dataTableFamily.ajax.reload();
-                toastr.success(data.message,'Selamat 🚀 !');
-            },
-            error: function(xhr, status, error) {
-                const data = JSON.parse(xhr.responseText);
-                toastr.error(errorThrown ,'Opps!');
-            }
-        });
-    }
 
     $(".btn_tambah_pegawai").on( "click", function() {
         $("[name='family_id']").val("")
@@ -171,7 +152,7 @@
     })
 
     $( "#family" ).on( "click", function() {
-        dataTable = $('#tb_family_content').DataTable({
+        dataTableFamily = $('#tb_family_content').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
@@ -246,6 +227,25 @@
         });
     })
 
+    function deleteFamily(family_id) {
+        $.ajax({
+            url: "{{ route('hc.emp.delete-family') }}",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: 'POST',
+            data: { family_id : family_id},
+            success: function(data) {
+                dataTableFamily.ajax.reload();
+                toastr.success(data.message,'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = JSON.parse(xhr.responseText);
+                toastr.error(errorThrown ,'Opps!');
+            }
+        });
+    }
+
     $('#modal_create_family_form').submit(function(event) {
         event.preventDefault();
         var formData = $(this).serialize();
@@ -253,8 +253,11 @@
             url: "{{ route('hc.emp.create-update-family') }}",
             type: 'POST',
             data: formData,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             success: function(data) {
-                dataTable.ajax.reload();
+                dataTableFamily.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {

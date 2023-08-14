@@ -125,7 +125,7 @@ class PersonalController extends Controller
             return response()->json([
                 'status' => "succes",
                 'message' => "Data berhasil disimpan",
-            ], 200);;
+            ], 200);
         }
 
         public function deleteFamily(Request $request) {
@@ -134,7 +134,7 @@ class PersonalController extends Controller
             return response()->json([
                 'status' => "succes",
                 'message' => "Data berhasil dihapus",
-            ], 200);;
+            ], 200);
         }
     // }
 
