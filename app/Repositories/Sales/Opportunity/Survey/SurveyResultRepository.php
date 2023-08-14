@@ -4,9 +4,12 @@ namespace App\Repositories\Sales\Opportunity\Survey;
 
 use App\Http\Requests\Opportunity\Survey\SurveyResult\SurveyResultCCTVRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyResult\SurveyResultInternetRequest;
+use App\Models\Master\ServiceType;
 use App\Models\Opportunity\Survey\SiteSurvey;
 use App\Models\Opportunity\Survey\SiteSurveyCCTV;
 use App\Models\Opportunity\Survey\SiteSurveyInternet;
+use App\Models\Opportunity\Survey\SurveyRequest;
+use Exception;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -21,7 +24,9 @@ class SurveyResultRepository
     }
 
     function save($data, $modelType) : EloquentBuilder {
-        $siteSurvey = SiteSurvey::create([
+        $siteSurvey = SiteSurvey::updateOrCreate([
+            'id' => $data->site_survey_id,
+        ],[
             'survey_request_id' => $data->survey_request_id,
             'work_order_id' => $data->work_order_id,
             'service_type_id' => $data->service_type_id,
@@ -53,7 +58,9 @@ class SurveyResultRepository
     }
 
     function saveSiteSurveyCCTV(SiteSurvey $siteSurvey, SurveyResultCCTVRequest $data) : SiteSurveyCCTV {
-        return $siteSurveyCCTV = SiteSurveyCCTV::create([
+        return $siteSurveyCCTV = SiteSurveyCCTV::updateOrCreate([
+            'id' => $data->site_survey_cctv_id
+        ],[
             'site_survey_id' => $siteSurvey->id,
             'camera_type_id' => $data->camera_type_id,
             'quantity_service_use' => $data->quantity_service_use,
@@ -65,7 +72,10 @@ class SurveyResultRepository
     }
 
     function saveSiteSurveyInternet(SiteSurvey $siteSurvey, SurveyResultInternetRequest $data) : SiteSurveyInternet {
-        return $siteSurveyInternet = SiteSurveyInternet::create([
+
+        return $siteSurveyInternet = SiteSurveyInternet::updateOrCreate([
+            'id' => $data->site_survey_internet_id
+        ],[
             'site_survey_id' => $siteSurvey->id,
             'quantity_service_use' => $data->quantity_service_use,
             'user_needs' => $data->user_needs,
@@ -75,6 +85,21 @@ class SurveyResultRepository
     }
 
     function getAll(Request $request) : EloquentBuilder {
-        return SiteSurvey::with('surveyRequest', 'workOrder', 'transmissionMedia', 'internetServiceType', 'serviceType');
+        $model = ServiceType::find($request->filters['service_type_id'])->model_name;
+        if ($model == null) {
+            throw new Exception("Model not found", 403);
+        }
+
+        $model = new $model;
+        
+        return $model::with('surveyRequest', 'workOrder', 'siteSurveyServiceType', 'serviceType');
+    }
+
+    function getById(Request $request, int $id) : EloquentBuilder {
+        return $this->getByIdWithoutRelationship($request, $id)->with('siteSurveyCCTV','siteSurveyInternet', 'surveyRequest.customerProspect.customer.customerContact', 'surveyRequest.customerProspect.customer.city', 'workOrder', 'siteSurveyServiceType', 'serviceType');
+    }
+
+    function getByIdWithoutRelationship(Request $request, int $id) : EloquentBuilder {
+        return SiteSurvey::where('id', $id);
     }
 }

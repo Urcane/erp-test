@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Models\Opportunity\Survey;
+namespace App\Models\Master;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class SiteSurveyInternet extends Model
+class GbConnectivityData extends Model
 {
     use HasFactory;
-
     protected $guarded = [];
+    protected $table = "gb_connectivity_datas";
 }

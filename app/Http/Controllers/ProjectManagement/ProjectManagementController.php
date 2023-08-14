@@ -53,7 +53,11 @@ class ProjectManagementController extends Controller
     }
 
     function getDataTableWorkOrder(Request $request) : JsonResponse {
-        return $this->workOrderService->renderDatatable();
+        return $this->workOrderService->renderDatatable($request);
+    }
+
+    function getDataTableWorkOrderSurvey(Request $request) : JsonResponse {
+        return $this->workOrderService->renderDatatableSurveyWO($request);
     }
 
     function getWorkOrderById(Request $request, int $id) : JsonResponse {

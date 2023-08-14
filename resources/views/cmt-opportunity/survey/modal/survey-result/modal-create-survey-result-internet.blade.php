@@ -9,6 +9,9 @@
             <div class="modal-body mx-5 mx-lg-15 my-9">
                 <form id="kt_modal_create_survey_result_internet_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="site_survey_id" value="">
+                    <input type="hidden" name="site_survey_cctv_id" value="">
+                    <input type="hidden" name="site_survey_internet_id" value="">
                     <input type="hidden" name="survey_request_id" value="">
                     <input type="hidden" name="work_order_id" value="">
                     <input type="hidden" name="service_type_id" value="1">
@@ -41,6 +44,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if ($unfileable ?? false)
+                                    <div></div>
+                                    @else
                                     <div class="stepper-item mx-8" data-kt-stepper-element="nav">
                                         <div class="stepper-wrapper d-flex align-items-center">
                                             <div class="stepper-icon w-30px h-30px">
@@ -50,6 +56,8 @@
                                         </div>
                                         <div class="stepper-line h-35px"></div>
                                     </div>
+                                    @endif
+                                    
                                 </div>
                                 
                                 <div class="w-lg-500px mx-auto">
@@ -62,9 +70,7 @@
                                                     </label>
                                                     <select class="drop-data form-select form-select-solid" data-control="select2" required name="trans_media_id" data-dropdown-parent="#kt_modal_create_survey_result_internet">
                                                         <option value="" selected hidden disabled>Pilih Dulu</option>
-                                                        @foreach ($transMedias as $transMedia)
-                                                        <option value="{{$transMedia->id}}">{{$transMedia->name}}</option>									
-                                                        @endforeach
+                                                        
                                                     </select>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
@@ -74,8 +80,8 @@
                                                     </label>
                                                     <select class="drop-data form-select form-select-solid" data-control="select2" required name="internet_service_type_id" data-dropdown-parent="#kt_modal_create_survey_result_internet">
                                                         <option value="" selected hidden disabled>Pilih Dulu</option>
-                                                        @foreach ($internetServiceTypes as $internetServiceType)
-                                                        <option value="{{$internetServiceType->id}}">{{$internetServiceType->name}}</option>									
+                                                        @foreach ($siteSurveyServiceTypes as $siteSurveyServiceType)
+                                                        <option value="{{$siteSurveyServiceType->id}}">{{$siteSurveyServiceType->name}}</option>									
                                                         @endforeach
                                                     </select>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -189,6 +195,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @if ($unfileable ?? false)
+                                        <div class="flex-column"></div>
+                                        @else
                                         <div class="flex-column" data-kt-stepper-element="content">
                                             <div class="row">
                                                 <div class="col-lg-12 mb-3">
@@ -201,6 +210,8 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
+                                        
                                     </div>
                                     <div class="mt-6 d-flex flex-stack">
                                         <div class="me-2">

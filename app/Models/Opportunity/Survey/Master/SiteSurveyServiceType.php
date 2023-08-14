@@ -1,20 +1,15 @@
 <?php
 
-namespace App\Models\Master;
+namespace App\Models\Opportunity\Survey\Master;
 
-use App\Models\Opportunity\Survey\SiteSurvey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class InternetServiceType extends Model
+class SiteSurveyServiceType extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
-
-    function siteSurveys() : HasMany {
-        return $this->hasMany(SiteSurvey::class);
-    }
 }
