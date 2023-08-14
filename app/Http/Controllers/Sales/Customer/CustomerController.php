@@ -281,7 +281,7 @@ class CustomerController extends Controller
                 // Auth::user()->getRoleNames()[0] == 'administrator' && 
                 if($check->prospect_status == null){
                     return '<div class="text-center w-50px"><input name="checkbox_lead_ids" type="checkbox" value="'.$check->id.'"></div>';
-                // }else{
+                }
                     // return '';
                 // }
             })
