@@ -304,6 +304,9 @@
                 if (isLateCheckIn || isEarlyCheckOut) {
                     return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
                 }
+            },
+            search: {
+                "regex": true
             }
 
             // columnDefs: [
