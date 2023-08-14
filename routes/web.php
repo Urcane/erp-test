@@ -73,16 +73,21 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(SurveyController::class)->group(function () {
         Route::prefix('cmt-survey')->group(function () {
             Route::get('/','index')->name('com.survey.index');
+            Route::get('/survey-request/detail/{id}','getSurveyRequestById')->name('com.survey-request.detail');
+
             Route::get('/soft-survey','indexSoftSurvey')->name('com.soft-survey.index');
             Route::get('/soft-survey/{surveyRequest}','detailSoftSurvey')->name('com.soft-survey.detail');
+
             Route::get('/survey-result-internet','indexSurveyResultInternet')->name('com.site-survey.internet.index');
             Route::get('/survey-result-cctv','indexSurveyResultCctv')->name('com.site-survey.cctv.index');
             Route::get('/survey-result-gb','indexSurveyResultGb')->name('com.site-survey.gb.index');
+
+            Route::get('/survey-result-store/{workOrder}','createSurveyResult')->name('com.survey-result.create');
+
             Route::get('/detail/{id}', 'detail')->name('com.survey.detail');
-            Route::get('/survey-request/detail/{id}','getSurveyRequestById')->name('com.survey-request.detail');
             Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
             Route::post('/soft-survey','storeSoftSurvey')->name('com.soft-survey.store');
-            Route::post('/survey-result','storeSurveyResult')->name('com.survey-result.store');
+            Route::post('/survey-result-store','storeSurveyResult')->name('com.survey-result.store');
             
             Route::get('/get-data/table/survey-request','getDatatableSurveyRequest')->name('com.survey-request.datatable');
             Route::get('/get-data/table/survey-result','getDatatableSurveyResult')->name('com.survey-result.datatable');

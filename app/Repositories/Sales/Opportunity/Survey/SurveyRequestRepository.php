@@ -59,7 +59,7 @@ class SurveyRequestRepository
     }
 
     function getById(int $id) : EloquentBuilder {
-        return $this->getByIdWithoutRelationship($id)->with('customerProspect.customer', 'serviceType', 'typeOfSurvey');
+        return $this->getByIdWithoutRelationship($id)->with('customerProspect.customer.customerContact', 'serviceType', 'typeOfSurvey');
     }
 
     function getByIdWithoutRelationship(int $id) : EloquentBuilder {

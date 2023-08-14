@@ -11,6 +11,7 @@ use App\Models\Master\ServiceType;
 use App\Models\Opportunity\Survey\SoftSurvey;
 use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
+use App\Models\ProjectManagement\WorkOrder;
 use App\Models\ProjectManagement\WorkOrderCategory;
 use App\Services\Sales\Opportunity\Survey\SoftSurveyService;
 use App\Services\Sales\Opportunity\Survey\SurveyRequestService;
@@ -179,6 +180,35 @@ class SurveyController extends Controller
             return $this->surveyRequestService->renderDatatable($request);
         }
         return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
+    /**
+     * View Create Survey Result From Survey Request with WO
+     * 
+     * @param \App\Http\Requests\Opportunity\Survey\SurveyResultRequest $request
+     * 
+     * @return Illuminate\Http\JsonResponse Returning JSON Response Data
+     */
+    function createSurveyResult(Request $request, WorkOrder $workOrder) : View {
+        $surveyRequest = SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey')->findOrFail($request->query('surveyRequestId'));
+        $serviceTypes = ServiceType::get();
+        
+        foreach ($serviceTypes as $serviceType) {
+            if ($serviceType->model_name != NULL) {
+                if ($surveyRequest->service_type_id == $serviceType->id) {
+                    $lower = strtolower($serviceType->name);
+                    $bladefy = collect(explode(' ', $lower))->implode('-');
+                    
+                    $siteSurveyServiceTypes = SiteSurveyServiceType::where('category', strtoupper($lower))->get();
+                    $view = "cmt-opportunity.survey.pages.site-survey.detail.$bladefy-form";
+                }
+            }
+        }
+        return view($view, compact(
+            'surveyRequest',
+            'workOrder',
+            'siteSurveyServiceTypes'
+        ));
     }
 
     /**
