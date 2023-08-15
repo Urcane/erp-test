@@ -48,7 +48,7 @@ class BoQController extends Controller{
             return view('cmt-opportunity.boq.index');
         }
         
-        function formBoQ(Request $request) {
+        function createDraftBoq(Request $request) {
             $prospectId = $request->query('prospect_id');
             $surveyRequestId = $request->query('survey_request_id');
         
@@ -83,7 +83,7 @@ class BoQController extends Controller{
             }
         }
         
-        function formUpdateBoQ(Request $request)  {
+        function updateDraftBoq(Request $request)  {
             $prospectId = $request->query('prospect_id');
             $surveyRequestId = $request->query('survey_request_id');
 

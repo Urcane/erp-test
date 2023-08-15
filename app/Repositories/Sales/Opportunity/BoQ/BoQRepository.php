@@ -6,11 +6,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Opportunity\BoQ\Item;
-use App\Models\Inventory\InventoryGood;
 use App\Models\Customer\CustomerProspect;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
-use App\Models\Opportunity\BoQ\ItemableBillOfQuantityLog;
 
 //use Your Model
 
@@ -41,7 +38,11 @@ class BoQRepository
         }
 
         if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'false') {
-            $dataBoq->where('is_draft',0)->wherenull('is_done');
+            $dataBoq->where('is_draft',0)->where('is_final',0)->wherenull('is_done');
+        }
+
+        if (isset($request->filters['is_final']) && $request->filters['is_final'] == 'true') {
+            $dataBoq->where('is_final',1)->whereNull('is_done');
         }
 
         if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'true') {
@@ -94,7 +95,8 @@ class BoQRepository
                 $itemableBoq->itemable()->updateOrCreate($criteria, $data);
             }
             DB::commit();
-            return response()->json(['message' => 'BoQ and items successfully created.'], 200);
+            return redirect()->route('com.boq.index')->with(response()->json(['message' => 'BoQ berhasil disimpan.'], 200));
+            
         } catch (Exception $e) { 
             DB::rollback();
             return response()->json(['error' => $e], 500);
@@ -112,23 +114,22 @@ class BoQRepository
     }
   
     function storeDataBoq(Request $request) {
-        $validator = $request->validate( [
-            'prospect_id' => 'required',
-            'sales_id' => 'required',
-            'technician_id' => 'required',
-            'procurement_id' => 'required',
-            'gpm' => 'required|numeric',
-            'modal' => 'required|numeric',
-            'npm' => 'required|numeric',
-            'percentage' => 'required|integer',
-            'manpower' => 'required|integer',
-        ]);
+        // $request->validate( [
+        //     'prospect_id' => 'required',
+        //     'sales_id' => 'required',
+        //     'technician_id' => 'required',
+        //     'procurement_id' => 'required',
+        //     'gpm' => 'required|numeric',
+        //     'modal' => 'required|numeric',
+        //     'npm' => 'required|numeric',
+        //     'percentage' => 'required|integer',
+        //     'manpower' => 'required|integer',
+        // ]);
 
         $prospect_id = $request->input('prospect_id');
         $itemableBoq = ItemableBillOfQuantity::where('prospect_id', $prospect_id)->first();
     
         if ($itemableBoq) {
-            // Update the fields
             $itemableBoq->survey_request_id = $request->input('survey_request_id');
             $itemableBoq->sales_id = $request->input('sales_id');
             $itemableBoq->technician_id = $request->input('technician_id');
@@ -145,11 +146,21 @@ class BoQRepository
             $itemableBoq->approval_director_date = $request->input('approval_director_date');
             $itemableBoq->approval_finman = $request->input('approval_finman');
             $itemableBoq->approval_finman_date = $request->input('approval_finman_date');
+            $itemableBoq->reference_boq_id = $itemableBoq->id;
+            
+            if ($itemableBoq->approval_manager === null || $itemableBoq->approval_director === null || $itemableBoq->approval_finman === null) {
+                $itemableBoq->is_done = null;
+            } else {
+                if ($itemableBoq->approval_manager == 1 && $itemableBoq->approval_director == 1 && $itemableBoq->approval_finman == 1) {
+                    $itemableBoq->is_done = 1;
+                } else {
+                    $itemableBoq->is_done = 0;
+                }
+            }
+            
             $itemableBoq->save();
-
-            $jsonResponse = response()->json(['message' => 'BoQ berhasil diperbarui.'], 200);
-            $redirectResponse = redirect()->back();
-            return $jsonResponse->merge($redirectResponse);
+            
+            return response()->json(['message' => 'BoQ berhasil diperbarui.'], 200);
 
         } else {
             return response()->json(['message' => 'BoQ not found.'], 404);
