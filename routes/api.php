@@ -16,6 +16,6 @@ use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
 */
 Route::controller(BoQController::class)->group(function () {
     Route::prefix('cmt-boq')->group(function (){
-        Route::post('/form-boq','createNewBoQ')->name('com.boq.boq.store');
+        Route::post('/store-data-boq','storeDataBoq')->name('com.boq.store.boq');
     });
 });

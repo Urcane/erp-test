@@ -112,30 +112,48 @@ class BoQRepository
     }
   
     function storeDataBoq(Request $request) {
+        $validator = $request->validate( [
+            'prospect_id' => 'required',
+            'sales_id' => 'required',
+            'technician_id' => 'required',
+            'procurement_id' => 'required',
+            'gpm' => 'required|numeric',
+            'modal' => 'required|numeric',
+            'npm' => 'required|numeric',
+            'percentage' => 'required|integer',
+            'manpower' => 'required|integer',
+        ]);
+
         $prospect_id = $request->input('prospect_id');
         $itemableBoq = ItemableBillOfQuantity::where('prospect_id', $prospect_id)->first();
+    
         if ($itemableBoq) {
-            [
-                'survey_request_id' => $request->input('survey_request_id'),
-                'sales_id' => $request->input('sales_id'),
-                'technician_id' => $request->input('technician_id'),
-                'procurement_id' => $request->input('procurement_id'),
-                'gpm' => $request->input('gpm'),
-                'modal' => $request->input('modal'),
-                'npm' => $request->input('npm'),
-                'percentage' => $request->input('percentage'),
-                'manpower' => $request->input('manpower'),
-                'approval_manager' => $request->input('approval_manager'),
-                'approval_manager_date' => $request->input('approval_manager_date'),
-                'approval_director' => $request->input('approval_director'),
-                'approval_director_date' => $request->input('approval_director_date'),
-                'approval_finman' => $request->input('approval_finman'),
-                'approval_finman_date' => $request->input('approval_finman_date'),
-                $itemableBoq->save(),
-            ];
-            return response()->json(['message' => 'BoQ successfully updated.'], 200);
+            // Update the fields
+            $itemableBoq->survey_request_id = $request->input('survey_request_id');
+            $itemableBoq->sales_id = $request->input('sales_id');
+            $itemableBoq->technician_id = $request->input('technician_id');
+            $itemableBoq->procurement_id = $request->input('procurement_id');
+            $itemableBoq->gpm = $request->input('gpm');
+            $itemableBoq->modal = $request->input('modal');
+            $itemableBoq->npm = $request->input('npm');
+            $itemableBoq->percentage = $request->input('percentage');
+            $itemableBoq->manpower = $request->input('manpower');
+            $itemableBoq->manpower = $request->input('is_draft');
+            $itemableBoq->approval_manager = $request->input('approval_manager');
+            $itemableBoq->approval_manager_date = $request->input('approval_manager_date');
+            $itemableBoq->approval_director = $request->input('approval_director');
+            $itemableBoq->approval_director_date = $request->input('approval_director_date');
+            $itemableBoq->approval_finman = $request->input('approval_finman');
+            $itemableBoq->approval_finman_date = $request->input('approval_finman_date');
+            $itemableBoq->save();
+
+            $jsonResponse = response()->json(['message' => 'BoQ berhasil diperbarui.'], 200);
+            $redirectResponse = redirect()->back();
+            return $jsonResponse->merge($redirectResponse);
+
         } else {
             return response()->json(['message' => 'BoQ not found.'], 404);
         }
     }
+    
 }
