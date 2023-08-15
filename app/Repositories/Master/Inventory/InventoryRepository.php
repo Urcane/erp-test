@@ -2,10 +2,11 @@
 
 namespace App\Repositories\Master\Inventory;
 
-use Yajra\DataTables\Utilities\Request;
-use App\Models\Inventory\InventoryGood;
 use App\Models\Inventory\Survey;
+use App\Models\Inventory\InventoryGood;
+use Yajra\DataTables\Utilities\Request;
 use App\Models\Customer\CustomerProspect;
+use App\Models\Opportunity\Survey\SurveyRequest;
 use JasonGuru\LaravelMakeRepository\Repository\BaseRepository;
 //use Your Model
 
@@ -31,7 +32,6 @@ class InventoryRepository
      }
 
      function getMerkTypeByItemId(int $itemId) {
-        // Fetch "jenis" (good_type) and "merek" (merk) data based on the item ID
         $itemData = InventoryGood::select('good_type', 'merk','description')->where('id', $itemId)->first();
         return $itemData;
      }

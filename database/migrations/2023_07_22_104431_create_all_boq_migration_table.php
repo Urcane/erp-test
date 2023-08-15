@@ -17,7 +17,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->id();
             $table->integer('itemable_id');
             $table->string('itemable_type')->nullable();
-            $table->string('item_inventory_id')->nullable();
+            $table->foreignId('item_inventory_id')->nullable()->constrained('inventory_goods');
             $table->string('item_detail')->nullable();
             $table->string('quantity')->nullable();
             $table->string('purchase_price')->nullable();
@@ -39,22 +39,22 @@ class CreateAllBoqMigrationTable extends Migration
         Schema::create('itemable_price_requests', function (Blueprint $table) {
             $table->id();
             $table->integer('survey_id')->nullable();
-            $table->integer('work_list_id')->nullable();
-            $table->string('customer_contact_id');
-            $table->string('customer_company_id');
+            $table->foreignId('work_list_id')->nullable()->constrained('work_lists');
+            $table->foreignId('customer_contact_id')->constrained('customer_contacts');
+            $table->foreignId('customer_company_id')->constrained('customers');
             $table->string('no_ph')->nullable();
             $table->string('release_date')->nullable();
-            $table->string('reference_price_request_id')->nullable()->digits(4);
+            $table->foreignId('reference_price_request_id')->digits(4)->constrained('itemable_price_requests');
             $table->timestamps();
         });
         
         Schema::create('itemable_bill_of_quantities', function (Blueprint $table) {
             $table->id();
-            $table->integer('prospect_id');
+            $table->foreignId('prospect_id')->constrained('customer_prospects');
             $table->integer('survey_request_id')->nullable();
-            $table->integer('sales_id')->nullable();
-            $table->integer('technician_id')->nullable();
-            $table->integer('procurement_id')->nullable();
+            $table->foreignId('sales_id')->nullable()->constrained('users');
+            $table->foreignId('technician_id')->nullable()->constrained('users');
+            $table->foreignId('procurement_id')->nullable()->constrained('users');
             $table->bigInteger('gpm')->digits(20)->nullable();
             $table->bigInteger('modal')->digits(20)->nullable();
             $table->bigInteger('npm')->digits(20)->nullable();
@@ -68,7 +68,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->date('approval_director_date')->nullable();
             $table->boolean('approval_finman')->nullable();
             $table->date('approval_finman_date')->nullable();
-            $table->integer('reference_bill_of_quantity_id')->nullable()->digits(4);
+            $table->foreignId('reference_boq_id')->digits(4)->constrained('itemable_bill_of_quantities');
             $table->timestamps();
         });
 
@@ -79,7 +79,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->string('no_quotation');
             $table->string('description');
             $table->bigInteger('total_price')->digits(20);
-            $table->string('referenced_quotation_id');
+            $table->foreignId('referenced_quotation_id')->constrained('itemable_quotation_parts');
             $table->timestamps();
         });
     }

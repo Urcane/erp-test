@@ -109,5 +109,10 @@ class BoqService
         $saveBoQ = $this->BoQRepository->saveItemsBoQ($request);
         return $saveBoQ;
     }
+
+    function storeDataBoq(Request $request) {
+        return $this->BoQRepository->storeDataBoq($request);
+    }
+
 }
 

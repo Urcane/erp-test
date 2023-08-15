@@ -54,50 +54,33 @@ class BoQRepository
         if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'false') {
             $dataBoq->where('is_done',0);
         }
-        
-        
         return $dataBoq;
     }    
 
-    public function saveItemsBoQ(Request $request){
+    function saveItemsBoQ(Request $request){
         try {
-            // Start a database transaction
             DB::beginTransaction();
-
-            // Get the data for the itemable boq from the request
             $boqData = [
                 'prospect_id' => $request->input('boq.prospect_id'),
                 'survey_request_id' => $request->input('boq.survey_request_id'),
             ];
-            
-            // Cari atau buat itemable boq berdasarkan 'prospect_id'
             $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
                 ['prospect_id' => $boqData['prospect_id']],
                 $boqData
             );
-            
-            // If provided, delete the associated items for the provided itemableBoqId
             if (isset($itemableBoq->id)) {
                 $itemIds = Item::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
                 Item::whereIn('id', $itemIds)->delete();
             }
-
-            // Dapatkan data untuk semua item dari request
             $itemsData = $request->input('items');
-
             foreach ($itemsData as $itemData) {
-                // Buat array yang berisi kriteria pencarian berdasarkan 'id' (jika id ada dalam $itemData)
                 $criteria = [
                     'itemable_id' => $itemableBoq->id,
                     'itemable_type' => $itemableBoq->itemable_type, 
                 ];
-
-                // Jika id ada dalam $itemData, tambahkan 'id' ke dalam kriteria pencarian
                 if (isset($itemData['id'])) {
                     $criteria['id'] = $itemData['id'];
                 }
-            
-                // Buat array yang berisi data untuk menciptakan item baru atau data perubahan
                 $data = [
                     'quantity' => $itemData['quantity'],
                     'purchase_price' => $itemData['purchase_price'],
@@ -107,13 +90,9 @@ class BoQRepository
                     'item_inventory_id' => $itemData['item_inventory_id'],
                     'item_detail' => $itemData['item_detail'],
                 ];
-            
-                // $item = Item::updateOrCreate($criteria, $data);
                 $itemableBoq->itemable()->updateOrCreate($criteria, $data);
             }
-            // Commit the transaction
             DB::commit();
-
             return response()->json(['message' => 'BoQ and items successfully created.'], 200);
         } catch (Exception $e) { 
             DB::rollback();
@@ -131,5 +110,31 @@ class BoQRepository
         return $dataWithId;
     }
   
-   
+    function storeDataBoq(Request $request) {
+        $prospect_id = $request->input('prospect_id');
+        $itemableBoq = ItemableBillOfQuantity::where('prospect_id', $prospect_id)->first();
+        if ($itemableBoq) {
+            [
+                'survey_request_id' => $request->input('survey_request_id'),
+                'sales_id' => $request->input('sales_id'),
+                'technician_id' => $request->input('technician_id'),
+                'procurement_id' => $request->input('procurement_id'),
+                'gpm' => $request->input('gpm'),
+                'modal' => $request->input('modal'),
+                'npm' => $request->input('npm'),
+                'percentage' => $request->input('percentage'),
+                'manpower' => $request->input('manpower'),
+                'approval_manager' => $request->input('approval_manager'),
+                'approval_manager_date' => $request->input('approval_manager_date'),
+                'approval_director' => $request->input('approval_director'),
+                'approval_director_date' => $request->input('approval_director_date'),
+                'approval_finman' => $request->input('approval_finman'),
+                'approval_finman_date' => $request->input('approval_finman_date'),
+                $itemableBoq->save(),
+            ];
+            return response()->json(['message' => 'BoQ successfully updated.'], 200);
+        } else {
+            return response()->json(['message' => 'BoQ not found.'], 404);
+        }
+    }
 }

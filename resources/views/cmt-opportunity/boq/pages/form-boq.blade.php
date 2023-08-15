@@ -74,6 +74,9 @@
                                                     data-control="select2" required name="survey_request_id"
                                                     id="survey_request_id">
                                                     <option value="" selected disabled>Pilih Survey</option>
+                                                    @foreach ($dataSurvey as $survey)
+                                                        <option value="{{$survey->id}}">{{$survey->customerProspect->prospect_title}}</option>
+                                                    @endforeach
                                                 </select>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>

@@ -2,10 +2,9 @@
 
 namespace App\Services\Master\Inventory;
 
-use Carbon\Carbon;
-use Yajra\DataTables\Utilities\Request;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repositories\Master\Inventory\InventoryRepository;
-use Illuminate\Http\JsonResponse;
 
 /**
  * Class InventoryService
@@ -19,14 +18,14 @@ class InventoryService
         $this->InventoryRepository = $InventoryRepository;
     }
 
-    function getDataForm() {
+    function getDataForm()  {
         $dataFormInventory = $this->InventoryRepository->getAllData()->get();
         return $dataFormInventory;
     }
     
-    function getMerkType(int $itemId)
-    {
+    function getMerkType(Request $request) {
+        $itemId = $request->input('item_id') ?? $request->item_id; 
         $itemData = $this->InventoryRepository->getMerkTypeByItemId($itemId);
-        return $itemData;
+        return response()->json($itemData);
     }
 }
