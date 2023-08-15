@@ -66,6 +66,7 @@ class BoQRepository
             ];
             $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
                 ['prospect_id' => $boqData['prospect_id']],
+                ['reference_boq_id' => $boqData['prospect_id']],
                 $boqData
             );
             if (isset($itemableBoq->id)) {

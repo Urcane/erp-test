@@ -56,10 +56,10 @@
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
-                                                <input type="hidden" class="form-control form-control-solid" disabled
+                                                <input type="text" class="form-control form-control-solid" disabled
                                                     placeholder="{{ $dataCompany->prospect_title ?? null }} {{ $dataCompany->customer->customer_name ?? null }}">
 
-                                                <input type="text" class="form-control form-control-solid" disabled
+                                                <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="prospect_id"
                                                     value="{{ $dataCompany->id ?? null }}">
 
