@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Storage;
 
 use App\Constants;
 use App\Models\User;
@@ -259,8 +260,23 @@ class PersonalController extends Controller
                     </ul>
                     ';
                 })
+
+                ->addColumn('certificate', function ($edu) {
+                    $button = '
+                    <div class="btn-edit" id="btn-certificate-modal-' . $edu->id . '">
+                        <a href="#img_certificate_modal" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-eye me-3"></i>' . $edu->certificate . '</a>
+                    </div>
+
+                    <script>
+                        $("#btn-certificate-modal-'. $edu->id . '").click(function() {
+                            $("#img_certificate").attr("src", "' . asset('storage/personal/education/formal-education-certificate/' . $edu->certificate) . '");
+                        });
+                    </script>
+                    ';
+                    return $button;
+                })
                 ->addIndexColumn()
-                ->rawColumns(['action','DT_RowChecklist'])
+                ->rawColumns(['certificate', 'action','DT_RowChecklist'])
                 ->make(true);
             }
         }
@@ -275,7 +291,7 @@ class PersonalController extends Controller
                 'score' => 'required',
             ]);
 
-            UserFormalEducation::updateOrCreate(
+            $userFormalEducation = UserFormalEducation::updateOrCreate(
             [
                 "id" => $request->id,
             ], [
@@ -286,8 +302,20 @@ class PersonalController extends Controller
                 'start_year' => $request->start_year,
                 'end_year' => $request->end_year,
                 'score' => $request->score,
-                'certificate' => "No",
             ]);
+
+            if ($request->certificate) {
+                $file = $request->file('certificate');
+                $filename = time() . '_' . $userFormalEducation->id . "." .  $file->extension();
+
+                if ($userFormalEducation->certificate) {
+                    $filename = $userFormalEducation->certificate;
+                }
+
+                $file->storeAs('personal/education/formal-education-certificate', $filename, 'public');
+
+                $userFormalEducation->update(['certificate' => $filename,]);
+            }
 
             return response()->json([
                 'status' => "succes",
@@ -296,8 +324,10 @@ class PersonalController extends Controller
         }
 
         public function deleteFormalEducation(Request $request) {
-            UserFormalEducation::whereId("$request->id")->delete();
+            $userFormalEducation = UserFormalEducation::whereId($request->id)->first();
+            Storage::delete('public/personal/education/formal-education-certificate/'.$userFormalEducation->certificate);
 
+            $userFormalEducation->delete();
             return response()->json([
                 'status' => "succes",
                 'message' => "Data berhasil dihapus",
@@ -355,9 +385,22 @@ class PersonalController extends Controller
                     $data = $education->expired_date ?? "-";
                     return $data;
                 })
+                ->addColumn('certificate', function ($edu) {
+                    $button = '
+                    <div class="btn-edit" id="btn-certificate-modal-non-' . $edu->id . '">
+                        <a href="#img_certificate_modal" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-eye me-3"></i>' . $edu->certificate . '</a>
+                    </div>
 
+                    <script>
+                        $("#btn-certificate-modal-non-'. $edu->id . '").click(function() {
+                            $("#img_certificate").attr("src", "' . asset('storage/personal/education/non-formal-education-certificate/' . $edu->certificate) . '");
+                        });
+                    </script>
+                    ';
+                    return $button;
+                })
                 ->addIndexColumn()
-                ->rawColumns(['action','DT_RowChecklist'])
+                ->rawColumns(['certificate','action','DT_RowChecklist'])
                 ->make(true);
             }
         }
@@ -375,7 +418,7 @@ class PersonalController extends Controller
                 'fee' => "required",
             ]);
 
-            UserNonFormalEducation::updateOrCreate(
+            $userNonFormalEducation = UserNonFormalEducation::updateOrCreate(
             [
                 "id" => $request->id,
             ], [
@@ -388,8 +431,21 @@ class PersonalController extends Controller
                 'end_year' => $request->end_year,
                 'duration' => $request->duration,
                 'fee' => $request->fee,
-                'certificate' => "No",
             ]);
+
+            if ($request->certificate) {
+                $file = $request->file('certificate');
+                $filename = time() . '_' . $userNonFormalEducation->id . "." .  $file->extension();
+
+                if ($userNonFormalEducation->certificate) {
+                    $filename = $userNonFormalEducation->certificate;
+                }
+
+                $file->storeAs('personal/education/non-formal-education-certificate', $filename, 'public');
+
+                $userNonFormalEducation->update(['certificate' => $filename,]);
+            }
+
 
             return response()->json([
                 'status' => "succes",
@@ -398,7 +454,10 @@ class PersonalController extends Controller
         }
 
         public function deleteNonFormalEducation(Request $request) {
-            UserNonFormalEducation::whereId("$request->id")->delete();
+            $userNonFormalEducation = UserNonFormalEducation::whereId("$request->id")->first();
+            Storage::delete('public/personal/education/non-formal-education-certificate'.$userNonFormalEducation->certificate);
+
+            $userNonFormalEducation->delete();
 
             return response()->json([
                 'status' => "succes",

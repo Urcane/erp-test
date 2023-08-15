@@ -39,8 +39,8 @@
                     <div class="scroll-y me-n10 pe-10" id="modal_create_organization_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_create_organization_header" data-kt-scroll-wrappers="#modal_create_organization_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
                         <div class="col-lg-12 text-center mb-9">
-                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Form Family</span>
-                            <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span>
+                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Organization</span>
+                            {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
                         </div>
                         <div class="col-lg-6 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -124,9 +124,9 @@
                                         </table>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="tab-pane fade" id="chart" role="tabpanel">
-                                <div id="chart-container"></div>
+                                <div class="tab-pane fade" id="chart" role="tabpanel">
+                                    <div id="chart-container"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -149,6 +149,7 @@
             var oc = $('#chart-container').orgchart({
                 'pan': true,
                 'data' : datascource,
+                'zoom' : true,
                 'nodeContent': 'count',
                 'createNode': function($node, data) {
                     $node.on('click', function(event) {
@@ -169,7 +170,7 @@
 </script>
 
 <script>
-    let dataTadataTableOrganizationbleBranch
+    let dataTableOrganization
     $(".btn_tambah_organization").on( "click", function() {
         $("input").val("")
     })

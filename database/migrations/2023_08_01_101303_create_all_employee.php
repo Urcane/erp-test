@@ -100,6 +100,7 @@ class CreateAllEmployee extends Migration
         Schema::create('employment_statuses', function (Blueprint $table) {
             $table->id();
             $table->string("name", 40);
+            $table->boolean('have_end_date')->nullable()->default(false);
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -136,6 +137,23 @@ class CreateAllEmployee extends Migration
         Schema::create('tax_statuses', function (Blueprint $table) {
             $table->id();
             $table->string("name", 40);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('user_file_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string("name", 40);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('user_files', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("user_id")->constrained("users");
+            $table->foreignId("user_file_category_id")->constrained("user_file_categories");
+            $table->string("description", 40);
+            $table->string("file", 40);
             $table->softDeletes()->index();
             $table->timestamps();
         });

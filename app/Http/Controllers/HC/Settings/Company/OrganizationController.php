@@ -10,7 +10,7 @@ use App\Models\Department;
 
 class OrganizationController extends Controller
 {
-    private function _loopChild($department, $root = false) {
+    private function _loopChild($department) {
         $data = [];
 
         foreach ($department as $dep) {

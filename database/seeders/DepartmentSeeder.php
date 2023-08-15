@@ -34,24 +34,29 @@ class DepartmentSeeder extends Seeder
             ]);
         }
 
-        for ($j=0; $j < count($cmr); $j++) {
-            $divCmr = Division::create([
-                'department_id'=>1,
-                'divisi_name'=>$cmr[$j],
-            ]);
-        }
-
         for ($k=0; $k < count($dir); $k++) {
             $divDir = Division::create([
                 'department_id'=>2,
                 'divisi_name'=>$dir[$k],
+                'parent_id' => $k + 1,
+                'parent_id' => $k == 0? null : $k,
             ]);
         }
+
+        for ($j=0; $j < count($cmr); $j++) {
+            $divCmr = Division::create([
+                'department_id'=>1,
+                'divisi_name'=>$cmr[$j],
+                'parent_id' => $j+1,
+            ]);
+        }
+
 
         for ($l=0; $l < count($fin); $l++) {
             $divFin = Division::create([
                 'department_id'=>3,
                 'divisi_name'=>$fin[$l],
+                'parent_id' => $l + 1,
             ]);
         }
 
@@ -59,6 +64,7 @@ class DepartmentSeeder extends Seeder
             $divTo = Division::create([
                 'department_id'=>4,
                 'divisi_name'=>$to[$m],
+                'parent_id' => $m + 1,
             ]);
         }
 
@@ -66,6 +72,7 @@ class DepartmentSeeder extends Seeder
             $divSdv = Division::create([
                 'department_id'=>5,
                 'divisi_name'=>$sdv[$n],
+                'parent_id' => $n + 1,
             ]);
         }
 
@@ -73,6 +80,7 @@ class DepartmentSeeder extends Seeder
             $divRet = Division::create([
                 'department_id'=>6,
                 'divisi_name'=>$ret[$o],
+                'parent_id' => $o + 1,
             ]);
         }
 
@@ -80,6 +88,7 @@ class DepartmentSeeder extends Seeder
             $divHc = Division::create([
                 'department_id'=>7,
                 'divisi_name'=>$hc[$p],
+                'parent_id' => $p + 1,
             ]);
         }
 
