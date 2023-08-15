@@ -90,9 +90,9 @@ class="app-default page-loading-enabled page-loading">
 	</div>
 </div>
 
-<div id="kt_scrolltop" class="scrolltop bg-info" data-kt-scrolltop="true">
-	<i class="fa-solid fa-arrow-up text-white"></i>
-</div>
+{{-- <div id="kt_scrolltop" class="scrolltop bg-info" data-kt-scrolltop="true">
+    <i class="fa-solid fa-arrow-up text-white"></i>
+</div> --}}
 
 <script>
 	var hostUrl = "{{asset('sense')}}/";

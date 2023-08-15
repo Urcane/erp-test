@@ -14,6 +14,7 @@ use App\Models\Master\PowerSource;
 use App\Models\Opportunity\Survey\Master\SiteSurveyServiceType;
 use App\Models\Master\ServiceType;
 use App\Models\Master\TransportationAccess;
+use App\Models\Opportunity\Survey\Master\SiteSurveyInterface;
 use App\Models\Opportunity\Survey\SiteSurveyInternet;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
 use Illuminate\Database\Seeder;
@@ -204,6 +205,35 @@ class OpportunitySeeder extends Seeder
             ['name' => 'Sawit'],
         ])->map(function($item) {
             TransportationAccess::create($item);
+        });
+
+        collect([
+            [
+                'name' => 'Ethernet',
+                'category' => 'INTERNET'
+            ],
+            [
+                'name' => 'RG6',
+                'category' => 'INTERNET'
+            ],
+            [
+                'name' => 'SFP',
+                'category' => 'INTERNET'
+            ],
+            [
+                'name' => 'Ethernet',
+                'category' => 'CCTV'
+            ],
+            [
+                'name' => 'SFP',
+                'category' => 'CCTV'
+            ],
+            [
+                'name' => 'Converter',
+                'category' => 'CCTV'
+            ],
+        ])->map(function($item) {
+            SiteSurveyInterface::create($item);
         });
 
         // collect([

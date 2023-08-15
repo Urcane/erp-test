@@ -13,6 +13,7 @@ use App\Models\Master\PowerSource;
 use App\Models\Opportunity\Survey\Master\SiteSurveyServiceType;
 use App\Models\Master\ServiceType;
 use App\Models\Master\TransportationAccess;
+use App\Models\Opportunity\Survey\Master\SiteSurveyInterface;
 use App\Models\Opportunity\Survey\SiteSurveyInternet;
 use App\Models\Opportunity\Survey\SoftSurvey;
 use App\Models\Opportunity\Survey\SurveyRequest;
@@ -199,7 +200,6 @@ class SurveyController extends Controller
         $surveyRequest = SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey')->findOrFail($request->query('surveyRequestId'));
         $serviceTypes = ServiceType::get();
         $internetBandwidths = InternetBandwidth::get(); 
-        $siteSurveyInterfaces = SiteSurveyInternet::get();
         $powerSources = PowerSource::get();
         $outdoorCableTypes = OutdoorCableType::get();
         $transportationAccesses = TransportationAccess::get();
@@ -212,6 +212,7 @@ class SurveyController extends Controller
                     $bladefy = collect(explode(' ', $lower))->implode('-');
                     
                     $siteSurveyServiceTypes = SiteSurveyServiceType::where('category', strtoupper($lower))->get();
+                    $siteSurveyInterfaces = SiteSurveyInterface::where('category', strtoupper($lower))->get();
                     $view = "cmt-opportunity.survey.pages.site-survey.detail.$bladefy-form";
                 }
             }

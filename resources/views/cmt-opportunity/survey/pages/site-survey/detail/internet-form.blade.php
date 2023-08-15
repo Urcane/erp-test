@@ -9,17 +9,6 @@
 @include('layouts.navbar.navbar')
 @endsection
 
-@section('summary-page')
-{{-- <div class="col-lg-3 col-6 mb-6 mb-md-0 text-center text-md-start">
-    <span class="mb-0 fs-4 fw-bolder d-block text-white">{{$dataUser->count()}}</span>
-    <span class="mb-0 fs-6 fw-bold" style="color:#ad87ff">Total Pegawai</span>
-</div>
-<div class="col-lg-3 col-6 mb-6 mb-md-0 text-center text-md-start">
-    <span class="mb-0 fs-4 fw-bolder d-block text-white">{{$dataDivision->count()}}</span>
-    <span class="mb-0 fs-6 fw-bold" style="color:#ad87ff">Total Divisi</span>
-</div> --}}
-@endsection
-
 @section('toolbar')
 @include('layouts.navbar.toolbar')
 @endsection
@@ -121,7 +110,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-10">
-                                        <input type="text" disabled="disabled" class="form-control form-control-solid" placeholder="" name="customer_name" value="">
+                                        <input type="text" class="form-control form-control-solid" placeholder="" name="local_access" value="{{old('local_access')}}">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
                                 </div>
@@ -132,14 +121,16 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-10">
-                                        <div class="row mt-3">
+                                        <div class="row mt-3 h-min-50px">
                                             @foreach ($internetBandwidths as $internetBandwidth)
-                                            <div class="col-lg-2 mb-3">
-                                                <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="internet_bandwidth[]" id="internet_bandwidth" value="{{$internetBandwidth->id}}">
-                                                <label class="fs-6 form-check-label mb-2" for="internet_bandwidth[]">
-                                                    <span class="fw-bold">{{$internetBandwidth->name}}</span>
-                                                </label>
-                                                <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                <div class="my-auto">
+                                                    <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="internet_bandwidth[]" id="internet_bandwidth" value="{{$internetBandwidth->id}}">
+                                                    <label class="fs-6 form-check-label" for="internet_bandwidth[]">
+                                                        <span class="fw-bold">{{$internetBandwidth->name}}</span>
+                                                    </label>
+                                                    {{-- <div class="fv-plugins-message-container invalid-feedback"></div> --}}
+                                                </div>
                                             </div>
                                             @endforeach
                                         </div>
@@ -152,14 +143,16 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-10">
-                                        <div class="row mt-3">
+                                        <div class="row mt-3 h-min-50px">
                                             @foreach ($siteSurveyInterfaces as $siteSurveyInterface)
-                                            <div class="col-lg-2 mb-3">
-                                                <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="site_survey_interface[]" id="site_survey_interface" value="{{$siteSurveyInterface->id}}">
-                                                <label class="fs-6 form-check-label mb-2" for="site_survey_interface[]">
-                                                    <span class="fw-bold">{{$siteSurveyInterface->name}}</span>
-                                                </label>
-                                                <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                <div class="my-auto">
+                                                    <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="site_survey_interface[]" id="site_survey_interface" value="{{$siteSurveyInterface->id}}">
+                                                    <label class="fs-6 form-check-label" for="site_survey_interface[]">
+                                                        <span class="fw-bold">{{$siteSurveyInterface->name}}</span>
+                                                    </label>
+                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                </div>
                                             </div>
                                             @endforeach
                                         </div>
@@ -171,6 +164,11 @@
                                 @include('cmt-opportunity.survey.component.indoor-form')
                                 <div class="separator mb-6"></div>
                                 @include('cmt-opportunity.survey.component.other-form')
+                                <div class="position-fixed bottom-0 end-0 rounded-circle m-5">
+                                    <button type="submit" class="btn btn-primary btn-md">
+                                        <i class="fa-solid fa-save fs-3"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
