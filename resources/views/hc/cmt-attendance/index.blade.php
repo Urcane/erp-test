@@ -232,7 +232,7 @@
             dom:
             "<'row mb-2'" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
-            "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start '>" +
             ">" +
 
             "<'table-responsive'tr>" +
@@ -245,17 +245,17 @@
             columns: [
                 { data: 'DT_RowChecklist', orderable: false, searchable: false},
                 { data: 'DT_RowIndex', orderable: false, searchable: false},
-                { data: 'name', orderable: true, searchable: true},
-                { data: 'nip' , orderable: true, searchable: true},
-                { data: 'date' , orderable: true, searchable: true},
-                { data: 'shift' , orderable: true, searchable: true},
-                { data: 'schedule_in' , orderable: true, searchable: true},
-                { data: 'schedule_out' , orderable: true, searchable: true},
-                { data: 'clock_in' , orderable: true, searchable: true},
-                { data: 'clock_out' , orderable: true, searchable: true},
-                { data: 'overtime' , orderable: true, searchable: true},
-                { data: 'attendance_code' , orderable: true, searchable: true},
-                { data: 'time_off_code' , orderable: true, searchable: true},
+                { data: 'name', orderable: false, searchable: false},
+                { data: 'nip' , orderable: false, searchable: false},
+                { data: 'date' , orderable: false, searchable: false},
+                { data: 'shift' , orderable: false, searchable: false},
+                { data: 'schedule_in' , orderable: false, searchable: false},
+                { data: 'schedule_out' , orderable: false, searchable: false},
+                { data: 'clock_in' , orderable: false, searchable: false},
+                { data: 'clock_out' , orderable: false, searchable: false},
+                { data: 'overtime' , orderable: false, searchable: false},
+                { data: 'attendance_code' , orderable: false, searchable: false},
+                { data: 'time_off_code' , orderable: false, searchable: false},
                 { data: 'action', orderable: false, searchable: false}
             ],
             createdRow: function(row, data, dataIndex) {
@@ -307,25 +307,13 @@
             },
             search: {
                 "regex": true
-            }
-
-            // columnDefs: [
-            //     {
-            //         targets: 0,
-            //         searchable : false,
-            //         className: 'text-center',
-            //     },
-            //     {
-            //         targets: 1,
-            //         className: 'text-center',
-            //     },
-            //     {
-            //         targets: 7,
-            //         orderable : false,
-            //         searchable : false,
-            //         className : 'text-center',
-            //     },
-            // ],
+            },
+            columnDefs: [
+                {
+                    targets: [0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    className: 'text-center',
+                },
+            ],
         });
 
         $('#range_date').on('apply.daterangepicker', function(ev, picker) {

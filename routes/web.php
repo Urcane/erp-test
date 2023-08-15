@@ -11,6 +11,7 @@ use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\PersonalController;
 use App\Http\Controllers\Profile\TimeManagementController;
 use App\Http\Controllers\HC\Settings;
+use App\Http\Controllers\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -162,6 +163,15 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::controller(CompanyInfoController::class)->group(function () {
 
+        });
+    });
+
+    Route::prefix('cmt-request')->group(function () {
+        Route::controller(Request\AttendanceController::class)->group(function () {
+            Route::prefix('/attendance')->group(function () {
+                Route::post('/create', 'makeRequest')->name('req.attd.create');
+                Route::get('/get-data/table/me', 'showAllRequestTable')->name('req.attd.get-table-me');
+            });
         });
     });
 

@@ -28,7 +28,7 @@
 								<span class="required fw-bold">Grade</span>
 							</label>
                             <select class="drop-data form-select form-select-solid" data-control="grade" name="grade" required>
-                                @foreach ($allOptions->grade as $option)
+                                @foreach ($constants->grade as $option)
                                     <option value="{{$option}}" @if (old('grade') == $option) selected @endif>{{$option}}</option>
                                 @endforeach
                             </select>

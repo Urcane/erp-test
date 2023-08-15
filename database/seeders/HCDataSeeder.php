@@ -222,7 +222,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "1990-01-01",
+                    "2021-01-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -300,7 +300,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "1990-01-01",
+                    "2021-01-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -378,7 +378,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "1990-01-01",
+                    "2021-01-01",
                     now(),
                     "08:00:00",
                     "17:00:00"
@@ -456,7 +456,7 @@ class HCDataSeeder extends Seeder
                     null,
                 ),
                 "user_attendance" => $this->makeAttendance(
-                    "1990-01-01",
+                    "2021-01-01",
                     now(),
                     "08:00:00",
                     "17:00:00"

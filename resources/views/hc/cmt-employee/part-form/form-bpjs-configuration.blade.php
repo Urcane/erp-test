@@ -19,7 +19,7 @@
             @if (($user->userBpjs->ketenagakerjaan_npp ?? old('ketenagakerjaan_npp')) == null)
                 <option value="" selected hidden disabled>Select NPP BPJS Ketenagakerjaan</option>
             @endif
-            @foreach ($allOptions->ketenagakerjaan_npp as $ketenagakerjaan_npp)
+            @foreach ($constants->ketenagakerjaan_npp as $ketenagakerjaan_npp)
                 <option value="{{$ketenagakerjaan_npp}}" @if (($user->userBpjs->ketenagakerjaan_npp ?? old('ketenagakerjaan_npp')) == $ketenagakerjaan_npp) selected @endif>{{$ketenagakerjaan_npp}}</option>
             @endforeach
         </select>
@@ -49,7 +49,7 @@
             @if (($user->userBpjs->kesehatan_family ?? old('kesehatan_family')) == null)
                 <option value="" selected hidden disabled>Select BPJS Kesehatan Family</option>
             @endif
-            @foreach ($allOptions->kesehatan_family as $kesehatan_family)
+            @foreach ($constants->kesehatan_family as $kesehatan_family)
                 <option value="{{$kesehatan_family}}" @if (($user->userBpjs->kesehatan_family ?? old('kesehatan_family')) == $kesehatan_family) selected @endif>{{$kesehatan_family}}</option>
             @endforeach
         </select>
@@ -68,7 +68,7 @@
             <span class="fw-bold">BPJS Kesehatan Cost</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="kesehatan_cost" name="kesehatan_cost" id="kesehatan_cost" @unlessrole("administrator") disabled @endunlessrole>
-            @foreach ($allOptions->kesehatan_cost as $kesehatan_cost)
+            @foreach ($constants->kesehatan_cost as $kesehatan_cost)
                 <option value="{{$kesehatan_cost}}" @if (($user->userBpjs->kesehatan_cost ?? old('kesehatan_cost')) == $kesehatan_cost) selected @endif>{{$kesehatan_cost}}</option>
             @endforeach
         </select>
@@ -80,7 +80,7 @@
             <span class="fw-bold">JHT Cost</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="jht_cost" name="jht_cost" id="jht_cost" @unlessrole("administrator") disabled @endunlessrole>
-            @foreach ($allOptions->jht_cost as $jht_cost)
+            @foreach ($constants->jht_cost as $jht_cost)
                 <option value="{{$jht_cost}}" @if (($user->userBpjs->jht_cost ?? old('jht_cost')) == $jht_cost) selected @endif>{{$jht_cost}}</option>
             @endforeach
         </select>
@@ -92,7 +92,7 @@
             <span class="fw-bold">Jaminan Pensiun Cost</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="jaminan_pensiun_cost" name="jaminan_pensiun_cost" id="jaminan_pensiun_cost" @unlessrole("administrator") disabled @endunlessrole>
-            @foreach ($allOptions->jaminan_pensiun_cost as $jaminan_pensiun_cost)
+            @foreach ($constants->jaminan_pensiun_cost as $jaminan_pensiun_cost)
                 <option value="{{$jaminan_pensiun_cost}}" @if (($user->userBpjs->jaminan_pensiun_cost ?? old('jaminan_pensiun_cost')) == $jaminan_pensiun_cost) selected @endif>{{$jaminan_pensiun_cost}}</option>
             @endforeach
         </select>

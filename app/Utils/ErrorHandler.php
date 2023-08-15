@@ -23,10 +23,14 @@ class ErrorHandler
         if ($error instanceof ValidationException) {
             $errors = $error->validator->errors();
 
+            $errorsArray = [];
+            foreach ($errors->all() as $error) {
+                $errorsArray[] = $error;
+            }
             return [
                 "data" => [
                     "status" => "fail",
-                    "message" => 'Validation Error' . $errors->toArray(),
+                    "message" => 'Validation Error ' . implode(', ', $errorsArray),
                 ],
                 "code" => 400,
             ];

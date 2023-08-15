@@ -20,7 +20,7 @@
             @if (($user->userTax->pktp_status ?? old('pktp')) == null)
                 <option value="" selected hidden disabled>Select PTKP Status</option>
             @endif
-            @foreach ($allOptions->pktp as $pktp)
+            @foreach ($constants->pktp as $pktp)
                 <option value="{{$pktp}}" @if (($user->userTax->pktp_status ?? old('pktp')) == $pktp) selected @endif>{{$pktp}}</option>
             @endforeach
         </select>
@@ -32,7 +32,7 @@
             <span class="fw-bold">TAX Method</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="tax_method" name="tax_method" id="tax_method" @unlessrole("administrator") disabled @endunlessrole>
-            @foreach ($allOptions->tax_method as $tax_method)
+            @foreach ($constants->tax_method as $tax_method)
                 <option value="{{$tax_method}}" @if (($user->userTax->tax_method ?? old('tax_method')) == $tax_method) selected @endif>{{$tax_method}}</option>
             @endforeach
         </select>
@@ -43,7 +43,7 @@
             <span class="fw-bold">Tax Salary</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="tax_salary" name="tax_salary" id="tax_salary" @unlessrole("administrator") disabled @endunlessrole>
-            @foreach ($allOptions->tax_salary as $tax_salary)
+            @foreach ($constants->tax_salary as $tax_salary)
                 <option value="{{$tax_salary}}" @if (($user->userTax->tax_salary ?? old('tax_salary')) == $tax_salary) selected @endif>{{$tax_salary}}</option>
             @endforeach
         </select>
