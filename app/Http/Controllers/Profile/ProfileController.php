@@ -228,10 +228,10 @@ class ProfileController extends Controller
         $dataDivision = Division::all();
 
         $dataRole = Role::all();
-        $allOptions = new Constants();
+        $constants = new Constants();
         $user = User::whereId($id)->first();
-        $users = User::get();
-        $dataTeam = Team::get();
+        $users = User::all();
+        $dataTeam = Team::all();
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataSubBranch = SubBranch::all();
         $dataTaxStatus = TaxStatus::all();
@@ -244,18 +244,18 @@ class ProfileController extends Controller
         return view('profile.index',compact(
             'user',
             'users',
-            "dataNonFormalEducationCategory",
-            "dataRole",
-            "dataTeam",
-            "dataTaxStatus",
+            'dataNonFormalEducationCategory',
+            'dataRole',
+            'dataTeam',
+            'dataTaxStatus',
             'dataDepartment',
-            "dataDivision",
-            'allOptions',
-            "dataEmploymentStatus",
-            "dataSubBranch",
-            "dataWorkingScheduleShift",
-            "dataPaymentSchedule",
-            "dataProrateSetting",
+            'dataDivision',
+            'constants',
+            'dataEmploymentStatus',
+            'dataSubBranch',
+            'dataWorkingScheduleShift',
+            'dataPaymentSchedule',
+            'dataProrateSetting',
         ));
     }
 

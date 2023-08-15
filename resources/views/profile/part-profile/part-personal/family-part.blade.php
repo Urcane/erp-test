@@ -1,5 +1,3 @@
-<meta name="csrf-token" content="{{ csrf_token() }}" />
-
 <div class="modal fade" id="modal_create_family" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
@@ -41,7 +39,7 @@
 								<span class="required fw-bold">Gender</span>
 							</label>
                             <select class="drop-data form-select form-select-solid" data-control="gender" name="gender" required>
-                                @foreach ($allOptions->gender as $option)
+                                @foreach ($constants->gender as $option)
                                     <option value="{{$option}}" @if (old('gender') == $option) selected @endif>{{$option}}</option>
                                 @endforeach
                             </select>
@@ -58,7 +56,7 @@
                                 <span class="required fw-bold">Marital Status</span>
                             </label>
                             <select required class="drop-data form-select form-select-solid" data-control="marital_status" name="marital_status">
-                                @foreach ($allOptions->marital_status as $option)
+                                @foreach ($constants->marital_status as $option)
                                     <option value="{{$option}}" @if (old('marital_status') == $option) selected @endif>{{$option}}</option>
                                 @endforeach
                             </select>
@@ -68,7 +66,7 @@
                                 <span class="required fw-bold">Religion</span>
                             </label>
                             <select required class="drop-data form-select form-select-solid" data-control="religion" name="religion">
-                                @foreach ($allOptions->religion as $option)
+                                @foreach ($constants->religion as $option)
                                     <option value="{{$option}}" @if (old('religion') == $option) selected @endif>{{$option}}</option>
                                 @endforeach
                             </select>

@@ -48,7 +48,7 @@ class UserController extends Controller
         $dataTeam = Team::get();
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataRole = Role::all();
-        $allOptions = new Constants();
+        $constants = new Constants();
         $dataSubBranch = SubBranch::all();
         $dataWorkingScheduleShift = WorkingScheduleShift::all();
         $dataTaxStatus = TaxStatus::all();
@@ -64,7 +64,7 @@ class UserController extends Controller
             "dataTeam",
             "dataTaxStatus",
             'dataRole',
-            'allOptions',
+            'constants',
             "dataEmploymentStatus",
             "dataSubBranch",
             "dataWorkingScheduleShift",

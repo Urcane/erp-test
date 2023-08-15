@@ -12,7 +12,7 @@
             @if (($user->userBank->name ?? old('bank_name')) == null)
                 <option value="" selected hidden disabled>Select bank name</option>
             @endif
-            @foreach ($allOptions->bank_name as $option)
+            @foreach ($constants->bank_name as $option)
                 <option value="{{$option}}" @if (($user->userBank->name ?? old('bank_name')) == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>

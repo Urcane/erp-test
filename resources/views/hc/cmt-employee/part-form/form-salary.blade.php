@@ -24,7 +24,7 @@
             @if (($user->userSalary->salary_type ?? old('salary_type')) == null)
                 <option value="" selected hidden disabled>Select salary type</option>
             @endif
-            @foreach ($allOptions->salary_type as $option)
+            @foreach ($constants->salary_type as $option)
                 <option value="{{$option}}" @if (($user->userSalary->salary_type ?? old('salary_type')) == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>
@@ -78,7 +78,7 @@
             @if (($user->userSalary->overtime_working_day ?? old('overtime_working_day')) == null)
             <option value="" selected hidden disabled>Select Overtime Working Day Default</option>
             @endif
-            @foreach ($allOptions->overtime_working_day as $overtime_working_day)
+            @foreach ($constants->overtime_working_day as $overtime_working_day)
                 <option value="{{$overtime_working_day}}" @if (($user->userSalary->overtime_working_day ?? old('overtime_working_day')) == $overtime_working_day) selected @endif>{{$overtime_working_day}}</option>
             @endforeach
         </select>
@@ -93,7 +93,7 @@
             @if (($user->userSalary->overtime_day_off ?? old('overtime_day_off')) == null)
             <option value="" selected hidden disabled>Select Overtime Day Off Default</option>
             @endif
-            @foreach ($allOptions->overtime_day_off as $overtime_day_off)
+            @foreach ($constants->overtime_day_off as $overtime_day_off)
                 <option value="{{$overtime_day_off}}" @if (($user->userSalary->overtime_day_off ?? old('overtime_day_off')) == $overtime_day_off) selected @endif>{{$overtime_day_off}}</option>
             @endforeach
         </select>
@@ -107,7 +107,7 @@
             @if (($user->userSalary->overtime_national_holiday ?? old('overtime_national_holiday')) == null)
             <option value="" selected hidden disabled>Select Overtime National Holiday Default</option>
             @endif
-            @foreach ($allOptions->overtime_national_holiday as $overtime_national_holiday)
+            @foreach ($constants->overtime_national_holiday as $overtime_national_holiday)
                 <option value="{{$overtime_national_holiday}}" @if (($user->userSalary->overtime_national_holiday ?? old('overtime_national_holiday')) == $overtime_national_holiday) selected @endif>{{$overtime_national_holiday}}</option>
             @endforeach
         </select>

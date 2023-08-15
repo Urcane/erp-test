@@ -50,7 +50,7 @@
             @if (($user->userPersonalData->marital_status ?? "") == "" && old('maritial_status') == null)
                 <option value="" selected hidden disabled>Select Status</option>
             @endif
-            @foreach ($allOptions->marital_status as $option)
+            @foreach ($constants->marital_status as $option)
                 <option value="{{$option}}" @if (($user->userPersonalData->marital_status ?? old('marital_status') ) == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>
@@ -61,7 +61,7 @@
             <span class="fw-bold">Gender</span>
         </label>
         <select class="drop-data form-select form-select-solid" data-control="gender" name="gender">
-            @foreach ($allOptions->gender as $option)
+            @foreach ($constants->gender as $option)
                 <option value="{{$option}}" @if (($user->userPersonalData->gender ?? old('gender')) == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>
@@ -76,7 +76,7 @@
             @if (($user->userPersonalData->religion ?? "") == "" && old('religion') == null)
                 <option value="" selected hidden disabled>Select Religion</option>
             @endif
-            @foreach ($allOptions->religion as $option)
+            @foreach ($constants->religion as $option)
                 <option value="{{$option}}" @if (($user->userPersonalData->religion ?? old('religion') ) == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>
@@ -90,7 +90,7 @@
             @if (($user->userPersonalData->blood_type ?? "") == "" && old('blood_type') == null)
                 <option value="" selected hidden disabled>Select blood type</option>
             @endif
-            @foreach ($allOptions->blood_type as $option)
+            @foreach ($constants->blood_type as $option)
                 <option value="{{$option}}" @if (($user->userPersonalData->blood_type ?? old('blood_type') ) == $option) selected @endif>{{$option}}</option>
             @endforeach
         </select>

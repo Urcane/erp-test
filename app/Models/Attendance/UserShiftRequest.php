@@ -20,7 +20,7 @@ class UserShiftRequest extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function approvedBy(): BelongsTo
+    public function approvalLine(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approval_line');
     }

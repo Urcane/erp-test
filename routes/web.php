@@ -11,6 +11,7 @@ use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\PersonalController;
 use App\Http\Controllers\Profile\TimeManagementController;
 use App\Http\Controllers\HC\Settings;
+use App\Http\Controllers\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,9 +135,15 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/createUpdate/employee/education/non/formal', 'createUpdateNonFormalEducation')->name('hc.emp.create-update-non-formal-education');
             Route::post('/delete/employee/education/non/formal', 'deleteNonFormalEducation')->name('hc.emp.delete-non-formal-education');
 
+            //  work experience
             Route::get('/get-data/table/experience', 'getTableExperience')->name('hc.emp.get-table-experience');
             Route::post('/createUpdate/employee/work/experience', 'createUpdateWorkExperience')->name('hc.emp.create-update-work-experience');
             Route::post('/delete/employee/work/experience', 'deleteWorkExperience')->name('hc.emp.delete-work-experience');
+
+            //  user file
+            Route::get('/get-data/table/user-file', 'getTableUserFile')->name('hc.emp.get-table-user-file');
+            Route::post('/createUpdate/employee/work/user-file', 'createUpdateWorkUserFile')->name('hc.emp.create-update-user-file');
+            Route::post('/delete/employee/work/user-file', 'deleteWorkUserFile')->name('hc.emp.delete-user-file');
 
             Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
             Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
@@ -205,6 +212,15 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('setting-attendance')->group(function () {
         Route::controller(Settings\TimeManagement\AttendanceController::class)->group(function () {
 
+        });
+    });
+
+    Route::prefix('cmt-request')->group(function () {
+        Route::controller(Request\AttendanceController::class)->group(function () {
+            Route::prefix('/attendance')->group(function () {
+                Route::post('/create', 'makeRequest')->name('req.attd.create');
+                Route::get('/get-data/table/me', 'showAllRequestTable')->name('req.attd.get-table-me');
+            });
         });
     });
 
