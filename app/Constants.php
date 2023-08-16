@@ -12,12 +12,6 @@ class Constants
         "holiday",      // Public or company-recognized holiday
     ]; // [0] as default, [1] always be for personal, sick, etc
 
-    public $attend_status = [
-        "on_time",
-        "late_check_in",
-
-    ];
-
     // database related
     public $marital_status = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
     public $gender = ["Laki-laki", "Perempuan"];
@@ -35,7 +29,16 @@ class Constants
     public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
     public $approve_status = ["Waiting", "Approved", "Rejected"]; // [0] as default
 
-
+    // system and view
+    public $filter_status_attendance = [
+        "On Time",
+        "Late Check In",
+        "Early Check Out",
+        "No Check In",
+        "No Check Out",
+        "Hari Libur",
+        "Izin/Cuti"
+    ];
 
     // only view
     public $identity_type = ["KTP", "SIM", "Passport"];
@@ -100,8 +103,8 @@ class Constants
     public $attendance_code_view = [
         "Kerja", // Regular working day
         "Izin/Cuti", // Leaves including personal, sick, etc.
-        "Libur", // Day not on working schedule
-        "Libur", // Public or company-recognized holiday
+        "Libur Kerja", // Day not on working schedule
+        "Hari Libur", // Public or company-recognized holiday
     ];
 
     public function attendanceCodeTranslator($code)

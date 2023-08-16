@@ -15,6 +15,8 @@ use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
+use App\Models\Division;
+use App\Models\Department;
 
 class AttendanceController extends Controller
 {
@@ -29,9 +31,11 @@ class AttendanceController extends Controller
 
     public function index()
     {
-        $attendanceCode = $this->constants->attendance_code_view;
+        $constants = $this->constants;
+        $dataDivision = Division::all();
+        $dataDepartment = Department::all();
 
-        return view('hc.cmt-attendance.index', compact(['attendanceCode']));
+        return view('hc.cmt-attendance.index', compact(['constants', 'dataDivision', 'dataDepartment']));
     }
 
     public function show(string $id)
@@ -327,14 +331,99 @@ class AttendanceController extends Controller
         if (request()->ajax()) {
             $userAttendances = UserAttendance::has('user.userEmployment')->with('user.userEmployment');
 
-            if ($request->dateFilter) {
-                $range_date = collect(explode('-', $request->dateFilter))->map(function ($item) {
+            if ($request->filters['filterDate']) {
+                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
                     return Carbon::parse($item)->toDateString();
                 })->toArray();
 
                 $userAttendances = $userAttendances->whereBetween('date', $range_date)->orderBy('date', 'desc');
             } else {
                 $userAttendances = $userAttendances->orderBy('date', 'desc');
+            }
+
+            $search = $request->filters['search'];
+            if (!empty($search)) {
+                $userAttendances = $userAttendances->where(function ($query) use ($search) {
+                    $query->whereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'LIKE', '%' . $search . '%');
+                    })->orWhereHas('user.userEmployment', function ($query) use ($search) {
+                        $query->where('employee_id', 'LIKE', '%' . $search . '%');
+                    })->orWhere('shift_name', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            $filterDivisi = $request->filters['filterDivisi'];
+            if (!empty($filterDivisi) && $filterDivisi !== '*') {
+                $userAttendances = $userAttendances->whereHas('user', function ($query) use ($filterDivisi) {
+                    $query->where('division_id', $filterDivisi);
+                });
+            }
+
+            $filterDepartment = $request->filters['filterDepartment'];
+            if (!empty($filterDepartment) && $filterDepartment !== '*') {
+                $userAttendances = $userAttendances->whereHas('user', function ($query) use ($filterDepartment) {
+                    $query->where('department_id', $filterDepartment);
+                });
+            }
+
+            switch ($request->filters['filterStatus']) {
+                case $this->constants->filter_status_attendance[0]:
+                    $userAttendances = $userAttendances->where(function ($query) {
+                            $query->whereDate('date', now())->where('attendance_code', '=', $this->constants->attendance_code[0])
+                                ->where(function ($query) {
+                                    $query->where(function ($query) {
+                                        $query->whereNotNull('check_in')
+                                            ->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                                    })->orWhere(function ($query) {
+                                        $query->whereNotNull('check_out')
+                                            ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                    });
+                                });
+                        })->orWhere(function($query) {
+                            $query->whereDate('date', '<', now())
+                                ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                                ->whereNotNull('check_in')
+                                ->whereNotNull('check_out')
+                                ->where(function($q) {
+                                    $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
+                                        ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                });
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[1]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereDate('date', '<', now())
+                        ->where(function ($query) {
+                            $query->whereRaw('TIME(check_in) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[2]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereDate('date', '<', now())
+                        ->where(function ($query) {
+                            $query->whereRaw('TIME(check_out) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[3]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereDate('date', '<', now())
+                        ->whereNull('check_in');
+                    break;
+                case $this->constants->filter_status_attendance[4]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereDate('date', '<', now())
+                        ->whereNull('check_out');
+                    break;
+                case $this->constants->filter_status_attendance[5]:
+                    $userAttendances = $userAttendances->where(function($query) {
+                            $query->where('attendance_code', '=', $this->constants->attendance_code[2])
+                            ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[6]:
+                    $userAttendances = $userAttendances->whereDate('date', '<', now())
+                        ->where('attendance_code', '=', $this->constants->attendance_code[1]);
+                    break;
             }
 
             return DataTables::of($userAttendances)
