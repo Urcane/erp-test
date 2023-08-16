@@ -43,11 +43,11 @@ class CreateAllAttendance extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->date("date")->index();
-            $table->enum("attendance_code", $this->constants->attendance_code)->default($this->constants->attendance_code[0]);
+            $table->enum("attendance_code", $this->constants->attendance_code)->default($this->constants->attendance_code[0])->index();
             $table->string("shift_name", 40);
             $table->string("day_off_code", 10)->nullable();
-            $table->time("working_start");
-            $table->time("working_end");
+            $table->time("working_start")->index();
+            $table->time("working_end")->index();
             $table->tinyInteger("late_check_in");
             $table->tinyInteger("late_check_out");
             $table->integer("overtime")->nullable();

@@ -211,6 +211,8 @@
             $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
         });
 
+        $('#range_date').val(moment().format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+
         function deleteSummaries() {
             $('#on-time').html("-");
             $('#late-clock-in').html("-");
@@ -227,7 +229,7 @@
                 url: "{{route('hc.att.all-summaries')}}",
                 method: 'GET',
                 data: {
-                    dateFilter: $('#range_date').val()
+                    filters: getFilter()
                 },
                 success: function(data) {
                     const {
@@ -346,13 +348,11 @@
 
                 if (!checkIn.isValid() || !checkOut.isValid()) {
                     if (moment(date).isBefore(moment(), 'day')) {
-                        $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
-                    } else if (moment(date).isSame(moment(), 'day')) {
-                        return;
+                        return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
                     }
                 }
 
-                if ((!checkIn.isValid() || !checkOut.isValid()) && moment(date).isBefore(moment(), 'day')) {
+                if (checkIn.isValid() && moment(date).isSame(moment(), 'day') && checkTimeIsAfter(checkIn,workingStartTime.clone().add(lateIn, 'minutes'))) {
                     return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
                 }
 
@@ -388,19 +388,25 @@
         });
 
         $('#filter_department').change(function() {
-            tableAttendance.draw()
+            tableAttendance.draw();
+            deleteSummaries();
+            renderSummaries();
         });
 
         $('#filter_divisi').change(function() {
-            tableAttendance.draw()
+            tableAttendance.draw();
+            deleteSummaries();
+            renderSummaries();
         });
 
         $('#filter_status').change(function() {
-            tableAttendance.draw()
+            tableAttendance.draw();
         });
 
         $('#search_attendance').on('input', function() {
-            tableAttendance.draw()
+            tableAttendance.draw();
+            deleteSummaries();
+            renderSummaries();
         });
 
         renderSummaries();

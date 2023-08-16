@@ -144,6 +144,8 @@
             $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
         });
 
+        $('#range_date').val(moment().subtract(1, 'month').format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+
         function deleteSummaries() {
             $('#on-time').html("-");
             $('#late-clock-in').html("-");
@@ -232,7 +234,7 @@
             dom:
             "<'row mb-2'" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
-            "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start '>" +
             ">" +
 
             "<'table-responsive'tr>" +
@@ -279,10 +281,12 @@
 
                 if (!checkIn.isValid() || !checkOut.isValid()) {
                     if (moment(date).isBefore(moment(), 'day')) {
-                        $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
-                    } else if (moment(date).isSame(moment(), 'day')) {
-                        return;
+                        return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
                     }
+                }
+
+                if (checkIn.isValid() && moment(date).isSame(moment(), 'day') && checkTimeIsAfter(checkIn,workingStartTime.clone().add(lateIn, 'minutes'))) {
+                    return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
                 }
 
                 const isLateCheckIn = checkTimeIsAfter(
