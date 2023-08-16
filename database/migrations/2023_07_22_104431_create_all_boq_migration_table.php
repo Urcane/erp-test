@@ -62,6 +62,8 @@ class CreateAllBoqMigrationTable extends Migration
             $table->integer('manpower')->digits(4)->nullable();
             $table->boolean('is_draft')->default(1);
             $table->boolean('is_done')->nullable();
+            $table->boolean('is_final')->default(0);
+            $table->string('remark')->nullable();
             $table->boolean('approval_manager')->nullable();
             $table->date('approval_manager_date')->nullable();
             $table->boolean('approval_director')->nullable();

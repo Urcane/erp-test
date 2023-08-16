@@ -38,7 +38,7 @@
                             <div class="col-lg-6 d-flex justify-content-end">
                                 <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
                                     <div class="">
-                                        <a href="{{url('cmt-boq/form-boq')}}" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Create BoQ</a>
+                                        <a href="{{url('cmt-boq/create-draft-boq')}}" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Create BoQ</a>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center">
@@ -64,6 +64,9 @@
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0" data-bs-toggle="tab" id="tab_commercial" href="#tab_commercial_content">BoQ Commercial</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="tab_review" href="#tab_on_review_content">On Review</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="tab_boq_done" href="#tab_boq_done_content">Done</a>
@@ -154,7 +157,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- TAB COMMERCIAL  --}}
+                                        {{-- TAB ON REVIEW  --}}
                                         <div class="tab-pane fade" id="tab_commercial_content" role="tabpanel">
                                             <div class="row">
                                                 <div class="col-lg-12">
@@ -162,6 +165,32 @@
                                                         <table
                                                             class="table align-top table-striped border table-rounded gy-5"
                                                             id="kt_table_commercial">
+                                                            <thead class="">
+                                                                <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
+                                                                    <th class="text-center w-75px">#</th>
+                                                                    <th class="w-25px">#</th>
+                                                                    <th class="">Project Name</th>
+                                                                    <th class="w-200px">No. Project</th>
+                                                                    <th class="w-200px">Progress</th>
+                                                                    <th class="w-300px">Next Action</th>
+                                                                    <th class="w-50px text-center">#</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="fs-7">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {{-- TAB COMMERCIAL  --}}
+                                        <div class="tab-pane fade" id="tab_on_review_content" role="tabpanel">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                        <table
+                                                            class="table align-top table-striped border table-rounded gy-5"
+                                                            id="kt_table_review">
                                                             <thead class="">
                                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                                     <th class="text-center w-75px">#</th>
@@ -362,6 +391,27 @@
             ajaxLink: "{{ route('com.boq.render.datatable') }}",
             filters: {
                 is_done: false,
+            },
+            columnData: [
+                // { data: 'DT_RowChecklist'},
+                { data: 'DT_RowIndex'},
+                { data: 'prospect.customer.customer_name'},
+                { data: 'prospect.customer.customer_address'},
+                { data: 'prospect.prospect_title'},
+                { data: 'progress_pretified'},
+                { data: 'next_action_pretified'},
+                { data: 'action' },
+            ]
+         });   
+      });
+
+      $('#tab_review').click(function () {
+        generateDatatable({
+            tableName: "tableOnReviewBoq",
+            elementName: "#kt_table_review",
+            ajaxLink: "{{ route('com.boq.render.datatable') }}",
+            filters: {
+                is_final: true,
             },
             columnData: [
                 // { data: 'DT_RowChecklist'},

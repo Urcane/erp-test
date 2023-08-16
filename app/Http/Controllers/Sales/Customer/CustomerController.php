@@ -518,12 +518,11 @@ class CustomerController extends Controller
                                 ';
             
                 if ( !isset($query->itemableBillOfQuantity)) {
-                    # code...
-                $actions .= '<li><a href="' . url("cmt-boq/form-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
+                $actions .= '<li><a href="' . url("cmt-boq/create-draft-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
                             <i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
                             ';
                 } else {
-                    $actions .= '<li><a href="' . url("cmt-boq/form-update-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
+                    $actions .= '<li><a href="' . url("cmt-boq/update-draft-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
                             <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>';
                 }
         

@@ -4,12 +4,10 @@ namespace App\Services\Sales\Opportunity\BoQ;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Models\Opportunity\BoQ\Items;
 use App\Models\Customer\CustomerProspect;
 use App\Services\Master\Item\ItemService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repositories\Sales\Opportunity\BoQ\BoQRepository;
-use Nette\Utils\Json;
 
 /**
  * Class BoQDraftService
@@ -38,8 +36,8 @@ class BoqService
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/form-boq/" . $query->prospect_id) . '" class="dropdown-item py-2">
-                                <i class="fa-solid fa-list-check me-3"></i>Edit</a></li>
+                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
+                                <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
                             </ul>';
             })
             ->addColumn('next_action_pretified', function ($query) {
@@ -54,6 +52,12 @@ class BoqService
                     $timelineIcon = '<div class="timeline-icon symbol symbol-circle symbol-35px">
                                         <div class="symbol-label bg-light-info">
                                             <i class="fa-solid fa-pencil text-info"></i>    
+                                        </div>
+                                    </div>';
+                } elseif ($query->is_final === 1 && $query->is_done === null) {
+                    $timelineIcon = '<div class="timeline-icon symbol symbol-circle symbol-35px">
+                                        <div class="symbol-label bg-light-info">
+                                            <i class="fa-solid fa-check text-info"></i>    
                                         </div>
                                     </div>';
                 } elseif ($query->is_done === 1) {
@@ -95,23 +99,25 @@ class BoqService
             ->make(true);
     }
 
-    function getFormWithoutID()  {
-        $dataFormWithId = $this->BoQRepository->getDataWithoutId()->get();
-        return $dataFormWithId;
-    }
-
-    function getFormWithID($id)      {
-        $dataFormWithId = $this->BoQRepository->getDataWithId($id)->where('id', $id)->first();
-        return $dataFormWithId;
-    }
-
     function saveItemsBoQ(Request $request) : JsonResponse{
         $saveBoQ = $this->BoQRepository->saveItemsBoQ($request);
         return $saveBoQ;
     }
 
-    function storeDataBoq(Request $request) {
+    function storeDataBoq(Request $request) : JsonResponse {
         return $this->BoQRepository->storeDataBoq($request);
+    }
+
+    function createRevisionBoq(Request $request) : JsonResponse {
+        return $this->BoQRepository->createRevisionBoq($request);
+    }
+
+    function createDraftBoq(Request $request){
+        return $this->BoQRepository->createDraftBoq($request);
+    }
+
+    function updateDraftBoq(Request $request){
+        return $this->BoQRepository->updateDraftBoq($request);
     }
 
 }
