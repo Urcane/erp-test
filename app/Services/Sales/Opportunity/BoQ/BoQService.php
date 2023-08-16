@@ -36,7 +36,7 @@ class BoqService
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/update-draft-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
+                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
                             </ul>';
             })
@@ -99,23 +99,25 @@ class BoqService
             ->make(true);
     }
 
-    function getFormWithoutID()  {
-        $dataFormWithId = $this->BoQRepository->getDataWithoutId()->get();
-        return $dataFormWithId;
-    }
-
-    function getFormWithID($id)      {
-        $dataFormWithId = $this->BoQRepository->getDataWithId($id)->where('id', $id)->first();
-        return $dataFormWithId;
-    }
-
     function saveItemsBoQ(Request $request) : JsonResponse{
         $saveBoQ = $this->BoQRepository->saveItemsBoQ($request);
         return $saveBoQ;
     }
 
-    function storeDataBoq(Request $request) {
+    function storeDataBoq(Request $request) : JsonResponse {
         return $this->BoQRepository->storeDataBoq($request);
+    }
+
+    function createRevisionBoq(Request $request) : JsonResponse {
+        return $this->BoQRepository->createRevisionBoq($request);
+    }
+
+    function createDraftBoq(Request $request){
+        return $this->BoQRepository->createDraftBoq($request);
+    }
+
+    function updateDraftBoq(Request $request){
+        return $this->BoQRepository->updateDraftBoq($request);
     }
 
 }

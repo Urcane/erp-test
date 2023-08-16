@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Opportunity\BoQ\Item;
 use App\Models\Customer\CustomerProspect;
+use App\Models\Opportunity\Survey\SurveyRequest;
+use App\Services\Master\Inventory\InventoryService;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
+use Illuminate\Http\JsonResponse;
 
 //use Your Model
 
@@ -21,13 +24,15 @@ class BoQRepository
      *  Return the model
      */
     protected $model;
-
+    protected $inventoryService;
     protected $customerProspect;
+    protected $surveyRequest;
 
-    function __construct(ItemableBillOfQuantity $model, CustomerProspect $customerProspect )
-    {
+    function __construct(ItemableBillOfQuantity $model, CustomerProspect $customerProspect, InventoryService $inventoryService, SurveyRequest $surveyRequest){
         $this->model = $model;
+        $this->inventoryService = $inventoryService;
         $this->customerProspect = $customerProspect;
+        $this->surveyRequest = $surveyRequest;
     }
 
     function getAll(Request $request){
@@ -58,7 +63,7 @@ class BoQRepository
         return $dataBoq;
     }    
 
-    function saveItemsBoQ(Request $request){
+    function saveItemsBoQ(Request $request) : JsonResponse{
         try {
             DB::beginTransaction();
             $boqData = [
@@ -102,29 +107,19 @@ class BoQRepository
             return response()->json(['error' => $e], 500);
         }
     }   
-
-    function getDataWithoutId(){
-        $dataWithId = $this->customerProspect->with(['customer.customerContact' ,'customer.bussinesType' ])();
-        return $dataWithId;
-    }
-
-    function getDataWithId($id){
-        $dataWithId = $this->customerProspect->with(['customer.customerContact' ,'customer.bussinesType' ]);
-        return $dataWithId;
-    }
   
-    function storeDataBoq(Request $request) {
-        // $request->validate( [
-        //     'prospect_id' => 'required',
-        //     'sales_id' => 'required',
-        //     'technician_id' => 'required',
-        //     'procurement_id' => 'required',
-        //     'gpm' => 'required|numeric',
-        //     'modal' => 'required|numeric',
-        //     'npm' => 'required|numeric',
-        //     'percentage' => 'required|integer',
-        //     'manpower' => 'required|integer',
-        // ]);
+    function storeDataBoq(Request $request) : JsonResponse {
+        $request->validate( [
+            'prospect_id' => 'required',
+            'sales_id' => 'required',
+            'technician_id' => 'required',
+            'procurement_id' => 'required',
+            'gpm' => 'required|numeric',
+            'modal' => 'required|numeric',
+            'npm' => 'required|numeric',
+            'percentage' => 'required|integer',
+            'manpower' => 'required|integer',
+        ]);
 
         $prospect_id = $request->input('prospect_id');
         $itemableBoq = ItemableBillOfQuantity::where('prospect_id', $prospect_id)->first();
@@ -159,12 +154,75 @@ class BoQRepository
             }
             
             $itemableBoq->save();
-            
             return response()->json(['message' => 'BoQ berhasil diperbarui.'], 200);
-
         } else {
             return response()->json(['message' => 'BoQ not found.'], 404);
         }
     }
+
+    function createRevisionBoq(Request $request) : JsonResponse{
+
+        $rejectedBoq = ItemableBillOfQuantity::findOrFail($request->query('id'));
+        $copyBoq = $rejectedBoq->toArray();
+        unset($copyBoq['id']); 
+
+        $revisionBoq = ItemableBillOfQuantity::create($copyBoq);
+
+        foreach ($rejectedBoq->itemable as $item) {
+            $newItems = $item->toArray();
+            unset($newItems['id']); 
+            $revisionBoq->itemable()->create($newItems);
+        }
+
+        return response()->json(['message' => 'Boq Berhasil Dibuat Kembali.'], 200);
+    }
+
+    function createDraftBoq(Request $request){
+        $prospectId = $request->query('prospect_id');
+        $surveyRequestId = $request->query('survey_request_id');
     
+        if ($prospectId && $surveyRequestId) { 
+            $dataForm = $this->inventoryService->getDataForm(); 
+            $dataProspect = $this->customerProspect->doesntHave('itemableBillOfQuantity')->where('id', $prospectId)->first();
+            $dataCompany = $this->customerProspect->with(['customer.customerContact', 'customer.bussinesType'])
+            ->where('id', $prospectId)
+            ->first();
+            $dataSurvey = $this->surveyRequest->with(['customerProspect'])
+            ->where('id', $surveyRequestId)
+            ->where('customer_prospect_id', $prospectId)
+            ->first();    
+             return view('cmt-opportunity.boq.pages.form-boq', compact('dataProspect', 'dataSurvey', 'dataForm','dataCompany'));
+
+        } elseif ($prospectId) {
+            $dataProspect = $this->customerProspect->doesntHave('itemableBillOfQuantity')->where('id', $prospectId)->first();
+            $dataForm = $this->inventoryService->getDataForm(); 
+            $dataCompany = $this->customerProspect->with(['customer.customerContact', 'customer.bussinesType'])
+                ->where('id', $prospectId)
+                ->doesntHave('itemableBillOfQuantity')
+                ->first();
+            $dataSurvey = $this->surveyRequest->with(['customerProspect'])
+            ->where('customer_prospect_id', $prospectId)
+            ->get();
+            return view('cmt-opportunity.boq.pages.form-boq', compact('dataCompany', 'dataProspect', 'dataSurvey', 'dataForm'));
+
+        } else {
+            $dataForm = $this->inventoryService->getDataForm(); 
+            $dataProspect = $this->customerProspect->doesntHave('itemableBillOfQuantity')->get();
+            $dataSurvey = $this->surveyRequest->with(['customerProspect'])->get();
+            return view('cmt-opportunity.boq.pages.form-boq', compact('dataProspect', 'dataSurvey', 'dataForm'));
+        }
+    }
+    
+    function updateDraftBoq(Request $request){
+        $boqId = $request->query('boq_id');
+        $surveyRequestId = $request->query('survey_request_id');
+
+        $prospectId = $this->model->where('id', $boqId)->first();
+
+        $dataItems = $this->model->with('itemable.inventoryGood')->where("prospect_id",$prospectId->prospect_id)->get();
+        $dataCompany = $this->customerProspect->with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId->prospect_id)->first();
+        $dataForm = $this->inventoryService->getDataForm();
+    
+        return view('cmt-opportunity.boq.pages.form-update-boq', compact('dataItems', 'dataForm', 'dataCompany'));
+    }
 }
