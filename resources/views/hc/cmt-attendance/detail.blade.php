@@ -13,6 +13,7 @@
 @endsection
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 <div class="row justify-content-center mt-n20">
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center">
@@ -117,6 +118,9 @@
         </div>
     </div>
 </div>
+
+@include('hc.cmt-attendance.modal.edit-attendance')
+@include('hc.cmt-attendance.modal.delete-attendance')
 
 <script>
     const attendanceCodeEnum = @json($attendanceCode);
@@ -275,18 +279,15 @@
                 const checkIn = getTime(checkInTime, 'YYYY-MM-DD HH:mm:ss');
                 const checkOut = getTime(checkOutTime, 'YYYY-MM-DD HH:mm:ss');
 
+                const today = moment();
+                const isDateToday = moment(date).isSame(today, 'day');
+                const isDateBeforeToday = moment(date).isBefore(today, 'day');
+
+                const $row = $(row);
+                const redBgColor = 'rgba(255, 0, 0, 0.2)';
+
                 if (attendanceCode !== attendanceCodeEnum[0]) {
-                    return $(row).css('background-color', 'rgba(192, 192, 192, 0.4)');
-                }
-
-                if (!checkIn.isValid() || !checkOut.isValid()) {
-                    if (moment(date).isBefore(moment(), 'day')) {
-                        return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
-                    }
-                }
-
-                if (checkIn.isValid() && moment(date).isSame(moment(), 'day') && checkTimeIsAfter(checkIn,workingStartTime.clone().add(lateIn, 'minutes'))) {
-                    return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
+                    return $row.css('background-color', 'rgba(192, 192, 192, 0.4)');
                 }
 
                 const isLateCheckIn = checkTimeIsAfter(
@@ -299,8 +300,16 @@
                     checkOut
                 );
 
-                if (isLateCheckIn || isEarlyCheckOut) {
-                    return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
+                if (
+                    (!checkIn.isValid() || !checkOut.isValid()) && isDateBeforeToday ||
+                    isDateToday && (
+                        (checkIn.isValid() && isLateCheckIn) ||
+                        (checkOut.isValid() && isEarlyCheckOut) ||
+                        (!checkIn.isValid() && checkTimeIsAfter(today, workingStartTime.clone().add(lateIn, 'minutes')))
+                    ) ||
+                    isLateCheckIn || isEarlyCheckOut
+                ) {
+                    return $row.css('background-color', redBgColor);
                 }
             }
 
@@ -327,6 +336,50 @@
             tableAttendance.draw();
             deleteSummaries();
             renderSummaries();
+        });
+
+        $('#modal_attendance_edit_modal').submit(function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: "{{ route('hc.att.edit') }}",
+                type: 'PUT',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    tableAttendance.draw();
+                    renderSummaries();
+                    toastr.success(data.message,'Selamat 🚀 !');
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
+        });
+
+        $('#modal_attendance_delete_modal').submit(function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: "{{ route('hc.att.delete') }}",
+                type: 'PUT',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    tableAttendance.draw();
+                    renderSummaries();
+                    toastr.success(data.message,'Selamat 🚀 !');
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
         });
 
         renderSummaries();

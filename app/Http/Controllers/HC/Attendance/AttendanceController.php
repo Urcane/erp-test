@@ -6,13 +6,16 @@ use Carbon\Carbon;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Utils\ErrorHandler;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Constants;
 
-use App\Models\User;
+use App\Utils\ErrorHandler;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
+use App\Models\User;
+use App\Models\Attendance\AttendanceChangeLogs;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
 use App\Models\Division;
@@ -48,6 +51,105 @@ class AttendanceController extends Controller
         }
 
         return view('hc.cmt-attendance.detail', compact(['user', 'attendanceCode']));
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            $request->validate([
+                "id" => "required",
+                "check_in" => "nullable",
+                "check_out" => "nullable",
+                "reason" => "nullable"
+            ]);
+
+            $checkIn = $request->check_in ? Carbon::parse($request->check_in) : null;
+            $checkOut = $request->check_out ? Carbon::parse($request->check_out) : null;
+
+            $userAttendance = UserAttendance::whereId($request->id)->first();
+
+            AttendanceChangeLogs::create([
+                "user_id" => Auth::user()->id,
+                "attendance_id" => $request->id,
+                "date" => $userAttendance->date,
+                "action" => "EDIT",
+                "old_check_in" => $userAttendance->check_in,
+                "old_check_out" => $userAttendance->check_out,
+                "new_check_in" => $checkIn,
+                "new_check_out" => $checkOut,
+                "reason" => $request->reason
+            ]);
+
+            $userAttendance->update([
+                "check_in" => $checkIn,
+                "check_out" => $checkOut
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Data Attendance berhasil diupdate"
+            ], 200);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function destroy(Request $request)
+    {
+        try {
+            $request->validate([
+                "id" => "required",
+                "reason" => "nullable"
+            ]);
+
+            $userAttendance = UserAttendance::whereId($request->id)->first();
+
+            DB::transaction(function () use ($request, $userAttendance) {
+                try {
+                    AttendanceChangeLogs::create([
+                        "user_id" => Auth::user()->id,
+                        "attendance_id" => $request->id,
+                        "date" => $userAttendance->date,
+                        "action" => "DELETE",
+                        "old_check_in" => $userAttendance->check_in,
+                        "old_check_out" => $userAttendance->check_out,
+                        "new_check_in" => null,
+                        "new_check_out" => null,
+                        "reason" => $request->reason
+                    ]);
+
+                    $userAttendance->update([
+                        "check_in" => null,
+                        "check_out" => null
+                    ]);
+
+                    DB::commit();
+
+                    return response()->json([
+                        "status" => "success",
+                        "message" => "Data Attendance berhasil diupdate"
+                    ], 200);
+                } catch (\Exception $e) {
+                    DB::rollback();
+
+                    $data = $this->errorHandler->handle($e);
+                    return response()->json($data["data"], $data["code"]);
+                }
+            });
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil menghapus attendance"
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function getAttendanceSummaries(Request $request)
@@ -459,14 +561,10 @@ class AttendanceController extends Controller
                     return $userAttendances->day_off_code ?? "-";
                 })
                 ->addColumn('action', function ($userAttendances) {
-                    return '
-                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                    <ul class="dropdown-menu">
-                        <li><a href="' . route('hc.att.detail', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-eye me-3"></i>Detail</a></li>
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-pencil me-3"></i>Edit</a></li>
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Hapus</a></li>
-                    </ul>
-                ';
+                    $checkIn = $userAttendances->check_in ? date('H:i', strtotime($userAttendances->check_in)) : null;
+                    $checkOut = $userAttendances->check_out ? date('H:i', strtotime($userAttendances->check_out)) : null;
+
+                    return view('hc.cmt-attendance.components.menu', compact(['checkIn', 'checkOut', 'userAttendances']));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])
@@ -531,14 +629,10 @@ class AttendanceController extends Controller
                     return $userAttendances->day_off_code ?? "-";
                 })
                 ->addColumn('action', function ($userAttendances) {
-                    return '
-                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                    <ul class="dropdown-menu">
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-eye me-3"></i>Detail</a></li>
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-pencil me-3"></i>Edit</a></li>
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Hapus</a></li>
-                    </ul>
-                ';
+                    $checkIn = $userAttendances->check_in ? date('H:i', strtotime($userAttendances->check_in)) : null;
+                    $checkOut = $userAttendances->check_out ? date('H:i', strtotime($userAttendances->check_out)) : null;
+
+                    return view('hc.cmt-attendance.components.menu', compact(['checkIn', 'checkOut', 'userAttendances']));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])

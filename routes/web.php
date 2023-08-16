@@ -48,6 +48,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/list', 'index')->name('hc.att.index');
             Route::get('/list/{id}', 'show')->name('hc.att.detail');
 
+            Route::put('/attendances', 'update')->name('hc.att.edit');
+            Route::delete('/attendances', 'destroy')->name('hc.att.delete');
+
             Route::get('/summaries', 'getAttendanceSummaries')->name('hc.att.all-summaries');
             Route::get('/summaries/user', 'getAttendanceSummariesById')->name('hc.att.user-summaries');
 

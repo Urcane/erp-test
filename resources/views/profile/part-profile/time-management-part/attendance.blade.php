@@ -29,7 +29,7 @@
                                 </label>
                                 <input type="text" class="form-control form-control-solid"
                                     value="{{ $user->userEmployment->workingScheduleShift->workingShift->name }}"
-                                    placeholder="Nomor Induk Keluarga" disabled>
+                                    disabled>
                             </div>
                             <div class="col-lg-6 mt-3 mb-3">
                                 <input type="checkbox" class="form-check-input checkbox-real" id="check_in_box">
