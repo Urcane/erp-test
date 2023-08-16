@@ -41,7 +41,14 @@ class BoQController extends Controller{
     }
     
     function createDraftBoq(Request $request) {
-        return $this->BoqService->createDraftBoq($request);
+        if ($request->query()) {
+            return $this->BoqService->createDraftBoqQuery($request);
+        } elseif ($request->ajax()) {
+            return $this->BoqService->createDraftBoqAjax($request);
+        } else {
+            return $this->BoqService->createDraftBoq();
+        }
+       return response()->json('Oops, Somethin\' Just Broke :(');
     }
     
     function updateDraftBoq(Request $request)  {

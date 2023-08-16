@@ -112,9 +112,37 @@ class BoqService
         return $this->BoQRepository->createRevisionBoq($request);
     }
 
-    function createDraftBoq(Request $request){
-        $createDraftBoqData = $this->BoQRepository->createDraftBoq($request);
-        return view('cmt-opportunity.boq.pages.form-boq', compact('createDraftBoqData'));
+    function createDraftBoqQuery(Request $request){
+        $dataProspect =  $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
+        $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
+        $dataItem = $this->BoQRepository->getListItem();
+        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->first();
+        // return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
+        return response()->json([
+            'dataProspect' => $dataProspect,
+            'dataCompany' => $dataCompany,
+            'dataItem' => $dataItem,
+            'dataSurvey' => $dataSurvey,
+        ]);
+    }
+
+    function createDraftBoqAjax(Request $request){
+        $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
+        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->first();
+        return response()->json([
+            'dataCompany' => $dataCompany,
+            'dataSurvey' => $dataSurvey,
+        ]);
+    }
+
+    function createDraftBoq(){
+        $dataProspect = $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
+        $dataItem = $this->BoQRepository->getListItem();
+        // return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem', 'dataSurvey'));
+        return response()->json([
+            'dataProspect' => $dataProspect,
+            'dataItem' => $dataItem,
+        ]);
     }
 
     function updateDraftBoq(Request $request){

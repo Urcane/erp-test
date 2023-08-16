@@ -11,6 +11,7 @@ use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Services\Master\Inventory\InventoryService;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use Illuminate\Http\JsonResponse;
+use Nette\Utils\Json;
 
 //use Your Model
 
@@ -61,7 +62,19 @@ class BoQRepository
             $dataBoq->where('is_done',0);
         }
         return $dataBoq;
-    }    
+    }  
+    
+    function getProspect()  {
+        return $this->customerProspect->with('customer.customerContact', 'customer.bussinesType','surveyRequest');
+    }
+    
+    function getListItem()  {
+        return $this->inventoryService->getDataForm();
+    }
+
+    function getSurvey() {
+        return $this->surveyRequest;
+    }
 
     function saveItemsBoQ(Request $request) : JsonResponse{
         try {
@@ -177,58 +190,6 @@ class BoQRepository
         return response()->json(['message' => 'Boq Berhasil Dibuat Kembali.'], 200);
     }
 
-    function createDraftBoq(Request $request){
-        $prospectId = $request->query('prospect_id');
-        $surveyRequestId = $request->query('survey_request_id');
-    
-        if ($prospectId && $surveyRequestId) { 
-            $dataForm = $this->inventoryService->getDataForm(); 
-            $dataProspect = $this->customerProspect
-                ->doesntHave('itemableBillOfQuantity')
-                ->with(['customer.customerContact', 'customer.bussinesType'])
-                ->where('id', $prospectId)
-                ->first();
-            $dataSurvey = $this->surveyRequest->with(['customerProspect'])
-                ->where('id', $surveyRequestId)
-                ->where('customer_prospect_id', $prospectId)
-                ->first();    
-
-            return [
-                'dataProspect' => $dataProspect,
-                'dataSurvey' => $dataSurvey,
-                'dataForm' => $dataForm,
-            ];
-
-        } elseif ($prospectId) {
-            $dataForm = $this->inventoryService->getDataForm(); 
-            $dataProspect = $this->customerProspect
-                ->doesntHave('itemableBillOfQuantity')
-                ->with(['customer.customerContact', 'customer.bussinesType'])
-                ->where('id', $prospectId)
-                ->first();
-            $dataSurvey = $this->surveyRequest->with(['customerProspect'])
-            ->where('customer_prospect_id', $prospectId)
-            ->get();
-
-            return [
-                'dataProspect' => $dataProspect,
-                'dataSurvey' => $dataSurvey,
-                'dataForm' => $dataForm,
-            ];
-
-        } else {
-            $dataForm = $this->inventoryService->getDataForm(); 
-            $dataProspect = $this->customerProspect->doesntHave('itemableBillOfQuantity')->get();
-            $dataSurvey = $this->surveyRequest->with(['customerProspect'])->get();
-            
-            return [
-                'dataProspect' => $dataProspect,
-                'dataSurvey' => $dataSurvey,
-                'dataForm' => $dataForm,
-            ];
-        }
-    }
-    
     function updateDraftBoq(Request $request){
         $boqId = $request->query('boq_id');
         $prospectId = $this->model->where('id', $boqId)->first();
