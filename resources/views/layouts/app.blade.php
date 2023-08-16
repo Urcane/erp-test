@@ -154,7 +154,7 @@ class="app-default page-loading-enabled page-loading">
         });
     }
 
-	function submitModal({modalName, tableName, ajaxLink, anotherTableName = null,validationMessages = {}}) {
+	function submitModal({modalName, tableName = null, ajaxLink, anotherTableName = null , validationMessages = {}}) {
         $(`#${modalName}_form`).validate({
             messages: validationMessages,
             submitHandler: function(form) {

@@ -231,23 +231,43 @@ class SurveyController extends Controller
     }
 
     /**
-     * Store Survey Result From Survey Request with WO
+     * Draft Survey Result From Survey Request with WO
      * 
      * @param \App\Http\Requests\Opportunity\Survey\SurveyResultRequest $request
      * 
      * @return Illuminate\Http\JsonResponse Returning JSON Response Data
      */
-    function storeSurveyResult(SurveyResultRequest $request) : JsonResponse {
+    function draftSurveyResult(Request $request) : JsonResponse {
         try {
-            $result = $this->surveyResultService->storeSurveyResultData($request);
+            $result = $request->session()->put('surveyResultTemp', $request->all());
 
             return response()->json([
+                "sessionData" => $request->session()->get('surveyResultTemp'),
                 "status" => "Yeay Berhasil!! 💼"
             ], 200);
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
+    }
+
+    /**
+     * Store Survey Result From Survey Request with WO
+     * 
+     * @param \App\Http\Requests\Opportunity\Survey\SurveyResultRequest $request
+     * 
+     * @return Illuminate\Http\JsonResponse Returning JSON Response Data
+     */
+    function storeSurveyResult(Request $request) : JsonResponse {
+        // try {
+            $result = $this->surveyResultService->storeSurveyResultData($request);
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼"
+            ], 200);
+        // } catch (\Throwable $th) {
+        //     Log::error($th);
+        //     return response()->json("Oopss, ada yang salah nih!", 500);
+        // }
     }
 
     /**

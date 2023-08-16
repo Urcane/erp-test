@@ -1,4 +1,5 @@
-<div>
+<div class="mt-6">
+    <h3 class="">Indoor Form</h3>
     <div class="row mb-3">
         <div class="col-lg-2">
             <label class="d-flex align-items-center fs-6 form-label h-100">
@@ -9,7 +10,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="room_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="room_status" value="1">
                         <label class="fs-6 form-check-label" for="room_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -17,7 +18,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="room_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="room_status" value="0">
                         <label class="fs-6 form-check-label" for="room_status">
                             <span class="fw-bold">Belum ada</span>
                         </label>
@@ -27,7 +28,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="room_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="room_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -41,7 +42,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="air_conditioning_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="air_conditioning_status" value="1">
                         <label class="fs-6 form-check-label" for="air_conditioning_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -49,7 +50,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="air_conditioning_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="air_conditioning_status" value="0">
                         <label class="fs-6 form-check-label" for="air_conditioning_status">
                             <span class="fw-bold">Belum ada</span>
                         </label>
@@ -59,7 +60,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="air_conditioning_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="air_conditioning_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -74,8 +75,8 @@
                 @foreach ($powerSources as $powerSource)
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="power_source" value="{{$powerSource->id}}">
-                        <label class="fs-6 form-check-label" for="power_source">
+                        <input type="radio" class="form-check-input" placeholder="" name="power_source_id" value="{{$powerSource->id}}">
+                        <label class="fs-6 form-check-label" for="power_source_id">
                             <span class="fw-bold">{{$powerSource->name}}</span>
                         </label>
                     </div>
@@ -85,7 +86,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="power_sorce_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="power_source_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -99,7 +100,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="mcb_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="mcb_status" value="1">
                         <label class="fs-6 form-check-label" for="mcb_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -107,7 +108,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="mcb_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="mcb_status" value="0">
                         <label class="fs-6 form-check-label" for="mcb_status">
                             <span class="fw-bold">Belum ada</span>
                         </label>
@@ -117,7 +118,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="mcb_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="mcb_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -131,7 +132,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="mcb_type" value="AC">
+                        <input type="radio" class="form-check-input" placeholder="" name="mcb_type" value="AC">
                         <label class="fs-6 form-check-label" for="mcb_type">
                             <span class="fw-bold">AC</span>
                         </label>
@@ -139,7 +140,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="mcb_type" value="DC">
+                        <input type="radio" class="form-check-input" placeholder="" name="mcb_type" value="DC">
                         <label class="fs-6 form-check-label" for="mcb_type">
                             <span class="fw-bold">DC</span>
                         </label>
@@ -149,7 +150,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="mcb_type" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="mcb_type_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -184,7 +185,7 @@
         <div class="col-lg-6"></div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="voltage_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="voltage_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -198,7 +199,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="ups_regulator_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="ups_regulator_status" value="1">
                         <label class="fs-6 form-check-label" for="ups_regulator_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -206,7 +207,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="ups_regulator_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="ups_regulator_status" value="0">
                         <label class="fs-6 form-check-label" for="ups_regulator_status">
                             <span class="fw-bold">Tidak Ada</span>
                         </label>
@@ -216,7 +217,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="ups_regulator_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="ups_regulator_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -230,7 +231,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="table_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="table_status" value="1">
                         <label class="fs-6 form-check-label" for="table_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -238,7 +239,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="table_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="table_status" value="0">
                         <label class="fs-6 form-check-label" for="table_status">
                             <span class="fw-bold">Tidak Ada</span>
                         </label>
@@ -248,7 +249,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="table_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="table_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>

@@ -10,7 +10,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="tower_available_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="tower_available_status" value="1">
                         <label class="fs-6 form-check-label" for="tower_available_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -18,7 +18,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="tower_available_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="tower_available_status" value="0">
                         <label class="fs-6 form-check-label" for="tower_available_status">
                             <span class="fw-bold">Belum ada</span>
                         </label>
@@ -28,7 +28,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="tower_available_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="tower_available_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -45,7 +45,7 @@
         <div class="col-lg-6"></div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="closest_site_range" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="closest_site_range_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -59,7 +59,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="closest_tower_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="closest_tower_status" value="1">
                         <label class="fs-6 form-check-label" for="closest_tower_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="closest_tower_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="closest_tower_status" value="0">
                         <label class="fs-6 form-check-label" for="closest_tower_status">
                             <span class="fw-bold">Belum ada</span>
                         </label>
@@ -77,7 +77,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="closest_tower_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="closest_tower_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -91,7 +91,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="thunder_protector_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="thunder_protector_status" value="1">
                         <label class="fs-6 form-check-label" for="thunder_protector_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -99,7 +99,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="thunder_protector_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="thunder_protector_status" value="0">
                         <label class="fs-6 form-check-label" for="thunder_protector_status">
                             <span class="fw-bold">Belum ada</span>
                         </label>
@@ -109,7 +109,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="thunder_protector_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="thunder_protector_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -123,7 +123,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="grounding_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="grounding_status" value="1">
                         <label class="fs-6 form-check-label" for="grounding_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -131,7 +131,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="grounding_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="grounding_status" value="0">
                         <label class="fs-6 form-check-label" for="grounding_status">
                             <span class="fw-bold">Belum ada</span>
                         </label>
@@ -141,7 +141,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="grounding_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="grounding_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -155,7 +155,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="cable_tray_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="cable_tray_status" value="1">
                         <label class="fs-6 form-check-label" for="cable_tray_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -163,7 +163,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="cable_tray_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="cable_tray_status" value="0">
                         <label class="fs-6 form-check-label" for="cable_tray_status">
                             <span class="fw-bold">Belum ada</span>
                         </label>
@@ -173,7 +173,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="cable_tray_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="cable_tray_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
@@ -187,7 +187,7 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="pondation_status" value="1">
+                        <input type="radio" class="form-check-input" placeholder="" name="pondation_status" value="1">
                         <label class="fs-6 form-check-label" for="pondation_status">
                             <span class="fw-bold">Ada</span>
                         </label>
@@ -195,7 +195,7 @@
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input type="radio" class="form-check-input checkbox-real" placeholder="" name="pondation_status" value="0">
+                        <input type="radio" class="form-check-input" placeholder="" name="pondation_status" value="0">
                         <label class="fs-6 form-check-label" for="pondation_status">
                             <span class="fw-bold">Belum ada</span>
                         </label>
@@ -205,7 +205,7 @@
         </div>
         <div class="col-lg-2"></div>
         <div class="col-lg-10 mt-2">
-            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" required name="pondation_status_note" style="resize:none"></textarea>
+            <textarea class="form-control form-control-solid" placeholder="Notes" rows="5" name="pondation_status_note" style="resize:none"></textarea>
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     </div>
