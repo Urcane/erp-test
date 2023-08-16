@@ -113,11 +113,13 @@ class BoqService
     }
 
     function createDraftBoq(Request $request){
-        return $this->BoQRepository->createDraftBoq($request);
+        $createDraftBoqData = $this->BoQRepository->createDraftBoq($request);
+        return view('cmt-opportunity.boq.pages.form-boq', compact('createDraftBoqData'));
     }
 
     function updateDraftBoq(Request $request){
-        return $this->BoQRepository->updateDraftBoq($request);
+        $updateDraftBoqData = $this->BoQRepository->updateDraftBoq($request);
+        return view('cmt-opportunity.boq.pages.form-update-boq', compact('updateDraftBoqData'));
     }
 
 }

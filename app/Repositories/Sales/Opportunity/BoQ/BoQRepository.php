@@ -100,7 +100,7 @@ class BoQRepository
                 $itemableBoq->itemable()->updateOrCreate($criteria, $data);
             }
             DB::commit();
-            return redirect()->route('com.boq.index')->with(response()->json(['message' => 'BoQ berhasil disimpan.'], 200));
+            return response()->json(['message' => 'BoQ berhasil disimpan.'], 200);
             
         } catch (Exception $e) { 
             DB::rollback();
@@ -183,46 +183,62 @@ class BoQRepository
     
         if ($prospectId && $surveyRequestId) { 
             $dataForm = $this->inventoryService->getDataForm(); 
-            $dataProspect = $this->customerProspect->doesntHave('itemableBillOfQuantity')->where('id', $prospectId)->first();
-            $dataCompany = $this->customerProspect->with(['customer.customerContact', 'customer.bussinesType'])
-            ->where('id', $prospectId)
-            ->first();
+            $dataProspect = $this->customerProspect
+                ->doesntHave('itemableBillOfQuantity')
+                ->with(['customer.customerContact', 'customer.bussinesType'])
+                ->where('id', $prospectId)
+                ->first();
             $dataSurvey = $this->surveyRequest->with(['customerProspect'])
-            ->where('id', $surveyRequestId)
-            ->where('customer_prospect_id', $prospectId)
-            ->first();    
-             return view('cmt-opportunity.boq.pages.form-boq', compact('dataProspect', 'dataSurvey', 'dataForm','dataCompany'));
+                ->where('id', $surveyRequestId)
+                ->where('customer_prospect_id', $prospectId)
+                ->first();    
+
+            return [
+                'dataProspect' => $dataProspect,
+                'dataSurvey' => $dataSurvey,
+                'dataForm' => $dataForm,
+            ];
 
         } elseif ($prospectId) {
-            $dataProspect = $this->customerProspect->doesntHave('itemableBillOfQuantity')->where('id', $prospectId)->first();
             $dataForm = $this->inventoryService->getDataForm(); 
-            $dataCompany = $this->customerProspect->with(['customer.customerContact', 'customer.bussinesType'])
-                ->where('id', $prospectId)
+            $dataProspect = $this->customerProspect
                 ->doesntHave('itemableBillOfQuantity')
+                ->with(['customer.customerContact', 'customer.bussinesType'])
+                ->where('id', $prospectId)
                 ->first();
             $dataSurvey = $this->surveyRequest->with(['customerProspect'])
             ->where('customer_prospect_id', $prospectId)
             ->get();
-            return view('cmt-opportunity.boq.pages.form-boq', compact('dataCompany', 'dataProspect', 'dataSurvey', 'dataForm'));
+
+            return [
+                'dataProspect' => $dataProspect,
+                'dataSurvey' => $dataSurvey,
+                'dataForm' => $dataForm,
+            ];
 
         } else {
             $dataForm = $this->inventoryService->getDataForm(); 
             $dataProspect = $this->customerProspect->doesntHave('itemableBillOfQuantity')->get();
             $dataSurvey = $this->surveyRequest->with(['customerProspect'])->get();
-            return view('cmt-opportunity.boq.pages.form-boq', compact('dataProspect', 'dataSurvey', 'dataForm'));
+            
+            return [
+                'dataProspect' => $dataProspect,
+                'dataSurvey' => $dataSurvey,
+                'dataForm' => $dataForm,
+            ];
         }
     }
     
     function updateDraftBoq(Request $request){
         $boqId = $request->query('boq_id');
-        $surveyRequestId = $request->query('survey_request_id');
-
         $prospectId = $this->model->where('id', $boqId)->first();
 
-        $dataItems = $this->model->with('itemable.inventoryGood')->where("prospect_id",$prospectId->prospect_id)->get();
-        $dataCompany = $this->customerProspect->with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId->prospect_id)->first();
+        $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$prospectId->prospect_id)->get();
         $dataForm = $this->inventoryService->getDataForm();
-    
-        return view('cmt-opportunity.boq.pages.form-update-boq', compact('dataItems', 'dataForm', 'dataCompany'));
+
+        return [
+            'dataCompanyItem' => $dataCompanyItem,
+            'dataForm' => $dataForm,
+        ];
     }
 }

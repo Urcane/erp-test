@@ -23,13 +23,10 @@ class ItemableBillOfQuantity extends Model
     {
         return $this->morphMany(Item::class, 'itemable');
     }
-    // public function items(): MorphMany
-    // {
-    //     // Mengembalikan hasil relasi "MorphMany" dengan model "Items"
-    //     // 'itemable_id' dan 'itemable_type' adalah kolom yang digunakan
-    //     // untuk mengidentifikasi polimorfik relasi pada tabel "items"
-    //     return $this->morphMany(Items::class, 'itemable', 'itemable_type', 'itemable_id');
-    // }
+    
+    function customerProspect() : BelongsTo {
+        return $this->belongsTo(CustomerProspect::class, 'prospect_id', 'id');
+    }
 
     function prospect() : BelongsTo {
         return $this->belongsTo(CustomerProspect::class, 'prospect_id', 'id');
