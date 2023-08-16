@@ -26,10 +26,12 @@
                                     <span class="fs-1 fw-bolder text-dark d-block mb-1">Branch</span>
                                 </div>
                                 <div class="row p-6 m-1 rounded border border-2 border-secondary">
-                                    <form action="">
+                                    <form action="{{route("hc.setting.branch.createUpdate")}}" method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <input type="hidden" name="company_id" value="{{$subBranch->id ?? old('company_id')}}">
                                         <section class="row">
                                             <div class="col-12 mb-3 d-flex justify-content-center mt-5">
-                                                <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle m-auto" style="width: 150px;" alt="Avatar" />
+                                                <img src="{{($subBranch->logo ?? null) ? asset("storage/branch-logo/" . $subBranch->logo) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFmDTZFCydgh_teJfzp3Gxq88OgTC_VYdUUg&usqp=CAU"}}" class="rounded-circle m-auto" style="width: 150px;" alt="Avatar" />
                                             </div>
                                             <div class="col-12 d-flex justify-content-center mt-5">
                                                 <label class="align-items-center fs-6 form-label" for="logo">
@@ -51,7 +53,7 @@
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2" for="phone_number">
                                                     <span class="fw-bold">Branch Phone Number</span>
                                                 </label>
-                                                <input type="number" value="{{$subBranch->number ?? old('phone_number')}}" class="form-control form-control-solid" placeholder="Nomor yang dapat dihubungi" name="phone_number" id="phone_number" @unlessrole("administrator") disabled @endunlessrole>
+                                                <input type="number" value="{{$subBranch->phone_number ?? old('phone_number')}}" class="form-control form-control-solid" placeholder="Nomor yang dapat dihubungi" name="phone_number" id="phone_number" @unlessrole("administrator") disabled @endunlessrole>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
@@ -74,7 +76,7 @@
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2" for="name">
                                                     <span class="fw-bold">Address</span>
                                                 </label>
-                                                <textarea name="address" class="form-control form-control-solid" placeholder="Alamat lengkap perusahaan" id="address" cols="30" rows="5" @unlessrole("administrator") disabled @endunlessrole>{{$subBranchh->address ?? old("address")}}</textarea>
+                                                <textarea name="address" class="form-control form-control-solid" placeholder="Alamat lengkap perusahaan" id="address" cols="30" rows="5" @unlessrole("administrator") disabled @endunlessrole>{{$subBranch->address ?? old("address")}}</textarea>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                             <div class="col-lg-6 mb-3">
@@ -83,14 +85,14 @@
                                                         <label class="d-flex align-items-center fs-6 form-label mb-2" for="city">
                                                             <span class="fw-bold">City</span>
                                                         </label>
-                                                        <input type="text" value="{{$subBranch->name ?? old('city')}}" class="form-control form-control-solid" placeholder="Kota" name="city" id="city" @unlessrole("administrator") disabled @endunlessrole>
+                                                        <input type="text" value="{{$subBranch->city ?? old('city')}}" class="form-control form-control-solid" placeholder="Kota" name="city" id="city" @unlessrole("administrator") disabled @endunlessrole>
                                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                                     </div>
                                                     <div class="col-lg-12 mb-3">
                                                         <label class="d-flex align-items-center fs-6 form-label mb-2" for="province">
                                                             <span class="fw-bold">Province</span>
                                                         </label>
-                                                        <input type="text" value="{{$subBranch->name ?? old('province')}}" class="form-control form-control-solid" placeholder="Provinsi" name="province" id="province" @unlessrole("administrator") disabled @endunlessrole>
+                                                        <input type="text" value="{{$subBranch->province ?? old('province')}}" class="form-control form-control-solid" placeholder="Provinsi" name="province" id="province" @unlessrole("administrator") disabled @endunlessrole>
                                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                                     </div>
                                                 </div>
@@ -130,7 +132,7 @@
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2" for="tax_name">
                                                         <span class="fw-bold">Branch Tax Name</span>
                                                     </label>
-                                                    <input type="date" value="{{$subBranch->tax_name ?? old('tax_name')}}" class="form-control form-control-solid" name="tax_name" id="tax_name" @unlessrole("administrator") disabled @endunlessrole>
+                                                    <input type="text" value="{{$subBranch->tax_name ?? old('tax_name')}}" class="form-control form-control-solid" name="tax_name" id="tax_name" @unlessrole("administrator") disabled @endunlessrole>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                                 <div class="col-lg-6 mb-3">
@@ -155,7 +157,7 @@
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2" for="klu">
                                                         <span class="fw-bold">Kode KLU (Klasifikasi Lapangan Usaha)</span>
                                                     </label>
-                                                    <input type="number" value="{{$subBranch->klu ?? old('klu')}}" class="form-control form-control-solid" placeholder="Nomor rekening" name="klu" id="klu" @unlessrole("administrator") disabled @endunlessrole>
+                                                    <input type="text" value="{{$subBranch->klu ?? old('klu')}}" class="form-control form-control-solid" placeholder="Nomor rekening" name="klu" id="klu" @unlessrole("administrator") disabled @endunlessrole>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
 
@@ -173,9 +175,9 @@
 
                                             <div class="mt-6 d-flex justify-content-center">
                                                 <div class="me-2">
-                                                    <button type="button" class="btn btn-sm btn-light me-3 w-lg-200px" data-kt-stepper-action="previous">
+                                                    <a href="{{route("hc.setting.branch.index")}}" class="btn btn-sm btn-light me-3 w-lg-200px" data-kt-stepper-action="previous">
                                                         Cancel
-                                                    </button>
+                                                    </a>
                                                 </div>
                                                 <div>
                                                     <button type="submit" id="kt_modal_create_survey_result_internet_submit" class="btn btn-sm btn-info w-lg-200px" data-kt-stepper-action="submit">

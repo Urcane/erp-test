@@ -18,6 +18,7 @@ class CreateDivisionsTable extends Migration
             $table->foreignId('department_id')->constrained();
             $table->string('divisi_name');
             $table->string('divisi_alias')->nullable();
+            $table->foreignId("parent_id")->nullable()->constrained("divisions");
             $table->timestamps();
         });
     }

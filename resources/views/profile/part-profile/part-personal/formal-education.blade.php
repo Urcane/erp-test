@@ -186,7 +186,7 @@
 
     $('#modal_create_formal_education_form').submit(function(event) {
         event.preventDefault();
-        var formData = $(this).serialize();
+        var formData = new FormData($(this)[0]);
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -194,6 +194,8 @@
             url: "{{ route('hc.emp.create-update-formal-education') }}",
             type: 'POST',
             data: formData,
+            contentType: false,
+            processData: false,
             success: function(data) {
                 dataTable.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');

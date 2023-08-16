@@ -135,33 +135,82 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/createUpdate/employee/education/non/formal', 'createUpdateNonFormalEducation')->name('hc.emp.create-update-non-formal-education');
             Route::post('/delete/employee/education/non/formal', 'deleteNonFormalEducation')->name('hc.emp.delete-non-formal-education');
 
+            //  work experience
             Route::get('/get-data/table/experience', 'getTableExperience')->name('hc.emp.get-table-experience');
             Route::post('/createUpdate/employee/work/experience', 'createUpdateWorkExperience')->name('hc.emp.create-update-work-experience');
             Route::post('/delete/employee/work/experience', 'deleteWorkExperience')->name('hc.emp.delete-work-experience');
+
+            //  user file
+            Route::get('/get-data/table/user-file', 'getTableUserFile')->name('hc.emp.get-table-user-file');
+            Route::post('/createUpdate/employee/work/user-file', 'createUpdateWorkUserFile')->name('hc.emp.create-update-user-file');
+            Route::post('/delete/employee/work/user-file', 'deleteWorkUserFile')->name('hc.emp.delete-user-file');
 
             Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
             Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
         });
     });
 
-    Route::prefix('cmt-employee-settings')->group(function () {
+    Route::prefix('setting-company')->group(function () {
         Route::controller(Settings\Company\CompanyInfoController::class)->group(function () {
             Route::prefix('company-info')->group(function () {
                 Route::get('/', 'index')->name('hc.setting.company-info.index');
-                Route::get('/update', 'update')->name('hc.setting.company-info.update');
+                Route::post('/update', 'update')->name('hc.setting.company-info.update');
             });
         });
         Route::controller(Settings\Company\BranchController::class)->group(function () {
             Route::prefix('branch')->group(function () {
                 Route::get('/', 'index')->name('hc.setting.branch.index');
+                Route::get('/table/branch', 'getTableBranch')->name('hc.emp.getTableBranch');
                 Route::get('/create', 'create')->name('hc.setting.branch.create');
-                Route::get('/update', 'update')->name('hc.setting.branch.update');
+                Route::get('/edit/{id}', 'edit')->name('hc.setting.branch.edit');
+                Route::post('/create/update', 'createUpdate')->name('hc.setting.branch.createUpdate');
+                Route::post('/delete', 'delete')->name('hc.setting.branch.delete');
             });
         });
-        Route::controller(CompanyInfoController::class)->group(function () {
-
+        Route::controller(Settings\Company\OrganizationController::class)->group(function () {
+            Route::prefix('organization')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.organization.index');
+                Route::get('/table/organization', 'getTableOrganization')->name('hc.emp.getTableOrganization');
+                Route::post('/create/update', 'createUpdate')->name('hc.setting.organization.createUpdate');
+                Route::post('/delete', 'delete')->name('hc.setting.organization.delete');
+            });
         });
-        Route::controller(CompanyInfoController::class)->group(function () {
+        Route::controller(Settings\Company\JobLevelController::class)->group(function () {
+            Route::prefix('job-level')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.job-level.index');
+                Route::get('/table/job-level', 'getTableJobLevel')->name('hc.emp.getTableJobLevel');
+                Route::post('/create/update', 'createUpdate')->name('hc.setting.job-level.createUpdate');
+                Route::post('/delete', 'delete')->name('hc.setting.job-level.delete');
+            });
+        });
+        Route::controller(Settings\Company\JobPositionController::class)->group(function () {
+            Route::prefix('job-position')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.job-position.index');
+                Route::get('/table/job-position', 'getTableJobPosition')->name('hc.emp.getTableJobPosition');
+                Route::post('/create/update', 'createUpdate')->name('hc.setting.job-position.createUpdate');
+                Route::post('/delete', 'delete')->name('hc.setting.job-position.delete');
+            });
+        });
+        Route::controller(Settings\Company\EmploymentStatusController::class)->group(function () {
+            Route::prefix('employment-status')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.employment-status.index');
+                Route::get('/table/employment-status', 'getTableEmploymentStatus')->name('hc.emp.getTableEmploymentStatus');
+                Route::post('/create/update', 'createUpdate')->name('hc.setting.employment-status.createUpdate');
+                Route::post('/delete', 'delete')->name('hc.setting.employment-status.delete');
+            });
+        });
+        Route::controller(Settings\Company\FileCategoryController::class)->group(function () {
+            Route::prefix('file-category')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.file-category.index');
+                Route::get('/table/file-category', 'getTableUserFileCategory')->name('hc.emp.getTableUserFileCategory');
+                Route::post('/create/update', 'createUpdate')->name('hc.setting.file-category.createUpdate');
+                Route::post('/delete', 'delete')->name('hc.setting.file-category.delete');
+            });
+        });
+    });
+
+    Route::prefix('setting-attendance')->group(function () {
+        Route::controller(Settings\TimeManagement\AttendanceController::class)->group(function () {
 
         });
     });

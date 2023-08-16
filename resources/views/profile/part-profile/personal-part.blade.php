@@ -1,22 +1,24 @@
 <div class="row p-6 m-1 rounded border border-2 border-secondary">
-    <div class="d-grid">
-        <ul class="nav nav-tabs flex-nowrap text-nowrap">
-            <li class="nav-item">
-                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0 active" data-bs-toggle="tab" id="basic_info" href="#basic_info_content">Basic Info</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="additional_information" href="#identity_address">Identity & Address</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="family" href="#family_content">Family</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="emergency_contact" href="#emergency_contact_content">Emergency Contact</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="education_experience" href="#education_experience_content">Education Experience</a>
-            </li>
-        </ul>
+    <div class="mb-6 hover-scroll-x">
+        <div class="d-grid">
+            <ul class="nav nav-tabs flex-nowrap text-nowrap">
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0 active" data-bs-toggle="tab" id="basic_info" href="#basic_info_content">Basic Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="additional_information" href="#identity_address">Identity & Address</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="family" href="#family_content">Family</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="emergency_contact" href="#emergency_contact_content">Emergency Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="education_experience" href="#education_experience_content">Education Experience</a>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="tab-content mt-5" id="myTabContent">
         <div class="tab-pane fade show active" id="basic_info_content" role="tabpanel">
@@ -171,6 +173,25 @@
         </div>
         <div class="tab-pane fade" id="education_experience_content" role="tabpanel">
             <div class="row p-4">
+                <div class="modal fade" id="img_certificate_modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered mw-650px">
+                        <div class="modal-content">
+                            <div class="modal-header pb-0 border-0 justify-content-end">
+                                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                            </div>
+                            <div class="modal-body mx-5 mx-lg-15 mb-7">
+                                    <img src="" alt="" id="img_certificate">
+                                    <div class="text-center mt-9">
+                                        <button type="reset" id="img_certificate_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Back</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 @include("profile.part-profile.part-personal.formal-education")
                 @include("profile.part-profile.part-personal.non-formal-education")
                 @include("profile.part-profile.part-personal.working-experience")

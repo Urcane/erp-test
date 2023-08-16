@@ -25,9 +25,8 @@ class CreateAllEmployee extends Migration
             $table->id();
             $table->string("industry", 40);
             $table->string("company_size", 40);
-            $table->string("company_taxable_date", 40);
+            $table->date("company_taxable_date", 40);
             $table->string("head_office_initial", 40);
-            $table->string("umr", 40);
             $table->string("bpjs_ketenagakerjaan", 40);
             $table->string("jaminan_kecelakaan_kerja", 40);
             $table->softDeletes()->index();
@@ -42,12 +41,13 @@ class CreateAllEmployee extends Migration
             $table->string("city", 15);
             $table->string("province", 30);
             $table->string("address", 30);
+            $table->integer("umr")->nullable();
             $table->string("npwp", 20);
             $table->string("tax_name", 25);
             $table->string("tax_person_npwp", 25);
             $table->string("tax_person_name", 25);
             $table->string("klu", 15);
-            $table->string("signature");
+            $table->string("signature")->nullable();
             $table->string("logo")->nullable();
             $table->foreignId("branch_id")->nullable()->constrained("branches");
             $table->foreignId("parent_id")->nullable()->constrained("sub_branches");
@@ -100,6 +100,7 @@ class CreateAllEmployee extends Migration
         Schema::create('employment_statuses', function (Blueprint $table) {
             $table->id();
             $table->string("name", 40);
+            $table->boolean('have_end_date')->nullable()->default(false);
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -140,6 +141,23 @@ class CreateAllEmployee extends Migration
             $table->timestamps();
         });
 
+        Schema::create('user_file_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string("name", 40);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('user_files', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("user_id")->constrained("users");
+            $table->foreignId("user_file_category_id")->constrained("user_file_categories");
+            $table->string("description", 40);
+            $table->string("file", 40);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
         Schema::create('user_personal_data', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
@@ -174,7 +192,7 @@ class CreateAllEmployee extends Migration
             $table->date("join_date");
             $table->date("end_date")->nullable()->default(null);
             $table->date("resign_date")->nullable()->default(null);
-            $table->foreignId("sub_branch_id")->nullable()->constrained("sub_branches");
+            $table->foreignId("sub_branch_id")->nullable()->constrained("sub_branches")->nullOnDelete();;
             $table->foreignId("working_schedule_shift_id")->constrained("working_schedule_shifts");
             $table->foreignId("approval_line")->nullable()->constrained("users");
             $table->string("barcode")->nullable();
@@ -264,5 +282,6 @@ class CreateAllEmployee extends Migration
         Schema::dropIfExists('user_bank');
         Schema::dropIfExists('user_tax');
         Schema::dropIfExists('branches');
+        Schema::dropIfExists('sub_branches');
     }
 }

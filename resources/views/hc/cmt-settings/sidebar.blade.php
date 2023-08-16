@@ -17,13 +17,13 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.company-info.index")}}">Company Info</a></li>
                             <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.branch.index")}}">Branch</a></li>
-                            <li><a class="dropdown-item py-2 px-5" href="#">Organization</a></li>
-                            <li><a class="dropdown-item py-2 px-5" href="#">Job Level</a></li>
-                            <li><a class="dropdown-item py-2 px-5" href="#">Job Position</a></li>
-                            <li><a class="dropdown-item py-2 px-5" href="#">File Category</a></li>
+                            <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.organization.index")}}">Organization</a></li>
+                            <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.job-level.index")}}">Job Level</a></li>
+                            <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.job-position.index")}}">Job Position</a></li>
+                            <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.file-category.index")}}">File Category</a></li>
                             <li><a class="dropdown-item py-2 px-5" href="#">Custom Field</a></li>
                             <li><a class="dropdown-item py-2 px-5" href="#">NPP</a></li>
-                            <li><a class="dropdown-item py-2 px-5" href="#">Employment Status</a></li>
+                            <li><a class="dropdown-item py-2 px-5" href="{{route('hc.setting.employment-status.index')}}">Employment Status</a></li>
                         </ul>
                     </div>
                     <div class="dropend mb-8">
@@ -37,9 +37,12 @@
                             </span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Action two</a></li>
-                            <li><a class="dropdown-item" href="#">Action three</a></li>
+                            <li><a class="dropdown-item" href="#">Attendance</a></li>
+                            <li><a class="dropdown-item" href="#">Live Attendance</a></li>
+                            <li><a class="dropdown-item" href="#">Portal</a></li>
+                            <li><a class="dropdown-item" href="#">Time Of</a></li>
+                            <li><a class="dropdown-item" href="#">Overtime</a></li>
+                            <li><a class="dropdown-item" href="#">Holiday</a></li>
                         </ul>
                     </div>
                     <div class="dropend mb-8">

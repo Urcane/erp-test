@@ -25,7 +25,7 @@
     .orgchart { background: white; }
 </style>
 
-<div class="modal fade" id="modal_create_job_position" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_create_organization" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header pb-0 border-0 justify-content-end">
@@ -34,51 +34,41 @@
                 </div>
             </div>
             <div class="modal-body mx-5 mx-lg-15 mb-7">
-                <form id="modal_create_job_position_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
-                    <input type="hidden" name="id" value="">
-                    <div class="scroll-y me-n10 pe-10" id="modal_create_job_position_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_create_job_position_header" data-kt-scroll-wrappers="#modal_create_job_position_scroll" data-kt-scroll-offset="300px">
+                <form id="modal_create_organization_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                    <input type="hidden" name="organization_id" value="">
+                    <div class="scroll-y me-n10 pe-10" id="modal_create_organization_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_create_organization_header" data-kt-scroll-wrappers="#modal_create_organization_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
                         <div class="col-lg-12 text-center mb-9">
-                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Job Position</span>
+                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Organization</span>
                             {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
                         </div>
                         <div class="col-lg-6 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Nama</span>
                             </label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Name" required name="divisi_name">
+                            <input type="text" class="form-control form-control-solid" placeholder="Name" required name="department_name">
                         </div>
                         <div class="col-lg-6 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Alias</span>
                             </label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Name" required name="divisi_alias">
+                            <input type="text" class="form-control form-control-solid" placeholder="Name" required name="department_alias">
                         </div>
-                        <div class="col-lg-6 mb-3">
-							<label class="d-flex align-items-center fs-6 form-label mb-2">
-								<span class="required fw-bold">Organization</span>
-							</label>
-                            <select class="drop-data form-select form-select-solid" data-control="department_id" name="department_id" required>
-                                @foreach ($dataOrganization as $option)
-                                    <option value="{{$option->id}}" @if (old('department_id') == $option->id) selected @endif>{{$option->department_name}}</option>
-                                @endforeach
-                            </select>
-						</div>
-                        <div class="col-lg-6 mb-3">
+                        <div class="col-lg-12 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Parent</span>
 							</label>
                             <select class="drop-data form-select form-select-solid" data-control="parent_id" name="parent_id" required>
                                 @foreach ($dataOrganization as $option)
-                                    <option value="{{$option->id}}" @if (old('parent_id') == $option->id) selected @endif>{{$option->divisi_name}}</option>
+                                    <option value="{{$option->id}}" @if (old('parent_id') == $option->id) selected @endif>{{$option->department_name}}</option>
                                 @endforeach
                             </select>
 						</div>
                     </div>
                 </div>
                     <div class="text-center mt-9">
-                        <button type="reset" id="modal_create_job_position_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="modal_create_job_position_submit" class="btn btn-sm btn-info w-lg-200px" data-bs-dismiss="modal">
+                        <button type="reset" id="modal_create_organization_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="modal_create_organization_submit" class="btn btn-sm btn-info w-lg-200px" data-bs-dismiss="modal">
                             <span class="indicator-label">Simpan</span>
                         </button>
                     </div>
@@ -98,11 +88,11 @@
                 <div class="card">
                     <div class="card-body row">
                         <div class="col-lg-6 mb-9">
-                            <h4>Job Position</h4>
+                            <h4>Organization</h4>
                         </div>
                         <div class="col-lg-6 d-flex justify-content-end">
                             <div>
-                                <a href="#modal_create_job_position" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_job_position"><i class="fa-solid fa-plus"></i>Add Job Position</a>
+                                <a href="#modal_create_organization" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_organization"><i class="fa-solid fa-plus"></i>Add Organization</a>
                             </div>
                         </div>
                         <div class="col-lg-12 row p-6 m-1 rounded border border-2 border-secondary">
@@ -119,14 +109,13 @@
                             <div class="tab-content mt-5" id="myTabContent">
                                 <div class="tab-pane fade show active" id="table" role="tabpanel">
                                     <div class="">
-                                        <table class="table align-top table-striped border table-rounded gy-5" id="tb_job_position">
+                                        <table class="table align-top table-striped border table-rounded gy-5" id="tb_organization">
                                             <thead class="">
                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                     <th class="text-center w-50px">#</th>
                                                     <th class="text-center w-50px">#</th>
-                                                    <th class="w-150px">Job Position</th>
-                                                    <th class="w-150px">Parent Job Position</th>
-                                                    <th class="w-150px">Employee</th>
+                                                    <th class="w-150px">Organization Name</th>
+                                                    <th class="w-150px">Parent Name</th>
                                                     <th class="w-100px">#</th>
                                                 </tr>
                                             </thead>
@@ -160,8 +149,19 @@
             var oc = $('#chart-container').orgchart({
                 'pan': true,
                 'data' : datascource,
-                'nodeContent': 'count',
                 'zoom' : true,
+                'nodeContent': 'count',
+                'createNode': function($node, data) {
+                    $node.on('click', function(event) {
+                    if (!$(event.target).is('.edge, .toggleBtn')) {
+                        var $this = $(this);
+                        var $chart = $this.closest('.orgchart');
+                        var newX = window.parseInt(($chart.outerWidth(true)/2) - ($this.offset().left - $chart.offset().left) - ($this.outerWidth(true)/2));
+                        var newY = window.parseInt(($chart.outerHeight(true)/2) - ($this.offset().top - $chart.offset().top) - ($this.outerHeight(true)/2));
+                        $chart.css('transform', 'matrix(1, 0, 0, 1, ' + newX + ', ' + newY + ')');
+                    }
+                    });
+                }
             });
 
         });
@@ -171,12 +171,12 @@
 
 <script>
     let dataTableOrganization
-    $(".btn_tambah_job_position").on( "click", function() {
+    $(".btn_tambah_organization").on( "click", function() {
         $("input").val("")
     })
 
     $(document).ready(function () {
-        dataTableOrganization = $('#tb_job_position').DataTable({
+        dataTableOrganization = $('#tb_organization').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
@@ -194,7 +194,7 @@
                 });
             },
             ajax: {
-                url : "{{route('hc.emp.getTableJobPosition')}}",
+                url : "{{route('hc.emp.getTableOrganization')}}",
             },
             language: {
                 "lengthMenu": "Show _MENU_",
@@ -217,9 +217,8 @@
             columns: [
             { data: 'DT_RowChecklist', orderable: false, searchable: false},
             { data: 'DT_RowIndex'},
-            { data: 'divisi_name'},
+            { data: 'department_name'},
             { data: 'parent_name'},
-            { data: 'employee'},
             { data: 'action'},
             ],
 
@@ -243,9 +242,9 @@
         });
     })
 
-    function deleteJobPosition(id) {
+    function deleteOrganization(id) {
         $.ajax({
-            url: "{{ route('hc.setting.job-position.delete') }}",
+            url: "{{ route('hc.setting.organization.delete') }}",
             headers: {
                 'X-CSRF-TOKEN': "{{csrf_token()}}"
             },
@@ -262,11 +261,11 @@
         });
     }
 
-    $('#modal_create_job_position_form').submit(function(event) {
+    $('#modal_create_organization_form').submit(function(event) {
         event.preventDefault();
         var formData = $(this).serialize();
         $.ajax({
-            url: "{{ route('hc.setting.job-position.createUpdate') }}",
+            url: "{{ route('hc.setting.organization.createUpdate') }}",
             type: 'POST',
             data: formData,
             headers: {
