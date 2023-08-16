@@ -51,34 +51,45 @@ class BoQController extends Controller{
         function formBoQ(Request $request) {
             $prospectId = $request->query('prospect_id');
             $surveyRequestId = $request->query('survey_request_id');
-        
+
+            try {
+                if ($request->ajax()) {
+                    $prospect_id = $request->query('prospect_id');
+                    $surveyId = SurveyRequest::where('customer_prospect_id', $prospect_id); 
+                    if (!$surveyId) {
+                        $surveyId = null;
+                    }
+                    $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospect_id)->first();$dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospect_id)->get();
+                    $combinedData = [
+                        'survey' => $surveyId,
+                        'dataCompany' => $dataCompany,
+                    ];
+                    return response()->json($combinedData);
+                }
+            } catch (Exception $e) {
+                Log::error('Error in getSurveyCompanyItemInventory: ' . $e->getMessage());
+                return response()->json(['error' => 'An error occurred'], 500);
+            }
+
             if ($prospectId && $surveyRequestId) { 
                 $dataForm = $this->InventoryService->getDataForm(); 
-                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->where('id', $prospectId)->first();
-                $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])
-                ->where('id', $prospectId)
-                ->first();
-                $dataSurvey = SurveyRequest::with(['customerProspect'])
-                ->where('id', $surveyRequestId)
-                ->where('customer_prospect_id', $prospectId)
-                ->first();    
+                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->with('customer')->get();
+                $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
+                $dataSurvey = SurveyRequest::with(['customerProspect'])->where('id', $surveyRequestId)->where('customer_prospect_id', $prospectId)->first();   
+
                  return view('cmt-opportunity.boq.pages.form-boq', compact('dataProspect', 'dataSurvey', 'dataForm','dataCompany'));
-            } elseif ($prospectId) {
-                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->where('id', $prospectId)->first();
+
+            } elseif ($prospectId) {              
                 $dataForm = $this->InventoryService->getDataForm(); 
-                $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])
-                    ->where('id', $prospectId)
-                    ->doesntHave('itemableBillOfQuantity')
-                    ->first();
-                $dataSurvey = SurveyRequest::with(['customerProspect'])
-                ->where('customer_prospect_id', $prospectId)
-                ->get();
-                // dd($dataSurvey);
+                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->with('customer')->get();  
+                $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
+                $dataSurvey = SurveyRequest::with(['customerProspect'])->where('customer_prospect_id', $prospectId)->get();
+
                 return view('cmt-opportunity.boq.pages.form-boq', compact('dataCompany', 'dataProspect', 'dataSurvey', 'dataForm'));
+
             } else {
                 $dataForm = $this->InventoryService->getDataForm(); 
-                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->get();
-                $dataSurvey = SurveyRequest::with(['customerProspect'])->get();
+                $dataProspect = CustomerProspect::doesntHave('itemableBillOfQuantity')->with('customer')->get(); 
                 return view('cmt-opportunity.boq.pages.form-boq', compact('dataProspect', 'dataSurvey', 'dataForm'));
             }
         }
@@ -91,34 +102,7 @@ class BoQController extends Controller{
             $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospectId)->first();
             $dataForm = $this->InventoryService->getDataForm();
         
-            // Pass all the required data to the view
             return view('cmt-opportunity.boq.pages.form-update-boq', compact('dataItems', 'dataForm', 'dataCompany'));
-        }
-
-        function getSurveyCompanyItemInventory(Request $request) : JsonResponse {
-            try {
-                if ($request->ajax()) {
-                    $prospect_id = $request->query('prospect_id');
-                    $surveyId = SurveyRequest::where('customer_prospect_id', $prospect_id);
-                    
-                    if (!$surveyId) {
-                        $surveyId = null;
-                    }
-                    
-                    $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospect_id)->first();
-                    $dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospect_id)->get();
-           
-                    $combinedData = [
-                        'survey' => $surveyId,
-                        'dataCompany' => $dataCompany,
-                        'dataItems' => $dataItems
-                    ];
-                    return response()->json($combinedData);
-                }
-            } catch (Exception $e) {
-                Log::error('Error in getSurveyCompanyItemInventory: ' . $e->getMessage());
-                return response()->json(['error' => 'An error occurred'], 500);
-            }
         }
 
         function saveItemsBoQ(Request $request) : JsonResponse   {
