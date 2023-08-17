@@ -98,11 +98,11 @@ class WorkOrderService
                     }
 
                     if ($query->surveyRequest->service_type_id == 2) {
-                        $additionalMenu .= "<li><a href=\"#kt_modal_create_survey_result_cctv\" class=\"dropdown-item py-2 btn_create_survey_result_cctv\" data-bs-toggle=\"modal\" data-id=\"$query->id\" data-surveyid=\"$query->survey_request_id\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result CCTV</a></li>";
+                        $additionalMenu .= "<li><a href=\"". route('com.survey-result.create', ['workOrder' => $query->id, 'surveyRequestId' => $query->survey_request_id]) ."\" class=\"dropdown-item py-2\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result CCTV</a></li>";
                     }
 
                     if ($query->surveyRequest->service_type_id == 3) {
-                        $additionalMenu .= "<li><a href=\"#kt_modal_create_survey_result_cctv\" class=\"dropdown-item py-2 btn_create_survey_result_cctv\" data-bs-toggle=\"modal\" data-id=\"$query->id\" data-surveyid=\"$query->survey_request_id\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result GSM Booster</a></li>";
+                        $additionalMenu .= "<li><a href=\"". route('com.survey-result.create', ['workOrder' => $query->id, 'surveyRequestId' => $query->survey_request_id]) ."\" class=\"dropdown-item py-2\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result GSM Booster</a></li>";
                     }
                 }
 

@@ -68,7 +68,7 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link fw-semibold menu-site-survey @if($selected_side_bar_content == 'site-survey-cctv') text-primary @else text-dark @endif" href="{{route('com.site-survey.gb.index')}}">
+                    <a class="menu-link fw-semibold menu-site-survey @if($selected_side_bar_content == 'site-survey-gsm-booster') text-primary @else text-dark @endif" href="{{route('com.site-survey.gb.index')}}">
                         <span class="menu-icon">
                             <i class="bullet bullet-dot"></i>
                         </span>

@@ -7,6 +7,11 @@ use App\Http\Requests\Opportunity\Survey\SoftSurveyRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyRequest as SurveyFormRequest;
 use App\Http\Requests\Opportunity\Survey\SurveyResultRequest;
 use App\Models\Master\BuildingType;
+use App\Models\Master\CctvRecordDuration;
+use App\Models\Master\CctvStorageCapacity;
+use App\Models\Master\GbConnectivityData;
+use App\Models\Master\GbNaturalFrequency;
+use App\Models\Master\GbRepeaterType;
 use App\Models\Master\InternetBandwidth;
 use App\Models\Master\OutdoorCableType;
 use App\Models\Master\PowerSource;
@@ -122,7 +127,7 @@ class SurveyController extends Controller
     }
 
     /**
-     * Show index of site survey cctv page
+     * Show index of site survey GSM Booster page
      * 
      * @return Illuminate\Contracts\View\View
      */
@@ -198,8 +203,39 @@ class SurveyController extends Controller
      */
     function createSurveyResult(Request $request, WorkOrder $workOrder) : View {
         $surveyRequest = SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey')->findOrFail($request->query('surveyRequestId'));
+        $compact = [
+            'surveyRequest',
+            'workOrder',
+            'siteSurveyServiceTypes',
+            'siteSurveyInterfaces',
+            'powerSources',
+            'outdoorCableTypes',
+            'transportationAccesses',
+            'buildingTypes'
+        ];
+
+
+        if ($surveyRequest->service_type_id == 2) {
+            $cctvRecordDurations = CctvRecordDuration::get();
+            $cctvStorageCapacities = CctvStorageCapacity::get();
+
+            array_push($compact, ['cctvRecordDurations', 'cctvStorageCapacities']);
+        }
+
+        if ($surveyRequest->service_type_id == 3) {
+            $gbNaturalFrequencies = GbNaturalFrequency::get();
+            $gbRepeaterTypes = GbRepeaterType::get();
+            $gbConnectivityDatas = GbConnectivityData::get();
+
+            array_push($compact, ['gbNaturalFrequencies', 'gbRepeaterTypes', 'gbConnectivityDatas']);
+        }
+        
+        if ($surveyRequest->service_type_id == 1) {
+            $internetBandwidths = InternetBandwidth::get();
+            array_push($compact, ['internetBandwidths']);
+        }
+
         $serviceTypes = ServiceType::get();
-        $internetBandwidths = InternetBandwidth::get(); 
         $powerSources = PowerSource::get();
         $outdoorCableTypes = OutdoorCableType::get();
         $transportationAccesses = TransportationAccess::get();
@@ -218,15 +254,7 @@ class SurveyController extends Controller
             }
         }
         return view($view, compact(
-            'surveyRequest',
-            'workOrder',
-            'siteSurveyServiceTypes',
-            'internetBandwidths',
-            'siteSurveyInterfaces',
-            'powerSources',
-            'outdoorCableTypes',
-            'transportationAccesses',
-            'buildingTypes'
+            ...$compact
         ));
     }
 

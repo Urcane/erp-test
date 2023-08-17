@@ -2,7 +2,7 @@
 
 @section('survey-content')
 @php
-    $selected_side_bar_content = 'site-survey-internet'
+    $selected_side_bar_content = 'site-survey-gsm-booster'
 @endphp
 
 <div class="row mb-6 align-items-center">
