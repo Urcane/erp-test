@@ -40,7 +40,7 @@
 							</label>
 							<div class="input-group">
 								<span class="input-group-text border-0" id="kontak">+62</span>
-								<input type="number" class="form-control form-control-solid" required minlength="8" name="kontak"/>
+								<input type="number" class="form-control form-control-solid" required minlength="9" name="kontak"/>
 							</div>
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>

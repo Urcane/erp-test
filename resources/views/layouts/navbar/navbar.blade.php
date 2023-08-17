@@ -7,7 +7,7 @@
         </div>
         <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
             <a href="{{route('dashboard')}}">
-                <img alt="Logo" src="{{asset('sense')}}/media/logos/logo-comtel.png" class="h-35px d-lg-none ms-4" />
+                <img alt="Logo" src="{{asset('sense')}}/media/logos/logo-comtel.png" class="h-35px d-sm-none ms-4" />
                 <img alt="Logo" src="{{asset('sense')}}/media/logos/logo-full-30.png" class="h-35px d-none d-sm-inline" />
             </a>
         </div>
@@ -100,7 +100,7 @@
                                                                 </div>
     
                                                                 <div class="menu-item">
-                                                                    <a href="#" class="menu-link" >
+                                                                    <a href="{{route('com.boq.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
                                                                             <i class="fa-solid fa-clipboard-list text-info fs-3"></i>
                                                                         </span>

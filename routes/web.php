@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
+use App\Http\Controllers\Sales\Opportunity\BOQ\BoqController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -92,6 +93,23 @@ Route::middleware(['auth'])->group(function () {
             
             Route::get('/get-data/table/survey-request','getDatatableSurveyRequest')->name('com.survey-request.datatable');
             Route::get('/get-data/table/survey-result','getDatatableSurveyResult')->name('com.survey-result.datatable');
+        });
+    });
+
+    Route::controller(BoQController::class)->group(function () {
+        Route::prefix('cmt-boq')->group(function (){
+            Route::get('/','index')->name('com.boq.index');
+            Route::get('/get-data/table/data-result','getDatatable')->name('com.boq.render.datatable');
+            
+            Route::post('/batal-boq','batalBoQ')->name('com.boq.batal-boq');
+            Route::get('/create-draft-boq','createDraftBoq')->name('com.boq.create-draft-boq');
+            Route::get('/update-draft-boq','updateDraftBoq')->name('com.boq.update-draft-boq');
+            Route::post('/save-items-boq','saveItemsBoQ')->name('com.boq.save.boq');
+            Route::post('/store-data-boq','storeDataBoq')->name('com.boq.store.boq');
+            Route::post('/create-revision-boq','storeDataBoq')->name('com.boq.revision.boq');
+            
+            Route::get('/get-merk-type','getMerkType')->name('get.merk.type');
+            Route::get('/get-survey-company-item-inventory','getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory'); 
         });
     });
 });

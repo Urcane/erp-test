@@ -178,7 +178,6 @@ class CustomerController extends Controller
                     ]);
                 }
             }
-            
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
@@ -478,13 +477,14 @@ class CustomerController extends Controller
     function getTableProspectDone(Request $request) : JsonResponse {
         if ($request->ajax()) {
             $query = CustomerProspect::with([
+                'itemableBillOfQuantity',
                 'customer.customerContact', 
                 'customer.userFollowUp', 
-                'latestCustomerProspectLog'
+                'latestCustomerProspectLog',
+                'customer.bussinesType'
             ])->whereHas('customerProspectLogs', function ($logs) {
                 $logs->where('status', 2);
-            });
-
+            })->doesntHave('itemableBillOfQuantity')->orderBy('id', 'DESC');
             return DataTables::of($query->get())
             ->addColumn('DT_RowChecklist', function($check) {
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
@@ -516,13 +516,23 @@ class CustomerController extends Controller
                 ';
             })
             ->addColumn('action', function ($query) {
-                return '     
-                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <ul class="dropdown-menu">
-                    <li><a href="#kt_modal_request_survey" class="dropdown-item py-2 btn_request_survey" data-bs-toggle="modal" data-id="'.$query->id.'"><i class="fa-solid fa-list-check me-3"></i>Request Survey</a></li>
-                </ul>
-                ';
+                $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">
+                                ';
+            
+                if ( !isset($query->itemableBillOfQuantity)) {
+                $actions .= '<li><a href="' . url("cmt-boq/create-draft-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
+                            <i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
+                            ';
+                } else {
+                    $actions .= '<li><a href="' . url("cmt-boq/update-draft-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
+                            <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>';
+                }
+        
+                $actions .= '</ul>';
+                return $actions;
             })
+            
             ->addIndexColumn()
             ->rawColumns(['DT_RowChecklist', 'action', 'next_action_pretified', 'progress_pretified'])
             ->make(true);

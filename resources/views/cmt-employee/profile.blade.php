@@ -100,6 +100,7 @@
                         <form id="kt_profile_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" value="{{$profile->id}}" name="user_id">
+                            {{-- personal information --}}
                             <div class="row p-6">
                                 <div class="col-lg-12 mb-9">
                                     <div class="d-flex align-items-center">
@@ -124,14 +125,14 @@
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
                                         <span class="required fw-bold text-dark">NIP</span>
                                     </label>
-                                    <input type="number" class="form-control form-control-solid" placeholder="" required value="{{$profile->nip}}" name="nip">
+                                    <input type="number" class="form-control form-control-solid" placeholder="" required maxlength="18" minlength="18" value="{{$profile->nip}}" name="nip" onkeyup="this.value = this.value.replace(/\D/g, '')">
                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                 </div>
                                 <div class="col-lg-6 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
                                         <span class="fw-bold text-dark">NIK</span>
                                     </label>
-                                    <input type="number" class="form-control form-control-solid" placeholder="" minlength="16" value="{{$profile->nik}}" name="nik">
+                                    <input type="number" class="form-control form-control-solid" placeholder="" required maxlength="16" minlength="16" value="{{$profile->nik}}" name="nik" min="0" onkeyup="this.value = this.value.replace(/\D/g, '')">
                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                 </div>
                                 <div class="col-lg-6 mb-3">
@@ -284,6 +285,19 @@
 <script>
     $(document ).ready(function() {
         $("#kt_profile_form").validate({
+            rules: {
+                nip : {
+                    required: true,
+                    minlength: 18,
+                    maxlength: 18,
+                },  
+                kontak : {
+                    required: true,
+                    minlength: 9,
+                    maxlength: 13,
+                }
+            },
+            
             messages: {
                 name: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nama lengkap pegawai wajib diisi</span>",
@@ -294,14 +308,18 @@
                 },
                 nik: {
                     required: "<span class='fw-semibold fs-8 text-danger'>NIK pegawai wajib diisi</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'>NIK maksimal memiliki 16 karakter</span>",
                     minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 16 karakter</span>",
                 },
                 nip: {
                     required: "<span class='fw-semibold fs-8 text-danger'>NIP pegawai wajib diisi</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'>NIK maksimal memiliki 18 karakter</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 18 karakter</span>",
                 },
                 kontak: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Kontak pegawai wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
                 },
                 role_id: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Role wajib dipilih</span>",
