@@ -37,7 +37,7 @@
                             </span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Attendance</a></li>
+                            <li><a class="dropdown-item" href="{{route("hc.setting.schedule.index")}}">Attendance</a></li>
                             <li><a class="dropdown-item" href="#">Live Attendance</a></li>
                             <li><a class="dropdown-item" href="#">Portal</a></li>
                             <li><a class="dropdown-item" href="#">Time Of</a></li>

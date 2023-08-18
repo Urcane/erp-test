@@ -19,6 +19,6 @@ class UserFile extends Model
 
     public function userFileCategory(): BelongsTo
     {
-        return $this->belongsTo(UserFileCategory::class);
+        return $this->belongsTo(UserFileCategory::class, "user_file_category_id");
     }
 }

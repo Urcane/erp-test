@@ -455,7 +455,7 @@ class PersonalController extends Controller
 
         public function deleteNonFormalEducation(Request $request) {
             $userNonFormalEducation = UserNonFormalEducation::whereId("$request->id")->first();
-            Storage::delete('public/personal/education/non-formal-education-certificate'.$userNonFormalEducation->certificate);
+            Storage::delete('public/personal/education/non-formal-education-certificate/'.$userNonFormalEducation->certificate);
 
             $userNonFormalEducation->delete();
 

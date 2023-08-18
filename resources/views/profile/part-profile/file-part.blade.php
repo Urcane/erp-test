@@ -16,57 +16,30 @@
                         <div class="scroll-y me-n10 pe-10" id="modal_user_file_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_user_file_header" data-kt-scroll-wrappers="#modal_user_file_scroll" data-kt-scroll-offset="300px">
                         <div class="row mb-9">
                             <div class="col-lg-12 text-center mb-9">
-                                <span class="fs-1 fw-bolder text-dark d-block mb-1">Formal Education</span>
-                                <span class="fs-7 fw-semibold text-gray-500">Riwayat pendidikan formal anda</span>
+                                <span class="fs-1 fw-bolder text-dark d-block mb-1">File</span>
+                                {{-- <span class="fs-7 fw-semibold text-gray-500">Riwayat pendidikan formal anda</span> --}}
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Nama</span>
+                                    <span class="required fw-bold">Category</span>
                                 </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Nama instansi" required name="name">
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Grade</span>
-                                </label>
-                                <select class="drop-data form-select form-select-solid" data-control="grade" name="grade" required>
-                                    @foreach ($constants->grade as $option)
-                                        <option value="{{$option}}" @if (old('grade') == $option) selected @endif>{{$option}}</option>
+                                <select class="drop-data form-select form-select-solid" data-control="category_id" name="category_id" required>
+                                    @foreach ($dataCategory as $option)
+                                        <option value="{{$option->id}}" @if (old('category_id') == $option->id) selected @endif>{{$option->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Major</span>
+                                    <span class="required fw-bold">Description</span>
                                 </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Jurusan" required name="major">
+                                <input type="text" class="form-control form-control-solid" placeholder="Description of your file" required name="description">
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Start Year</span>
+                                    <span class="required fw-bold">File</span>
                                 </label>
-                                <input type="number" class="form-control form-control-solid" placeholder="Tahun Masuk" required name="start_year">
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">End Year</span>
-                                </label>
-                                <input type="number" class="form-control form-control-solid" placeholder="Tahun Lulus" required name="end_year">
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Score</span>
-                                </label>
-                                <input type="number" class="form-control form-control-solid" placeholder="Nilai yang didapatkan ketika lulus" required name="score">
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="fw-bold">Certificate</span>
-                                </label>
-                                <input type="file" class="form-control form-control-solid" placeholder="Sektifikat maupun ijazah yang didapatkan" name="certificate">
-                            </div>
-                            <div id="containerSelectedSurveyRequests">
-
+                                <input type="file" class="form-control form-control-solid" placeholder="File" required name="file">
                             </div>
                         </div>
                     </div>
@@ -84,7 +57,7 @@
 
     {{-- formal education experience content --}}
     <div class="col-lg-6 mb-9">
-        <h4>User FIle</h4>
+        <h4>User File</h4>
         <span class="fs-7 fw-semibold text-gray-500">Your files</span>
     </div>
     <div class="col-lg-6 d-flex justify-content-end">
@@ -115,6 +88,20 @@
         $(".btn_tambah_file").on( "click", function() {
             $("input:not([name='user_id'])").val("")
         })
+
+        function fillInput(
+            id,
+            category_id,
+            description,) {
+
+            $("[name=\'id\']").val(id);
+            $("[name=\'description\']").val(description);
+            $(`[name="${category_id}"] option`).each(function() {
+                if (category_id == parseInt($(this).val())) {
+                    $(this).prop("selected", true);
+                }
+            });
+        }
 
         $( "#files" ).on( "click", function() {
             dataTableUserFile = $('#tb_user_file').DataTable({
@@ -151,13 +138,16 @@
 
                 columns: [
                 { data: 'DT_RowIndex'},
-                { data: 'Description'},
+                { data: 'category'},
+                { data: 'description'},
+                { data: 'created_at'},
+                { data: 'file'},
                 { data: 'action'},
                 ],
             });
         });
 
-        function deleteFormalEducation(id) {
+        function deleteUserFile(id) {
             $.ajax({
                 url: "{{ route('hc.emp.delete-user-file') }}",
                 headers: {
@@ -189,7 +179,7 @@
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    dataTable.ajax.reload();
+                    dataTableUserFile.ajax.reload();
                     toastr.success(data.message,'Selamat 🚀 !');
                 },
                 error: function(xhr, status, error) {
