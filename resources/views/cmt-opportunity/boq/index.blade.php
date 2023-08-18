@@ -303,7 +303,7 @@
             ]
         });
 
-        $('#tab_survey').click(function() {
+      $('#tab_survey').click(function() {
             generateDatatable({
                 tableName: "tableDoneSurvey",
                 elementName: "#kt_table_survey",
@@ -316,10 +316,10 @@
                     { data: 'service_type.name' },
                     { data: 'building_type' },
                     { data: 'building_height' },
-                    { data: 'action' },
+                    { data: 'action_done_survey' },
                 ]
             });
-        });
+      });
 
       $('#tab_draft').click(function () {
           generateDatatable({
@@ -337,7 +337,7 @@
                 { data: 'prospect.prospect_title'},
                 { data: 'progress_pretified'},
                 { data: 'next_action_pretified'},
-                { data: 'action' },
+                { data: 'action_draft_boq' },
             ]
          });   
       });
@@ -358,7 +358,7 @@
                 { data: 'prospect.prospect_title'},
                 { data: 'progress_pretified'},
                 { data: 'next_action_pretified'},
-                { data: 'action' },
+                { data: 'action_commercial' },
             ]
          });   
       });
@@ -379,7 +379,7 @@
                 { data: 'prospect.prospect_title'},
                 { data: 'progress_pretified'},
                 { data: 'next_action_pretified'},
-                { data: 'action' },
+                { data: 'action_done_boq' },
             ]
          });   
       });
@@ -400,7 +400,7 @@
                 { data: 'prospect.prospect_title'},
                 { data: 'progress_pretified'},
                 { data: 'next_action_pretified'},
-                { data: 'action' },
+                { data: 'action_cancel' },
             ]
          });   
       });
@@ -421,7 +421,7 @@
                 { data: 'prospect.prospect_title'},
                 { data: 'progress_pretified'},
                 { data: 'next_action_pretified'},
-                { data: 'action' },
+                { data: 'action_review' },
             ]
          });   
       });

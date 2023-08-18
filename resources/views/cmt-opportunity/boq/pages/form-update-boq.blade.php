@@ -71,9 +71,15 @@
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" required name="survey_request_id"
-                                                    id="survey_request_id">
+                                                data-control="select2" name="survey_request_id"
+                                                id="survey_request_id">
                                                     <option value="" selected disabled>Pilih Survey</option>
+                                                    @if (isset($dataSurvey))
+                                                        @foreach ($dataSurvey as $survey)
+                                                            <option value="{{ $survey->id ?? null}}">
+                                                                {{ $survey->customerProspect->prospect_title ?? null}}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
