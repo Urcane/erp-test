@@ -96,14 +96,11 @@
                         <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_survey_done">
                             <thead class="">
                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                    <th class="text-center w-25px">#</th>
                                     <th class="text-center w-50px">#</th>
                                     <th class="">Task Name</th>
                                     <th class="w-200px">No. Survey Request</th>
                                     <th class="w-200px">No. Work Order</th>
                                     <th class="w-100px">Service Type</th>
-                                    <th class="w-100px">Building Type</th>
-                                    <th class="w-100px">Building Height</th>
                                     <th class="w-100px text-center">#</th>
                                 </tr>
                             </thead>
@@ -363,9 +360,7 @@
                 { data: 'work_order.task_description'},
                 { data: 'survey_request.no_survey'},
                 { data: 'work_order.no_wo'},
-                { data: 'service_type.name'},
-                { data: 'building_type'},
-                { data: 'building_height'},
+                { data: 'site_survey_service_type.name'},
                 { data: 'action' },
             ]
         });    

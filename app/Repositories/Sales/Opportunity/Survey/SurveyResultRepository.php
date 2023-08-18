@@ -71,12 +71,21 @@ class SurveyResultRepository
         return $siteSurveyCCTV = SiteSurveyCCTV::updateOrCreate([
             'id' => $data->site_survey_cctv_id
         ],[
-            'camera_type_id' => $data->camera_type_id,
-            'quantity_service_use' => $data->quantity_service_use,
-            'record_duration' => $data->record_duration,
-            'camera_storage' => $data->camera_storage,
-            'camera_resolution' => $data->camera_resolution,
-            'special_request' => $data->special_request,
+            'survey_request_id' => $data->survey_request_id,
+            'customer_id' => $data->customer_id,
+            'customer_contact_id' => $data->customer_contact_id,
+            'work_order_id' => $data->work_order_id,
+            'site_survey_service_type_id' => $data->site_survey_service_type_id,
+            'quantity' => $data->quantity,
+            'local_acceses' => $data->local_access,
+            'cctv_record_duration_id' => $data->cctv_record_duration_id,
+            'cctv_storage_capacity_id' => $data->cctv_storage_capacity_id,
+            'site_survey_interface_id' => $data->site_survey_interface_id,
+            'survey_date' => $data->survey_date,
+            'site_survey_outdoor_area_id' => $data->site_survey_outdoor_area->id, 
+            'site_survey_indoor_area_id' => $data->site_survey_indoor_area->id, 
+            'site_survey_other_area_id' => $data->site_survey_other_area->id, 
+            'survey_executor_id' => Auth::user()->id,
         ]);
     }
 

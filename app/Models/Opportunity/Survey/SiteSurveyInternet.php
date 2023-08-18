@@ -6,13 +6,14 @@ use App\Models\Customer\Customer;
 use App\Models\Customer\CustomerContact;
 use App\Models\Opportunity\Survey\Master\SiteSurveyServiceType;
 use App\Models\ProjectManagement\WorkOrder;
+use App\Traits\HasAdditionalSurveyForm;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SiteSurveyInternet extends Model
 {
-    use HasFactory;
+    use HasFactory, HasAdditionalSurveyForm;
 
     protected $guarded = [];
 

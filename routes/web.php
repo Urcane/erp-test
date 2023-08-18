@@ -84,7 +84,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/survey-result-store/{workOrder}','createSurveyResult')->name('com.survey-result.create');
 
-            Route::get('/detail/{id}', 'detail')->name('com.survey.detail');
+            Route::get('/detail/{serviceType}/{id}', 'detail')->name('com.survey.detail');
             Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
             Route::post('/soft-survey','storeSoftSurvey')->name('com.soft-survey.store');
             Route::post('/survey-result-draft','draftSurveyResult')->name('com.survey-result.draft');

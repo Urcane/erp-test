@@ -103,7 +103,8 @@
                                                 @foreach ($siteSurveyServiceTypes as $siteSurveyServiceType)                                                
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                        <input type="radio" class="form-check-input my-auto" placeholder="" name="site_survey_service_type_id" value="{{$siteSurveyServiceType->id}}">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->site_survey_service_type_id == $siteSurveyServiceType->id) checked="checked" @endif @endif 
+                                                            type="radio" class="form-check-input my-auto" placeholder="" name="site_survey_service_type_id" value="{{$siteSurveyServiceType->id}}">
                                                         <label class="fs-6 form-check-label" for="site_survey_service_type_id">
                                                             <span class="fw-bold">{{$siteSurveyServiceType->name}}</span>
                                                         </label>
@@ -121,7 +122,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-4">
-                                            <input type="number" class="form-control form-control-solid" placeholder="" name="closest_site_range" value="{{$surveyRequest->customerProspect->customer->customer_address}}">
+                                            <input @if (isset($surveyResult)) disabled="disabled" @endif type="number" class="form-control form-control-solid" placeholder="" name="quantity" value="{{isset($surveyResult) ? old('quantity', $surveyResult->quantity) : ''}}">
                                             <div class="fv-plugins-message-container invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -132,7 +133,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-10">
-                                            <input type="text" class="form-control form-control-solid" placeholder="" name="local_access" value="{{old('local_access')}}">
+                                            <input @if (isset($surveyResult)) disabled="disabled" @endif type="text" class="form-control form-control-solid" placeholder="" name="local_access" value="{{isset($surveyResult) ? old('local_acceses', $surveyResult->local_acceses) : ''}}">
                                             <div class="fv-plugins-message-container invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -147,7 +148,8 @@
                                                 @foreach ($cctvRecordDurations as $cctvRecordDuration)
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                        <input type="radio" class="form-check-input" placeholder="" name="cctv_record_duration_id" value="{{$cctvRecordDuration->id}}">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->cctv_record_duration_id == $cctvRecordDuration->id) checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="cctv_record_duration_id" value="{{$cctvRecordDuration->id}}">
                                                         <label class="fs-6 form-check-label" for="cctv_record_duration_id">
                                                             <span class="fw-bold">{{$cctvRecordDuration->name}}</span>
                                                         </label>
@@ -169,7 +171,8 @@
                                                 @foreach ($cctvStorageCapacities as $cctvStorageCapacity)
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                        <input type="radio" class="form-check-input" placeholder="" name="cctv_storage_capacity_id" value="{{$cctvStorageCapacity->id}}">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->cctv_storage_capacity_id == $cctvStorageCapacity->id) checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="cctv_storage_capacity_id" value="{{$cctvStorageCapacity->id}}">
                                                         <label class="fs-6 form-check-label" for="cctv_storage_capacity_id">
                                                             <span class="fw-bold">{{$cctvStorageCapacity->name}}</span>
                                                         </label>
@@ -191,7 +194,9 @@
                                                 @foreach ($siteSurveyInterfaces as $siteSurveyInterface)
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                        <input type="radio" class="form-check-input" placeholder="" name="site_survey_interface_id" value="{{$siteSurveyInterface->id}}">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->site_survey_interface_id == $siteSurveyInterface->id) checked="checked" @endif @endif 
+                                                            type="radio" class="form-check-input" placeholder="" name="site_survey_interface_id" 
+                                                            value="{{$siteSurveyInterface->id}}">
                                                         <label class="fs-6 form-check-label" for="site_survey_interface_id">
                                                             <span class="fw-bold">{{$siteSurveyInterface->name}}</span>
                                                         </label>
@@ -209,7 +214,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-10">
-                							<input type="date" class="form-control form-control-solid" name="survey_date">
+                							<input @if (isset($surveyResult)) disabled="disabled" @endif type="date" class="form-control form-control-solid" name="survey_date" value="{{isset($surveyResult) ? old('survey_date', $surveyResult->survey_date) : ''}}">
                                             <div class="fv-plugins-message-container invalid-feedback"></div>
                                         </div>
                                     </div>
