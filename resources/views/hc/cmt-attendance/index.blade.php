@@ -13,6 +13,7 @@
 @endsection
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 <div class="row justify-content-center mt-n20">
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center">
@@ -80,8 +81,63 @@
 
                         <div class="d-flex justify-content-end mb-2">
                             <div class="input-group w-150px w-md-250px mx-4">
+                                <span class="input-group-text border-0"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input class="form-control form-control-solid form-control-sm" autocomplete="off" id="search_attendance">
+                            </div>
+
+                            <div class="input-group w-150px w-md-250px mx-4">
                                 <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
                                 <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
+                            </div>
+
+                            <div>
+                                <button type="button" class="btn btn-light-info btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-filter me-2"></i>Filter</button>
+                                <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start" id="filter_pegawai" data-kt-menu="true" style="">
+                                    <div class="d-flex flex-column bgi-no-repeat rounded-top">
+                                        <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Filter Options</span>
+                                    </div>
+                                    <div class="separator mb-6"></div>
+                                    <div class="row px-8 pb-6">
+                                        <div class="col-lg-12 mb-3">
+                                            <label class="d-flex align-items-center fs-6 mb-2">
+                                                <span class="fw-bold textd-dark">Department</span>
+                                            </label>
+                                            <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterDepartment" id="filter_department" data-dropdown-parent="#filter_pegawai">
+                                                <option value="*">Semua Department</option>
+                                                @foreach ($dataDepartment as $dp)
+                                                <option value="{{$dp->id}}">{{$dp->department_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-3">
+                                            <label class="d-flex align-items-center fs-6 mb-2">
+                                                <span class="fw-bold textd-dark">Divisi</span>
+                                            </label>
+                                            <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterDivisi" id="filter_divisi" data-dropdown-parent="#filter_pegawai">
+                                                <option value="*">Semua Divisi</option>
+                                                @foreach ($dataDivision as $dd)
+                                                <option value="{{$dd->id}}">{{$dd->divisi_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-3">
+                                            <label class="d-flex align-items-center fs-6 mb-2">
+                                                <span class="fw-bold textd-dark">Status</span>
+                                            </label>
+                                            <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterStatus" id="filter_status" data-dropdown-parent="#filter_pegawai">
+                                                <option value="*">Semua Status</option>
+                                                @foreach ($constants->filter_status_attendance as $status)
+                                                    <option value="{{$status}}">{{$status}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-12 mt-6 text-end">
+                                            <button class="btn btn-sm btn-light" id="btn_reset_filter">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -120,8 +176,11 @@
     </div>
 </div>
 
+@include('hc.cmt-attendance.modal.edit-attendance')
+@include('hc.cmt-attendance.modal.delete-attendance')
+
 <script>
-    const attendanceCodeEnum = @json($attendanceCode);
+    const attendanceCodeEnum = @json($constants->attendance_code_view);
 
     const getTime = (timeStr, format) => moment(timeStr, format);
 
@@ -141,10 +200,22 @@
         return false;
     };
 
+    const getFilter = () => {
+        return {
+            'filterDivisi': $('#filter_divisi').val(),
+            'filterDepartment': $('#filter_department').val(),
+            'filterStatus': $('#filter_status').val(),
+            'filterDate': $('#range_date').val(),
+            'search': $('#search_attendance').val()
+        }
+    }
+
     $(document ).ready(function() {
         $('input[name="range_date"]').daterangepicker({autoUpdateInput: false}, (from_date, to_date) => {
             $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
         });
+
+        $('#range_date').val(moment().format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
 
         function deleteSummaries() {
             $('#on-time').html("-");
@@ -162,7 +233,7 @@
                 url: "{{route('hc.att.all-summaries')}}",
                 method: 'GET',
                 data: {
-                    dateFilter: $('#range_date').val()
+                    filters: getFilter()
                 },
                 success: function(data) {
                     const {
@@ -211,7 +282,7 @@
             ajax: {
                 url : "{{route('hc.att.get-table-attendance')}}",
                 data: function(data) {
-                    data.dateFilter = $('#range_date').val();
+                    data.filters = getFilter()
                 },
             },
             language: {
@@ -275,20 +346,15 @@
                 const checkIn = getTime(checkInTime, 'YYYY-MM-DD HH:mm:ss');
                 const checkOut = getTime(checkOutTime, 'YYYY-MM-DD HH:mm:ss');
 
+                const today = moment();
+                const isDateToday = moment(date).isSame(today, 'day');
+                const isDateBeforeToday = moment(date).isBefore(today, 'day');
+
+                const $row = $(row);
+                const redBgColor = 'rgba(255, 0, 0, 0.2)';
+
                 if (attendanceCode !== attendanceCodeEnum[0]) {
-                    return $(row).css('background-color', 'rgba(192, 192, 192, 0.4)');
-                }
-
-                if (!checkIn.isValid() || !checkOut.isValid()) {
-                    if (moment(date).isBefore(moment(), 'day')) {
-                        $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
-                    } else if (moment(date).isSame(moment(), 'day')) {
-                        return;
-                    }
-                }
-
-                if ((!checkIn.isValid() || !checkOut.isValid()) && moment(date).isBefore(moment(), 'day')) {
-                    return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
+                    return $row.css('background-color', 'rgba(192, 192, 192, 0.4)');
                 }
 
                 const isLateCheckIn = checkTimeIsAfter(
@@ -301,8 +367,16 @@
                     checkOut
                 );
 
-                if (isLateCheckIn || isEarlyCheckOut) {
-                    return $(row).css('background-color', 'rgba(255, 0, 0, 0.2)');
+                if (
+                    (!checkIn.isValid() || !checkOut.isValid()) && isDateBeforeToday ||
+                    isDateToday && (
+                        (checkIn.isValid() && isLateCheckIn) ||
+                        (checkOut.isValid() && isEarlyCheckOut) ||
+                        (!checkIn.isValid() && checkTimeIsAfter(today, workingStartTime.clone().add(lateIn, 'minutes')))
+                    ) ||
+                    isLateCheckIn || isEarlyCheckOut
+                ) {
+                    return $row.css('background-color', redBgColor);
                 }
             },
             search: {
@@ -320,6 +394,72 @@
             tableAttendance.draw();
             deleteSummaries();
             renderSummaries();
+        });
+
+        $('#filter_department').change(function() {
+            tableAttendance.draw();
+            deleteSummaries();
+            renderSummaries();
+        });
+
+        $('#filter_divisi').change(function() {
+            tableAttendance.draw();
+            deleteSummaries();
+            renderSummaries();
+        });
+
+        $('#filter_status').change(function() {
+            tableAttendance.draw();
+        });
+
+        $('#search_attendance').on('input', function() {
+            tableAttendance.draw();
+            deleteSummaries();
+            renderSummaries();
+        });
+
+        $('#modal_attendance_edit_modal').submit(function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: "{{ route('hc.att.edit') }}",
+                type: 'PUT',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    tableAttendance.draw();
+                    renderSummaries();
+                    toastr.success(data.message,'Selamat 🚀 !');
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
+        });
+
+        $('#modal_attendance_delete_modal').submit(function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: "{{ route('hc.att.delete') }}",
+                type: 'PUT',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    tableAttendance.draw();
+                    renderSummaries();
+                    toastr.success(data.message,'Selamat 🚀 !');
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
         });
 
         renderSummaries();

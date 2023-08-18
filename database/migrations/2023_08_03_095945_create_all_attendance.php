@@ -43,11 +43,11 @@ class CreateAllAttendance extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->date("date")->index();
-            $table->enum("attendance_code", $this->constants->attendance_code)->default($this->constants->attendance_code[0]);
+            $table->enum("attendance_code", $this->constants->attendance_code)->default($this->constants->attendance_code[0])->index();
             $table->string("shift_name", 40);
             $table->string("day_off_code", 10)->nullable();
-            $table->time("working_start");
-            $table->time("working_end");
+            $table->time("working_start")->index();
+            $table->time("working_end")->index();
             $table->tinyInteger("late_check_in");
             $table->tinyInteger("late_check_out");
             $table->integer("overtime")->nullable();
@@ -129,6 +129,21 @@ class CreateAllAttendance extends Migration
             $table->softDeletes()->index();
             $table->timestamps();
         });
+
+        Schema::create('attendance_change_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("user_id")->constrained("users");
+            $table->foreignId("attendance_id")->constrained("user_attendances");
+            $table->date("date")->index();
+            $table->string("action", 30);
+            $table->timestamp("old_check_in")->nullable();
+            $table->timestamp("old_check_out")->nullable();
+            $table->timestamp("new_check_in")->nullable();
+            $table->timestamp("new_check_out")->nullable();
+            $table->text("reason")->nullable();
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -148,5 +163,7 @@ class CreateAllAttendance extends Migration
         Schema::dropIfExists('user_overtime_requests');
         Schema::dropIfExists('user_shift_requests');
         Schema::dropIfExists('user_attendance_requests');
+
+        Schema::dropIfExists('attendance_change_logs');
     }
 }

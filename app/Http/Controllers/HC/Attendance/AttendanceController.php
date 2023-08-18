@@ -6,15 +6,20 @@ use Carbon\Carbon;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Utils\ErrorHandler;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\Constants;
 
-use App\Models\User;
+use App\Utils\ErrorHandler;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
+use App\Models\User;
+use App\Models\Attendance\AttendanceChangeLogs;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
+use App\Models\Division;
+use App\Models\Department;
 
 class AttendanceController extends Controller
 {
@@ -29,9 +34,11 @@ class AttendanceController extends Controller
 
     public function index()
     {
-        $attendanceCode = $this->constants->attendance_code_view;
+        $constants = $this->constants;
+        $dataDivision = Division::all();
+        $dataDepartment = Department::all();
 
-        return view('hc.cmt-attendance.index', compact(['attendanceCode']));
+        return view('hc.cmt-attendance.index', compact(['constants', 'dataDivision', 'dataDepartment']));
     }
 
     public function show(string $id)
@@ -46,126 +53,234 @@ class AttendanceController extends Controller
         return view('hc.cmt-attendance.detail', compact(['user', 'attendanceCode']));
     }
 
+    public function update(Request $request)
+    {
+        try {
+            $request->validate([
+                "id" => "required",
+                "check_in" => "nullable",
+                "check_out" => "nullable",
+                "reason" => "nullable"
+            ]);
+
+            $checkIn = $request->check_in ? Carbon::parse($request->check_in) : null;
+            $checkOut = $request->check_out ? Carbon::parse($request->check_out) : null;
+
+            $userAttendance = UserAttendance::whereId($request->id)->first();
+
+            AttendanceChangeLogs::create([
+                "user_id" => Auth::user()->id,
+                "attendance_id" => $request->id,
+                "date" => $userAttendance->date,
+                "action" => "EDIT",
+                "old_check_in" => $userAttendance->check_in,
+                "old_check_out" => $userAttendance->check_out,
+                "new_check_in" => $checkIn,
+                "new_check_out" => $checkOut,
+                "reason" => $request->reason
+            ]);
+
+            $userAttendance->update([
+                "check_in" => $checkIn,
+                "check_out" => $checkOut
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Data Attendance berhasil diupdate"
+            ], 200);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function destroy(Request $request)
+    {
+        try {
+            $request->validate([
+                "id" => "required",
+                "reason" => "nullable"
+            ]);
+
+            $userAttendance = UserAttendance::whereId($request->id)->first();
+
+            DB::transaction(function () use ($request, $userAttendance) {
+                try {
+                    AttendanceChangeLogs::create([
+                        "user_id" => Auth::user()->id,
+                        "attendance_id" => $request->id,
+                        "date" => $userAttendance->date,
+                        "action" => "DELETE",
+                        "old_check_in" => $userAttendance->check_in,
+                        "old_check_out" => $userAttendance->check_out,
+                        "new_check_in" => null,
+                        "new_check_out" => null,
+                        "reason" => $request->reason
+                    ]);
+
+                    $userAttendance->update([
+                        "check_in" => null,
+                        "check_out" => null
+                    ]);
+
+                    DB::commit();
+
+                    return response()->json([
+                        "status" => "success",
+                        "message" => "Data Attendance berhasil diupdate"
+                    ], 200);
+                } catch (\Exception $e) {
+                    DB::rollback();
+
+                    $data = $this->errorHandler->handle($e);
+                    return response()->json($data["data"], $data["code"]);
+                }
+            });
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil menghapus attendance"
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function getAttendanceSummaries(Request $request)
     {
         try {
-            if ($request->dateFilter) {
-                $range_date = collect(explode('-', $request->dateFilter))->map(function ($item) {
+            $userAttendances = UserAttendance::has('user.userEmployment')->with('user.userEmployment');
+
+            if ($request->filters['filterDate']) {
+                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
                     return Carbon::parse($item)->toDateString();
                 })->toArray();
 
-                return response()->json([
-                    "onTimeCount" => UserAttendance::whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->whereNotNull('check_in')
-                        ->whereNotNull('check_out')
-                        ->where(function($q) {
-                            $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
-                            ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
-                        })
-                        ->count(),
-
-                    "lateCheckInCount" => UserAttendance::whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->whereNotNull('check_in')
-                        ->whereRaw('TIME(check_in) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
-                        ->count(),
-
-                    "earlyCheckOutCount" => UserAttendance::whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->whereNotNull('check_out')
-                        ->whereRaw('TIME(check_out) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))')
-                        ->count(),
-
-                    "absent" => UserAttendance::whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->where(function ($query) {
-                            $query->whereNull('check_in')
-                                ->orWhereNull('check_out');
-                        })
-                        ->count(),
-
-                    "noCheckInCount" => UserAttendance::whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->where(function ($query) {
-                            $query->whereNull('check_in');
-                        })
-                        ->count(),
-
-                    "noCheckOutCount" => UserAttendance::whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->where(function ($query) {
-                            $query->WhereNull('check_out');
-                        })
-                        ->count(),
-
-                    "dayOffCount" => UserAttendance::whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where(function($query) {
-                            $query->where('attendance_code', '=', $this->constants->attendance_code[2])
-                            ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
-                        })
-                        ->count(),
-
-                    "timeOffCount" => UserAttendance::whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[1])
-                        ->count(),
-                ]);
+                $userAttendances = $userAttendances->whereBetween('date', $range_date);
             }
 
-            return response()->json([
-                "onTimeCount" => UserAttendance::whereDate('date', '<', now())
-                    ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                    ->whereNotNull('check_in')
-                    ->whereNotNull('check_out')
-                    ->where(function($q) {
-                        $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
-                        ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
-                    })
-                    ->count(),
+            $search = $request->filters['search'];
+            if (!empty($search)) {
+                $userAttendances = $userAttendances->where(function ($query) use ($search) {
+                    $query->whereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'LIKE', '%' . $search . '%');
+                    })->orWhereHas('user.userEmployment', function ($query) use ($search) {
+                        $query->where('employee_id', 'LIKE', '%' . $search . '%');
+                    })->orWhere('shift_name', 'LIKE', '%' . $search . '%');
+                });
+            }
 
-                "lateCheckInCount" => UserAttendance::whereDate('date', '<', now())
+            $filterDivisi = $request->filters['filterDivisi'];
+            if (!empty($filterDivisi) && $filterDivisi !== '*') {
+                $userAttendances = $userAttendances->whereHas('user', function ($query) use ($filterDivisi) {
+                    $query->where('division_id', $filterDivisi);
+                });
+            }
+
+            $filterDepartment = $request->filters['filterDepartment'];
+            if (!empty($filterDepartment) && $filterDepartment !== '*') {
+                $userAttendances = $userAttendances->whereHas('user', function ($query) use ($filterDepartment) {
+                    $query->where('department_id', $filterDepartment);
+                });
+            }
+
+            $query1 = clone $userAttendances;
+            $query2 = clone $userAttendances;
+            $query3 = clone $userAttendances;
+            $query4 = clone $userAttendances;
+            $query5 = clone $userAttendances;
+            $query6 = clone $userAttendances;
+            $query7 = clone $userAttendances;
+            $query8 = clone $userAttendances;
+
+            return response()->json([
+                "onTimeCount" => $query1->where('attendance_code', '=', $this->constants->attendance_code[0])
+                    ->where(function ($query) {
+                        $query->where(function ($query) {
+                            $query->whereDate('date', '=', now())
+                                ->where(function ($query) {
+                                    $query->where(function ($query) {
+                                        $query->whereNotNull('check_in')
+                                            ->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                                    })->orWhere(function ($query) {
+                                        $query->whereNotNull('check_out')
+                                            ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                    });
+                                });
+                        })->orWhere(function($query) {
+                            $query->whereDate('date', '<', now())
+                                ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                                ->whereNotNull('check_in')
+                                ->whereNotNull('check_out')
+                                ->where(function($q) {
+                                    $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
+                                        ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                });
+                        });
+                })->count(),
+
+                "lateCheckInCount" => $query2->whereDate('date', '<=', now())
                     ->where('attendance_code', '=', $this->constants->attendance_code[0])
                     ->whereNotNull('check_in')
                     ->whereRaw('TIME(check_in) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
                     ->count(),
 
-                "earlyCheckOutCount" => UserAttendance::whereDate('date', '<', now())
+                "earlyCheckOutCount" => $query3->whereDate('date', '<=', now())
                     ->where('attendance_code', '=', $this->constants->attendance_code[0])
                     ->whereNotNull('check_out')
                     ->whereRaw('TIME(check_out) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))')
                     ->count(),
 
-                "absent" => UserAttendance::whereDate('date', '<', now())
-                    ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                "absent" => $query4->where('attendance_code', '=', $this->constants->attendance_code[0])
                     ->where(function ($query) {
-                        $query->whereNull('check_in')
-                            ->orWhereNull('check_out');
+                        $query->where(function ($query) {
+                            $query->whereDate('date', '<', now())
+                                ->whereNull('check_in')
+                                ->orWhereNull('check_out');
+                        })->orWhere(function ($query) {
+                            $query->where('date', '=', now())
+                                ->where(function ($query) {
+                                    $query->whereNull('check_out')
+                                        ->orWhereNull('check_in');
+                                })
+                                ->whereRaw('TIME(?) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))', [now()]);
+                        });
                     })
                     ->count(),
 
-                "noCheckInCount" => UserAttendance::whereDate('date', '<', now())
-                    ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                "noCheckInCount" => $query5->where('attendance_code', '=', $this->constants->attendance_code[0])
+                    ->whereNull('check_in')
                     ->where(function ($query) {
-                        $query->whereNull('check_in');
+                        $query->whereDate('date', '<', now())->orWhere(function ($query) {
+                            $query->whereDate('date', '=', now())
+                            ->whereRaw('TIME(?) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))', [now()]);
+                        });
                     })
                     ->count(),
 
-                "noCheckOutCount" => UserAttendance::whereDate('date', '<', now())
-                    ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                "noCheckOutCount" => $query6->where('attendance_code', '=', $this->constants->attendance_code[0])
+                    ->whereNull('check_out')
                     ->where(function ($query) {
-                        $query->WhereNull('check_out');
+                        $query->whereDate('date', '<', now())->orWhere(function ($query) {
+                            $query->whereDate('date', '=', now())
+                            ->whereRaw('TIME(?) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))', [now()]);
+                        });
                     })
                     ->count(),
 
-                "dayOffCount" => UserAttendance::whereDate('date', '<', now())
-                    ->where(function($query) {
+                "dayOffCount" => $query7->where(function($query) {
                         $query->where('attendance_code', '=', $this->constants->attendance_code[2])
                         ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
                     })
                     ->count(),
 
-                "timeOffCount" => UserAttendance::whereDate('date', '<', now())
-                    ->where('attendance_code', '=', $this->constants->attendance_code[1])
+                "timeOffCount" => $query8->where('attendance_code', '=', $this->constants->attendance_code[1])
                     ->count(),
             ]);
         } catch (\Throwable $th) {
@@ -178,141 +293,107 @@ class AttendanceController extends Controller
     public function getAttendanceSummariesById(Request $request)
     {
         try {
-            $userId = $request->userId;
+            $userAttendances = UserAttendance::where('user_id', $request->userId);
 
             if ($request->dateFilter) {
                 $range_date = collect(explode('-', $request->dateFilter))->map(function ($item) {
                     return Carbon::parse($item)->toDateString();
                 })->toArray();
 
-                return response()->json([
-                    "onTimeCount" => UserAttendance::where('user_id', $userId)
-                        ->whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->whereNotNull('check_in')
-                        ->whereNotNull('check_out')
-                        ->where(function($q) {
-                            $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
-                            ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
-                        })
-                        ->count(),
-
-                    "lateCheckInCount" => UserAttendance::where('user_id', $userId)
-                        ->whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->whereNotNull('check_in')
-                        ->whereRaw('TIME(check_in) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
-                        ->count(),
-
-                    "earlyCheckOutCount" => UserAttendance::where('user_id', $userId)
-                        ->whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->whereNotNull('check_out')
-                        ->whereRaw('TIME(check_out) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))')
-                        ->count(),
-
-                    "absent" => UserAttendance::where('user_id', $userId)
-                        ->whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->where(function ($query) {
-                            $query->whereNull('check_in')
-                                ->orWhereNull('check_out');
-                        })
-                        ->count(),
-
-                    "noCheckInCount" => UserAttendance::where('user_id', $userId)
-                        ->whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->where(function ($query) {
-                            $query->whereNull('check_in');
-                        })
-                        ->count(),
-
-                    "noCheckOutCount" => UserAttendance::where('user_id', $userId)
-                        ->whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                        ->where(function ($query) {
-                            $query->WhereNull('check_out');
-                        })
-                        ->count(),
-
-                    "dayOffCount" => UserAttendance::where('user_id', $userId)
-                        ->whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where(function($query) {
-                            $query->where('attendance_code', '=', $this->constants->attendance_code[2])
-                            ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
-                        })
-                        ->count(),
-
-                    "timeOffCount" => UserAttendance::where('user_id', $userId)
-                        ->whereDate('date', '<', now())->whereBetween('date', $range_date)
-                        ->where('attendance_code', '=', $this->constants->attendance_code[1])
-                        ->count(),
-                ]);
+                $userAttendances = $userAttendances->whereBetween('date', $range_date);
             }
 
-            return response()->json([
-                "onTimeCount" => UserAttendance::where('user_id', $userId)
-                    ->whereDate('date', '<', now())
-                    ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                    ->whereNotNull('check_in')
-                    ->whereNotNull('check_out')
-                    ->where(function($q) {
-                        $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
-                        ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
-                    })
-                    ->count(),
+            $query1 = clone $userAttendances;
+            $query2 = clone $userAttendances;
+            $query3 = clone $userAttendances;
+            $query4 = clone $userAttendances;
+            $query5 = clone $userAttendances;
+            $query6 = clone $userAttendances;
+            $query7 = clone $userAttendances;
+            $query8 = clone $userAttendances;
 
-                "lateCheckInCount" => UserAttendance::where('user_id', $userId)
-                    ->whereDate('date', '<', now())
+            return response()->json([
+                "onTimeCount" => $query1->where('attendance_code', '=', $this->constants->attendance_code[0])
+                    ->where(function ($query) {
+                        $query->where(function ($query) {
+                            $query->whereDate('date', '=', now())
+                                ->where(function ($query) {
+                                    $query->where(function ($query) {
+                                        $query->whereNotNull('check_in')
+                                            ->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                                    })->orWhere(function ($query) {
+                                        $query->whereNotNull('check_out')
+                                            ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                    });
+                                });
+                        })->orWhere(function($query) {
+                            $query->whereDate('date', '<', now())
+                                ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                                ->whereNotNull('check_in')
+                                ->whereNotNull('check_out')
+                                ->where(function($q) {
+                                    $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
+                                        ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                });
+                        });
+                })->count(),
+
+                "lateCheckInCount" => $query2->whereDate('date', '<=', now())
                     ->where('attendance_code', '=', $this->constants->attendance_code[0])
                     ->whereNotNull('check_in')
                     ->whereRaw('TIME(check_in) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
                     ->count(),
 
-                "earlyCheckOutCount" => UserAttendance::where('user_id', $userId)
-                    ->whereDate('date', '<', now())
+                "earlyCheckOutCount" => $query3->whereDate('date', '<=', now())
                     ->where('attendance_code', '=', $this->constants->attendance_code[0])
                     ->whereNotNull('check_out')
                     ->whereRaw('TIME(check_out) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))')
                     ->count(),
 
-                "absent" => UserAttendance::where('user_id', $userId)
-                    ->where('attendance_code', '=', $this->constants->attendance_code[0])
-                    ->whereDate('date', '<', now())
+                "absent" => $query4->where('attendance_code', '=', $this->constants->attendance_code[0])
                     ->where(function ($query) {
-                        $query->whereNull('check_in')
-                            ->orWhereNull('check_out');
+                        $query->where(function ($query) {
+                            $query->whereDate('date', '<', now())
+                                ->whereNull('check_in')
+                                ->orWhereNull('check_out');
+                        })->orWhere(function ($query) {
+                            $query->where('date', '=', now())
+                                ->where(function ($query) {
+                                    $query->whereNull('check_out')
+                                        ->orWhereNull('check_in');
+                                })
+                                ->whereRaw('TIME(?) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))', [now()]);
+                        });
                     })
                     ->count(),
 
-                "noCheckInCount" => UserAttendance::where('user_id', $userId)
-                    ->whereDate('date', '<', now())
-                    ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                "noCheckInCount" => $query5->where('attendance_code', '=', $this->constants->attendance_code[0])
+                    ->whereNull('check_in')
                     ->where(function ($query) {
-                        $query->whereNull('check_in');
+                        $query->whereDate('date', '<', now())->orWhere(function ($query) {
+                            $query->whereDate('date', '=', now())
+                            ->whereRaw('TIME(?) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))', [now()]);
+                        });
                     })
                     ->count(),
 
-                "noCheckOutCount" => UserAttendance::where('user_id', $userId)
-                    ->whereDate('date', '<', now())
-                    ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                "noCheckOutCount" => $query6->where('attendance_code', '=', $this->constants->attendance_code[0])
+                    ->whereNull('check_out')
                     ->where(function ($query) {
-                        $query->WhereNull('check_out');
+                        $query->whereDate('date', '<', now())->orWhere(function ($query) {
+                            $query->whereDate('date', '=', now())
+                            ->whereRaw('TIME(?) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))', [now()]);
+                        });
                     })
                     ->count(),
 
-                "dayOffCount" => UserAttendance::where('user_id', $userId)
-                    ->whereDate('date', '<', now())
-                    ->where(function($query) {
+                "dayOffCount" => $query7->where(function($query) {
                         $query->where('attendance_code', '=', $this->constants->attendance_code[2])
                         ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
                     })
                     ->count(),
 
-                "timeOffCount" => UserAttendance::where('user_id', $userId)
-                    ->whereDate('date', '<', now())
-                    ->where('attendance_code', '=', $this->constants->attendance_code[1])
+                "timeOffCount" => $query8->where('attendance_code', '=', $this->constants->attendance_code[1])
                     ->count(),
             ]);
         } catch (\Throwable $th) {
@@ -327,14 +408,109 @@ class AttendanceController extends Controller
         if (request()->ajax()) {
             $userAttendances = UserAttendance::has('user.userEmployment')->with('user.userEmployment');
 
-            if ($request->dateFilter) {
-                $range_date = collect(explode('-', $request->dateFilter))->map(function ($item) {
+            if ($request->filters['filterDate']) {
+                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
                     return Carbon::parse($item)->toDateString();
                 })->toArray();
 
                 $userAttendances = $userAttendances->whereBetween('date', $range_date)->orderBy('date', 'desc');
             } else {
                 $userAttendances = $userAttendances->orderBy('date', 'desc');
+            }
+
+            $search = $request->filters['search'];
+            if (!empty($search)) {
+                $userAttendances = $userAttendances->where(function ($query) use ($search) {
+                    $query->whereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'LIKE', '%' . $search . '%');
+                    })->orWhereHas('user.userEmployment', function ($query) use ($search) {
+                        $query->where('employee_id', 'LIKE', '%' . $search . '%');
+                    })->orWhere('shift_name', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            $filterDivisi = $request->filters['filterDivisi'];
+            if (!empty($filterDivisi) && $filterDivisi !== '*') {
+                $userAttendances = $userAttendances->whereHas('user', function ($query) use ($filterDivisi) {
+                    $query->where('division_id', $filterDivisi);
+                });
+            }
+
+            $filterDepartment = $request->filters['filterDepartment'];
+            if (!empty($filterDepartment) && $filterDepartment !== '*') {
+                $userAttendances = $userAttendances->whereHas('user', function ($query) use ($filterDepartment) {
+                    $query->where('department_id', $filterDepartment);
+                });
+            }
+
+            switch ($request->filters['filterStatus']) {
+                case $this->constants->filter_status_attendance[0]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                    ->where(function ($query) {
+                        $query->where(function ($query) {
+                            $query->whereDate('date', '=', now())
+                                ->where(function ($query) {
+                                    $query->where(function ($query) {
+                                        $query->whereNotNull('check_in')
+                                            ->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                                    })->orWhere(function ($query) {
+                                        $query->whereNotNull('check_out')
+                                            ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                    });
+                                });
+                        })->orWhere(function($query) {
+                            $query->whereDate('date', '<', now())
+                                ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                                ->whereNotNull('check_in')
+                                ->whereNotNull('check_out')
+                                ->where(function($q) {
+                                    $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
+                                        ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                });
+                        });
+                });
+                    break;
+                case $this->constants->filter_status_attendance[1]:
+                    $userAttendances = $userAttendances->whereDate('date', '<=', now())
+                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNotNull('check_in')
+                        ->whereRaw('TIME(check_in) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                    break;
+                case $this->constants->filter_status_attendance[2]:
+                    $userAttendances = $userAttendances->whereDate('date', '<=', now())
+                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNotNull('check_out')
+                        ->whereRaw('TIME(check_out) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                    break;
+                case $this->constants->filter_status_attendance[3]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNull('check_in')
+                        ->where(function ($query) {
+                            $query->whereDate('date', '<', now())->orWhere(function ($query) {
+                                $query->whereDate('date', '=', now())
+                                ->whereRaw('TIME(?) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))', [now()]);
+                            });
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[4]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNull('check_out')
+                        ->where(function ($query) {
+                            $query->whereDate('date', '<', now())->orWhere(function ($query) {
+                                $query->whereDate('date', '=', now())
+                                ->whereRaw('TIME(?) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))', [now()]);
+                            });
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[5]:
+                    $userAttendances = $userAttendances->where(function($query) {
+                            $query->where('attendance_code', '=', $this->constants->attendance_code[2])
+                            ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[6]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[1]);
+                    break;
             }
 
             return DataTables::of($userAttendances)
@@ -385,14 +561,10 @@ class AttendanceController extends Controller
                     return $userAttendances->day_off_code ?? "-";
                 })
                 ->addColumn('action', function ($userAttendances) {
-                    return '
-                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                    <ul class="dropdown-menu">
-                        <li><a href="' . route('hc.att.detail', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-eye me-3"></i>Detail</a></li>
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-pencil me-3"></i>Edit</a></li>
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Hapus</a></li>
-                    </ul>
-                ';
+                    $checkIn = $userAttendances->check_in ? date('H:i', strtotime($userAttendances->check_in)) : null;
+                    $checkOut = $userAttendances->check_out ? date('H:i', strtotime($userAttendances->check_out)) : null;
+
+                    return view('hc.cmt-attendance.components.menu', compact(['checkIn', 'checkOut', 'userAttendances']));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])
@@ -457,14 +629,10 @@ class AttendanceController extends Controller
                     return $userAttendances->day_off_code ?? "-";
                 })
                 ->addColumn('action', function ($userAttendances) {
-                    return '
-                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                    <ul class="dropdown-menu">
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-eye me-3"></i>Detail</a></li>
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-pencil me-3"></i>Edit</a></li>
-                        <li><a href="' . route('hc.emp.profile', ['id' => $userAttendances->user->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Hapus</a></li>
-                    </ul>
-                ';
+                    $checkIn = $userAttendances->check_in ? date('H:i', strtotime($userAttendances->check_in)) : null;
+                    $checkOut = $userAttendances->check_out ? date('H:i', strtotime($userAttendances->check_out)) : null;
+
+                    return view('hc.cmt-attendance.components.menu', compact(['checkIn', 'checkOut', 'userAttendances']));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])
