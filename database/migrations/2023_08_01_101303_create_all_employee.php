@@ -45,7 +45,7 @@ class CreateAllEmployee extends Migration
             $table->string("address", 30);
             $table->string("latitude", 50);
             $table->string("longitude", 50);
-            $table->integer("coordinate_radius")->default(5); // meter
+            $table->integer("coordinate_radius")->default(20); // meter
             $table->integer("umr")->nullable();
             $table->string("npwp", 20);
             $table->string("tax_name", 25);

@@ -29,10 +29,10 @@ class AttendanceController extends Controller
         $R = 6371000; // Radius of the Earth in meters
 
         // Convert degrees to radians
-        $lat1 = deg2rad($lat1);
-        $lon1 = deg2rad($lon1);
-        $lat2 = deg2rad($lat2);
-        $lon2 = deg2rad($lon2);
+        $lat1 = deg2rad(floatval($lat1));
+        $lon1 = deg2rad(floatval($lon1));
+        $lat2 = deg2rad(floatval($lat2));
+        $lon2 = deg2rad(floatval($lon2));
 
         $dlat = $lat2 - $lat1;
         $dlon = $lon2 - $lon1;
@@ -194,7 +194,7 @@ class AttendanceController extends Controller
                 $employmentData->subBranch->longitude,
                 $request->latitude,
                 $request->longitude,
-                $employmentData->subBranch->radius
+                $employmentData->subBranch->coordinate_radius
             );
 
             // save the file
@@ -302,7 +302,7 @@ class AttendanceController extends Controller
                 $employmentData->subBranch->longitude,
                 $request->latitude,
                 $request->longitude,
-                $employmentData->subBranch->radius
+                $employmentData->subBranch->coordinate_radius
             );
 
             // save the file
