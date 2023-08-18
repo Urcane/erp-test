@@ -58,6 +58,11 @@ class CreateAllEmployee extends Migration
         Schema::create('working_schedules', function (Blueprint $table) {
             $table->id();
             $table->string("name", 40);
+            $table->date("effective_date");
+            $table->boolean('override_national_holiday')->default(false);
+            $table->boolean('override_company_holiday')->default(false);
+            $table->boolean('override_special_holiday')->default(false);
+            $table->boolean('flexible')->default(false);
             $table->tinyInteger("late_check_in")->default(5); // in minute
             $table->tinyInteger("late_check_out")->default(5); // in minute
             $table->softDeletes()->index();

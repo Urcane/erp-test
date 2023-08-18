@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HC\Attendance\AttendanceController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\PersonalController;
+use App\Http\Controllers\Profile\FileController;
 use App\Http\Controllers\Profile\TimeManagementController;
 use App\Http\Controllers\HC\Settings;
 use App\Http\Controllers\Request;
@@ -143,13 +144,18 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/createUpdate/employee/work/experience', 'createUpdateWorkExperience')->name('hc.emp.create-update-work-experience');
             Route::post('/delete/employee/work/experience', 'deleteWorkExperience')->name('hc.emp.delete-work-experience');
 
-            //  user file
-            Route::get('/get-data/table/user-file', 'getTableUserFile')->name('hc.emp.get-table-user-file');
-            Route::post('/createUpdate/employee/work/user-file', 'createUpdateWorkUserFile')->name('hc.emp.create-update-user-file');
-            Route::post('/delete/employee/work/user-file', 'deleteWorkUserFile')->name('hc.emp.delete-user-file');
-
             Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
             Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
+        });
+    });
+
+    Route::controller(FileController::class)->group(function () {
+        Route::prefix('cmt-employee-file')->group(function () {
+            //  user file
+            Route::get('/get-data/table/user-file', 'getTableUserFile')->name('hc.emp.get-table-user-file');
+            Route::post('/createUpdate/employee/user-file', 'createUpdateUserFile')->name('hc.emp.create-update-user-file');
+            Route::post('/delete/employee/user-file', 'deleteUserFile')->name('hc.emp.delete-user-file');
+            Route::post('/delete/employee/user-file/download', 'download')->name('hc.emp.profile.file.download');
         });
     });
 
@@ -212,9 +218,15 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::prefix('setting-attendance')->group(function () {
+    Route::prefix('setting-time-management')->group(function () {
         Route::controller(Settings\TimeManagement\AttendanceController::class)->group(function () {
-
+            Route::prefix('attendance')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.schedule.index');
+                Route::get('/table/schedule', 'getTableSchedule')->name('hc.setting.getTableSchedule');
+                Route::post('/create/update', 'createUpdate')->name('hc.setting.schedule.createUpdate');
+                Route::post('/delete', 'delete')->name('hc.setting.schedule.delete');
+                Route::post('/get/shift', 'getShift')->name('hc.setting.schedule.get.shift');
+            });
         });
     });
 

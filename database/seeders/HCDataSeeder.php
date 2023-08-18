@@ -139,6 +139,11 @@ class HCDataSeeder extends Seeder
         ])->map(function ($data) {
             WorkingSchedule::create([
                 "name" => $data[0],
+                'effective_date' => "2022-02-02",
+                'override_national_holiday' => 0,
+                'override_company_holiday' => 0,
+                'override_special_holiday' => 0,
+                'flexible' => 0,
                 "late_check_in" => $data[1],
                 "late_check_out" => $data[2],
             ]);
@@ -146,7 +151,7 @@ class HCDataSeeder extends Seeder
 
         WorkingScheduleShift::create([
             "working_schedule_id" => 1,
-            "working_shift_id" => 1
+            "working_shift_id" => 1,
         ]);
 
         collect([

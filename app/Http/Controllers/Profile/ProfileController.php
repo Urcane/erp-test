@@ -30,6 +30,7 @@ use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
 use App\Models\PersonalInfo\NonFormalEducationCategory;
+Use App\Models\PersonalInfo\UserFileCategory;
 
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\WorkingShift;
@@ -43,6 +44,46 @@ class ProfileController extends Controller
 
     public function __construct() {
         $this->constants = new Constants();
+    }
+
+    public function profile($id) {
+        $dataDepartment = Department::all();
+        $dataDivision = Division::all();
+
+        $dataRole = Role::all();
+        $constants = new Constants();
+        $user = User::whereId($id)->first();
+        $users = User::all();
+        $dataTeam = Team::all();
+        $dataEmploymentStatus = EmploymentStatus::all();
+        $dataSubBranch = SubBranch::all();
+        $dataTaxStatus = TaxStatus::all();
+        $dataWorkingScheduleShift = WorkingScheduleShift::all();
+        $dataShift = WorkingShift::all();
+
+        $dataNonFormalEducationCategory = NonFormalEducationCategory::all();
+        $dataPaymentSchedule = PaymentSchedule::all();
+        $dataProrateSetting = ProrateSetting::all();
+        $dataCategory = UserFileCategory::all();
+
+        return view('profile.index',compact(
+            'user',
+            'users',
+            'dataNonFormalEducationCategory',
+            'dataRole',
+            'dataTeam',
+            'dataTaxStatus',
+            'dataDepartment',
+            'dataDivision',
+            'constants',
+            'dataEmploymentStatus',
+            'dataSubBranch',
+            'dataWorkingScheduleShift',
+            'dataPaymentSchedule',
+            'dataProrateSetting',
+            'dataShift',
+            'dataCategory'
+        ));
     }
 
     public function store(Request $request) {
@@ -221,44 +262,6 @@ class ProfileController extends Controller
         });
 
         return $transaction;
-    }
-
-    public function profile($id) {
-        $dataDepartment = Department::all();
-        $dataDivision = Division::all();
-
-        $dataRole = Role::all();
-        $constants = new Constants();
-        $user = User::whereId($id)->first();
-        $users = User::all();
-        $dataTeam = Team::all();
-        $dataEmploymentStatus = EmploymentStatus::all();
-        $dataSubBranch = SubBranch::all();
-        $dataTaxStatus = TaxStatus::all();
-        $dataWorkingScheduleShift = WorkingScheduleShift::all();
-        $dataShift = WorkingShift::all();
-
-        $dataNonFormalEducationCategory = NonFormalEducationCategory::all();
-        $dataPaymentSchedule = PaymentSchedule::all();
-        $dataProrateSetting = ProrateSetting::all();
-
-        return view('profile.index',compact(
-            'user',
-            'users',
-            'dataNonFormalEducationCategory',
-            'dataRole',
-            'dataTeam',
-            'dataTaxStatus',
-            'dataDepartment',
-            'dataDivision',
-            'constants',
-            'dataEmploymentStatus',
-            'dataSubBranch',
-            'dataWorkingScheduleShift',
-            'dataPaymentSchedule',
-            'dataProrateSetting',
-            'dataShift'
-        ));
     }
 
     public function updateEmployment(Request $request) {
