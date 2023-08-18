@@ -56,10 +56,6 @@ class SurveyRequest extends Model
         return $this->belongsTo(User::class, 'soft_surveyed_by', 'id');
     }
 
-    function itemableBillOfQuantity() : HasOne {
-        return $this->hasOne(ItemableBillOfQuantity::class);
-    }
-
     function scopeUnProcess($query) {
         return $query->doesnthave('workOrders')->doesnthave('softSurveys');
     }
@@ -74,5 +70,9 @@ class SurveyRequest extends Model
         return $query->has('softSurveys')->orWhereHas('workOrders', function($q) {
             $q->where('status', 'DN');
         });
+    }
+    
+    function itemableBillOfQuantity() : HasOne {
+        return $this->hasOne(ItemableBillOfQuantity::class);
     }
 }
