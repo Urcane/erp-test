@@ -10,6 +10,7 @@ use App\Models\Customer\CustomerProspect;
 use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Services\Master\Inventory\InventoryService;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Nette\Utils\Json;
 
@@ -28,12 +29,14 @@ class BoQRepository
     protected $inventoryService;
     protected $customerProspect;
     protected $surveyRequest;
+    protected $user;
 
-    function __construct(ItemableBillOfQuantity $model, CustomerProspect $customerProspect, InventoryService $inventoryService, SurveyRequest $surveyRequest){
+    function __construct(ItemableBillOfQuantity $model, CustomerProspect $customerProspect, InventoryService $inventoryService, SurveyRequest $surveyRequest, User $user){
         $this->model = $model;
         $this->inventoryService = $inventoryService;
         $this->customerProspect = $customerProspect;
         $this->surveyRequest = $surveyRequest;
+        $this->user = $user;
     }
 
     function getAll(Request $request){
@@ -174,10 +177,12 @@ class BoQRepository
     }
 
     function createRevisionBoq(Request $request) : JsonResponse{
-
         $rejectedBoq = ItemableBillOfQuantity::findOrFail($request->query('id'));
         $copyBoq = $rejectedBoq->toArray();
         unset($copyBoq['id']); 
+        $copyBoq['approval_amanager'] = null;
+        $copyBoq['approval_director'] = null;
+        $copyBoq['approval_finman'] = null;
 
         $revisionBoq = ItemableBillOfQuantity::create($copyBoq);
 
@@ -196,10 +201,17 @@ class BoQRepository
 
         $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$prospectId->prospect_id)->get();
         $dataForm = $this->inventoryService->getDataForm();
+        $dataSales = $this->user->where('department_id', 1)->get();
+        $dataFinance = $this->user->where('department_id', 2)->get();
+        $dataTechnician = $this->user->where('department_id', 4)->get();
 
         return [
             'dataCompanyItem' => $dataCompanyItem,
             'dataForm' => $dataForm,
+            'dataSales' => $dataSales,
+            'dataFinance' => $dataFinance,
+            'dataTechnician' => $dataTechnician,
         ];
     }
+
 }

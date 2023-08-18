@@ -93,32 +93,5 @@ class BoQController extends Controller{
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
-    // Terrano Code
-        // function getSurveyCompanyItemInventory(Request $request) : JsonResponse {
-    //     try {
-    //         if ($request->ajax()) {
-    //             $prospect_id = $request->query('prospect_id');
-    //             $surveyId = SurveyRequest::where('customer_prospect_id', $prospect_id);
-                
-    //             if (!$surveyId) {
-    //                 $surveyId = null;
-    //             }
-                
-    //             $dataCompany = CustomerProspect::with(['customer.customerContact', 'customer.bussinesType'])->where('id', $prospect_id)->first();
-    //             $dataItems = ItemableBillOfQuantity::with('itemableBillOfQuantity','itemableBillOfQuantity.inventoryGood')->where("prospect_id", $prospect_id)->get();
-        
-    //             $combinedData = [
-    //                 'survey' => $surveyId,
-    //                 'dataCompany' => $dataCompany,
-    //                 'dataItems' => $dataItems
-    //             ];
-    //             return response()->json($combinedData);
-    //         }
-    //     } catch (Exception $e) {
-    //         Log::error('Error in getSurveyCompanyItemInventory: ' . $e->getMessage());
-    //         return response()->json(['error' => 'An error occurred'], 500);
-    //     }
-    // }
-
     }
     

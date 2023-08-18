@@ -36,8 +36,24 @@ class BoqService
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
+                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id . "&is_draft=". $query->is_draft) .'" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
+                            </ul>';
+            })
+            ->addColumn('action_done', function ($query) {
+                return 
+                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">
+                            <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
+                            <i class="fa-solid fa-list-check me-3"></i>No Action</a></li>
+                            </ul>';
+            })
+            ->addColumn('action_cancel', function ($query) {
+                return 
+                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
+                                <i class="fa-solid fa-list-check me-3"></i>Recreate BoQ</a></li>
                             </ul>';
             })
             ->addColumn('next_action_pretified', function ($query) {
@@ -95,7 +111,7 @@ class BoqService
                 ';
             })
             ->addIndexColumn()
-            ->rawColumns(['DT_RowChecklist', 'action', 'next_action_pretified', 'progress_pretified'])
+            ->rawColumns(['DT_RowChecklist', 'action', 'action_done', 'action_cancel', 'next_action_pretified', 'progress_pretified'])
             ->make(true);
     }
 
@@ -138,7 +154,7 @@ class BoqService
     function createDraftBoq(){
         $dataProspect = $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
         $dataItem = $this->BoQRepository->getListItem();
-        // return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem', 'dataSurvey'));
+        // return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem'));
         return response()->json([
             'dataProspect' => $dataProspect,
             'dataItem' => $dataItem,
@@ -147,7 +163,10 @@ class BoqService
 
     function updateDraftBoq(Request $request){
         $updateDraftBoqData = $this->BoQRepository->updateDraftBoq($request);
-        return view('cmt-opportunity.boq.pages.form-update-boq', compact('updateDraftBoqData'));
+        if ($request->query('is_draft',1)) {
+            return view('cmt-opportunity.boq.pages.form-update-boq', compact('updateDraftBoqData'));
+        }
+        return view('cmt-opportunity.boq.pages.commercial-boq', compact('updateDraftBoqData'));
     }
 
 }

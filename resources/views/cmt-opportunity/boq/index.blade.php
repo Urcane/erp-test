@@ -379,7 +379,7 @@
                 { data: 'prospect.prospect_title'},
                 { data: 'progress_pretified'},
                 { data: 'next_action_pretified'},
-                { data: 'action' },
+                { data: 'action_done' },
             ]
          });   
       });
@@ -400,7 +400,7 @@
                 { data: 'prospect.prospect_title'},
                 { data: 'progress_pretified'},
                 { data: 'next_action_pretified'},
-                { data: 'action' },
+                { data: 'action_cancel' },
             ]
          });   
       });
