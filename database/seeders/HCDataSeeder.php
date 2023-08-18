@@ -23,6 +23,7 @@ use App\Constants;
 use App\Models\Attendance\UserAttendance;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Employee\WorkingShift;
+use Illuminate\Support\Facades\DB;
 
 class HCDataSeeder extends Seeder
 {
@@ -69,6 +70,8 @@ class HCDataSeeder extends Seeder
                 "branch_id"=> $data[11],
                 "parent_id"=> $data[12],
                 "email"=> $data[13],
+                "latitude" => "-1.2495105",
+                "longitude" => "116.8749959"
             ]);
         });
 
@@ -123,7 +126,7 @@ class HCDataSeeder extends Seeder
         });
 
         collect([
-            ["Shift1", "08:00:00", "17:00:00", "12:00:00", "13:00:00"]
+            ["Shift1", "08:00:00", "17:00:00", "12:00:00", "13:00:00", 5, 5]
         ])->map(function ($data) {
             WorkingShift::create([
                 "name" => $data[0],
@@ -131,11 +134,13 @@ class HCDataSeeder extends Seeder
                 "working_end" => Carbon::createFromFormat('H:i:s', $data[2]),
                 "break_start" => Carbon::createFromFormat('H:i:s', $data[3]),
                 "break_end" => Carbon::createFromFormat('H:i:s', $data[4]),
+                "late_check_in" => $data[5],
+                "late_check_out" => $data[6],
             ]);
         });
 
         collect([
-            ["Default", 5, 5]
+            ["Default"]
         ])->map(function ($data) {
             WorkingSchedule::create([
                 "name" => $data[0],
@@ -144,8 +149,6 @@ class HCDataSeeder extends Seeder
                 'override_company_holiday' => 0,
                 'override_special_holiday' => 0,
                 'flexible' => 0,
-                "late_check_in" => $data[1],
-                "late_check_out" => $data[2],
             ]);
         });
 
@@ -476,12 +479,12 @@ class HCDataSeeder extends Seeder
             UserSalary::create($data["user_salary"] + $data["user_id"]);
             UserTax::create($data["user_tax"] + $data["user_id"]);
 
-            $workingSchedule = User::whereId($data["user_id"])->first()->userEmployment->workingScheduleShift->workingSchedule;
+            $workingShift = User::whereId($data["user_id"])->first()->userEmployment->workingScheduleShift->workingShift;
 
             foreach ($data["user_attendance"] as $attendance) {
                 UserAttendance::create($attendance + $data["user_id"] + [
-                    "late_check_in" => $workingSchedule->late_check_in,
-                    "late_check_out" => $workingSchedule->late_check_out,
+                    "late_check_in" => $workingShift->late_check_in,
+                    "late_check_out" => $workingShift->late_check_out,
                 ]);
             }
 

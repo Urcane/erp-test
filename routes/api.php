@@ -31,7 +31,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
             Route::get('/history', 'getAttendanceHistory');
             Route::get('/history/today', 'getAttendanceToday');
-            Route::post('/attend', 'makeAttend');
+            Route::post('/attend/location/validate', 'validateLocation');
+            Route::post('/attend/check-in', 'checkIn');
+            Route::post('/attend/check-out', 'checkOut');
         });
     });
 });

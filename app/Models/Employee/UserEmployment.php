@@ -24,9 +24,9 @@ class UserEmployment extends Model
         return $this->belongsTo(EmploymentStatus::class);
     }
 
-    public function branch(): BelongsTo
+    public function subBranch(): BelongsTo
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(SubBranch::class);
     }
 
     public function workingScheduleShift(): BelongsTo

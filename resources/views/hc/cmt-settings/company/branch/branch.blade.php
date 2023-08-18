@@ -23,7 +23,7 @@
                         <div class="row">
                             <div class="col-lg-6 mb-9">
                                 <h4>Branch</h4>
-                                <span class="fs-7 fw-semibold text-gray-500">Jabang yang dimiliki perusahaan</span>
+                                <span class="fs-7 fw-semibold text-gray-500">Cabang yang dimiliki perusahaan</span>
                             </div>
                             <div class="col-lg-6 d-flex justify-content-end">
                                 <div>

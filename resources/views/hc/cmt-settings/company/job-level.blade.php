@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-<link rel="stylesheet" href="{{asset('sense')}}/plugins/custom/OrgChart/css/jquery.orgchart.css"">
+<link rel="stylesheet" href="{{asset('sense')}}/plugins/custom/OrgChart/css/jquery.orgchart.css">
 <style>
     #chart-container {
         font-family: Arial;

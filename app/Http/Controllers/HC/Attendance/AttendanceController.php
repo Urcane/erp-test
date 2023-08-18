@@ -536,7 +536,7 @@ class AttendanceController extends Controller
                     return "-";
                 })
                 ->addColumn('overtime', function ($userAttendances) {
-                    return $userAttendances->overtime ?? "-";
+                    return $userAttendances->overtime != 0 ? $userAttendances->overtime : "-";
                 })
                 ->addColumn('attendance_code', function ($userAttendances) {
                     return $this->constants->attendanceCodeTranslator($userAttendances->attendance_code) ?? "-";
@@ -604,7 +604,7 @@ class AttendanceController extends Controller
                     return "-";
                 })
                 ->addColumn('overtime', function ($userAttendances) {
-                    return $userAttendances->overtime ?? "-";
+                    return $userAttendances->overtime != 0 ? $userAttendances->overtime : "-";
                 })
                 ->addColumn('attendance_code', function ($userAttendances) {
                     return $this->constants->attendanceCodeTranslator($userAttendances->attendance_code) ?? "-";

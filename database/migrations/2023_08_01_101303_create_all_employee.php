@@ -35,12 +35,17 @@ class CreateAllEmployee extends Migration
 
         Schema::create('sub_branches', function (Blueprint $table) {
             $table->id();
+            $table->foreignId("branch_id")->nullable()->constrained("branches");
+            $table->foreignId("parent_id")->nullable()->constrained("sub_branches");
             $table->string("name", 40);
             $table->string("phone_number", 15);
             $table->string("email", 40);
-            $table->string("city", 15);
+            $table->string("city", 30);
             $table->string("province", 30);
             $table->string("address", 30);
+            $table->string("latitude", 50);
+            $table->string("longitude", 50);
+            $table->integer("coordinate_radius")->default(5); // meter
             $table->integer("umr")->nullable();
             $table->string("npwp", 20);
             $table->string("tax_name", 25);
@@ -49,8 +54,6 @@ class CreateAllEmployee extends Migration
             $table->string("klu", 15);
             $table->string("signature")->nullable();
             $table->string("logo")->nullable();
-            $table->foreignId("branch_id")->nullable()->constrained("branches");
-            $table->foreignId("parent_id")->nullable()->constrained("sub_branches");
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -63,8 +66,6 @@ class CreateAllEmployee extends Migration
             $table->boolean('override_company_holiday')->default(false);
             $table->boolean('override_special_holiday')->default(false);
             $table->boolean('flexible')->default(false);
-            $table->tinyInteger("late_check_in")->default(5); // in minute
-            $table->tinyInteger("late_check_out")->default(5); // in minute
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -76,6 +77,8 @@ class CreateAllEmployee extends Migration
             $table->time("working_end");
             $table->time("break_start");
             $table->time("break_end");
+            $table->tinyInteger("late_check_in")->default(5); // in minute
+            $table->tinyInteger("late_check_out")->default(5); // in minute
             $table->time("overtime_before")->nullable();
             $table->time("overtime_after")->nullable();
             $table->softDeletes()->index();
@@ -91,7 +94,7 @@ class CreateAllEmployee extends Migration
 
         Schema::create('days', function (Blueprint $table) {
             $table->id();
-            $table->string("name", 10);
+            $table->enum("name", $this->constants->day);
             $table->timestamps();
         });
 

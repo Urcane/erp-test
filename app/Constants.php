@@ -4,6 +4,9 @@ namespace App;
 
 class Constants
 {
+    // system
+    public string $locale = "id";
+
     // database only
     public $attendance_code = [
         "work_day",     // Regular working day
