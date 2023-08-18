@@ -4,6 +4,7 @@ namespace App\Repositories\ProjectManagement;
 
 use App\Models\ProjectManagement\WorkOrder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Http\Request;
 
 class WorkOrderRepository
 {
@@ -34,6 +35,12 @@ class WorkOrderRepository
             'status' => "PR",
             'type_of_wo' => "SR",
         ]);
+    }
+
+    function getAllSurveyWO(Request $request) : EloquentBuilder {
+        return $this->model->where('type_of_wo', 'SR')->whereHas('surveyRequest', function($surveyRequest) use ($request){
+            $surveyRequest->where('service_type_id', $request->filters['service_type_id']);
+        });
     }
 
     // function save($data) : WorkOrder {

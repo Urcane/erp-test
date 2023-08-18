@@ -8,6 +8,7 @@ use App\Traits\HasFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class SoftSurvey extends Model
@@ -18,9 +19,5 @@ class SoftSurvey extends Model
 
     function surveyRequests() : BelongsTo {
         return $this->belongsTo(SurveyRequest::class);
-    }
-
-    function workOrders() : BelongsTo {
-        return $this->belongsTo(WorkOrder::class);
     }
 }

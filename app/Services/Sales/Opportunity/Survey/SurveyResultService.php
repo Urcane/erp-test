@@ -23,8 +23,7 @@ class SurveyResultService
         $this->surveyRequestRepository = $surveyRequestRepository;
     }
 
-    function storeSurveyResultData(SurveyResultRequest $request) {
-        
+    function storeSurveyResultData(Request $request) {
         $serviceType = ServiceType::find($request->service_type_id);
         $modelType = new $serviceType->model_name;
 
