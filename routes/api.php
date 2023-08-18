@@ -15,9 +15,13 @@ use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
 |
 */
 Route::controller(BoQController::class)->group(function () {
+
     Route::prefix('cmt-boq')->group(function (){
         Route::post('/store-data-boq','storeDataBoq')->name('com.boq.store.boq');
         Route::post('/save-items-boq','saveItemsBoQ')->name('com.boq.save.boq');
         Route::post('/create-revision-boq','createRevisionBoq')->name('com.boq.revision.boq');
+        Route::get('/update-draft-boq','updateDraftBoq')->name('com.boq.update-draft-boq');
+        Route::get('/create-draft-boq','createDraftBoq')->name('com.boq.create-draft-boq');
+
     });
 });

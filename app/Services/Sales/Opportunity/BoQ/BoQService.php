@@ -32,52 +32,28 @@ class BoqService
             ->addColumn('DT_RowChecklist', function($check) {
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
             })
-            ->addColumn('action_opportunity', function ($query) {
+            ->addColumn('action', function ($query) {
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
+                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id . "&is_draft=". $query->is_draft) .'" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
                             </ul>';
             })
-            ->addColumn('action_draft_boq', function ($query) {
+            ->addColumn('action_done', function ($query) {
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
-                                <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
+                            <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
+                            <i class="fa-solid fa-list-check me-3"></i>No Action</a></li>
                             </ul>';
             })
-            ->addColumn('action_commercial', function ($query) {
-                return 
-                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/boq-commercial?boq_id=". $query->id) . '" class="dropdown-item py-2">
-                                <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
-                            </ul>';
-            })
-            ->addColumn('action_done_boq', function ($query) {
-                return 
-                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
-                                <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
-                            </ul>';
-            })          
             ->addColumn('action_cancel', function ($query) {
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
-                                <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
-                            </ul>';
-            })
-            ->addColumn('action_review', function ($query) {
-                return 
-                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
-                                <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
+                                <i class="fa-solid fa-list-check me-3"></i>Recreate BoQ</a></li>
                             </ul>';
             })
             ->addColumn('next_action_pretified', function ($query) {
@@ -135,9 +111,7 @@ class BoqService
                 ';
             })
             ->addIndexColumn()
-            ->rawColumns(['DT_RowChecklist', 'action_opportunity',
-            'action_done_survey','action_draft_boq','action_commercial','action_done_boq',
-            'action_cancel','action_review', 'next_action_pretified', 'progress_pretified'])
+            ->rawColumns(['DT_RowChecklist', 'action', 'action_done', 'action_cancel', 'next_action_pretified', 'progress_pretified'])
             ->make(true);
     }
 
@@ -154,16 +128,45 @@ class BoqService
         return $this->BoQRepository->createRevisionBoq($request);
     }
 
-    function createDraftBoq(Request $request) {
-        return $this->BoQRepository->createDraftBoq($request);
+    function createDraftBoqQuery(Request $request){
+        $dataProspect =  $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
+        $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
+        $dataItem = $this->BoQRepository->getListItem();
+        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->first();
+        // return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
+        return response()->json([
+            'dataProspect' => $dataProspect,
+            'dataCompany' => $dataCompany,
+            'dataItem' => $dataItem,
+            'dataSurvey' => $dataSurvey,
+        ]);
     }
 
-    function updateDraftBoq(Request $request) {
-        return $this->BoQRepository->updateDraftBoq($request);
+    function createDraftBoqAjax(Request $request){
+        $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
+        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->first();
+        return response()->json([
+            'dataCompany' => $dataCompany,
+            'dataSurvey' => $dataSurvey,
+        ]);
     }
 
-    function boqCommercial(Request $request) {
-        return $this->BoQRepository->boqCommercial($request);
+    function createDraftBoq(){
+        $dataProspect = $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
+        $dataItem = $this->BoQRepository->getListItem();
+        // return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem'));
+        return response()->json([
+            'dataProspect' => $dataProspect,
+            'dataItem' => $dataItem,
+        ]);
     }
+
+    function updateDraftBoq(Request $request){
+        $updateDraftBoqData = $this->BoQRepository->updateDraftBoq($request);
+        if ($request->query('is_draft',1)) {
+            return view('cmt-opportunity.boq.pages.form-update-boq', compact('updateDraftBoqData'));
+        }
+        return view('cmt-opportunity.boq.pages.commercial-boq', compact('updateDraftBoqData'));
+    }
+
 }
-

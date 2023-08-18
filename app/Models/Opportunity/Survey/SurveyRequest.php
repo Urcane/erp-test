@@ -24,8 +24,16 @@ class SurveyRequest extends Model
         return $this->hasMany(SoftSurvey::class);
     }
 
-    function siteSurveys() : HasMany {
-        return $this->hasMany(SoftSurvey::class);
+    function siteSurveyInternets() : HasMany {
+        return $this->hasMany(SiteSurveyInternet::class);
+    }
+
+    function siteSurveyCCTVs() : HasMany {
+        return $this->hasMany(SiteSurveyCCTV::class);
+    }
+    
+    function siteSurveyGSMBoosters() : HasMany {
+        return $this->hasMany(SiteSurveyGSMBooster::class);
     }
 
     function workOrders() : HasMany {
@@ -48,6 +56,22 @@ class SurveyRequest extends Model
         return $this->belongsTo(User::class, 'soft_surveyed_by', 'id');
     }
 
+    function scopeUnProcess($query) {
+        return $query->doesnthave('workOrders')->doesnthave('softSurveys');
+    }
+
+    function scopeOnProcess($query) {
+        return $query->whereHas('workOrders', function($q) {
+            $q->where('status', 'PR');
+        });
+    }
+
+    function scopeDone($query) {
+        return $query->has('softSurveys')->orWhereHas('workOrders', function($q) {
+            $q->where('status', 'DN');
+        });
+    }
+    
     function itemableBillOfQuantity() : HasOne {
         return $this->hasOne(ItemableBillOfQuantity::class);
     }

@@ -134,7 +134,7 @@
                                                 </div>
                                                 <div class="row my-6">
                                                     <div class="col-lg-5 text-dark">Media Transmisi Jaringan</div>
-                                                    <div class="col-lg-7 text-gray-800">: {{$query->transmissionMedia->name}}</div>
+                                                    <div class="col-lg-7 text-gray-800">: </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -163,7 +163,7 @@
                                             <div class="mx-8 fs-6">
                                                 <div class="row my-6">
                                                     <div class="col-lg-5 text-dark">Jenis Kamera</div>
-                                                    <div class="col-lg-7 text-gray-800">: {{$query->siteSurveyCCTV->cameraType->name}}</div>
+                                                    <div class="col-lg-7 text-gray-800">: </div>
                                                 </div>
                                                 <div class="row my-6">
                                                     <div class="col-lg-5 text-dark">Potensi Jumlah CCTV</div>
@@ -198,7 +198,7 @@
                                                 </div>
                                                 <div class="row my-6">
                                                     <div class="col-lg-5 text-dark">Jenis Layanan</div>
-                                                    <div class="col-lg-7 text-gray-800">: {{$query->internetServiceType->name}}</div>
+                                                    <div class="col-lg-7 text-gray-800">: {{$query->SiteSurveyServiceType->name}}</div>
                                                 </div>
                                                 <div class="row my-6">
                                                     <div class="col-lg-5 text-dark">Jenis Bangunan</div>
