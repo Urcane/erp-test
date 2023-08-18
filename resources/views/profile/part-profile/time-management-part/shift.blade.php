@@ -7,13 +7,12 @@
                 </div>
             </div>
             <div class="modal-body mx-5 mx-lg-15 mb-7">
-                <form id="modal_create_attendance_request" class="form fv-plugins-bootstrap5 fv-plugins-framework">
+                <form id="modal_create_shift_request" class="form fv-plugins-bootstrap5 fv-plugins-framework">
                     <input type="hidden" name="user_id" value="{{ $user->id }}">
-                    <input type="hidden" name="family_id" value="">
                     <div class="scroll-y me-n10 pe-10" data-kt-scroll-max-height="auto" data-kt-scroll-offset="300px">
                         <div class="row mb-9">
                             <div class="col-lg-12 text-center mb-9">
-                                <span class="fs-1 fw-bolder text-dark d-block mb-1">Request Attendance</span>
+                                <span class="fs-1 fw-bolder text-dark d-block mb-1">Request Shift</span>
                                 {{-- <span class="fs-7 fw-semibold text-gray-500">Ajukan absen</span> --}}
                             </div>
                             <div class="col-lg-12 mb-3">
@@ -29,21 +28,24 @@
                                 </label>
                                 <input type="text" class="form-control form-control-solid"
                                     value="{{ $user->userEmployment->workingScheduleShift->workingShift->name }}"
-                                    placeholder="Nomor Induk Keluarga" disabled>
+                                    name="dweadawd" disabled>
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Shift Baru</span>
                                 </label>
-                                <input type="text" class="form-control form-control-solid"
-                                    value="{{ $user->userEmployment->workingScheduleShift->workingShift->name }}"
-                                    placeholder="Nomor Induk Keluarga" disabled>
+                                <select required class="drop-data form-select form-select-solid"
+                                    data-control="working_shift_id" name="working_shift_id">
+                                    @foreach ($dataShift as $option)
+                                        <option value="{{ $option->id }}">{{ $option->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Notes</span>
                                 </label>
-                                <textarea class="form-control form-control-solid" placeholder="Select Date" required name="notes"></textarea>
+                                <textarea class="form-control form-control-solid" required name="notes"></textarea>
                             </div>
                         </div>
                     </div>
@@ -70,7 +72,7 @@
         <div class="col-lg-6 d-flex justify-content-end">
             <div>
                 <a href="#shift_request_modal" class="btn btn-info btn-sm me-3 fs-8" data-bs-toggle="modal"><i
-                    class="fa-solid fa-plus"></i>Request Shift</a>
+                        class="fa-solid fa-plus"></i>Request Shift</a>
             </div>
         </div>
         <div class="col-lg-12">
@@ -83,7 +85,6 @@
                         <th class="w-150px">Shift</th>
                         <th class="w-150px">Working Start</th>
                         <th class="w-150px">Working End</th>
-                        <th class="w-150px">Note</th>
                         <th class="w-150px">Status</th>
                         <th class="w-100px">#</th>
                     </tr>
@@ -96,49 +97,91 @@
 </div>
 
 <script>
-    $( "#shift" ).on( "click", function() {
-        $('#tb_shift_content').DataTable({
+    let shiftTable;
+
+    $("#shift").on("click", function() {
+        shiftTable = $('#tb_shift_content').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
             deferRender: true,
             responsive: false,
-            aaSorting : [],
+            aaSorting: [],
             ajax: {
-                url : "{{route('hc.emp.get-table-request-shift')}}",
-                data: function(data){
-                    data.user_id = {{$user->id}}
+                url: "{{ route('req.shift.get-table-me') }}",
+                data: function(data) {
+                    data.user_id = {{ $user->id }}
                 }
             },
             language: {
                 "lengthMenu": "Show _MENU_",
-                "emptyTable" : "Tidak ada data terbaru 📁",
+                "emptyTable": "Tidak ada data terbaru 📁",
                 "zeroRecords": "Data tidak ditemukan 😞",
             },
             buttons: [],
-            dom:
-            "<'row mb-2'" +
-            "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
-            "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
-            ">" +
+            dom: "<'row mb-2'" +
+                "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
+                "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+                ">" +
 
-            "<'table-responsive'tr>" +
+                "<'table-responsive'tr>" +
 
-            "<'row'" +
-            "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
-            "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
-            ">",
+                "<'row'" +
+                "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+                "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+                ">",
 
-            columns: [
-            { data: 'DT_RowIndex'},
-            { data: 'date'},
-            { data: 'approved_by'},
-            { data: 'shift'},
-            { data: 'working_start'},
-            { data: 'working_end'},
-            { data: 'notes'},
-            { data: 'action'},
+            columns: [{
+                    data: 'DT_RowIndex'
+                },
+                {
+                    data: 'date'
+                },
+                {
+                    data: 'approval_line'
+                },
+                {
+                    data: 'shift'
+                },
+                {
+                    data: 'working_start'
+                },
+                {
+                    data: 'working_end'
+                },
+                {
+                    data: 'status'
+                },
+                {
+                    data: 'action'
+                },
             ],
+            columnDefs: [{
+                targets: 0,
+                searchable: false,
+                className: 'text-center',
+            }, ],
         });
     })
+
+    $('#modal_create_shift_request').submit(function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            url: "{{ route('req.shift.create') }}",
+            type: 'POST',
+            data: formData,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                shiftTable.ajax.reload();
+                toastr.success(data.message, 'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    });
 </script>

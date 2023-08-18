@@ -222,7 +222,14 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(Request\AttendanceController::class)->group(function () {
             Route::prefix('/attendance')->group(function () {
                 Route::post('/create', 'makeRequest')->name('req.attd.create');
-                Route::get('/get-data/table/me', 'showAllRequestTable')->name('req.attd.get-table-me');
+                Route::get('/get-data/table/me', 'showRequestTableById')->name('req.attd.get-table-me');
+            });
+        });
+
+        Route::controller(Request\ShiftController::class)->group(function () {
+            Route::prefix('/shift')->group(function () {
+                Route::post('/create', 'makeRequest')->name('req.shift.create');
+                Route::get('/get-data/table/me', 'showRequestTableById')->name('req.shift.get-table-me');
             });
         });
     });

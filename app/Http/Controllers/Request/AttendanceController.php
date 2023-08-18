@@ -14,6 +14,7 @@ use App\Constants;
 use App\Exceptions\AuthorizationError;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
+use App\Models\Attendance\AttendanceChangeLog;
 use App\Models\Attendance\UserAttendanceRequest;
 use App\Models\Attendance\UserAttendance;
 
@@ -35,6 +36,18 @@ class AttendanceController extends Controller
         $userAttendance->update([
             "check_in" => $checkIn ?? $userAttendance->check_in,
             "check_out" => $checkOut ?? $userAttendance->check_out
+        ]);
+
+        AttendanceChangeLog::create([
+            "user_id" => Auth::user()->id,
+            "attendance_id" => $userAttendance->id,
+            "date" => $userAttendance->date,
+            "action" => "SYSTEM EDIT",
+            "old_check_in" => $userAttendance->check_in,
+            "old_check_out" => $userAttendance->check_out,
+            "new_check_in" => $checkIn ?? $userAttendance->check_in,
+            "new_check_out" => $checkOut ?? $userAttendance->check_out,
+            "reason" => "[CHANGED FROM USER REQUEST --SYSTEM]"
         ]);
     }
 
@@ -102,12 +115,16 @@ class AttendanceController extends Controller
                 ]);
             }
 
-            if (!$attendanceRequest->approval_line != Auth::user()->id) {
+            if ($attendanceRequest->approval_line != Auth::user()->id) {
                 throw new AuthorizationError("Anda tidak berhak melakukan update status");
             }
 
             if ($attendanceRequest->status == $this->constants->approve_status[1]) {
                 throw new InvariantError("Tidak dapat melakukan update status, Request sudah di approve");
+            }
+
+            if ($attendanceRequest->status == $this->constants->approve_status[2]) {
+                throw new InvariantError("Tidak dapat melakukan update status, Request sudah di reject");
             }
 
             if ($request->status == $this->constants->approve_status[1]) {
@@ -134,7 +151,7 @@ class AttendanceController extends Controller
         }
     }
 
-    public function showAllRequestTable(Request $request)
+    public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
             $attendanceRequests = UserAttendanceRequest::where('user_id', $request->user_id)->orderBy('created_at', 'desc');
@@ -174,7 +191,7 @@ class AttendanceController extends Controller
         }
     }
 
-    public function showWaitingRequestTable(Request $request)
+    public function showRequestTableByApprovalId(Request $request)
     {
         //
     }

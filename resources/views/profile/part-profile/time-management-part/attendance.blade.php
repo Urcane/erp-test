@@ -51,7 +51,7 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Notes</span>
                                 </label>
-                                <textarea class="form-control form-control-solid" placeholder="Select Date" required name="notes"></textarea>
+                                <textarea class="form-control form-control-solid" required name="notes"></textarea>
                             </div>
                         </div>
                     </div>

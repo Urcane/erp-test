@@ -15,7 +15,7 @@ use App\Utils\ErrorHandler;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
 use App\Models\User;
-use App\Models\Attendance\AttendanceChangeLogs;
+use App\Models\Attendance\AttendanceChangeLog;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
 use App\Models\Division;
@@ -68,11 +68,11 @@ class AttendanceController extends Controller
 
             $userAttendance = UserAttendance::whereId($request->id)->first();
 
-            AttendanceChangeLogs::create([
+            AttendanceChangeLog::create([
                 "user_id" => Auth::user()->id,
                 "attendance_id" => $request->id,
                 "date" => $userAttendance->date,
-                "action" => "EDIT",
+                "action" => "USER EDIT",
                 "old_check_in" => $userAttendance->check_in,
                 "old_check_out" => $userAttendance->check_out,
                 "new_check_in" => $checkIn,
@@ -108,38 +108,22 @@ class AttendanceController extends Controller
 
             $userAttendance = UserAttendance::whereId($request->id)->first();
 
-            DB::transaction(function () use ($request, $userAttendance) {
-                try {
-                    AttendanceChangeLogs::create([
-                        "user_id" => Auth::user()->id,
-                        "attendance_id" => $request->id,
-                        "date" => $userAttendance->date,
-                        "action" => "DELETE",
-                        "old_check_in" => $userAttendance->check_in,
-                        "old_check_out" => $userAttendance->check_out,
-                        "new_check_in" => null,
-                        "new_check_out" => null,
-                        "reason" => $request->reason
-                    ]);
+            AttendanceChangeLog::create([
+                "user_id" => Auth::user()->id,
+                "attendance_id" => $request->id,
+                "date" => $userAttendance->date,
+                "action" => "USER DELETE",
+                "old_check_in" => $userAttendance->check_in,
+                "old_check_out" => $userAttendance->check_out,
+                "new_check_in" => null,
+                "new_check_out" => null,
+                "reason" => $request->reason
+            ]);
 
-                    $userAttendance->update([
-                        "check_in" => null,
-                        "check_out" => null
-                    ]);
-
-                    DB::commit();
-
-                    return response()->json([
-                        "status" => "success",
-                        "message" => "Data Attendance berhasil diupdate"
-                    ], 200);
-                } catch (\Exception $e) {
-                    DB::rollback();
-
-                    $data = $this->errorHandler->handle($e);
-                    return response()->json($data["data"], $data["code"]);
-                }
-            });
+            $userAttendance->update([
+                "check_in" => null,
+                "check_out" => null
+            ]);
 
             return response()->json([
                 "status" => "success",

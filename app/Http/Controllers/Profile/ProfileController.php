@@ -32,7 +32,7 @@ use App\Models\Employee\TaxStatus;
 use App\Models\PersonalInfo\NonFormalEducationCategory;
 
 use App\Models\Employee\WorkingSchedule;
-
+use App\Models\Employee\WorkingShift;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
@@ -236,6 +236,7 @@ class ProfileController extends Controller
         $dataSubBranch = SubBranch::all();
         $dataTaxStatus = TaxStatus::all();
         $dataWorkingScheduleShift = WorkingScheduleShift::all();
+        $dataShift = WorkingShift::all();
 
         $dataNonFormalEducationCategory = NonFormalEducationCategory::all();
         $dataPaymentSchedule = PaymentSchedule::all();
@@ -256,6 +257,7 @@ class ProfileController extends Controller
             'dataWorkingScheduleShift',
             'dataPaymentSchedule',
             'dataProrateSetting',
+            'dataShift'
         ));
     }
 
