@@ -274,6 +274,167 @@ class AttendanceController extends Controller
         }
     }
 
+    public function getAttendanceSummariesTable(Request $request)
+    {
+        if (request()->ajax()) {
+            $userAttendances = UserAttendance::has('user.userEmployment')->with('user.userEmployment');
+
+            if ($request->filters['filterDate']) {
+                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
+                    return Carbon::parse($item)->toDateString();
+                })->toArray();
+
+                $userAttendances = $userAttendances->whereBetween('date', $range_date);
+            }
+
+            $search = $request->filters['search'];
+            if (!empty($search)) {
+                $userAttendances = $userAttendances->where(function ($query) use ($search) {
+                    $query->whereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'LIKE', '%' . $search . '%');
+                    })->orWhereHas('user.userEmployment', function ($query) use ($search) {
+                        $query->where('employee_id', 'LIKE', '%' . $search . '%');
+                    })->orWhere('shift_name', 'LIKE', '%' . $search . '%');
+                });
+            }
+
+            $filterDivisi = $request->filters['filterDivisi'];
+            if (!empty($filterDivisi) && $filterDivisi !== '*') {
+                $userAttendances = $userAttendances->whereHas('user', function ($query) use ($filterDivisi) {
+                    $query->where('division_id', $filterDivisi);
+                });
+            }
+
+            $filterDepartment = $request->filters['filterDepartment'];
+            if (!empty($filterDepartment) && $filterDepartment !== '*') {
+                $userAttendances = $userAttendances->whereHas('user', function ($query) use ($filterDepartment) {
+                    $query->where('department_id', $filterDepartment);
+                });
+            }
+
+            switch ($request->param) {
+                case "on-time":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->where(function ($query) {
+                            $query->where(function ($query) {
+                                $query->whereDate('date', '=', now())
+                                    ->where(function ($query) {
+                                        $query->where(function ($query) {
+                                            $query->whereNotNull('check_in')
+                                                ->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                                        })->orWhere(function ($query) {
+                                            $query->whereNotNull('check_out')
+                                                ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                        });
+                                    });
+                            })->orWhere(function($query) {
+                                $query->whereDate('date', '<', now())
+                                    ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                                    ->whereNotNull('check_in')
+                                    ->whereNotNull('check_out')
+                                    ->where(function($q) {
+                                        $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
+                                            ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                    });
+                            });
+                        });
+                    break;
+
+                case "late-clock-in":
+                    $userAttendances->whereDate('date', '<=', now())
+                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNotNull('check_in')
+                        ->whereRaw('TIME(check_in) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                    break;
+
+                case "early-clock-out":
+                    $userAttendances->whereDate('date', '<=', now())
+                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNotNull('check_out')
+                        ->whereRaw('TIME(check_out) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                    break;
+
+                case "absent":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->where(function ($query) {
+                            $query->where(function ($query) {
+                                $query->whereDate('date', '<', now())
+                                    ->whereNull('check_in')
+                                    ->orWhereNull('check_out');
+                            })->orWhere(function ($query) {
+                                $query->where('date', '=', now())
+                                    ->where(function ($query) {
+                                        $query->whereNull('check_out')
+                                            ->orWhereNull('check_in');
+                                    })
+                                    ->whereRaw('TIME(?) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))', [now()]);
+                            });
+                        });
+                    break;
+
+                case "no-clock-in":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNull('check_in')
+                        ->where(function ($query) {
+                            $query->whereDate('date', '<', now())->orWhere(function ($query) {
+                                $query->whereDate('date', '=', now())
+                                ->whereRaw('TIME(?) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))', [now()]);
+                            });
+                        });
+                    break;
+
+                case "no-clock-out":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNull('check_out')
+                        ->where(function ($query) {
+                            $query->whereDate('date', '<', now())->orWhere(function ($query) {
+                                $query->whereDate('date', '=', now())
+                                ->whereRaw('TIME(?) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))', [now()]);
+                            });
+                        });
+                    break;
+
+                case "no-clock-out":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNull('check_out')
+                        ->where(function ($query) {
+                            $query->whereDate('date', '<', now())->orWhere(function ($query) {
+                                $query->whereDate('date', '=', now())
+                                ->whereRaw('TIME(?) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))', [now()]);
+                            });
+                        });
+                    break;
+
+                case "day-off":
+                    $userAttendances->where(function($query) {
+                        $query->where('attendance_code', '=', $this->constants->attendance_code[2])
+                        ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
+                    });
+                    break;
+
+                case "time-off":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[1]);
+                    break;
+            }
+
+            return DataTables::of($userAttendances)
+                ->addColumn('name', function ($userAttendances) {
+                    return $userAttendances->user->name;
+                })
+                ->addColumn('nip', function ($userAttendances) {
+                    return $userAttendances->user->userEmployment->employee_id;
+                })
+                ->addColumn('date', function ($userAttendances) {
+                    return $userAttendances->date;
+                })
+                ->addColumn('shift', function ($userAttendances) {
+                    return $userAttendances->shift_name;
+                })
+                ->addIndexColumn()
+                ->make(true);
+        }
+    }
+
     public function getAttendanceSummariesById(Request $request)
     {
         try {
