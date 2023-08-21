@@ -40,7 +40,7 @@
                             <div class="col-lg-12">
                                 <form id="kt_modal_confirm_survey_result_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                                     @csrf
-                                    <input type="hidden" name="id" value="">
+                                    <input type="hidden" name="id" value="{{isset($surveyResult) ? $surveyResult->id : ''}}">
                                     <input type="hidden" name="service_type_id" value="{{$surveyRequest->service_type_id}}">
                                     <input type="hidden" name="survey_request_id" value="{{$surveyRequest->id}}">
                                     <input type="hidden" name="customer_id" value="{{$surveyRequest->customerProspect->customer->id}}">

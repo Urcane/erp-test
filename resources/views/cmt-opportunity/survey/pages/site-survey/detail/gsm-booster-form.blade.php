@@ -40,7 +40,7 @@
                             <div class="col-lg-12">
                                 <form id="kt_modal_confirm_survey_result_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                                     @csrf
-                                    <input type="hidden" name="id" value="">
+                                    <input type="hidden" name="id" value="{{isset($surveyResult) ? $surveyResult->id : ''}}">
                                     <input type="hidden" name="service_type_id" value="{{$surveyRequest->service_type_id}}">
                                     <input type="hidden" name="survey_request_id" value="{{$surveyRequest->id}}">
                                     <input type="hidden" name="customer_id" value="{{$surveyRequest->customerProspect->customer->id}}">
@@ -88,7 +88,7 @@
                                         <div class="col-lg-10">
                                             <div class="input-group">
                                                 <span class="input-group-text border-0" id="kontak">+62</span>
-                                                <input type="number" disabled="disabled" class="form-control form-control-solid" minlength="8" name="kontak" value="{{$surveyRequest->customerProspect->customer->customerContact->customer_contact_phone}}"/>
+                                                <input @if (isset($surveyResult)) disabled="disabled" @endif type="number" disabled="disabled" class="form-control form-control-solid" minlength="8" name="kontak" value="{{$surveyRequest->customerProspect->customer->customerContact->customer_contact_phone}}"/>
                                             </div>
                                         </div>
                                     </div>
@@ -103,7 +103,8 @@
                                                 @foreach ($gbNaturalFrequencies as $gbNaturalFrequency)
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                        <input type="radio" class="form-check-input" placeholder="" name="gb_natural_frequency_id" value="{{$gbNaturalFrequency->id}}">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->gb_natural_frequency_id == $gbNaturalFrequency->id) checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="gb_natural_frequency_id" value="{{$gbNaturalFrequency->id}}">
                                                         <label class="fs-6 form-check-label" for="gb_natural_frequency_id">
                                                             <span class="fw-bold">{{$gbNaturalFrequency->name}}</span>
                                                         </label>
@@ -121,7 +122,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-4">
-                                            <input type="number" class="form-control form-control-solid" placeholder="" name="natural_signal_rsrp" value="">
+                                            <input @if (isset($surveyResult)) disabled="disabled" @endif type="number" class="form-control form-control-solid" placeholder="" name="natural_signal_rsrp" value="{{isset($surveyResult) ? old('natural_signal_rsrp', $surveyResult->natural_signal_rsrp) : ''}}">
                                             <div class="fv-plugins-message-container invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -132,7 +133,7 @@
                                             </label>
                                         </div>
                                         <div class="col-lg-4">
-                                            <input type="number" class="form-control form-control-solid" placeholder="" name="natural_signal_rsrq" value="">
+                                            <input @if (isset($surveyResult)) disabled="disabled" @endif type="number" class="form-control form-control-solid" placeholder="" name="natural_signal_rsrq" value="{{isset($surveyResult) ? old('natural_signal_rsrq', $surveyResult->natural_signal_rsrq) : ''}}">
                                             <div class="fv-plugins-message-container invalid-feedback"></div>
                                         </div>
                                     </div>
@@ -147,7 +148,8 @@
                                                 @foreach ($gbRepeaterTypes as $gbRepeaterType)
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                        <input type="radio" class="form-check-input" placeholder="" name="gb_repeater_type_id" value="{{$gbRepeaterType->id}}">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->gb_repeater_type_id == $gbRepeaterType->id) checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="gb_repeater_type_id" value="{{$gbRepeaterType->id}}">
                                                         <label class="fs-6 form-check-label" for="gb_repeater_type_id">
                                                             <span class="fw-bold">{{$gbRepeaterType->name}}</span>
                                                         </label>
@@ -168,7 +170,8 @@
                                             <div class="row mt-3 h-min-50px">
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                    <input type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="PERIODIK">
+                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_donor_type == "PERIODIK") checked="checked" @endif @endif 
+                                                    type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="PERIODIK">
                                                     <label class="fs-6 form-check-label" for="anthena_donor_type">
                                                         <span class="fw-bold">Periodik</span>
                                                     </label>
@@ -176,7 +179,8 @@
                                                 </div>
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                    <input type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="GRID">
+                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_donor_type == "GRID") checked="checked" @endif @endif 
+                                                    type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="GRID">
                                                     <label class="fs-6 form-check-label" for="anthena_donor_type">
                                                         <span class="fw-bold">Grid</span>
                                                     </label>
@@ -184,7 +188,8 @@
                                                 </div>
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                    <input type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="OMNI">
+                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_donor_type == "OMNI") checked="checked" @endif @endif 
+                                                    type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="OMNI">
                                                     <label class="fs-6 form-check-label" for="anthena_donor_type">
                                                         <span class="fw-bold">OMNI</span>
                                                     </label>
@@ -203,7 +208,8 @@
                                             <div class="row mt-3 h-min-50px">
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                    <input type="radio" class="form-check-input" placeholder="" name="anthena_service" value="OMNI">
+                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_service == "OMNI") checked="checked" @endif @endif 
+                                                    type="radio" class="form-check-input" placeholder="" name="anthena_service" value="OMNI">
                                                     <label class="fs-6 form-check-label" for="anthena_service">
                                                         <span class="fw-bold">OMNI</span>
                                                     </label>
@@ -211,7 +217,8 @@
                                                 </div>
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                    <input type="radio" class="form-check-input" placeholder="" name="anthena_service" value="SECTORAL">
+                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_service == "SECTORAL") checked="checked" @endif @endif 
+                                                    type="radio" class="form-check-input" placeholder="" name="anthena_service" value="SECTORAL">
                                                     <label class="fs-6 form-check-label" for="anthena_service">
                                                         <span class="fw-bold">Sectoral</span>
                                                     </label>
@@ -219,7 +226,8 @@
                                                 </div>
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                    <input type="radio" class="form-check-input" placeholder="" name="anthena_service" value="PLANNER">
+                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_service == "PLANNER") checked="checked" @endif @endif 
+                                                    type="radio" class="form-check-input" placeholder="" name="anthena_service" value="PLANNER">
                                                     <label class="fs-6 form-check-label" for="anthena_service">
                                                         <span class="fw-bold">Planner</span>
                                                     </label>
@@ -239,7 +247,8 @@
                                                 @foreach ($gbConnectivityDatas as $gbConnectivityData)
                                                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                                                     <div class="my-auto">
-                                                        <input type="radio" class="form-check-input" placeholder="" name="gb_connectivity_data_id" value="{{$gbConnectivityData->id}}">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->gb_connectivity_data_id == $gbConnectivityData->id) checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="gb_connectivity_data_id" value="{{$gbConnectivityData->id}}">
                                                         <label class="fs-6 form-check-label" for="gb_connectivity_data_id">
                                                             <span class="fw-bold">{{$gbConnectivityData->name}}</span>
                                                         </label>

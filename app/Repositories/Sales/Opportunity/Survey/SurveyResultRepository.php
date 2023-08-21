@@ -54,7 +54,7 @@ class SurveyResultRepository
 
     function saveSiteSurveyGSMBooster(Request $data) : SiteSurveyCCTV {
 
-        return $siteSurveyCCTV = SiteSurveyCCTV::updateOrCreate([
+        return $siteSurveyGSMBooster = SiteSurveyGSMBooster::updateOrCreate([
             'id' => $data->id
         ],[
             'camera_type_id' => $data->camera_type_id,
@@ -69,7 +69,7 @@ class SurveyResultRepository
     function saveSiteSurveyCCTV(Request $data) : SiteSurveyCCTV {
 
         return $siteSurveyCCTV = SiteSurveyCCTV::updateOrCreate([
-            'id' => $data->site_survey_cctv_id
+            'id' => $data->id
         ],[
             'survey_request_id' => $data->survey_request_id,
             'customer_id' => $data->customer_id,
