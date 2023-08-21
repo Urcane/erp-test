@@ -60,7 +60,7 @@
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-url="{{ route('com.boq.create-draft-boq') }}"
                                                     data-control="select2" required name="prospect_id" id="prospect_id" >
-                                                    <option value="{{ $dataCompany->id ?? null }}" selected disabled>{{ $dataCompany->prospect_title ?? "Pilih Prospect"}} {{ $dataCompany->customer->customer_name ?? null }}</option>
+                                                    <option value="{{ $dataCompany->id ?? null }}" selected>{{ $dataCompany->prospect_title ?? "Pilih Prospect"}} {{ $dataCompany->customer->customer_name ?? null }}</option>
                                                     @foreach ($dataProspect as $prospect)
                                                         <option value="{{ $prospect->id ?? null}}">{{ $prospect->prospect_title ?? null }} {{ $prospect->customer->customer_name ?? null }}</option>
                                                     @endforeach
@@ -304,7 +304,7 @@
         $(document).ready(function() {
             // function Submit BOQ page BENERAN wkwkw
             $('#submit-all-items').on('click', function(event) {
-                event.preventDefault();
+                // event.preventDefault();
 
                 // Get Prospect ID and Survey ID from the HTML elements
                 var prospect_id = $('#prospect_id').val();
@@ -505,7 +505,7 @@
                     },
                 },
                 submitHandler: function(form) {
-                    event.preventDefault();
+                    // event.preventDefault();
 
                     // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
                     var selectedItemId = $('#good_name_update').val();
@@ -604,7 +604,7 @@
                     },
                 },
                 submitHandler: function(form) {
-                    event.preventDefault();
+                    // event.preventDefault();
 
                     // ngambil inputan nama dan merk
                     var selectedItemId = $('#good_name').val();

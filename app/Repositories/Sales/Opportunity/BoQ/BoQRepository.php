@@ -85,12 +85,45 @@ class BoQRepository
             $boqData = [
                 'prospect_id' => $request->input('boq.prospect_id'),
                 'survey_request_id' => $request->input('boq.survey_request_id'),
+                'is_draft' => $request->input('boq.is_draft')
             ];
-            $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
-                ['prospect_id' => $boqData['prospect_id']],
-                ['reference_boq_id' => $boqData['prospect_id']],
-                $boqData
-            );
+
+            if (isset($boqData['survey_request_id'])) { 
+                $itemableBoq = ItemableBillOfQuantity::updateOrCreate( 
+                    ['prospect_id' => $boqData['prospect_id'], 'survey_request_id' => $boqData['survey_request_id']],
+                    [
+                        'reference_boq_id' => $boqData['prospect_id'],
+                        'is_draft' => $boqData['is_draft']
+                    ],
+                    $boqData 
+                );
+            } else { 
+                $itemableBoq = ItemableBillOfQuantity::updateOrCreate( 
+                    ['prospect_id' => $boqData['prospect_id']], 
+                    [
+                        'reference_boq_id' => $boqData['prospect_id'],
+                        'is_draft' => $boqData['is_draft']
+                    ], 
+                    $boqData 
+                );
+            }
+
+            // if (isset($boqData['survey_request_id'])) {
+                //     $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
+                //         ['prospect_id' => $boqData['prospect_id']],
+                //         ['reference_boq_id' => $itemableBoq['id']],
+                //         ['survey_request_id' => $boqData['survey_request_id']],
+                //         ['is_draft' => $boqData['is_draft']],
+                //         $boqData
+                //     );
+                // } else {
+                //     $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
+                //         ['prospect_id' => $boqData['prospect_id']],
+                //         ['reference_boq_id' => $itemableBoq['id']],
+                //         $boqData
+                //     );
+            // }
+
             if (isset($itemableBoq->id)) {
                 $itemIds = Item::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
                 Item::whereIn('id', $itemIds)->delete();
@@ -128,7 +161,7 @@ class BoQRepository
         $request->validate( [
             'prospect_id' => 'required',
             'sales_id' => 'required',
-            'technician_id' => 'required',
+            'technician_id' => 'nullable',
             'procurement_id' => 'required',
             'gpm' => 'required|numeric',
             'modal' => 'required|numeric',
@@ -141,7 +174,7 @@ class BoQRepository
         $itemableBoq = ItemableBillOfQuantity::where('prospect_id', $prospect_id)->first();
     
         if ($itemableBoq) {
-            $itemableBoq->survey_request_id = $request->input('survey_request_id');
+            // $itemableBoq->survey_request_id = $request->input('survey_request_id');
             $itemableBoq->sales_id = $request->input('sales_id');
             $itemableBoq->technician_id = $request->input('technician_id');
             $itemableBoq->procurement_id = $request->input('procurement_id');
@@ -150,13 +183,14 @@ class BoQRepository
             $itemableBoq->npm = $request->input('npm');
             $itemableBoq->percentage = $request->input('percentage');
             $itemableBoq->manpower = $request->input('manpower');
-            $itemableBoq->manpower = $request->input('is_draft');
-            $itemableBoq->approval_manager = $request->input('approval_manager');
-            $itemableBoq->approval_manager_date = $request->input('approval_manager_date');
-            $itemableBoq->approval_director = $request->input('approval_director');
-            $itemableBoq->approval_director_date = $request->input('approval_director_date');
-            $itemableBoq->approval_finman = $request->input('approval_finman');
-            $itemableBoq->approval_finman_date = $request->input('approval_finman_date');
+            $itemableBoq->is_final = $request->input('is_final');
+            // $itemableBoq->is_draft = $request->input('is_draft');
+            // $itemableBoq->approval_manager = $request->input('approval_manager');
+            // $itemableBoq->approval_manager_date = $request->input('approval_manager_date');
+            // $itemableBoq->approval_director = $request->input('approval_director');
+            // $itemableBoq->approval_director_date = $request->input('approval_director_date');
+            // $itemableBoq->approval_finman = $request->input('approval_finman');
+            // $itemableBoq->approval_finman_date = $request->input('approval_finman_date');
             $itemableBoq->reference_boq_id = $itemableBoq->id;
             
             if ($itemableBoq->approval_manager === null || $itemableBoq->approval_director === null || $itemableBoq->approval_finman === null) {
@@ -204,7 +238,7 @@ class BoQRepository
         $dataSales = $this->user->where('department_id', 1)->get();
         $dataFinance = $this->user->where('department_id', 2)->get();
         $dataTechnician = $this->user->where('department_id', 4)->get();
-
+        // dd($dataTechnician);
         return [
             'dataCompanyItem' => $dataCompanyItem,
             'dataForm' => $dataForm,
