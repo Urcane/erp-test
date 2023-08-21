@@ -214,11 +214,22 @@ class BoQRepository
         $rejectedBoq = ItemableBillOfQuantity::findOrFail($request->query('id'));
         $copyBoq = $rejectedBoq->toArray();
         unset($copyBoq['id']); 
-        $copyBoq['approval_amanager'] = null;
+        unset($copyBoq['created_at']); 
+        unset($copyBoq['updated_at']); 
+        $copyBoq['approval_manager'] = null;
+        $copyBoq['approval_manager_date'] = null;
         $copyBoq['approval_director'] = null;
+        $copyBoq['approval_director_date'] = null;
         $copyBoq['approval_finman'] = null;
+        $copyBoq['approval_finman_date'] = null;
+        $copyBoq['is_draft'] = 1;
+        $copyBoq['is_final'] = 0;
+        $copyBoq['remark'] = null;
+        $copyBoq['reference_boq_id'] = null;
 
         $revisionBoq = ItemableBillOfQuantity::create($copyBoq);
+
+        $revisionBoq['reference_boq_id'] = $revisionBoq['id'];
 
         foreach ($rejectedBoq->itemable as $item) {
             $newItems = $item->toArray();
