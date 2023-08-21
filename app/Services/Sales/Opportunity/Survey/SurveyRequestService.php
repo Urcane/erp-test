@@ -48,7 +48,6 @@ class SurveyRequestService
             ->addColumn('action', function ($query) use($request) {
                 $additionalMenu = "";
 
-
                 if ($request->filters['status'] == 'ST') {
                     if ($query->type_of_survey_id == 2) {
                         $additionalMenu .= "<li><a href=\"#kt_modal_create_wo_survey\" class=\"dropdown-item py-2 btn_create_wo_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Terbit WO Survey</a></li>";
@@ -57,7 +56,7 @@ class SurveyRequestService
                     }
                 } else {
                     if ($query->type_of_survey_id == 2) {
-                        $additionalMenu .= "<li><a href=\"". route('com.survey.detail', ['id' => 1])  ."\" class=\"dropdown-item py-2 \"><i class=\"fa-solid fa-list-check me-3\"></i>Detail</a></li>";
+                        $additionalMenu .= "<li><a href=\"". route('com.survey.detail', ['id' => 1, 'serviceType' => $query->service_type_id])  ."\" class=\"dropdown-item py-2 \"><i class=\"fa-solid fa-list-check me-3\"></i>Detail</a></li>";
                     } else {
                         $additionalMenu .= "<li><a href=\"". route('com.soft-survey.detail', ['surveyRequest' => $query->id]) ."\" class=\"dropdown-item py-2 \"><i class=\"fa-solid fa-list-check me-3\"></i>Detail</a></li>";
                     }

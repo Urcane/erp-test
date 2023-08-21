@@ -13,6 +13,7 @@ use App\Models\Opportunity\Survey\SiteSurveyInternet;
 use App\Models\Opportunity\Survey\SiteSurveyOtherArea;
 use App\Models\Opportunity\Survey\SiteSurveyOutdoorArea;
 use App\Models\Opportunity\Survey\SurveyRequest;
+use App\Models\ProjectManagement\WorkOrder;
 use Exception;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Request;
@@ -31,6 +32,10 @@ class SurveyResultRepository
 
     function save($data, $modelType) {
         $result = $this->handleSave($data, $modelType);
+
+        $workOrder = WorkOrder::where('id', $data->work_order_id)->update([
+            'status' => 'DN'
+        ]);
 
         return $result;
     }

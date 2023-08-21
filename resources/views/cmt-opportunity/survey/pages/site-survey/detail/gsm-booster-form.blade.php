@@ -22,7 +22,9 @@
                     <div class="card-header">
                         <h3 class="card-title">🌟⭐✨</h3>
                         <div class="card-toolbar">
-                            
+                            <button type="button" class="btn btn-md btn-info edit-form">
+                                <i class="fa-solid fa-pen-to-square fs-6"></i>Edit
+                            </button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -92,196 +94,198 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
-                                        <div class="col-lg-2">
-                                            <label class="d-flex align-items-center fs-6 form-label h-100">
-                                                <span class="fw-bold my-auto">Natural Frequency : </span>
-                                            </label>
+                                    <div class="real-form">
+                                        <div class="row mb-3">
+                                            <div class="col-lg-2">
+                                                <label class="d-flex align-items-center fs-6 form-label h-100">
+                                                    <span class="fw-bold my-auto">Natural Frequency : </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-10">
+                                                <div class="row mt-3 h-min-50px">
+                                                    @foreach ($gbNaturalFrequencies as $gbNaturalFrequency)
+                                                    <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                        <div class="my-auto">
+                                                            <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->gb_natural_frequency_id == $gbNaturalFrequency->id) checked="checked" @endif @endif 
+                                                            type="radio" class="form-check-input" placeholder="" name="gb_natural_frequency_id" value="{{$gbNaturalFrequency->id}}">
+                                                            <label class="fs-6 form-check-label" for="gb_natural_frequency_id">
+                                                                <span class="fw-bold">{{$gbNaturalFrequency->name}}</span>
+                                                            </label>
+                                                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-10">
-                                            <div class="row mt-3 h-min-50px">
-                                                @foreach ($gbNaturalFrequencies as $gbNaturalFrequency)
-                                                <div class="col-lg-2 mb-3 d-flex align-items-center">
-                                                    <div class="my-auto">
-                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->gb_natural_frequency_id == $gbNaturalFrequency->id) checked="checked" @endif @endif 
-                                                        type="radio" class="form-check-input" placeholder="" name="gb_natural_frequency_id" value="{{$gbNaturalFrequency->id}}">
-                                                        <label class="fs-6 form-check-label" for="gb_natural_frequency_id">
-                                                            <span class="fw-bold">{{$gbNaturalFrequency->name}}</span>
+                                        <div class="row mb-3">
+                                            <div class="col-lg-2">
+                                                <label class="d-flex align-items-center fs-6 form-label h-100">
+                                                    <span class="fw-bold my-auto">Natural Signal RSRP : </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <input @if (isset($surveyResult)) disabled="disabled" @endif type="number" class="form-control form-control-solid" placeholder="" name="natural_signal_rsrp" value="{{isset($surveyResult) ? old('natural_signal_rsrp', $surveyResult->natural_signal_rsrp) : ''}}">
+                                                <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-lg-2">
+                                                <label class="d-flex align-items-center fs-6 form-label h-100">
+                                                    <span class="fw-bold my-auto">Natural Signal RSRQ : </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <input @if (isset($surveyResult)) disabled="disabled" @endif type="number" class="form-control form-control-solid" placeholder="" name="natural_signal_rsrq" value="{{isset($surveyResult) ? old('natural_signal_rsrq', $surveyResult->natural_signal_rsrq) : ''}}">
+                                                <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-lg-2">
+                                                <label class="d-flex align-items-center fs-6 form-label h-100">
+                                                    <span class="fw-bold my-auto">Repeater : </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-10">
+                                                <div class="row mt-3 h-min-50px">
+                                                    @foreach ($gbRepeaterTypes as $gbRepeaterType)
+                                                    <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                        <div class="my-auto">
+                                                            <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->gb_repeater_type_id == $gbRepeaterType->id) checked="checked" @endif @endif 
+                                                            type="radio" class="form-check-input" placeholder="" name="gb_repeater_type_id" value="{{$gbRepeaterType->id}}">
+                                                            <label class="fs-6 form-check-label" for="gb_repeater_type_id">
+                                                                <span class="fw-bold">{{$gbRepeaterType->name}}</span>
+                                                            </label>
+                                                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-lg-2">
+                                                <label class="d-flex align-items-center fs-6 form-label h-100">
+                                                    <span class="fw-bold my-auto">Anthena Donor : </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-10">
+                                                <div class="row mt-3 h-min-50px">
+                                                    <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                        <div class="my-auto">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_donor_type == "PERIODIK") checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="PERIODIK">
+                                                        <label class="fs-6 form-check-label" for="anthena_donor_type">
+                                                            <span class="fw-bold">Periodik</span>
                                                         </label>
-                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-lg-2">
-                                            <label class="d-flex align-items-center fs-6 form-label h-100">
-                                                <span class="fw-bold my-auto">Natural Signal RSRP : </span>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <input @if (isset($surveyResult)) disabled="disabled" @endif type="number" class="form-control form-control-solid" placeholder="" name="natural_signal_rsrp" value="{{isset($surveyResult) ? old('natural_signal_rsrp', $surveyResult->natural_signal_rsrp) : ''}}">
-                                            <div class="fv-plugins-message-container invalid-feedback"></div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-lg-2">
-                                            <label class="d-flex align-items-center fs-6 form-label h-100">
-                                                <span class="fw-bold my-auto">Natural Signal RSRQ : </span>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <input @if (isset($surveyResult)) disabled="disabled" @endif type="number" class="form-control form-control-solid" placeholder="" name="natural_signal_rsrq" value="{{isset($surveyResult) ? old('natural_signal_rsrq', $surveyResult->natural_signal_rsrq) : ''}}">
-                                            <div class="fv-plugins-message-container invalid-feedback"></div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-lg-2">
-                                            <label class="d-flex align-items-center fs-6 form-label h-100">
-                                                <span class="fw-bold my-auto">Repeater : </span>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-10">
-                                            <div class="row mt-3 h-min-50px">
-                                                @foreach ($gbRepeaterTypes as $gbRepeaterType)
-                                                <div class="col-lg-2 mb-3 d-flex align-items-center">
-                                                    <div class="my-auto">
-                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->gb_repeater_type_id == $gbRepeaterType->id) checked="checked" @endif @endif 
-                                                        type="radio" class="form-check-input" placeholder="" name="gb_repeater_type_id" value="{{$gbRepeaterType->id}}">
-                                                        <label class="fs-6 form-check-label" for="gb_repeater_type_id">
-                                                            <span class="fw-bold">{{$gbRepeaterType->name}}</span>
+                                                    <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                        <div class="my-auto">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_donor_type == "GRID") checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="GRID">
+                                                        <label class="fs-6 form-check-label" for="anthena_donor_type">
+                                                            <span class="fw-bold">Grid</span>
                                                         </label>
-                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-lg-2">
-                                            <label class="d-flex align-items-center fs-6 form-label h-100">
-                                                <span class="fw-bold my-auto">Anthena Donor : </span>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-10">
-                                            <div class="row mt-3 h-min-50px">
-                                                <div class="col-lg-2 mb-3 d-flex align-items-center">
-                                                    <div class="my-auto">
-                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_donor_type == "PERIODIK") checked="checked" @endif @endif 
-                                                    type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="PERIODIK">
-                                                    <label class="fs-6 form-check-label" for="anthena_donor_type">
-                                                        <span class="fw-bold">Periodik</span>
-                                                    </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-2 mb-3 d-flex align-items-center">
-                                                    <div class="my-auto">
-                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_donor_type == "GRID") checked="checked" @endif @endif 
-                                                    type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="GRID">
-                                                    <label class="fs-6 form-check-label" for="anthena_donor_type">
-                                                        <span class="fw-bold">Grid</span>
-                                                    </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-2 mb-3 d-flex align-items-center">
-                                                    <div class="my-auto">
-                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_donor_type == "OMNI") checked="checked" @endif @endif 
-                                                    type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="OMNI">
-                                                    <label class="fs-6 form-check-label" for="anthena_donor_type">
-                                                        <span class="fw-bold">OMNI</span>
-                                                    </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-lg-2">
-                                            <label class="d-flex align-items-center fs-6 form-label h-100">
-                                                <span class="fw-bold my-auto">Anthena Service : </span>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-10">
-                                            <div class="row mt-3 h-min-50px">
-                                                <div class="col-lg-2 mb-3 d-flex align-items-center">
-                                                    <div class="my-auto">
-                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_service == "OMNI") checked="checked" @endif @endif 
-                                                    type="radio" class="form-check-input" placeholder="" name="anthena_service" value="OMNI">
-                                                    <label class="fs-6 form-check-label" for="anthena_service">
-                                                        <span class="fw-bold">OMNI</span>
-                                                    </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-2 mb-3 d-flex align-items-center">
-                                                    <div class="my-auto">
-                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_service == "SECTORAL") checked="checked" @endif @endif 
-                                                    type="radio" class="form-check-input" placeholder="" name="anthena_service" value="SECTORAL">
-                                                    <label class="fs-6 form-check-label" for="anthena_service">
-                                                        <span class="fw-bold">Sectoral</span>
-                                                    </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-2 mb-3 d-flex align-items-center">
-                                                    <div class="my-auto">
-                                                    <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_service == "PLANNER") checked="checked" @endif @endif 
-                                                    type="radio" class="form-check-input" placeholder="" name="anthena_service" value="PLANNER">
-                                                    <label class="fs-6 form-check-label" for="anthena_service">
-                                                        <span class="fw-bold">Planner</span>
-                                                    </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-lg-2">
-                                            <label class="d-flex align-items-center fs-6 form-label h-100">
-                                                <span class="fw-bold my-auto">Konektivitas Data : </span>
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-10">
-                                            <div class="row mt-3 h-min-50px">
-                                                @foreach ($gbConnectivityDatas as $gbConnectivityData)
-                                                <div class="col-lg-2 mb-3 d-flex align-items-center">
-                                                    <div class="my-auto">
-                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->gb_connectivity_data_id == $gbConnectivityData->id) checked="checked" @endif @endif 
-                                                        type="radio" class="form-check-input" placeholder="" name="gb_connectivity_data_id" value="{{$gbConnectivityData->id}}">
-                                                        <label class="fs-6 form-check-label" for="gb_connectivity_data_id">
-                                                            <span class="fw-bold">{{$gbConnectivityData->name}}</span>
+                                                    <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                        <div class="my-auto">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_donor_type == "OMNI") checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="anthena_donor_type" value="OMNI">
+                                                        <label class="fs-6 form-check-label" for="anthena_donor_type">
+                                                            <span class="fw-bold">OMNI</span>
                                                         </label>
-                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                @endforeach
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-lg-2">
-                                            <label class="d-flex align-items-center fs-6 form-label h-100">
-                                                <span class="fw-bold my-auto">Tanggal Survey : </span>
-                                            </label>
+                                        <div class="row mb-3">
+                                            <div class="col-lg-2">
+                                                <label class="d-flex align-items-center fs-6 form-label h-100">
+                                                    <span class="fw-bold my-auto">Anthena Service : </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-10">
+                                                <div class="row mt-3 h-min-50px">
+                                                    <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                        <div class="my-auto">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_service == "OMNI") checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="anthena_service" value="OMNI">
+                                                        <label class="fs-6 form-check-label" for="anthena_service">
+                                                            <span class="fw-bold">OMNI</span>
+                                                        </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                        <div class="my-auto">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_service == "SECTORAL") checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="anthena_service" value="SECTORAL">
+                                                        <label class="fs-6 form-check-label" for="anthena_service">
+                                                            <span class="fw-bold">Sectoral</span>
+                                                        </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                        <div class="my-auto">
+                                                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->anthena_service == "PLANNER") checked="checked" @endif @endif 
+                                                        type="radio" class="form-check-input" placeholder="" name="anthena_service" value="PLANNER">
+                                                        <label class="fs-6 form-check-label" for="anthena_service">
+                                                            <span class="fw-bold">Planner</span>
+                                                        </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-lg-10">
-                							<input type="date" class="form-control form-control-solid" name="survey_date">
-                                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                                        <div class="row mb-3">
+                                            <div class="col-lg-2">
+                                                <label class="d-flex align-items-center fs-6 form-label h-100">
+                                                    <span class="fw-bold my-auto">Konektivitas Data : </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-10">
+                                                <div class="row mt-3 h-min-50px">
+                                                    @foreach ($gbConnectivityDatas as $gbConnectivityData)
+                                                    <div class="col-lg-2 mb-3 d-flex align-items-center">
+                                                        <div class="my-auto">
+                                                            <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->gb_connectivity_data_id == $gbConnectivityData->id) checked="checked" @endif @endif 
+                                                            type="radio" class="form-check-input" placeholder="" name="gb_connectivity_data_id" value="{{$gbConnectivityData->id}}">
+                                                            <label class="fs-6 form-check-label" for="gb_connectivity_data_id">
+                                                                <span class="fw-bold">{{$gbConnectivityData->name}}</span>
+                                                            </label>
+                                                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
                                         </div>
+                                        <div class="row mb-3">
+                                            <div class="col-lg-2">
+                                                <label class="d-flex align-items-center fs-6 form-label h-100">
+                                                    <span class="fw-bold my-auto">Tanggal Survey : </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-lg-10">
+                                                <input type="date" class="form-control form-control-solid" name="survey_date">
+                                                <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+                                        </div>
+                                        <div class="separator mb-6"></div>
+                                        @include('cmt-opportunity.survey.component.outdoor-form')
+                                        <div class="separator mb-6"></div>
+                                        @include('cmt-opportunity.survey.component.indoor-form')
+                                        <div class="separator mb-6"></div>
+                                        @include('cmt-opportunity.survey.component.other-form')
+                                        <div class="position-fixed bottom-0 end-0 rounded-circle m-5">
+                                            <a href="#kt_modal_confirm_survey_result" class="btn btn-primary btn-md" data-bs-toggle="modal">
+                                                <i class="fa-solid fa-save fs-3"></i>
+                                            </a>
+                                        </div>
+                                        @include('cmt-opportunity.survey.modal.modal-confirm-survey-result')
                                     </div>
-                                    <div class="separator mb-6"></div>
-                                    @include('cmt-opportunity.survey.component.outdoor-form')
-                                    <div class="separator mb-6"></div>
-                                    @include('cmt-opportunity.survey.component.indoor-form')
-                                    <div class="separator mb-6"></div>
-                                    @include('cmt-opportunity.survey.component.other-form')
-                                    <div class="position-fixed bottom-0 end-0 rounded-circle m-5">
-                                        <a href="#kt_modal_confirm_survey_result" class="btn btn-primary btn-md" data-bs-toggle="modal">
-                                            <i class="fa-solid fa-save fs-3"></i>
-                                        </a>
-                                    </div>
-                                    @include('cmt-opportunity.survey.modal.modal-confirm-survey-result')
                                 </form>
                             </div>
                         </div>
@@ -294,10 +298,17 @@
 
 <script>
     $(document).ready(function () {
+        let editStatus = false;
+
         submitModal({
             modalName: 'kt_modal_confirm_survey_result',
             ajaxLink: "{{route('com.survey-result.store')}}",
             // validationMessages: workOrderValidationMessages,
+            successCallback: function(data) {
+                setTimeout(() => {
+                    window.location.href = `${window.location.origin}/cmt-survey/detail/${data.data.serviceTypeId}/${data.data.surveyResultId}`;
+                }, 800);
+            }
         })
 
         $('#kt_modal_confirm_survey_result_draft').click(function (e) {
@@ -323,6 +334,44 @@
                     toastr.error(errorThrown ,'Opps!');
                 }
             });
+        })
+
+        $('.edit-form').click(function (e) {
+            e.preventDefault();
+
+            editStatus = !editStatus;
+
+            if (editStatus) {
+                $('.real-form input').removeAttr('disabled');
+                $('.real-form textarea').removeAttr('disabled');
+
+                $(this).html(`
+                    <i class="fa-solid fa-x fs-6"></i>Cancel
+                `).removeClass('btn-info').addClass('btn-danger').attr('disabled', 'disabled');
+
+                setTimeout(function() {
+                    $('.edit-form').removeAttr('disabled');
+                }, 800);
+
+                $('#floating-button-container').html(`
+                    <a href="#kt_modal_confirm_survey_result" class="btn btn-primary btn-md" data-bs-toggle="modal">
+                        <i class="fa-solid fa-save fs-3"></i>
+                    </a>
+                `);
+            } else {
+                $('.real-form input').attr('disabled', 'disabled');
+                $('.real-form textarea').attr('disabled', 'disabled');
+
+                $(this).html(`
+                    <i class="fa-solid fa-pen-to-square fs-6"></i>Edit
+                `).removeClass('btn-danger').addClass('btn-info').attr('disabled', 'disabled');
+
+                setTimeout(function() {
+                    $('.edit-form').removeAttr('disabled');
+                }, 800);
+
+                $('#floating-button-container').html(``);
+            }
         })
     })
 </script>

@@ -29,7 +29,7 @@ class SurveyResultService
 
         $surveyResult = $this->surveyResultRepository->save( $request, $modelType);
 
-        return $surveyResult;
+        return ['data' => $surveyResult, 'serviceTypeId' => $serviceType->id];
     }
 
     function renderDatatable(Request $request) : JsonResponse {

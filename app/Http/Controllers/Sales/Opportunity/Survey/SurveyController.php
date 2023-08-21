@@ -346,7 +346,11 @@ class SurveyController extends Controller
         try {
             $result = $this->surveyResultService->storeSurveyResultData($request);
             return response()->json([
-                "status" => "Yeay Berhasil!! 💼"
+                "status" => "Yeay Berhasil!! 💼",
+                "data" => [
+                    'serviceTypeId' => $result['serviceTypeId'],
+                    'surveyResultId' => $result['data']->id
+                ]
             ], 200);
         } catch (\Throwable $th) {
             Log::error($th);

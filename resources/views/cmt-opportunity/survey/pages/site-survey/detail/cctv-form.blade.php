@@ -253,6 +253,11 @@
         submitModal({
             modalName: 'kt_modal_confirm_survey_result',
             ajaxLink: "{{route('com.survey-result.store')}}",
+            successCallback: function(data) {
+                setTimeout(() => {
+                    window.location.href = `${window.location.origin}/cmt-survey/detail/${data.data.serviceTypeId}/${data.data.surveyResultId}`;
+                }, 800);
+            }
             // validationMessages: workOrderValidationMessages,
         })
 
@@ -288,6 +293,7 @@
 
             if (editStatus) {
                 $('.real-form input').removeAttr('disabled');
+                $('.real-form textarea').removeAttr('disabled');
 
                 $(this).html(`
                     <i class="fa-solid fa-x fs-6"></i>Cancel
@@ -304,6 +310,7 @@
                 `);
             } else {
                 $('.real-form input').attr('disabled', 'disabled');
+                $('.real-form textarea').attr('disabled', 'disabled');
 
                 $(this).html(`
                     <i class="fa-solid fa-pen-to-square fs-6"></i>Edit
