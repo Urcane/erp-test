@@ -25,55 +25,57 @@
                             <span class="fs-4 text-uppercase fw-bolder text-dark d-none d-md-block">List Attendance</span>
                         </div>
 
+                        @include('hc.cmt-attendance.modal.summaries')
+
                         <div class="row border rounded p-4 mb-4 justify-content-center">
                             <div class="col-3">
                                 <p class="fw-bold fs-6 mb-2">Present</p>
                                 <div class="ms-1 row">
-                                    <div class="col">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="on-time">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="on-time">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">On Time</div>
-                                    </div>
-                                    <div class="col">
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="late-clock-in">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="late-clock-in">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Late Clock In</div>
-                                    </div>
-                                    <div class="col">
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="early-clock-out">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="early-clock-out">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Early Clock Out</div>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-1"></div>
                             <div class="col-4">
                                 <p class="fw-bold fs-6 mb-2">Not Present</p>
                                 <div class="ms-1 row">
-                                    <div class="col">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="absent">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="absent">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Absent</div>
-                                    </div>
-                                    <div class="col">
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="no-clock-in">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="no-clock-in">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">No Clock In</div>
-                                    </div>
-                                    <div class="col">
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="no-clock-out">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="no-clock-out">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">No Clock Out</div>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-1"></div>
                             <div class="col-3">
                                 <p class="fw-bold fs-6 mb-2">Away</p>
                                 <div class="ms-1 row">
-                                    <div class="col-4">
+                                    <a class="col-4 summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="day-off">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="day-off">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Day Off</div>
-                                    </div>
+                                    </a>
                                     <div class="col-1"></div>
-                                    <div class="col-4">
+                                    <a class="col-4 summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="time-off">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="time-off">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Time Off</div>
-                                    </div>
+                                    </a>
                                     <div class="col-1"></div>
                                 </div>
                             </div>
@@ -208,6 +210,12 @@
             'filterDate': $('#range_date').val(),
             'search': $('#search_attendance').val()
         }
+    }
+
+    const paramToView = (param) => {
+        const parts = param.split('-');
+        const formattedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1));
+        return formattedParts.join(' ');
     }
 
     $(document ).ready(function() {
@@ -390,6 +398,80 @@
             ],
         });
 
+        const renderSummariesTable = (param, name) => {
+            if ($.fn.DataTable.isDataTable('#kt_table_summaries')) {
+                $('#kt_table_summaries').DataTable().destroy();
+            }
+
+            $('#kt_table_summaries').DataTable({
+                processing: true,
+                serverSide: true,
+                retrieve: true,
+                deferRender: true,
+                responsive: false,
+                aaSorting : [],
+                drawCallback: function () {
+                    $('body').on('click', 'input[name=\'pegawai_ids\']', function () {
+                        if($(this).is(":checked")){
+                            pegawai_ids.push($(this).val());
+                        } else {
+                            removeFrom(pegawai_ids, $(this).val());
+                        }
+                    });
+                },
+                ajax: {
+                    url : "{{route('hc.att.get-table-attendance-summaries')}}",
+                    data: function(data) {
+                        data.filters = getFilter();
+                        data.param = param;
+                    },
+                },
+                language: {
+                    "lengthMenu": "Show _MENU_",
+                    "emptyTable" : "Tidak ada data terbaru 📁",
+                    "zeroRecords": "Data tidak ditemukan 😞",
+                },
+                dom:
+                "<'row mb-2'" +
+                "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
+                "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start '>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+                "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+                ">",
+
+                columns: [
+                    { data: 'date' , orderable: false, searchable: false},
+                    { data: 'nip' , orderable: false, searchable: false},
+                    { data: 'name', orderable: false, searchable: false},
+                    { data: 'shift' , orderable: false, searchable: false},
+                ],
+                buttons: [
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-light-success btn-sm ms-3',
+                        title: name,
+                        exportOptions: {
+                            columns: [1,2,3,4]
+                        }
+                    },
+                ],
+                search: {
+                    "regex": true
+                },
+                columnDefs: [
+                    {
+                        targets: [0, 1, 3],
+                        className: 'text-center',
+                    },
+                ],
+            });
+        }
+
         $('#range_date').on('apply.daterangepicker', function(ev, picker) {
             tableAttendance.draw();
             deleteSummaries();
@@ -459,6 +541,21 @@
                     const data = xhr.responseJSON;
                     toastr.error(data.message, 'Opps!');
                 }
+            });
+        });
+
+        $('.summaries').each(function () {
+            $(this).on('click', function () {
+                const param = $(this).data('param');
+
+                const department = $('#filter_department').find(':selected').text();
+                const divisi = $('#filter_divisi').find(':selected').text();
+                const search = $('#search_attendance').val() !== "" ? $('#range_date').val() : "-";
+
+                $('#summaries_modal_title').text(`${paramToView(param)} - (${$('#range_date').val()})`);
+                $('#summaries_modal_subtitle').text(`Divisi: ${divisi}, Department: ${department}, Search: ${search}`);
+
+                renderSummariesTable(param, `${paramToView(param)} - (${$('#range_date').val()}) File`);
             });
         });
 

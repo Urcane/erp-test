@@ -56,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/summaries/user', 'getAttendanceSummariesById')->name('hc.att.user-summaries');
 
             Route::get('/get-data/table/attendance', 'getTableAttendance')->name('hc.att.get-table-attendance');
+            Route::get('/get-data/table/summaries', 'getAttendanceSummariesTable')->name('hc.att.get-table-attendance-summaries');
             Route::get('/get-data/table/attendance/detail', 'getTableAttendanceDetail')->name('hc.att.get-table-attendance-detail');
         });
     });
@@ -243,15 +244,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/create', 'makeRequest')->name('req.shift.create');
                 Route::get('/get-data/table/me', 'showRequestTableById')->name('req.shift.get-table-me');
             });
-        });
-    });
-
-    Route::controller(TimeManagementController::class)->group(function () {
-        Route::prefix('cmt-employee-time-management')->group(function () {
-            Route::get('/get-data/table/request/attendance', 'getRequestAttendance')->name('hc.emp.get-table-request-attendance');
-            Route::get('/get-data/table/request/shift', 'getRequestShift')->name('hc.emp.get-table-request-shift');
-            Route::get('/get-data/table/request/overtime', 'getRequestOvertime')->name('hc.emp.get-table-request-overtime');
-            Route::get('/get-data/table/request/timeof', 'getRequestTimeOf')->name('hc.emp.get-table-request-timeoff');
         });
     });
 });
