@@ -21,8 +21,8 @@
                             <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.job-level.index")}}">Job Level</a></li>
                             <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.job-position.index")}}">Job Position</a></li>
                             <li><a class="dropdown-item py-2 px-5" href="{{route("hc.setting.file-category.index")}}">File Category</a></li>
-                            <li><a class="dropdown-item py-2 px-5" href="#">Custom Field</a></li>
-                            <li><a class="dropdown-item py-2 px-5" href="#">NPP</a></li>
+                            {{-- <li><a class="dropdown-item py-2 px-5" href="#">Custom Field</a></li>
+                            <li><a class="dropdown-item py-2 px-5" href="#">NPP</a></li> --}}
                             <li><a class="dropdown-item py-2 px-5" href="{{route('hc.setting.employment-status.index')}}">Employment Status</a></li>
                         </ul>
                     </div>

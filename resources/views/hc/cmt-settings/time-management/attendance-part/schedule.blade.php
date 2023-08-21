@@ -29,19 +29,6 @@
                             <input type="date" class="form-control form-control-solid" placeholder="Select Date" required name="effective_date">
 						</div>
 
-                        <div class="col-lg-6 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class="required fw-bold">Late Check In</span>
-                            </label>
-                            <input type="number" class="form-control form-control-solid" placeholder="Schedule Name" required name="late_check_in">
-                        </div>
-                        <div class="col-lg-6 mb-3">
-							<label class="d-flex align-items-center fs-6 form-label mb-2">
-								<span class="required fw-bold">Late Check Out</span>
-							</label>
-                            <input type="number" class="form-control form-control-solid" placeholder="Select Date" required name="late_check_out">
-						</div>
-
                         <div class="col-lg-12">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Settings</span>
@@ -219,8 +206,6 @@
         override_company_holiday,
         override_special_holiday,
         flexible,
-        late_check_in,
-        late_check_out,
         shift_id) {
 
         $("[name=\'id\']").val(id);
@@ -251,8 +236,6 @@
             $("[name=\'flexible\']").val("1")
             $("[name=\'flexible\']").prop("checked", true);
         }
-        $("[name=\'late_check_in\']").val(late_check_in);
-        $("[name=\'late_check_out\']").val(late_check_out);
 
         const optionElement = $(".select-shift").last().children();
         $("#table-shift").children().remove();

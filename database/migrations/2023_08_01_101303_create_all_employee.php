@@ -79,8 +79,11 @@ class CreateAllEmployee extends Migration
             $table->time("break_end");
             $table->tinyInteger("late_check_in")->default(5); // in minute
             $table->tinyInteger("late_check_out")->default(5); // in minute
+            $table->tinyInteger("min_check_in")->default(0);
+            $table->tinyInteger("max_check_out")->default(0);
             $table->time("overtime_before")->nullable();
             $table->time("overtime_after")->nullable();
+            $table->boolean("show_in_request")->default(0);
             $table->softDeletes()->index();
             $table->timestamps();
         });

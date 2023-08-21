@@ -27,7 +27,7 @@
                                         <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0 active" data-bs-toggle="tab" id="btn_schedule" href="#schedule_content">Schedule</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="shift" href="#chart">Chart</a>
+                                        <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="shift" href="#shift_content">Shift</a>
                                     </li>
                                 </ul>
                             </div>
@@ -35,8 +35,8 @@
                                 <div class="tab-pane fade show active" id="schedule_content" role="tabpanel">
                                     @include("hc.cmt-settings.time-management.attendance-part.schedule")
                                 </div>
-                                <div class="tab-pane fade" id="chart" role="tabpanel">
-
+                                <div class="tab-pane fade" id="shift_content" role="tabpanel">
+                                    @include("hc.cmt-settings.time-management.attendance-part.shift")
                                 </div>
                             </div>
                         </div>

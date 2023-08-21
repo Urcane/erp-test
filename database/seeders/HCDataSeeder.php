@@ -136,6 +136,8 @@ class HCDataSeeder extends Seeder
                 "break_end" => Carbon::createFromFormat('H:i:s', $data[4]),
                 "late_check_in" => $data[5],
                 "late_check_out" => $data[6],
+                "min_check_in" => "60",
+                "max_check_out" => "60",
             ]);
         });
 

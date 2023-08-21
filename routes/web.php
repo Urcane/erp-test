@@ -223,9 +223,13 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('attendance')->group(function () {
                 Route::get('/', 'index')->name('hc.setting.schedule.index');
                 Route::get('/table/schedule', 'getTableSchedule')->name('hc.setting.getTableSchedule');
-                Route::post('/create/update', 'createUpdate')->name('hc.setting.schedule.createUpdate');
-                Route::post('/delete', 'delete')->name('hc.setting.schedule.delete');
+                Route::post('/create/update/schedule', 'createUpdateSchedule')->name('hc.setting.schedule.createUpdate');
+                Route::post('/delete/schedule', 'deleteSchedule')->name('hc.setting.schedule.delete');
                 Route::post('/get/shift', 'getShift')->name('hc.setting.schedule.get.shift');
+
+                Route::get('/table/shift', 'getTableShift')->name('hc.setting.getTableShift');
+                Route::post('/create/update/shift', 'createUpdateShift')->name('hc.setting.shift.createUpdate');
+                Route::post('/delete/shift', 'deleteShift')->name('hc.setting.shift.delete');
             });
         });
     });
