@@ -336,7 +336,9 @@
                 });
 
                 $('input[name="checkbox_work_order_ids"]').click(function () {
-                    workOrderIds.push($(this).val());
+                    if ($(this).is(':checked')) {
+                        workOrderIds.push($(this).val());   
+                    }
                 });
             }
         });

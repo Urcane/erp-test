@@ -227,6 +227,52 @@
                                         @include('cmt-opportunity.survey.component.indoor-form')
                                         <div class="separator mb-6"></div>
                                         @include('cmt-opportunity.survey.component.other-form')
+                                        <div class="row mb-3">
+                                            <div class="col-lg-6 mb-8 ps-0">
+                                                <div class="p-9">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                                <span class="fw-bold text-dark">Tanda Tangan Pelaksana Survey</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-10">
+                                                            <div id="employee_sig" class="border border-gray-500 rounded"></div>
+                                                            <textarea id="survey_person_sign_url" name="survey_person_sign_url" style="display: none"></textarea>
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            <button type="button" class="btn btn-md btn-icon btn-danger clear-sign-emp"><i class="fa-solid fa-eraser"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 mb-8 pe-0">
+                                                <div class="p-9">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                                <span class="fw-bold text-dark">Tanda Tangan Customer</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-lg-10">
+                                                            <div id="customer_sig" class="border border-gray-500 rounded"></div>
+                                                            @php
+                                                                if (isset($surveyResult->customerSignFile)) {
+                                                                    $test = file_get_contents(public_path('filestorage/' . $surveyResult->customerSignFile->path));
+                                                                    $base64 = base64_encode($test);
+                                                                }
+                                                            @endphp
+                                                            <textarea id="customer_sign_url" name="customer_sign_url" style="display: none">{{ isset($surveyResult->customerSignFile) ? 'data:image/png;base64,' . $base64 : ''}}</textarea>
+                                                        </div>
+                                                        @if (!isset($surveyResult->customerSignFile))
+                                                            <div class="col-lg-2">
+                                                                <button type="button" class="btn btn-md btn-icon btn-danger clear-sign-cust"><i class="fa-solid fa-eraser"></i></button>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="position-fixed bottom-0 end-0 rounded-circle m-5" id="floating-button-container">
                                             @if (!isset($surveyResult))
                                             <a href="#kt_modal_confirm_survey_result" class="btn btn-primary btn-md" data-bs-toggle="modal">
@@ -247,6 +293,24 @@
 </div>
 
 <script>
+    const employee_sig = $('#employee_sig').signature({syncField: '#survey_person_sign_url', syncFormat: 'PNG', disabled: true});
+    const customer_sig = $('#customer_sig').signature({syncField: '#customer_sign_url', syncFormat: 'PNG'});
+
+    @if (isset($surveyResult->customerSignFile) || isset($surveyResult)) customer_sig.signature('disable'); @endif
+
+    @if (isset($surveyResult->customerSignFile)) customer_sig.signature('enable').signature('draw', $('#customer_sign_url').html()).signature('disable'); @endif
+
+    console.log($('#customer_sign_url').html());
+
+    $('.clear-sign-emp').click(function() {
+        employee_sig.signature('clear');
+        $("#survey_person_sign_url").val('');
+    });
+    $('.clear-sign-cust').click(function() {
+        customer_sig.signature('clear');
+        $("#customer_sign_url").val('');
+    });
+
     $(document).ready(function () {
         let editStatus = false;
 

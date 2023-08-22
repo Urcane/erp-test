@@ -157,7 +157,7 @@ class SurveyController extends Controller
 
         $model_name = new $serviceType->model_name;
 
-        $surveyResult = (new $model_name)->with('siteSurveyOutdoorArea', 'siteSurveyIndoorArea', 'siteSurveyOtherArea')->findOrFail($id);
+        $surveyResult = (new $model_name)->with('siteSurveyOutdoorArea', 'siteSurveyIndoorArea', 'siteSurveyOtherArea', 'customerSignFile')->findOrFail($id);
         $surveyRequest = SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey')->findOrFail($surveyResult->survey_request_id);
         $workOrder = WorkOrder::findOrFail($surveyResult->work_order_id);
         $compact = [
