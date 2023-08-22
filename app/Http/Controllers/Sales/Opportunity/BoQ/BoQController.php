@@ -58,13 +58,6 @@ class BoQController extends Controller{
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
-    function saveItemsBoQ(Request $request) : JsonResponse   {
-        if ($request->ajax()) {
-            return $this->BoqService->saveItemsBoQ($request);
-        }
-        return response()->json('Oops, Somethin\' Just Broke :(');
-    }
-
     function getMerkType(Request $request) : JsonResponse  { 
         if ($request->ajax()) {
             return $this->InventoryService->getMerkType($request);
@@ -79,9 +72,9 @@ class BoQController extends Controller{
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
-    function storeDataBoq(Request $request) {
+    function saveAndStoreBoq(Request $request) {
         if ($request->ajax()) {
-            return $this->BoqService->storeDataBoq($request);
+            return $this->BoqService->saveAndStoreBoq($request);
         }   
         return response()->json('Oops, Somethin\' Just Broke :('); 
     } 

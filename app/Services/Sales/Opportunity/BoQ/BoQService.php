@@ -115,13 +115,8 @@ class BoqService
             ->make(true);
     }
 
-    function saveItemsBoQ(Request $request) : JsonResponse{
-        $saveBoQ = $this->BoQRepository->saveItemsBoQ($request);
-        return $saveBoQ;
-    }
-
-    function storeDataBoq(Request $request) : JsonResponse {
-        return $this->BoQRepository->storeDataBoq($request);
+    function saveAndStoreBoq(Request $request) : JsonResponse {
+        return $this->BoQRepository->saveAndStoreBoq($request);
     }
 
     function createRevisionBoq(Request $request) : JsonResponse {

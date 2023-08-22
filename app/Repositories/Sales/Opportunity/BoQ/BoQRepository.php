@@ -79,65 +79,53 @@ class BoQRepository
         return $this->surveyRequest;
     }
 
-    function saveItemsBoQ(Request $request) : JsonResponse{
+    function saveAndStoreBoq(Request $request) : JsonResponse {
         try {
             DB::beginTransaction();
-            $boqData = [
-                'prospect_id' => $request->input('boq.prospect_id'),
-                'survey_request_id' => $request->input('boq.survey_request_id'),
-                'is_draft' => $request->input('boq.is_draft')
-            ];
 
-            if (isset($boqData['survey_request_id'])) { 
-                $itemableBoq = ItemableBillOfQuantity::updateOrCreate( 
-                    ['prospect_id' => $boqData['prospect_id'], 'survey_request_id' => $boqData['survey_request_id']],
-                    [
-                        'reference_boq_id' => $boqData['prospect_id'],
-                        'is_draft' => $boqData['is_draft']
-                    ],
-                    $boqData 
-                );
-            } else { 
-                $itemableBoq = ItemableBillOfQuantity::updateOrCreate( 
-                    ['prospect_id' => $boqData['prospect_id']], 
-                    [
-                        'reference_boq_id' => $boqData['prospect_id'],
-                        'is_draft' => $boqData['is_draft']
-                    ], 
-                    $boqData 
-                );
-            }
-
-            // if (isset($boqData['survey_request_id'])) {
-                //     $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
-                //         ['prospect_id' => $boqData['prospect_id']],
-                //         ['reference_boq_id' => $itemableBoq['id']],
-                //         ['survey_request_id' => $boqData['survey_request_id']],
-                //         ['is_draft' => $boqData['is_draft']],
-                //         $boqData
-                //     );
-                // } else {
-                //     $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
-                //         ['prospect_id' => $boqData['prospect_id']],
-                //         ['reference_boq_id' => $itemableBoq['id']],
-                //         $boqData
-                //     );
-            // }
-
-            if (isset($itemableBoq->id)) {
-                $itemIds = Item::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
-                Item::whereIn('id', $itemIds)->delete();
-            }
+            $prospect_id = $request->input('boq.prospect_id');
+            $survey_request_id = $request->input('boq.survey_request_id');
+            $is_draft = $request->input('boq.is_draft', 1);
+            $sales_id = $request->input('boq.sales_id');
+            $technician_id = $request->input('boq.technician_id');
+            $procurement_id = $request->input('boq.procurement_id');
+            $gpm = $request->input('boq.gpm');
+            $modal = $request->input('boq.modal');
+            $npm = $request->input('boq.npm');
+            $percentage = $request->input('boq.percentage');
+            $manpower = $request->input('boq.manpower');
+            $is_final = $request->input('boq.is_final', 0);
+    
+            $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
+                [
+                    'prospect_id' => $prospect_id, 
+                    'survey_request_id' => $survey_request_id,
+                ],
+                [
+                    'sales_id' => $sales_id,
+                    'technician_id' => $technician_id,
+                    'procurement_id' => $procurement_id,
+                    'gpm' => $gpm,
+                    'modal' => $modal,
+                    'npm' => $npm,
+                    'percentage' => $percentage,
+                    'manpower' => $manpower,
+                    'is_final' => $is_final,
+                    'reference_boq_id' => $prospect_id,
+                    'is_draft' => $is_draft,
+                ]
+            );
+    
             $itemsData = $request->input('items');
             foreach ($itemsData as $itemData) {
                 $criteria = [
                     'itemable_id' => $itemableBoq->id,
-                    'itemable_type' => $itemableBoq->itemable_type, 
+                    'itemable_type' => $itemableBoq->itemable_type,
                 ];
                 if (isset($itemData['id'])) {
                     $criteria['id'] = $itemData['id'];
                 }
-                $data = [
+                $itemData = [
                     'quantity' => $itemData['quantity'],
                     'purchase_price' => $itemData['purchase_price'],
                     'total_price' => $itemData['total_price'],
@@ -146,53 +134,10 @@ class BoQRepository
                     'item_inventory_id' => $itemData['item_inventory_id'],
                     'item_detail' => $itemData['item_detail'],
                 ];
-                $itemableBoq->itemable()->updateOrCreate($criteria, $data);
-            }
-            DB::commit();
-            return response()->json(['message' => 'BoQ berhasil disimpan.'], 200);
-            
-        } catch (Exception $e) { 
-            DB::rollback();
-            return response()->json(['error' => $e], 500);
-        }
-    }   
-  
-    function storeDataBoq(Request $request) : JsonResponse {
-        $request->validate( [
-            'prospect_id' => 'required',
-            'sales_id' => 'required',
-            'technician_id' => 'nullable',
-            'procurement_id' => 'required',
-            'gpm' => 'required|numeric',
-            'modal' => 'required|numeric',
-            'npm' => 'required|numeric',
-            'percentage' => 'required|integer',
-            'manpower' => 'required|integer',
-        ]);
-
-        $prospect_id = $request->input('prospect_id');
-        $itemableBoq = ItemableBillOfQuantity::where('prospect_id', $prospect_id)->first();
     
-        if ($itemableBoq) {
-            // $itemableBoq->survey_request_id = $request->input('survey_request_id');
-            $itemableBoq->sales_id = $request->input('sales_id');
-            $itemableBoq->technician_id = $request->input('technician_id');
-            $itemableBoq->procurement_id = $request->input('procurement_id');
-            $itemableBoq->gpm = $request->input('gpm');
-            $itemableBoq->modal = $request->input('modal');
-            $itemableBoq->npm = $request->input('npm');
-            $itemableBoq->percentage = $request->input('percentage');
-            $itemableBoq->manpower = $request->input('manpower');
-            $itemableBoq->is_final = $request->input('is_final');
-            // $itemableBoq->is_draft = $request->input('is_draft');
-            // $itemableBoq->approval_manager = $request->input('approval_manager');
-            // $itemableBoq->approval_manager_date = $request->input('approval_manager_date');
-            // $itemableBoq->approval_director = $request->input('approval_director');
-            // $itemableBoq->approval_director_date = $request->input('approval_director_date');
-            // $itemableBoq->approval_finman = $request->input('approval_finman');
-            // $itemableBoq->approval_finman_date = $request->input('approval_finman_date');
-            $itemableBoq->reference_boq_id = $itemableBoq->id;
-            
+                $itemableBoq->itemable()->updateOrCreate($criteria, $itemData);
+            }
+    
             if ($itemableBoq->approval_manager === null || $itemableBoq->approval_director === null || $itemableBoq->approval_finman === null) {
                 $itemableBoq->is_done = null;
             } else {
@@ -204,9 +149,12 @@ class BoQRepository
             }
             
             $itemableBoq->save();
-            return response()->json(['message' => 'BoQ berhasil diperbarui.'], 200);
-        } else {
-            return response()->json(['message' => 'BoQ not found.'], 404);
+            DB::commit();
+            return response()->json(['message' => 'BoQ berhasil disimpan.'], 200);
+            
+        }catch (Exception $e) { 
+            DB::rollback();
+            return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
 

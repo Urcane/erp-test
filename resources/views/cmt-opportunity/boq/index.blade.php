@@ -33,21 +33,27 @@
                     <div class="card-body">
                         <div class="row mb-6 align-items-center">
                             <div class="col-lg-6 gap-3 d-flex align-items-center">
-                                <span class="fs-7 text-uppercase fw-bolder text-dark d-none d-md-block">List Project / Work</span>
+                                <span class="fs-7 text-uppercase fw-bolder text-dark">List Project / Work</span>
                             </div>
-                            <div class="col-lg-6 d-flex justify-content-end">
-                                <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
-                                    <div class="">
-                                        <a href="{{url('cmt-boq/create-draft-boq')}}" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Create BoQ</a>
+                             <div class="col-lg-6 d-flex justify-content-end">
+                                    <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
+                                        <div class="d-flex align-items-center">
+                                            <span class="fs-7 fw-bolder badge badge-info px-3 py-2 text-white me-4 text-nowrap" id="progress_bar" >In Progress</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        
+                             </div>
+                            <div class="row mb-6 align-items-center">
+                                <div class="col-lg-6 d-flex justify-content-end">
+                                    <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
+                                        <div class="">
+                                            <a href="{{ url('cmt-boq/create-draft-boq') }}" class="btn btn-info btn-sm me-3 btn_tambah_boq" id="create_boq">
+                                                <i class="fa-solid fa-plus"></i>Create BoQ
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="mb-6 hover-scroll-x">
@@ -69,7 +75,7 @@
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="tab_review" href="#tab_on_review_content">On Review</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="tab_boq_done" href="#tab_boq_done_content">Done</a>
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="tab_done" href="#tab_boq_done_content">Done</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0" data-bs-toggle="tab" id="tab_cancel" href="#tab_boq_cancel_content">Cancel</a>
@@ -283,9 +289,44 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
 <script>
     $(document).ready(function() {
+        $('#progress_bar').hide();
+        
+        $('body').on('click', '#tab_opportunity', function () {
+            $('#progress_bar').hide();
+            $('#create_boq').show();
+        });
+        
+        $('body').on('click', '#tab_survey', function () {
+            $('#progress_bar').hide();
+            $('#create_boq').show();
+        });
+
+        $('body').on('click', '#tab_draft', function () {
+            $('#progress_bar').show();
+            $('#create_boq').hide();
+        });
+
+        $('body').on('click', '#tab_commercial', function () {
+            $('#progress_bar').show();
+            $('#create_boq').hide();
+        });
+
+        $('body').on('click', '#tab_done', function () {
+            $('#progress_bar').show();
+            $('#create_boq').hide();
+        });
+
+        $('body').on('click', '#tab_cancel', function () {
+            $('#progress_bar').show();
+            $('#create_boq').hide();
+        });
+
+        $('body').on('click', '#tab_review', function () {
+            $('#progress_bar').show  ();
+            $('#create_boq').hide();
+        });
         
         generateDatatable({
             tableName: "tableOpporunities",
@@ -303,23 +344,28 @@
             ]
         });
 
-        $('#tab_survey').click(function() {
-            generateDatatable({
-                tableName: "tableDoneSurvey",
-                elementName: "#kt_table_survey",
-                ajaxLink: "{{ route('com.survey-result.datatable') }}",
-                columnData: [
-                    { data: 'DT_RowIndex' },
-                    { data: 'work_order.task_description' },
-                    { data: 'survey_request.no_survey' },
-                    { data: 'work_order.no_wo' },
-                    { data: 'service_type.name' },
-                    { data: 'building_type' },
-                    { data: 'building_height' },
-                    { data: 'action' },
-                ]
-            });
+        $('#tab_survey').click( function() {
+        generateDatatable({
+            tableName: "tableDoneSurvey",
+            elementName: "#kt_table_survey",
+            ajaxLink: "{{route('com.survey-request.datatable')}}",
+            filters: {
+                'status': 'DN'
+            },
+            columnData: [
+                // { data: 'DT_RowChecklist', orderable: false, searchable: false},
+                { data: 'DT_RowIndex'},
+                { data: 'customer_prospect.customer.customer_name'},
+                { data: 'no_survey' },
+                { data: 'service_type.name' },
+                { data: 'type_of_survey.name'},
+                { data: 'covered_status_pretified'},
+                { data: 'notes'},
+                { data: 'action'},
+            ],
         });
+    });
+
 
       $('#tab_draft').click(function () {
           generateDatatable({
@@ -363,7 +409,7 @@
          });   
       });
 
-      $('#tab_boq_done').click(function () {
+      $('#tab_done').click(function () {
         generateDatatable({
             tableName: "tableDoneBoq",
             elementName: "#kt_table_boq_done",
