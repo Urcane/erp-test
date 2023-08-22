@@ -93,5 +93,5 @@ class BoQController extends Controller{
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
-    }
+}
     

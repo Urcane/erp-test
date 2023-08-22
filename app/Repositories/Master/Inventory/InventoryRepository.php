@@ -22,21 +22,25 @@ class InventoryRepository
 
      protected $model;
 
-     function __construct(InventoryGood $model ) {
+     function __construct(InventoryGood $model ) 
+     {
         $this->model = $model;
      }
 
-     function getAllData() {
+     function getAllData() 
+     {
         $dataFormInventory = $this->model->with(['inventoryGoodCategory.inventoryGood']);
         return $dataFormInventory;
      }
 
-     function getMerkTypeByItemId(int $itemId) {
+     function getMerkTypeByItemId(int $itemId) 
+     {
         $itemData = InventoryGood::select('good_type', 'merk','description')->where('id', $itemId)->first();
         return $itemData;
      }
 
-     function getSurveyCompanyByProspectId(int $prospect_id) {
+     function getSurveyCompanyByProspectId(int $prospect_id) 
+     {
         // Get the primary key (id) in SurveyRequest based on the foreign key prospect_id
         $surveyId = SurveyRequest::where('customer_prospect_id', $prospect_id)->pluck('id')->first();
 

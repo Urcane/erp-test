@@ -108,6 +108,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/store-data-boq','storeDataBoq')->name('com.boq.store.boq');
             Route::post('/create-revision-boq','storeDataBoq')->name('com.boq.revision.boq');
             
+            Route::get('/boq-commercial','boqCommercial')->name('com.boq.boq-commercial');
+            
             Route::get('/get-merk-type','getMerkType')->name('get.merk.type');
             Route::get('/get-survey-company-item-inventory','getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory'); 
         });

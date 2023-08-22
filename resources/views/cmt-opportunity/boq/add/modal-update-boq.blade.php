@@ -26,9 +26,16 @@
                                 <select class="form-select form-select-solid drop-data" data-control="select2" required data-placeholder="Select an Item" name="good_name" id="good_name_update" data-dropdown-parent="#kt_modal_update_boq"
                                 data-url="{{ route('get.merk.type') }}">
                                     <option></option>
-                                    @foreach ($dataForm as $gig)
-                                        <option value="{{ $gig->id }}">{{ $gig->good_name }}</option>
-                                    @endforeach
+                                    @if (isset($dataItem))
+                                        @foreach ($dataItem as $gig)
+                                            <option value="{{ $gig->id }}">{{ $gig->good_name }}</option>
+                                        @endforeach
+                                    @endif
+                                    @if (isset($updateDraftBoqData["dataForm"]))
+                                        @foreach ($updateDraftBoqData["dataForm"] as $item) 
+                                            <option value="{{ $item->id }}">{{ $item->good_name }}</option>
+                                        @endforeach
+                                    @endif 
                                 </select>
                             </div>
 
