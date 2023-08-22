@@ -134,17 +134,11 @@ class BoqService
         $dataItem = $this->BoQRepository->getListItem();
         $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
         return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
-        // return response()->json([
-        //     'dataProspect' => $dataProspect,
-        //     'dataCompany' => $dataCompany,
-        //     'dataItem' => $dataItem,
-        //     'dataSurvey' => $dataSurvey,
-        // ]);
     }
 
     function createDraftBoqAjax(Request $request){
         $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
-        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->first();
+        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
         return response()->json([
             'dataCompany' => $dataCompany,
             'dataSurvey' => $dataSurvey,

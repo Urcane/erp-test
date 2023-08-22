@@ -59,10 +59,14 @@
 
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-url="{{ route('com.boq.create-draft-boq') }}"
-                                                    data-control="select2" required name="prospect_id" id="prospect_id" >
-                                                    <option value="{{ $dataCompany->id ?? null }}" selected>{{ $dataCompany->prospect_title ?? "Pilih Prospect"}} {{ $dataCompany->customer->customer_name ?? null }}</option>
+                                                    data-control="select2" required name="prospect_id" id="prospect_id">
+                                                    <option value="{{ $dataCompany->id ?? null }}" selected>
+                                                        {{ $dataCompany->prospect_title ?? 'Pilih Prospect' }}
+                                                        {{ $dataCompany->customer->customer_name ?? null }}</option>
                                                     @foreach ($dataProspect as $prospect)
-                                                        <option value="{{ $prospect->id ?? null}}">{{ $prospect->prospect_title ?? null }} {{ $prospect->customer->customer_name ?? null }}</option>
+                                                        <option value="{{ $prospect->id ?? null }}">
+                                                            {{ $prospect->prospect_title ?? null }}
+                                                            {{ $prospect->customer->customer_name ?? null }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div id="error-prospect"></div>
@@ -82,14 +86,14 @@
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <select class="form-select-solid form-select form-select-solid"
-                                                data-control="select2" name="survey_request_id"
-                                                id="survey_request_id">
-                                                <option value="" selected disabled>Pilih Survey</option>
-                                                @if (isset($dataSurvey))
-                                                    @foreach ($dataSurvey as $survey)
-                                                        <option value="{{ $survey->id ?? null}}">
-                                                            {{ $survey->customerProspect->prospect_title ?? null}}</option>
-                                                    @endforeach
+                                                    data-control="select2" name="survey_request_id" id="survey_request_id">
+                                                    <option value="" selected disabled>Pilih Survey</option>
+                                                    @if (isset($dataSurvey))
+                                                        @foreach ($dataSurvey as $survey)
+                                                            <option value="{{ $survey->id ?? null }}">
+                                                                {{ $survey->customerProspect->prospect_title ?? null }}
+                                                            </option>
+                                                        @endforeach
                                                     @endif
                                                 </select>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -186,11 +190,6 @@
     @role('administrator')
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
         @include('cmt-opportunity.boq.add.modal-update-boq')
-
-        {{-- @include('cmt-opportunity.survey.modal.modal-request-survey')
-@include('cmt-opportunity.survey.modal.modal-create-wo-survey')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-internet')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-cctv') --}}
     @endrole
 
 
@@ -312,6 +311,7 @@
 
                 // Validate the prospect_id
                 if (!prospect_id) {
+                    event.preventDefault(); 
                     var errorMessageProspect =
                         "<span class='fw-semibold fs-8 text-danger'>Pilih Prospect Terlebih Dahulu.</span>";
                     $('#error-prospect').html(errorMessageProspect);
@@ -368,7 +368,8 @@
                 });
 
                 // Check if there is at least one item in the 'items' array
-                if (items.length === 0) {
+                if (items.length === 0) {                    
+                    event.preventDefault(); 
                     // Show an error message
                     var errorMessageItem =
                         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
@@ -410,11 +411,15 @@
                     type: 'GET',
                     data: {
                         prospect_id: prospect_id
-                    }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
+                    },
+                    dataType: 'json', // Mengharapkan respons dalam format JSON
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest' // Set header X-Requested-With
+                    },
                     success: function(response) {
 
-                        console.log(response);
-                        const survey = response.survey;
+                        // console.log(response);
+                        const survey = response.dataSurvey;
                         const dataCompany = response.dataCompany;
 
                         console.log(survey);
@@ -422,7 +427,8 @@
                         if (survey.length >= 1) {
                             survey.forEach((item) => {
                                 $('#survey_request_id').append(new Option(item
-                                    .no_survey, item.id, false, false)).trigger('change');
+                                    .no_survey, item.id, false, false)).trigger(
+                                    'change');
                             });
                         }
 
@@ -441,7 +447,7 @@
                             $('#type_name').val(dataCompany.customer.bussines_type
                                     .type_name)
                                 .prop('disabled', true);
-                                
+
                         } else {
                             // Set the input values to blank if dataCompany or customer object is empty
                             $('#customer_name').val("").prop('disabled', true);
