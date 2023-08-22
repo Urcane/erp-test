@@ -104,7 +104,7 @@
             responsive: false,
             aaSorting : [],
             ajax: {
-                url : "{{route('hc.emp.get-table-request-timeoff')}}",
+
                 data: function(data){
                     data.user_id = {{$user->id}}
                 }

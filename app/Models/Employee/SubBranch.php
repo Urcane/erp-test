@@ -13,19 +13,28 @@ class SubBranch extends Model
 
     protected $guarded = [];
 
-    public function userEmployments(): HasMany {
+    public function userEmployments(): HasMany
+    {
         return $this->hasMany(UserEmployment::class);
     }
 
-    public function branch() : Belongsto {
-        return $this->belongsTo(Branch::class, );
+    public function branch(): Belongsto
+    {
+        return $this->belongsTo(Branch::class);
     }
 
-    public function parent() : Belongsto {
+    public function parent(): Belongsto
+    {
         return $this->belongsTo(SubBranch::class, "parent_id");
     }
 
-    public function child() : HasMany {
+    public function child(): HasMany
+    {
         return $this->hasMany(SubBranch::class, "parent_id");
+    }
+
+    public function branchLocations(): HasMany
+    {
+        return $this->hasMany(BranchLocation::class);
     }
 }

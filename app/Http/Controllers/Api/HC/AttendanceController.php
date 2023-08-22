@@ -25,29 +25,29 @@ class AttendanceController extends Controller
         $this->constants = new Constants();
     }
 
-    private function _haversineDistance($lat1, $lon1, $lat2, $lon2, $radius) {
-        $R = 6371000; // Radius of the Earth in meters
+    // private function _haversineDistance($lat1, $lon1, $lat2, $lon2, $radius) {
+    //     $R = 6371000; // Radius of the Earth in meters
 
-        // Convert degrees to radians
-        $lat1 = deg2rad(floatval($lat1));
-        $lon1 = deg2rad(floatval($lon1));
-        $lat2 = deg2rad(floatval($lat2));
-        $lon2 = deg2rad(floatval($lon2));
+    //     // Convert degrees to radians
+    //     $lat1 = deg2rad(floatval($lat1));
+    //     $lon1 = deg2rad(floatval($lon1));
+    //     $lat2 = deg2rad(floatval($lat2));
+    //     $lon2 = deg2rad(floatval($lon2));
 
-        $dlat = $lat2 - $lat1;
-        $dlon = $lon2 - $lon1;
+    //     $dlat = $lat2 - $lat1;
+    //     $dlon = $lon2 - $lon1;
 
-        $a = sin($dlat/2) * sin($dlat/2) + cos($lat1) * cos($lat2) * sin($dlon/2) * sin($dlon/2);
-        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+    //     $a = sin($dlat/2) * sin($dlat/2) + cos($lat1) * cos($lat2) * sin($dlon/2) * sin($dlon/2);
+    //     $c = 2 * atan2(sqrt($a), sqrt(1-$a));
 
-        $distance = $R * $c;
+    //     $distance = $R * $c;
 
-        if ($distance > $radius) {
-            throw new InvariantError("Anda diluar radius kantor ($distance meter)");
-        }
+    //     if ($distance > $radius) {
+    //         throw new InvariantError("Anda diluar radius kantor ($distance meter)");
+    //     }
 
-        return $distance;
-    }
+    //     return $distance;
+    // }
 
     public function getAttendanceToday(Request $request)
     {
@@ -123,19 +123,24 @@ class AttendanceController extends Controller
                 "longitude" => "required"
             ]);
 
-            $subBranch = $request->user()->userEmployment->subBranch;
+            $userInLocation = $request->user()->userEmployment->subBranch->branchLocations()
+                ->selectRaw("branch_locations.*,
+                    (6371000 * acos(cos(radians(?))
+                    * cos(radians(latitude))
+                    * cos(radians(longitude) - radians(?))
+                    + sin(radians(?))
+                    * sin(radians(latitude)))) AS distance",
+                    [$request->latitude, $request->longitude, $request->latitude]
+                )
+                ->orderBy('distance')->first();
 
-            $distance =  $this->_haversineDistance(
-                $subBranch->latitude,
-                $subBranch->longitude,
-                $request->latitude,
-                $request->longitude,
-                $subBranch->coordinate_radius
-            );
+            if ($userInLocation->distance > $userInLocation->radius) {
+                throw new InvariantError("Anda diluar radius kantor ($userInLocation->distance meter)");
+            }
 
             return response()->json([
                 "status" => "success",
-                "message" => "Anda berada dalam radius kantor ($distance meter)"
+                "message" => "Anda berada dalam radius kantor ($userInLocation->distance meter)"
             ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);
@@ -166,7 +171,10 @@ class AttendanceController extends Controller
             }
 
             // user handler
-            $user = $request->user()->load('userEmployment.workingScheduleShift.workingSchedule.dayOffs');;
+            $user = $request->user()->load([
+                'userEmployment.workingScheduleShift.workingSchedule.dayOffs',
+                'userEmployment.subBranch.branchLocations'
+            ]);
 
             if (!$user) {
                 throw new NotFoundError("User tidak ditemukan");
@@ -184,18 +192,38 @@ class AttendanceController extends Controller
                 throw new InvariantError("Tidak dapat absen pada hari libur (Working Schedule)");
             }
 
-            // make attend
-            $workingSchedule = $employmentData->workingScheduleShift->workingSchedule;
+            // data user checking
             $workingShift = $employmentData->workingScheduleShift->workingShift;
             $attendanceToday = $user->userAttendances->where('date', $today)->first();
 
-            $this->_haversineDistance(
-                $employmentData->subBranch->latitude,
-                $employmentData->subBranch->longitude,
-                $request->latitude,
-                $request->longitude,
-                $employmentData->subBranch->coordinate_radius
-            );
+            // attendance validation
+            if ($workingShift->min_check_in) {
+                if (!($now->isAfter(Carbon::parse($workingShift->working_start)->addMinutes($workingShift->min_check_in)))) {
+                    throw new InvariantError("Tidak dapat absen, Waktu absen belum dimulai");
+                }
+            }
+
+            if ($workingShift->max_check_out) {
+                if (!($now->isBefore(Carbon::parse($workingShift->working_end)->addMinutes($workingShift->max_check_out)))) {
+                    throw new InvariantError("Tidak dapat absen, Waktu absen sudah selesai");
+                }
+            }
+
+            // check location
+            $userInLocation = $employmentData->subBranch->branchLocations()
+                ->selectRaw("branch_locations.*,
+                    (6371000 * acos(cos(radians(?))
+                    * cos(radians(latitude))
+                    * cos(radians(longitude) - radians(?))
+                    + sin(radians(?))
+                    * sin(radians(latitude)))) AS distance",
+                    [$request->latitude, $request->longitude, $request->latitude]
+                )
+                ->orderBy('distance')->first();
+
+            if ($userInLocation->distance > $userInLocation->radius) {
+                throw new InvariantError("Anda diluar radius kantor ($userInLocation->distance meter)");
+            }
 
             // save the file
             $file = $request->file('file');
@@ -258,7 +286,8 @@ class AttendanceController extends Controller
         try {
             $request->validate([
                 "file" => "required",
-                "coordinate" => "required"
+                "latitude" => "required",
+                "longitude" => "required"
             ]);
 
             Carbon::setLocale($this->constants->locale);
@@ -274,7 +303,10 @@ class AttendanceController extends Controller
             }
 
             // user handler
-            $user = $request->user()->load('userEmployment.workingScheduleShift.workingSchedule.dayOffs');;
+            $user = $request->user()->load([
+                'userEmployment.workingScheduleShift.workingSchedule.dayOffs',
+                'userEmployment.subBranch.branchLocations'
+            ]);
 
             if (!$user) {
                 throw new NotFoundError("User tidak ditemukan");
@@ -292,18 +324,38 @@ class AttendanceController extends Controller
                 throw new InvariantError("Tidak dapat absen pada hari libur (Working Schedule)");
             }
 
-            // make attend
-            $workingSchedule = $employmentData->workingScheduleShift->workingSchedule;
+            // data user checking
             $workingShift = $employmentData->workingScheduleShift->workingShift;
             $attendanceToday = $user->userAttendances->where('date', $today)->first();
 
-            $this->_haversineDistance(
-                $employmentData->subBranch->latitude,
-                $employmentData->subBranch->longitude,
-                $request->latitude,
-                $request->longitude,
-                $employmentData->subBranch->coordinate_radius
-            );
+            // attendance validation
+            if ($workingShift->min_check_in) {
+                if (!($now->isAfter(Carbon::parse($workingShift->working_start)->addMinutes($workingShift->min_check_in)))) {
+                    throw new InvariantError("Tidak dapat absen, Waktu absen belum dimulai");
+                }
+            }
+
+            if ($workingShift->max_check_out) {
+                if (!($now->isBefore(Carbon::parse($workingShift->working_end)->addMinutes($workingShift->max_check_out)))) {
+                    throw new InvariantError("Tidak dapat absen, Waktu absen sudah selesai");
+                }
+            }
+
+            // check location
+            $userInLocation = $employmentData->subBranch->branchLocations()
+                ->selectRaw("branch_locations.*,
+                    (6371000 * acos(cos(radians(?))
+                    * cos(radians(latitude))
+                    * cos(radians(longitude) - radians(?))
+                    + sin(radians(?))
+                    * sin(radians(latitude)))) AS distance",
+                    [$request->latitude, $request->longitude, $request->latitude]
+                )
+                ->orderBy('distance')->first();
+
+            if ($userInLocation->distance > $userInLocation->radius) {
+                throw new InvariantError("Anda diluar radius kantor ($userInLocation->distance meter)");
+            }
 
             // save the file
             $file = $request->file('file');
