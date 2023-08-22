@@ -12,7 +12,23 @@
     <div class="col-lg-6 d-flex justify-content-end">
         <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
             <div class="d-flex align-items-center">
-                <span class="fs-7 fw-bolder badge badge-info px-3 py-2 text-white me-4 text-nowrap d-none d-lg-block">In Progress</span>
+                <div class="tab_action_work_order">
+                    <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
+                    <div class="menu menu-sub menu-sub-dropdown w-300px text-start pb-3" id="action_lead" data-kt-menu="true" style="">
+                        <div class="d-flex flex-column bgi-no-repeat rounded-top">
+                            <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Mass Action Options</span>
+                        </div>
+                        <div class="separator mb-6"></div>
+                        <div class="menu-item px-3">
+                            <a href="#kt_modal_approve_work_order" data-bs-toggle="modal" class="menu-link" id="btn_approve_work_order">
+                                <span class="menu-icon">
+                                    <i class="fa-solid fa-building-circle-check text-gray-500"></i>
+                                </span>
+                                <span class="menu-title text-dark">Approval Work Order</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="d-flex align-items-center">
@@ -118,13 +134,23 @@
 @include('cmt-opportunity.survey.modal.modal-request-survey')
 @include('cmt-opportunity.survey.modal.modal-create-wo-survey')
 @include('cmt-opportunity.survey.modal.modal-create-soft-survey')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-internet')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-cctv')
+@include('cmt-promag.modal.modal-approve-work-order')
 @endrole
 
 <script>
     let prospectIds = [];
     let surveyRequestIds = [];
+    let workOrderIds = [];
+
+    $('body').on('click', '#tab_on_progress', function () {
+        $('.tab_action_work_order').show();
+    });
+    $('body').on('click', '#tab_survey_sent', function () {
+        $('.tab_action_work_order').hide();
+    });
+    $('body').on('click', '#tab_survey_done', function () {
+        $('.tab_action_work_order').hide();
+    });
 
     const workOrderValidationMessages = {
         survey_request_id: {
@@ -156,31 +182,17 @@
         },
     };
 
+    const workOrderApproveValidationMessages = {
+        approved_status: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Survey Result has Broken Link, Please Refresh (unable to find survey request)</span>",
+        },
+        work_order_id: {
+            required: "<span class='fw-semibold fs-8 text-danger'>Survey Result has Broken Link, Please Refresh (unable to find work order)</span>",
+        },
+    };
+
     $(document).ready(function() {
-        const surveyResultInternetElement = document.querySelector(".kt_stepper_survey_result_internet");
-        const surveyResultCctvElement = document.querySelector(".kt_stepper_survey_result_cctv");
-
-        const surveyResultInternetStepper = new KTStepper(surveyResultInternetElement);
-        const surveyResultCctvStepper = new KTStepper(surveyResultCctvElement);
-
-        surveyResultInternetStepper.on("kt.stepper.next", function (stepper) {
-            const state = $('#kt_modal_create_survey_result_internet_form').valid();
-            if (state) {
-                stepper.goNext(); 
-            }
-        });
-        surveyResultCctvStepper.on("kt.stepper.next", function (stepper) {
-            const state = $('#kt_modal_create_survey_result_cctv_form').valid();
-            if (state) {
-                stepper.goNext(); 
-            }
-        });
-        surveyResultInternetStepper.on("kt.stepper.previous", function (stepper) {
-            stepper.goPrevious(); 
-        });
-        surveyResultCctvStepper.on("kt.stepper.previous", function (stepper) {
-            stepper.goPrevious(); 
-        });
+        $('.tab_action_work_order').hide();
 
         generateDatatable({
             tableName: "tableSurveyRequest",
@@ -322,29 +334,70 @@
                         });
                     })
                 });
+
+                $('input[name="checkbox_work_order_ids"]').click(function () {
+                    workOrderIds.push($(this).val());  
+                });
             }
         });
 
-        ['create_survey_result_cctv', 'create_survey_result_internet'].forEach(element => {
-            $('body').on('click', `.btn_${element}`, function () {
-                const form_edit = $(`#kt_modal_${element}_form`);
-                form_edit.find('#containerSelectedSurveyRequests').html('');
-                $('.drop-data').val("").trigger("change")
-                $(`#kt_modal_${element}_form`).trigger("reset")
-                $(`#kt_modal_${element}_submit`).removeAttr('disabled','disabled');
+        // ['create_survey_result_cctv', 'create_survey_result_internet'].forEach(element => {
+        //     $('body').on('click', `.btn_${element}`, function () {
+        //         const form_edit = $(`#kt_modal_${element}_form`);
+        //         form_edit.find('#containerSelectedSurveyRequests').html('');
+        //         $('.drop-data').val("").trigger("change")
+        //         $(`#kt_modal_${element}_form`).trigger("reset")
+        //         $(`#kt_modal_${element}_submit`).removeAttr('disabled','disabled');
 
-                form_edit.find('input[name="survey_request_id"]').val($(this).data('surveyid'));
-                form_edit.find('input[name="work_order_id"]').val($(this).data('id'));
+        //         form_edit.find('input[name="survey_request_id"]').val($(this).data('surveyid'));
+        //         form_edit.find('input[name="work_order_id"]').val($(this).data('id'));
+        //     });
+
+        //     submitModal({
+        //         modalName: `kt_modal_${element}`,
+        //         tableName: 'kt_table_on_progress_survey',
+        //         anotherTableName: 'tableDoneSurvey',
+        //         ajaxLink: "{{route('com.survey-result.store')}}",
+        //         validationMessages: surveyResultValidationMessages,
+        //     })
+        // });   
+        
+        $('#btn_approve_work_order').click(function () {
+            const form_edit = $('#kt_modal_approve_work_order_form')
+            form_edit.find('#containerSelectedWorkOrders').html('')
+
+            $.each(workOrderIds.filter(onlyUnique), function(index, rowId) {
+                form_edit.find('#containerSelectedWorkOrders').append(
+                    $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'work_order_id[]')
+                    .val(rowId)
+                );
             });
+        })
 
-            submitModal({
-                modalName: `kt_modal_${element}`,
-                tableName: 'kt_table_on_progress_survey',
-                anotherTableName: 'tableDoneSurvey',
-                ajaxLink: "{{route('com.survey-result.store')}}",
-                validationMessages: surveyResultValidationMessages,
-            })
-        });        
+        $('#kt_modal_approve_work_order_approve').click(function (e) {
+            const form_edit = $('#kt_modal_approve_work_order_form')
+            e.preventDefault();
+
+            form_edit.find('input[name="approved_status"]').val(1);
+            form_edit.trigger('submit');
+        })
+
+        $('#kt_modal_approve_work_order_decline').click(function (e) {
+            const form_edit = $('#kt_modal_approve_work_order_form')
+            e.preventDefault();
+
+            form_edit.find('input[name="approved_status"]').val(0);
+            form_edit.trigger('submit');
+        })
+
+        submitModal({
+            modalName: `kt_modal_approve_work_order`,
+            tableName: 'kt_table_on_progress_survey',
+            ajaxLink: "{{route('com.work-order.approve')}}",
+            validationMessages: workOrderApproveValidationMessages,
+        })
     });
 
     $('#tab_survey_done').click(function () {

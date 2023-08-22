@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/detail/files','files')->name('com.promag.detail.files');
             Route::get('/detail/task-lists','taskLists')->name('com.promag.detail.task-lists');
 
+            Route::post('/work-order/approve','approveWorkOrder')->name('com.work-order.approve');
             Route::post('/work-order/store','createWorkOrderSurvey')->name('com.work-order-survey.store');
             Route::get('/work-order/detail/{id}','getWorkOrderById')->name('com.work-order.detail');
             Route::get('/get-data/table/work-order','getDatatableWorkOrder')->name('com.work-order.datatable');

@@ -57,17 +57,27 @@ class SurveyResultRepository
         return $siteSurveyInternet = $this->saveSiteSurveyInternet(Request::createFrom($data));
     }
 
-    function saveSiteSurveyGSMBooster(Request $data) : SiteSurveyCCTV {
+    function saveSiteSurveyGSMBooster(Request $data) : SiteSurveyGSMBooster {
 
         return $siteSurveyGSMBooster = SiteSurveyGSMBooster::updateOrCreate([
             'id' => $data->id
         ],[
-            'camera_type_id' => $data->camera_type_id,
-            'quantity_service_use' => $data->quantity_service_use,
-            'record_duration' => $data->record_duration,
-            'camera_storage' => $data->camera_storage,
-            'camera_resolution' => $data->camera_resolution,
-            'special_request' => $data->special_request,
+            'survey_request_id' => $data->survey_request_id,
+            'customer_id' => $data->customer_id,
+            'customer_contact_id' => $data->customer_contact_id,
+            'work_order_id' => $data->work_order_id,
+            'gb_natural_frequency_id' => $data->gb_natural_frequency_id,
+            'natural_signal_rsrp' => $data->natural_signal_rsrp,
+            'natural_signal_rsrq' => $data->natural_signal_rsrq,
+            'gb_repeater_type_id' => $data->gb_repeater_type_id,
+            'anthena_donor_type' => $data->anthena_donor_type,
+            'anthena_service' => $data->anthena_service,
+            'gb_connectivity_data_id' => $data->gb_connectivity_data_id,
+            'survey_date' => $data->survey_date,
+            'site_survey_outdoor_area_id' => $data->site_survey_outdoor_area->id, 
+            'site_survey_indoor_area_id' => $data->site_survey_indoor_area->id, 
+            'site_survey_other_area_id' => $data->site_survey_other_area->id, 
+            'survey_executor_id' => Auth::user()->id,
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ProjectManagement;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProjectManagement\WorkOrderApprovalRequest;
 use App\Http\Requests\ProjectManagement\WorkOrderRequest;
 use App\Models\Customer\Customer;
 use App\Services\ProjectManagement\WorkOrderService;
@@ -65,5 +66,18 @@ class ProjectManagementController extends Controller
             return response()->json($this->workOrderService->getWorkOrderById($request, $id)->first(), 200);
         }
         return response()->json('Oops, Somethin\' Just Broke :(', 403);
+    }
+
+    function approveWorkOrder(WorkOrderApprovalRequest $request) : JsonResponse {
+        try {
+            $result = $this->workOrderService->updateApprove($request);
+
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼"
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json("Oopss, ada yang salah nih!", 500);
+        }
     }
 }
