@@ -28,7 +28,7 @@
     {{-- BOQ  COMMERCIAL --}}
     {{-- @dd($dataSurvey) --}}
     {{-- @dd($dataProspect) --}}
-    {{-- @dd($updateDraftBoqData['dataTechnician']) --}}
+    {{-- @dd($updateDraftBoqData['dataCompanyItem'][0]) --}}
 
 
     <div class="row justify-content-center">
@@ -37,6 +37,8 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
+
+                            @csrf
                             <div class="mb-6 d-flex justify-content-between">
                                 <div class="col-lg-6 gap-3 d-flex align-items-center">
                                     <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Commercial Bill of
@@ -52,16 +54,12 @@
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
-
-
-
+                                 
+                                    {{-- divv Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-
-
-                                        {{-- baris 1 Pospect & Survey --}}
+                                        {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                            <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
-                                            @csrf
+                                            
                                             <div class="col-lg-5 col-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
@@ -76,7 +74,6 @@
                                                 <div id="error-prospect"></div>
                                             </div>
 
-                                            <!-- Tambahkan atribut "data-url" pada select jenis item -->
                                             <div class="col-lg-5 col-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
@@ -89,331 +86,312 @@
                                             </div>
                                         </div>
 
-                                        {{-- baris 1 Nama Perusahaan DAn jenis Project --}}
+                                        {{-- baris company contact --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class=" form-label">Nama Kontak Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label">No Kontak Customer</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text border-0" id="">+62</span>
                                                     <input type="number" class="form-control form-control-solid" disabled
-                                                        minlength="8" name="customer_contact_phone"
-                                                        id="customer_contact_phone"
+                                                        minlength="8" name="customer_contact_phone" id="customer_contact_phone"
                                                         value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->bussinesType->type_name }}">
                                             </div>
                                         </div>
+                                    </div>
 
-                                        {{-- sales & gpm required --}}
-                                        <div class="mb-6 hover-scroll-x border-top-dashed border-gray-100">
-                                            <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                    {{-- sales & gpm required --}}
+                                    <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
+                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
 
-                                                <div class=""
-                                                    style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label class="form-label required">Sales</label>
-                                                    <select class="form-select-solid form-select form-select-solid"
-                                                        data-control="select2" name="sales_id" id="sales_id">
-                                                        <option value="" selected disabled>Pilih Sales</option>
-                                                        @if (isset($updateDraftBoqData['dataSales']))
-                                                            @foreach ($updateDraftBoqData['dataSales'] as $sales)
-                                                                <option value="{{ $sales->id ?? null }}">
-                                                                    {{ $sales->name ?? null }}
-                                                                </option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </div>
-
-                                                <div class=""
-                                                    style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label class="form-label required">Technician</label>
-                                                    <select class="form-select-solid form-select form-select-solid"
-                                                        data-control="select2" name="technician_id" id="technician_id">
-                                                        <option value="" selected disabled>Pilih Technician</option>
-                                                        @if (isset($updateDraftBoqData['dataTechnician']))
-                                                            @foreach ($updateDraftBoqData['dataTechnician'] as $Technician)
-                                                                <option value="{{ $Technician->id ?? null }}">
-                                                                    {{ $Technician->name ?? null }}
-                                                                </option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </div>
-
-                                                <div class=""
-                                                    style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label class="form-label required">Procurement</label>
-                                                    <select class="form-select-solid form-select form-select-solid"
-                                                        data-control="select2" name="procurement_id" id="procurement_id">
-                                                        <option value="" selected disabled>Pilih Procurement</option>
-                                                        @if (isset($updateDraftBoqData['dataFinance']))
-                                                            @foreach ($updateDraftBoqData['dataFinance'] as $procurement)
-                                                                <option value="{{ $procurement->id ?? null }}">
-                                                                    {{ $procurement->name ?? null }}
-                                                                </option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                </div>
-
+                                            <div class=""
+                                                style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
+                                                <label class="form-label required">Sales</label>
+                                                <select class="form-select-solid form-select form-select-solid"
+                                                    data-control="select2" name="sales_id" id="sales_id">
+                                                    <option value="{{ $updateDraftBoqData['dataCompanyItem'][0]->sales_id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataCompanyItem'][0]->sales_id ?? "Pilih Sales"  }}</option>
+                                                    @if (isset($updateDraftBoqData['dataSales']))
+                                                        @foreach ($updateDraftBoqData['dataSales'] as $sales)
+                                                            <option value="{{ $sales->id ?? null }}">
+                                                                {{ $sales->name ?? null }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
 
-                                            <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                            <div class=""
+                                                style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
+                                                <label class="form-label required">Technician</label>
+                                                <select class="form-select-solid form-select form-select-solid"
+                                                    data-control="select2" name="technician_id" id="technician_id">
+                                                    <option value="{{ $updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? "Pilih Sales"  }}</option>
+                                                    @if (isset($updateDraftBoqData['dataTechnician']))
+                                                        @foreach ($updateDraftBoqData['dataTechnician'] as $Technician)
+                                                            <option value="{{ $Technician->id ?? null }}">
+                                                                {{ $Technician->name ?? null }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
 
-                                                <div class=""
-                                                    style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label class="form-label required">GPM</label>
-                                                    <div class="position-relative">
-                                                        <div class="position-absolute top-0"></div>
-                                                        <input type="number"
-                                                            class="form-control form-control-solid required"
-                                                            oninput="validateAndFormatNumber(this);" id="gpm" name="gpm"
-                                                            value="" />
-                                                    </div>
-                                                </div>
-
-                                                <div class=""
-                                                    style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label class="form-label required">Modal</label>
-                                                    <div class="position-relative">
-                                                        <div class="position-absolute top-0"></div>
-                                                        <input type="number"
-                                                            class="form-control form-control-solid required"
-                                                            oninput="validateAndFormatNumber(this);" id="modal" name="modal"
-                                                            value="" />
-                                                    </div>
-                                                </div>
-
-                                                <div class=""
-                                                    style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label class="form-label required">NPM</label>
-                                                    <div class="position-relative">
-                                                        <div class="position-absolute top-0"></div>
-                                                        <input type="number"
-                                                            class="form-control form-control-solid required"
-                                                            oninput="validateAndFormatNumber(this);" id="npm" name="npm"
-                                                            value="" />
-                                                    </div>
-                                                </div>
-
-                                                <div class=""
-                                                    style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label class="form-label required">Manpower</label>
-                                                    <div class="position-relative">
-                                                        <div class="position-absolute top-0"></div>
-                                                        <input type="number"
-                                                            class="form-control form-control-solid required"
-                                                            oninput="validateAndFormatNumber(this);" id="manpower" name="manpower"
-                                                            value="" />
-                                                    </div>
-                                                </div>
-
-                                                <div class=""
-                                                    style="flex-basis: 10%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label class="form-label required">Percentage</label>
-                                                    <div class="position-relative">
-                                                        <div class="position-absolute top-0"></div>
-                                                        <input type="number"
-                                                            class="form-control form-control-solid required"
-                                                            oninput="validateAndFormatNumber(this);" id="percentage" name="percentage"
-                                                            value="" />
-                                                    </div>
-                                                </div>
+                                            <div class=""
+                                                style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
+                                                <label class="form-label required">Procurement</label>
+                                                <select class="form-select-solid form-select form-select-solid"
+                                                    data-control="select2" name="procurement_id" id="procurement_id">
+                                                    <option value="{{ $updateDraftBoqData['dataCompanyItem'][0]->procurement_id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataCompanyItem'][0]->procurement_id ?? "Pilih Sales"  }}</option>
+                                                   @if (isset($updateDraftBoqData['dataFinance']))
+                                                        @foreach ($updateDraftBoqData['dataFinance'] as $procurement)
+                                                            <option value="{{ $procurement->id ?? null }}">
+                                                                {{ $procurement->name ?? null }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
 
                                         </div>
 
-                                        {{-- Tempat Items --}}
-                                        <div class="mb-6 hover-scroll-x border-top-dashed border-gray-100">
+                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
 
-                                            <div class="MultipleItem">
-                                                @if (isset($updateDraftBoqData['dataCompanyItem'][0]->itemable))
-                                                    @foreach ($updateDraftBoqData['dataCompanyItem'][0]->itemable as $relatedItem)
-                                                        @php
-                                                            $random_string = \Illuminate\Support\Str::random(4);
-                                                        @endphp
-                                                        <div
-                                                            class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
-                                                            <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                                <label class="form-label">Item</label>
-                                                                <input type="text"
-                                                                    class="form-control form-control-solid" disabled
-                                                                    name="content[][good_name]"
-                                                                    value="{{ $relatedItem->inventoryGood->good_name ?? null }}" />
-                                                            </div>
-
-                                                            <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                                <label class="form-label">Merk</label>
-                                                                <div class="position-relative">
-                                                                    <div class="position-absolute top-0"></div>
-                                                                    <input type="text"
-                                                                        class="form-control form-control-solid" disabled
-                                                                        name="content[][good_merk]"
-                                                                        value="{{ $relatedItem->inventoryGood->merk ?? null }}" />
-                                                                </div>
-                                                            </div>
-
-                                                            <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                                <label class="form-label">Price</label>
-                                                                <div class="position-relative">
-                                                                    <div class="position-absolute top-0"></div>
-                                                                    <input type="number"
-                                                                        class="form-control form-control-solid" disabled
-                                                                        name="content[][purchase_price]"
-                                                                        value="{{ $relatedItem->purchase_price ?? null }}" />
-                                                                </div>
-                                                            </div>
-
-                                                            <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                                <label class="form-label">Qty</label>
-                                                                <div class="position-relative">
-                                                                    <div class="position-absolute top-0"></div>
-                                                                    <input type="number"
-                                                                        class="form-control form-control-solid" disabled
-                                                                        name="content[][quantity]"
-                                                                        value="{{ $relatedItem->quantity ?? null }}" />
-                                                                </div>
-                                                            </div>
-
-                                                            <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                                <label class="form-label">Jasa
-                                                                    Antar</label>
-                                                                <div class="position-relative">
-                                                                    <div class="position-absolute top-0"></div>
-                                                                    <input type="number"
-                                                                        class="form-control form-control-solid" disabled
-                                                                        name="content[][purchase_delivery]"
-                                                                        value="{{ $relatedItem->purchase_delivery_charge ?? null }}" />
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="d-flex justify-content-between"
-                                                                style="flex-basis: 28%; min-width: 150px; margin: 10px;">
-                                                                <div style="flex-basis: 80%; min-width: 120px;">
-                                                                    <label class="form-label">Total
-                                                                        Price</label>
-                                                                    <div class="position-relative">
-                                                                        <div class="position-absolute top-0"></div>
-                                                                        <input type="number"
-                                                                            class="total-price form-control form-control-solid"
-                                                                            disabled name="content[][total_price]"
-                                                                            value="{{ $relatedItem->total_price ?? null }}" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="d-flex justify-content-center align-items-center"
-                                                                    style="flex-basis: 14%; min-width: 30px;">
-                                                                    <button type="button"
-                                                                        class="btn btn-secondary btn-icon btn-sm"
-                                                                        data-kt-menu-placement="bottom-end"
-                                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                                    </button>
-                                                                    <ul class="dropdown-menu">
-                                                                        <li type="button" class="btn-update-boq-modal"
-                                                                            data-random-string="{{ $random_string }}"
-                                                                            data-item-id="{{ $relatedItem->item_inventory_id }}"
-                                                                            data-quantity="{{ $relatedItem->quantity }}"
-                                                                            data-total_price="{{ $relatedItem->total_price }}"
-                                                                            data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
-                                                                            data-purchase_price="{{ $relatedItem->purchase_price }}"
-                                                                            data-purchase_refrence="{{ $relatedItem->purchase_refrence }}"
-                                                                            data-item_detail="{{ $relatedItem->item_detail }}">
-                                                                            <a class="dropdown-item py-2">
-                                                                                <i class="fa-solid fa-edit me-3"></i>Edit
-                                                                                Item</a>
-                                                                        </li>
-                                                                        <li type="button" class="clear-soft-survey-item"
-                                                                            data-random-string="{{ $random_string }}">
-                                                                            <a class="dropdown-item py-2">
-                                                                                <i class="fa-solid fa-trash me-3"></i>Hapus
-                                                                                Item</a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-
-                                                            <div>
-                                                                <input type="hidden" name="content[][id]" disabled
-                                                                    value="{{ $relatedItem->id ?? null }}" />
-                                                                <input type="hidden" name="content[][item_inventory_id]"
-                                                                    disabled
-                                                                    value="{{ $relatedItem->item_inventory_id ?? null }}" />
-                                                                <input type="hidden" name="content[][purchase_reference]"
-                                                                    disabled
-                                                                    value="{{ $relatedItem->purchase_refrence ?? null }}" />
-                                                                <input type="hidden" name="content[][item_detail]"
-                                                                    disabled
-                                                                    value="{{ $relatedItem->item_detail ?? null }}" />
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                @endif
-                                            </div>
-
-                                            @role('administrator')
-                                                <div class="ms-15 w-20 mt-3 mb-3 ">
-                                                    <a href="#kt_modal_tambah_boq" data-bs-toggle="modal"
-                                                        class="btn btn-light-info btn-sm me-3 btn_tambah_boq">
-                                                        <i class="fa-solid fa-plus"></i>Item Baru</a>
-                                                    <div id="error-item"></div>
-                                                </div>
-                                            @endrole
-
-                                        </div>
-
-                                        {{-- layer total dan submit --}}
-                                        <div class="border-top-dashed border-gray-100 mt-10">
-                                            <div class="d-flex justify-content-end mx-20">
-                                                <div class="w-20 me-10">
-                                                    <span class="fw-bold">Total Amount : <span
-                                                            id="totalsum"></span></span>
+                                            <div class=""
+                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                                <label class="form-label required">GPM</label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="number" class="form-control form-control-solid required"
+                                                        oninput="validateAndFormatNumber(this);" id="gpm"
+                                                        name="gpm" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->gpm ?? null}}"/>
                                                 </div>
                                             </div>
 
-                                            <div class="d-flex justify-content-center mt-6">
-                                                <div class=" me-5">
-                                                    <a href="" class="btn btn-light-info">Discard</a>
+                                            <div class=""
+                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                                <label class="form-label required">Modal</label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="number" class="form-control form-control-solid required"
+                                                        oninput="validateAndFormatNumber(this);" id="modal"
+                                                        name="modal" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->modal ?? null}}" />
                                                 </div>
+                                            </div>
 
-                                                <div class="me-5">
-                                                    <a href="cmt-boq" id="submit-all-items"
-                                                        class="btn btn-info">Submit</a>
+                                            <div class=""
+                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                                <label class="form-label required">NPM</label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="number" class="form-control form-control-solid required"
+                                                        oninput="validateAndFormatNumber(this);" id="npm"
+                                                        name="npm" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->npm ?? null}}" />
+                                                </div>
+                                            </div>
+
+                                            <div class=""
+                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                                <label class="form-label required">Manpower</label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="number" class="form-control form-control-solid required"
+                                                        oninput="validateAndFormatNumber(this);" id="manpower"
+                                                        name="manpower" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->manpower ?? null}}" />
+                                                </div>
+                                            </div>
+
+                                            <div class=""
+                                                style="flex-basis: 10%; min-width: 200px; margin-bottom: 15px;">
+                                                <label class="form-label required">Percentage</label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="number" class="form-control form-control-solid required"
+                                                        oninput="validateAndFormatNumber(this);" id="percentage"
+                                                        name="percentage" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null}}" />
                                                 </div>
                                             </div>
                                         </div>
 
                                     </div>
 
+                                    {{-- Tempat Items --}}
+                                    <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
+                                        <div class="MultipleItem">
+                                            @if (isset($updateDraftBoqData['dataCompanyItem'][0]->itemable))
+                                                @foreach ($updateDraftBoqData['dataCompanyItem'][0]->itemable as $relatedItem)
+                                                    @php
+                                                        $random_string = \Illuminate\Support\Str::random(4);
+                                                    @endphp
+                                                    <div
+                                                        class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Item</label>
+                                                            <input type="text" class="form-control form-control-solid"
+                                                                disabled name="content[][good_name]"
+                                                                value="{{ $relatedItem->inventoryGood->good_name ?? null }}" />
+                                                        </div>
 
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Merk</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="text"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][good_merk]"
+                                                                    value="{{ $relatedItem->inventoryGood->merk ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Price</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][purchase_price]"
+                                                                    value="{{ $relatedItem->purchase_price ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Qty</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][quantity]"
+                                                                    value="{{ $relatedItem->quantity ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Jasa
+                                                                Antar</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][purchase_delivery]"
+                                                                    value="{{ $relatedItem->purchase_delivery_charge ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between"
+                                                            style="flex-basis: 28%; min-width: 150px; margin: 10px;">
+                                                            <div style="flex-basis: 80%; min-width: 120px;">
+                                                                <label class="form-label">Total
+                                                                    Price</label>
+                                                                <div class="position-relative">
+                                                                    <div class="position-absolute top-0"></div>
+                                                                    <input type="number"
+                                                                        class="total-price form-control form-control-solid"
+                                                                        disabled name="content[][total_price]"
+                                                                        value="{{ $relatedItem->total_price ?? null }}" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex justify-content-center align-items-center"
+                                                                style="flex-basis: 14%; min-width: 30px;">
+                                                                <button type="button"
+                                                                    class="btn btn-secondary btn-icon btn-sm"
+                                                                    data-kt-menu-placement="bottom-end"
+                                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li type="button" class="btn-update-boq-modal"
+                                                                        data-random-string="{{ $random_string }}"
+                                                                        data-item-id="{{ $relatedItem->item_inventory_id }}"
+                                                                        data-quantity="{{ $relatedItem->quantity }}"
+                                                                        data-total_price="{{ $relatedItem->total_price }}"
+                                                                        data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
+                                                                        data-purchase_price="{{ $relatedItem->purchase_price }}"
+                                                                        data-purchase_refrence="{{ $relatedItem->purchase_refrence }}"
+                                                                        data-item_detail="{{ $relatedItem->item_detail }}">
+                                                                        <a class="dropdown-item py-2">
+                                                                            <i class="fa-solid fa-edit me-3"></i>Edit
+                                                                            Item</a>
+                                                                    </li>
+                                                                    <li type="button" class="clear-soft-survey-item"
+                                                                        data-random-string="{{ $random_string }}">
+                                                                        <a class="dropdown-item py-2">
+                                                                            <i class="fa-solid fa-trash me-3"></i>Hapus
+                                                                            Item</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
+                                                        <div>
+                                                            <input type="hidden" name="content[][id]" disabled
+                                                                value="{{ $relatedItem->id ?? null }}" />
+                                                            <input type="hidden" name="content[][item_inventory_id]"
+                                                                disabled
+                                                                value="{{ $relatedItem->item_inventory_id ?? null }}" />
+                                                            <input type="hidden" name="content[][purchase_reference]"
+                                                                disabled
+                                                                value="{{ $relatedItem->purchase_refrence ?? null }}" />
+                                                            <input type="hidden" name="content[][item_detail]" disabled
+                                                                value="{{ $relatedItem->item_detail ?? null }}" />
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+
+                                        @role('administrator')
+                                            <div class="ms-15 w-20 mt-3 mb-3 ">
+                                                <a href="#kt_modal_tambah_boq" data-bs-toggle="modal"
+                                                    class="btn btn-light-info btn-sm me-3 btn_tambah_boq">
+                                                    <i class="fa-solid fa-plus"></i>Item Baru</a>
+                                                <div id="error-item"></div>
+                                            </div>
+                                        @endrole
+
+                                    </div>
+
+                                    {{-- layer total dan submit --}}
+                                    <div>
+                                        <div class="d-flex justify-content-end mx-20">
+                                            <div class="w-20 me-10">
+                                                <span class="fw-bold">Total Amount : Rp<span id="totalsum"></span></span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center mt-6">
+                                            <div class=" me-5">
+                                                <a href="" class="btn btn-light-info">Discard</a>
+                                            </div>
+                                            <div class="me-5">
+                                                <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Submit</a>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -424,7 +402,6 @@
             @include('cmt-opportunity.boq.add.modal-tambah-boq')
             @include('cmt-opportunity.boq.add.modal-update-boq')
         @endrole
-
 
         <script>
             function validateAndFormatNumber(input) {
@@ -492,7 +469,7 @@
             $(document).ready(function() {
                 // function Submit BOQ page BENERAN wkwkw
                 $('#submit-all-items').on('click', function(event) {
-                    event.preventDefault();
+                    // event.preventDefault();
 
                     // Get Prospect ID and Survey ID from the HTML elements
                     // var survey_request_id = $('#survey_request_id').val();
@@ -509,16 +486,15 @@
                     var percentage = $('#percentage').val();
 
                     var is_final = $('#is_final').is(':checked') ? 1 : 0;
-
+                     
                     // Validate the prospect_id
-                        // if (!prospect_id) {
-                        //     var errorMessageProspect =
-                        //         "<span class='fw-semibold fs-8 text-danger'>Pilih Prospect Terlebih Dahulu.</span>";
-                        //     $('#error-prospect').html(errorMessageProspect);
-                        //     return;
-                        // } else {
-                        //     $('#error-prospect').empty();
-
+                    // if (!prospect_id) {
+                    //     var errorMessageProspect =
+                    //         "<span class='fw-semibold fs-8 text-danger'>Pilih Prospect Terlebih Dahulu.</span>";
+                    //     $('#error-prospect').html(errorMessageProspect);
+                    //     return;
+                    // } else {
+                    //     $('#error-prospect').empty();
                     // }
 
 
@@ -531,11 +507,12 @@
 
                         sales_id: sales_id,
                         technician_id: technician_id,
-                        procurement_id,procurement_id,
+                        procurement_id,
+                        procurement_id,
 
                         modal: modal,
                         gpm: gpm,
-                        npm: npm, 
+                        npm: npm,
                         manpower: manpower,
                         percentage: percentage
                     };
@@ -590,21 +567,21 @@
                     console.log(items);
 
                     // Send the data to the server using AJAX
-                    // $.ajax({
-                    //     url: "{{ route('com.boq.store.boq') }}",
-                    //     method: 'POST',
-                    //     data: {
-                    //         _token: '{{ csrf_token() }}',
-                    //         boq: boq,
-                    //         items: items
-                    //     },
-                    //     success: function(response) {
-                    //         console.log(response);
-                    //     },
-                    //     error: function(error) {
-                    //         console.error('Error submitting all item data: ', error);
-                    //     }
-                    // });
+                    $.ajax({
+                        url: "{{ route('com.boq.store.boq') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            boq: boq,
+                            items: items
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
                 });
 
                 // Function Update BOQ modal

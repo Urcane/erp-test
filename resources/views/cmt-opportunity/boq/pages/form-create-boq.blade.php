@@ -46,9 +46,11 @@
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
+                                    @csrf
+                                    {{-- divv Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        {{-- baris Rilll --}}
 
+                                        {{-- baris Rilll --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
                                             <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
                                             @csrf
@@ -59,10 +61,14 @@
 
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-url="{{ route('com.boq.create-draft-boq') }}"
-                                                    data-control="select2" required name="prospect_id" id="prospect_id" >
-                                                    <option value="{{ $dataCompany->id ?? null }}" selected>{{ $dataCompany->prospect_title ?? "Pilih Prospect"}} {{ $dataCompany->customer->customer_name ?? null }}</option>
+                                                    data-control="select2" required name="prospect_id" id="prospect_id">
+                                                    <option value="{{ $dataCompany->id ?? null }}" selected>
+                                                        {{ $dataCompany->prospect_title ?? 'Pilih Prospect' }}
+                                                        {{ $dataCompany->customer->customer_name ?? null }}</option>
                                                     @foreach ($dataProspect as $prospect)
-                                                        <option value="{{ $prospect->id ?? null}}">{{ $prospect->prospect_title ?? null }} {{ $prospect->customer->customer_name ?? null }}</option>
+                                                        <option value="{{ $prospect->id ?? null }}">
+                                                            {{ $prospect->prospect_title ?? null }}
+                                                            {{ $prospect->customer->customer_name ?? null }}</option>
                                                     @endforeach
                                                 </select>
                                                 <div id="error-prospect"></div>
@@ -82,14 +88,14 @@
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <select class="form-select-solid form-select form-select-solid"
-                                                data-control="select2" name="survey_request_id"
-                                                id="survey_request_id">
-                                                <option value="" selected disabled>Pilih Survey</option>
-                                                @if (isset($dataSurvey))
-                                                    @foreach ($dataSurvey as $survey)
-                                                        <option value="{{ $survey->id ?? null}}">
-                                                            {{ $survey->customerProspect->prospect_title ?? null}}</option>
-                                                    @endforeach
+                                                    data-control="select2" name="survey_request_id" id="survey_request_id">
+                                                    <option value="" selected disabled>Pilih Survey</option>
+                                                    @if (isset($dataSurvey))
+                                                        @foreach ($dataSurvey as $survey)
+                                                            <option value="{{ $survey->id ?? null }}">
+                                                                {{ $survey->customerProspect->prospect_title ?? null }}
+                                                            </option>
+                                                        @endforeach
                                                     @endif
                                                 </select>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -139,6 +145,7 @@
                                         </div>
                                     </div>
 
+                                    {{--  divv item --}}
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                         <div class="MultipleItem">
@@ -156,10 +163,11 @@
                                         @endrole
                                     </div>
 
+                                    {{-- divv akhir total amount --}}
                                     <div>
                                         <div class="d-flex justify-content-end mx-20">
                                             <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Amount : <span id="totalsum"></span></span>
+                                                <span class="fw-bold">Total Amount : Rp.<span id="totalsum"></span></span>
                                             </div>
                                         </div>
 
@@ -176,6 +184,7 @@
 
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -186,13 +195,7 @@
     @role('administrator')
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
         @include('cmt-opportunity.boq.add.modal-update-boq')
-
-        {{-- @include('cmt-opportunity.survey.modal.modal-request-survey')
-@include('cmt-opportunity.survey.modal.modal-create-wo-survey')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-internet')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-cctv') --}}
     @endrole
-
 
     <script>
         function validateAndFormatNumber(input) {
@@ -304,7 +307,7 @@
         $(document).ready(function() {
             // function Submit BOQ page BENERAN wkwkw
             $('#submit-all-items').on('click', function(event) {
-                // event.preventDefault();
+                event.preventDefault();
 
                 // Get Prospect ID and Survey ID from the HTML elements
                 var prospect_id = $('#prospect_id').val();
@@ -312,6 +315,7 @@
 
                 // Validate the prospect_id
                 if (!prospect_id) {
+                    event.preventDefault(); 
                     var errorMessageProspect =
                         "<span class='fw-semibold fs-8 text-danger'>Pilih Prospect Terlebih Dahulu.</span>";
                     $('#error-prospect').html(errorMessageProspect);
@@ -368,7 +372,8 @@
                 });
 
                 // Check if there is at least one item in the 'items' array
-                if (items.length === 0) {
+                if (items.length === 0) {                    
+                    event.preventDefault(); 
                     // Show an error message
                     var errorMessageItem =
                         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
@@ -380,7 +385,7 @@
                 console.log(items);
                 // Send the data to the server using AJAX
                 $.ajax({
-                    url: "{{ route('com.boq.save.boq') }}",
+                    url: "{{ route('com.boq.store.boq') }}",
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -410,11 +415,15 @@
                     type: 'GET',
                     data: {
                         prospect_id: prospect_id
-                    }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
+                    },
+                    dataType: 'json', // Mengharapkan respons dalam format JSON
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest' // Set header X-Requested-With
+                    },
                     success: function(response) {
 
-                        console.log(response);
-                        const survey = response.survey;
+                        // console.log(response);
+                        const survey = response.dataSurvey;
                         const dataCompany = response.dataCompany;
 
                         console.log(survey);
@@ -422,7 +431,8 @@
                         if (survey.length >= 1) {
                             survey.forEach((item) => {
                                 $('#survey_request_id').append(new Option(item
-                                    .no_survey, item.id, false, false)).trigger('change');
+                                    .no_survey, item.id, false, false)).trigger(
+                                    'change');
                             });
                         }
 
@@ -441,7 +451,7 @@
                             $('#type_name').val(dataCompany.customer.bussines_type
                                     .type_name)
                                 .prop('disabled', true);
-                                
+
                         } else {
                             // Set the input values to blank if dataCompany or customer object is empty
                             $('#customer_name').val("").prop('disabled', true);
