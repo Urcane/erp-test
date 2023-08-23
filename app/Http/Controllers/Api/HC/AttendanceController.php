@@ -25,6 +25,91 @@ class AttendanceController extends Controller
         $this->constants = new Constants();
     }
 
+    private function _summariesQuery($query1, $query2, $query3, $query4, $query5, $query6, $query7, $query8)
+    {
+        $now = now();
+
+        return [
+            "onTimeCount" => $query1->where('attendance_code', '=', $this->constants->attendance_code[0])
+                ->where(function ($query) use ($now) {
+                    $query->where(function ($query) use ($now) {
+                        $query->whereDate('date', '=', $now)
+                            ->whereNotNull('check_in')
+                            ->where(function ($query) {
+                                $query->where(function ($query) {
+                                    $query->whereNull('check_out')
+                                        ->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                                })->orWhere(function ($query) {
+                                    $query->whereNotNull('check_out')
+                                        ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                });
+                            });
+                    })->orWhere(function($query) use ($now) {
+                        $query->whereDate('date', '<', $now)
+                            ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                            ->whereNotNull('check_in')
+                            ->whereNotNull('check_out')
+                            ->where(function($query) {
+                                $query->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
+                                    ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                            });
+                    });
+            })->count(),
+
+            "lateCheckInCount" => $query2->whereDate('date', '<=', $now)
+                ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                ->whereNotNull('check_in')
+                ->whereRaw('TIME(check_in) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
+                ->count(),
+
+            "earlyCheckOutCount" => $query3->whereDate('date', '<=', $now)
+                ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                ->whereNotNull('check_out')
+                ->whereRaw('TIME(check_out) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))')
+                ->count(),
+
+            "absent" => $query4->where('attendance_code', '=', $this->constants->attendance_code[0])
+                ->where(function ($query) use ($now) {
+                    $query->where(function ($query) use ($now) {
+                        $query->whereDate('date', '<', $now)
+                            ->where(function ($query) {
+                                $query->whereNull('check_in')
+                                ->orWhereNull('check_out');
+                            });
+                    })->orWhere(function ($query) use ($now) {
+                        $query->whereDate('date', '=', $now)
+                            ->whereNull('check_in')
+                            ->whereRaw('TIME(?) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))', [$now]);
+                    });
+                })
+                ->count(),
+
+            "noCheckInCount" => $query5->where('attendance_code', '=', $this->constants->attendance_code[0])
+                ->whereNull('check_in')
+                ->where(function ($query) use ($now) {
+                    $query->whereDate('date', '<', $now)->orWhere(function ($query) use ($now) {
+                        $query->whereDate('date', '=', $now)
+                        ->whereRaw('TIME(?) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))', [$now]);
+                    });
+                })
+                ->count(),
+
+            "noCheckOutCount" => $query6->where('attendance_code', '=', $this->constants->attendance_code[0])
+                ->whereDate('date', '<', $now)
+                ->whereNull('check_out')
+                ->count(),
+
+            "dayOffCount" => $query7->where(function($query) {
+                    $query->where('attendance_code', '=', $this->constants->attendance_code[2])
+                    ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
+                })
+                ->count(),
+
+            "timeOffCount" => $query8->where('attendance_code', '=', $this->constants->attendance_code[1])
+                ->count(),
+        ];
+    }
+
     // private function _haversineDistance($lat1, $lon1, $lat2, $lon2, $radius) {
     //     $R = 6371000; // Radius of the Earth in meters
 
@@ -106,6 +191,39 @@ class AttendanceController extends Controller
                     "currentPage" => $attendance->currentPage(),
                     "itemCount" => $itemCount,
                     "attendance" => $attendance->items(),
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getPersonalAttendanceSummaries(Request $request)
+    {
+        try {
+            $userAttendances = $request->user()->userAttendances();
+            $rangeDate = [$request->startDate ?? Carbon::now()->format('Y-m-d'), $request->endDate ?? Carbon::now()->format('Y-m-d')];
+
+            $userAttendances = $userAttendances->whereBetween('date', $rangeDate);
+
+            $summaries = $this->_summariesQuery(
+                clone $userAttendances,
+                clone $userAttendances,
+                clone $userAttendances,
+                clone $userAttendances,
+                clone $userAttendances,
+                clone $userAttendances,
+                clone $userAttendances,
+                clone $userAttendances
+            );
+
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "rangeDate" => $rangeDate,
+                    "summaries" => $summaries
                 ]
             ]);
         } catch (\Throwable $th) {
@@ -227,8 +345,20 @@ class AttendanceController extends Controller
 
             // save the file
             $file = $request->file('file');
-            $filename = time() . '_checkIn_' . $file->getClientOriginalName();
-            $file->storeAs('attendance', $filename, 'public');
+            $filename = time() . $file->getClientOriginalName();
+            $file->storeAs('attendance/checkin', $filename, 'public');
+
+            $overtime = 0;
+
+            if ($attendanceToday->overtime_before) {
+                $adjustedNow = $now->copy()->setDate(2000, 1, 1);
+                $overtimeStartTime = Carbon::parse($attendanceToday->overtime_before)->setDate(2000, 1, 1);
+                $workingStartTime = Carbon::parse($attendanceToday->workingStart)->setDate(2000, 1, 1);
+
+                if ($adjustedNow->gt($overtimeStartTime) && $adjustedNow->lt($workingStartTime)) {
+                    $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
+                }
+            }
 
             if (!$attendanceToday) {
                 UserAttendance::create([
@@ -241,6 +371,9 @@ class AttendanceController extends Controller
                     'late_check_in' => $workingShift->late_check_in,
                     'late_check_out' => $workingShift->late_check_out,
                     'check_in' => $timestamp,
+                    'overtime' => ($attendanceToday->overtime ?? 0) + $overtime,
+                    'check_in_latitude' => $request->latitude,
+                    'check_in_longitude' => $request->longitude,
                     'check_in_file' => $filename,
                     'check_out' => null,
                 ]);
@@ -252,21 +385,13 @@ class AttendanceController extends Controller
             } else if ($attendanceToday->check_in) {
                 throw new InvariantError("Anda sudah melakukan check in, Hubungi Admin jika ini kesalahan");
             } else {
-                $overtime = 0;
-
-                if ($attendanceToday->overtime_before) {
-                    $adjustedNow = $now->copy()->setDate(2000, 1, 1);
-                    $overtimeStartTime = Carbon::parse($attendanceToday->overtime_before)->setDate(2000, 1, 1);
-                    $workingStartTime = Carbon::parse($attendanceToday->workingStart)->setDate(2000, 1, 1);
-
-                    if ($adjustedNow->gt($overtimeStartTime) && $adjustedNow->lt($workingStartTime)) {
-                        $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
-                    }
-                }
 
                 $attendanceToday->update([
                     'check_in' => $timestamp,
-                    'overtime' => ($attendanceToday->overtime ?? 0) + $overtime
+                    'overtime' => ($attendanceToday->overtime ?? 0) + $overtime,
+                    'check_in_latitude' => $request->latitude,
+                    'check_in_longitude' => $request->longitude,
+                    'check_in_file' => $filename,
                 ]);
 
                 return response()->json([
@@ -359,8 +484,19 @@ class AttendanceController extends Controller
 
             // save the file
             $file = $request->file('file');
-            $filename = time() . '_checkOut_' . $file->getClientOriginalName();
-            $file->storeAs('attendance', $filename, 'public');
+            $filename = time() . $file->getClientOriginalName();
+            $file->storeAs('attendance/checkout', $filename, 'public');
+
+            $overtime = 0;
+
+            if ($attendanceToday->overtime_after) {
+                $adjustedNow = $now->copy()->setDate(2000, 1, 1);
+                $overtimeStartTime = Carbon::parse($attendanceToday->overtime_after)->setDate(2000, 1, 1);
+
+                if ($adjustedNow->gt($overtimeStartTime)) {
+                    $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
+                }
+            }
 
             if (!$attendanceToday) {
                 UserAttendance::create([
@@ -374,7 +510,10 @@ class AttendanceController extends Controller
                     'late_check_out' => $workingShift->late_check_out,
                     'check_in' => null,
                     'check_out' => $timestamp,
-                    'check_out_file' => $filename
+                    'overtime' => ($attendanceToday->overtime ?? 0) + $overtime,
+                    'check_out_latitude' => $request->latitude,
+                    'check_out_longitude' => $request->longitude,
+                    'check_out_file' => $filename,
                 ]);
 
                 return response()->json([
@@ -384,20 +523,12 @@ class AttendanceController extends Controller
             } else if ($attendanceToday->check_out) {
                 throw new InvariantError("Anda sudah melakukan check out, Hubungi Admin jika ini kesalahan");
             } else {
-                $overtime = 0;
-
-                if ($attendanceToday->overtime_after) {
-                    $adjustedNow = $now->copy()->setDate(2000, 1, 1);
-                    $overtimeStartTime = Carbon::parse($attendanceToday->overtime_after)->setDate(2000, 1, 1);
-
-                    if ($adjustedNow->gt($overtimeStartTime)) {
-                        $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
-                    }
-                }
-
                 $attendanceToday->update([
                     'check_out' => $timestamp,
-                    'overtime' => ($attendanceToday->overtime ?? 0) + $overtime
+                    'overtime' => ($attendanceToday->overtime ?? 0) + $overtime,
+                    'check_out_latitude' => $request->latitude,
+                    'check_out_longitude' => $request->longitude,
+                    'check_out_file' => $filename,
                 ]);
 
                 return response()->json([

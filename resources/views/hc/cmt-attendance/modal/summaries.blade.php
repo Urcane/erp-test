@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="text-center mt-9">
-                        <button type="reset" id="modal_create_family_cancel"
+                        <button type="reset" id="summaries_modal_cancel"
                             class="btn btn-sm btn-info me-3 w-lg-200px" data-bs-dismiss="modal">OK</button>
                     </div>
             </div>
