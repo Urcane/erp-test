@@ -211,11 +211,11 @@ class BoQRepository
         $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$boqData->prospect_id)->get();
         $dataForm = $this->inventoryService->getDataForm();
         $dataSales = $this->user->where('department_id', 1)->get();
-        $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->get();
+        $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first();
         $dataProcurement = $this->user->where('department_id', 2)->get();
-        $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->get();
+        $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->first();
         $dataTechnician = $this->user->where('department_id', 4)->get();
-        $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->get();
+        $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->first();
 
         return [
             'dataCompanyItem' => $dataCompanyItem,
