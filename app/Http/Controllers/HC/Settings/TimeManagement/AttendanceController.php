@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\DB;
 
+use App\Utils\ErrorHandler;
+
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\WorkingShift;
 use App\Models\Employee\WorkingScheduleShift;
@@ -140,18 +142,18 @@ class AttendanceController extends Controller
                 $edit = '
                 <li>
                     <div class="btn-edit" onclick=\'fillInput(
-                            "'. $action->id.'"
-                            "'. $action->show_in_request.'"
-                            "'. $action->name.'"
-                            "'. $action->working_start.'"
-                            "'. $action->working_end.'"
-                            "'. $action->break_start.'"
-                            "'. $action->break_end.'"
-                            "'. $action->min_check_in.'"
-                            "'. $action->max_check_out.'"
-                            "'. $action->late_check_in.'"
-                            "'. $action->late_check_out.'"
-                            "'. $action->overtime_before.'"
+                            "'. $action->id.'",
+                            "'. $action->show_in_request.'",
+                            "'. $action->name.'",
+                            "'. $action->working_start.'",
+                            "'. $action->working_end.'",
+                            "'. $action->break_start.'",
+                            "'. $action->break_end.'",
+                            "'. $action->min_check_in.'",
+                            "'. $action->max_check_out.'",
+                            "'. $action->late_check_in.'",
+                            "'. $action->late_check_out.'",
+                            "'. $action->overtime_before.'",
                             "'. $action->overtime_after.'"
                         )\'>
                         <a href="#modal_create_shift" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
@@ -169,9 +171,6 @@ class AttendanceController extends Controller
                 </ul>
                 ';
             })
-            ->addColumn('DT_RowChecklist', function($check) {
-                return '<div class="text-center w-50px"><input name="job_level_ids" type="checkbox" value="'.$check->id.'"></div>';
-            })
             ->addColumn('working_hour', function($data) {
 
                 return substr($data->working_start, 0, -3). "-" .substr($data->working_end, 0, -3);
@@ -185,19 +184,19 @@ class AttendanceController extends Controller
                 $check = $data->show_in_request == "1" ? "checked" : "";
 
                 return '<div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="show_id_request_table" '. $check .' >
+                    <input class="form-check-input" type="checkbox" id="show_id_request_table_'.$data->id.'" '. $check .' onclick="updateShowInRequest(\''.$data->id.'\')">
                     <label class="form-check-label" for="show_id_request_table"></label>
                 </div>';
             })
-            // ->addColumn('assigned_to', function($data) {
-            //     $count = 0;
-            //     foreach ($data->workingScheduleShifts as $scheduleShift) {
-            //         $count += $scheduleShift->userEmployments->count();
-            //     }
-            //     return $count;
-            // })
+            ->addColumn('assigned_to', function($data) {
+                $count = 0;
+                foreach ($data->workingScheduleShifts as $scheduleShift) {
+                    $count += $scheduleShift->userEmployments->count();
+                }
+                return $count;
+            })
             ->addIndexColumn()
-            ->rawColumns(['action','DT_RowChecklist','working_hour','break_hour','show_in_request'])
+            ->rawColumns(['action','working_hour','break_hour','show_in_request'])
             ->make(true);
         }
     }
@@ -216,7 +215,7 @@ class AttendanceController extends Controller
             $workingShift = WorkingShift::updateOrCreate([
                 "id" => $request->id,
             ], [
-                'show_in_request' => $request->show_in_request,
+                'show_in_request' => $request->show_in_request ?? "0",
                 'name' => $request->name,
                 'working_start' => $request->working_start,
                 'working_end' => $request->working_end,
@@ -224,8 +223,8 @@ class AttendanceController extends Controller
                 'break_end' => $request->break_end,
                 'min_check_in' => $request->min_check_in,
                 'max_check_out' => $request->max_check_out,
-                'late_check_in' => $request->late_check_in,
-                'late_check_out' => $request->late_check_out,
+                'late_check_in' => $request->late_check_in ?? "5" ,
+                'late_check_out' => $request->late_check_out ?? "5" ,
                 'overtime_before' => $request->overtime_before,
                 'overtime_after' => $request->overtime_after,
             ]);
@@ -235,6 +234,24 @@ class AttendanceController extends Controller
                 'message' => "Data berhasil disimpan",
             ], 200);
         // });
+    }
+
+    function udpateShowInRequest(Request $request, ErrorHandler $errorHandler) {
+        try {
+            $workingShift = WorkingShift::whereId($request->id)->first();
+            $workingShift->update([
+                'show_in_request' => $workingShift->show_in_request == "1" ? "0" : "1",
+            ]);
+
+            return response()->json([
+                'status' => "success",
+                'message' => "Data berhasil disimpan",
+            ], 200);
+        } catch (\Throwable $th) {
+            $data = $errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function deleteShift(Request $request) {

@@ -45,7 +45,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Schedule Out</span>
                             </label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Schedule Out" required name="working_end">
+                            <input type="time" class="form-control form-control-solid" placeholder="Schedule Out" required name="working_end">
                         </div>
 
                         <div class="col-lg-6 mb-3">
@@ -58,75 +58,83 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Break End</span>
                             </label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Schedule Out" required name="break_end">
+                            <input type="time" class="form-control form-control-solid" placeholder="Schedule Out" required name="break_end">
                         </div>
 
                         <div class="col-lg-12">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
-								<span class="required fw-bold">Additional Setup</span>
+								<span class="fw-bold">Additional Setup</span>
 							</label>
 						</div>
                         <div class="col-lg-12">
-                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="add_attendance_validation" id="add_attendance_validation">
+                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="add_attendance_validation" id="add_attendance_validation" onclick="toggleHidden('#attendance_validation')">
                             <label class="fs-6 form-check-label mb-2" for="add_attendance_validation">
                                 <span class="fw-bold">Add attendance validation</span>
                             </label>
                         </div>
-                        <div class="col-lg-6 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class= fw-bold">Min. Clock in time</span>
-                            </label>
-                            <input type="number" class="form-control form-control-solid" placeholder="Schedule In" name="min_check_in">
-                        </div>
-                        <div class="col-lg-6 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class= fw-bold">Max. Clock out time</span>
-                            </label>
-                            <input type="number" class="form-control form-control-solid" placeholder="Schedule Out" name="max_check_out">
+                        <div class="row" id="attendance_validation">
+                            <div class="col-lg-6 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class= fw-bold">Min. Clock in time</span>
+                                </label>
+                                <input type="number" class="form-control form-control-solid" placeholder="Schedule In" name="min_check_in">
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class= fw-bold">Max. Clock out time</span>
+                                </label>
+                                <input type="number" class="form-control form-control-solid" placeholder="Schedule Out" name="max_check_out">
+                            </div>
                         </div>
 
                         <div class="col-lg-12">
-                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="add_grace_period" id="add_grace_period">
+                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="add_grace_period" id="add_grace_period" onclick="toggleHidden('#grace_period')">
                             <label class="fs-6 form-check-label mb-2" for="add_grace_period">
                                 <span class="fw-bold">Add grace period</span>
                             </label>
                         </div>
-                        <div class="col-lg-6 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class= fw-bold">Clock in dispensation</span>
-                            </label>
-                            <input type="number" class="form-control form-control-solid" placeholder="Clock in dispensation" name="late_check_in">
-                        </div>
-                        <div class="col-lg-6 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class= fw-bold">Clock out dispensation</span>
-                            </label>
-                            <input type="number" class="form-control form-control-solid" placeholder="Clock out dispensation" name="late_check_out">
+
+                        <div class="row" id="grace_period">
+                            <div class="col-lg-6 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class= fw-bold">Clock in dispensation</span>
+                                </label>
+                                <input type="number" class="form-control form-control-solid" placeholder="Clock in dispensation" name="late_check_in">
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class= fw-bold">Clock out dispensation</span>
+                                </label>
+                                <input type="number" class="form-control form-control-solid" placeholder="Clock out dispensation" name="late_check_out">
+                            </div>
                         </div>
 
                         <div class="col-lg-12">
-                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="enable_auto_overtime" id="enable_auto_overtime">
+                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="enable_auto_overtime" id="enable_auto_overtime" onclick="toggleHidden('#auto_overtime')">
                             <label class="fs-6 form-check-label mb-2" for="enable_auto_overtime">
                                 <span class="fw-bold">Enable auto overtime</span>
                             </label>
                         </div>
-                        <div class="col-lg-6 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class= fw-bold">Overtime Before</span>
-                            </label>
-                            <input type="time" class="form-control form-control-solid" placeholder="Overtime Before" name="overtime_before">
-                        </div>
-                        <div class="col-lg-6 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class= fw-bold">Overtime After</span>
-                            </label>
-                            <input type="text" class="form-control form-control-solid" placeholder="Overtime After" name="overtime_after">
+
+                        <div class="row" id="auto_overtime">
+                            <div class="col-lg-6 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class= fw-bold">Overtime Before</span>
+                                </label>
+                                <input type="time" class="form-control form-control-solid" placeholder="Overtime Before" name="overtime_before">
+                            </div>
+                            <div class="col-lg-6 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class= fw-bold">Overtime After</span>
+                                </label>
+                                <input type="time" class="form-control form-control-solid" placeholder="Overtime After" name="overtime_after">
+                            </div>
                         </div>
                     </div>
                 </div>
                     <div class="text-center mt-9">
                         <button type="reset" id="modal_create_shift_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="modal_create_shift_submit" class="btn btn-sm btn-info w-lg-200px" data-bs-dismiss="modal">
+                        <button type="submit" id="modal_create_shift_submit" class="btn btn-sm btn-info w-lg-200px">
                             <span class="indicator-label">Simpan</span>
                         </button>
                     </div>
@@ -173,7 +181,22 @@
     let dataTableJobShift
     $(".btn_tambah_shift").on( "click", function() {
         $("input").val("")
+        $("[name=\'show_in_request\']").val("0");
+        $("[name=\'show_in_request\']").prop("checked", false);
+        $("[name=\'add_attendance_validation\']").val("0");
+        $("[name=\'add_attendance_validation\']").prop("checked", false);
+        $("#attendance_validation").addClass("d-none")
+        $("[name=\'add_grace_period\']").val("0");
+        $("[name=\'add_grace_period\']").prop("checked", false);
+        $("#grace_period").addClass("d-none")
+        $("[name=\'enable_auto_overtime\']").val("0");
+        $("[name=\'enable_auto_overtime\']").prop("checked", false);
+        $("#auto_overtime").addClass("d-none")
     })
+
+    function toggleHidden(id) {
+        $(id).toggleClass("d-none");
+    }
 
     $(document).ready(function () {
         dataTableJobShift = $('#tb_shift').DataTable({
@@ -223,7 +246,7 @@
                 className: 'text-center',
             },
             {
-                targets: 3,
+                targets: 8,
                 orderable : false,
                 searchable : false,
                 className : 'text-center',
@@ -272,6 +295,24 @@
         });
     });
 
+    function updateShowInRequest(id) {
+        $.ajax({
+            url: "{{ route('hc.setting.shift.udpateShowInRequest') }}",
+            headers: {
+                'X-CSRF-TOKEN': "{{csrf_token()}}"
+            },
+            type: 'POST',
+            data: { id : id},
+            success: function(data) {
+                toastr.success(data.message,'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+                $('#show_id_request_table_' + id).prop('checked', false);
+            }
+        });
+    }
 
     function fillInput(
         id,
@@ -314,19 +355,25 @@
             $("[name=\'show_in_request\']").prop("checked", true);
         }
 
-        if (min_check_in != "0" || max_check_out != "0") {
+        $("#attendance_validation").addClass("d-none")
+        if (min_check_in || max_check_out) {
             $("[name=\'add_attendance_validation\']").val("1")
             $("[name=\'add_attendance_validation\']").prop("checked", true);
+            $("#attendance_validation").removeClass("d-none")
         }
 
-        if (late_check_in != "0" || late_check_out != "0") {
+        $("#grace_period").addClass("d-none")
+        if (late_check_in || late_check_out) {
             $("[name=\'add_grace_period\']").val("1")
             $("[name=\'add_grace_period\']").prop("checked", true);
+            $("#grace_period").removeClass("d-none")
         }
 
+        $("#auto_overtime").addClass("d-none")
         if (overtime_before || overtime_after) {
             $("[name=\'enable_auto_overtime\']").val("1")
             $("[name=\'enable_auto_overtime\']").prop("checked", true);
+            $("#auto_overtime").removeClass("d-none")
         }
     }
 </script>

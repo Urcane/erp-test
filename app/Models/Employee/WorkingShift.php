@@ -19,6 +19,11 @@ class WorkingShift extends Model
         return $this->belongsToMany(WorkingSchedule::class, 'working_schedule_shifts');
     }
 
+    public function workingScheduleShifts(): HasMany
+    {
+        return $this->hasMany(WorkingScheduleShift::class);
+    }
+
     public function userShiftRequests(): HasMany
     {
         return $this->hasMany(UserShiftRequest::class);

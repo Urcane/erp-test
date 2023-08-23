@@ -231,6 +231,16 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/table/shift', 'getTableShift')->name('hc.setting.getTableShift');
                 Route::post('/create/update/shift', 'createUpdateShift')->name('hc.setting.shift.createUpdate');
                 Route::post('/delete/shift', 'deleteShift')->name('hc.setting.shift.delete');
+                Route::post('/create/update/shift/show/in/request', 'udpateShowInRequest')->name('hc.setting.shift.udpateShowInRequest');
+            });
+        });
+
+        Route::controller(Settings\TimeManagement\TimeOfController::class)->group(function () {
+            Route::prefix('time-of')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.timeof.index');
+                Route::get('/table/timeof', 'getTableTimeOf')->name('hc.setting.getTableTimeOf');
+                Route::post('/create/update/timeof', 'createUpdateTimeOf')->name('hc.setting.timeof.createUpdate');
+                Route::post('/delete/timeof', 'deleteTimeOf')->name('hc.setting.timeof.delete');
             });
         });
     });

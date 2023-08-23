@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title-apps','Settings')
-@section('sub-title-apps','Organization')
+@section('sub-title-apps','Attendance')
 
 @section('navbar')
 @include('layouts.navbar.navbar')
