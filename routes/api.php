@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
             Route::get('/history', 'getAttendanceHistory');
-            Route::get('/history/today', 'getAttendanceToday');
+            Route::get('/history/detail', 'getAttendanceByDate');
 
             Route::get('/summaries/me', 'getPersonalAttendanceSummaries');
 

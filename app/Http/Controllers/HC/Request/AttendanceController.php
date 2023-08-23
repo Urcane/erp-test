@@ -125,7 +125,15 @@ class AttendanceController extends Controller
     public function getTable(Request $request)
     {
         if (request()->ajax()) {
-            $query = UserAttendanceRequest::where('approval_line', Auth::user()->id)
+            $userId = Auth::user()->id;
+
+            $query = UserAttendanceRequest::where(function ($query) use ($userId) {
+                    $query->where('approval_line', $userId)
+                        ->orWhere(function ($query) use ($userId) {
+                            $query->whereId($userId)
+                                    ->whereNull('approval_line');
+                        });
+                })
                 ->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
 
             if ($request->filters['filterDate']) {

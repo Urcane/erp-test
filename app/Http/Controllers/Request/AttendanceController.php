@@ -10,8 +10,6 @@ use Yajra\DataTables\DataTables;
 
 use App\Utils\ErrorHandler;
 use App\Constants;
-use App\Models\Attendance\AttendanceChangeLog;
-use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserAttendanceRequest;
 
 class AttendanceController extends Controller
@@ -34,27 +32,6 @@ class AttendanceController extends Controller
                 "check_in" => "nullable|date_format:H:i|required_without_all:check_out",
                 "check_out" => "nullable|date_format:H:i|required_without_all:check_in",
             ]);
-
-            if (!Auth::user()->approval_line) {
-                $userAttendance = UserAttendance::where('user_id', Auth::user()->id)->where('date', $request->date)->first();
-
-                $userAttendance->update([
-                    "check_in" => $checkIn ?? $userAttendance->check_in,
-                    "check_out" => $checkOut ?? $userAttendance->check_out
-                ]);
-
-                AttendanceChangeLog::create([
-                    "user_id" => Auth::user()->id,
-                    "attendance_id" => Auth::user()->id,
-                    "date" => $userAttendance->date,
-                    "action" => "SYSTEM EDIT",
-                    "old_check_in" => $userAttendance->check_in,
-                    "old_check_out" => $userAttendance->check_out,
-                    "new_check_in" => $checkIn ?? $userAttendance->check_in,
-                    "new_check_out" => $checkOut ?? $userAttendance->check_out,
-                    "reason" => "[CHANGED FROM USER REQUEST --SYSTEM] [SELF APPROVAL]"
-                ]);
-            }
 
             UserAttendanceRequest::create([
                 "user_id" => Auth::user()->id,

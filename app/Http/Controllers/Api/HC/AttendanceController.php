@@ -134,18 +134,11 @@ class AttendanceController extends Controller
     //     return $distance;
     // }
 
-    public function getAttendanceToday(Request $request)
+    public function getAttendanceByDate(Request $request)
     {
         try {
             $today = Carbon::now()->toDateString();
-            $attendanceToday = UserAttendance::where('user_id', $request->user()->id)->where('date', $today)->first();
-
-            if ($attendanceToday->attendance_code != $this->constants->attendance_code[0]) {
-                return response()->json([
-                    "status" => "success",
-                    "message" => "Hari ini bukan hari kerja"
-                ]);
-            }
+            $attendanceToday = $request->user()->userAttendances()->whereDate('date', $request->date ?? Carbon::now()->format('Y-m-d'))->first();
 
             if (!$attendanceToday) {
                 return response()->json([
@@ -160,14 +153,18 @@ class AttendanceController extends Controller
                 ]);
             }
 
+            if ($attendanceToday->attendance_code != $this->constants->attendance_code[0]) {
+                return response()->json([
+                    "status" => "success",
+                    "message" => "Hari ini bukan hari kerja"
+                ]);
+            }
+
             return response()->json([
                 "status" => "success",
-                "data" => [
-                    "date" => $attendanceToday->date,
-                    "attendance_code" => $attendanceToday->attendance_code,
-                    "attendance_code_view" => $this->constants->attendanceCodeTranslator($attendanceToday->attendance_code),
-                    "check_in" => $attendanceToday->check_in,
-                    "check_out" => $attendanceToday->check_out
+                "data" => $attendanceToday + [
+                    "check_in_file" => $attendanceToday->check_in_file ? asset("storage/attendance/checkin/$attendanceToday->check_in_file") : null,
+                    "check_out_file" => $attendanceToday->check_out_file ? asset("storage/attendance/checkout/$attendanceToday->check_out_file") : null,
                 ]
             ]);
         } catch (\Throwable $th) {
@@ -348,19 +345,19 @@ class AttendanceController extends Controller
             $filename = time() . $file->getClientOriginalName();
             $file->storeAs('attendance/checkin', $filename, 'public');
 
-            $overtime = 0;
-
-            if ($attendanceToday->overtime_before) {
-                $adjustedNow = $now->copy()->setDate(2000, 1, 1);
-                $overtimeStartTime = Carbon::parse($attendanceToday->overtime_before)->setDate(2000, 1, 1);
-                $workingStartTime = Carbon::parse($attendanceToday->workingStart)->setDate(2000, 1, 1);
-
-                if ($adjustedNow->gt($overtimeStartTime) && $adjustedNow->lt($workingStartTime)) {
-                    $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
-                }
-            }
-
             if (!$attendanceToday) {
+                $overtime = 0;
+
+                if ($workingShift->overtime_before) {
+                    $adjustedNow = $now->copy()->setDate(2000, 1, 1);
+                    $overtimeStartTime = Carbon::parse($workingShift->overtime_before)->setDate(2000, 1, 1);
+                    $workingStartTime = Carbon::parse($workingShift->workingStart)->setDate(2000, 1, 1);
+
+                    if ($adjustedNow->gt($overtimeStartTime) && $adjustedNow->lt($workingStartTime)) {
+                        $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
+                    }
+                }
+
                 UserAttendance::create([
                     'user_id' => $request->user()->id,
                     'date' => $today,
@@ -368,6 +365,8 @@ class AttendanceController extends Controller
                     'shift_name' => $workingShift->name,
                     'working_start' => $workingShift->working_start,
                     'working_end' => $workingShift->working_end,
+                    'overtime_before' => $workingShift->overtime_before,
+                    'overtime_after' => $workingShift->overtime_after,
                     'late_check_in' => $workingShift->late_check_in,
                     'late_check_out' => $workingShift->late_check_out,
                     'check_in' => $timestamp,
@@ -385,6 +384,17 @@ class AttendanceController extends Controller
             } else if ($attendanceToday->check_in) {
                 throw new InvariantError("Anda sudah melakukan check in, Hubungi Admin jika ini kesalahan");
             } else {
+                $overtime = 0;
+
+                if ($attendanceToday->overtime_before) {
+                    $adjustedNow = $now->copy()->setDate(2000, 1, 1);
+                    $overtimeStartTime = Carbon::parse($attendanceToday->overtime_before)->setDate(2000, 1, 1);
+                    $workingStartTime = Carbon::parse($attendanceToday->workingStart)->setDate(2000, 1, 1);
+
+                    if ($adjustedNow->gt($overtimeStartTime) && $adjustedNow->lt($workingStartTime)) {
+                        $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
+                    }
+                }
 
                 $attendanceToday->update([
                     'check_in' => $timestamp,
@@ -487,18 +497,18 @@ class AttendanceController extends Controller
             $filename = time() . $file->getClientOriginalName();
             $file->storeAs('attendance/checkout', $filename, 'public');
 
-            $overtime = 0;
-
-            if ($attendanceToday->overtime_after) {
-                $adjustedNow = $now->copy()->setDate(2000, 1, 1);
-                $overtimeStartTime = Carbon::parse($attendanceToday->overtime_after)->setDate(2000, 1, 1);
-
-                if ($adjustedNow->gt($overtimeStartTime)) {
-                    $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
-                }
-            }
-
             if (!$attendanceToday) {
+                $overtime = 0;
+
+                if ($workingShift->overtime_after) {
+                    $adjustedNow = $now->copy()->setDate(2000, 1, 1);
+                    $overtimeStartTime = Carbon::parse($workingShift->overtime_after)->setDate(2000, 1, 1);
+
+                    if ($adjustedNow->gt($overtimeStartTime)) {
+                        $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
+                    }
+                }
+
                 UserAttendance::create([
                     'user_id' => $request->user()->id,
                     'date' => $today,
@@ -506,6 +516,8 @@ class AttendanceController extends Controller
                     'shift_name' => $workingShift->name,
                     'working_start' => $workingShift->working_start,
                     'working_end' => $workingShift->working_end,
+                    'overtime_before' => $workingShift->overtime_before,
+                    'overtime_after' => $workingShift->overtime_after,
                     'late_check_in' => $workingShift->late_check_in,
                     'late_check_out' => $workingShift->late_check_out,
                     'check_in' => null,
@@ -523,6 +535,17 @@ class AttendanceController extends Controller
             } else if ($attendanceToday->check_out) {
                 throw new InvariantError("Anda sudah melakukan check out, Hubungi Admin jika ini kesalahan");
             } else {
+                $overtime = 0;
+
+                if ($attendanceToday->overtime_after) {
+                    $adjustedNow = $now->copy()->setDate(2000, 1, 1);
+                    $overtimeStartTime = Carbon::parse($attendanceToday->overtime_after)->setDate(2000, 1, 1);
+
+                    if ($adjustedNow->gt($overtimeStartTime)) {
+                        $overtime = $overtimeStartTime->diffInMinutes($adjustedNow);
+                    }
+                }
+
                 $attendanceToday->update([
                     'check_out' => $timestamp,
                     'overtime' => ($attendanceToday->overtime ?? 0) + $overtime,

@@ -48,6 +48,8 @@ class CreateAllAttendance extends Migration
             $table->string("day_off_code", 10)->nullable();
             $table->time("working_start")->index();
             $table->time("working_end")->index();
+            $table->time("overtime_before")->nullable();
+            $table->time("overtime_after")->nullable();
             $table->tinyInteger("late_check_in")->default(0);
             $table->tinyInteger("late_check_out")->default(0);
             $table->integer("overtime")->default(0);
