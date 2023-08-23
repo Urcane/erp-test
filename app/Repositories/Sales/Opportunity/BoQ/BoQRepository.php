@@ -190,20 +190,26 @@ class BoQRepository
 
     function updateDraftBoq(Request $request){
         $boqId = $request->query('boq_id');
-        $prospectId = $this->model->where('id', $boqId)->first();
+        $boqData = $this->model->where('id', $boqId)->first();
 
-        $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$prospectId->prospect_id)->get();
+        $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$boqData->prospect_id)->get();
         $dataForm = $this->inventoryService->getDataForm();
         $dataSales = $this->user->where('department_id', 1)->get();
-        $dataFinance = $this->user->where('department_id', 2)->get();
+        $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->get();
+        $dataProcurement = $this->user->where('department_id', 2)->get();
+        $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->get();
         $dataTechnician = $this->user->where('department_id', 4)->get();
-        // dd($dataTechnician);
+        $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->get();
+
         return [
             'dataCompanyItem' => $dataCompanyItem,
             'dataForm' => $dataForm,
             'dataSales' => $dataSales,
-            'dataFinance' => $dataFinance,
+            'dataSalesSelected' => $dataSalesSelected,
+            'dataProcurement' => $dataProcurement,
+            'dataProcurementSelected' => $dataProcurementSelected,
             'dataTechnician' => $dataTechnician,
+            'dataTechnicianSelected' => $dataTechnicianSelected,
         ];
     }
 
