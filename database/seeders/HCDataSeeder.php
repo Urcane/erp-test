@@ -21,6 +21,7 @@ use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\EmploymentStatus;
 use App\Constants;
 use App\Models\Attendance\UserAttendance;
+use App\Models\Employee\BranchLocation;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Employee\WorkingShift;
 use Illuminate\Support\Facades\DB;
@@ -49,6 +50,7 @@ class HCDataSeeder extends Seeder
             "bpjs_ketenagakerjaan" => "0000000000",
             "jaminan_kecelakaan_kerja" => "1-0.24%",
         ]);
+
         collect([
             ["PT Group Utama", "0812331223", "Jakarta", "Jakarta", "Jln Sidoarjo RT 15 No 15", "1234324123133", "PT Group Utama", "12334345234", "Bowo", "Kode KLU", "9fThLIMy32MWG1dEizgVNSlha5HQKUsjvN0ZKkxH.png", $branch->id, null, "GroupUtama@gmail.com"],
             ["PT Anak Balikpapan", "093248439535", "Balikpapan", "Kalimantan timur", "Jln Sidoarjo RT 15 No 15", "1234324123133", "PT Anak Balikpapan", "12334345234", "Bowo", "Kode KLU", "9fThLIMy32MWG1dEizgVNSlha5HQKUsjvN0ZKkxH.png", null, 1, "balikpapan@gmail.com"],
@@ -70,8 +72,19 @@ class HCDataSeeder extends Seeder
                 "branch_id"=> $data[11],
                 "parent_id"=> $data[12],
                 "email"=> $data[13],
-                "latitude" => "-1.2495105",
-                "longitude" => "116.8749959"
+            ]);
+        });
+
+        collect([
+            [1, "-1.249637", "116.877503", 30],
+            [2, "-1.249637", "116.877503", 30],
+            [3, "-1.249637", "116.877503", 30],
+        ])->map(function ($data) {
+            BranchLocation::create([
+                "sub_branch_id" => $data[0],
+                "latitude" => $data[1],
+                "longitude" => $data[2],
+                "radius" => $data[3]
             ]);
         });
 

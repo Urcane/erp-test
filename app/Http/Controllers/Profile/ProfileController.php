@@ -59,7 +59,7 @@ class ProfileController extends Controller
         $dataSubBranch = SubBranch::all();
         $dataTaxStatus = TaxStatus::all();
         $dataWorkingScheduleShift = WorkingScheduleShift::all();
-        $dataShift = WorkingShift::all();
+        $dataShift = WorkingShift::where('show_in_request', true);
 
         $dataNonFormalEducationCategory = NonFormalEducationCategory::all();
         $dataPaymentSchedule = PaymentSchedule::all();

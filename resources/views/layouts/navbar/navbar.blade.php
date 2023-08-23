@@ -165,6 +165,19 @@
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0">
+                                                            <a href="{{route('hc.request.index')}}" class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-solid fa-handshake text-primary fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">CMT-Request</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Catatan Daftar Request Karyawan</span>
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0">
                                                             <a href="{{route('hc.setting.company-info.index')}}" class="menu-link">
                                                                 <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
                                                                     <i class="fa-solid fa-gear text-primary fs-3"></i>

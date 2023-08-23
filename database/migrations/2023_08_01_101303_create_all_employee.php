@@ -25,7 +25,7 @@ class CreateAllEmployee extends Migration
             $table->id();
             $table->string("industry", 40);
             $table->string("company_size", 40);
-            $table->date("company_taxable_date", 40);
+            $table->date("company_taxable_date");
             $table->string("head_office_initial", 40);
             $table->string("bpjs_ketenagakerjaan", 40);
             $table->string("jaminan_kecelakaan_kerja", 40);
@@ -43,9 +43,6 @@ class CreateAllEmployee extends Migration
             $table->string("city", 30);
             $table->string("province", 30);
             $table->string("address", 30);
-            $table->string("latitude", 50);
-            $table->string("longitude", 50);
-            $table->integer("coordinate_radius")->default(20); // meter
             $table->integer("umr")->nullable();
             $table->string("npwp", 20);
             $table->string("tax_name", 25);
@@ -54,6 +51,16 @@ class CreateAllEmployee extends Migration
             $table->string("klu", 15);
             $table->string("signature")->nullable();
             $table->string("logo")->nullable();
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('branch_locations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("sub_branch_id")->nullable()->constrained("sub_branches");
+            $table->string("latitude", 50);
+            $table->string("longitude", 50);
+            $table->integer("radius")->default(30); // meter
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -77,10 +84,10 @@ class CreateAllEmployee extends Migration
             $table->time("working_end");
             $table->time("break_start");
             $table->time("break_end");
-            $table->tinyInteger("late_check_in")->default(5); // in minute
-            $table->tinyInteger("late_check_out")->default(5); // in minute
-            $table->tinyInteger("min_check_in")->default(0);
-            $table->tinyInteger("max_check_out")->default(0);
+            $table->smallInteger("late_check_in")->default(0); // in minute
+            $table->smallInteger("late_check_out")->default(0); // in minute
+            $table->smallInteger("min_check_in")->nullable(); // in minute
+            $table->smallInteger("max_check_out")->nullable(); // in minute
             $table->time("overtime_before")->nullable();
             $table->time("overtime_after")->nullable();
             $table->boolean("show_in_request")->default(0);

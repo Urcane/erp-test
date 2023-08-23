@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasOne(Team\Team::class, "id", "team_id");
     }
 
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
     public function userBank(): HasOne
     {
         return $this->hasOne(Employee\UserBank::class);

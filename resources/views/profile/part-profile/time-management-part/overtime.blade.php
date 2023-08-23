@@ -28,45 +28,46 @@
 </div>
 
 <script>
-    // $( "#overtime" ).on( "click", function() {
-    //     $('#tb_overtime_content').DataTable({
-    //         processing: true,
-    //         serverSide: true,
-    //         retrieve: true,
-    //         deferRender: true,
-    //         responsive: false,
-    //         aaSorting : [],
-    //         ajax: {
-    //             data: function(data){
-    //                 data.user_id = {{$user->id}}
-    //             }
-    //         },
-    //         language: {
-    //             "lengthMenu": "Show _MENU_",
-    //             "emptyTable" : "Tidak ada data terbaru 📁",
-    //             "zeroRecords": "Data tidak ditemukan 😞",
-    //         },
-    //         buttons: [],
-    //         dom:
-    //         "<'row mb-2'" +
-    //         "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
-    //         "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
-    //         ">" +
+    $( "#overtime" ).on( "click", function() {
+        $('#tb_overtime_content').DataTable({
+            processing: true,
+            serverSide: true,
+            retrieve: true,
+            deferRender: true,
+            responsive: false,
+            aaSorting : [],
+            ajax: {
 
-    //         "<'table-responsive'tr>" +
+                data: function(data){
+                    data.user_id = {{$user->id}}
+                }
+            },
+            language: {
+                "lengthMenu": "Show _MENU_",
+                "emptyTable" : "Tidak ada data terbaru 📁",
+                "zeroRecords": "Data tidak ditemukan 😞",
+            },
+            buttons: [],
+            dom:
+            "<'row mb-2'" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+            ">" +
 
-    //         "<'row'" +
-    //         "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
-    //         "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
-    //         ">",
+            "<'table-responsive'tr>" +
 
-    //         columns: [
-    //         { data: 'DT_RowIndex'},
-    //         { data: 'created_at'},
-    //         { data: 'date'},
-    //         { data: 'approved_by'},
-    //         { data: 'action'},
-    //         ],
-    //     });
-    // });
+            "<'row'" +
+            "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+            "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+            ">",
+
+            columns: [
+            { data: 'DT_RowIndex'},
+            { data: 'created_at'},
+            { data: 'date'},
+            { data: 'approved_by'},
+            { data: 'action'},
+            ],
+        });
+    });
 </script>

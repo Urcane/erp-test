@@ -7,6 +7,7 @@ use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HC\Attendance\AttendanceController;
+use App\Http\Controllers\HC\Request as HCRequest;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\PersonalController;
 use App\Http\Controllers\Profile\FileController;
@@ -246,17 +247,31 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('cmt-request')->group(function () {
-        Route::controller(Request\AttendanceController::class)->group(function () {
-            Route::prefix('/attendance')->group(function () {
-                Route::post('/create', 'makeRequest')->name('req.attd.create');
-                Route::get('/get-data/table/me', 'showRequestTableById')->name('req.attd.get-table-me');
+        Route::controller(HCRequest\IndexController::class)->group(function () {
+            Route::get('/list', 'index')->name('hc.request.index');
+        });
+
+        Route::prefix('attendance')->group(function () {
+            Route::controller(HCRequest\AttendanceController::class)->group(function () {
+                Route::put('/update/status', 'updateRequestStatus')->name('hc.request.att.update');
+
+                Route::get('/get-data/table', 'getTable')->name('hc.request.att.get-table');
             });
         });
 
-        Route::controller(Request\ShiftController::class)->group(function () {
-            Route::prefix('/shift')->group(function () {
-                Route::post('/create', 'makeRequest')->name('req.shift.create');
-                Route::get('/get-data/table/me', 'showRequestTableById')->name('req.shift.get-table-me');
+        Route::prefix('personal')->group(function () {
+            Route::controller(Request\AttendanceController::class)->group(function () {
+                Route::prefix('/attendance')->group(function () {
+                    Route::post('/create', 'makeRequest')->name('req.attd.create');
+                    Route::get('/get-data/table/me', 'showRequestTableById')->name('req.attd.get-table-me');
+                });
+            });
+
+            Route::controller(Request\ShiftController::class)->group(function () {
+                Route::prefix('/shift')->group(function () {
+                    Route::post('/create', 'makeRequest')->name('req.shift.create');
+                    Route::get('/get-data/table/me', 'showRequestTableById')->name('req.shift.get-table-me');
+                });
             });
         });
     });
