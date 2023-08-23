@@ -348,7 +348,7 @@
         </div>
     </div>
 </div>
-
+<div id="printerDiv" style="display:none"></div>
 <script>
     const employee_sig = $('#employee_sig').signature({syncField: '#survey_person_sign_url', syncFormat: 'PNG', disabled: true});
     const customer_sig = $('#customer_sig').signature({syncField: '#customer_sign_url', syncFormat: 'PNG'});
