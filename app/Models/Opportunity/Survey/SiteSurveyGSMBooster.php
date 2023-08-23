@@ -4,6 +4,7 @@ namespace App\Models\Opportunity\Survey;
 
 use App\Models\Customer\Customer;
 use App\Models\Customer\CustomerContact;
+use App\Models\Master\File;
 use App\Models\ProjectManagement\WorkOrder;
 use App\Traits\HasAdditionalSurveyForm;
 use App\Traits\HasFile;
@@ -36,6 +37,6 @@ class SiteSurveyGSMBooster extends Model
     }
     
     function customerSignFile() : MorphOne {
-        return $this->morphOne(File::class, 'fileable')->where('additional', 'site-survey/customer_sign');   
+        return $this->morphOne(File::class, 'fileable')->where('additional', 'site-survey/customer_sign')->latest();   
     }
 }

@@ -42,6 +42,6 @@ class SiteSurveyInternet extends Model
     }
 
     function customerSignFile() : MorphOne {
-        return $this->morphOne(File::class, 'fileable')->where('additional', 'site-survey/customer_sign');   
+        return $this->morphOne(File::class, 'fileable')->where('additional', 'site-survey/customer_sign')->latest();   
     }
 }

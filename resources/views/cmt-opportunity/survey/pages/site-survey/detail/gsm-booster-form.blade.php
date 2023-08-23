@@ -22,9 +22,14 @@
                     <div class="card-header">
                         <h3 class="card-title">🌟⭐✨</h3>
                         <div class="card-toolbar">
+                            @if (isset($surveyResult))
+                            <button type="button" class="btn btn-md btn-light me-3 print-form">
+                                <i class="fa-solid fa-print fs-6"></i>Print
+                            </button>
                             <button type="button" class="btn btn-md btn-info edit-form">
                                 <i class="fa-solid fa-pen-to-square fs-6"></i>Edit
                             </button>
+                            @endif
                         </div>
                     </div>
                     <div class="card-body">
@@ -269,7 +274,7 @@
                                                 </label>
                                             </div>
                                             <div class="col-lg-10">
-                                                <input type="date" class="form-control form-control-solid" name="survey_date">
+                                                <input @if (isset($surveyResult)) disabled="disabled" type="date" @endif class="form-control form-control-solid" name="survey_date" value="{{isset($surveyResult) ? old('survey_date', $surveyResult->survey_date) : ''}}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -325,10 +330,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="position-fixed bottom-0 end-0 rounded-circle m-5">
+                                        <div class="position-fixed bottom-0 end-0 rounded-circle mx-12 my-8" id="floating-button-container">
+                                            @if (!isset($surveyResult))
                                             <a href="#kt_modal_confirm_survey_result" class="btn btn-primary btn-md" data-bs-toggle="modal">
-                                                <i class="fa-solid fa-save fs-3"></i>
+                                                <i class="fa-solid fa-save fs-3"></i>Save
                                             </a>
+                                            @endif
                                         </div>
                                         @include('cmt-opportunity.survey.modal.modal-confirm-survey-result')
                                     </div>
@@ -423,6 +430,8 @@
                         <i class="fa-solid fa-save fs-3"></i>
                     </a>
                 `);
+
+                customer_sig.signature('enable');
             } else {
                 $('.real-form input').attr('disabled', 'disabled');
                 $('.real-form textarea').attr('disabled', 'disabled');
@@ -436,8 +445,17 @@
                 }, 800);
 
                 $('#floating-button-container').html(``);
+
+                customer_sig.signature('disable');
             }
         })
+
+        @if (isset($surveyResult))
+        $('.print-form').click(function () {
+            const div = document.getElementById("printerDiv");
+            div.innerHTML = `<iframe src="{{route('com.survey-result.export',['serviceType'=>$surveyRequest->service_type_id ,'id' => $surveyResult->id])}}" onload="this.contentWindow.print();"></iframe>`;
+        })
+        @endif
     })
 </script>
 @endsection
