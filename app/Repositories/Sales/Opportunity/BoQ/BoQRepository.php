@@ -95,7 +95,20 @@ class BoQRepository
             $percentage = $request->input('boq.percentage');
             $manpower = $request->input('boq.manpower');
             $is_final = $request->input('boq.is_final', 0);
-    
+
+            // Cek apakah is_draft pada ItemableBillOfQuantity sudah ada dan nilainya adalah 0
+            $itemableBoqIsDraft = ItemableBillOfQuantity::where([
+                'prospect_id' => $prospect_id,
+                'survey_request_id' => $survey_request_id,
+            ])->first();
+
+            if ($itemableBoqIsDraft) {
+                // Kondisi 3: Jika is_draft sudah ada dan nilainya 0, jangan ubah nilainya
+                if ($itemableBoqIsDraft->is_draft === 0) {
+                    $is_draft = 0;
+                }
+            }
+
             $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
                 [
                     'prospect_id' => $prospect_id, 
@@ -115,17 +128,21 @@ class BoQRepository
                     'is_draft' => $is_draft,
                 ]
             );
-    
+
+            if (isset($itemableBoq->id)) {
+                $itemIds = Item::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
+                Item::whereIn('id', $itemIds)->delete();
+            }
             $itemsData = $request->input('items');
             foreach ($itemsData as $itemData) {
                 $criteria = [
                     'itemable_id' => $itemableBoq->id,
-                    'itemable_type' => $itemableBoq->itemable_type,
+                    'itemable_type' => $itemableBoq->itemable_type, 
                 ];
                 if (isset($itemData['id'])) {
                     $criteria['id'] = $itemData['id'];
                 }
-                $itemData = [
+                $data = [
                     'quantity' => $itemData['quantity'],
                     'purchase_price' => $itemData['purchase_price'],
                     'total_price' => $itemData['total_price'],
@@ -134,8 +151,7 @@ class BoQRepository
                     'item_inventory_id' => $itemData['item_inventory_id'],
                     'item_detail' => $itemData['item_detail'],
                 ];
-    
-                $itemableBoq->itemable()->updateOrCreate($criteria, $itemData);
+                $itemableBoq->itemable()->updateOrCreate($criteria, $data);
             }
     
             if ($itemableBoq->approval_manager === null || $itemableBoq->approval_director === null || $itemableBoq->approval_finman === null) {
@@ -152,7 +168,7 @@ class BoQRepository
             DB::commit();
             return response()->json(['message' => 'BoQ berhasil disimpan.'], 200);
             
-        }catch (Exception $e) { 
+        }catch (\Exception $e) { 
             DB::rollback();
             return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }

@@ -36,6 +36,8 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
+
+
                             <div class="row mb-6 align-items-center">
                                 <div class="col-lg-6 gap-3 d-flex align-items-center">
                                     <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Bill of Quantity</span>
@@ -45,12 +47,11 @@
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
+                                    @csrf
+                                    {{-- divv Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        {{-- baris Rilll --}}
-
+                                        {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                            <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
-                                            @csrf
                                             <div class="col-lg-5 col-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
@@ -78,7 +79,7 @@
                                             </div>
                                         </div>
 
-                                        {{-- baris Rilll --}}
+                                        {{-- baris company contact --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
 
                                             <div class=""
@@ -119,7 +120,7 @@
                                         </div>
                                     </div>
 
-
+                                    {{--  divv item --}}
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                         <div class="MultipleItem">
@@ -259,6 +260,7 @@
                                         @endrole
                                     </div>
 
+                                    {{-- divv akhir total amount --}}
                                     <div>
                                         <div class="d-flex justify-content-between mx-20">
                                             <div class="form-check form-check-custom form-check-success form-check-solid">
@@ -267,15 +269,13 @@
                                                 <label class="form-check-label" for="is_draft">Next to Commercial</label>
                                             </div>
                                             <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Amount : <span id="totalsum"></span></span>
+                                                <span class="fw-bold">Total Amount : Rp<span id="totalsum"></span></span>
                                             </div>
                                         </div>
-
                                         <div class="d-flex justify-content-center mt-6">
                                             <div class=" me-5">
                                                 <a href="" class="btn btn-light-info">Discard</a>
                                             </div>
-
                                             <div class="me-5">
                                                 <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Submit</a>
                                             </div>
@@ -284,6 +284,7 @@
 
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -295,7 +296,6 @@
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
         @include('cmt-opportunity.boq.add.modal-update-boq')
     @endrole
-
 
     <script>
         function validateAndFormatNumber(input) {
@@ -442,7 +442,7 @@
 
                 // Send the data to the server using AJAX
                 $.ajax({
-                    url: "{{ route('com.boq.save.boq') }}",
+                    url: "{{ route('com.boq.store.boq') }}",
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -558,19 +558,20 @@
                     const item = document.querySelectorAll(
                         `.MultipleItem .file-soft-boq-item-${uniq_id}`);
 
-                    let data = $(`.btn-update-boq-modal[data-random-string="${uniq_id}"]`); 
+                    let data = $(`.btn-update-boq-modal[data-random-string="${uniq_id}"]`);
 
                     // Mengatur ulang atribut-atribut elemen <li> berdasarkan formData
                     data.attr({
                         'data-item-id': selectedItemId,
                         'data-quantity': formData.get('quantity_update'),
                         'data-total_price': formData.get('total_update'),
-                        'data-purchase_delivery_charge': formData.get('purchase_delivery_update'),
+                        'data-purchase_delivery_charge': formData.get(
+                            'purchase_delivery_update'),
                         'data-purchase_price': formData.get('purchase_price_update'),
                         'data-purchase_refrence': formData.get('purchase_reference'),
                         'data-item_detail': formData.get('item_detail')
                     });
-                    
+
                     data.data({
                         'item-id': selectedItemId,
                         'quantity': formData.get('quantity_update'),
@@ -579,7 +580,7 @@
                         'purchase_price': formData.get('purchase_price_update'),
                         'purchase_refrence': formData.get('purchase_reference'),
                         'item_detail': formData.get('item_detail')
-                    }); 
+                    });
 
                     $('[name="content[][good_name]"]', item).val(itemName);
                     $('[name="content[][good_merk]"]', item).val(itemMerk);

@@ -46,9 +46,11 @@
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
+                                    @csrf
+                                    {{-- divv Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        {{-- baris Rilll --}}
 
+                                        {{-- baris Rilll --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
                                             <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
                                             @csrf
@@ -143,6 +145,7 @@
                                         </div>
                                     </div>
 
+                                    {{--  divv item --}}
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                         <div class="MultipleItem">
@@ -160,10 +163,11 @@
                                         @endrole
                                     </div>
 
+                                    {{-- divv akhir total amount --}}
                                     <div>
                                         <div class="d-flex justify-content-end mx-20">
                                             <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Amount : <span id="totalsum"></span></span>
+                                                <span class="fw-bold">Total Amount : Rp.<span id="totalsum"></span></span>
                                             </div>
                                         </div>
 
@@ -180,6 +184,7 @@
 
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -191,7 +196,6 @@
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
         @include('cmt-opportunity.boq.add.modal-update-boq')
     @endrole
-
 
     <script>
         function validateAndFormatNumber(input) {
@@ -303,7 +307,7 @@
         $(document).ready(function() {
             // function Submit BOQ page BENERAN wkwkw
             $('#submit-all-items').on('click', function(event) {
-                // event.preventDefault();
+                event.preventDefault();
 
                 // Get Prospect ID and Survey ID from the HTML elements
                 var prospect_id = $('#prospect_id').val();
@@ -381,7 +385,7 @@
                 console.log(items);
                 // Send the data to the server using AJAX
                 $.ajax({
-                    url: "{{ route('com.boq.save.boq') }}",
+                    url: "{{ route('com.boq.store.boq') }}",
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
