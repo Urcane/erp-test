@@ -4,7 +4,7 @@
 @section('sub-title-apps','CMT-OPPOR')
 @section('desc-apps','Survey, Survey, Survey Luar biasa!')
 @section('icon-apps','fa-solid fa-briefcase')
-@section('print-title', 'Hasil Survey Internet')
+@section('print-title', 'Hasil Survey GSM Booster')
 
 @section('content')
 <div class="row my-4 align-items-center">
