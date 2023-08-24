@@ -116,7 +116,7 @@
                                     <th class="w-100px">Closest BTS</th>
                                     <th class="w-100px">Covered Status</th>
                                     <th class="w-300px">Notes</th>
-                                    <th class="w-100px text-center">#</th>
+                                    {{-- <th class="w-100px text-center">#</th> --}}
                                 </tr>
                             </thead>
                             <tbody class="fs-7">
@@ -143,7 +143,7 @@
                                     <th class="w-100px">Closest BTS</th>
                                     <th class="w-100px">Covered Status</th>
                                     <th class="w-300px">Notes</th>
-                                    <th class="w-100px text-center">#</th>
+                                    {{-- <th class="w-100px text-center">#</th> --}}
                                 </tr>
                             </thead>
                             <tbody class="fs-7">

@@ -13,6 +13,7 @@ use App\Models\Opportunity\Survey\SiteSurveyInternet;
 use App\Models\Opportunity\Survey\SiteSurveyOtherArea;
 use App\Models\Opportunity\Survey\SiteSurveyOutdoorArea;
 use App\Models\Opportunity\Survey\SurveyRequest;
+use App\Models\ProjectManagement\WorkOrder;
 use Exception;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Http\Request;
@@ -31,6 +32,10 @@ class SurveyResultRepository
 
     function save($data, $modelType) {
         $result = $this->handleSave($data, $modelType);
+
+        $workOrder = WorkOrder::where('id', $data->work_order_id)->update([
+            'status' => 'DN'
+        ]);
 
         return $result;
     }
@@ -52,31 +57,50 @@ class SurveyResultRepository
         return $siteSurveyInternet = $this->saveSiteSurveyInternet(Request::createFrom($data));
     }
 
-    function saveSiteSurveyGSMBooster(Request $data) : SiteSurveyCCTV {
+    function saveSiteSurveyGSMBooster(Request $data) : SiteSurveyGSMBooster {
 
-        return $siteSurveyCCTV = SiteSurveyCCTV::updateOrCreate([
+        return $siteSurveyGSMBooster = SiteSurveyGSMBooster::updateOrCreate([
             'id' => $data->id
         ],[
-            'camera_type_id' => $data->camera_type_id,
-            'quantity_service_use' => $data->quantity_service_use,
-            'record_duration' => $data->record_duration,
-            'camera_storage' => $data->camera_storage,
-            'camera_resolution' => $data->camera_resolution,
-            'special_request' => $data->special_request,
+            'survey_request_id' => $data->survey_request_id,
+            'customer_id' => $data->customer_id,
+            'customer_contact_id' => $data->customer_contact_id,
+            'work_order_id' => $data->work_order_id,
+            'gb_natural_frequency_id' => $data->gb_natural_frequency_id,
+            'natural_signal_rsrp' => $data->natural_signal_rsrp,
+            'natural_signal_rsrq' => $data->natural_signal_rsrq,
+            'gb_repeater_type_id' => $data->gb_repeater_type_id,
+            'anthena_donor_type' => $data->anthena_donor_type,
+            'anthena_service' => $data->anthena_service,
+            'gb_connectivity_data_id' => $data->gb_connectivity_data_id,
+            'survey_date' => $data->survey_date,
+            'site_survey_outdoor_area_id' => $data->site_survey_outdoor_area->id, 
+            'site_survey_indoor_area_id' => $data->site_survey_indoor_area->id, 
+            'site_survey_other_area_id' => $data->site_survey_other_area->id, 
+            'survey_executor_id' => Auth::user()->id,
         ]);
     }
 
     function saveSiteSurveyCCTV(Request $data) : SiteSurveyCCTV {
 
         return $siteSurveyCCTV = SiteSurveyCCTV::updateOrCreate([
-            'id' => $data->site_survey_cctv_id
+            'id' => $data->id
         ],[
-            'camera_type_id' => $data->camera_type_id,
-            'quantity_service_use' => $data->quantity_service_use,
-            'record_duration' => $data->record_duration,
-            'camera_storage' => $data->camera_storage,
-            'camera_resolution' => $data->camera_resolution,
-            'special_request' => $data->special_request,
+            'survey_request_id' => $data->survey_request_id,
+            'customer_id' => $data->customer_id,
+            'customer_contact_id' => $data->customer_contact_id,
+            'work_order_id' => $data->work_order_id,
+            'site_survey_service_type_id' => $data->site_survey_service_type_id,
+            'quantity' => $data->quantity,
+            'local_acceses' => $data->local_access,
+            'cctv_record_duration_id' => $data->cctv_record_duration_id,
+            'cctv_storage_capacity_id' => $data->cctv_storage_capacity_id,
+            'site_survey_interface_id' => $data->site_survey_interface_id,
+            'survey_date' => $data->survey_date,
+            'site_survey_outdoor_area_id' => $data->site_survey_outdoor_area->id, 
+            'site_survey_indoor_area_id' => $data->site_survey_indoor_area->id, 
+            'site_survey_other_area_id' => $data->site_survey_other_area->id, 
+            'survey_executor_id' => Auth::user()->id,
         ]);
     }
 
