@@ -41,10 +41,10 @@ class BoQController extends Controller{
     }
     
     function createDraftBoq(Request $request) {
-        if ($request->query()) {
-            return $this->BoqService->createDraftBoqQuery($request);
-        } elseif ($request->ajax()) {
+        if ($request->ajax()) {
             return $this->BoqService->createDraftBoqAjax($request);
+        } else if ($request->query()) {
+            return $this->BoqService->createDraftBoqQuery($request);
         } else {
             return $this->BoqService->createDraftBoq();
         }
@@ -54,13 +54,6 @@ class BoQController extends Controller{
     function updateDraftBoq(Request $request)  {
         if ($request->query()) {
             return $this->BoqService->updateDraftBoq($request);
-        }
-        return response()->json('Oops, Somethin\' Just Broke :(');
-    }
-
-    function saveItemsBoQ(Request $request) : JsonResponse   {
-        if ($request->ajax()) {
-            return $this->BoqService->saveItemsBoQ($request);
         }
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
@@ -79,9 +72,9 @@ class BoQController extends Controller{
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
-    function storeDataBoq(Request $request) {
+    function saveAndStoreBoq(Request $request) {
         if ($request->ajax()) {
-            return $this->BoqService->storeDataBoq($request);
+            return $this->BoqService->saveAndStoreBoq($request);
         }   
         return response()->json('Oops, Somethin\' Just Broke :('); 
     } 
@@ -93,5 +86,12 @@ class BoQController extends Controller{
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
+    function storeApprovalBoq(Request $request) : JsonResponse {
+        if ($request->ajax()) {
+            return $this->BoqService->storeApprovalBoq($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
     }
+
+}
     

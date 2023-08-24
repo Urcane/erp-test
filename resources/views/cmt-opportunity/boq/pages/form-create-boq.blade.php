@@ -26,8 +26,8 @@
 
 @section('content')
     {{-- FORM BOQ --}}
-    {{-- @dd($dataCompany) --}}
-    {{-- @dd($dataProspect)  --}}
+    {{-- @dd($dataSurvey) --}}
+    {{-- @dd($dataProspect) --}}
     {{-- @dd($dataItems) --}}
 
 
@@ -46,24 +46,40 @@
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
+                                    @csrf
+                                    {{-- divv Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        {{-- baris Rilll --}}
 
+                                        {{-- baris Rilll --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
                                             <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
                                             @csrf
                                             <div class="col-lg-5 col-6 mb-3">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <label class="d-flex align-items-center fs-6 form-label mb-2" required>
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
-                                                <input type="text" class="form-control form-control-solid" disabled
+
+                                                <select class="form-select-solid form-select form-select-solid"
+                                                    data-url="{{ route('com.boq.create-draft-boq') }}"
+                                                    data-control="select2" required name="prospect_id" id="prospect_id">
+                                                    <option value="{{ $dataCompany->id ?? null }}" selected>
+                                                        {{ $dataCompany->prospect_title ?? 'Pilih Prospect' }}
+                                                        {{ $dataCompany->customer->customer_name ?? null }}</option>
+                                                    @foreach ($dataProspect as $prospect)
+                                                        <option value="{{ $prospect->id ?? null }}">
+                                                            {{ $prospect->prospect_title ?? null }}
+                                                            {{ $prospect->customer->customer_name ?? null }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div id="error-prospect"></div>
+
+                                                {{-- <input type="text" class="form-control form-control-solid" disabled
                                                     placeholder="{{ $dataCompany->prospect_title ?? null }} {{ $dataCompany->customer->customer_name ?? null }}">
 
-                                                <input type="hidden" class="form-control form-control-solid" disabled
+                                                <input type="text" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="prospect_id"
-                                                    value="{{ $dataCompany->id ?? null }}">
+                                                    value="{{ $dataCompany->id ?? null }}"> --}}
 
-                                                <div id="error-prospect"></div>
                                             </div>
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
@@ -72,12 +88,15 @@
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" required name="survey_request_id"
-                                                    id="survey_request_id">
+                                                    data-control="select2" name="survey_request_id" id="survey_request_id">
                                                     <option value="" selected disabled>Pilih Survey</option>
-                                                    @foreach ($dataSurvey as $survey)
-                                                        <option value="{{$survey->id}}">{{$survey->customerProspect->prospect_title}}</option>
-                                                    @endforeach
+                                                    @if (isset($dataSurvey))
+                                                        @foreach ($dataSurvey as $survey)
+                                                            <option value="{{ $survey->id ?? null }}">
+                                                                {{ $survey->customerProspect->prospect_title ?? null }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
@@ -126,6 +145,7 @@
                                         </div>
                                     </div>
 
+                                    {{--  divv item --}}
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                         <div class="MultipleItem">
@@ -143,10 +163,11 @@
                                         @endrole
                                     </div>
 
+                                    {{-- divv akhir total amount --}}
                                     <div>
                                         <div class="d-flex justify-content-end mx-20">
                                             <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Amount : <span id="totalsum"></span></span>
+                                                <span class="fw-bold">Total Amount : Rp.<span id="totalsum"></span></span>
                                             </div>
                                         </div>
 
@@ -163,6 +184,7 @@
 
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -173,13 +195,7 @@
     @role('administrator')
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
         @include('cmt-opportunity.boq.add.modal-update-boq')
-
-        {{-- @include('cmt-opportunity.survey.modal.modal-request-survey')
-@include('cmt-opportunity.survey.modal.modal-create-wo-survey')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-internet')
-@include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-cctv') --}}
     @endrole
-
 
     <script>
         function validateAndFormatNumber(input) {
@@ -299,6 +315,7 @@
 
                 // Validate the prospect_id
                 if (!prospect_id) {
+                    event.preventDefault(); 
                     var errorMessageProspect =
                         "<span class='fw-semibold fs-8 text-danger'>Pilih Prospect Terlebih Dahulu.</span>";
                     $('#error-prospect').html(errorMessageProspect);
@@ -355,7 +372,8 @@
                 });
 
                 // Check if there is at least one item in the 'items' array
-                if (items.length === 0) {
+                if (items.length === 0) {                    
+                    event.preventDefault(); 
                     // Show an error message
                     var errorMessageItem =
                         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
@@ -367,7 +385,7 @@
                 console.log(items);
                 // Send the data to the server using AJAX
                 $.ajax({
-                    url: "{{ route('com.boq.save.boq') }}",
+                    url: "{{ route('com.boq.store.boq') }}",
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -397,17 +415,21 @@
                     type: 'GET',
                     data: {
                         prospect_id: prospect_id
-                    }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
+                    },
+                    dataType: 'json', // Mengharapkan respons dalam format JSON
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest' // Set header X-Requested-With
+                    },
                     success: function(response) {
 
-
-
-                        console.log(response);
-                        const survey = response.survey;
+                        // console.log(response);
+                        const survey = response.dataSurvey;
                         const dataCompany = response.dataCompany;
 
+                        console.log(survey);
+
                         if (survey.length >= 1) {
-                            survey.foreach((item) => {
+                            survey.forEach((item) => {
                                 $('#survey_request_id').append(new Option(item
                                     .no_survey, item.id, false, false)).trigger(
                                     'change');
@@ -429,6 +451,7 @@
                             $('#type_name').val(dataCompany.customer.bussines_type
                                     .type_name)
                                 .prop('disabled', true);
+
                         } else {
                             // Set the input values to blank if dataCompany or customer object is empty
                             $('#customer_name').val("").prop('disabled', true);
@@ -437,76 +460,15 @@
                             $('#type_name').val("").prop('disabled', true);
                         }
 
-                        // const dataItems = response.dataItems;
-
-                        // ... your existing code for survey and dataCompany ...
-
-                        // Clear previous items in the .MultipleItem class
-
-                        //                     if (dataItems && dataItems.length > 0) {
-                        //                         // If dataItems is not null and has data, access the first element in the outer collection
-                        //                         const itemableBillOfQuantities = dataItems[0];
-
-                        //                         // Access the 'itemableBillOfQuantities' relationship on the 'ItemableBillOfQuantities' object
-                        //                         const relatedItems = itemableBillOfQuantities.itemableBillOfQuantities;
-
-                        //                         // Iterate through the collection of 'Items' objects within the 'itemableBillOfQuantities' relationship
-                        //                         relatedItems.forEach((relatedItem) => {
-                        //                             const randomString = generateRandomString(4);
-
-                        //                             // Your code to access the properties within each 'relatedItem'
-                        //                             const goodName = relatedItem.inventoryGood.good_name;
-                        //                             const goodMerk = relatedItem.inventoryGood.merk;
-                        //                             const purchasePrice = relatedItem.purchase_price;
-                        //                             const quantity = relatedItem.quantity;
-                        //                             const purchaseDelivery = relatedItem
-                        //                                 .purchase_delivery_charge;
-                        //                             const totalPrice = relatedItem.total_price;
-                        //                             const id = relatedItem.id;
-                        //                             const itemInventoryId = relatedItem.item_inventory_id;
-                        //                             const purchaseReference = relatedItem.purchase_refrence;
-                        //                             const itemDetail = relatedItem.item_detail;
-
-                        //                             // Append the HTML template using the extracted data
-                        //                             $('.MultipleItem').append(`
-                    //   <!-- Display data from itemableBillOfQuantities -->
-                    //   <!-- Display data from relatedItem -->
-                    //   <div class="file-soft-boq-item-${randomString} d-flex justify-content-between mx-20 mb-5 mt-10">
-                    //       <!-- Your existing HTML template -->
-                    //       <!-- Use the extracted data here -->
-                    //       <input type="text" class="form-control form-control-solid" disabled name="content[][good_name]"
-                    //           value="${goodName}" />
-                    //       <input type="text" class="form-control form-control-solid" disabled name="content[][good_merk]"
-                    //           value="${goodMerk}" />
-                    //       <input type="number" class="form-control form-control-solid" disabled name="content[][purchase_price]"
-                    //           value="${purchasePrice}" />
-                    //       <input type="number" class="form-control form-control-solid" disabled name="content[][quantity]"
-                    //           value="${quantity}" />
-                    //       <input type="number" class="form-control form-control-solid" disabled name="content[][purchase_delivery]"
-                    //           value="${purchaseDelivery}" />
-                    //       <input type="number" class="form-control form-control-solid" disabled name="content[][total_price]"
-                    //           value="${totalPrice}" />
-                    //       <input type="hidden" name="content[][id]" disabled value="${id}" />
-                    //       <input type="hidden" name="content[][item_inventory_id]" disabled value="${itemInventoryId}" />
-                    //       <input type="hidden" name="content[][purchase_reference]" disabled value="${purchaseReference}" />
-                    //       <input type="hidden" name="content[][item_detail]" disabled value="${itemDetail}" />
-                    //   </div>
-                    // `);
-                        //         });
-                        //     }
                     },
                     error: function(error) {
                         console.log(error);
                     }
 
-
-
-
-
                 });
             });
 
-            
+
 
 
             // Handler untuk peristiwa "change" pada select item Update
@@ -553,7 +515,7 @@
                     },
                 },
                 submitHandler: function(form) {
-                    event.preventDefault();
+                    // event.preventDefault();
 
                     // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
                     var selectedItemId = $('#good_name_update').val();
@@ -652,7 +614,7 @@
                     },
                 },
                 submitHandler: function(form) {
-                    event.preventDefault();
+                    // event.preventDefault();
 
                     // ngambil inputan nama dan merk
                     var selectedItemId = $('#good_name').val();

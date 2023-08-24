@@ -115,13 +115,8 @@ class BoqService
             ->make(true);
     }
 
-    function saveItemsBoQ(Request $request) : JsonResponse{
-        $saveBoQ = $this->BoQRepository->saveItemsBoQ($request);
-        return $saveBoQ;
-    }
-
-    function storeDataBoq(Request $request) : JsonResponse {
-        return $this->BoQRepository->storeDataBoq($request);
+    function saveAndStoreBoq(Request $request) : JsonResponse {
+        return $this->BoQRepository->saveAndStoreBoq($request);
     }
 
     function createRevisionBoq(Request $request) : JsonResponse {
@@ -132,19 +127,13 @@ class BoqService
         $dataProspect =  $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
         $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
         $dataItem = $this->BoQRepository->getListItem();
-        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->first();
-        // return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
-        return response()->json([
-            'dataProspect' => $dataProspect,
-            'dataCompany' => $dataCompany,
-            'dataItem' => $dataItem,
-            'dataSurvey' => $dataSurvey,
-        ]);
+        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
+        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
     }
 
     function createDraftBoqAjax(Request $request){
         $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
-        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->first();
+        $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
         return response()->json([
             'dataCompany' => $dataCompany,
             'dataSurvey' => $dataSurvey,
@@ -154,11 +143,11 @@ class BoqService
     function createDraftBoq(){
         $dataProspect = $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
         $dataItem = $this->BoQRepository->getListItem();
-        // return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem'));
-        return response()->json([
-            'dataProspect' => $dataProspect,
-            'dataItem' => $dataItem,
-        ]);
+        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem'));
+        // return response()->json([
+        //     'dataProspect' => $dataProspect,
+        //     'dataItem' => $dataItem,
+        // ]);
     }
 
     function updateDraftBoq(Request $request){
@@ -166,8 +155,11 @@ class BoqService
         if ($request->query('is_draft',1)) {
             return view('cmt-opportunity.boq.pages.form-update-boq', compact('updateDraftBoqData'));
         }
-        return view('cmt-opportunity.boq.pages.commercial-boq', compact('updateDraftBoqData'));
+        return view('cmt-opportunity.boq.pages.form-commercial-boq', compact('updateDraftBoqData'));
+    }
+
+    function storeApprovalBoq(Request $request) : JsonResponse {
+        return $this->BoQRepository->storeApprovalBoq($request);
     }
 
 }
-
