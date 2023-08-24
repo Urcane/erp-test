@@ -165,13 +165,15 @@ class BoQRepository
     }
 
     function storeApprovalBoq(Request $request) : JsonResponse {
-        $boqId = $request->query('boq_id');
+        // dd($request->input('boq.boq_id'));
+        $boqId = $request->input('boq_id');
+        $remark = $request->input('remark');
         $boqData = $this->model->where('id', $boqId)->first();
-    
+        
         if ($boqData) {
-            $approval_manager = $request->input('approval_manager');
-            $approval_director = $request->input('approval_director');
-            $approval_finman = $request->input('approval_finman');
+            $approval_manager = $request->input('is_approval_manager');
+            $approval_director = $request->input('is_approval_director');
+            $approval_finman = $request->input('is_approval_finman');
         
             if ($approval_manager !== null) {
                 $boqData->approval_manager = $approval_manager;
@@ -201,9 +203,12 @@ class BoQRepository
                         $boqData->is_done = 0;
                     }
             }
+            if (isset($remark)) { 
+                $boqData->remark = $remark;
+            }
             
             $boqData->save();
-            return response()->json(['message' => 'BoQ berhasil disimpan.'], 200);
+            return response()->json(['message' => 'Approval & Reject berhasil disimpan.'], 200);
         }
         return response()->json(['error' => 'BoQ tidak ditemukan.'], 404);
     }

@@ -566,7 +566,7 @@
 
                     // Send the data to the server using AJAX
                     $.ajax({
-                        url: "{{ route('com.boq.store.boq') }}",
+                        url: "{{ route('com.boq.store.approval.boq') }}",
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',

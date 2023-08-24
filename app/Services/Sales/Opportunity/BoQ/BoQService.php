@@ -40,6 +40,14 @@ class BoqService
                                 <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
                             </ul>';
             })
+            ->addColumn('action_approval', function ($query) {
+                return 
+                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="' . url("cmt-boq/on-review-boq?boq_id=". $query->id) .'" class="dropdown-item py-2">
+                                <i class="fa-solid fa-list-check me-3"></i>Approval BoQ</a></li>
+                            </ul>';
+            })
             ->addColumn('action_done', function ($query) {
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
@@ -111,7 +119,7 @@ class BoqService
                 ';
             })
             ->addIndexColumn()
-            ->rawColumns(['DT_RowChecklist', 'action', 'action_done', 'action_cancel', 'next_action_pretified', 'progress_pretified'])
+            ->rawColumns(['DT_RowChecklist', 'action','action_approval', 'action_done', 'action_cancel', 'next_action_pretified', 'progress_pretified'])
             ->make(true);
     }
 
@@ -156,6 +164,11 @@ class BoqService
             return view('cmt-opportunity.boq.pages.form-update-boq', compact('updateDraftBoqData'));
         }
         return view('cmt-opportunity.boq.pages.form-commercial-boq', compact('updateDraftBoqData'));
+    }
+
+    function onReviewBoq(Request $request){
+        $updateDraftBoqData = $this->BoQRepository->onReviewBoq($request); 
+            return view('cmt-opportunity.boq.pages.on-review-boq', compact('updateDraftBoqData')); 
     }
 
     function storeApprovalBoq(Request $request) : JsonResponse {

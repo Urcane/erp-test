@@ -28,7 +28,7 @@
     {{-- BOQ  COMMERCIAL --}}
     {{-- @dd($dataSurvey) --}}
     {{-- @dd($dataProspect) --}}
-    {{-- @dd($updateDraftBoqData['dataSalesSelected']) --}}
+    {{-- @dd($updateDraftBoqData['dataCompanyItem'][0]) --}}
 
 
     <div class="row justify-content-center">
@@ -36,57 +36,37 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Review Bill of Quantity</span>
+                            </h3>
 
-                            @csrf
-                            <div class="mb-6  d-flex justify-content-between flex-wrap">
-                                <div class="mx-20 col-lg-6 gap-3 d-flex align-items-center">
-                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Review Bill of
-                                        Quantity</span>
-                                </div>
-
-                                <div class="mx-20 col-lg-6 gap-3 d-flex align-items-center">
-                                    <div class="mx-20 form-check form-check-custom form-check-success form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="1" id="approve_manager"
-                                            name="approve_manager" />
-                                        <label class="form-check-label" for="approve_manager">Approve</label>
-                                    </div>
-                                    <div class="mx-20 form-check form-check-custom form-check-danger form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="1" id="reject_manager"
-                                            name="reject_manager" />
-                                        <label class="form-check-label" for="reject_manager">Reject</label>
-                                    </div>
-                                </div>
-
-                                <div class="mx-20 col-lg-6 gap-3 d-flex align-items-center">
-                                    <div class="mx-20 form-check form-check-custom form-check-success form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="1" id="approve_finnman"
-                                            name="approve_finnman" />
-                                        <label class="form-check-label" for="approve_finnman">Approve</label>
-                                    </div>
-                                    <div class="mx-20 form-check form-check-custom form-check-danger form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="1" id="reject_finnman"
-                                            name="reject_finnman" />
-                                        <label class="form-check-label" for="reject_finnman">Reject</label>
-                                    </div>
-                                </div>
-
-                                <div class="mx-20 col-lg-6 gap-3 d-flex align-items-center">
-                                    <div class="mx-20 form-check form-check-custom form-check-success form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="1" id="approve_director"
-                                            name="approve_director" />
-                                        <label class="form-check-label" for="approve_director">Approve</label>
-                                    </div>
-                                    <div class="mx-20 form-check form-check-custom form-check-danger form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="1" id="reject_director"
-                                            name="reject_director" />
-                                        <label class="form-check-label" for="reject_director">Reject</label>
-                                    </div>
-                                </div>
-
-
+                            <div class="card-toolbar p-3">
+                                <a href="#kt_modal_review_director_boq_commercial"
+                                    data-boq-id="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}"
+                                    data-remark="{{ $updateDraftBoqData['dataCompanyItem'][0]->remark }}"
+                                    class="btn btn-md btn-info w-lg-150px btn_review_director_boq_commercial"
+                                    data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Director</a>
                             </div>
 
+                            <div class="card-toolbar p-3">
+                                <a href="#kt_modal_review_manager_boq_commercial"
+                                    data-boq-id="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}"
+                                    data-remark="{{ $updateDraftBoqData['dataCompanyItem'][0]->remark }}"
+                                    class="btn btn-md btn-info w-lg-150px btn_review_manager_boq_commercial"
+                                    data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager</a>
+                            </div>
+
+                            <div class="card-toolbar p-3">
+                                <a href="#kt_modal_review_finman_boq_commercial"
+                                    data-boq-id="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}"                                    
+                                    data-remark="{{ $updateDraftBoqData['dataCompanyItem'][0]->remark }}"
+                                    class="btn btn-md btn-info w-lg-150px btn_review_finman_boq_commercial"
+                                    data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Finman</a>
+                            </div>
+
+                        </div>
+                        <div class="card-body">
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
@@ -104,8 +84,8 @@
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->prospect_title }} - {{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                                 <input type="hidden" class="form-control form-control-solid" disabled
-                                                    name="prospect_id" id="prospect_id"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->prospect_id }}">
+                                                    name="prospect_id" id="boq_id"
+                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}">
                                                 <div id="error-prospect"></div>
                                             </div>
 
@@ -136,9 +116,8 @@
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class=" form-label">Nama Kontak Customer</label>
-                                                <input type="text" class="form-control form-control-solid"
-                                                    placeholder="" disabled name="customer_contact_name"
-                                                    id="customer_contact_name"
+                                                <input type="text" class="form-control form-control-solid" placeholder=""
+                                                    disabled name="customer_contact_name" id="customer_contact_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
@@ -157,8 +136,8 @@
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label">Jenis Project</label>
-                                                <input type="text" class="form-control form-control-solid"
-                                                    placeholder="" disabled name="type_name" id="type_name"
+                                                <input type="text" class="form-control form-control-solid" placeholder=""
+                                                    disabled name="type_name" id="type_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->bussinesType->type_name }}">
                                             </div>
                                         </div>
@@ -369,7 +348,7 @@
                                     </div>
 
                                     {{-- layer total dan submit --}}
-                                    <div>
+                                    {{-- <div>
                                         <div class="d-flex justify-content-end mx-20">
                                             <div class="w-20 me-10">
                                                 <span class="fw-bold">Total Amount : Rp<span id="totalsum"></span></span>
@@ -383,7 +362,7 @@
                                                 <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Submit</a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                 </div>
                             </div>
@@ -394,8 +373,9 @@
             </div>
         </div>
 
-        @role('administrator')
-        @endrole
+        @include('cmt-opportunity.boq.add.modal-review-director-boq-commercial')
+        @include('cmt-opportunity.boq.add.modal-review-manager-boq-commercial')
+        @include('cmt-opportunity.boq.add.modal-review-finman-boq-commercial')
 
         <script>
             // Mengambil semua elemen checkbox dengan class "form-check-input"
@@ -485,54 +465,220 @@
             }
 
             $(document).ready(function() {
-                $('#submit-all-items').on('click', function(event) {
-                    event.preventDefault();
-
-                    var boq_id = $('#prospect_id').val();
-
-                    var is_approve_manager = $('#approve_manager').is(':checked');
-                    var is_approve_finnman = $('#approve_finnman').is(':checked');
-                    var is_approve_director = $('#approve_director').is(':checked');
-
-                    // Jika checkbox "Reject Manager" dicentang, set is_approve_manager menjadi false
-                    if ($('#reject_manager').is(':checked')) {
-                        is_approve_manager = false;
-                    }
-
-                    // Jika checkbox "Reject Finnman" dicentang, set is_approve_finnman menjadi false
-                    if ($('#reject_finnman').is(':checked')) {
-                        is_approve_finnman = false;
-                    }
-
-                    // Jika checkbox "Reject Director" dicentang, set is_approve_director menjadi false
-                    if ($('#reject_director').is(':checked')) {
-                        is_approve_director = false;
-                    }
-
-                    var boq = {
-                        boq_id: boq_id,
-                        is_approve_manager: is_approve_manager ? 1 : 0,
-                        is_approve_finnman: is_approve_finnman ? 1 : 0,
-                        is_approve_director: is_approve_director ? 1 : 0,
-                    };
-
-                    console.log(boq);
-
-                    // $.ajax({
-                    //     url: "{{ route('com.boq.store.boq') }}",
-                    //     method: 'POST',
-                    //     data: {
-                    //         _token: '{{ csrf_token() }}',
-                    //         boq: boq,
-                    //     },
-                    //     success: function(response) {
-                    //         console.log(response);
-                    //     },
-                    //     error: function(error) {
-                    //         console.error('Error submitting all item data: ', error);
-                    //     }
-                    // });
+                $('.btn_review_director_boq_commercial').on('click', function() {
+                    var boq_id = $(this).data('boq-id'); 
+                    $('#itemableBillOfQuantity_id').val(boq_id); 
+                    var remark = $(this).data('remark');
+                    $('#remark_director').val(remark);
+                    // console.log(boq_id, remark); 
                 });
+
+                $('#kt_modal_review_director_boq_commercial_approve').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_director"]'); 
+                    isApprovalInput.val('1');
+                    
+                    var is_approval = $('input[name="is_approval_director"]');
+                    var is_approval_director = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id').value;
+                    var remark = document.getElementById('remark_director').value;
+                    // console.log(boq_id, is_approval_director, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            is_approval_director: is_approval_director,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    // Tutup modal
+                    $('#kt_modal_review_director_boq_commercial').modal('hide'); 
+                });
+
+                $('#kt_modal_review_director_boq_commercial_decline').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_director"]'); 
+                    isApprovalInput.val('0');
+                    
+                    var is_approval = $('input[name="is_approval_director"]');
+                    var is_approval_director = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id').value;
+                    var remark = document.getElementById('remark_director').value;
+                    // console.log(boq_id, is_approval_director, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: { 
+                            _token: '{{ csrf_token() }}',
+                            is_approval_director: is_approval_director,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    
+                    // Tutup modal
+                    $('#kt_modal_review_director_boq_commercial').modal('hide'); 
+                });
+ 
+                $('.btn_review_finman_boq_commercial').on('click', function() {
+                    var boq_id = $(this).data('boq-id'); 
+                    $('#itemableBillOfQuantity_id_finman').val(boq_id); 
+                    var remark = $(this).data('remark');
+                    $('#remark_finman').val(remark);
+                    console.log(boq_id, remark); 
+                });
+
+                $('#kt_modal_review_finman_boq_commercial_approve').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_finman"]'); 
+                    isApprovalInput.val('1');
+                    
+                    var is_approval = $('input[name="is_approval_finman"]');
+                    var is_approval_finman = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_finman').value;
+                    var remark = document.getElementById('remark_finman').value;
+                    console.log(boq_id, is_approval_finman, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            is_approval_finman: is_approval_finman,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    // Tutup modal
+                    $('#kt_modal_review_finman_boq_commercial').modal('hide'); 
+                });
+
+                $('#kt_modal_review_finman_boq_commercial_decline').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_finman"]'); 
+                    isApprovalInput.val('0');
+                    
+                    var is_approval = $('input[name="is_approval_finman"]');
+                    var is_approval_finman = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_finman').value;
+                    var remark = document.getElementById('remark_finman').value;
+                    console.log(boq_id, is_approval_finman, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: { 
+                            _token: '{{ csrf_token() }}',
+                            is_approval_finman: is_approval_finman,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    
+                    // Tutup modal
+                    $('#kt_modal_review_finman_boq_commercial').modal('hide'); 
+                });
+
+                $('.btn_review_manager_boq_commercial').on('click', function() {
+                    var boq_id = $(this).data('boq-id'); 
+                    $('#itemableBillOfQuantity_id_manager').val(boq_id); 
+                    var remark = $(this).data('remark');
+                    $('#remark_manager').val(remark);
+                    console.log(boq_id, remark); 
+                });
+
+                $('#kt_modal_review_manager_boq_commercial_approve').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager"]'); 
+                    isApprovalInput.val('1');
+                    
+                    var is_approval = $('input[name="is_approval_manager"]');
+                    var is_approval_manager = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager').value;
+                    var remark = document.getElementById('remark_manager').value;
+                    console.log(boq_id, is_approval_manager, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            is_approval_manager: is_approval_manager,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    // Tutup modal
+                    $('#kt_modal_review_manager_boq_commercial').modal('hide'); 
+                });
+
+                $('#kt_modal_review_manager_boq_commercial_decline').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager"]'); 
+                    isApprovalInput.val('0');
+                    
+                    var is_approval = $('input[name="is_approval_manager"]');
+                    var is_approval_manager = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager').value;
+                    var remark = document.getElementById('remark_manager').value;
+                    console.log(boq_id, is_approval_manager, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: { 
+                            _token: '{{ csrf_token() }}',
+                            is_approval_manager: is_approval_manager,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    
+                    // Tutup modal
+                    $('#kt_modal_review_manager_boq_commercial').modal('hide'); 
+                });
+
+
 
 
                 function updateTotalSum() {
