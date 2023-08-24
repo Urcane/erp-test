@@ -18,6 +18,8 @@ use App\Exceptions\NotFoundError;
 use App\Models\Attendance\AttendanceChangeLog;
 use App\Models\Attendance\UserAttendanceRequest;
 use App\Models\Attendance\UserAttendance;
+use App\Models\Employee\UserEmployment;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -34,33 +36,65 @@ class AttendanceController extends Controller
     {
         $userAttendance = UserAttendance::where('user_id', $userId)->where('date', $date)->first();
 
-        $userAttendance->update([
-            "check_in" => $checkIn ?? $userAttendance->check_in,
-            "check_out" => $checkOut ?? $userAttendance->check_out
-        ]);
+        if (!$userAttendance) {
+            $workingShift = UserEmployment::where('user_id', $userId)->first()->workingScheduleShift->workingShift;
 
-        AttendanceChangeLog::create([
-            "user_id" => Auth::user()->id,
-            "attendance_id" => $userAttendance->id,
-            "date" => $userAttendance->date,
-            "action" => "SYSTEM EDIT",
-            "old_check_in" => $userAttendance->check_in,
-            "old_check_out" => $userAttendance->check_out,
-            "new_check_in" => $checkIn ?? $userAttendance->check_in,
-            "new_check_out" => $checkOut ?? $userAttendance->check_out,
-            "reason" => "[CHANGED FROM USER REQUEST --SYSTEM]"
-        ]);
+            $attendance = UserAttendance::create([
+                'user_id' => $userId,
+                'date' => $date,
+                'attendance_code' => $this->constants->attendance_code[0],
+                'shift_name' => $workingShift->name,
+                'working_start' => $workingShift->working_start,
+                'working_end' => $workingShift->working_end,
+                'overtime_before' => $workingShift->overtime_before,
+                'overtime_after' => $workingShift->overtime_after,
+                'late_check_in' => $workingShift->late_check_in,
+                'late_check_out' => $workingShift->late_check_out,
+                'check_in' => $checkIn,
+                'check_out' => $checkOut,
+            ]);
+
+            AttendanceChangeLog::create([
+                "user_id" => Auth::user()->id,
+                "attendance_id" => $attendance->id,
+                "date" => $date,
+                "action" => "SYSTEM EDIT",
+                "old_check_in" => null,
+                "old_check_out" => null,
+                "new_check_in" => $checkIn ?? null,
+                "new_check_out" => $checkOut ?? null,
+                "reason" => "[CHANGED FROM USER REQUEST --SYSTEM]"
+            ]);
+        } else {
+            $userAttendance->update([
+                "check_in" => $checkIn ?? $userAttendance->check_in,
+                "check_out" => $checkOut ?? $userAttendance->check_out
+            ]);
+
+            AttendanceChangeLog::create([
+                "user_id" => Auth::user()->id,
+                "attendance_id" => $userAttendance->id,
+                "date" => $userAttendance->date,
+                "action" => "SYSTEM EDIT",
+                "old_check_in" => $userAttendance->check_in,
+                "old_check_out" => $userAttendance->check_out,
+                "new_check_in" => $checkIn ?? $userAttendance->check_in,
+                "new_check_out" => $checkOut ?? $userAttendance->check_out,
+                "reason" => "[CHANGED FROM USER REQUEST --SYSTEM]"
+            ]);
+        }
     }
 
     public function updateRequestStatus(Request $request)
     {
         try {
             $request->validate([
-                "attendance_request_id" => "required",
+                "id" => "required",
                 "status" => ["required", Rule::in($this->constants->approve_status)],
+                "comment" => "nullable"
             ]);
 
-            $attendanceRequest = UserAttendanceRequest::whereId($request->attendance_request_id)->first();
+            $attendanceRequest = UserAttendanceRequest::whereId($request->id)->first();
 
             if (!$attendanceRequest) {
                 throw new NotFoundError("Attendance Request tidak ditemukan");
@@ -78,6 +112,7 @@ class AttendanceController extends Controller
 
                 $attendanceRequest->update([
                     "status" => $request->status,
+                    "comment" => $request->comment
                 ]);
 
                 return response()->json([
@@ -109,6 +144,7 @@ class AttendanceController extends Controller
 
             $attendanceRequest->update([
                 "status" => $request->status,
+                "comment" => $request->comment
             ]);
 
             return response()->json([
@@ -122,19 +158,99 @@ class AttendanceController extends Controller
         }
     }
 
+    public function getSummaries(Request $request)
+    {
+        try {
+            $query = UserAttendanceRequest::where('approval_line', Auth::user()->id)
+                ->has('user.userEmployment')
+                ->with('user.userEmployment');
+
+            $search = $request->filters['search'];
+            if (!empty($search)) {
+                $query = $query->where(function ($query) use ($search) {
+                    $query->whereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'LIKE', '%' . $search . '%');
+                    })->orWhereHas('user.userEmployment', function ($query) use ($search) {
+                        $query->where('employee_id', 'LIKE', '%' . $search . '%');
+                    });
+                });
+            }
+
+            $filterDivisi = $request->filters['filterDivisi'];
+            if (!empty($filterDivisi) && $filterDivisi !== '*') {
+                $query = $query->whereHas('user', function ($query) use ($filterDivisi) {
+                    $query->where('division_id', $filterDivisi);
+                });
+            }
+
+            $filterDepartment = $request->filters['filterDepartment'];
+            if (!empty($filterDepartment) && $filterDepartment !== '*') {
+                $query = $query->whereHas('user', function ($query) use ($filterDepartment) {
+                    $query->where('department_id', $filterDepartment);
+                });
+            }
+
+            $range_date = $request->filters['filterDate'] ? collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
+                return Carbon::parse($item)->toDateString();
+            })->toArray() : [Carbon::now()->format('Y-m-d'), Carbon::now()->format('Y-m-d')];
+
+            $allSummaries = $query->select('status', DB::raw('count(*) as total'))
+                ->groupBy('status')
+                ->get();
+
+            $viewDate = $query->whereBetween('date', $range_date)
+                ->select('status', DB::raw('count(*) as total'))
+                ->groupBy('status')
+                ->get();
+
+            function formatter($collection) {
+                $statuses = ['waiting' => 0, 'approved' => 0, 'rejected' => 0];
+
+                foreach ($collection as $summary) {
+                    $statuses[strtolower($summary->status)] = $summary->total;
+                }
+
+                return $statuses;
+            }
+
+            $allSummaries = formatter($allSummaries);
+            $viewDate = formatter($viewDate);
+            $viewDate["rangeDate"] = $range_date;
+
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "allSummaries" => $allSummaries,
+                    "viewDate" => $viewDate
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function getTable(Request $request)
     {
         if (request()->ajax()) {
-            $userId = Auth::user()->id;
-
-            $query = UserAttendanceRequest::where(function ($query) use ($userId) {
-                    $query->where('approval_line', $userId)
-                        ->orWhere(function ($query) use ($userId) {
-                            $query->whereId($userId)
-                                    ->whereNull('approval_line');
-                        });
-                })
+            $query = UserAttendanceRequest::where('approval_line', Auth::user()->id)
+                ->has('user.userEmployment')
                 ->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
+
+            switch($request->filters['filterStatus']) {
+                case $this->constants->approve_status[0]:
+                    $query = $query->where('status', $this->constants->approve_status[0]);
+                    break;
+
+                case $this->constants->approve_status[1]:
+                    $query = $query->where('status', $this->constants->approve_status[1]);
+                    break;
+
+                case $this->constants->approve_status[2]:
+                    $query = $query->where('status', $this->constants->approve_status[2]);
+                    break;
+            };
 
             if ($request->filters['filterDate']) {
                 $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
@@ -144,6 +260,31 @@ class AttendanceController extends Controller
                 $query = $query->whereBetween('date', $range_date)->orderBy('date', 'desc');
             } else {
                 $query = $query->orderBy('date', 'desc');
+            }
+
+            $filterDivisi = $request->filters['filterDivisi'];
+            if (!empty($filterDivisi) && $filterDivisi !== '*') {
+                $query = $query->whereHas('user', function ($query) use ($filterDivisi) {
+                    $query->where('division_id', $filterDivisi);
+                });
+            }
+
+            $filterDepartment = $request->filters['filterDepartment'];
+            if (!empty($filterDepartment) && $filterDepartment !== '*') {
+                $query = $query->whereHas('user', function ($query) use ($filterDepartment) {
+                    $query->where('department_id', $filterDepartment);
+                });
+            }
+
+            $search = $request->filters['search'];
+            if (!empty($search)) {
+                $query = $query->where(function ($query) use ($search) {
+                    $query->whereHas('user', function ($query) use ($search) {
+                        $query->where('name', 'LIKE', '%' . $search . '%');
+                    })->orWhereHas('user.userEmployment', function ($query) use ($search) {
+                        $query->where('employee_id', 'LIKE', '%' . $search . '%');
+                    });
+                });
             }
 
             return DataTables::of($query)
@@ -171,8 +312,30 @@ class AttendanceController extends Controller
                 ->addColumn('job_position', function ($query) {
                     return $query->user->division->divisi_name;
                 })
+                ->addColumn('status', function ($query) {
+                    $statusEnum = $this->constants->approve_status;
+                    $status = $query->status;
+
+                    return view('hc.cmt-request.components.status', compact(['statusEnum', 'status']));
+                })
                 ->addColumn('action', function ($query) {
-                    return view('hc.cmt-request.attendance.menu', compact([]));
+                    $params = "#attendances_modal";
+                    $shift = "-";
+                    $workHour = "-";
+
+                    $userAttendance = UserAttendance::where('user_id', $query->user->id)
+                        ->whereDate('date', $query->date)->first();
+
+                    if (!$userAttendance) {
+                        $workingShift = $query->user->userEmployment->workingScheduleShift->workingShift;
+                        $shift = $workingShift->name;
+                        $workHour = "$workingShift->working_start - $workingShift->working_end";
+                    } else {
+                        $shift = $userAttendance->shift_name;
+                        $workHour = "$userAttendance->working_start - $userAttendance->working_end";
+                    }
+
+                    return view('hc.cmt-request.attendance.menu', compact(['params', 'query', 'shift', 'workHour']));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])

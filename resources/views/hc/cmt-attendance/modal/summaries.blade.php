@@ -6,17 +6,17 @@
                     <i class="fas fa-times"></i>
                 </div>
             </div>
-            <div class="modal-body mx-5 mb-7">
-                    <div class="scroll-y pe-10" data-kt-scroll-max-height="auto" data-kt-scroll-offset="300px">
-                        <div class="row">
-                            <div class="col-lg-12 text-center mb-9">
-                                <span class="fs-1 fw-bolder text-dark d-block mb-1" id="summaries_modal_title"></span>
-                                <span class="fs-7 fw-semibold text-gray-500" id="summaries_modal_subtitle"></span>
-                            </div>
-                        </div>
+            <div class="modal-body mx-2 mb-7">
+                <div class="row">
+                    <div class="col-lg-12 text-center mb-9">
+                        <span class="fs-1 fw-bolder text-dark d-block mb-1" id="summaries_modal_title"></span>
+                        <span class="fs-7 fw-semibold text-gray-500" id="summaries_modal_subtitle"></span>
                     </div>
-
-                    <div class="row">
+                </div>
+                <div class="scroll-y me-n6 pe-6" data-kt-scroll="true"
+                    data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
+                    data-kt-scroll-offset="300px">
+                    <div class="scroll-y row" data-kt-scroll-max-height="auto" data-kt-scroll-offset="300px">
                         <div class="col-lg-12">
                             <table class="table align-top border table-rounded gy-5" id="kt_table_summaries">
                                 <thead class="">
@@ -32,11 +32,11 @@
                             </table>
                         </div>
                     </div>
-
-                    <div class="text-center mt-9">
-                        <button type="reset" id="summaries_modal_cancel"
-                            class="btn btn-sm btn-info me-3 w-lg-200px" data-bs-dismiss="modal">OK</button>
-                    </div>
+                </div>
+                <div class="text-center mt-9">
+                    <button type="reset" id="summaries_modal_cancel" class="btn btn-sm btn-info me-3 w-lg-200px"
+                        data-bs-dismiss="modal">OK</button>
+                </div>
             </div>
         </div>
     </div>

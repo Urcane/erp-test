@@ -79,9 +79,10 @@ class CreateAllAttendance extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->foreignId("approval_line")->nullable()->constrained("users");
-            $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
+            $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0])->index();
             $table->date("date");
             $table->text("notes")->nullable();
+            $table->text("comment")->nullable();
             $table->timestamp("check_in")->nullable();
             $table->timestamp("check_out")->nullable();
             $table->softDeletes()->index();

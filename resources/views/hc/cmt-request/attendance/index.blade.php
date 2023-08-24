@@ -9,15 +9,15 @@
         <p class="fw-bold fs-6 mb-2" id="view-date-attendance">View Date : -</p>
         <div class="ms-1 row">
             <div class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="on-time">
-                <div class="text-info fw-bolder fs-4 mb-3" id="on-time">-</div>
+                <div class="text-info fw-bolder fs-4 mb-3" id="view-need-att">-</div>
                 <div class="fw-semibold fs-7 text-gray-600">Need Approval</div>
             </div>
             <div class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="late-clock-in">
-                <div class="text-info fw-bolder fs-4 mb-3" id="late-clock-in">-</div>
+                <div class="text-info fw-bolder fs-4 mb-3" id="view-approved-att">-</div>
                 <div class="fw-semibold fs-7 text-gray-600">Approved</div>
             </div>
             <div class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="early-clock-out">
-                <div class="text-info fw-bolder fs-4 mb-3" id="early-clock-out">-</div>
+                <div class="text-info fw-bolder fs-4 mb-3" id="view-reject-att">-</div>
                 <div class="fw-semibold fs-7 text-gray-600">Rejected</div>
             </div>
         </div>
@@ -26,15 +26,15 @@
         <p class="fw-bold fs-6 mb-2">All Time</p>
         <div class="ms-1 row">
             <div class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="on-time">
-                <div class="text-info fw-bolder fs-4 mb-3" id="on-time">-</div>
+                <div class="text-info fw-bolder fs-4 mb-3" id="all-need-att">-</div>
                 <div class="fw-semibold fs-7 text-gray-600">Need Approval</div>
             </div>
             <div class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="late-clock-in">
-                <div class="text-info fw-bolder fs-4 mb-3" id="late-clock-in">-</div>
+                <div class="text-info fw-bolder fs-4 mb-3" id="all-approved-att">-</div>
                 <div class="fw-semibold fs-7 text-gray-600">Approved</div>
             </div>
             <div class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="early-clock-out">
-                <div class="text-info fw-bolder fs-4 mb-3" id="early-clock-out">-</div>
+                <div class="text-info fw-bolder fs-4 mb-3" id="all-reject-att">-</div>
                 <div class="fw-semibold fs-7 text-gray-600">Rejected</div>
             </div>
         </div>
@@ -123,8 +123,8 @@
                     <th class="w-150px">Organization</th>
                     <th class="w-150px">Job Level</th>
                     <th class="w-150px">Job Position</th>
-                    <th class="w-150px">Status</th>
-                    <th class="w-100px">#</th>
+                    <th class="w-50px">Status</th>
+                    <th class="w-150px">#</th>
                 </tr>
             </thead>
             <tbody class="fs-7">

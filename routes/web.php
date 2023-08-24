@@ -6,14 +6,15 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\HC\Attendance\AttendanceController;
-use App\Http\Controllers\HC\Request as HCRequest;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\Profile\PersonalController;
 use App\Http\Controllers\Profile\FileController;
-use App\Http\Controllers\Profile\TimeManagementController;
-use App\Http\Controllers\HC\Settings;
+
 use App\Http\Controllers\Request;
+
+use App\Http\Controllers\HC\Attendance;
+use App\Http\Controllers\HC\Settings;
+use App\Http\Controllers\HC\Request as HCRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(AttendanceController::class)->group(function () {
+    Route::controller(Attendance\AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
             Route::get('/list', 'index')->name('hc.att.index');
             Route::get('/list/{id}', 'show')->name('hc.att.detail');
@@ -253,6 +254,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('attendance')->group(function () {
             Route::controller(HCRequest\AttendanceController::class)->group(function () {
+                Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.att.summaries');
                 Route::put('/update/status', 'updateRequestStatus')->name('hc.request.att.update');
 
                 Route::get('/get-data/table', 'getTable')->name('hc.request.att.get-table');
