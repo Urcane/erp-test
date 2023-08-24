@@ -357,7 +357,7 @@
             elementName: "#kt_table_opportunities",
             ajaxLink: "{{ route('com.prospect.get-table-prospect-only-done') }}",
             filters: {
-                calledFrom: 'boq'
+                calledFrom: 'BOQ'
             },
             columnData: [{
                     data: 'DT_RowChecklist',

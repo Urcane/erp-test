@@ -299,7 +299,7 @@
             elementName: "#kt_table_opportunities",
             ajaxLink: "{{route('com.prospect.get-table-prospect-only-done')}}",
             filters: {
-                calledFrom: 'survey'
+                calledFrom: 'SURVEY'
             },
             columnData: [
                 { data: 'DT_RowChecklist', orderable: false, searchable: false},
