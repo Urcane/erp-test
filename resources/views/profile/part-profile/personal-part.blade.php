@@ -235,6 +235,9 @@
                 var formData = new FormData(form);
                 $('#kt_personal_data_submit').attr('disabled', 'disabled');
                 $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     data: formData,
                     processData: false,
                     contentType: false,

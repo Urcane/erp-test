@@ -32,6 +32,7 @@ class AttendanceController extends Controller
                 "check_in" => "nullable|date_format:H:i|required_without_all:check_out",
                 "check_out" => "nullable|date_format:H:i|required_without_all:check_in",
             ]);
+            // $test;
 
             UserAttendanceRequest::create([
                 "user_id" => Auth::user()->id,
