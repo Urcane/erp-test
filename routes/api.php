@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\HC\AttendanceController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\HC\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 
+    Route::controller(EmployeeController::class)->group(function () {
+        Route::prefix('cmt-employee')->group(function () {
+            Route::get("/all", "getAllEmployee");
+        });
+    });
     Route::controller(AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
             Route::get('/history', 'getAttendanceHistory');

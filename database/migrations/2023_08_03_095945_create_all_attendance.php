@@ -34,8 +34,18 @@ class CreateAllAttendance extends Migration
             $table->id();
             $table->string("name", 60);
             $table->string("code", 8);
+            $table->date("effective_date");
+            $table->date("expired_date")->nullable();
             $table->tinyInteger("leave_quota_reduction")->default(0);
             $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('user_leave_request_categories', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("user_id")->constrained("users");
+            $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
+            $table->softDeletes();
             $table->timestamps();
         });
 

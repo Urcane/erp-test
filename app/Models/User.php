@@ -157,4 +157,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attendance\UserShiftRequest::class);
     }
+
+    public function leaveRequestCategory(): BelongsToMany
+    {
+        return $this->belongsToMany(Attendance\LeaveRequestCategory::class, 'user_leave_request_categories');
+    }
 }
