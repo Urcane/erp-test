@@ -1,4 +1,62 @@
 <script>
+    const formatDateTime = (dateTime) => {
+        return dateTime === "-" ? "-" : dateTime.replace(" ", " at ");
+    }
+
+    const onAttendanceModalOpen = ({
+        id,
+        name = "-",
+        nip = "-",
+        branch = "-",
+        org = "-",
+        position = "-",
+        level = "-",
+        shift = "-",
+        work = "-",
+        created = "-",
+        checkin = "-",
+        checkout = "-",
+        notes = "-",
+        status
+    }) => {
+        const createdFormated = formatDateTime(created);
+        const checkinFormated = formatDateTime(checkin);
+        const checkoutFormated = formatDateTime(checkout);
+
+        switch (status) {
+            case approveStatusEnum[0]:
+                $('#attendance_approved_button').hide();
+                $('#attendance_rejected_button').hide();
+                $('#attendance_waiting_button').show();
+                break;
+            case approveStatusEnum[1]:
+                $('#attendance_approved_button').show();
+                $('#attendance_rejected_button').hide();
+                $('#attendance_waiting_button').hide();
+                break;
+            case approveStatusEnum[2]:
+                $('#attendance_approved_button').hide();
+                $('#attendance_rejected_button').show();
+                $('#attendance_waiting_button').hide();
+                break;
+        }
+
+        $('#att-name-modal').text(name);
+        $('#att-nip-modal').text(nip);
+        $('#att-branch-modal').text(branch);
+        $('#att-org-modal').text(org);
+        $('#att-position-modal').text(position);
+        $('#att-level-modal').text(level);
+        $('#att-shift-modal').text(shift);
+        $('#att-work-modal').text(work);
+        $('#att-created-modal').text(createdFormated);
+        $('#att-checkin-modal').text(checkinFormated);
+        $('#att-checkout-modal').text(checkoutFormated);
+        $('#att-notes-modal').text(notes);
+        $('#attendance-request-id').val(id)
+        $('#attendance_comment').val("");
+    };
+
     const attendanceInit = () => {
         const getAttendanceFilter = () => {
             return {
@@ -10,6 +68,45 @@
             }
         }
 
+        const deleteAttendanceSummaries = () => {
+            $('#view-need-att').text("-");
+            $('#view-approved-att').text("-");
+            $('#view-reject-att').text("-");
+            $('#all-need-att').text("-");
+            $('#all-approved-att').text("-");
+            $('#all-reject-att').text("-");
+            $('#view-date-attendance').text("View Date : -");
+        }
+
+        const getAttendanceSummaries = () => {
+            $.ajax({
+                url: "{{ route('hc.request.att.summaries') }}",
+                method: 'GET',
+                data: {
+                    filters: getAttendanceFilter()
+                },
+                success: function(data) {
+                    const {
+                        allSummaries,
+                        viewDate
+                    } = data.data;
+
+                    $('#view-need-att').text(viewDate.waiting);
+                    $('#view-approved-att').text(viewDate.approved);
+                    $('#view-reject-att').text(viewDate.rejected);
+                    $('#all-need-att').text(allSummaries.waiting);
+                    $('#all-approved-att').text(allSummaries.approved);
+                    $('#all-reject-att').text(allSummaries.rejected);
+                    $('#view-date-attendance').text(
+                        `View Date : ${formatDate(viewDate.rangeDate[0])} - ${formatDate(viewDate.rangeDate[1])}`
+                    );
+                },
+                error: function(xhr, status, error) {
+                    deleteAttendanceSummaries();
+                }
+            });
+        };
+
         $('input[name="range_date_attendance"]').daterangepicker({
             autoUpdateInput: false
         }, (from_date, to_date) => {
@@ -17,12 +114,7 @@
                 'MM/DD/YYYY'));
         });
 
-        $('#range_date').on('apply.daterangepicker', function(ev, picker) {
-            $('#view-date-attendance').text(`View Date : ${$(this).val()}`);
-        });
-
         $('#range_date_attendance').val(moment().format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
-        $('#view-date-attendance').text(`View Date : ${$('#range_date_attendance').val()}`);
 
         const tableAttendance = $('#kt_table_attendance')
             .DataTable({
@@ -129,9 +221,98 @@
                     }
                 ],
                 columnDefs: [{
-                    targets: [0, 1],
+                    targets: [0, 1, 9, 10],
                     className: 'text-center',
                 }, ],
             });
+
+        $('#range_date_attendance').on('apply.daterangepicker', function(ev, picker) {
+            tableAttendance.draw();
+            deleteAttendanceSummaries();
+            getAttendanceSummaries();
+        });
+
+        $('#filter_department_attendance').change(function() {
+            tableAttendance.draw();
+            deleteAttendanceSummaries();
+            getAttendanceSummaries();
+        });
+
+        $('#filter_divisi_attendance').change(function() {
+            tableAttendance.draw();
+            deleteAttendanceSummaries();
+            getAttendanceSummaries();
+        });
+
+        $('#filter_status_attendance').change(function() {
+            tableAttendance.draw();
+        });
+
+        $('#search_attendance').on('input', function() {
+            tableAttendance.draw();
+            deleteAttendanceSummaries();
+            getAttendanceSummaries();
+        });
+
+        const onAttendanceModalClose = () => {
+            $('#att-name-modal').text("-");
+            $('#att-nip-modal').text("-");
+            $('#att-branch-modal').text("-");
+            $('#att-org-modal').text("-");
+            $('#att-position-modal').text("-");
+            $('#att-level-modal').text("-");
+            $('#att-shift-modal').text("-");
+            $('#att-work-modal').text("-");
+            $('#att-created-modal').text("-");
+            $('#att-checkin-modal').text("-");
+            $('#att-checkout-modal').text("-");
+            $('#att-notes-modal').text("-");
+            $('#attendance-request-id').val("")
+            $('#attendance_comment').val("");
+        };
+
+        const onAttendanceModalSubmit = (id, status, comment) => {
+            $.ajax({
+                url: "{{ route('hc.request.att.update') }}",
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                data: {
+                    id,
+                    status,
+                    comment
+                },
+                success: function(data) {
+                    tableAttendance.draw();
+                    onAttendanceModalClose();
+                    deleteAttendanceSummaries();
+                    getAttendanceSummaries();
+                    toastr.success(data.message, 'Selamat 🚀 !');
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
+        };
+
+        $('#attendance-modal-close').on('click', function() {
+            onAttendanceModalClose();
+        });
+
+        $('#attendance_reject').on('click', function() {
+            const id = $('#attendance-request-id').val();
+            const comment = $('#attendance_comment').val();
+            onAttendanceModalSubmit(id, approveStatusEnum[2], comment);
+        });
+
+        $('#attendance_approve').on('click', function() {
+            const id = $('#attendance-request-id').val();
+            const comment = $('#attendance_comment').val();
+            onAttendanceModalSubmit(id, approveStatusEnum[1], comment);
+        });
+
+        getAttendanceSummaries();
     }
 </script>

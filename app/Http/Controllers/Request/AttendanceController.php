@@ -10,7 +10,10 @@ use Yajra\DataTables\DataTables;
 
 use App\Utils\ErrorHandler;
 use App\Constants;
+use App\Exceptions\InvariantError;
+use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendanceRequest;
+use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -33,9 +36,33 @@ class AttendanceController extends Controller
                 "check_out" => "nullable|date_format:H:i|required_without_all:check_in",
             ]);
 
+            $userEmployment = Auth::user()->userEmployment->load([
+                'workingScheduleShift.workingSchedule.dayOffs',
+                'subBranch.branchLocations'
+            ]);
+
+            if (!$userEmployment) {
+                throw new InvariantError("User belum memiliki data karyawan");
+            }
+
+            Carbon::setLocale($this->constants->locale);
+            $now = Carbon::now();
+            $today = $now->toDateString();
+            $globalDayOff = GlobalDayOff::where('date', $today)->first();
+
+            if ($globalDayOff) {
+                throw new InvariantError("Tidak dapat request absen pada hari libur ($globalDayOff->name)");
+            }
+
+            $workingDayOff = $userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('name')->toArray();
+
+            if (in_array($now->dayName, $workingDayOff)) {
+                throw new InvariantError("Tidak dapat request absen pada hari libur (Working Schedule)");
+            }
+
             UserAttendanceRequest::create([
                 "user_id" => Auth::user()->id,
-                "approval_line" => Auth::user()->approval_line,
+                "approval_line" => $userEmployment->approval_line,
                 "date" => $request->date,
                 "notes" => $request->notes,
                 "check_in" => $request->check_in ? date('Y-m-d H:i:s', strtotime(date('Y-m-d') . ' ' . $request->check_in)): null,

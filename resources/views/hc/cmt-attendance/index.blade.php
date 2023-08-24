@@ -14,6 +14,13 @@
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+<style>
+    .summaries:hover {
+        background-color: rgba(114, 57, 234, 0.1);
+        border-radius: 10px;
+        transition: background-color 0.2s ease, border-radius 0.2s ease;
+    }
+</style>
 <div class="row justify-content-center mt-n20">
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center">

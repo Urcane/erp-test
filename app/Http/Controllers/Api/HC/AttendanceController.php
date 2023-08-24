@@ -138,9 +138,9 @@ class AttendanceController extends Controller
     {
         try {
             $today = Carbon::now()->toDateString();
-            $attendanceToday = $request->user()->userAttendances()->whereDate('date', $request->date ?? Carbon::now()->format('Y-m-d'))->first();
+            $attendance = $request->user()->userAttendances()->whereDate('date', $request->date ?? Carbon::now()->format('Y-m-d'))->first();
 
-            if (!$attendanceToday) {
+            if (!$attendance) {
                 return response()->json([
                     "status" => "success",
                     "data" => [
@@ -153,19 +153,19 @@ class AttendanceController extends Controller
                 ]);
             }
 
-            if ($attendanceToday->attendance_code != $this->constants->attendance_code[0]) {
+            if ($attendance->attendance_code != $this->constants->attendance_code[0]) {
                 return response()->json([
                     "status" => "success",
                     "message" => "Hari ini bukan hari kerja"
                 ]);
             }
 
+            $attendance["check_in_file"] = $attendance->check_in_file ? asset("storage/attendance/checkin/$attendance->check_in_file") : null;
+            $attendance["check_out_file"] = $attendance->check_out_file ? asset("storage/attendance/checkout/$attendance->check_out_file") : null;
+
             return response()->json([
                 "status" => "success",
-                "data" => $attendanceToday + [
-                    "check_in_file" => $attendanceToday->check_in_file ? asset("storage/attendance/checkin/$attendanceToday->check_in_file") : null,
-                    "check_out_file" => $attendanceToday->check_out_file ? asset("storage/attendance/checkout/$attendanceToday->check_out_file") : null,
-                ]
+                "data" => $attendance
             ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);

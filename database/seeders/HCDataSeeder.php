@@ -21,6 +21,7 @@ use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\EmploymentStatus;
 use App\Constants;
 use App\Models\Attendance\UserAttendance;
+use App\Models\Attendance\UserAttendanceRequest;
 use App\Models\Employee\BranchLocation;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Employee\WorkingShift;
@@ -57,21 +58,21 @@ class HCDataSeeder extends Seeder
             ["PT Anak Samarinda", "093248439535", "Samarinda", "Kalimantan timur", "Jln Sidoarjo RT 15 No 15", "1234324123133", "PT Anak Samarinda", "12334345234", "Bowo", "Kode KLU", "9fThLIMy32MWG1dEizgVNSlha5HQKUsjvN0ZKkxH.png", null, 1, "samarinda@gmail.com"]
         ])->map(function ($data) {
             SubBranch::create([
-                "name"=> $data[0],
-                "phone_number"=> $data[1],
-                "city"=> $data[2],
-                "province"=> $data[3],
-                "address"=> $data[4],
-                "npwp"=> $data[5],
-                "tax_name"=> $data[6],
-                "tax_person_npwp"=> $data[7],
-                "tax_person_name"=> $data[8],
-                "klu"=> $data[9],
+                "name" => $data[0],
+                "phone_number" => $data[1],
+                "city" => $data[2],
+                "province" => $data[3],
+                "address" => $data[4],
+                "npwp" => $data[5],
+                "tax_name" => $data[6],
+                "tax_person_npwp" => $data[7],
+                "tax_person_name" => $data[8],
+                "klu" => $data[9],
                 "umr" => "3324000",
-                "signature"=> $data[10],
-                "branch_id"=> $data[11],
-                "parent_id"=> $data[12],
-                "email"=> $data[13],
+                "signature" => $data[10],
+                "branch_id" => $data[11],
+                "parent_id" => $data[12],
+                "email" => $data[13],
             ]);
         });
 
@@ -203,7 +204,7 @@ class HCDataSeeder extends Seeder
                     "AAA",
                     "AAA",
                     1,
-                    null,
+                    1,
                     null
                 ),
                 "user_salary" => $this->makeSalary(
@@ -281,7 +282,7 @@ class HCDataSeeder extends Seeder
                     "AAA",
                     "AAA",
                     1,
-                    null,
+                    1,
                     null
                 ),
                 "user_salary" => $this->makeSalary(
@@ -359,7 +360,7 @@ class HCDataSeeder extends Seeder
                     "AAA",
                     "AAA",
                     1,
-                    null,
+                    1,
                     null
                 ),
                 "user_salary" => $this->makeSalary(
@@ -437,7 +438,7 @@ class HCDataSeeder extends Seeder
                     "AAA",
                     "AAA",
                     1,
-                    null,
+                    1,
                     null
                 ),
                 "user_salary" => $this->makeSalary(
@@ -496,13 +497,16 @@ class HCDataSeeder extends Seeder
 
             $workingShift = User::whereId($data["user_id"])->first()->userEmployment->workingScheduleShift->workingShift;
 
-            foreach ($data["user_attendance"] as $attendance) {
+            foreach ($data["user_attendance"]["attendance"] as $attendance) {
                 UserAttendance::create($attendance + $data["user_id"] + [
                     "late_check_in" => $workingShift->late_check_in,
                     "late_check_out" => $workingShift->late_check_out,
                 ]);
             }
 
+            foreach ($data["user_attendance"]["request"] as $request) {
+                UserAttendanceRequest::create($request + $data["user_id"]);
+            }
         });
     }
 
@@ -601,42 +605,66 @@ class HCDataSeeder extends Seeder
     private function makeAttendance($start, $end, $workingStartTime, $workingEndTime)
     {
         $data = [];
+        $request = [];
         $startDate = Carbon::parse($start);
+        $requestStartDate = Carbon::parse("2023-01-01");
         $endDate = Carbon::parse($end)->subDay();
 
         $currentDate = $startDate->copy();
 
         while ($currentDate->lte($endDate)) {
-            random_int(1, 200) <= 198 ?
-            array_push($data, [
-                'date' => $currentDate->format('Y-m-d'),
-                'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 101) <= 90 ? 1 : random_int(2,3)],
-                'shift_name' => "Shift 1",
-                'working_start' => $workingStartTime,
-                'working_end' => $workingEndTime,
-                'check_in' => random_int(1, 101) <= 90 ?
-                    Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(0, 5), 0)
-                    : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(6, 10), 0),
-                'check_out' => random_int(1, 101) <= 80 ?
-                    Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 5), 0)
-                    : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 16, random_int(50, 54), 0),
-            ]) : array_push($data, [
-                'date' => $currentDate->format('Y-m-d'),
-                'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 3)],
-                'shift_name' => "Shift 1",
-                'working_start' => $workingStartTime,
-                'working_end' => $workingEndTime,
-                'check_in' => random_int(1, 101) <= 20 ?
-                    null
-                    : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(6, 10), 0),
-                'check_out' => random_int(1, 101) <= 90 ?
-                    Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 5), 0)
-                    : null,
-            ]);
+            if ($currentDate->gte($requestStartDate) && random_int(1, 100) <= 35) {
+                array_push($request, [
+                    'approval_line' => 1,
+                    'status' => $this->constants->approve_status[random_int(0,2)],
+                    'date' => $currentDate->format('Y-m-d'),
+                    'notes' => "Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit numquam, nam ut earum ad dolor accusantium nulla sed aspernatur pariatur commodi hic quod consequatur? Facere iure nulla ipsam omnis sequi?",
+                    'check_in' => random_int(1, 101) <= 70 ?
+                        Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(0, 5), 0)
+                        : null,
+                    'check_out' => random_int(1, 101) <= 70 ?
+                        Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 5), 0)
+                        : null,
+                    'created_at' => Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 15, 8, 0)
+                ]);
+            }
+
+            if (random_int(1, 200) <= 198) {
+                array_push($data, [
+                    'date' => $currentDate->format('Y-m-d'),
+                    'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 101) <= 90 ? 1 : random_int(2, 3)],
+                    'shift_name' => "Shift 1",
+                    'working_start' => $workingStartTime,
+                    'working_end' => $workingEndTime,
+                    'check_in' => random_int(1, 101) <= 90 ?
+                        Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(0, 5), 0)
+                        : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(6, 10), 0),
+                    'check_out' => random_int(1, 101) <= 80 ?
+                        Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 5), 0)
+                        : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 16, random_int(50, 54), 0),
+                ]);
+            } else {
+                array_push($data, [
+                    'date' => $currentDate->format('Y-m-d'),
+                    'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 3)],
+                    'shift_name' => "Shift 1",
+                    'working_start' => $workingStartTime,
+                    'working_end' => $workingEndTime,
+                    'check_in' => random_int(1, 101) <= 20 ?
+                        null
+                        : Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 8, random_int(6, 10), 0),
+                    'check_out' => random_int(1, 101) <= 90 ?
+                        Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 5), 0)
+                        : null,
+                ]);
+            }
 
             $currentDate->addDay();
         }
 
-        return $data;
+        return [
+            "attendance" => $data,
+            "request" => $request
+        ];
     }
 }
