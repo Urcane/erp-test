@@ -37,7 +37,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-10 mt-n20">
+    <div class="col-lg-10 mt-lg-n20">
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="card">

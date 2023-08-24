@@ -63,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/detail/files','files')->name('com.promag.detail.files');
             Route::get('/detail/task-lists','taskLists')->name('com.promag.detail.task-lists');
 
+            Route::post('/work-order/approve','approveWorkOrder')->name('com.work-order.approve');
             Route::post('/work-order/store','createWorkOrderSurvey')->name('com.work-order-survey.store');
             Route::get('/work-order/detail/{id}','getWorkOrderById')->name('com.work-order.detail');
             Route::get('/get-data/table/work-order','getDatatableWorkOrder')->name('com.work-order.datatable');
@@ -75,21 +76,21 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('cmt-survey')->group(function () {
             Route::get('/','index')->name('com.survey.index');
             Route::get('/survey-request/detail/{id}','getSurveyRequestById')->name('com.survey-request.detail');
+            Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
 
             Route::get('/soft-survey','indexSoftSurvey')->name('com.soft-survey.index');
             Route::get('/soft-survey/{surveyRequest}','detailSoftSurvey')->name('com.soft-survey.detail');
+            Route::post('/soft-survey','storeSoftSurvey')->name('com.soft-survey.store');
 
             Route::get('/survey-result-internet','indexSurveyResultInternet')->name('com.site-survey.internet.index');
             Route::get('/survey-result-cctv','indexSurveyResultCctv')->name('com.site-survey.cctv.index');
             Route::get('/survey-result-gb','indexSurveyResultGb')->name('com.site-survey.gb.index');
-
             Route::get('/survey-result-store/{workOrder}','createSurveyResult')->name('com.survey-result.create');
-
-            Route::get('/detail/{id}', 'detail')->name('com.survey.detail');
-            Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
-            Route::post('/soft-survey','storeSoftSurvey')->name('com.soft-survey.store');
+            Route::get('/detail/{serviceType}/{id}', 'detail')->name('com.survey.detail');
             Route::post('/survey-result-draft','draftSurveyResult')->name('com.survey-result.draft');
             Route::post('/survey-result-store','storeSurveyResult')->name('com.survey-result.store');
+
+            Route::get('/survey-result-export/{serviceType}/{id}','exportSurveyResult')->name('com.survey-result.export');
             
             Route::get('/get-data/table/survey-request','getDatatableSurveyRequest')->name('com.survey-request.datatable');
             Route::get('/get-data/table/survey-result','getDatatableSurveyResult')->name('com.survey-result.datatable');

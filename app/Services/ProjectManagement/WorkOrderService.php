@@ -2,7 +2,9 @@
 
 namespace App\Services\ProjectManagement;
 
+use App\Http\Requests\ProjectManagement\WorkOrderApprovalRequest;
 use App\Http\Requests\ProjectManagement\WorkOrderRequest;
+use App\Models\ProjectManagement\WorkOrder;
 use App\Repositories\ProjectManagement\WorkOrderRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -80,10 +82,13 @@ class WorkOrderService
 
         return DataTables::of($data)
             ->addColumn('DT_RowChecklist', function($check) {
-                return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
+                if (!isset($check->approved_status)) {
+                    return '<div class="text-center w-50px"><input name="checkbox_work_order_ids" type="checkbox" value="'.$check->id.'"></div>';
+                }
+                return '';
             })
             ->editColumn('approved_status', function($query) {
-                if ($query->approved_status != null) {
+                if (isset($query->approved_status)) {
                     return $query->approved_status == 1 ? 'Approved' : 'Rejected';
                 }
                 return 'On Review...';
@@ -121,5 +126,13 @@ class WorkOrderService
 
     function getWorkOrderById(Request $request, int $id) : Builder {
         return $this->workOrderRepository->getById($id);
+    }
+
+    function updateApprove(WorkOrderApprovalRequest $request) : Collection {
+        $result = collect($request->work_order_id)->map(function($id) use($request) {
+            return $this->workOrderRepository->updateApprove($request, $id);
+        });
+
+        return $result;
     }
 }

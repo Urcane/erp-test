@@ -164,7 +164,7 @@ input[type="number"]::-webkit-outer-spin-button {
         });
     }
 
-	function submitModal({modalName, tableName = null, ajaxLink, anotherTableName = null , validationMessages = {}}) {
+	function submitModal({modalName, tableName = null, ajaxLink, anotherTableName = null , validationMessages = {}, successCallback = () => {}}) {
         $(`#${modalName}_form`).validate({
             messages: validationMessages,
             submitHandler: function(form) {
@@ -187,6 +187,8 @@ input[type="number"]::-webkit-outer-spin-button {
                         }
 
                         toastr.success(data.status,'Selamat 🚀 !');
+
+                        successCallback(data);
                     },
                     error: function (xhr, status, errorThrown) {
                         $(`#${modalName}_submit`).removeAttr('disabled','disabled');
