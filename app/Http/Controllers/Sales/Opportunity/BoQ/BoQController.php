@@ -93,5 +93,12 @@ class BoQController extends Controller{
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
+    function storeApprovalBoq(Request $request) : JsonResponse {
+        if ($request->ajax()) {
+            return $this->BoqService->storeApprovalBoq($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
 }
     
