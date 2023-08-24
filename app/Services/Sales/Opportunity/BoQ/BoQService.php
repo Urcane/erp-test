@@ -158,4 +158,8 @@ class BoqService
         return view('cmt-opportunity.boq.pages.form-commercial-boq', compact('updateDraftBoqData'));
     }
 
+    function onReviewBoq(Request $request){
+        $updateDraftBoqData = $this->BoQRepository->onReviewBoq($request);
+            return view('cmt-opportunity.boq.pages.on-review-boq', compact('updateDraftBoqData'));
+    }
 }

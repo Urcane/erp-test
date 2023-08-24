@@ -229,4 +229,21 @@ class BoQRepository
         ];
     }
 
+    function onReviewBoq(Request $request){
+        $boqId = $request->query('boq_id');
+        $boqData = $this->model->where('id', $boqId)->first();
+
+        $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$boqData->prospect_id)->get();       
+        $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first(); 
+        $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->first(); 
+        $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->first();
+
+        return [
+            'dataCompanyItem' => $dataCompanyItem, 
+            'dataSalesSelected' => $dataSalesSelected, 
+            'dataProcurementSelected' => $dataProcurementSelected, 
+            'dataTechnicianSelected' => $dataTechnicianSelected,
+        ];
+    }
+
 }

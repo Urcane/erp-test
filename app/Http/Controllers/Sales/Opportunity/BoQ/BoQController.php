@@ -58,6 +58,13 @@ class BoQController extends Controller{
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
+    function onReviewBoq(Request $request)  {
+        if ($request->query()) {
+            return $this->BoqService->onReviewBoq($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
     function getMerkType(Request $request) : JsonResponse  { 
         if ($request->ajax()) {
             return $this->InventoryService->getMerkType($request);

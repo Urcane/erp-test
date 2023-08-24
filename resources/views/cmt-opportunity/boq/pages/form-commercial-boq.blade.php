@@ -162,8 +162,8 @@
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="procurement_id" id="procurement_id">
                                                     <option value="{{ $updateDraftBoqData['dataProcurementSelected']->id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataProcurementSelected']->name ?? "Pilih Procurement"  }}</option>
-                                                   @if (isset($updateDraftBoqData['dataFinance']))
-                                                        @foreach ($updateDraftBoqData['dataFinance'] as $procurement)
+                                                   @if (isset($updateDraftBoqData['dataProcurement']))
+                                                        @foreach ($updateDraftBoqData['dataProcurement'] as $procurement)
                                                             <option value="{{ $procurement->id ?? null }}">
                                                                 {{ $procurement->name ?? null }}
                                                             </option>
