@@ -82,7 +82,6 @@ class BoQRepository
     function saveAndStoreBoq(Request $request) : JsonResponse {
         try {
             DB::beginTransaction();
-
             $prospect_id = $request->input('boq.prospect_id');
             $survey_request_id = $request->input('boq.survey_request_id');
             $is_draft = $request->input('boq.is_draft', 1);
@@ -96,14 +95,12 @@ class BoQRepository
             $manpower = $request->input('boq.manpower');
             $is_final = $request->input('boq.is_final', 0);
 
-            // Cek apakah is_draft pada ItemableBillOfQuantity sudah ada dan nilainya adalah 0
             $itemableBoqIsDraft = ItemableBillOfQuantity::where([
                 'prospect_id' => $prospect_id,
                 'survey_request_id' => $survey_request_id,
             ])->first();
 
             if ($itemableBoqIsDraft) {
-                // Kondisi 3: Jika is_draft sudah ada dan nilainya 0, jangan ubah nilainya
                 if ($itemableBoqIsDraft->is_draft === 0) {
                     $is_draft = 0;
                 }
@@ -134,33 +131,26 @@ class BoQRepository
                 Item::whereIn('id', $itemIds)->delete();
             }
             $itemsData = $request->input('items');
-            foreach ($itemsData as $itemData) {
-                $criteria = [
-                    'itemable_id' => $itemableBoq->id,
-                    'itemable_type' => $itemableBoq->itemable_type, 
-                ];
-                if (isset($itemData['id'])) {
-                    $criteria['id'] = $itemData['id'];
-                }
-                $data = [
-                    'quantity' => $itemData['quantity'],
-                    'purchase_price' => $itemData['purchase_price'],
-                    'total_price' => $itemData['total_price'],
-                    'purchase_delivery_charge' => $itemData['purchase_delivery'],
-                    'purchase_refrence' => $itemData['purchase_reference'],
-                    'item_inventory_id' => $itemData['item_inventory_id'],
-                    'item_detail' => $itemData['item_detail'],
-                ];
-                $itemableBoq->itemable()->updateOrCreate($criteria, $data);
-            }
-    
-            if ($itemableBoq->approval_manager === null || $itemableBoq->approval_director === null || $itemableBoq->approval_finman === null) {
-                $itemableBoq->is_done = null;
-            } else {
-                if ($itemableBoq->approval_manager == 1 && $itemableBoq->approval_director == 1 && $itemableBoq->approval_finman == 1) {
-                    $itemableBoq->is_done = 1;
-                } else {
-                    $itemableBoq->is_done = 0;
+
+            if (!empty($itemsData)) {
+                foreach ($itemsData as $itemData) {
+                    $criteria = [
+                        'itemable_id' => $itemableBoq->id,
+                        'itemable_type' => $itemableBoq->itemable_type, 
+                    ];
+                    if (isset($itemData['id'])) {
+                        $criteria['id'] = $itemData['id'];
+                    }
+                    $data = [
+                        'quantity' => $itemData['quantity'],
+                        'purchase_price' => $itemData['purchase_price'],
+                        'total_price' => $itemData['total_price'],
+                        'purchase_delivery_charge' => $itemData['purchase_delivery'],
+                        'purchase_refrence' => $itemData['purchase_reference'],
+                        'item_inventory_id' => $itemData['item_inventory_id'],
+                        'item_detail' => $itemData['item_detail'],
+                    ];
+                    $itemableBoq->itemable()->updateOrCreate($criteria, $data);
                 }
             }
             
@@ -173,6 +163,51 @@ class BoQRepository
             return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
+
+    function storeApprovalBoq(Request $request) : JsonResponse {
+        $boqId = $request->query('boq_id');
+        $boqData = $this->model->where('id', $boqId)->first();
+    
+        if ($boqData) {
+            $approval_manager = $request->input('approval_manager');
+            $approval_director = $request->input('approval_director');
+            $approval_finman = $request->input('approval_finman');
+        
+            if ($approval_manager !== null) {
+                $boqData->approval_manager = $approval_manager;
+                if (empty($boqData->approval_manager_date)) {
+                    $boqData->approval_manager_date = date('Y-m-d H:i:s');
+                }
+            }
+            if ($approval_director !== null) {
+                $boqData->approval_director = $approval_director;
+                if (empty($boqData->approval_director_date)) {
+                    $boqData->approval_director_date = date('Y-m-d H:i:s');
+                }
+            }
+            if ($approval_finman !== null) {
+                $boqData->approval_finman = $approval_finman;
+                if (empty($boqData->approval_finman_date)) {
+                    $boqData->approval_finman_date = date('Y-m-d H:i:s');
+                }
+            }
+
+            if ($boqData->approval_manager === null || $boqData->approval_director === null || $boqData->approval_finman === null) {
+                $boqData->is_done = null;
+                } else {
+                    if ($boqData->approval_manager == 1 && $boqData->approval_director == 1 && $boqData->approval_finman == 1) {
+                        $boqData->is_done = 1;
+                    } else {
+                        $boqData->is_done = 0;
+                    }
+            }
+            
+            $boqData->save();
+            return response()->json(['message' => 'BoQ berhasil disimpan.'], 200);
+        }
+        return response()->json(['error' => 'BoQ tidak ditemukan.'], 404);
+    }
+    
 
     function createRevisionBoq(Request $request) : JsonResponse{
         $rejectedBoq = ItemableBillOfQuantity::findOrFail($request->query('id'));
