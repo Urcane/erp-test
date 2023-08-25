@@ -312,15 +312,29 @@ class AttendanceController extends Controller
             $attendanceToday = $user->userAttendances->where('date', $today)->first();
 
             // attendance validation
-            if ($workingShift->min_check_in) {
-                if (!($now->isAfter(Carbon::parse($workingShift->working_start)->addMinutes($workingShift->min_check_in)))) {
-                    throw new InvariantError("Tidak dapat absen, Waktu absen belum dimulai");
+            if (!$attendanceToday) {
+                if ($workingShift->start_attend) {
+                    if (!($now->isAfter(Carbon::parse($workingShift->working_start)->addMinutes($workingShift->start_attend)))) {
+                        throw new InvariantError("Tidak dapat absen, Waktu absen belum dimulai");
+                    }
                 }
-            }
 
-            if ($workingShift->max_check_out) {
-                if (!($now->isBefore(Carbon::parse($workingShift->working_end)->addMinutes($workingShift->max_check_out)))) {
-                    throw new InvariantError("Tidak dapat absen, Waktu absen sudah selesai");
+                if ($workingShift->end_attend) {
+                    if (!($now->isBefore(Carbon::parse($workingShift->working_end)->addMinutes($workingShift->end_attend)))) {
+                        throw new InvariantError("Tidak dapat absen, Waktu absen sudah selesai");
+                    }
+                }
+            } else {
+                if ($attendanceToday->start_attend) {
+                    if (!($now->isAfter(Carbon::parse($attendanceToday->working_start)->addMinutes($attendanceToday->start_attend)))) {
+                        throw new InvariantError("Tidak dapat absen, Waktu absen belum dimulai");
+                    }
+                }
+
+                if ($attendanceToday->end_attend) {
+                    if (!($now->isBefore(Carbon::parse($attendanceToday->working_end)->addMinutes($attendanceToday->end_attend)))) {
+                        throw new InvariantError("Tidak dapat absen, Waktu absen sudah selesai");
+                    }
                 }
             }
 
@@ -369,6 +383,8 @@ class AttendanceController extends Controller
                     'overtime_after' => $workingShift->overtime_after,
                     'late_check_in' => $workingShift->late_check_in,
                     'late_check_out' => $workingShift->late_check_out,
+                    'start_attend' => $workingShift->start_attend,
+                    'end_attend' => $workingShift->end_attend,
                     'check_in' => $timestamp,
                     'overtime' => ($attendanceToday->overtime ?? 0) + $overtime,
                     'check_in_latitude' => $request->latitude,
@@ -464,15 +480,29 @@ class AttendanceController extends Controller
             $attendanceToday = $user->userAttendances->where('date', $today)->first();
 
             // attendance validation
-            if ($workingShift->min_check_in) {
-                if (!($now->isAfter(Carbon::parse($workingShift->working_start)->addMinutes($workingShift->min_check_in)))) {
-                    throw new InvariantError("Tidak dapat absen, Waktu absen belum dimulai");
+            if (!$attendanceToday) {
+                if ($workingShift->start_attend) {
+                    if (!($now->isAfter(Carbon::parse($workingShift->working_start)->addMinutes($workingShift->start_attend)))) {
+                        throw new InvariantError("Tidak dapat absen, Waktu absen belum dimulai");
+                    }
                 }
-            }
 
-            if ($workingShift->max_check_out) {
-                if (!($now->isBefore(Carbon::parse($workingShift->working_end)->addMinutes($workingShift->max_check_out)))) {
-                    throw new InvariantError("Tidak dapat absen, Waktu absen sudah selesai");
+                if ($workingShift->end_attend) {
+                    if (!($now->isBefore(Carbon::parse($workingShift->working_end)->addMinutes($workingShift->end_attend)))) {
+                        throw new InvariantError("Tidak dapat absen, Waktu absen sudah selesai");
+                    }
+                }
+            } else {
+                if ($attendanceToday->start_attend) {
+                    if (!($now->isAfter(Carbon::parse($attendanceToday->working_start)->addMinutes($attendanceToday->start_attend)))) {
+                        throw new InvariantError("Tidak dapat absen, Waktu absen belum dimulai");
+                    }
+                }
+
+                if ($attendanceToday->end_attend) {
+                    if (!($now->isBefore(Carbon::parse($attendanceToday->working_end)->addMinutes($attendanceToday->end_attend)))) {
+                        throw new InvariantError("Tidak dapat absen, Waktu absen sudah selesai");
+                    }
                 }
             }
 
@@ -520,6 +550,8 @@ class AttendanceController extends Controller
                     'overtime_after' => $workingShift->overtime_after,
                     'late_check_in' => $workingShift->late_check_in,
                     'late_check_out' => $workingShift->late_check_out,
+                    'start_attend' => $workingShift->start_attend,
+                    'end_attend' => $workingShift->end_attend,
                     'check_in' => null,
                     'check_out' => $timestamp,
                     'overtime' => ($attendanceToday->overtime ?? 0) + $overtime,

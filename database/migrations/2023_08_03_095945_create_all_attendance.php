@@ -54,14 +54,20 @@ class CreateAllAttendance extends Migration
             $table->foreignId("user_id")->constrained("users");
             $table->date("date")->index();
             $table->enum("attendance_code", $this->constants->attendance_code)->default($this->constants->attendance_code[0])->index();
-            $table->string("shift_name", 40);
             $table->string("day_off_code", 10)->nullable();
+            $table->string("shift_name", 40);
             $table->time("working_start")->index();
             $table->time("working_end")->index();
+            $table->string("primary_shift_name", 40)->nullable(); // primary is history of shift if the shift changed
+            $table->time("primary_working_start")->nullable();
+            $table->time("primary_working_end")->nullable();
+            $table->boolean("shift_changed")->default(0);
             $table->time("overtime_before")->nullable();
             $table->time("overtime_after")->nullable();
             $table->tinyInteger("late_check_in")->default(0);
             $table->tinyInteger("late_check_out")->default(0);
+            $table->smallInteger("start_attend")->nullable(); // in minute
+            $table->smallInteger("end_attend")->nullable(); // in minute
             $table->integer("overtime")->default(0);
             $table->timestamp("check_in")->nullable();
             $table->timestamp("check_out")->nullable();
@@ -78,7 +84,7 @@ class CreateAllAttendance extends Migration
         Schema::create('user_attendance_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("approval_line")->nullable()->constrained("users");
+            $table->foreignId("approval_line")->nullable()->constrained("users"); // approval_line as history (who change the status)
             $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0])->index();
             $table->date("date");
             $table->text("notes")->nullable();
@@ -99,12 +105,13 @@ class CreateAllAttendance extends Migration
         Schema::create('user_leave_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("approval_line")->nullable()->constrained("users");
+            $table->foreignId("approval_line")->nullable()->constrained("users"); // approval_line as history (who change the status)
             $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
             $table->date("start_date");
             $table->date("end_date");
             $table->text("notes")->nullable();
+            $table->text("comment")->nullable();
             $table->text("file")->nullable();
             $table->softDeletes()->index();
             $table->timestamps();
@@ -125,7 +132,7 @@ class CreateAllAttendance extends Migration
         Schema::create('user_overtime_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("approval_line")->nullable()->constrained("users");
+            $table->foreignId("approval_line")->nullable()->constrained("users"); // approval_line as history (who change the status)
             $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->date("date");
             $table->time("overtime_before");
@@ -133,6 +140,7 @@ class CreateAllAttendance extends Migration
             $table->time("break_start");
             $table->time("break_end");
             $table->text("notes")->nullable();
+            $table->text("comment")->nullable();
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -140,11 +148,12 @@ class CreateAllAttendance extends Migration
         Schema::create('user_shift_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("approval_line")->nullable()->constrained("users");
+            $table->foreignId("approval_line")->nullable()->constrained("users"); // approval_line as history (who change the status)
             $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
             $table->foreignId("working_shift_id")->constrained("working_shifts");
             $table->date("date");
             $table->text("notes")->nullable();
+            $table->text("comment")->nullable();
             $table->softDeletes()->index();
             $table->timestamps();
         });

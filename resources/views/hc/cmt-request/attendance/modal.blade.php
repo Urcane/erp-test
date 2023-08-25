@@ -19,27 +19,27 @@
                     <div class="row p-2 m-1 rounded border border-2 border-secondary">
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Name</span>
-                            <p class="fs-7 fw-normal" id="att-name-modal">Ahmda Muladwwfesfd dwa</p>
+                            <p class="fs-7 fw-normal" id="att-name-modal">-</p>
                         </div>
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">NIP</span>
-                            <p class="fs-7 fw-normal" id="att-nip-modal">00000001</p>
+                            <p class="fs-7 fw-normal" id="att-nip-modal">-</p>
                         </div>
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Branch</span>
-                            <p class="fs-7 fw-normal" id="att-branch-modal">Ahmda Muladwwfesfd dwa</p>
+                            <p class="fs-7 fw-normal" id="att-branch-modal">-</p>
                         </div>
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Organization</span>
-                            <p class="fs-7 fw-normal" id="att-org-modal">Ahmda Muladwwfesfd dwa</p>
+                            <p class="fs-7 fw-normal" id="att-org-modal">-</p>
                         </div>
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Job Position</span>
-                            <p class="fs-7 fw-normal" id="att-position-modal">Ahmda Muladwwfesfd dwa</p>
+                            <p class="fs-7 fw-normal" id="att-position-modal">-</p>
                         </div>
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Job Level</span>
-                            <p class="fs-7 fw-normal" id="att-level-modal">Ahmda Muladwwfesfd dwa</p>
+                            <p class="fs-7 fw-normal" id="att-level-modal">-</p>
                         </div>
                     </div>
 
@@ -47,28 +47,27 @@
                     <div class="row p-2 m-1 rounded border border-2 border-secondary">
                         <div class="col-lg-4 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Shift</span>
-                            <p class="fs-7 fw-normal" id="att-shift-modal">Shiftessss</p>
+                            <p class="fs-7 fw-normal" id="att-shift-modal">-</p>
                         </div>
                         <div class="col-lg-4 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Work Hours</span>
-                            <p class="fs-7 fw-normal" id="att-work-modal">08:00 - 12:00</p>
+                            <p class="fs-7 fw-normal" id="att-work-modal">-</p>
                         </div>
                         <div class="col-lg-4 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Request Created</span>
-                            <p class="fs-7 fw-normal" id="att-created-modal">Ahmda Muladwwfesfd dwa</p>
+                            <p class="fs-7 fw-normal" id="att-created-modal">-</p>
                         </div>
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Check In Request</span>
-                            <p class="fs-7 fw-normal" id="att-checkin-modal">Ahmda Muladwwfesfd dwa</p>
+                            <p class="fs-7 fw-normal" id="att-checkin-modal">-</p>
                         </div>
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Check Out Request</span>
-                            <p class="fs-7 fw-normal" id="att-checkout-modal">Ahmda Muladwwfesfd dwa</p>
+                            <p class="fs-7 fw-normal" id="att-checkout-modal">-</p>
                         </div>
                         <div class="col-lg-12 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Notes</span>
-                            <p class="fs-7 fw-normal" id="att-notes-modal">Ahmda
-                                Muldwaaaaaaaaaaaaaaaaaaaaaaaaaaaaadwwfesfd dwa</p>
+                            <p class="fs-7 fw-normal" id="att-notes-modal">-</p>
                         </div>
                     </div>
 

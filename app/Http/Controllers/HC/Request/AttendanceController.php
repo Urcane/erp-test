@@ -50,6 +50,8 @@ class AttendanceController extends Controller
                 'overtime_after' => $workingShift->overtime_after,
                 'late_check_in' => $workingShift->late_check_in,
                 'late_check_out' => $workingShift->late_check_out,
+                'start_attend' => $workingShift->start_attend,
+                'end_attend' => $workingShift->end_attend,
                 'check_in' => $checkIn,
                 'check_out' => $checkOut,
             ]);
@@ -95,12 +97,13 @@ class AttendanceController extends Controller
             ]);
 
             $attendanceRequest = UserAttendanceRequest::whereId($request->id)->first();
+            $approvalLine = $attendanceRequest->user->userEmployment->approvalLine;
 
             if (!$attendanceRequest) {
                 throw new NotFoundError("Attendance Request tidak ditemukan");
             }
 
-            if (!$attendanceRequest->approval_line) {
+            if (!$approvalLine) {
                 if ($request->status == $this->constants->approve_status[1]) {
                     $this->_updateAttendance(
                         $attendanceRequest->user_id,
@@ -111,6 +114,7 @@ class AttendanceController extends Controller
                 }
 
                 $attendanceRequest->update([
+                    "approval_line" => $approvalLine->id,
                     "status" => $request->status,
                     "comment" => $request->comment
                 ]);
@@ -121,7 +125,7 @@ class AttendanceController extends Controller
                 ]);
             }
 
-            if ($attendanceRequest->approval_line != Auth::user()->id) {
+            if ($approvalLine->id != Auth::user()->id) {
                 throw new AuthorizationError("Anda tidak berhak melakukan update status");
             }
 
@@ -143,6 +147,7 @@ class AttendanceController extends Controller
             }
 
             $attendanceRequest->update([
+                "approval_line" => $approvalLine->id,
                 "status" => $request->status,
                 "comment" => $request->comment
             ]);
@@ -161,9 +166,14 @@ class AttendanceController extends Controller
     public function getSummaries(Request $request)
     {
         try {
-            $query = UserAttendanceRequest::where('approval_line', Auth::user()->id)
-                ->has('user.userEmployment')
-                ->with('user.userEmployment');
+            $query = UserAttendanceRequest::where(function ($query) {
+                $query->where(function ($query) {
+                    $query->where('status', $this->constants->approve_status[0])
+                    ->whereHas('user.userEmployment', function ($query) {
+                        $query->where('approval_line', Auth::user()->id);
+                    });
+                })->orWhere('approval_line', Auth::user()->id);
+            });
 
             $search = $request->filters['search'];
             if (!empty($search)) {
@@ -203,7 +213,8 @@ class AttendanceController extends Controller
                 ->groupBy('status')
                 ->get();
 
-            function formatter($collection) {
+            function formatter($collection)
+            {
                 $statuses = ['waiting' => 0, 'approved' => 0, 'rejected' => 0];
 
                 foreach ($collection as $summary) {
@@ -234,11 +245,16 @@ class AttendanceController extends Controller
     public function getTable(Request $request)
     {
         if (request()->ajax()) {
-            $query = UserAttendanceRequest::where('approval_line', Auth::user()->id)
-                ->has('user.userEmployment')
-                ->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
+            $query = UserAttendanceRequest::where(function ($query) {
+                $query->where(function ($query) {
+                    $query->where('status', $this->constants->approve_status[0])
+                    ->whereHas('user.userEmployment', function ($query) {
+                        $query->where('approval_line', Auth::user()->id);
+                    });
+                })->orWhere('approval_line', Auth::user()->id);
+            })->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
 
-            switch($request->filters['filterStatus']) {
+            switch ($request->filters['filterStatus']) {
                 case $this->constants->approve_status[0]:
                     $query = $query->where('status', $this->constants->approve_status[0]);
                     break;

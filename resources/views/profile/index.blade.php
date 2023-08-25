@@ -131,7 +131,6 @@
                                     </div>
                                 </div>
                                 <div class="tab-content" id="myTabContent">
-
                                     {{-- Personal --}}
                                     <div class="tab-pane fade show active" id="personal_content" role="tabpanel">
                                         @include('profile.part-profile.personal-part')

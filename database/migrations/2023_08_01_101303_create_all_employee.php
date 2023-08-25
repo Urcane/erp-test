@@ -86,8 +86,8 @@ class CreateAllEmployee extends Migration
             $table->time("break_end");
             $table->smallInteger("late_check_in")->default(0); // in minute
             $table->smallInteger("late_check_out")->default(0); // in minute
-            $table->smallInteger("min_check_in")->nullable(); // in minute
-            $table->smallInteger("max_check_out")->nullable(); // in minute
+            $table->smallInteger("start_attend")->nullable(); // in minute
+            $table->smallInteger("end_attend")->nullable(); // in minute
             $table->time("overtime_before")->nullable();
             $table->time("overtime_after")->nullable();
             $table->boolean("show_in_request")->default(0);

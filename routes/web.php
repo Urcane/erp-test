@@ -254,10 +254,19 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('attendance')->group(function () {
             Route::controller(HCRequest\AttendanceController::class)->group(function () {
-                Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.att.summaries');
                 Route::put('/update/status', 'updateRequestStatus')->name('hc.request.att.update');
+                Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.att.summaries');
 
                 Route::get('/get-data/table', 'getTable')->name('hc.request.att.get-table');
+            });
+        });
+
+        Route::prefix('shift')->group(function () {
+            Route::controller(HCRequest\ShiftController::class)->group(function () {
+                Route::put('/update/status', 'updateRequestStatus')->name('hc.request.shf.update');
+                Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.shf.summaries');
+
+                Route::get('/get-data/table', 'getTable')->name('hc.request.shf.get-table');
             });
         });
 
