@@ -180,7 +180,7 @@ class AttendanceController extends Controller
             $page = $request->page ?? 1;
             $itemCount = $request->itemCount ?? 10;
 
-            $attendance = $request->user()->userAttendances()->paginate($itemCount, ['*'], 'page', $page);
+            $attendance = $request->user()->userAttendances()->orderBy('date', 'desc')->paginate($itemCount, ['*'], 'page', $page);
 
             return response()->json([
                 "status" => "success",

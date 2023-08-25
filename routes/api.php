@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::controller(Api\UserController::class)->group(function () {
             Route::get('/me', 'getUserProfile');
             Route::get('/personal/data', 'getUserPersonalData');
+            Route::get('/employment/data', 'getUserEmploymentData');
         });
         Route::controller(PersonalController::class)->group(function () {
             Route::post('/update/personal/data', 'updatePersonal');
@@ -52,9 +53,12 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 
-    Route::controller(AttendanceController::class)->group(function () {
-        Route::prefix('cmt-request')->group(function () {
-            Route::post('/get', 'getRequestAttendance');
+    Route::prefix('cmt-request')->group(function () {
+        Route::controller(AttendanceController::class)->group(function () {
+            Route::post('/attendance/get', 'getRequestAttendance');
+        });
+        Route::controller(Api\Request\ShiftController::class)->group(function () {
+            Route::post('/shift/get', 'getRequestShift');
         });
     });
 

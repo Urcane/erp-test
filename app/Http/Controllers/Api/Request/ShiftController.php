@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api\HC\Request;
+namespace App\Http\Controllers\Api\Request;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Utils\ErrorHandler;
-use App\Models\Attendance\UserAttendanceRequest;
+use App\Models\Attendance\UserShiftRequest;
 
-class AttendanceController extends Controller
+class ShiftController extends Controller
 {
     private $errorHandler;
 
@@ -16,20 +16,19 @@ class AttendanceController extends Controller
         $this->errorHandler = new ErrorHandler();
     }
 
-    public function getApprovalAttendance(Request $request) {
+    public function getRequestShift(Request $request) {
 
         try {
-
             $page = $request->page ?? 1;
             $itemCount = $request->itemCount ?? 10;
 
-            $userAttendanceRequest = UserAttendanceRequest::where('approval_line', $request->user()->id)->orderBy('created_at', 'desc')->with("user")->with("approvalLine")->paginate($itemCount, ['*'], 'page', $page);
+            $userShiftRequest = UserShiftRequest::where('user_id', $request->user()->id)->orderBy('created_at', 'desc')->with("user")->with("approvalLine")->paginate($itemCount, ['*'], 'page', $page);
             return response()->json([
                 "status" => "success",
                 "data" => [
-                    "currentPage" => $userAttendanceRequest->currentPage(),
+                    "currentPage" => $userShiftRequest->currentPage(),
                     "itemCount" => $itemCount,
-                    "userAttendanceRequest" => $userAttendanceRequest->items(),
+                    "userShiftRequest" => $userShiftRequest->items(),
                 ],
             ]);
         } catch (\Throwable $th) {
