@@ -1,8 +1,4 @@
 <script>
-    const formatDateTime = (dateTime) => {
-        return dateTime === "-" ? "-" : dateTime.replace(" ", " at ");
-    }
-
     const onAttendanceModalOpen = ({
         id,
         name = "-",

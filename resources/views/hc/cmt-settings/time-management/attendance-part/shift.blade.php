@@ -77,13 +77,13 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class= fw-bold">Min. Clock in time</span>
                                 </label>
-                                <input type="number" class="form-control form-control-solid" placeholder="Schedule In" name="min_check_in">
+                                <input type="number" class="form-control form-control-solid" placeholder="Schedule In" name="start_attend">
                             </div>
                             <div class="col-lg-6 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class= fw-bold">Max. Clock out time</span>
                                 </label>
-                                <input type="number" class="form-control form-control-solid" placeholder="Schedule Out" name="max_check_out">
+                                <input type="number" class="form-control form-control-solid" placeholder="Schedule Out" name="end_attend">
                             </div>
                         </div>
 
@@ -322,8 +322,8 @@
         working_end,
         break_start,
         break_end,
-        min_check_in,
-        max_check_out,
+        start_attend,
+        end_attend,
         late_check_in,
         late_check_out,
         overtime_before,
@@ -334,8 +334,8 @@
         $("[name=\'working_end\']").val(working_end);
         $("[name=\'break_start\']").val(break_start);
         $("[name=\'break_end\']").val(break_end);
-        $("[name=\'min_check_in\']").val(min_check_in);
-        $("[name=\'max_check_out\']").val(max_check_out);
+        $("[name=\'start_attend\']").val(start_attend);
+        $("[name=\'end_attend\']").val(end_attend);
         $("[name=\'late_check_in\']").val(late_check_in);
         $("[name=\'late_check_out\']").val(late_check_out);
         $("[name=\'overtime_before\']").val(overtime_before);
@@ -356,7 +356,7 @@
         }
 
         $("#attendance_validation").addClass("d-none")
-        if (min_check_in || max_check_out) {
+        if (start_attend || end_attend) {
             $("[name=\'add_attendance_validation\']").val("1")
             $("[name=\'add_attendance_validation\']").prop("checked", true);
             $("#attendance_validation").removeClass("d-none")

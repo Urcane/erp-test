@@ -4,6 +4,10 @@
         return `${day}/${month}/${year}`;
     }
 
+    const formatDateTime = (dateTime) => {
+        return dateTime === "-" ? "-" : dateTime.replace(" ", " at ");
+    }
+
     const approveStatusEnum = @json($approveStatus);
 </script>
 
@@ -16,5 +20,9 @@
 <script>
     $(document).ready(function() {
         attendanceInit();
+
+        $('#shiftnav').one('click', function() {
+            shiftInit();
+        });
     });
 </script>

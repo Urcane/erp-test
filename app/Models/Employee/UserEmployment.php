@@ -36,6 +36,6 @@ class UserEmployment extends Model
 
     public function approvalLine(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'approval_line');
     }
 }

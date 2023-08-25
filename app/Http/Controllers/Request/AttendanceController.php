@@ -62,7 +62,6 @@ class AttendanceController extends Controller
 
             UserAttendanceRequest::create([
                 "user_id" => Auth::user()->id,
-                "approval_line" => $userEmployment->approval_line,
                 "date" => $request->date,
                 "notes" => $request->notes,
                 "check_in" => $request->check_in ? date('Y-m-d H:i:s', strtotime(date('Y-m-d') . ' ' . $request->check_in)): null,
@@ -83,7 +82,9 @@ class AttendanceController extends Controller
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
-            $attendanceRequests = UserAttendanceRequest::where('user_id', $request->user_id)->orderBy('created_at', 'desc');
+            $attendanceRequests = UserAttendanceRequest::where('user_id', $request->user_id)
+                ->orderBy('date', 'desc')
+                ->with(['user.userEmployment', 'approvalLine']);
 
             return DataTables::of($attendanceRequests)
                 ->addColumn('action', function ($action) {
@@ -96,7 +97,11 @@ class AttendanceController extends Controller
                     ';
                 })
                 ->addColumn('approval_line', function ($attendanceRequest) {
-                    return $attendanceRequest->approvalLine->name ?? "-";
+                    if ($attendanceRequest->status != $this->constants->approve_status[0]) {
+                        return $attendanceRequest->approvalLine->name ?? "-";
+                    }
+
+                    return $attendanceRequest->user->userEmployment->approvalLine->name ?? "-";
                 })
                 ->addColumn('check_in', function ($attendanceRequest) {
                     $checkIn = $attendanceRequest->check_in;
