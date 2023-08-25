@@ -59,6 +59,10 @@
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
                                         {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+
+                                            <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                                <input type="hidden" id="boq_id" name="boq_id"  value="{{$updateDraftBoqData['dataCompanyItem'][0]->id}}">
+                                            </div>
                                             
                                             <div class="" style="flex-basis: 30%; min-width: 450px; margin-bottom: 15px;">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -471,6 +475,7 @@
 
                     // Get Prospect ID and Survey ID from the HTML elements
                     // var survey_request_id = $('#survey_request_id').val();
+                    var boq_id = $('#boq_id').val();
                     var prospect_id = $('#prospect_id').val();
 
                     var sales_id = $('#sales_id').val();
@@ -500,6 +505,7 @@
                     var items = [];
                     // Create an object to store prospect_id and survey_request_id
                     var boq = {
+                        boq_id: boq_id,
                         prospect_id: prospect_id,
                         is_final: is_final,
 
@@ -566,7 +572,7 @@
 
                     // Send the data to the server using AJAX
                     $.ajax({
-                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        url: "{{ route('com.boq.store.boq') }}",
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',

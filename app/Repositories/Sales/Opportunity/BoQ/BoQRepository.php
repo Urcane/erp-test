@@ -93,7 +93,7 @@ class BoQRepository
             $npm = $request->input('boq.npm');
             $percentage = $request->input('boq.percentage');
             $manpower = $request->input('boq.manpower');
-            $is_final = $request->input('boq.is_final', 0);
+            $is_final = $request->input('boq.is_final');
 
             $itemableBoqIsDraft = ItemableBillOfQuantity::where([
                 'prospect_id' => $prospect_id,
@@ -166,8 +166,8 @@ class BoQRepository
 
     function storeApprovalBoq(Request $request) : JsonResponse {
         // dd($request->input('boq.boq_id'));
-        $boqId = $request->input('boq_id');
-        $remark = $request->input('remark');
+        $boqId = $request->input('boq.boq_id');
+        $remark = $request->input('boq.remark');
         $boqData = $this->model->where('id', $boqId)->first();
         
         if ($boqData) {
@@ -212,7 +212,6 @@ class BoQRepository
         }
         return response()->json(['error' => 'BoQ tidak ditemukan.'], 404);
     }
-    
 
     function createRevisionBoq(Request $request) : JsonResponse {
         try {
@@ -267,7 +266,6 @@ class BoQRepository
             return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
-    
 
     function updateDraftBoq(Request $request){
         $boqId = $request->query('boq_id');

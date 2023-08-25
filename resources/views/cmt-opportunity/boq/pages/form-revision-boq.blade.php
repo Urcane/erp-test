@@ -44,11 +44,6 @@
                                     <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Commercial Bill of
                                         Quantity</span>
                                 </div>
-                                <div class="form-check form-check-custom form-check-success form-check-solid">
-                                    <input class="form-check-input" type="checkbox" value="1" id="is_final"
-                                        name="is_final" />
-                                    <label class="form-check-label" for="is_final">Finalisasi</label>
-                                </div>
                             </div>
 
                             {{-- header company --}}
