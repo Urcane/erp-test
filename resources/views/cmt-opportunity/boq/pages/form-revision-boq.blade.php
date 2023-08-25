@@ -28,7 +28,7 @@
     {{-- BOQ  COMMERCIAL --}}
     {{-- @dd($dataSurvey) --}}
     {{-- @dd($dataProspect) --}}
-    {{-- @dd($updateDraftBoqData['dataCompanyItem'][0]) --}}
+    {{-- @dd($updateDraftBoqData['dataCompanyItem'][0]->id) --}}
 
 
     <div class="row justify-content-center">
@@ -87,6 +87,10 @@
                                         </div>
 
                                         {{-- baris company contact --}}
+                                        <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <input type="hidden" id="boq_id" name="boq_id"  value="{{$updateDraftBoqData['dataCompanyItem'][0]->id}}">
+                                        </div>
+                                        
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
 
                                             <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
@@ -95,6 +99,7 @@
                                                     id="customer_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                             </div>
+                                            
 
                                             <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class=" form-label">Nama Kontak Customer</label>
@@ -147,16 +152,17 @@
                                                 style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label required">Technician</label>
                                                 <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" name="technician_id" id="technician_id">
-                                                    <option value="{{ $updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? "Pilih Sales"  }}</option>
-                                                    @if (isset($updateDraftBoqData['dataTechnician']))
-                                                        @foreach ($updateDraftBoqData['dataTechnician'] as $Technician)
-                                                            <option value="{{ $Technician->id ?? null }}">
-                                                                {{ $Technician->name ?? null }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
+                                                data-control="select2" name="technician_id" id="technician_id">
+                                                <option value="" disabled>Pilih Technician</option>
+                                                @if (isset($updateDraftBoqData['dataTechnician']))
+                                                    @foreach ($updateDraftBoqData['dataTechnician'] as $technician)
+                                                        <option value="{{ $technician->id }}"
+                                                            {{ $technician->id == ($updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? null) ? 'selected' : '' }}>
+                                                            {{ $technician->name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>   
                                             </div>
 
                                             <div class=""
@@ -164,14 +170,14 @@
                                                 <label class="form-label required">Procurement</label>
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="procurement_id" id="procurement_id">
-                                                    <option value="{{ $updateDraftBoqData['dataCompanyItem'][0]->procurement_id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataCompanyItem'][0]->procurement_id ?? "Pilih Sales"  }}</option>
-                                                   @if (isset($updateDraftBoqData['dataFinance']))
-                                                        @foreach ($updateDraftBoqData['dataFinance'] as $procurement)
-                                                            <option value="{{ $procurement->id ?? null }}">
-                                                                {{ $procurement->name ?? null }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
+                                                    @if (isset($updateDraftBoqData['dataProcurement']))
+                                                    @foreach ($updateDraftBoqData['dataProcurement'] as $procurement)
+                                                        <option value="{{ $procurement->id }}"
+                                                            {{ $procurement->id == ($updateDraftBoqData['dataCompanyItem'][0]->procurement_id ?? null) ? 'selected' : '' }}>
+                                                            {{ $procurement->name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
                                                 </select>
                                             </div>
 
@@ -370,9 +376,7 @@
                                                 <div id="error-item"></div>
                                             </div>
                                         @endrole
-
                                     </div>
-
                                     {{-- layer total dan submit --}}
                                     <div>
                                         <div class="d-flex justify-content-end mx-20">
@@ -385,7 +389,7 @@
                                                 <a href="" class="btn btn-light-info">Discard</a>
                                             </div>
                                             <div class="me-5">
-                                                <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Submit</a>
+                                                <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Create Revision</a>
                                             </div>
                                         </div>
                                     </div>
@@ -474,6 +478,7 @@
 
                     // Get Prospect ID and Survey ID from the HTML elements
                     // var survey_request_id = $('#survey_request_id').val();
+                    var boq_id = $('#boq_id').val();
                     var prospect_id = $('#prospect_id').val();
 
                     var sales_id = $('#sales_id').val();
@@ -503,6 +508,7 @@
                     var items = [];
                     // Create an object to store prospect_id and survey_request_id
                     var boq = {
+                        boq_id: boq_id,
                         prospect_id: prospect_id,
                         is_final: is_final,
 
@@ -517,6 +523,7 @@
                         manpower: manpower,
                         percentage: percentage
                     };
+
 
                     console.log(boq);
 
@@ -569,7 +576,7 @@
 
                     // Send the data to the server using AJAX
                     $.ajax({
-                        url: "{{ route('com.boq.store.boq') }}",
+                        url: "{{ route('com.boq.revision.boq') }}",
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',

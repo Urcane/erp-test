@@ -54,8 +54,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="row mb-6 align-items-center">
 
@@ -328,26 +326,36 @@
         });
 
         $('body').on('click', '#tab_draft', function() {
+            $('#progress_bar').removeClass('badge-danger').addClass('badge-info');
+            $('#progress_bar').text('In Progress');
             $('#progress_bar').show();
             $('#create_boq').hide();
         });
 
         $('body').on('click', '#tab_commercial', function() {
+            $('#progress_bar').removeClass('badge-danger').addClass('badge-info');
+            $('#progress_bar').text('In Progress');
             $('#progress_bar').show();
             $('#create_boq').hide();
         });
 
         $('body').on('click', '#tab_done', function() {
+            $('#progress_bar').removeClass('badge-danger').addClass('badge-info');
+            $('#progress_bar').text('In Progress');
             $('#progress_bar').show();
             $('#create_boq').hide();
         });
 
         $('body').on('click', '#tab_cancel', function() {
+            $('#progress_bar').removeClass('badge-info').addClass('badge-danger');
+            $('#progress_bar').text('Canceled').prepend('<i class="fas fa-times-circle me-2"></i>');
             $('#progress_bar').show();
             $('#create_boq').hide();
         });
 
         $('body').on('click', '#tab_review', function() {
+            $('#progress_bar').removeClass('badge-danger').addClass('badge-info');
+            $('#progress_bar').text('In Progress');
             $('#progress_bar').show();
             $('#create_boq').hide();
         });

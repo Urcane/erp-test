@@ -209,35 +209,60 @@ class BoQRepository
     }
     
 
-    function createRevisionBoq(Request $request) : JsonResponse{
-        $rejectedBoq = ItemableBillOfQuantity::findOrFail($request->query('id'));
-        $copyBoq = $rejectedBoq->toArray();
-        unset($copyBoq['id']); 
-        unset($copyBoq['created_at']); 
-        unset($copyBoq['updated_at']); 
-        $copyBoq['approval_manager'] = null;
-        $copyBoq['approval_manager_date'] = null;
-        $copyBoq['approval_director'] = null;
-        $copyBoq['approval_director_date'] = null;
-        $copyBoq['approval_finman'] = null;
-        $copyBoq['approval_finman_date'] = null;
-        $copyBoq['is_draft'] = 1;
-        $copyBoq['is_final'] = 0;
-        $copyBoq['remark'] = null;
-        $copyBoq['reference_boq_id'] = null;
-
-        $revisionBoq = ItemableBillOfQuantity::create($copyBoq);
-
-        $revisionBoq['reference_boq_id'] = $revisionBoq['id'];
-
-        foreach ($rejectedBoq->itemable as $item) {
-            $newItems = $item->toArray();
-            unset($newItems['id']); 
-            $revisionBoq->itemable()->create($newItems);
+    function createRevisionBoq(Request $request) : JsonResponse {
+        try {
+            DB::beginTransaction();
+    
+            $rejectedBoq = ItemableBillOfQuantity::findOrFail($request->input('boq.boq_id'));
+    
+            $newBoq = ItemableBillOfQuantity::create([
+                'prospect_id' => $rejectedBoq->prospect_id,
+                'survey_request_id' => $rejectedBoq->survey_request_id,
+                'sales_id' => $request->input('boq.sales_id'),
+                'technician_id' => $request->input('boq.technician_id'),
+                'procurement_id' => $request->input('boq.procurement_id'),
+                'gpm' => $request->input('boq.gpm'),
+                'modal' => $request->input('boq.modal'),
+                'npm' => $request->input('boq.npm'),
+                'percentage' => $request->input('boq.percentage'),
+                'manpower' => $request->input('boq.manpower'),
+                'approval_manager' => null,
+                'approval_manager_date' => null,
+                'approval_director' => null,
+                'approval_director_date' => null,
+                'approval_finman' => null,
+                'approval_finman_date' => null,
+                'is_draft' => 1,
+                'is_final' => 0,
+                'remark' => null,
+                'reference_boq_id' => $rejectedBoq->id,
+            ]);
+    
+            $itemsData = $request->input('items');
+    
+            if (!empty($itemsData)) {
+                foreach ($itemsData as $itemData) {
+                    $newBoq->itemable()->create([
+                        'quantity' => $itemData['quantity'],
+                        'purchase_price' => $itemData['purchase_price'],
+                        'total_price' => $itemData['total_price'],
+                        'purchase_delivery_charge' => $itemData['purchase_delivery'],
+                        'purchase_refrence' => $itemData['purchase_reference'],
+                        'item_inventory_id' => $itemData['item_inventory_id'],
+                        'item_detail' => $itemData['item_detail'],
+                    ]);
+                }
+            }
+    
+            DB::commit();
+            return response()->json(['message' => 'BOQ Baru Berhasil Dibuat.'], 200);
+    
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
-
-        return response()->json(['message' => 'Boq Berhasil Dibuat Kembali.'], 200);
     }
+    
 
     function updateDraftBoq(Request $request){
         $boqId = $request->query('boq_id');

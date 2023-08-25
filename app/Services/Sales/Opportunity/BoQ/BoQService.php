@@ -52,7 +52,7 @@ class BoqService
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
+                                <li><a href="' . url("cmt-boq/get-revision-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Recreate BoQ</a></li>
                             </ul>';
             })
@@ -156,6 +156,11 @@ class BoqService
             return view('cmt-opportunity.boq.pages.form-update-boq', compact('updateDraftBoqData'));
         }
         return view('cmt-opportunity.boq.pages.form-commercial-boq', compact('updateDraftBoqData'));
+    }
+
+    function getApprovalBoq(Request $request){
+        $updateDraftBoqData = $this->BoQRepository->updateDraftBoq($request);
+        return view('cmt-opportunity.boq.pages.form-revision-boq', compact('updateDraftBoqData'));
     }
 
     function storeApprovalBoq(Request $request) : JsonResponse {

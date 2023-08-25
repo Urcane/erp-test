@@ -104,9 +104,11 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/batal-boq','batalBoQ')->name('com.boq.batal-boq');
             Route::get('/create-draft-boq','createDraftBoq')->name('com.boq.create-draft-boq');
             Route::get('/update-draft-boq','updateDraftBoq')->name('com.boq.update-draft-boq');
-            Route::post('/create-revision-boq','storeDataBoq')->name('com.boq.revision.boq');
+            Route::post('/create-revision-boq','createRevisionBoq')->name('com.boq.revision.boq');
+            Route::get('/get-revision-boq','getApprovalBoq')->name('com.boq.get.revision.boq');
             Route::post('/store-data-boq','saveAndStoreBoq')->name('com.boq.store.boq');
-            
+            Route::post('/store-approval-boq','storeApprovalBoq')->name('com.boq.store.approval.boq');
+
             Route::get('/get-merk-type','getMerkType')->name('get.merk.type');
             Route::get('/get-survey-company-item-inventory','getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory'); 
         });
