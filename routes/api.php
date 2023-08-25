@@ -1,12 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api;
-use App\Http\Controllers\Api\Request\AttendanceController;
-use App\Http\Controllers\Api\HC\EmployeeController;
-
 use App\Http\Controllers\Profile\PersonalController;
+use App\Http\Controllers\Api\HC;
+use App\Http\Controllers\Api\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -35,12 +34,13 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 
-    Route::controller(EmployeeController::class)->group(function () {
+    Route::controller(HC\EmployeeController::class)->group(function () {
         Route::prefix('cmt-employee')->group(function () {
             Route::get("/all", "getAllEmployee");
         });
     });
-    Route::controller(Api\HC\AttendanceController::class)->group(function () {
+
+    Route::controller(HC\AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
             Route::get('/history', 'getAttendanceHistory');
             Route::post('/history/detail', 'getAttendanceByDate');
@@ -54,17 +54,30 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('cmt-request')->group(function () {
-        Route::controller(AttendanceController::class)->group(function () {
-            Route::post('/attendance/get', 'getRequestAttendance');
+        Route::prefix('attendance')->group(function () {
+            Route::controller(HC\Request\AttendanceController::class)->group(function () {
+                Route::post('/get', 'getRequest');
+            });
         });
-        Route::controller(Api\Request\ShiftController::class)->group(function () {
-            Route::post('/shift/get', 'getRequestShift');
-        });
-    });
 
-    Route::controller(Api\HC\Request\AttendanceController::class)->group(function () {
-        Route::prefix('cmt-approval')->group(function () {
-            Route::post('/get', 'getApprovalAttendance');
+        // Route::prefix('shift')->group(function () {
+        //     Route::controller(HC\Request\ShiftController::class)->group(function () {
+        //         Route::post('/get', 'getRequest');
+        //     });
+        // });
+
+        Route::prefix('personal')->group(function () {
+            Route::prefix('attendance')->group(function () {
+                Route::controller(Request\AttendanceController::class)->group(function () {
+                    Route::post('/get', 'getRequestAttendance');
+                });
+            });
+
+            Route::prefix('shift')->group(function () {
+                Route::controller(Request\ShiftController::class)->group(function () {
+                    Route::post('/get', 'getRequestShift');
+                });
+            });
         });
     });
 });

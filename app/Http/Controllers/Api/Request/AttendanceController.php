@@ -22,7 +22,11 @@ class AttendanceController extends Controller
             $page = $request->page ?? 1;
             $itemCount = $request->itemCount ?? 10;
 
-            $userAttendanceRequest = UserAttendanceRequest::where('user_id', $request->user()->id)->orderBy('created_at', 'desc')->with("user")->with("approvalLine")->paginate($itemCount, ['*'], 'page', $page);
+            $userAttendanceRequest = UserAttendanceRequest::where('user_id', $request->user()->id)
+                ->orderBy('date', 'desc')
+                ->with(['approvalLine'])
+                ->paginate($itemCount, ['*'], 'page', $page);
+
             return response()->json([
                 "status" => "success",
                 "data" => [
