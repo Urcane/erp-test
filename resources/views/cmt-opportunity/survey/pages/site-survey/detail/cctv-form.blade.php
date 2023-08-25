@@ -221,7 +221,7 @@
                                                     <span class="fw-bold my-auto">Tanggal Survey : </span>
                                                 </label>
                                             </div>
-                                            <div class="col-lg-10">
+                                            <div class="col-lg-4">
                                                 <input @if (isset($surveyResult)) disabled="disabled" @endif type="date" class="form-control form-control-solid" name="survey_date" value="{{isset($surveyResult) ? old('survey_date', $surveyResult->survey_date) : ''}}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>

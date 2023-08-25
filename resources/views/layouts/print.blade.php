@@ -34,9 +34,9 @@
 	<script src="{{asset('sense')}}/plugins/custom/signaturejs/js/jquery.signature.js"></script>
 	
 </head>
-<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="@yield('navbar-status','false')" 
-data-kt-app-toolbar-fixed="@yield('toolbar-status','false')" data-kt-app-toolbar-enabled="@yield('toolbar-status','true')" 
-data-kt-app-sidebar-enabled="@yield('sidebar-status','false')" data-kt-app-sidebar-fixed="@yield('sidebar-status','false')" data-kt-app-sidebar-hoverable="@yield('sidebar-status','false')" data-kt-app-sidebar-push-header="@yield('sidebar-push','false')" data-kt-app-sidebar-push-toolbar="@yield('sidebar-push','false')" data-kt-app-sidebar-push-footer="@yield('sidebar-status','false')" 
+<body id="kt_app_body" data-kt-app-layout="light-sidebar" data-kt-app-header-fixed="@yield('navbar-status','true')" 
+data-kt-app-toolbar-fixed="@yield('toolbar-status','true')" data-kt-app-toolbar-enabled="@yield('toolbar-status','true')" 
+data-kt-app-sidebar-enabled="@yield('sidebar-status','false')" data-kt-app-sidebar-fixed="@yield('sidebar-status','false')" data-kt-app-sidebar-hoverable="@yield('sidebar-status','false')" data-kt-app-sidebar-push-header="@yield('sidebar-status2','false')" data-kt-app-sidebar-push-toolbar="@yield('sidebar-status2','false')" data-kt-app-sidebar-push-footer="@yield('sidebar-status','false')" 
 class="app-default page-loading-enabled page-loading">
 
 <style>
@@ -64,7 +64,7 @@ class="app-default page-loading-enabled page-loading">
 </style>
 
 <script>
-	var defaultThemeMode = "system"; 
+	var defaultThemeMode = "light"; 
 	var themeMode; 
 	if ( document.documentElement ) { 
 		if ( document.documentElement.hasAttribute("data-theme-mode")) { 
@@ -76,7 +76,7 @@ class="app-default page-loading-enabled page-loading">
 				themeMode = defaultThemeMode; 
 			} 
 		} if (themeMode === "system") { 
-			themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; 
+			themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "light"; 
 		} 
 		document.documentElement.setAttribute("data-theme", themeMode); 
 	}

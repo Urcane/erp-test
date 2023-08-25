@@ -184,8 +184,8 @@
                                                     <span class="fw-bold my-auto">Tanggal Survey : </span>
                                                 </label>
                                             </div>
-                                            <div class="col-lg-10">
-                                                <input @if (isset($surveyResult)) disabled="disabled" type="date" @endif class="form-control form-control-solid" name="survey_date" value="{{isset($surveyResult) ? old('survey_date', $surveyResult->survey_date) : ''}}">
+                                            <div class="col-lg-4">
+                                                <input  type="date" @if (isset($surveyResult)) disabled="disabled" @endif class="form-control form-control-solid" name="survey_date" value="{{isset($surveyResult) ? old('survey_date', $surveyResult->survey_date) : ''}}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>
