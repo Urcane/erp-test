@@ -165,13 +165,15 @@ class BoQRepository
     }
 
     function storeApprovalBoq(Request $request) : JsonResponse {
-        $boqId = $request->query('boq_id');
+        // dd($request->input('boq.boq_id'));
+        $boqId = $request->input('boq_id');
+        $remark = $request->input('remark');
         $boqData = $this->model->where('id', $boqId)->first();
-    
+        
         if ($boqData) {
-            $approval_manager = $request->input('approval_manager');
-            $approval_director = $request->input('approval_director');
-            $approval_finman = $request->input('approval_finman');
+            $approval_manager = $request->input('is_approval_manager');
+            $approval_director = $request->input('is_approval_director');
+            $approval_finman = $request->input('is_approval_finman');
         
             if ($approval_manager !== null) {
                 $boqData->approval_manager = $approval_manager;
@@ -201,9 +203,12 @@ class BoQRepository
                         $boqData->is_done = 0;
                     }
             }
+            if (isset($remark)) { 
+                $boqData->remark = $remark;
+            }
             
             $boqData->save();
-            return response()->json(['message' => 'BoQ berhasil disimpan.'], 200);
+            return response()->json(['message' => 'Approval & Reject berhasil disimpan.'], 200);
         }
         return response()->json(['error' => 'BoQ tidak ditemukan.'], 404);
     }
@@ -271,11 +276,11 @@ class BoQRepository
         $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$boqData->prospect_id)->get();
         $dataForm = $this->inventoryService->getDataForm();
         $dataSales = $this->user->where('department_id', 1)->get();
-        $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->get();
+        $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first();
         $dataProcurement = $this->user->where('department_id', 2)->get();
-        $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->get();
+        $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->first();
         $dataTechnician = $this->user->where('department_id', 4)->get();
-        $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->get();
+        $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->first();
 
         return [
             'dataCompanyItem' => $dataCompanyItem,
@@ -285,6 +290,23 @@ class BoQRepository
             'dataProcurement' => $dataProcurement,
             'dataProcurementSelected' => $dataProcurementSelected,
             'dataTechnician' => $dataTechnician,
+            'dataTechnicianSelected' => $dataTechnicianSelected,
+        ];
+    }
+
+    function onReviewBoq(Request $request){
+        $boqId = $request->query('boq_id');
+        $boqData = $this->model->where('id', $boqId)->first();
+
+        $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$boqData->prospect_id)->get();       
+        $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first(); 
+        $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->first(); 
+        $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->first();
+
+        return [
+            'dataCompanyItem' => $dataCompanyItem, 
+            'dataSalesSelected' => $dataSalesSelected, 
+            'dataProcurementSelected' => $dataProcurementSelected, 
             'dataTechnicianSelected' => $dataTechnicianSelected,
         ];
     }

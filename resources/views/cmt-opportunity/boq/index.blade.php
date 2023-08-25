@@ -364,6 +364,9 @@
             tableName: "tableOpporunities",
             elementName: "#kt_table_opportunities",
             ajaxLink: "{{ route('com.prospect.get-table-prospect-only-done') }}",
+            filters: {
+                calledFrom: 'BOQ'
+            },
             columnData: [{
                     data: 'DT_RowChecklist',
                     orderable: false,
@@ -601,7 +604,7 @@
                         data: 'next_action_pretified'
                     },
                     {
-                        data: 'action'
+                        data: 'action_approval'
                     },
                 ]
             });

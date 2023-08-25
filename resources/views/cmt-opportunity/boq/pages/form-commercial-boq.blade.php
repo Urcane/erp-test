@@ -28,7 +28,7 @@
     {{-- BOQ  COMMERCIAL --}}
     {{-- @dd($dataSurvey) --}}
     {{-- @dd($dataProspect) --}}
-    {{-- @dd($updateDraftBoqData['dataCompanyItem'][0]) --}}
+    {{-- @dd($updateDraftBoqData['dataSalesSelected']) --}}
 
 
     <div class="row justify-content-center">
@@ -60,21 +60,19 @@
                                         {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
                                             
-                                            <div class="col-lg-5 col-6 mb-3">
+                                            <div class="" style="flex-basis: 30%; min-width: 450px; margin-bottom: 15px;">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->prospect_title }} - {{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
-
                                                 <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="prospect_id"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->prospect_id }}">
-
                                                 <div id="error-prospect"></div>
                                             </div>
 
-                                            <div class="col-lg-5 col-6 mb-3">
+                                            <div class="" style="flex-basis: 30%; min-width: 450px; margin-bottom: 15px;">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
@@ -130,17 +128,16 @@
                                                 style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label required">Sales</label>
                                                 <select class="form-select-solid form-select form-select-solid"
-                                                data-control="select2" name="sales_id" id="sales_id">
-                                                <option value="" disabled>Pilih Sales</option>
-                                                @if (isset($updateDraftBoqData['dataSales']))
-                                                    @foreach ($updateDraftBoqData['dataSales'] as $sales)
-                                                        <option value="{{ $sales->id }}"
-                                                            {{ $sales->id == ($updateDraftBoqData['dataCompanyItem'][0]->sales_id ?? null) ? 'selected' : '' }}>
-                                                            {{ $sales->name }}
-                                                        </option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
+                                                    data-control="select2" name="sales_id" id="sales_id">
+                                                    <option value="{{ $updateDraftBoqData['dataSalesSelected']->id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataSalesSelected']->name ?? "Pilih Sales"  }}</option>
+                                                    @if (isset($updateDraftBoqData['dataSales']))
+                                                        @foreach ($updateDraftBoqData['dataSales'] as $sales)
+                                                            <option value="{{ $sales->id ?? null }}">
+                                                                {{ $sales->name ?? null }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
 
                                             <div class=""
@@ -148,7 +145,7 @@
                                                 <label class="form-label required">Technician</label>
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="technician_id" id="technician_id">
-                                                    <option value="{{ $updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? "Pilih Sales"  }}</option>
+                                                    <option value="{{ $updateDraftBoqData['dataTechnicianSelected']->id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataTechnicianSelected']->name ?? "Pilih Technician"  }}</option>
                                                     @if (isset($updateDraftBoqData['dataTechnician']))
                                                         @foreach ($updateDraftBoqData['dataTechnician'] as $Technician)
                                                             <option value="{{ $Technician->id ?? null }}">
@@ -164,9 +161,9 @@
                                                 <label class="form-label required">Procurement</label>
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="procurement_id" id="procurement_id">
-                                                    <option value="{{ $updateDraftBoqData['dataCompanyItem'][0]->procurement_id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataCompanyItem'][0]->procurement_id ?? "Pilih Sales"  }}</option>
-                                                   @if (isset($updateDraftBoqData['dataFinance']))
-                                                        @foreach ($updateDraftBoqData['dataFinance'] as $procurement)
+                                                    <option value="{{ $updateDraftBoqData['dataProcurementSelected']->id ?? null}}" selected disabled>{{ $updateDraftBoqData['dataProcurementSelected']->name ?? "Pilih Procurement"  }}</option>
+                                                   @if (isset($updateDraftBoqData['dataProcurement']))
+                                                        @foreach ($updateDraftBoqData['dataProcurement'] as $procurement)
                                                             <option value="{{ $procurement->id ?? null }}">
                                                                 {{ $procurement->name ?? null }}
                                                             </option>
@@ -569,7 +566,7 @@
 
                     // Send the data to the server using AJAX
                     $.ajax({
-                        url: "{{ route('com.boq.store.boq') }}",
+                        url: "{{ route('com.boq.store.approval.boq') }}",
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',

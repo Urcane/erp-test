@@ -150,13 +150,69 @@ class SurveyController extends Controller
      * 
      * @return Illuminate\Contracts\View\View
      */
-    function detail(Request $request, int $id) : View {
-        $siteSurveyServiceTypes = SiteSurveyServiceType::get();
-        $query = $this->surveyResultService->getSurveyResultById($request, $id)->first();
+    function detail(Request $request, ServiceType $serviceType, int $id) : View {
+        if ($serviceType->model_name == NULL) {
+            abort(404, 'Model Name tidak ditemukan');
+        }
+
+        $model_name = new $serviceType->model_name;
+
+        $surveyResult = (new $model_name)->with('siteSurveyOutdoorArea', 'siteSurveyIndoorArea', 'siteSurveyOtherArea', 'customerSignFile')->findOrFail($id);
+        $surveyRequest = SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey')->findOrFail($surveyResult->survey_request_id);
+        $workOrder = WorkOrder::findOrFail($surveyResult->work_order_id);
+        $compact = [
+            'surveyResult',
+            'surveyRequest',
+            'workOrder',
+            'siteSurveyServiceTypes',
+            'siteSurveyInterfaces',
+            'powerSources',
+            'outdoorCableTypes',
+            'transportationAccesses',
+            'buildingTypes'
+        ];
+
+
+        if ($surveyRequest->service_type_id == 2) {
+            $cctvRecordDurations = CctvRecordDuration::get();
+            $cctvStorageCapacities = CctvStorageCapacity::get();
+
+            array_push($compact, ['cctvRecordDurations', 'cctvStorageCapacities']);
+        }
+
+        if ($surveyRequest->service_type_id == 3) {
+            $gbNaturalFrequencies = GbNaturalFrequency::get();
+            $gbRepeaterTypes = GbRepeaterType::get();
+            $gbConnectivityDatas = GbConnectivityData::get();
+
+            array_push($compact, ['gbNaturalFrequencies', 'gbRepeaterTypes', 'gbConnectivityDatas']);
+        }
         
-        return view('cmt-opportunity.survey.pages.detail', compact(
-            'SiteSurveyServiceTypes',
-            'query'
+        if ($surveyRequest->service_type_id == 1) {
+            $internetBandwidths = InternetBandwidth::get();
+            array_push($compact, ['internetBandwidths']);
+        }
+
+        $serviceTypes = ServiceType::get();
+        $powerSources = PowerSource::get();
+        $outdoorCableTypes = OutdoorCableType::get();
+        $transportationAccesses = TransportationAccess::get();
+        $buildingTypes = BuildingType::get();
+        
+        foreach ($serviceTypes as $serviceType) {
+            if ($serviceType->model_name != NULL) {
+                if ($surveyRequest->service_type_id == $serviceType->id) {
+                    $lower = strtolower($serviceType->name);
+                    $bladefy = collect(explode(' ', $lower))->implode('-');
+                    
+                    $siteSurveyServiceTypes = SiteSurveyServiceType::where('category', strtoupper($lower))->get();
+                    $siteSurveyInterfaces = SiteSurveyInterface::where('category', strtoupper($lower))->get();
+                    $view = "cmt-opportunity.survey.pages.site-survey.detail.$bladefy-form";
+                }
+            }
+        }
+        return view($view, compact(
+            ...$compact
         ));
     }
 
@@ -287,15 +343,19 @@ class SurveyController extends Controller
      * @return Illuminate\Http\JsonResponse Returning JSON Response Data
      */
     function storeSurveyResult(Request $request) : JsonResponse {
-        // try {
+        try {
             $result = $this->surveyResultService->storeSurveyResultData($request);
             return response()->json([
-                "status" => "Yeay Berhasil!! 💼"
+                "status" => "Yeay Berhasil!! 💼",
+                "data" => [
+                    'serviceTypeId' => $result['serviceTypeId'],
+                    'surveyResultId' => $result['data']->id
+                ]
             ], 200);
-        // } catch (\Throwable $th) {
-        //     Log::error($th);
-        //     return response()->json("Oopss, ada yang salah nih!", 500);
-        // }
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json("Oopss, ada yang salah nih!", 500);
+        }
     }
 
     /**
@@ -320,7 +380,6 @@ class SurveyController extends Controller
      * 
      * @return Illuminate\Http\JsonResponse Returning JSON Response Data
      */
-
     function getSurveyRequestById(Request $request, int $id) : JsonResponse {
         if ($request->ajax()) {
             return response()->json($this->surveyRequestService->getSurveyRequestById($request, $id)->first(), 200);
@@ -328,7 +387,14 @@ class SurveyController extends Controller
         return response()->json('Oops, Somethin\' Just Broke :(', 403);
     }
 
-    function storeSoftSurvey(SoftSurveyRequest $request) {
+    /**
+     * Store Soft Survey
+     * 
+     * @param \Illuminate\Http\Request $request
+     * 
+     * @return Illuminate\Http\JsonResponse Returning JSON Response Data
+     */
+    function storeSoftSurvey(SoftSurveyRequest $request) : JsonResponse {
         try {
             $result = $this->softSurveyService->storeSoftSurvey($request);
 
@@ -341,6 +407,14 @@ class SurveyController extends Controller
         }
     }
 
+    /**
+     * detail Soft Survey
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param App\Models\Opportunity\Survey\SurveyRequest $surveyRequest
+     * 
+     * @return Illuminate\Contracts\View\View Returning JSON Response Data
+     */
     function detailSoftSurvey(Request $request, SurveyRequest $surveyRequest) : View {
         $surveyRequest = $surveyRequest->with('softSurveys.attachment')->first();
         $siteSurveyServiceTypes = SiteSurveyServiceType::get();
@@ -348,6 +422,72 @@ class SurveyController extends Controller
         return view('cmt-opportunity.survey.pages.soft-survey-detail', compact(
             'siteSurveyServiceTypes',
             'surveyRequest'
+        ));
+    }
+
+    function exportSurveyResult(Request $request, ServiceType $serviceType, int $id) : View {
+        if ($serviceType->model_name == NULL) {
+            abort(404, 'Model Name tidak ditemukan');
+        }
+
+        $model_name = new $serviceType->model_name;
+
+        $surveyResult = (new $model_name)->with('siteSurveyOutdoorArea', 'siteSurveyIndoorArea', 'siteSurveyOtherArea', 'customerSignFile')->findOrFail($id);
+        $surveyRequest = SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey')->findOrFail($surveyResult->survey_request_id);
+        $workOrder = WorkOrder::findOrFail($surveyResult->work_order_id);
+        $compact = [
+            'surveyResult',
+            'surveyRequest',
+            'workOrder',
+            'siteSurveyServiceTypes',
+            'siteSurveyInterfaces',
+            'powerSources',
+            'outdoorCableTypes',
+            'transportationAccesses',
+            'buildingTypes'
+        ];
+
+
+        if ($surveyRequest->service_type_id == 2) {
+            $cctvRecordDurations = CctvRecordDuration::get();
+            $cctvStorageCapacities = CctvStorageCapacity::get();
+
+            array_push($compact, ['cctvRecordDurations', 'cctvStorageCapacities']);
+        }
+
+        if ($surveyRequest->service_type_id == 3) {
+            $gbNaturalFrequencies = GbNaturalFrequency::get();
+            $gbRepeaterTypes = GbRepeaterType::get();
+            $gbConnectivityDatas = GbConnectivityData::get();
+
+            array_push($compact, ['gbNaturalFrequencies', 'gbRepeaterTypes', 'gbConnectivityDatas']);
+        }
+        
+        if ($surveyRequest->service_type_id == 1) {
+            $internetBandwidths = InternetBandwidth::get();
+            array_push($compact, ['internetBandwidths']);
+        }
+
+        $serviceTypes = ServiceType::get();
+        $powerSources = PowerSource::get();
+        $outdoorCableTypes = OutdoorCableType::get();
+        $transportationAccesses = TransportationAccess::get();
+        $buildingTypes = BuildingType::get();
+        
+        foreach ($serviceTypes as $serviceType) {
+            if ($serviceType->model_name != NULL) {
+                if ($surveyRequest->service_type_id == $serviceType->id) {
+                    $lower = strtolower($serviceType->name);
+                    $bladefy = collect(explode(' ', $lower))->implode('-');
+                    
+                    $siteSurveyServiceTypes = SiteSurveyServiceType::where('category', strtoupper($lower))->get();
+                    $siteSurveyInterfaces = SiteSurveyInterface::where('category', strtoupper($lower))->get();
+                    $view = "cmt-opportunity.survey.pages.site-survey.print.$bladefy-print";
+                }
+            }
+        }
+        return view($view, compact(
+            ...$compact
         ));
     }
 }
