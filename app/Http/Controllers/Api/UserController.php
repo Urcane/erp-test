@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use App\Utils\ErrorHandler;
 
 class UserController extends Controller
@@ -44,6 +45,19 @@ class UserController extends Controller
                 ]
             ]);
 
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getUserPersonalData(Request $request){
+        try {
+            return response()->json([
+                "status" => "success",
+                "data" => $request->user()->load('userPersonalData'),
+            ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);
 

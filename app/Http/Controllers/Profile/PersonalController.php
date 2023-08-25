@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Storage;
+use App\Utils\ErrorHandler;
 
 use App\Constants;
 use App\Models\User;
@@ -28,9 +29,11 @@ use App\Models\PersonalInfo\UserWorkingExperience;
 class PersonalController extends Controller
 {
     private $constants;
+    private $errorHandler;
 
     public function __construct()
     {
+        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
 
@@ -546,9 +549,15 @@ class PersonalController extends Controller
     // }
 
     public function updatePersonal(Request $request) {
-        $getUser = User::where('id',$request->user_id)->first();
-        // try {
-            $file_sign = $request->pegawai_sign_url;
+        if($request->header('authorization')) {
+            $getUser = $request->user();
+        } else {
+            $getUser = User::where('id',$request->user_id)->first();
+        }
+
+        try {
+            // dd("Asdf");
+            // $file_sign = $request->pegawai_sign_url;
             if ($file_sign != null && $file_sign != '') {
                 $image_parts = explode(";base64,", $file_sign);
                 $image_type_aux = explode("image/", $image_parts[0]);
@@ -599,11 +608,11 @@ class PersonalController extends Controller
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        // }
-        // catch (\Throwable $th) {
-        //     Log::error($th);
-        //     return response()->json("Oopss, ada yang salah nih!", 500);
-        // }
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function updateIdentity(Request $request) {

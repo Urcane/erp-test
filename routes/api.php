@@ -2,9 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\HC\AttendanceController;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api;
+use App\Http\Controllers\Api\Request\AttendanceController;
 use App\Http\Controllers\Api\HC\EmployeeController;
+
+use App\Http\Controllers\Profile\PersonalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,14 +19,18 @@ use App\Http\Controllers\Api\HC\EmployeeController;
 |
 */
 
-Route::controller(UserController::class)->group(function () {
+Route::controller(Api\UserController::class)->group(function () {
     Route::post('/login', 'login');
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::controller(UserController::class)->group(function () {
-        Route::prefix('user')->group(function () {
+    Route::prefix('user')->group(function () {
+        Route::controller(Api\UserController::class)->group(function () {
             Route::get('/me', 'getUserProfile');
+            Route::get('/personal/data', 'getUserPersonalData');
+        });
+        Route::controller(PersonalController::class)->group(function () {
+            Route::post('/update/personal/data', 'updatePersonal');
         });
     });
 
@@ -33,16 +39,28 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get("/all", "getAllEmployee");
         });
     });
-    Route::controller(AttendanceController::class)->group(function () {
+    Route::controller(Api\HC\AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
             Route::get('/history', 'getAttendanceHistory');
-            Route::get('/history/detail', 'getAttendanceByDate');
+            Route::post('/history/detail', 'getAttendanceByDate');
 
             Route::get('/summaries/me', 'getPersonalAttendanceSummaries');
 
             Route::post('/attend/location/validate', 'validateLocation');
             Route::post('/attend/check-in', 'checkIn');
             Route::post('/attend/check-out', 'checkOut');
+        });
+    });
+
+    Route::controller(AttendanceController::class)->group(function () {
+        Route::prefix('cmt-request')->group(function () {
+            Route::post('/get', 'getRequestAttendance');
+        });
+    });
+
+    Route::controller(Api\HC\Request\AttendanceController::class)->group(function () {
+        Route::prefix('cmt-approval')->group(function () {
+            Route::post('/get', 'getApprovalAttendance');
         });
     });
 });
