@@ -596,7 +596,7 @@
                         data: 'next_action_pretified'
                     },
                     {
-                        data: 'action'
+                        data: 'action_approval'
                     },
                 ]
             });
