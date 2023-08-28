@@ -121,7 +121,7 @@
     </div>
     <div class="col-lg-6 d-flex justify-content-end">
         <div>
-            <a href="#modal_create_schedule" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_create_schdule"><i class="fa-solid fa-plus"></i>Add Status</a>
+            <a href="#modal_create_schedule" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_create_schdule"><i class="fa-solid fa-plus"></i>Add Schedule</a>
         </div>
     </div>
     <div class="col-lg-12 row p-6 m-1 rounded border border-2 border-secondary">

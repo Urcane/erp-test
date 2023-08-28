@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Controller;
+use App\Utils\ErrorHandler;
+use App\Exceptions\InvariantError;
+use App\Exceptions\NotFoundError;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +18,13 @@ use Carbon\Carbon;
 
 class FileController extends Controller
 {
+    private $errorHandler;
+
+    public function __construct()
+    {
+        $this->errorHandler = new ErrorHandler();
+    }
+
     public function getTableUserFile(Request $request) {
         if (request()->ajax()) {
             $query = UserFile::where('user_id',$request->user_id)
@@ -62,56 +72,75 @@ class FileController extends Controller
     }
 
     public function createUpdateUserFile(Request $request) {
-        $request->validate([
-            'user_id' => 'required',
-            'category_id' => 'required',
-            'description' => 'required',
-            'file' => "required",
-        ]);
+        try {
+            $request->validate([
+                'user_id' => 'required',
+                'category_id' => 'required',
+                'description' => 'required',
+                'file' => "required",
+            ]);
 
-        $file = $request->file('file');
-        $filename = time() . $request->user_id  . "_" . UserFileCategory::whereId($request->category_id)->first()->name . '.' .  $file->extension();
+            $file = $request->file('file');
+            $filename = time() . $request->user_id  . "_" . UserFileCategory::whereId($request->category_id)->first()->name . '.' .  $file->extension();
 
-        $checkDataInDb = UserFile::whereId($request->id)->first();
-        if ($checkDataInDb) {
-            $filename = $checkDataInDb->file;
+            $checkDataInDb = UserFile::whereId($request->id)->first();
+            if ($checkDataInDb) {
+                $filename = $checkDataInDb->file;
+            }
+
+            $UserFile = UserFile::updateOrCreate(
+            [
+                "id" => $request->id,
+            ], [
+                "user_id" => $request->user_id,
+                'user_file_category_id' => $request->category_id,
+                'description' => $request->description,
+                'file' => $filename,
+            ]);
+
+            $file->storeAs('personal/file', $filename, 'public');
+
+            $UserFile->update(['file' => $filename,]);
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil disimpan",
+            ], 200);
+        } catch (\Throwable $th) {
+
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
         }
-
-        $UserFile = UserFile::updateOrCreate(
-        [
-            "id" => $request->id,
-        ], [
-            "user_id" => $request->user_id,
-            'user_file_category_id' => $request->category_id,
-            'description' => $request->description,
-            'file' => $filename,
-        ]);
-
-        $file->storeAs('personal/file', $filename, 'public');
-
-        $UserFile->update(['file' => $filename,]);
-
-        return response()->json([
-            'status' => "succes",
-            'message' => "Data berhasil disimpan",
-        ], 200);
     }
 
     public function deleteUserFile(Request $request) {
-        $UserFile = UserFile::whereId($request->id)->first();
-        Storage::delete('public/personal/file/'.$UserFile->file);
+        try {
+            $UserFile = UserFile::whereId($request->id)->first();
+            Storage::delete('public/personal/file/'.$UserFile->file);
 
-        $UserFile->delete();
+            $UserFile->delete();
 
-        return response()->json([
-            'status' => "succes",
-            'message' => "Data berhasil dihapus",
-        ], 200);
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil dihapus",
+            ], 200);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function download(Request $request) {
-        $file = UserFile::whereId($request->id)->get()[0]->file;
+        try {
+            $file = UserFile::whereId($request->id)->get()[0]->file;
 
-        return Storage::download('public/personal/file/' . $file);
+            return Storage::download('public/personal/file/' . $file);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 }

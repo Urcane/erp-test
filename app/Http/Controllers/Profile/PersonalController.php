@@ -7,13 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
-use Illuminate\Http\UploadedFile;
-use Symfony\Component\HttpFoundation\File\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+
+use Spatie\Permission\Models\Role;
+use Symfony\Component\HttpFoundation\File\File;
+use Yajra\DataTables\Facades\DataTables;
+
 use App\Utils\ErrorHandler;
 
 use App\Constants;
@@ -100,45 +102,58 @@ class PersonalController extends Controller
         }
 
         public function createUpdateFamily(Request $request) {
-            $request->validate([
-                'name' => 'required',
-                'nik' => 'required',
-                'relationship' => 'required',
-                'gender' => ['required', Rule::in($this->constants->gender)],
-                'birthdate' => 'required|date',
-                'marital_status' => ['required', Rule::in($this->constants->marital_status)],
-                'religion' => ['required', Rule::in($this->constants->religion)],
-                'job' => 'required',
-            ]);
+            try {
+                $request->validate([
+                    'name' => 'required',
+                    'nik' => 'required',
+                    'relationship' => 'required',
+                    'gender' => ['required', Rule::in($this->constants->gender)],
+                    'birthdate' => 'required|date',
+                    'marital_status' => ['required', Rule::in($this->constants->marital_status)],
+                    'religion' => ['required', Rule::in($this->constants->religion)],
+                    'job' => 'required',
+                ]);
 
-            UserFamily::updateOrCreate(
-            [
-                "id" => $request->family_id,
-            ], [
-                "user_id" => $request->user_id,
-                'name' => $request->name,
-                'nik' => $request->nik,
-                'relationship' => $request->relationship,
-                'gender' => $request->gender,
-                'birthdate' => $request->birthdate,
-                'marital_status' => $request->marital_status,
-                'religion' => $request->religion,
-                'job' => $request->job,
-            ]);
+                UserFamily::updateOrCreate(
+                [
+                    "id" => $request->family_id,
+                ], [
+                    "user_id" => $request->user_id,
+                    'name' => $request->name,
+                    'nik' => $request->nik,
+                    'relationship' => $request->relationship,
+                    'gender' => $request->gender,
+                    'birthdate' => $request->birthdate,
+                    'marital_status' => $request->marital_status,
+                    'religion' => $request->religion,
+                    'job' => $request->job,
+                ]);
 
-            return response()->json([
-                'status' => "succes",
-                'message' => "Data berhasil disimpan",
-            ], 200);
+                return response()->json([
+                    'status' => "succes",
+                    'message' => "Data berhasil disimpan",
+                ], 200);
+            } catch (\Throwable $th) {
+                $data = $this->errorHandler->handle($th);
+
+                return response()->json($data["data"], $data["code"]);
+            }
         }
 
         public function deleteFamily(Request $request) {
-            UserFamily::whereId("$request->family_id")->delete();
+            try {
+                UserFamily::whereId("$request->family_id")->delete();
 
-            return response()->json([
-                'status' => "succes",
-                'message' => "Data berhasil dihapus",
-            ], 200);
+                return response()->json([
+                    'status' => "succes",
+                    'message' => "Data berhasil dihapus",
+                ], 200);
+
+            } catch (\Throwable $th) {
+                $data = $this->errorHandler->handle($th);
+
+                return response()->json($data["data"], $data["code"]);
+            }
         }
     // }
 
@@ -188,35 +203,47 @@ class PersonalController extends Controller
         }
 
         public function createUpdateEmergencyContact(Request $request) {
-            $request->validate([
-                'name' => 'required',
-                'phone' => 'required',
-                'relationship' => 'required',
-            ]);
+            try {
+                $request->validate([
+                    'name' => 'required',
+                    'phone' => 'required',
+                    'relationship' => 'required',
+                ]);
 
-            UserEmergencyContact::updateOrCreate(
-            [
-                "id" => $request->id,
-            ], [
-                'user_id' => $request->user_id,
-                'name' => $request->name,
-                'phone' => $request->phone,
-                'relationship' => $request->relationship,
-            ]);
+                UserEmergencyContact::updateOrCreate(
+                [
+                    "id" => $request->id,
+                ], [
+                    'user_id' => $request->user_id,
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'relationship' => $request->relationship,
+                ]);
 
-            return response()->json([
-                'status' => "succes",
-                'message' => "Data berhasil disimpan",
-            ], 200);
+                return response()->json([
+                    'status' => "succes",
+                    'message' => "Data berhasil disimpan",
+                ], 200);
+            } catch (\Throwable $th) {
+                $data = $this->errorHandler->handle($th);
+
+                return response()->json($data["data"], $data["code"]);
+            }
         }
 
         public function deleteEmergencyContact(Request $request) {
-            UserEmergencyContact::whereId("$request->id")->delete();
+            try {
+                UserEmergencyContact::whereId("$request->id")->delete();
 
-            return response()->json([
-                'status' => "succes",
-                'message' => "Data berhasil dihapus",
-            ], 200);
+                return response()->json([
+                    'status' => "succes",
+                    'message' => "Data berhasil dihapus",
+                ], 200);
+            } catch (\Throwable $th) {
+                $data = $this->errorHandler->handle($th);
+
+                return response()->json($data["data"], $data["code"]);
+            }
         }
     // }
 
@@ -514,37 +541,49 @@ class PersonalController extends Controller
         }
 
         public function createUpdateWorkExperience(Request $request) {
-            $request->validate([
-                'name' => 'required',
-                'position' => "required",
-                'start_date' => "required",
-                'end_date' => "required",
-            ]);
+            try {
+                $request->validate([
+                    'name' => 'required',
+                    'position' => "required",
+                    'start_date' => "required",
+                    'end_date' => "required",
+                ]);
 
-            UserWorkingExperience::updateOrCreate(
-            [
-                "id" => $request->id,
-            ], [
-                'user_id' => $request->user_id,
-                'name' => $request->name,
-                'position' => $request->position,
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
-            ]);
+                UserWorkingExperience::updateOrCreate(
+                [
+                    "id" => $request->id,
+                ], [
+                    'user_id' => $request->user_id,
+                    'name' => $request->name,
+                    'position' => $request->position,
+                    'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
+                ]);
 
-            return response()->json([
-                'status' => "succes",
-                'message' => "Data berhasil disimpan",
-            ], 200);
+                return response()->json([
+                    'status' => "succes",
+                    'message' => "Data berhasil disimpan",
+                ], 200);
+            } catch (\Throwable $th) {
+                $data = $this->errorHandler->handle($th);
+
+                return response()->json($data["data"], $data["code"]);
+            }
         }
 
         public function deleteWorkExperience(Request $request) {
-            UserWorkingExperience::whereId("$request->id")->delete();
+            try {
+                UserWorkingExperience::whereId("$request->id")->delete();
 
-            return response()->json([
-                'status' => "succes",
-                'message' => "Data berhasil dihapus",
-            ], 200);
+                return response()->json([
+                    'status' => "succes",
+                    'message' => "Data berhasil dihapus",
+                ], 200);
+            } catch (\Throwable $th) {
+                $data = $this->errorHandler->handle($th);
+
+                return response()->json($data["data"], $data["code"]);
+            }
         }
     // }
 
@@ -616,27 +655,33 @@ class PersonalController extends Controller
     }
 
     public function updateIdentity(Request $request) {
-        $request->validate([
-            'identity_type' => 'nullable|string|max:10',
-            'identity_number' => 'nullable|string|max:25',
-            'identity_expire_date' => 'nullable|date',
-            'postal_code' => 'nullable|string|max:6',
-            'citizen_id_address' => 'nullable|string|max:100',
-            'residential_address' => 'nullable|string|max:100',
-        ]);
+        try {
+            $request->validate([
+                'identity_type' => 'nullable|string|max:10',
+                'identity_number' => 'nullable|string|max:25',
+                'identity_expire_date' => 'nullable|date',
+                'postal_code' => 'nullable|string|max:6',
+                'citizen_id_address' => 'nullable|string|max:100',
+                'residential_address' => 'nullable|string|max:100',
+            ]);
 
-        UserIdentity::where('user_id', $request->user_id)->update([
-            'type' => $request->identity_type,
-            'number' => $request->identity_number,
-            'expire_date' => $request->identity_expire_date,
-            'postal_code' => $request->postal_code,
-            'citizen_id_address' => $request->citizen_id_address,
-            'residential_address' => $request->residential_address,
-        ]);
+            UserIdentity::where('user_id', $request->user_id)->update([
+                'type' => $request->identity_type,
+                'number' => $request->identity_number,
+                'expire_date' => $request->identity_expire_date,
+                'postal_code' => $request->postal_code,
+                'citizen_id_address' => $request->citizen_id_address,
+                'residential_address' => $request->residential_address,
+            ]);
 
-        return response()->json([
-            "status" => "success",
-            "message" => "Data berhasil disimpan"
-        ], 201);
+            return response()->json([
+                "status" => "success",
+                "message" => "Data berhasil disimpan"
+            ], 201);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 }

@@ -39,7 +39,7 @@
                     <div class="scroll-y me-n10 pe-10" id="file_category_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#file_category_header" data-kt-scroll-wrappers="#file_category_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
                         <div class="col-lg-12 text-center mb-9">
-                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Job Level</span>
+                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Category File</span>
                             {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
                         </div>
                         <div class="col-lg-12 mb-3">
@@ -77,7 +77,7 @@
                         </div>
                         <div class="col-lg-6 d-flex justify-content-end">
                             <div>
-                                <a href="#file_category" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_file_category"><i class="fa-solid fa-plus"></i>Add Job Level</a>
+                                <a href="#file_category" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_file_category"><i class="fa-solid fa-plus"></i>Add category file</a>
                             </div>
                         </div>
                         <div class="col-lg-12 row p-6 m-1 rounded border border-2 border-secondary">
