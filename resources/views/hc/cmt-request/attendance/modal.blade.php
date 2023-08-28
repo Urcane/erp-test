@@ -66,6 +66,10 @@
                             <p class="fs-7 fw-normal" id="att-checkout-modal">-</p>
                         </div>
                         <div class="col-lg-12 mb-1">
+                            <span class="fs-8 text-gray-600 fw-semibold mb-1">File</span>
+                            <p class="fs-7 fw-normal" id="att-file-modal">-</p>
+                        </div>
+                        <div class="col-lg-12 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Notes</span>
                             <p class="fs-7 fw-normal" id="att-notes-modal">-</p>
                         </div>

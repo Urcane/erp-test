@@ -161,11 +161,6 @@
                     ">",
 
                 columns: [{
-                        data: 'DT_RowChecklist',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
                         data: 'DT_RowIndex',
                         orderable: false,
                         searchable: false
@@ -217,7 +212,7 @@
                     }
                 ],
                 columnDefs: [{
-                    targets: [0, 1, 9, 10],
+                    targets: [0, 8, 9],
                     className: 'text-center',
                 }, ],
             });

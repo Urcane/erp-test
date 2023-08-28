@@ -169,9 +169,9 @@ class AttendanceController extends Controller
             $query = UserAttendanceRequest::where(function ($query) {
                 $query->where(function ($query) {
                     $query->where('status', $this->constants->approve_status[0])
-                    ->whereHas('user.userEmployment', function ($query) {
-                        $query->where('approval_line', Auth::user()->id);
-                    });
+                        ->whereHas('user.userEmployment', function ($query) {
+                            $query->where('approval_line', Auth::user()->id);
+                        });
                 })->orWhere('approval_line', Auth::user()->id);
             });
 
@@ -248,9 +248,9 @@ class AttendanceController extends Controller
             $query = UserAttendanceRequest::where(function ($query) {
                 $query->where(function ($query) {
                     $query->where('status', $this->constants->approve_status[0])
-                    ->whereHas('user.userEmployment', function ($query) {
-                        $query->where('approval_line', Auth::user()->id);
-                    });
+                        ->whereHas('user.userEmployment', function ($query) {
+                            $query->where('approval_line', Auth::user()->id);
+                        });
                 })->orWhere('approval_line', Auth::user()->id);
             })->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
 
@@ -265,6 +265,10 @@ class AttendanceController extends Controller
 
                 case $this->constants->approve_status[2]:
                     $query = $query->where('status', $this->constants->approve_status[2]);
+                    break;
+
+                default:
+                    $query = $query->orderByRaw("FIELD(status, ?, ?, ?)", $this->constants->approve_status);
                     break;
             };
 

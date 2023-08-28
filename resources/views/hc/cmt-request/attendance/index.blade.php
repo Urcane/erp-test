@@ -115,7 +115,6 @@
             <thead class="">
                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
                     <th class="text-center w-50px">#</th>
-                    <th class="text-center w-50px">#</th>
                     <th class="w-250px">Nama Pegawai</th>
                     <th class="w-150px">Nip</th>
                     <th class="w-150px">Date</th>

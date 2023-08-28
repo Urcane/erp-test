@@ -32,10 +32,10 @@ class AttendanceController extends Controller
             $request->validate([
                 "date" => "required|date",
                 "notes" => "nullable|string",
+                "file" => "nullable",
                 "check_in" => "nullable|date_format:H:i|required_without_all:check_out",
                 "check_out" => "nullable|date_format:H:i|required_without_all:check_in",
             ]);
-            // $test;
 
             $userEmployment = Auth::user()->userEmployment->load([
                 'workingScheduleShift.workingSchedule.dayOffs',
@@ -61,10 +61,18 @@ class AttendanceController extends Controller
                 throw new InvariantError("Tidak dapat request absen pada hari libur (Working Schedule)");
             }
 
+            // save the file
+            if ($request->file) {
+                $file = $request->file('file');
+                $filename = time() . $file->getClientOriginalName();
+                $file->storeAs('request/attendance/', $filename, 'public');
+            }
+
             UserAttendanceRequest::create([
                 "user_id" => Auth::user()->id,
                 "date" => $request->date,
                 "notes" => $request->notes,
+                "file" => $filename ?? null,
                 "check_in" => $request->check_in ? date('Y-m-d H:i:s', strtotime(date('Y-m-d') . ' ' . $request->check_in)): null,
                 "check_out" => $request->check_out ? date('Y-m-d H:i:s', strtotime(date('Y-m-d') . ' ' . $request->check_out)) : null,
             ]);

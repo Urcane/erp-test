@@ -89,6 +89,7 @@ class CreateAllAttendance extends Migration
             $table->date("date");
             $table->text("notes")->nullable();
             $table->text("comment")->nullable();
+            $table->text("file")->nullable();
             $table->timestamp("check_in")->nullable();
             $table->timestamp("check_out")->nullable();
             $table->softDeletes()->index();

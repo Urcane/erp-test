@@ -46,7 +46,6 @@ class ShiftController extends Controller
 
             UserShiftRequest::create([
                 "user_id" => Auth::user()->id,
-                "approval_line" => Auth::user()->approve_line,
                 "working_shift_id" => $request->working_shift_id,
                 "date" => $request->date,
                 "notes" => $request->notes,

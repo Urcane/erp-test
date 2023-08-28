@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api;
 use App\Http\Controllers\Profile\PersonalController;
+
 use App\Http\Controllers\Api\HC;
 use App\Http\Controllers\Api\Request;
 
@@ -40,7 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
         });
     });
 
-    Route::controller(HC\AttendanceController::class)->group(function () {
+    Route::controller(Api\AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
             Route::get('/history', 'getAttendanceHistory');
             Route::post('/history/detail', 'getAttendanceByDate');
@@ -69,13 +70,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('personal')->group(function () {
             Route::prefix('attendance')->group(function () {
                 Route::controller(Request\AttendanceController::class)->group(function () {
-                    Route::post('/get', 'getRequestAttendance');
+                    Route::post('/get', 'getRequest');
+                    Route::post('/get/detail', 'getRequestById');
+
+                    Route::post('/make', 'makeRequest');
                 });
             });
 
             Route::prefix('shift')->group(function () {
                 Route::controller(Request\ShiftController::class)->group(function () {
-                    Route::post('/get', 'getRequestShift');
+                    Route::post('/get', 'getRequest');
+                    Route::post('/get/detail', 'getRequestById');
+
+                    Route::post('/make', 'makeRequest');
                 });
             });
         });

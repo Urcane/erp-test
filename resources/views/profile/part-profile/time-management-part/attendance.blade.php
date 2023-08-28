@@ -49,9 +49,15 @@
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class="fw-bold">File</span>
+                                </label>
+                                <input type="file" class="form-control form-control-solid" name="file">
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Notes</span>
                                 </label>
-                                <textarea class="form-control form-control-solid" required name="notes"></textarea>
+                                <textarea class="form-control form-control-solid" name="notes"></textarea>
                             </div>
                         </div>
                     </div>
@@ -208,11 +214,13 @@
 
         $('#modal_create_attendance_request').submit(function(event) {
             event.preventDefault();
-            var formData = $(this).serialize();
+            var formData = new FormData($(this)[0]);
             $.ajax({
                 url: "{{ route('req.attd.create') }}",
                 type: 'POST',
                 data: formData,
+                contentType: false,
+                processData: false,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

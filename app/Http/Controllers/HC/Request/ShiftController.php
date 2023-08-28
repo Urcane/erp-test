@@ -252,6 +252,10 @@ class ShiftController extends Controller
                 case $this->constants->approve_status[2]:
                     $query = $query->where('status', $this->constants->approve_status[2]);
                     break;
+
+                default:
+                    $query = $query->orderByRaw("FIELD(status, ?, ?, ?)", $this->constants->approve_status);
+                    break;
             };
 
             if ($request->filters['filterDate']) {

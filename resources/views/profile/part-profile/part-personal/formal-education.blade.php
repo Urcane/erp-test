@@ -63,9 +63,6 @@
 							</label>
                             <input type="file" class="form-control form-control-solid" placeholder="Sektifikat maupun ijazah yang didapatkan" name="certificate">
 						</div>
-                        <div id="containerSelectedSurveyRequests">
-
-                        </div>
                     </div>
                 </div>
                     <div class="text-center mt-9">
