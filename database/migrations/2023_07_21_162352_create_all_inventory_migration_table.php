@@ -16,7 +16,7 @@ class CreateAllInventoryMigrationTable extends Migration
         Schema::create('inventory_unit_masters', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
-            $table->char('code', 2)->unique();
+            $table->char('code', 10)->unique();
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -34,7 +34,7 @@ class CreateAllInventoryMigrationTable extends Migration
             $table->id();
             $table->foreignId('good_category_id')->constrained('inventory_good_categories');
             $table->string('good_name');
-            $table->string('good_type')->index();
+            $table->string('good_type')->nullable()->index();
             $table->string('code_name');
             $table->string('spesification')->nullable();
             $table->string('merk')->nullable()->index();
