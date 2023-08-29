@@ -114,7 +114,7 @@
                                             <span class="fw-bold">Toko Referensi</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid"
-                                            name="purchase_reference" id="purchase_refrence_update">
+                                            name="purchase_reference" id="purchase_reference_update">
                                     </div>
                                 </div>
                             </div>

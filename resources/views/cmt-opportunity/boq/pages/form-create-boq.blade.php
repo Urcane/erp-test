@@ -653,7 +653,7 @@
                                             data-total_price="${formData.get('total_tambah')}"
                                             data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
                                             data-purchase_price="${formData.get('purchase_price_tambah')}"
-                                            data-purchase_refrence="${formData.get('purchase_reference')}"
+                                            data-purchase_reference="${formData.get('purchase_reference')}"
                                             data-item_detail="${formData.get('item_detail')}"">                                            
                                             
                                             <a class="dropdown-item py-2">
@@ -692,12 +692,12 @@
                         var total_price = $(this).data('total_price');
                         var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
                         var purchase_price = $(this).data('purchase_price');
-                        var purchase_refrence = $(this).data('purchase_refrence');
+                        var purchase_reference = $(this).data('purchase_reference');
                         var item_detail = $(this).data('item_detail');
 
                         console.log(randomString, itemId, quantity, total_price,
                             purchase_delivery_charge,
-                            purchase_price, purchase_refrence, item_detail);
+                            purchase_price, purchase_reference, item_detail);
 
                         $('#good_name_update').val(itemId).trigger('change');
 
@@ -706,7 +706,7 @@
                         $('#uniq_id').val(randomString);
 
                         $('#item_detail_update').val(item_detail);
-                        $('#purchase_refrence_update').val(purchase_refrence);
+                        $('#purchase_reference_update').val(purchase_reference);
                         $('#purchase_price_update').val(purchase_price);
                         $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
                         $('#total_price_update').val(total_price);

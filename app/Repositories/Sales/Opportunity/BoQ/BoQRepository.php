@@ -146,7 +146,7 @@ class BoQRepository
                         'purchase_price' => $itemData['purchase_price'],
                         'total_price' => $itemData['total_price'],
                         'purchase_delivery_charge' => $itemData['purchase_delivery'],
-                        'purchase_refrence' => $itemData['purchase_reference'],
+                        'purchase_reference' => $itemData['purchase_reference'],
                         'item_inventory_id' => $itemData['item_inventory_id'],
                         'item_detail' => $itemData['item_detail'],
                     ];
@@ -251,7 +251,7 @@ class BoQRepository
                         'purchase_price' => $itemData['purchase_price'],
                         'total_price' => $itemData['total_price'],
                         'purchase_delivery_charge' => $itemData['purchase_delivery'],
-                        'purchase_refrence' => $itemData['purchase_reference'],
+                        'purchase_reference' => $itemData['purchase_reference'],
                         'item_inventory_id' => $itemData['item_inventory_id'],
                         'item_detail' => $itemData['item_detail'],
                     ]);
