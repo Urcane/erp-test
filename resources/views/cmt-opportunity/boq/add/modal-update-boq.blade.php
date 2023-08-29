@@ -77,7 +77,7 @@
 
                             <div class="col-lg-12">
                                 <div class="row">
-                                    <div class="col-lg-6 col-6 mb-3">
+                                    {{-- <div class="col-lg-6 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Harga Beli</span>
                                         </label>
@@ -85,8 +85,8 @@
                                             min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update', 'update');"
                                             name="purchase_price_update" id="purchase_price_update">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-6 col-6 mb-3">
+                                    </div> --}}
+                                    <div class="col-lg-12 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
@@ -98,7 +98,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-12">
+                            {{-- <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-lg-6 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -124,7 +124,7 @@
                                     <span class="fw-bold">Total Amount : Rp. <span id="total_update"></span></span>
                                     <input type="hidden" class="form-control form-control-solid total" name="total_update" id="total_price_update" value=""/>
                                 </div>
-                            </div>
+                            </div> --}}
 
                         </div>
                     </div>

@@ -50,9 +50,9 @@ class CreateAllBoqMigrationTable extends Migration
             $table->id();
             $table->foreignId('prospect_id')->constrained('customer_prospects');
             $table->foreignId('survey_request_id')->nullable()->constrained();
-            $table->foreignId('sales_id')->constrained('users');
-            $table->foreignId('technician_id')->constrained('users');
-            $table->foreignId('procurement_id')->constrained('users');
+            $table->foreignId('sales_id')->nullable()->constrained('users');
+            $table->foreignId('technician_id')->nullable()->constrained('users');
+            $table->foreignId('procurement_id')->nullable()->constrained('users');
             $table->bigInteger('gpm')->default(0);
             $table->bigInteger('modal')->default(0);
             $table->bigInteger('npm')->default(0);
@@ -68,7 +68,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->date('approval_director_date')->nullable();
             $table->boolean('approval_finman')->nullable();
             $table->date('approval_finman_date')->nullable();
-            $table->foreignId('reference_boq_id')->constrained('itemable_bill_of_quantities');
+            $table->foreignId('reference_boq_id')->nullable()->constrained('itemable_bill_of_quantities');
             $table->timestamps();
         });
 
@@ -80,7 +80,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->foreignId('customer_company_id')->constrained('customers');
             $table->string('no_ph');
             $table->string('release_date');
-            $table->foreignId('reference_price_request_id')->digits(4)->constrained('itemable_price_requests');
+            $table->foreignId('reference_price_request_id')->nullable()->constrained('itemable_price_requests');
             $table->timestamps();
         });
         
@@ -92,7 +92,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->string('no_quotation');
             $table->string('description');
             $table->bigInteger('total_price')->digits(20);
-            $table->foreignId('referenced_quotation_id')->constrained('itemable_quotation_parts');
+            $table->foreignId('referenced_quotation_id')->nullable()->constrained('itemable_quotation_parts');
             $table->timestamps();
         });
     }

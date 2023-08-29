@@ -9,28 +9,11 @@
     @include('layouts.navbar.navbar')
 @endsection
 
-@section('summary-page')
-    {{-- <div class="col-lg-3 col-6 mb-6 mb-md-0 text-center text-md-start">
-    <span class="mb-0 fs-4 fw-bolder d-block text-white">{{$dataUser->count()}}</span>
-    <span class="mb-0 fs-6 fw-bold" style="color:#ad87ff">Total Pegawai</span>
-</div>
-<div class="col-lg-3 col-6 mb-6 mb-md-0 text-center text-md-start">
-    <span class="mb-0 fs-4 fw-bolder d-block text-white">{{$dataDivision->count()}}</span>
-    <span class="mb-0 fs-6 fw-bold" style="color:#ad87ff">Total Divisi</span>
-</div> --}}
-@endsection
-
 @section('toolbar')
     @include('layouts.navbar.toolbar')
 @endsection
 
 @section('content')
-    {{-- FORM BOQ --}}
-    {{-- @dd($dataSurvey) --}}
-    {{-- @dd($dataProspect) --}}
-    {{-- @dd($dataItems) --}}
-
-
     <div class="row justify-content-center">
         <div class="col-lg-12 mt-n20">
             <div class="row justify-content-center">
@@ -54,6 +37,7 @@
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
                                             <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
                                             @csrf
+                                            <input type="hidden" name="boq_id" value="">
                                             <div class="col-lg-5 col-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2" required>
                                                     <span class="fw-bold">Judul Prospect</span>
@@ -165,19 +149,19 @@
 
                                     {{-- divv akhir total amount --}}
                                     <div>
-                                        <div class="d-flex justify-content-end mx-20">
+                                        {{-- <div class="d-flex justify-content-end mx-20">
                                             <div class="w-20 me-10">
                                                 <span class="fw-bold">Total Amount : Rp.<span id="totalsum"></span></span>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="d-flex justify-content-center mt-6">
                                             <div class=" me-5">
-                                                <a href="" class="btn btn-light-info">Discard</a>
+                                                <a href="{{route('com.boq.index')}}" class="btn btn-light-info">Discard</a>
                                             </div>
 
                                             <div class="me-5">
-                                                <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Submit</a>
+                                                <a id="submit-all-items" class="btn btn-info">Submit</a>
                                             </div>
                                         </div>
                                     </div>
@@ -352,10 +336,11 @@
                     success: function(response) {
                         // Handle the response from the server, e.g., show a success message
                         console.log(response);
+                        window.location = "{{route('com.boq.index')}}";
                     },
                     error: function(error) {
                         // Handle errors if the request fails
-                        console.error('Error submitting all item data: ', error);
+                        toastr.error('Error submitting all item data: ', error);
                     }
                 });
             });
@@ -595,50 +580,52 @@
                     <div class="file-soft-boq-item-${random_string} d-flex justify-content-between mx-20 mb-5 mt-10">
                         <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
                             <label for="" class="form-label">Item</label>
-                            <input type="text" class="form-control form-control-solid" name="content[][good_name]" value="${itemName}" />
+                            <input disabled="disabled" type="text" class="form-control form-control-solid" name="content[][good_name]" value="${itemName}" />
                         </div>
                         
                         <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
                             <label for="" class="form-label">Merk</label>
                             <div class="position-relative">
                                 <div class="position-absolute top-0"></div>
-                                <input type="text" class="form-control form-control-solid" name="content[][good_merk]" value="${itemMerk}" />
+                                <input disabled="disabled" type="text" class="form-control form-control-solid" name="content[][good_merk]" value="${itemMerk}" />
                             </div>
                         </div>
-
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                            <label for="" class="form-label">Price</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
-                            </div>
-                        </div>
+                        `+
+                        // <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                        //     <label for="" class="form-label">Price</label>
+                        //     <div class="position-relative">
+                        //         <div class="position-absolute top-0"></div>
+                        //         <input disabled="disabled" type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
+                        //     </div>
+                        // </div>
+                        `
 
                         <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
                             <label for="" class="form-label">Qty</label>
                             <div class="position-relative">
                                 <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity_tambah')}" />
+                                <input disabled="disabled" type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity_tambah')}" />
                             </div>
                         </div>
-
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                            <label for="" class="form-label">Jasa Antar</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
-                                </div>
-                        </div>
+                        `+ 
+                        // <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                        //     <label for="" class="form-label">Jasa Antar</label>
+                        //     <div class="position-relative">
+                        //         <div class="position-absolute top-0"></div>
+                        //         <input disabled="disabled" type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
+                        //         </div>
+                        // </div>
                         
-                        <div class="d-flex justify-content-between" style="flex-basis: 28%; min-width: 150px; margin: 10px;">
-                            <div style="flex-basis: 80%; min-width: 120px;">
-                                <label for="" class="form-label">Total Price</label>
-                                <div class="position-relative">
-                                    <div class="position-absolute top-0"></div>
-                                    <input type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total_tambah')}" />
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-center align-items-center" style="flex-basis: 14%; min-width: 30px;">
+                        `<div class="d-flex justify-content-between" style="flex-basis: 28%; min-width: 150px; margin: 10px;">
+                            `+
+                            // <div style="flex-basis: 80%; min-width: 120px;">
+                            //     <label for="" class="form-label">Total Price</label>
+                            //     <div class="position-relative">
+                            //         <div class="position-absolute top-0"></div>
+                            //         <input disabled="disabled" type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total_tambah')}" />
+                            //     </div>
+                            // </div>
+                            `<div class="d-flex justify-content-center align-items-center" style="flex-basis: 14%; min-width: 30px;">
                 
                                 <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-solid fa-ellipsis-vertical"></i>
@@ -668,9 +655,9 @@
                             </div>
                         </div>  
                         <div>
-                            <input type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
-                            <input type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
-                            <input type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
+                            <input disabled="disabled" type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
+                            <input disabled="disabled" type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
+                            <input disabled="disabled" type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
                         </div>
                     </div>`;
 

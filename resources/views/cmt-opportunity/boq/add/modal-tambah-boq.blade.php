@@ -85,7 +85,7 @@
 
                             <div class="col-lg-12">
                                 <div class="row">
-                                    <div class="col-lg-6 col-6 mb-3">
+                                    {{-- <div class="col-lg-6 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Harga Beli</span>
                                         </label>
@@ -93,8 +93,8 @@
                                             min="1" minlength="3" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_tambah', 'tambah');"
                                             name="purchase_price_tambah">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-6 col-6 mb-3">
+                                    </div> --}}
+                                    <div class="col-lg-12 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
@@ -105,7 +105,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-12">
+                            {{-- <div class="col-lg-12">
                                 <div class="row">
                                     <div class="col-lg-6 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -131,7 +131,7 @@
                                     <span class="fw-bold">Total Amount : Rp. <span id="total_tambah"></span></span>
                                     <input type="hidden" class="form-control form-control-solid total" name="total_tambah" value=""/>
                                 </div>
-                            </div>
+                            </div> --}}
 
                         </div>
                     </div>

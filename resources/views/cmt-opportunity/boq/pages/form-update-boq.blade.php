@@ -48,6 +48,7 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     @csrf
+                                    <input type="hidden" name="boq_id" value="">
                                     {{-- divv Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
                                         {{-- baris prospect company --}}
@@ -366,6 +367,7 @@
                 // event.preventDefault();
 
                 // Get Prospect ID and Survey ID from the HTML elements
+                var boq_id = $('input[name="boq_id"').val();
                 var prospect_id = $('#prospect_id').val();
                 var survey_request_id = $('#survey_request_id').val();
                 var is_draft = $('#is_draft').is(':checked') ? 0 : 1;
@@ -386,6 +388,7 @@
                 var items = [];
                 // Create an object to store prospect_id and survey_request_id
                 var boq = {
+                    boq_id: boq_id,
                     prospect_id: prospect_id,
                     survey_request_id: survey_request_id,
                     is_draft: is_draft
