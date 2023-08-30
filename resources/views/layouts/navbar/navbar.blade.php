@@ -111,7 +111,7 @@
                                                                 </div>
     
                                                                 <div class="menu-item">
-                                                                    <a href="#" class="menu-link" >
+                                                                    <a href="{{route('com.quotation.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
                                                                             <i class="fa-solid fa-file-invoice-dollar text-info fs-3"></i>
                                                                         </span>
