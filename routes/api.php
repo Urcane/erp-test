@@ -29,6 +29,10 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/me', 'getUserProfile');
             Route::get('/personal/data', 'getUserPersonalData');
             Route::get('/employment/data', 'getUserEmploymentData');
+            Route::get('/payroll/salary/data', 'getUserSalary');
+            Route::get('/payroll/bank/data', 'getUserBank');
+            Route::get('/payroll/tax/data', 'getUserTax');
+            Route::get('/payroll/bpjs/data', 'getUserBpjs');
         });
         Route::controller(PersonalController::class)->group(function () {
             Route::post('/update/personal/data', 'updatePersonal');
@@ -85,6 +89,15 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::post('/make', 'makeRequest');
                 });
             });
+
+            // Route::prefix('time-off')->group(function () {
+            //     Route::controller(Request\TimeOffController::class)->group(function () {
+            //         Route::post('/get', 'getRequest');
+            //         Route::post('/get/detail', 'getRequestById');
+
+            //         Route::post('/make', 'makeRequest');
+            //     });
+            // });
         });
     });
 });
