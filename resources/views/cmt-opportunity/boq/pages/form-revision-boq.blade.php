@@ -126,7 +126,7 @@
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
 
-                                            <div
+                                            <div class=""
                                                 style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label required">Sales</label>
                                                 <select class="form-select-solid form-select form-select-solid"
@@ -147,23 +147,20 @@
                                                 style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label required">Technician</label>
                                                 <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" name="technician_id" id="technician_id">
-                                                    <option
-                                                        value="{{ $updateDraftBoqData['dataTechnicianSelected']->id ?? null }}"
-                                                        selected disabled>
-                                                        {{ $updateDraftBoqData['dataTechnicianSelected']->name ?? 'Pilih Technician' }}
-                                                    </option>
-                                                    @if (isset($updateDraftBoqData['dataTechnician']))
-                                                        @foreach ($updateDraftBoqData['dataTechnician'] as $Technician)
-                                                            <option value="{{ $Technician->id ?? null }}">
-                                                                {{ $Technician->name ?? null }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
+                                                data-control="select2" name="technician_id" id="technician_id">
+                                                <option value="" disabled>Pilih Technician</option>
+                                                @if (isset($updateDraftBoqData['dataTechnician']))
+                                                    @foreach ($updateDraftBoqData['dataTechnician'] as $technician)
+                                                        <option value="{{ $technician->id }}"
+                                                            {{ $technician->id == ($updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? null) ? 'selected' : '' }}>
+                                                            {{ $technician->name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>   
                                             </div>
 
-                                            <div
+                                            <div class=""
                                                 style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label required">Procurement</label>
                                                 <select class="form-select-solid form-select form-select-solid"

@@ -3,7 +3,7 @@
 namespace App\Services\Master\Inventory;
 
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Illuminate\Http\JsonResponse;
 use App\Repositories\Master\Inventory\InventoryRepository;
 
 /**
@@ -12,20 +12,29 @@ use App\Repositories\Master\Inventory\InventoryRepository;
  */
 class InventoryService
 {
-    protected $InventoryRepository;
+    protected $inventoryRepository;
 
-    function __construct(InventoryRepository $InventoryRepository) {
-        $this->InventoryRepository = $InventoryRepository;
+    function __construct(inventoryRepository $inventoryRepository) {
+        $this->inventoryRepository = $inventoryRepository;
     }
 
     function getDataForm()  {
-        $dataFormInventory = $this->InventoryRepository->getAllData()->get();
+        $dataFormInventory = $this->inventoryRepository->getAllData()->with(['inventoryGoodCategory.inventoryGood'])->get();
         return $dataFormInventory;
     }
     
     function getMerkType(Request $request) {
         $itemId = $request->input('item_id') ?? $request->item_id; 
-        $itemData = $this->InventoryRepository->getMerkTypeByItemId($itemId);
+        $itemData = $this->inventoryRepository->getMerkTypeByItemId($itemId);
         return response()->json($itemData);
+    }
+
+    function getInternetBundling() : JsonResponse  {
+        $dataBundling = $this->inventoryRepository->getAllData()->where('good_category_id',3)->get();
+        return response()->json($dataBundling);
+    }
+
+    function updateInternetBundling(Request $request) : JsonResponse {
+        return $this->inventoryRepository->updateInternetBundling($request);
     }
 }

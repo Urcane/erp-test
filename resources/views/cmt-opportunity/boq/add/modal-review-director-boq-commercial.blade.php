@@ -20,8 +20,8 @@
                             </div>
                         </div>
                         <div id="containerSelectedBoqCommercials">
-                            <input type="hidden" id="itemableBillOfQuantity_id" name="itemableBillOfQuantity_id" value="">
-                            <input type="hidden" id="" name="is_approval_director" value="">
+                            <input type="text" id="itemableBillOfQuantity_id" name="itemableBillOfQuantity_id" value="">
+                            <input type="text" id="" name="is_approval_director" value="">
                         </div>
                     </div>
                     
