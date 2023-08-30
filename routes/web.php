@@ -3,10 +3,11 @@
 use App\Http\Controllers\Sales\Customer\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
-use App\Http\Controllers\ProjectManagement\ProjectManagementController;
-use App\Http\Controllers\Sales\Opportunity\BOQ\BoqController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProjectManagement\ProjectManagementController;
+use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
+use App\Http\Controllers\Sales\Opportunity\BOQ\BoqController;
+use App\Http\Controllers\Sales\Opportunity\Quotation\QuotationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,6 +114,12 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/get-merk-type','getMerkType')->name('get.merk.type');
             Route::get('/get-survey-company-item-inventory','getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory'); 
+        });
+    });
+
+    Route::controller(QuotationController::class)->group(function () {
+        Route::prefix('cmt-quotation')->group(function (){
+            Route::get('/','index')->name('com.quotation.index');
         });
     });
 });

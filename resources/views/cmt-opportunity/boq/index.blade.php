@@ -130,8 +130,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
                                         {{-- TAB SURVEY  --}}
                                         <div class="tab-pane fade" id="tab_survey_content" role="tabpanel">
                                             <div class="row">
@@ -289,6 +287,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                     </div>
                                 </div>
                             </div>
