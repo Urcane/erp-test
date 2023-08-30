@@ -27,6 +27,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->boolean('process_status')->nullable();
             $table->boolean('is_monthly')->nullable();
             $table->boolean('vendor_charge')->nullable();
+            $table->string('remark')->nullable()->comment('example: monthly price');
             $table->boolean('approval_manager')->nullable();
             $table->date('approval_manager_date')->nullable();
             $table->boolean('approval_director')->nullable();
@@ -76,12 +77,13 @@ class CreateAllBoqMigrationTable extends Migration
 
         Schema::create('itemable_quotation_parts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('prospect_id')->constrained('customer_prospects');
-            $table->foreignId('survey_request_id')->nullable();
+            $table->foreignId('boq_id')->constrained('itemable_bill_of_quantities')->nullable();
             $table->string('no_quotation');
             $table->string('description');
             $table->bigInteger('total_price')->digits(20);
-            $table->foreignId('referenced_quotation_id')->constrained('itemable_quotation_parts');
+            $table->string('remark')->nullable();
+            $table->boolean('is_done')->nullable();
+            $table->foreignId('referenced_quotation_id')->nullable();
             $table->timestamps();
         });
     }
@@ -95,7 +97,7 @@ class CreateAllBoqMigrationTable extends Migration
     {
         Schema::dropIfExists('items');
         Schema::dropIfExists('itemable_price_requests');
-        Schema::dropIfExists('itemable_bill_of_quantities');
         Schema::dropIfExists('itemable_quotation_parts');
+        Schema::dropIfExists('itemable_bill_of_quantities');
     }
 }

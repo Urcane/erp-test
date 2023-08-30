@@ -52,8 +52,15 @@ class BoqService
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                            <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
-                            <i class="fa-solid fa-list-check me-3"></i>No Action</a></li>
+                            <li><span class="dropdown-item py-2">No Action</span></li>
+                            </ul>';
+            })
+            ->addColumn('action_quotation', function ($query) {
+                return 
+                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">
+                            <li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ) . '" class="dropdown-item py-2">
+                            <i class="fa-solid fa-list-check me-3"></i>Create Quotation</a></li>
                             </ul>';
             })
             ->addColumn('action_cancel', function ($query) {
@@ -119,7 +126,7 @@ class BoqService
                 ';
             })
             ->addIndexColumn()
-            ->rawColumns(['DT_RowChecklist', 'action','action_approval', 'action_done', 'action_cancel', 'next_action_pretified', 'progress_pretified'])
+            ->rawColumns(['DT_RowChecklist', 'action','action_approval', 'action_done', 'action_cancel','action_quotation', 'next_action_pretified', 'progress_pretified'])
             ->make(true);
     }
 

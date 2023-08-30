@@ -40,7 +40,7 @@ class BoQRepository
     }
 
     function getAll(Request $request){
-        $dataBoq = $this->model->with([  'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
+        $dataBoq = $this->model->with(['sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
 
         if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'true' ) {
             $dataBoq->where('is_draft',1)->wherenull('is_done');
@@ -93,7 +93,7 @@ class BoQRepository
             $npm = $request->input('boq.npm');
             $percentage = $request->input('boq.percentage');
             $manpower = $request->input('boq.manpower');
-            $is_final = $request->input('boq.is_final');
+            $is_final = $request->input('boq.is_final', 0);
 
             $itemableBoqIsDraft = ItemableBillOfQuantity::where([
                 'prospect_id' => $prospect_id,
@@ -121,10 +121,11 @@ class BoQRepository
                     'percentage' => $percentage,
                     'manpower' => $manpower,
                     'is_final' => $is_final,
-                    'reference_boq_id' => $prospect_id,
                     'is_draft' => $is_draft,
+                    'reference_boq_id' => 1,
                 ]
             );
+            $itemableBoq->reference_boq_id = $itemableBoq->id;
 
             if (isset($itemableBoq->id)) {
                 $itemIds = Item::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
@@ -153,7 +154,6 @@ class BoQRepository
                     $itemableBoq->itemable()->updateOrCreate($criteria, $data);
                 }
             }
-            
             $itemableBoq->save();
             DB::commit();
             return response()->json(['message' => 'BoQ berhasil disimpan.'], 200);
@@ -166,8 +166,8 @@ class BoQRepository
 
     function storeApprovalBoq(Request $request) : JsonResponse {
         // dd($request->input('boq.boq_id'));
-        $boqId = $request->input('boq.boq_id');
-        $remark = $request->input('boq.remark');
+        $boqId = $request->input('boq_id');
+        $remark = $request->input('remark');
         $boqData = $this->model->where('id', $boqId)->first();
         
         if ($boqData) {
@@ -199,6 +199,7 @@ class BoQRepository
                 } else {
                     if ($boqData->approval_manager == 1 && $boqData->approval_director == 1 && $boqData->approval_finman == 1) {
                         $boqData->is_done = 1;
+                        $boqData->is_draft = 0;
                     } else {
                         $boqData->is_done = 0;
                     }
@@ -217,9 +218,9 @@ class BoQRepository
         try {
             DB::beginTransaction();
     
-            $rejectedBoq = ItemableBillOfQuantity::findOrFail($request->input('boq.boq_id'));
+            $rejectedBoq = $this->model->findOrFail($request->input('boq.boq_id'));
     
-            $newBoq = ItemableBillOfQuantity::create([
+            $newBoq = $this->model->create([
                 'prospect_id' => $rejectedBoq->prospect_id,
                 'survey_request_id' => $rejectedBoq->survey_request_id,
                 'sales_id' => $request->input('boq.sales_id'),
@@ -239,8 +240,9 @@ class BoQRepository
                 'is_draft' => 1,
                 'is_final' => 0,
                 'remark' => null,
-                'reference_boq_id' => $rejectedBoq->id,
             ]);
+            $newBoq->reference_boq_id = $newBoq->id;
+            $newBoq->save();
     
             $itemsData = $request->input('items');
     
