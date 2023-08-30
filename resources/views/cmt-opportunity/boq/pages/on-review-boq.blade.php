@@ -499,8 +499,7 @@
                             console.error('Error submitting all item data: ', error);
                         }
                     });
-                    is_approval.val('');
-                    // Tutup modal
+                    is_approval.val(''); 
                     $('#kt_modal_review_director_boq_commercial').modal('hide'); 
                 });
 
@@ -535,13 +534,15 @@
                     // Tutup modal
                     $('#kt_modal_review_director_boq_commercial').modal('hide'); 
                 });
+
+
  
                 $('.btn_review_finman_boq_commercial').on('click', function() {
                     var boq_id = $(this).data('boq-id'); 
                     $('#itemableBillOfQuantity_id_finman').val(boq_id); 
                     var remark = $(this).data('remark');
                     $('#remark_finman').val(remark);
-                    console.log(boq_id, remark); 
+                    // console.log(boq_id, remark); 
                 });
 
                 $('#kt_modal_review_finman_boq_commercial_approve').on('click', function() {
@@ -552,7 +553,7 @@
                     var is_approval_finman = is_approval.val();
                     var boq_id = document.getElementById('itemableBillOfQuantity_id_finman').value;
                     var remark = document.getElementById('remark_finman').value;
-                    console.log(boq_id, is_approval_finman, remark);
+                    // console.log(boq_id, is_approval_finman, remark);
 
                     $.ajax({
                         url: "{{ route('com.boq.store.approval.boq') }}",
@@ -583,7 +584,7 @@
                     var is_approval_finman = is_approval.val();
                     var boq_id = document.getElementById('itemableBillOfQuantity_id_finman').value;
                     var remark = document.getElementById('remark_finman').value;
-                    console.log(boq_id, is_approval_finman, remark);
+                    // console.log(boq_id, is_approval_finman, remark);
 
                     $.ajax({
                         url: "{{ route('com.boq.store.approval.boq') }}",
@@ -607,12 +608,14 @@
                     $('#kt_modal_review_finman_boq_commercial').modal('hide'); 
                 });
 
+
+
                 $('.btn_review_manager_boq_commercial').on('click', function() {
                     var boq_id = $(this).data('boq-id'); 
                     $('#itemableBillOfQuantity_id_manager').val(boq_id); 
                     var remark = $(this).data('remark');
                     $('#remark_manager').val(remark);
-                    console.log(boq_id, remark); 
+                    // console.log(boq_id, remark); 
                 });
 
                 $('#kt_modal_review_manager_boq_commercial_approve').on('click', function() {
@@ -623,7 +626,7 @@
                     var is_approval_manager = is_approval.val();
                     var boq_id = document.getElementById('itemableBillOfQuantity_id_manager').value;
                     var remark = document.getElementById('remark_manager').value;
-                    console.log(boq_id, is_approval_manager, remark);
+                    // console.log(boq_id, is_approval_manager, remark);
 
                     $.ajax({
                         url: "{{ route('com.boq.store.approval.boq') }}",
@@ -654,7 +657,7 @@
                     var is_approval_manager = is_approval.val();
                     var boq_id = document.getElementById('itemableBillOfQuantity_id_manager').value;
                     var remark = document.getElementById('remark_manager').value;
-                    console.log(boq_id, is_approval_manager, remark);
+                    // console.log(boq_id, is_approval_manager, remark);
 
                     $.ajax({
                         url: "{{ route('com.boq.store.approval.boq') }}",

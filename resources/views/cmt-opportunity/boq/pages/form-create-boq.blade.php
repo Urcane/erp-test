@@ -271,8 +271,7 @@
                 var survey_request_id = $('#survey_request_id').val();
 
                 // Validate the prospect_id
-                if (!prospect_id) {
-                    event.preventDefault(); 
+                if (!prospect_id) { 
                     var errorMessageProspect =
                         "<span class='fw-semibold fs-8 text-danger'>Pilih Prospect Terlebih Dahulu.</span>";
                     $('#error-prospect').html(errorMessageProspect);
@@ -291,7 +290,7 @@
                     survey_request_id: survey_request_id
                 };
 
-                console.log(boq);
+                // console.log(boq);
 
                 // Loop through each .file-soft-boq-item div to get the data for each item
                 $('.MultipleItem [class^="file-soft-boq-item"]').each(function(index, item) {
@@ -329,8 +328,7 @@
                 });
 
                 // Check if there is at least one item in the 'items' array
-                if (items.length === 0) {                    
-                    event.preventDefault(); 
+                if (items.length === 0) {     
                     // Show an error message
                     var errorMessageItem =
                         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
@@ -377,14 +375,10 @@
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest' // Set header X-Requested-With
                     },
-                    success: function(response) {
-
+                    success: function(response) { 
                         // console.log(response);
                         const survey = response.dataSurvey;
-                        const dataCompany = response.dataCompany;
-
-                        console.log(survey);
-
+                        const dataCompany = response.dataCompany;  
                         if (survey.length >= 1) {
                             survey.forEach((item) => {
                                 $('#survey_request_id').append(new Option(item
@@ -471,8 +465,7 @@
                         minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
                     },
                 },
-                submitHandler: function(form) {
-                    // event.preventDefault();
+                submitHandler: function(form) { 
 
                     // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
                     var selectedItemId = $('#good_name_update').val();
@@ -487,20 +480,14 @@
                     });
 
                     // Menambahkan elemen input tersembunyi ke dalam form
-                    $(form).append(itemNameInput);
-
+                    $(form).append(itemNameInput); 
 
                     var formData = new FormData(form);
 
                     const uniq_id = formData.get('uniq_id');
 
                     const item = document.querySelectorAll(
-                        `.MultipleItem .file-soft-boq-item-${uniq_id}`);
-
-                    // console.log(items);
-                    // console.log(uniq_id);
-                    // console.log(form);
-
+                        `.MultipleItem .file-soft-boq-item-${uniq_id}`); 
                     $('[name="content[][good_name]"]', item).val(itemName);
                     $('[name="content[][good_merk]"]', item).val(itemMerk);
                     $('[name="content[][purchase_price]"]', item).val(formData.get(
