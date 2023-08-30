@@ -2,26 +2,14 @@
 
 namespace App\Http\Controllers\Api\Request;
 
-use App\Constants;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Utils\ErrorHandler;
 use App\Models\Attendance\UserShiftRequest;
 use App\Models\Employee\UserEmployment;
 
-class ShiftController extends Controller
+class ShiftController extends RequestController
 {
-    private $errorHandler;
-    private $constants;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-        $this->constants = new Constants();
-    }
-
     public function getRequest(Request $request)
     {
         try {
@@ -29,7 +17,7 @@ class ShiftController extends Controller
             $itemCount = $request->itemCount ?? 10;
 
             $userShiftRequest = UserShiftRequest::where('user_id', $request->user()->id)
-                ->orderBy('date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->with(['workingShift', 'approvalLine'])
                 ->paginate($itemCount, ['*'], 'page', $page);
 

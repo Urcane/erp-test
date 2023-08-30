@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\HC\Request;
 
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Yajra\DataTables\DataTables;
 use Illuminate\Validation\Rule;
 
-use App\Utils\ErrorHandler;
-use App\Constants;
 use App\Exceptions\AuthorizationError;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
@@ -21,17 +18,8 @@ use App\Models\Attendance\UserAttendance;
 use App\Models\Employee\UserEmployment;
 use Illuminate\Support\Facades\DB;
 
-class AttendanceController extends Controller
+class AttendanceController extends RequestController
 {
-    private $errorHandler;
-    private $constants;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-        $this->constants = new Constants();
-    }
-
     private function _updateAttendance($userId, $date, $checkIn, $checkOut)
     {
         $userAttendance = UserAttendance::where('user_id', $userId)->where('date', $date)->first();
@@ -97,11 +85,12 @@ class AttendanceController extends Controller
             ]);
 
             $attendanceRequest = UserAttendanceRequest::whereId($request->id)->first();
-            $approvalLine = $attendanceRequest->user->userEmployment->approvalLine;
 
             if (!$attendanceRequest) {
                 throw new NotFoundError("Attendance Request tidak ditemukan");
             }
+
+            $approvalLine = $attendanceRequest->user->userEmployment->approvalLine;
 
             if (!$approvalLine) {
                 if ($request->status == $this->constants->approve_status[1]) {

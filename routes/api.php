@@ -85,6 +85,15 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::post('/make', 'makeRequest');
                 });
             });
+
+            Route::prefix('time-off')->group(function () {
+                Route::controller(Request\TimeOffController::class)->group(function () {
+                    Route::post('/get', 'getRequest');
+                    Route::post('/get/detail', 'getRequestById');
+
+                    Route::post('/make', 'makeRequest');
+                });
+            });
         });
     });
 });

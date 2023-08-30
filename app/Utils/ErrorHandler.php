@@ -41,7 +41,7 @@ class ErrorHandler
         return [
             "data" => [
                 "status" => "error",
-                "message" => "Server Unavailable",
+                "message" => "Something Went Wrong",
             ],
             "code" => 500,
         ];

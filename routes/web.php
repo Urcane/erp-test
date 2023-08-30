@@ -237,12 +237,12 @@ Route::middleware(['auth'])->group(function () {
             });
         });
 
-        Route::controller(Settings\TimeManagement\TimeOfController::class)->group(function () {
-            Route::prefix('time-of')->group(function () {
-                Route::get('/', 'index')->name('hc.setting.timeof.index');
-                Route::get('/table/timeof', 'getTableTimeOf')->name('hc.setting.getTableTimeOf');
-                Route::post('/create/update/timeof', 'createUpdateTimeOf')->name('hc.setting.timeof.createUpdate');
-                Route::post('/delete/timeof', 'deleteTimeOf')->name('hc.setting.timeof.delete');
+        Route::controller(Settings\TimeManagement\TimeOffController::class)->group(function () {
+            Route::prefix('time-off')->group(function () {
+                Route::get('/', 'index')->name('hc.setting.timeoff.index');
+                Route::get('/table/timeoff', 'getTableTimeOff')->name('hc.setting.getTableTimeOf');
+                Route::post('/create/update/timeoff', 'createUpdateTimeOff')->name('hc.setting.timeoff.createUpdate');
+                Route::post('/delete/timeoff', 'deleteTimeOff')->name('hc.setting.timeoff.delete');
             });
         });
     });
@@ -270,6 +270,15 @@ Route::middleware(['auth'])->group(function () {
             });
         });
 
+        Route::prefix('time-off')->group(function () {
+            Route::controller(HCRequest\TimeOffController::class)->group(function () {
+                Route::put('/update/status', 'updateRequestStatus')->name('hc.request.tmoff.update');
+                Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.tmoff.summaries');
+
+                Route::get('/get-data/table', 'getTable')->name('hc.request.tmoff.get-table');
+            });
+        });
+
         Route::prefix('personal')->group(function () {
             Route::controller(Request\AttendanceController::class)->group(function () {
                 Route::prefix('/attendance')->group(function () {
@@ -282,6 +291,13 @@ Route::middleware(['auth'])->group(function () {
                 Route::prefix('/shift')->group(function () {
                     Route::post('/create', 'makeRequest')->name('req.shift.create');
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.shift.get-table-me');
+                });
+            });
+
+            Route::controller(Request\TimeOffController::class)->group(function () {
+                Route::prefix('/time-off')->group(function () {
+                    Route::post('/create', 'makeRequest')->name('req.time-off.create');
+                    Route::get('/get-data/table/me', 'showRequestTableById')->name('req.time-off.get-table-me');
                 });
             });
         });

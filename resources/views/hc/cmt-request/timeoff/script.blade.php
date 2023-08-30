@@ -1,5 +1,5 @@
 <script>
-    const onAttendanceModalOpen = ({
+    const onTimeOffModalOpen = ({
         id,
         name = "-",
         nip = "-",
@@ -7,79 +7,80 @@
         org = "-",
         position = "-",
         level = "-",
-        shift = "-",
-        work = "-",
+        taken = "-",
+        file = "-",
+        type = "-",
         created = "-",
-        checkin = "-",
-        checkout = "-",
         notes = "-",
+        startDate = "-",
+        endDate = "-",
         status
     }) => {
         const createdFormated = formatDateTime(created);
-        const checkinFormated = formatDateTime(checkin);
-        const checkoutFormated = formatDateTime(checkout);
+        const startDateFormated = formatDate(startDate);
+        const endDateFormated = formatDate(endDate);
 
         switch (status) {
             case approveStatusEnum[0]:
-                $('#attendance_approved_button').hide();
-                $('#attendance_rejected_button').hide();
-                $('#attendance_waiting_button').show();
+                $('#timeoff_approved_button').hide();
+                $('#timeoff_rejected_button').hide();
+                $('#timeoff_waiting_button').show();
                 break;
             case approveStatusEnum[1]:
-                $('#attendance_approved_button').show();
-                $('#attendance_rejected_button').hide();
-                $('#attendance_waiting_button').hide();
+                $('#timeoff_approved_button').show();
+                $('#timeoff_rejected_button').hide();
+                $('#timeoff_waiting_button').hide();
                 break;
             case approveStatusEnum[2]:
-                $('#attendance_approved_button').hide();
-                $('#attendance_rejected_button').show();
-                $('#attendance_waiting_button').hide();
+                $('#timeoff_approved_button').hide();
+                $('#timeoff_rejected_button').show();
+                $('#timeoff_waiting_button').hide();
                 break;
         }
 
-        $('#att-name-modal').text(name);
-        $('#att-nip-modal').text(nip);
-        $('#att-branch-modal').text(branch);
-        $('#att-org-modal').text(org);
-        $('#att-position-modal').text(position);
-        $('#att-level-modal').text(level);
-        $('#att-shift-modal').text(shift);
-        $('#att-work-modal').text(work);
-        $('#att-created-modal').text(createdFormated);
-        $('#att-checkin-modal').text(checkinFormated);
-        $('#att-checkout-modal').text(checkoutFormated);
-        $('#att-notes-modal').text(notes);
-        $('#attendance-request-id').val(id)
-        $('#attendance_comment').val("");
+        $('#tmoff-name-modal').text(name);
+        $('#tmoff-nip-modal').text(nip);
+        $('#tmoff-branch-modal').text(branch);
+        $('#tmoff-org-modal').text(org);
+        $('#tmoff-position-modal').text(position);
+        $('#tmoff-level-modal').text(level);
+        $('#tmoff-type-modal').text(type);
+        $('#tmoff-file-modal').text(file);
+        $('#tmoff-taken-modal').text(`${taken} Day(s)`);
+        $('#tmoff-date-modal').text(`${startDateFormated} - ${endDateFormated}`);
+        $('#tmoff-created-modal').text(createdFormated);
+        $('#tmoff-notes-modal').text(notes);
+        $('#timeoff-request-id').val(id)
+        $('#timeoff_comment').val("");
     };
 
-    const attendanceInit = () => {
-        const getAttendanceFilter = () => {
+    const timeOffInit = () => {
+        const getTimeOffFilter = () => {
             return {
-                'filterDivisi': $('#filter_divisi_attendance').val(),
-                'filterDepartment': $('#filter_department_attendance').val(),
-                'filterStatus': $('#filter_status_attendance').val(),
-                'filterDate': $('#range_date_attendance').val(),
-                'search': $('#search_attendance').val()
+                'filterDivisi': $('#filter_divisi_timeoff').val(),
+                'filterDepartment': $('#filter_department_timeoff').val(),
+                'filterStatus': $('#filter_status_timeoff').val(),
+                'filterDate': $('#range_date_timeoff').val(),
+                'search': $('#search_timeoff').val()
             }
         }
 
-        const deleteAttendanceSummaries = () => {
-            $('#view-need-att').text("-");
-            $('#view-approved-att').text("-");
-            $('#view-reject-att').text("-");
-            $('#all-need-att').text("-");
-            $('#all-approved-att').text("-");
-            $('#all-reject-att').text("-");
-            $('#view-date-attendance').text("View Date : -");
+        const deleteTimeOffSummaries = () => {
+            $('#view-need-tmoff').text("-");
+            $('#view-approved-tmoff').text("-");
+            $('#view-reject-tmoff').text("-");
+            $('#all-need-tmoff').text("-");
+            $('#all-approved-tmoff').text("-");
+            $('#all-reject-tmoff').text("-");
+            $('#view-date-timeoff').text("View Date : -");
         }
 
-        const getAttendanceSummaries = () => {
+        const getTimeOffSummaries = () => {
             $.ajax({
-                url: "{{ route('hc.request.att.summaries') }}",
+                url: "{{ route('hc.request.tmoff.summaries') }}",
                 method: 'GET',
                 data: {
-                    filters: getAttendanceFilter()
+                    filters: getTimeOffFilter()
                 },
                 success: function(data) {
                     const {
@@ -87,32 +88,32 @@
                         viewDate
                     } = data.data;
 
-                    $('#view-need-att').text(viewDate.waiting);
-                    $('#view-approved-att').text(viewDate.approved);
-                    $('#view-reject-att').text(viewDate.rejected);
-                    $('#all-need-att').text(allSummaries.waiting);
-                    $('#all-approved-att').text(allSummaries.approved);
-                    $('#all-reject-att').text(allSummaries.rejected);
-                    $('#view-date-attendance').text(
+                    $('#view-need-tmoff').text(viewDate.waiting);
+                    $('#view-approved-tmoff').text(viewDate.approved);
+                    $('#view-reject-tmoff').text(viewDate.rejected);
+                    $('#all-need-tmoff').text(allSummaries.waiting);
+                    $('#all-approved-tmoff').text(allSummaries.approved);
+                    $('#all-reject-tmoff').text(allSummaries.rejected);
+                    $('#view-date-timeoff').text(
                         `View Date : ${formatDate(viewDate.rangeDate[0])} - ${formatDate(viewDate.rangeDate[1])}`
                     );
                 },
                 error: function(xhr, status, error) {
-                    deleteAttendanceSummaries();
+                    deleteTimeOffSummaries();
                 }
             });
         };
 
-        $('input[name="range_date_attendance"]').daterangepicker({
+        $('input[name="range_date_timeoff"]').daterangepicker({
             autoUpdateInput: false
         }, (from_date, to_date) => {
-            $('#range_date_attendance').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format(
+            $('#range_date_timeoff').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format(
                 'MM/DD/YYYY'));
         });
 
-        $('#range_date_attendance').val(moment().format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+        $('#range_date_timeoff').val(moment().format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
 
-        const tableAttendance = $('#kt_table_attendance')
+        const tableTimeOff = $('#kt_table_timeoff')
             .DataTable({
                 processing: true,
                 serverSide: true,
@@ -130,9 +131,9 @@
                     });
                 },
                 ajax: {
-                    url: "{{ route('hc.request.att.get-table') }}",
+                    url: "{{ route('hc.request.tmoff.get-table') }}",
                     data: function(data) {
-                        data.filters = getAttendanceFilter()
+                        data.filters = getTimeOffFilter()
                     },
                 },
                 language: {
@@ -217,54 +218,54 @@
                 }, ],
             });
 
-        $('#range_date_attendance').on('apply.daterangepicker', function(ev, picker) {
-            tableAttendance.draw();
-            deleteAttendanceSummaries();
-            getAttendanceSummaries();
+        $('#range_date_timeoff').on('apply.daterangepicker', function(ev, picker) {
+            tableTimeOff.draw();
+            deleteTimeOffSummaries();
+            getTimeOffSummaries();
         });
 
-        $('#filter_department_attendance').change(function() {
-            tableAttendance.draw();
-            deleteAttendanceSummaries();
-            getAttendanceSummaries();
+        $('#filter_department_timeoff').change(function() {
+            tableTimeOff.draw();
+            deleteTimeOffSummaries();
+            getTimeOffSummaries();
         });
 
-        $('#filter_divisi_attendance').change(function() {
-            tableAttendance.draw();
-            deleteAttendanceSummaries();
-            getAttendanceSummaries();
+        $('#filter_divisi_timeoff').change(function() {
+            tableTimeOff.draw();
+            deleteTimeOffSummaries();
+            getTimeOffSummaries();
         });
 
-        $('#filter_status_attendance').change(function() {
-            tableAttendance.draw();
+        $('#filter_status_timeoff').change(function() {
+            tableTimeOff.draw();
         });
 
-        $('#search_attendance').on('input', function() {
-            tableAttendance.draw();
-            deleteAttendanceSummaries();
-            getAttendanceSummaries();
+        $('#search_timeoff').on('input', function() {
+            tableTimeOff.draw();
+            deleteTimeOffSummaries();
+            getTimeOffSummaries();
         });
 
-        const onAttendanceModalClose = () => {
-            $('#att-name-modal').text("-");
-            $('#att-nip-modal').text("-");
-            $('#att-branch-modal').text("-");
-            $('#att-org-modal').text("-");
-            $('#att-position-modal').text("-");
-            $('#att-level-modal').text("-");
-            $('#att-shift-modal').text("-");
-            $('#att-work-modal').text("-");
-            $('#att-created-modal').text("-");
-            $('#att-checkin-modal').text("-");
-            $('#att-checkout-modal').text("-");
-            $('#att-notes-modal').text("-");
-            $('#attendance-request-id').val("")
-            $('#attendance_comment').val("");
+        const onTimeOffModalClose = () => {
+            $('#tmoff-name-modal').text("-");
+            $('#tmoff-nip-modal').text("-");
+            $('#tmoff-branch-modal').text("-");
+            $('#tmoff-org-modal').text("-");
+            $('#tmoff-position-modal').text("-");
+            $('#tmoff-level-modal').text("-");
+            $('#tmoff-shift-modal').text("-");
+            $('#tmoff-work-modal').text("-");
+            $('#tmoff-created-modal').text("-");
+            $('#tmoff-checkin-modal').text("-");
+            $('#tmoff-checkout-modal').text("-");
+            $('#tmoff-notes-modal').text("-");
+            $('#timeoff-request-id').val("")
+            $('#timeoff_comment').val("");
         };
 
-        const onAttendanceModalSubmit = (id, status, comment) => {
+        const onTimeOffModalSubmit = (id, status, comment) => {
             $.ajax({
-                url: "{{ route('hc.request.att.update') }}",
+                url: "{{ route('hc.request.tmoff.update') }}",
                 method: 'PUT',
                 headers: {
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
@@ -275,10 +276,10 @@
                     comment
                 },
                 success: function(data) {
-                    tableAttendance.draw();
-                    onAttendanceModalClose();
-                    deleteAttendanceSummaries();
-                    getAttendanceSummaries();
+                    tableTimeOff.draw();
+                    onTimeOffModalClose();
+                    deleteTimeOffSummaries();
+                    getTimeOffSummaries();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },
                 error: function(xhr, status, error) {
@@ -288,22 +289,22 @@
             });
         };
 
-        $('#attendance-modal-close').on('click', function() {
-            onAttendanceModalClose();
+        $('#timeoff-modal-close').on('click', function() {
+            onTimeOffModalClose();
         });
 
-        $('#attendance_reject').on('click', function() {
-            const id = $('#attendance-request-id').val();
-            const comment = $('#attendance_comment').val();
-            onAttendanceModalSubmit(id, approveStatusEnum[2], comment);
+        $('#timeoff_reject').on('click', function() {
+            const id = $('#timeoff-request-id').val();
+            const comment = $('#timeoff_comment').val();
+            onTimeOffModalSubmit(id, approveStatusEnum[2], comment);
         });
 
-        $('#attendance_approve').on('click', function() {
-            const id = $('#attendance-request-id').val();
-            const comment = $('#attendance_comment').val();
-            onAttendanceModalSubmit(id, approveStatusEnum[1], comment);
+        $('#timeoff_approve').on('click', function() {
+            const id = $('#timeoff-request-id').val();
+            const comment = $('#timeoff_comment').val();
+            onTimeOffModalSubmit(id, approveStatusEnum[1], comment);
         });
 
-        getAttendanceSummaries();
+        getTimeOffSummaries();
     }
 </script>

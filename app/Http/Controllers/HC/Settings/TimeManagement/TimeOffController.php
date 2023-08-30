@@ -5,15 +5,16 @@ namespace App\Http\Controllers\HC\Settings\TimeManagement;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance\LeaveRequestCategory;
+use App\Models\Employee\WorkingShift;
 use Yajra\DataTables\Facades\DataTables;
 
-class TimeOfController extends Controller
+class TimeOffController extends Controller
 {
     public function index() {
-        return view("hc.cmt-settings.time-management.time-of");
+        return view("hc.cmt-settings.time-management.time-off");
     }
 
-    public function getTableTimeOf(Request $request) {
+    public function getTableTimeOff(Request $request) {
         if (request()->ajax()) {
             $query = LeaveRequestCategory::all();
 
@@ -64,7 +65,7 @@ class TimeOfController extends Controller
         }
     }
 
-    public function createUpdateTimeOf(Request $request) {
+    public function createUpdateTimeOff(Request $request) {
 
         $request->validate([
             "name" => "required",
@@ -99,7 +100,7 @@ class TimeOfController extends Controller
         // });
     }
 
-    public function deleteTimeOf(Request $request) {
+    public function deleteTimeOff(Request $request) {
 
         WorkingShift::whereId($request->id)->delete();
 

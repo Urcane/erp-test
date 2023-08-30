@@ -2,28 +2,15 @@
 
 namespace App\Http\Controllers\Api\Request;
 
-use App\Constants;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
-use App\Http\Controllers\Controller;
 use App\Models\Attendance\GlobalDayOff;
-use App\Models\Attendance\UserAttendance;
 use Illuminate\Http\Request;
-use App\Utils\ErrorHandler;
 use App\Models\Attendance\UserAttendanceRequest;
 use Carbon\Carbon;
 
-class AttendanceController extends Controller
+class AttendanceController extends RequestController
 {
-    private $errorHandler;
-    private $constants;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-        $this->constants = new Constants();
-    }
-
     public function getRequest(Request $request)
     {
         try {
@@ -31,7 +18,7 @@ class AttendanceController extends Controller
             $itemCount = $request->itemCount ?? 10;
 
             $userAttendanceRequest = UserAttendanceRequest::where('user_id', $request->user()->id)
-                ->orderBy('date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->with(['approvalLine'])
                 ->paginate($itemCount, ['*'], 'page', $page);
 

@@ -26,7 +26,7 @@
                     <div class="scroll-y me-n10 pe-10" id="modal_create_time_of_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#modal_create_time_of_header" data-kt-scroll-wrappers="#modal_create_time_of_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
                         <div class="col-lg-12 text-center mb-9">
-                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Time Of</span>
+                            <span class="fs-1 fw-bolder text-dark d-block mb-1">Time Off</span>
                             {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
                         </div>
                         <div class="col-lg-12 mb-3">
@@ -155,7 +155,7 @@
 
     function deleteTimeOf(id) {
         $.ajax({
-            url: "{{ route('hc.setting.timeof.delete') }}",
+            url: "{{ route('hc.setting.timeoff.delete') }}",
             headers: {
                 'X-CSRF-TOKEN': "{{csrf_token()}}"
             },
@@ -176,7 +176,7 @@
         event.preventDefault();
         var formData = $(this).serialize();
         $.ajax({
-            url: "{{ route('hc.setting.timeof.createUpdate') }}",
+            url: "{{ route('hc.setting.timeoff.createUpdate') }}",
             type: 'POST',
             data: formData,
             headers: {

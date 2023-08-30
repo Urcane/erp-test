@@ -12,6 +12,7 @@ use Illuminate\Http\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 
 use App\Constants;
+use App\Models\Attendance\LeaveRequestCategory;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Division;
@@ -69,6 +70,8 @@ class ProfileController extends Controller
         $dataProrateSetting = ProrateSetting::all();
         $dataCategory = UserFileCategory::all();
 
+        $leaveRequestCategory = LeaveRequestCategory::all();
+
         return view('profile.index',compact(
             'user',
             'users',
@@ -85,7 +88,8 @@ class ProfileController extends Controller
             'dataPaymentSchedule',
             'dataProrateSetting',
             'dataShift',
-            'dataCategory'
+            'dataCategory',
+            'leaveRequestCategory'
         ));
     }
 

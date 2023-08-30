@@ -356,6 +356,12 @@
                     date
                 } = data;
 
+                const $row = $(row);
+
+                if (attendanceCode !== attendanceCodeEnum[0]) {
+                    return $row.css('background-color', 'rgba(192, 192, 192, 0.4)');
+                }
+
                 const workingStartTime = getTime(startTime, 'HH:mm:ss');
                 const workingEndTime = getTime(endTime, 'HH:mm:ss');
                 const checkIn = getTime(checkInTime, 'YYYY-MM-DD HH:mm:ss');
@@ -365,12 +371,7 @@
                 const isDateToday = moment(date).isSame(today, 'day');
                 const isDateBeforeToday = moment(date).isBefore(today, 'day');
 
-                const $row = $(row);
                 const redBgColor = 'rgba(255, 0, 0, 0.2)';
-
-                if (attendanceCode !== attendanceCodeEnum[0]) {
-                    return $row.css('background-color', 'rgba(192, 192, 192, 0.4)');
-                }
 
                 const isLateCheckIn = checkTimeIsAfter(
                     checkIn,
