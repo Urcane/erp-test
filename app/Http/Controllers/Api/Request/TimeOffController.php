@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api\Request;
 
-use App\Exceptions\NotFoundError;
-use App\Models\Attendance\GlobalDayOff;
-use App\Models\Attendance\UserLeaveRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+
+use App\Exceptions\NotFoundError;
+
+use App\Models\Attendance\GlobalDayOff;
+use App\Models\Attendance\UserLeaveRequest;
+use App\Models\Attendance\LeaveRequestCategory;
 
 class TimeOffController extends RequestController
 {
@@ -18,7 +21,7 @@ class TimeOffController extends RequestController
 
             $userLeaveRequest = UserLeaveRequest::where('user_id', $request->user()->id)
                 ->orderBy('created_at', 'desc')
-                ->with('approvalLine')
+                ->with(['approvalLine', 'leaveRequestCategory'])
                 ->paginate($itemCount, ['*'], 'page', $page);
 
             return response()->json([
@@ -68,7 +71,7 @@ class TimeOffController extends RequestController
         try {
             $request->validate([
                 "start_date" => "required|date",
-                "end_date" => "required|date|after:start_date",
+                "end_date" => "required|date|after_or_equal:start_date",
                 "leave_request_category_id" => "required",
                 "file" => "required",
                 "notes" => "nullable|string"
@@ -114,6 +117,21 @@ class TimeOffController extends RequestController
                 "status" => "success",
                 "message" => "Berhasil melakukan request time off"
             ], 201);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getRequestCategory()
+    {
+        try {
+            $leaveRequestCategories = LeaveRequestCategory::all();
+            return response()->json([
+                "status" => "success",
+                "data" => $leaveRequestCategories,
+            ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);
 

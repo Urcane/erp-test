@@ -91,4 +91,56 @@ class UserController extends Controller
             return response()->json($data["data"], $data["code"]);
         }
     }
+
+    public function getUserSalary(Request $request) {
+        try {
+            return response()->json([
+                "status" => "success",
+                "data" => $request->user()->userSalary->load(['paymentSchedule','prorateSetting']),
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getUserBank(Request $request) {
+        try {
+            return response()->json([
+                "status" => "success",
+                "data" => $request->user()->userBank,
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getUserTax(Request $request) {
+        try {
+            return response()->json([
+                "status" => "success",
+                "data" => $request->user()->userTax->load(['taxStatus']),
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getUserBpjs(Request $request) {
+        try {
+            return response()->json([
+                "status" => "success",
+                "data" => $request->user()->userBpjs,
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
 }
