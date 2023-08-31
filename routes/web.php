@@ -37,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('cmt-employee')->group(function () {
             Route::get('/', 'index')->name('hc.emp.index');
 
-            Route::GET('/create/employee', 'create')->name('hc.emp.create');
+            Route::get('/create/employee', 'create')->name('hc.emp.create');
             // Route::post('/store/employee','store')->name('hc.emp.store');
             Route::post('/update-status/employee', 'statusPegawai')->name('hc.emp.update-status');
             Route::post('/reset-password-pegawai/employee', 'resetPasswordPegawai')->name('hc.emp.reset-password-pegawai');
@@ -60,6 +60,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/get-data/table/attendance', 'getTableAttendance')->name('hc.att.get-table-attendance');
             Route::get('/get-data/table/summaries', 'getAttendanceSummariesTable')->name('hc.att.get-table-attendance-summaries');
             Route::get('/get-data/table/attendance/detail', 'getTableAttendanceDetail')->name('hc.att.get-table-attendance-detail');
+
+            Route::get('/export/all', 'exportAllAttendance')->name('hc.att.export.all');
+            Route::get('/export/personal', 'exportPersonalAttendance')->name('hc.att.export.personal');
         });
     });
 

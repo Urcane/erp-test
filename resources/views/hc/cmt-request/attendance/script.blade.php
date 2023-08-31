@@ -239,6 +239,12 @@
             tableAttendance.draw();
         });
 
+        $('#btn_reset_filter').on('click', function () {
+            $('#filter_department_attendance').val("*").trigger("change")
+            $('#filter_divisi_attendance').val("*").trigger("change")
+            $('#filter_status_attendance').val("*").trigger("change")
+        });
+
         $('#search_attendance').on('input', function() {
             tableAttendance.draw();
             deleteAttendanceSummaries();

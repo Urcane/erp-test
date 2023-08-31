@@ -4,6 +4,7 @@ namespace App\Http\Controllers\HC\Attendance;
 
 use Carbon\Carbon;
 use Yajra\DataTables\DataTables;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,8 @@ use App\Constants;
 use App\Utils\ErrorHandler;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
+use App\Exports\Attendance\AllAttendance;
+use App\Exports\Attendance\PersonalAttendance;
 use App\Models\User;
 use App\Models\Attendance\AttendanceChangeLog;
 use App\Models\Attendance\GlobalDayOff;
@@ -129,13 +132,13 @@ class AttendanceController extends Controller
     public function show(string $id)
     {
         $user = User::has('userEmployment')->has('userAttendances')->whereId($id)->first();
-        $attendanceCode = $this->constants->attendance_code_view;
+        $constants = $this->constants;
 
         if (!$user) {
             abort(404);
         }
 
-        return view('hc.cmt-attendance.detail', compact(['user', 'attendanceCode']));
+        return view('hc.cmt-attendance.detail', compact(['user', 'constants']));
     }
 
     public function update(Request $request)
@@ -442,7 +445,8 @@ class AttendanceController extends Controller
     public function getAttendanceSummariesById(Request $request)
     {
         try {
-            $userAttendances = UserAttendance::where('user_id', $request->userId);
+            $userAttendances = UserAttendance::where('user_id', $request->userId)
+                ->has('user.userEmployment')->with('user.userEmployment');
 
             if ($request->dateFilter) {
                 $range_date = collect(explode('-', $request->dateFilter))->map(function ($item) {
@@ -643,7 +647,8 @@ class AttendanceController extends Controller
     public function getTableAttendanceDetail(Request $request)
     {
         if (request()->ajax()) {
-            $userAttendances = UserAttendance::where('user_id', $request->user_id);
+            $userAttendances = UserAttendance::where('user_id', $request->user_id)
+                ->has('user.userEmployment')->with('user.userEmployment');;
 
             if ($range_date = $request->dateFilter) {
                 $range_date = collect(explode('-', $request->dateFilter))->map(function ($item) {
@@ -705,6 +710,35 @@ class AttendanceController extends Controller
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])
                 ->make(true);
+        }
+    }
+
+    public function exportAllAttendance(Request $request)
+    {
+        try {
+            return Excel::download(new AllAttendance(
+                $request->rangeDate,
+                $request->filterDivisi,
+                $request->filterDepartment
+            ), 'Data Absen Pegawai.xlsx');
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function exportPersonalAttendance(Request $request)
+    {
+        try {
+            return Excel::download(new PersonalAttendance(
+                $request->userId,
+                $request->rangeDate,
+            ), 'Data Absen Pegawai.xlsx');
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
         }
     }
 }

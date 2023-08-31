@@ -43,6 +43,29 @@ class Constants
         "Izin/Cuti"
     ];
 
+    // export excel
+    public $summaries_attendance = [
+        "On Time",
+        "Late Check In",
+        "Early Check Out",
+        "Absent",
+        "No Check In",
+        "No Check Out",
+        "Day Off",
+        "Time Off"
+    ];
+
+    public $summaries_attendance_information = [
+        "Tepat waktu dalam check-in dan check-out",
+        "Terlambat check-in",
+        "Terlalu cepat check-out",
+        "Antara tidak check-in atau check-out",
+        "Tidak check-in",
+        "Tidak check-out",
+        "Hari libur kerja/nasional",
+        "Izin dan cuti"
+    ];
+
     // only view
     public $identity_type = ["KTP", "SIM", "Passport"];
     public $bank_name = [

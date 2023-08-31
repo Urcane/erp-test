@@ -187,6 +187,7 @@
 
 @include('hc.cmt-attendance.modal.edit-attendance')
 @include('hc.cmt-attendance.modal.delete-attendance')
+@include('hc.cmt-attendance.modal.export-attendance')
 
 <script>
     const attendanceCodeEnum = @json($constants->attendance_code_view);
@@ -305,16 +306,7 @@
                 "emptyTable" : "Tidak ada data terbaru 📁",
                 "zeroRecords": "Data tidak ditemukan 😞",
             },
-            buttons: [
-                {
-                    extend: 'excel',
-                    className: 'btn btn-light-success btn-sm ms-3',
-                    title: 'Data Absen Pegawai Comtelindo',
-                    exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10,11,12]
-                    }
-                },
-            ],
+            buttons: [],
             dom:
             "<'row mb-2'" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
@@ -480,6 +472,9 @@
             });
         }
 
+        const customExportLink = '<a href="#attendance_export_modal" class="btn btn-light-success btn-sm ms-3" data-bs-toggle="modal">Excel</a>'
+        $(tableAttendance.buttons().container()).append(customExportLink);
+
         $('#range_date').on('apply.daterangepicker', function(ev, picker) {
             tableAttendance.draw();
             deleteSummaries();
@@ -565,6 +560,20 @@
 
                 renderSummariesTable(param, `${paramToView(param)} - (${$('#range_date').val()}) File`);
             });
+        });
+
+        $('#btn_reset_filter').on('click', function () {
+            $('#filter_department').val("*").trigger("change")
+            $('#filter_divisi').val("*").trigger("change")
+            $('#filter_status').val("*").trigger("change")
+        });
+
+        $('#modal_attendance_export_submit').on('click', function() {
+            const rangeDate = $('#range_date_export').val();
+            const filterDivisi = $('#filter_divisi_export').val();
+            const filterDepartment = $('#filter_department_export').val();
+
+            window.open(`{{ route('hc.att.export.all') }}?rangeDate=${rangeDate}&filterDivisi=${filterDivisi}&filterDepartment=${filterDepartment}`, '_blank');
         });
 
         renderSummaries();
