@@ -15,7 +15,11 @@ class QuotationController
     }
 
     function index() { 
-        return view('');      
+        return view('cmt-opportunity.quotation.pages.quotation-internet');      
+    }
+
+    function perangkat() { 
+        return view('cmt-opportunity.quotation.pages.quotation-perangkat');      
     }
 
     function getDatatable(Request $request) : JsonResponse  {
@@ -25,7 +29,7 @@ class QuotationController
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
-    function createQuotation(Request $request) : JsonResponse{
+    function createQuotation(Request $request) {
         if ($request->query('boq_id')) {
             return $this->quotationService->createQuotation($request);
         } 

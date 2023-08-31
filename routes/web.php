@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\Sales\Opportunity\Quotation\QuotationController;
 use App\Http\Controllers\Sales\Customer\CustomerController;
 use App\Http\Controllers\Sales\Opportunity\BOQ\BoqController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
@@ -119,9 +119,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(QuotationController::class)->group(function(){
         Route::prefix('cmt-quotation')->group(function(){
-           Route::get('/', 'index')->name('com.quotation.index');
+            Route::get('/', 'index')->name('com.quotation.index'); // quotation internet
+            Route::get('/quotation-perangkat', 'perangkat')->name('com.quotation.perangkat.index'); // quotation perangkat
            Route::get('/get-data/table/data-result','getDatatable')->name('com.quotation.render.datatable');
-           Route::get('/create-quotation','createQuotation')->name('com.quotation.create.quotation');
+           Route::get('/create-draft-quotation','createQuotation')->name('com.quotation.create.quotation');
            Route::get('/update-quotation','updateQuotation')->name('com.quotation.update.quotation');
            Route::post('/store-data-quotation','saveAndStoreQuotation')->name('com.quotation.store.quotation');
         });

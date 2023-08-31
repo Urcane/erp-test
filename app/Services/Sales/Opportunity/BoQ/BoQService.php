@@ -49,19 +49,30 @@ class BoqService
                             </ul>';
             })
             ->addColumn('action_done', function ($query) {
-                return 
-                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                return '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
                             <li><span class="dropdown-item py-2">No Action</span></li>
                             </ul>';
             })
-            ->addColumn('action_quotation', function ($query) {
-                return 
-                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <ul class="dropdown-menu">
-                            <li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ) . '" class="dropdown-item py-2">
-                            <i class="fa-solid fa-list-check me-3"></i>Create Quotation</a></li>
-                            </ul>';
+            ->addColumn('action_quotation', function ($query) use($request)  {
+                $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">'; 
+                 // Check if 'calledFrom' key exists in $request->filters
+                if (isset($request->filters['calledFrom'])) {
+                    if ($request->filters['calledFrom'] == 'Internet') {
+                        $actions .= '<li><a href="' . url("cmt-quotation/create-draft-quotation?boq_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
+                                <i class="fa-solid fa-list-check me-3"></i>Create Quotation Internet</a></li>';
+                    }
+                    elseif ($request->filters['calledFrom'] == 'Perangkat') {
+                        $actions .= '<li><a href="' . url("cmt-quotation/create-draft-quotation?boq_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
+                                <i class="fa-solid fa-list-check me-3"></i>Create Quotation Perangkat</a></li>';
+                    }
+                } else {                    
+                   $actions .= '<li><span class="dropdown-item py-2">No Action</span></li>';
+                }
+        
+                $actions .= '</ul>';
+                return $actions; 
             })
             ->addColumn('action_cancel', function ($query) {
                 return 
@@ -145,6 +156,48 @@ class BoqService
         $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
         return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
     }
+
+    // function createDraftBoqQuery(Request $request) {
+    //     $prospectId = $request->query('prospect_id');
+    
+    //     $dataProspect = $this->BoQRepository->getProspect()
+    //         ->doesntHave('itemableBillOfQuantity')
+    //         ->get();
+    
+    //     $dataCompany = $this->BoQRepository->getProspect()
+    //         ->where('id', $prospectId)
+    //         ->with('itemableBillOfQuantity')
+    //         ->first();
+    
+    //     $dataItem = $this->BoQRepository->getListItem();
+    
+    //     $dataSurvey = $this->BoQRepository->getSurvey()
+    //         ->where('customer_prospect_id', $prospectId)
+    //         ->get();
+    
+    //     return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
+    // }
+
+    // function createDraftBoqQuery(Request $request){
+    //     $prospectId = $request->query('prospect_id');
+    
+    //     $dataProspect = $this->BoQRepository->getProspect()
+    //         ->doesntHave('itemableBillOfQuantity')
+    //         ->get();
+    
+    //     $dataCompany = $this->BoQRepository->getProspect()
+    //         ->with('itemableBillOfQuantity')
+    //         ->find($prospectId);
+    
+    //     $dataItem = $this->BoQRepository->getListItem();
+    
+    //     $dataSurvey = $this->BoQRepository->getSurvey()
+    //         ->where('customer_prospect_id', $prospectId)
+    //         ->get();
+    
+    //     return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
+    // }
+    
 
     function createDraftBoqAjax(Request $request){
         $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();

@@ -26,9 +26,8 @@
 
 @section('content')
     {{-- FORM BOQ --}}
-    {{-- @dd($dataSurvey) --}}
-    {{-- @dd($dataProspect) --}}
-    {{-- @dd($dataItems) --}}
+    {{-- @dd($dataCompany) --}}
+    {{-- @dd($dataBoq["dataForm"])   --}}
 
 
     <div class="row justify-content-center">
@@ -37,9 +36,11 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
+
+
                             <div class="row mb-6 align-items-center">
                                 <div class="col-lg-6 gap-3 d-flex align-items-center">
-                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Bill of Quantity</span>
+                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Bill of Quantity</span>
                                 </div>
                             </div>
 
@@ -49,37 +50,20 @@
                                     @csrf
                                     {{-- divv Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-
-                                        {{-- baris Rilll --}}
+                                        {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                            <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
-                                            @csrf
                                             <div class="col-lg-5 col-6 mb-3">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2" required>
+                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
-
-                                                <select class="form-select-solid form-select form-select-solid"
-                                                    data-url="{{ route('com.boq.create-draft-boq') }}"
-                                                    data-control="select2" required name="prospect_id" id="prospect_id">
-                                                    <option value="{{ $dataCompany->id ?? null }}" selected>
-                                                        {{ $dataCompany->prospect_title ?? 'Pilih Prospect' }}
-                                                        {{ $dataCompany->customer->customer_name ?? null }}</option>
-                                                    @foreach ($dataProspect as $prospect)
-                                                        <option value="{{ $prospect->id ?? null }}">
-                                                            {{ $prospect->prospect_title ?? null }}
-                                                            {{ $prospect->customer->customer_name ?? null }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <div id="error-prospect"></div>
-
-                                                {{-- <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $dataCompany->prospect_title ?? null }} {{ $dataCompany->customer->customer_name ?? null }}">
-
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    name="prospect_id" id="prospect_id"
-                                                    value="{{ $dataCompany->id ?? null }}"> --}}
+                                                    placeholder="{{ $dataBoq['boqFinalData'][0]->customerProspect->prospect_title }} - {{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
 
+                                                <input type="hidden" class="form-control form-control-solid" disabled
+                                                    name="prospect_id" id="prospect_id"
+                                                    value="{{ $dataBoq['boqFinalData'][0]->prospect_id }}">
+
+                                                <div id="error-prospect"></div>
                                             </div>
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
@@ -87,60 +71,51 @@
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
-                                                <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" name="survey_request_id" id="survey_request_id">
-                                                    <option value="" selected disabled>Pilih Survey</option>
-                                                    @if (isset($dataSurvey))
-                                                        @foreach ($dataSurvey as $survey)
-                                                            <option value="{{ $survey->id ?? null }}">
-                                                                {{ $survey->customerProspect->prospect_title ?? null }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
+                                                <input type="text" class="form-control form-control-solid" disabled
+                                                    name="survey_request_id" id="survey_request_id"
+                                                    value="{{ $dataBoq['boqFinalData'][0]->survey_request_id }}"
+                                                    {{ $dataBoq['boqFinalData'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>
 
-                                        {{-- baris Rilll --}}
+                                        {{-- baris company contact --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
 
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class="form-label">Nama Perusahaan</label>
+                                                <label class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    name="customer_name" id="customer_name"
-                                                    value="{{ $dataCompany->customer->customer_name ?? null }}">
+                                                    id="customer_name"
+                                                    value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
                                             </div>
 
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class=" form-label">Nama Kontak Customer</label>
+                                                <label class=" form-label">Nama Kontak Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
-                                                    value="{{ $dataCompany->customer->customerContact->customer_contact_name ?? null }}"
-                                                    name="">
+                                                    value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class="form-label">No Kontak Customer</label>
+                                                <label class="form-label">No Kontak Customer</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text border-0" id="">+62</span>
                                                     <input type="number" class="form-control form-control-solid" disabled
                                                         minlength="8" name="customer_contact_phone"
                                                         id="customer_contact_phone"
-                                                        value="{{ $dataCompany->customer->customerContact->customer_contact_phone ?? null }}"
-                                                        name="" />
+                                                        value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
                                                 </div>
                                             </div>
 
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class="form-label">Jenis Project</label>
+                                                <label class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
-                                                    value="{{ $dataCompany->customer->bussinesType->type_name ?? null }}">
+                                                    value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->bussinesType->type_name }}">
                                             </div>
                                         </div>
                                     </div>
@@ -149,13 +124,135 @@
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                         <div class="MultipleItem">
+                                            {{-- Cek Dari db items jika ada masukkan di sni
+                                            {{-- inputan dari modal masuk kesni --}}
+                                            @if (isset($dataBoq['boqFinalData'][0]->itemable))
+
+                                                @foreach ($dataBoq['boqFinalData'][0]->itemable as $relatedItem)
+                                                    <!-- Display data from $relatedItem -->
+                                                    @php
+                                                        $random_string = \Illuminate\Support\Str::random(4);
+                                                    @endphp
+                                                    <div
+                                                        class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Item</label>
+                                                            <input type="text" class="form-control form-control-solid"
+                                                                disabled name="content[][good_name]"
+                                                                value="{{ $relatedItem->inventoryGood->good_name ?? null }}" />
+                                                        </div>
+
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Merk</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="text"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][good_merk]"
+                                                                    value="{{ $relatedItem->inventoryGood->merk ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Price</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][purchase_price]"
+                                                                    value="{{ $relatedItem->purchase_price ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Qty</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][quantity]"
+                                                                    value="{{ $relatedItem->quantity ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                            <label class="form-label">Jasa
+                                                                Antar</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][purchase_delivery]"
+                                                                    value="{{ $relatedItem->purchase_delivery_charge ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="d-flex justify-content-between"
+                                                            style="flex-basis: 28%; min-width: 150px; margin: 10px;">
+                                                            <div style="flex-basis: 80%; min-width: 120px;">
+                                                                <label class="form-label">Total
+                                                                    Price</label>
+                                                                <div class="position-relative">
+                                                                    <div class="position-absolute top-0"></div>
+                                                                    <input type="number"
+                                                                        class="total-price form-control form-control-solid"
+                                                                        disabled name="content[][total_price]"
+                                                                        value="{{ $relatedItem->total_price ?? null }}" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="d-flex justify-content-center align-items-center"
+                                                                style="flex-basis: 14%; min-width: 30px;">
+                                                                <button type="button"
+                                                                    class="btn btn-secondary btn-icon btn-sm"
+                                                                    data-kt-menu-placement="bottom-end"
+                                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li type="button" class="btn-update-boq-modal"
+                                                                        data-random-string="{{ $random_string }}"
+                                                                        data-item-id="{{ $relatedItem->item_inventory_id }}"
+                                                                        data-quantity="{{ $relatedItem->quantity }}"
+                                                                        data-total_price="{{ $relatedItem->total_price }}"
+                                                                        data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
+                                                                        data-purchase_price="{{ $relatedItem->purchase_price }}"
+                                                                        data-purchase_refrence="{{ $relatedItem->purchase_refrence }}"
+                                                                        data-item_detail="{{ $relatedItem->item_detail }}">
+                                                                        <a class="dropdown-item py-2">
+                                                                            <i class="fa-solid fa-edit me-3"></i>Edit
+                                                                            Item</a>
+                                                                    </li>
+                                                                    <li type="button" class="clear-soft-survey-item"
+                                                                        data-random-string="{{ $random_string }}">
+                                                                        <a class="dropdown-item py-2">
+                                                                            <i class="fa-solid fa-trash me-3"></i>Hapus
+                                                                            Item</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
+                                                        <div>
+                                                            <input type="hidden" name="content[][id]" disabled
+                                                                value="{{ $relatedItem->id ?? null }}" />
+                                                            <input type="hidden" name="content[][item_inventory_id]"
+                                                                disabled
+                                                                value="{{ $relatedItem->item_inventory_id ?? null }}" />
+                                                            <input type="hidden" name="content[][purchase_reference]"
+                                                                disabled
+                                                                value="{{ $relatedItem->purchase_refrence ?? null }}" />
+                                                            <input type="hidden" name="content[][item_detail]" disabled
+                                                                value="{{ $relatedItem->item_detail ?? null }}" />
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
 
                                         </div>
 
-
                                         @role('administrator')
                                             <div class="ms-15 w-20 mt-3 mb-3 ">
-                                                <a href="#kt_modal_tambah_boq" data-bs-toggle="modal"
+                                                <a href="#kt_modal_tambah_boq" data-bs-toggle="modal" id="btn-tambah-boq"
                                                     class="btn btn-light-info btn-sm me-3 btn_tambah_boq">
                                                     <i class="fa-solid fa-plus"></i>Item Baru</a>
                                                 <div id="error-item"></div>
@@ -165,17 +262,15 @@
 
                                     {{-- divv akhir total amount --}}
                                     <div>
-                                        <div class="d-flex justify-content-end mx-20">
+                                        <div class="d-flex justify-content-end mx-20"> 
                                             <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Amount : Rp.<span id="totalsum"></span></span>
+                                                <span class="fw-bold">Total Amount : Rp<span id="totalsum"></span></span>
                                             </div>
                                         </div>
-
                                         <div class="d-flex justify-content-center mt-6">
                                             <div class=" me-5">
                                                 <a href="" class="btn btn-light-info">Discard</a>
                                             </div>
-
                                             <div class="me-5">
                                                 <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Submit</a>
                                             </div>
@@ -258,7 +353,6 @@
             // Mengatur nilai total pada elemen dengan class 'total' (hidden input)
             const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
             hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
-
         }
 
         $(document).ready(function() {
@@ -269,10 +363,10 @@
                 // Get Prospect ID and Survey ID from the HTML elements
                 var prospect_id = $('#prospect_id').val();
                 var survey_request_id = $('#survey_request_id').val();
+                var is_draft = $('#is_draft').is(':checked') ? 0 : 1;
 
                 // Validate the prospect_id
-                if (!prospect_id) { 
-                    event.preventDefault();
+                if (!prospect_id) {
                     var errorMessageProspect =
                         "<span class='fw-semibold fs-8 text-danger'>Pilih Prospect Terlebih Dahulu.</span>";
                     $('#error-prospect').html(errorMessageProspect);
@@ -288,7 +382,8 @@
                 // Create an object to store prospect_id and survey_request_id
                 var boq = {
                     prospect_id: prospect_id,
-                    survey_request_id: survey_request_id
+                    survey_request_id: survey_request_id,
+                    is_draft: is_draft
                 };
 
                 // console.log(boq);
@@ -329,9 +424,8 @@
                 });
 
                 // Check if there is at least one item in the 'items' array
-                if (items.length === 0) {     
+                if (items.length === 0) {
                     // Show an error message
-                    event.preventDefault();
                     var errorMessageItem =
                         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
                     $('#error-item').html(errorMessageItem);
@@ -340,6 +434,7 @@
                     $('#error-item').empty();
                 }
                 console.log(items);
+
                 // Send the data to the server using AJAX
                 $.ajax({
                     url: "{{ route('com.boq.store.boq') }}",
@@ -360,71 +455,37 @@
                 });
             });
 
-            // Handler untuk peristiwa "change" pada Prospect id di Title prospect
-            $('#prospect_id').on('change', function() {
+            // Function Update BOQ modal
+            $('.btn-update-boq-modal').on('click', function() {
+                var randomString = $(this).data('random-string');
+                var itemId = parseInt($(this).data('itemId'));
+                console.log($(this).data('itemId'));
 
-                var prospect_id = $(this).val();
-                var url = $(this).data('url');
-                $('.MultipleItem').empty();
-                // Mengirim permintaan asinkron menggunakan AJAX untuk mendapatkan data jenis dan merek item
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        prospect_id: prospect_id
-                    },
-                    dataType: 'json', // Mengharapkan respons dalam format JSON
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest' // Set header X-Requested-With
-                    },
-                    success: function(response) { 
-                        // console.log(response);
-                        const survey = response.dataSurvey;
-                        const dataCompany = response.dataCompany;  
-                        if (survey.length >= 1) {
-                            survey.forEach((item) => {
-                                $('#survey_request_id').append(new Option(item
-                                    .no_survey, item.id, false, false)).trigger(
-                                    'change');
-                            });
-                        }
+                var quantity = $(this).data('quantity');
+                var total_price = ($(this).data('total_price'));
+                var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                var purchase_price = ($(this).data('purchase_price'));
+                var purchase_refrence = $(this).data('purchase_refrence');
+                var item_detail = ($(this).data('item_detail'));
+                // console.log(randomString, itemId, quantity, total_price, purchase_delivery_charge,
+                //     purchase_price, purchase_refrence, item_detail);
 
-                        if (dataCompany && dataCompany.customer) {
-                            $('#customer_name').val(dataCompany.customer.customer_name)
-                                .prop(
-                                    'disabled', true);
-                            $('#customer_contact_name').val(dataCompany.customer
-                                .customer_contact.customer_contact_name).prop(
-                                'disabled',
-                                true);
-                            $('#customer_contact_phone').val(dataCompany.customer
-                                .customer_contact.customer_contact_phone).prop(
-                                'disabled',
-                                true);
-                            $('#type_name').val(dataCompany.customer.bussines_type
-                                    .type_name)
-                                .prop('disabled', true);
+                $('#good_name_update').val(itemId).trigger('change');
 
-                        } else {
-                            // Set the input values to blank if dataCompany or customer object is empty
-                            $('#customer_name').val("").prop('disabled', true);
-                            $('#customer_contact_name').val("").prop('disabled', true);
-                            $('#customer_contact_phone').val("").prop('disabled', true);
-                            $('#type_name').val("").prop('disabled', true);
-                        }
+                $('#kt_modal_update_boq').modal('show');
 
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
+                $('#uniq_id').val(randomString);
 
-                });
+                $('#item_detail_update').val(item_detail);
+                $('#purchase_refrence_update').val(purchase_refrence);
+                $('#purchase_price_update').val(purchase_price);
+                $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
+                $('#total_price_update').val(total_price);
+                $('#quantity_update').val(quantity);
+                document.getElementById('total_update').textContent = total_price;
             });
 
-
-
-
-            // Handler untuk peristiwa "change" pada select item Update
+            // Handler untuk peristiwa "change" pada select item
             $('#good_name_update').on('change', function() {
                 var selectedItemId = $(this).val();
                 var url = $(this).data('url');
@@ -467,7 +528,8 @@
                         minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
                     },
                 },
-                submitHandler: function(form) { 
+                submitHandler: function(form) {
+                    event.preventDefault();
 
                     // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
                     var selectedItemId = $('#good_name_update').val();
@@ -476,20 +538,45 @@
 
                     // Membuat elemen input tersembunyi untuk nama barang
                     var itemNameInput = $('<input>').attr({
-                        type: 'hidden',
+                        type: 'text',
                         name: 'content[][good_name]',
                         value: itemName
                     });
 
                     // Menambahkan elemen input tersembunyi ke dalam form
-                    $(form).append(itemNameInput); 
+                    $(form).append(itemNameInput);
 
                     var formData = new FormData(form);
 
                     const uniq_id = formData.get('uniq_id');
 
                     const item = document.querySelectorAll(
-                        `.MultipleItem .file-soft-boq-item-${uniq_id}`); 
+                        `.MultipleItem .file-soft-boq-item-${uniq_id}`);
+
+                    let data = $(`.btn-update-boq-modal[data-random-string="${uniq_id}"]`);
+
+                    // Mengatur ulang atribut-atribut elemen <li> berdasarkan formData
+                    data.attr({
+                        'data-item-id': selectedItemId,
+                        'data-quantity': formData.get('quantity_update'),
+                        'data-total_price': formData.get('total_update'),
+                        'data-purchase_delivery_charge': formData.get(
+                            'purchase_delivery_update'),
+                        'data-purchase_price': formData.get('purchase_price_update'),
+                        'data-purchase_refrence': formData.get('purchase_reference'),
+                        'data-item_detail': formData.get('item_detail')
+                    });
+
+                    data.data({
+                        'item-id': selectedItemId,
+                        'quantity': formData.get('quantity_update'),
+                        'total_price': formData.get('total_update'),
+                        'purchase_delivery_charge': formData.get('purchase_delivery_update'),
+                        'purchase_price': formData.get('purchase_price_update'),
+                        'purchase_refrence': formData.get('purchase_reference'),
+                        'item_detail': formData.get('item_detail')
+                    });
+
                     $('[name="content[][good_name]"]', item).val(itemName);
                     $('[name="content[][good_merk]"]', item).val(itemMerk);
                     $('[name="content[][purchase_price]"]', item).val(formData.get(
@@ -503,6 +590,9 @@
                     $('[name="content[][total_price]"]', item).val(formData.get('total_update'));
                     $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
 
+                    // Hapus elemen itemNameInput dari formulir
+                    itemNameInput.remove();
+
                     // Bersihkan input setelah item ditambahkan
                     form.reset();
 
@@ -514,11 +604,18 @@
             });
 
 
+            // Function Tambah BOQ modal
+            $('#btn-tambah-boq').on('click', '.btn_tambah_boq', function() {
+                $('.drop-data').val("").trigger("change");
+                $('#kt_modal_tambah_boq_form').trigger("reset");
+                $('#kt_modal_tambah_boq_submit').removeAttr('disabled', 'disabled');
+            });
 
             // Handler untuk peristiwa "change" pada select item
             $('#good_name').on('change', function() {
                 var selectedItemId = $(this).val();
                 var url = $(this).data('url');
+
                 // Mengirim permintaan asinkron menggunakan AJAX untuk mendapatkan data jenis dan merek item
                 $.ajax({
                     url: url,
@@ -528,11 +625,9 @@
                     }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
                     success: function(response) {
                         console.log(response);
-                        $('#good_type').val(response.good_type).prop('disabled',
-                            true);
+                        $('#good_type').val(response.good_type).prop('disabled', true);
                         $('#merk').val(response.merk).prop('disabled', true);
-                        $('#detail').val(response.description).prop('disabled',
-                            true);
+                        $('#detail').val(response.description).prop('disabled', true);
                     },
                     error: function(error) {
                         console.log(error);
@@ -540,7 +635,14 @@
                 });
             });
 
-            // Function Submit Tambah BOQ modal
+            // Function Hapus Item Frontend
+            $('.MultipleItem').on('click', '.clear-soft-survey-item', function() {
+                var random_string = $(this).data('random-string');
+                $(this).closest('.file-soft-boq-item-' + random_string).remove();
+                updateTotalSum();
+            });
+
+            // Function Submit BOQ modal
             $("#kt_modal_tambah_boq_form").validate({
                 messages: {
                     good_name: {
@@ -560,7 +662,7 @@
                     },
                 },
                 submitHandler: function(form) {
-                    // event.preventDefault();
+                    event.preventDefault();
 
                     // ngambil inputan nama dan merk
                     var selectedItemId = $('#good_name').val();
@@ -671,7 +773,6 @@
                             updateTotalSum();
                         });
 
-
                     // Function Update BOQ modal
                     $('.MultipleItem').on('click', '.btn-update-boq-modal', function() {
 
@@ -718,13 +819,8 @@
                 }
             });
 
-            // Function Tambah BOQ modal
-            $('#btn-tambah-boq').on('click', '.btn_tambah_boq', function() {
-                $('.drop-data').val("").trigger("change");
-                $('#kt_modal_tambah_boq_form').trigger("reset");
-                $('#kt_modal_tambah_boq_submit').removeAttr('disabled', 'disabled');
-            });
-
+            //  Calculate and update total sum on page load
+            updateTotalSum();
 
             function updateTotalSum() {
                 var totalSum = 0;
@@ -743,5 +839,4 @@
             }
         });
     </script>
-
 @endsection

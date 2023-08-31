@@ -484,8 +484,8 @@ class CustomerController extends Controller
             ])->whereHas('customerProspectLogs', function ($logs) {
                 $logs->where('status', 2);
             })->doesntHave('itemableBillOfQuantity')->orderBy('id', 'DESC');
-
-            return DataTables::of($query->get())
+            
+            return DataTables::of($query->get()) 
             ->addColumn('DT_RowChecklist', function($check) {
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
             })

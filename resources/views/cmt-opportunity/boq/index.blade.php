@@ -245,9 +245,9 @@
                                                             id="kt_table_boq_done">
                                                             <thead class="">
                                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                                                    <th class="text-center w-75px">#</th>
-                                                                    <th class="w-25px">#</th>
-                                                                    <th class="">Project Name</th>
+                                                                    <th class="w-50px">#</th>
+                                                                    <th class="">Company Name</th>
+                                                                    <th class="">Company Contact</th>
                                                                     <th class="w-200px">No. Project</th>
                                                                     <th class="w-200px">Progress</th>
                                                                     <th class="w-300px">Next Action</th>
@@ -287,7 +287,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -378,7 +378,16 @@
                     data: 'customer.customer_contact.customer_contact_name'
                 },
                 {
-                    data: 'customer.customer_contact.customer_contact_phone'
+                    data: 'customer.customer_contact.customer_contact_phone',
+                    render: function(data, type, row) {
+                        // Check if the data is of type display or filter (not sorting)
+                        if (type === 'display' || type === 'filter') {
+                            // Prepend '0' to the phone number
+                            return '0' + data;
+                        }
+                        // For sorting and other purposes, return the original data
+                        return data;
+                    }
                 },
                 {
                     data: 'customer.bussines_type.type_name'
@@ -512,16 +521,23 @@
                 filters: {
                     is_done: true,
                 },
-                columnData: [
-                    // { data: 'DT_RowChecklist'},
-                    {
+                columnData: [{
                         data: 'DT_RowIndex'
                     },
                     {
                         data: 'prospect.customer.customer_name'
                     },
                     {
-                        data: 'prospect.customer.customer_address'
+                        data: 'prospect.customer.customer_contact.customer_contact_phone',
+                        render: function(data, type, row) {
+                            // Check if the data is of type display or filter (not sorting)
+                            if (type === 'display' || type === 'filter') {
+                                // Prepend '0' to the phone number
+                                return '0' + data;
+                            }
+                            // For sorting and other purposes, return the original data
+                            return data;
+                        }
                     },
                     {
                         data: 'prospect.prospect_title'
