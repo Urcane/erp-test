@@ -14,7 +14,9 @@
         notes = "-",
         startDate = "-",
         endDate = "-",
-        status
+        status,
+        fileLink = "-",
+        fileName = "-"
     }) => {
         const createdFormated = formatDateTime(created);
         const startDateFormated = formatDate(startDate);
@@ -52,6 +54,12 @@
         $('#tmoff-notes-modal').text(notes);
         $('#timeoff-request-id').val(id)
         $('#timeoff_comment').val("");
+
+        if (fileName !== "-") {
+            $('#tmoff-file-modal').attr('href', fileLink);
+        }
+
+        $('#tmoff-file-modal').text(fileName);
     };
 
     const timeOffInit = () => {
@@ -267,6 +275,8 @@
             $('#tmoff-notes-modal').text("-");
             $('#timeoff-request-id').val("")
             $('#timeoff_comment').val("");
+            $('#tmoff-file-modal').attr('href', "#");
+            $('#tmoff-file-modal').text("-");
         };
 
         const onTimeOffModalSubmit = (id, status, comment) => {

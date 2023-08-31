@@ -63,7 +63,9 @@
                         </div>
                         <div class="col-lg-12 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">File</span>
-                            <p class="fs-7 fw-normal" id="tmoff-file-modal">-</p>
+                            <div>
+                                <a href="" class="fs-7 fw-normal btn btn-link" id="tmoff-file-modal" target="_blank">-</a>
+                            </div>
                         </div>
                         <div class="col-lg-12 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Notes</span>

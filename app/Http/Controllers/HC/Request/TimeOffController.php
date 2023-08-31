@@ -447,8 +447,11 @@ class TimeOffController extends RequestController
                 ->addColumn('action', function ($query) {
                     $params = "#timeoff_modal";
 
+                    $fileName = $query->file;
+                    $fileLink = asset("/storage/request/timeoff/$fileName");
+
                     return view('hc.cmt-request.timeoff.menu', compact([
-                        'params', 'query'
+                        'params', 'query', 'fileName', 'fileLink'
                     ]));
                 })
                 ->addIndexColumn()

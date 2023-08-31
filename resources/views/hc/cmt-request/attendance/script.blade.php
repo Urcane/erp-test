@@ -13,7 +13,9 @@
         checkin = "-",
         checkout = "-",
         notes = "-",
-        status
+        status,
+        fileLink = "-",
+        fileName = "-"
     }) => {
         const createdFormated = formatDateTime(created);
         const checkinFormated = formatDateTime(checkin);
@@ -51,6 +53,12 @@
         $('#att-notes-modal').text(notes);
         $('#attendance-request-id').val(id)
         $('#attendance_comment').val("");
+
+        if (fileName !== "-") {
+            $('#att-file-modal').attr('href', fileLink);
+        }
+
+        $('#att-file-modal').text(fileName);
     };
 
     const attendanceInit = () => {
@@ -266,6 +274,8 @@
             $('#att-notes-modal').text("-");
             $('#attendance-request-id').val("")
             $('#attendance_comment').val("");
+            $('#att-file-modal').attr('href', "#");
+            $('#att-file-modal').text("-");
         };
 
         const onAttendanceModalSubmit = (id, status, comment) => {

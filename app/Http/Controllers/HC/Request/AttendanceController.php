@@ -344,7 +344,17 @@ class AttendanceController extends RequestController
                         $workHour = "$userAttendance->working_start - $userAttendance->working_end";
                     }
 
-                    return view('hc.cmt-request.attendance.menu', compact(['params', 'query', 'shift', 'workHour']));
+                    $fileName = $query->file;
+                    $fileLink = asset("/storage/request/attendance/$fileName");
+
+                    return view('hc.cmt-request.attendance.menu', compact([
+                        'params',
+                        'query',
+                        'shift',
+                        'workHour',
+                        'fileName',
+                        'fileLink'
+                    ]));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])

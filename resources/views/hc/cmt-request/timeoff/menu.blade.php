@@ -14,7 +14,9 @@
         notes: '{{$query->notes ?? '-'}}',
         status: '{{$query->status}}',
         startDate: '{{$query->start_date}}',
-        endDate: '{{$query->end_date}}'
+        endDate: '{{$query->end_date}}',
+        fileName: '{{$fileName}}',
+        fileLink: '{{$fileLink}}'
     })">
     <i class="fas fa-eye mr-1"></i> Details
 </a>

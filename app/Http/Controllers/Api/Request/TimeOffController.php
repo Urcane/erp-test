@@ -97,7 +97,7 @@ class TimeOffController extends RequestController
             if ($request->file) {
                 $file = $request->file('file');
                 $filename = time() . $file->getClientOriginalName();
-                $file->storeAs('request/attendance/', $filename, 'public');
+                $file->storeAs('request/timeoff/', $filename, 'public');
             }
 
             UserLeaveRequest::create([

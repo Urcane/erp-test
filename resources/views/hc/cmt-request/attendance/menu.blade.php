@@ -13,7 +13,9 @@
         checkin: '{{$query->check_in ?? '-'}}',
         checkout: '{{$query->check_out ?? '-'}}',
         notes: '{{$query->notes ?? '-'}}',
-        status: '{{$query->status}}'
+        status: '{{$query->status}}',
+        fileName: '{{$fileName ?? '-'}}',
+        fileLink: '{{$fileLink}}',
     })">
     <i class="fas fa-eye mr-1"></i> Details
 </a>
