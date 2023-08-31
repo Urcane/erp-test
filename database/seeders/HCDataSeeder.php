@@ -723,10 +723,22 @@ class HCDataSeeder extends Seeder
             }
 
             if ($currentDate->lte($endDate2)) {
+                $random = random_int(1, 101);
+
+                if ($random <= 10) {
+                    array_push($data, [
+                        'date' => $currentDate->format('Y-m-d'),
+                        'attendance_code' => $this->constants->attendance_code[random_int(1, 101) <= 90 ? 1 : random_int(2, 3)],
+                    ]);
+                    $currentDate->addDay();
+
+                    continue;
+                }
+
                 if (random_int(1, 200) <= 198) {
                     array_push($data, [
                         'date' => $currentDate->format('Y-m-d'),
-                        'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 101) <= 90 ? 1 : random_int(2, 3)],
+                        'attendance_code' => $this->constants->attendance_code[0],
                         'shift_name' => "Shift 1",
                         'primary_shift_name' => "Shift 1",
                         'primary_working_start' => $workingStartTime,
@@ -743,7 +755,7 @@ class HCDataSeeder extends Seeder
                 } else {
                     array_push($data, [
                         'date' => $currentDate->format('Y-m-d'),
-                        'attendance_code' => random_int(1, 101) <= 90 ? $this->constants->attendance_code[0] : $this->constants->attendance_code[random_int(1, 3)],
+                        'attendance_code' => $this->constants->attendance_code[0],
                         'shift_name' => "Shift 1",
                         'primary_shift_name' => "Shift 1",
                         'primary_working_start' => $workingStartTime,
@@ -756,6 +768,7 @@ class HCDataSeeder extends Seeder
                         'check_out' => random_int(1, 101) <= 90 ?
                             Carbon::create($currentDate->year, $currentDate->month, $currentDate->day, 17, random_int(0, 5), 0)
                             : null,
+                        'day_off_code' => "TEST"
                     ]);
                 }
             }

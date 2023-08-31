@@ -267,6 +267,12 @@
             tableShift.draw();
         });
 
+        $('#btn_reset_filter').on('click', function () {
+            $('#filter_department_shift').val("*").trigger("change")
+            $('#filter_divisi_shift').val("*").trigger("change")
+            $('#filter_status_shift').val("*").trigger("change")
+        });
+
         $('#search_shift').on('input', function() {
             tableShift.draw();
             deleteShiftSummaries();

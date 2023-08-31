@@ -240,6 +240,12 @@
             tableTimeOff.draw();
         });
 
+        $('#btn_reset_filter').on('click', function () {
+            $('#filter_department_timeoff').val("*").trigger("change")
+            $('#filter_divisi_timeoff').val("*").trigger("change")
+            $('#filter_status_timeoff').val("*").trigger("change")
+        });
+
         $('#search_timeoff').on('input', function() {
             tableTimeOff.draw();
             deleteTimeOffSummaries();

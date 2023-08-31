@@ -21,13 +21,14 @@ use App\Models\Attendance\UserLeaveHistory;
 
 class TimeOffController extends RequestController
 {
-    private function _updateAttendance($userId, $date, $attendanceCode)
+    private function _updateAttendance($userId, $date, $attendanceCode, $leaveCategoryCode = null)
     {
         UserAttendance::updateOrCreate([
             "user_id" => $userId,
             "date" => $date
         ], [
-            "attendance_code" => $attendanceCode
+            "attendance_code" => $attendanceCode,
+            "day_off_code" => $leaveCategoryCode
         ]);
     }
 
@@ -128,6 +129,7 @@ class TimeOffController extends RequestController
                             $userId,
                             $data,
                             $this->constants->attendance_code[1],
+                            $leaveCategoryCode
                         );
 
                         $this->_createHistory(
@@ -215,6 +217,7 @@ class TimeOffController extends RequestController
                         $userId,
                         $data,
                         $this->constants->attendance_code[1],
+                        $leaveCategoryCode
                     );
 
                     $this->_createHistory(

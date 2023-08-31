@@ -121,9 +121,10 @@
 
 @include('hc.cmt-attendance.modal.edit-attendance')
 @include('hc.cmt-attendance.modal.delete-attendance')
+@include('hc.cmt-attendance.modal.export-attendance')
 
 <script>
-    const attendanceCodeEnum = @json($attendanceCode);
+    const attendanceCodeEnum = @json($constants->attendance_code_view);
 
     const getTime = (timeStr, format) => moment(timeStr, format);
 
@@ -225,16 +226,7 @@
                 "emptyTable" : "Tidak ada data terbaru 📁",
                 "zeroRecords": "Data tidak ditemukan 😞",
             },
-            buttons: [
-                {
-                    extend: 'excel',
-                    className: 'btn btn-light-success btn-sm ms-3',
-                    title: 'Data Absen {{$user->name}}',
-                    exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9,10]
-                    }
-                },
-            ],
+            buttons: [],
             dom:
             "<'row mb-2'" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
@@ -312,26 +304,17 @@
                 ) {
                     return $row.css('background-color', redBgColor);
                 }
-            }
-
-            // columnDefs: [
-            //     {
-            //         targets: 0,
-            //         searchable : false,
-            //         className: 'text-center',
-            //     },
-            //     {
-            //         targets: 1,
-            //         className: 'text-center',
-            //     },
-            //     {
-            //         targets: 7,
-            //         orderable : false,
-            //         searchable : false,
-            //         className : 'text-center',
-            //     },
-            // ],
+            },
+            columnDefs: [
+                {
+                    targets: [0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    className: 'text-center',
+                },
+            ],
         });
+
+        const customExportLink = '<a href="#attendance_export_modal" class="btn btn-light-success btn-sm ms-3" data-bs-toggle="modal">Excel</a>'
+        $(tableAttendance.buttons().container()).append(customExportLink);
 
         $('#range_date').on('apply.daterangepicker', function(ev, picker) {
             tableAttendance.draw();
@@ -381,6 +364,14 @@
                     toastr.error(data.message, 'Opps!');
                 }
             });
+        });
+
+        $('#modal_attendance_export_submit').on('click', function() {
+            const rangeDate = $('#range_date_export').val();
+            const filterDivisi = $('#filter_divisi_export').val();
+            const filterDepartment = $('#filter_department_export').val();
+
+            window.open(`{{ route('hc.att.export.personal') }}?userId={{$user->id}}&rangeDate=${rangeDate}`, '_blank');
         });
 
         renderSummaries();
