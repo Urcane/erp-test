@@ -33,18 +33,18 @@
                                             <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0"
                                                 data-bs-toggle="tab" id="timeoffnav" href="#timeoff">Time Off</a>
                                         </li>
-                                        <li class="nav-item">
+                                        {{-- <li class="nav-item">
                                             <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0"
                                                 data-bs-toggle="tab" id="overtimenav" href="#overtime">Overtime</a>
-                                        </li>
+                                        </li> --}}
                                         <li class="nav-item">
                                             <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0"
                                                 data-bs-toggle="tab" id="shiftnav" href="#shift">Shift</a>
                                         </li>
-                                        <li class="nav-item">
+                                        {{-- <li class="nav-item">
                                             <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0"
                                                 data-bs-toggle="tab" id="delegatenav" href="#delegate">Delegate</a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </div>
 
@@ -57,17 +57,17 @@
                                         @include('hc.cmt-request.timeoff.index')
                                     </div>
 
-                                    <div class="tab-pane fade" id="overtime" role="tabpanel">
+                                    {{-- <div class="tab-pane fade" id="overtime" role="tabpanel">
                                         @include('hc.cmt-request.overtime.index')
-                                    </div>
+                                    </div> --}}
 
                                     <div class="tab-pane fade" id="shift" role="tabpanel">
                                         @include('hc.cmt-request.shift.index')
                                     </div>
 
-                                    <div class="tab-pane fade" id="delegate" role="tabpanel">
+                                    {{-- <div class="tab-pane fade" id="delegate" role="tabpanel">
                                         @include('hc.cmt-request.delegate.index')
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                             </div>

@@ -20,10 +20,13 @@ use App\Models\Employee\TaxStatus;
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\EmploymentStatus;
 use App\Constants;
+use App\Models\Attendance\LeaveRequestCategory;
 use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserAttendanceRequest;
 use App\Models\Attendance\UserShiftRequest;
+use App\Models\Day;
 use App\Models\Employee\BranchLocation;
+use App\Models\Employee\WorkingScheduleDayOff;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Employee\WorkingShift;
 use Illuminate\Support\Facades\DB;
@@ -74,6 +77,14 @@ class HCDataSeeder extends Seeder
                 "branch_id" => $data[11],
                 "parent_id" => $data[12],
                 "email" => $data[13],
+            ]);
+        });
+
+        collect([
+            "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"
+        ])->map(function ($data) {
+            Day::create([
+                "name" => $data,
             ]);
         });
 
@@ -174,11 +185,31 @@ class HCDataSeeder extends Seeder
         });
 
         collect([
+            [1, 6], [1, 7]
+        ])->map(function ($data) {
+            WorkingScheduleDayOff::create([
+                "working_schedule_id" => $data[0],
+                "day_id" => $data[1]
+            ]);
+        });
+
+        collect([
             [1, 1], [1, 2], [1, 3], [1, 4]
         ])->map(function ($data) {
             WorkingScheduleShift::create([
                 "working_schedule_id" => $data[0],
                 "working_shift_id" => $data[1],
+            ]);
+        });
+
+        collect([
+            ["Sakit", "SK"],
+            ["Izin", "IZ"]
+        ])->map(function ($data) {
+            LeaveRequestCategory::create([
+                "name" => $data[0],
+                "code" => $data[1],
+                "effective_date" => "2021-09-09"
             ]);
         });
 

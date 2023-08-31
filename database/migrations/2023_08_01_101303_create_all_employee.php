@@ -60,7 +60,7 @@ class CreateAllEmployee extends Migration
             $table->foreignId("sub_branch_id")->nullable()->constrained("sub_branches");
             $table->string("latitude", 50);
             $table->string("longitude", 50);
-            $table->integer("radius")->default(30); // meter
+            $table->integer("radius")->default(40); // meter
             $table->softDeletes()->index();
             $table->timestamps();
         });

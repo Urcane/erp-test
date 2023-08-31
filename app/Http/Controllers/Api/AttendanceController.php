@@ -177,7 +177,7 @@ class AttendanceController extends Controller
     {
         try {
             $userAttendances = $request->user()->userAttendances();
-            $rangeDate = [$request->startDate ?? Carbon::now()->format('Y-m-d'), $request->endDate ?? Carbon::now()->format('Y-m-d')];
+            $rangeDate = [$request->startDate ?? Carbon::now()->subMonth()->format('Y-m-d'), $request->endDate ?? Carbon::now()->format('Y-m-d')];
 
             $userAttendances = $userAttendances->whereBetween('date', $rangeDate);
 

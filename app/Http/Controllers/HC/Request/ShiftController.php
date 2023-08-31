@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\HC\Request;
 
 use Carbon\Carbon;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Yajra\DataTables\DataTables;
 use Illuminate\Validation\Rule;
 
-use App\Utils\ErrorHandler;
-use App\Constants;
 use App\Exceptions\AuthorizationError;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
@@ -21,17 +18,8 @@ use App\Models\Employee\UserEmployment;
 use Illuminate\Support\Facades\DB;
 
 
-class ShiftController extends Controller
+class ShiftController extends RequestController
 {
-    private $errorHandler;
-    private $constants;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-        $this->constants = new Constants();
-    }
-
     private function _updateAttendance($userId, $date, $workingShift)
     {
         $userAttendance = UserAttendance::where('user_id', $userId)->where('date', $date)->first();
@@ -84,11 +72,12 @@ class ShiftController extends Controller
 
             $shiftRequest = UserShiftRequest::whereId($request->id)
                 ->with('workingShift')->first();
-            $approvalLine = $shiftRequest->user->userEmployment->approvalLine;
 
             if (!$shiftRequest) {
                 throw new NotFoundError("Shift Request tidak ditemukan");
             }
+
+            $approvalLine = $shiftRequest->user->userEmployment->approvalLine;
 
             if (!$approvalLine) {
                 if ($request->status == $this->constants->approve_status[1]) {

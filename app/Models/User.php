@@ -139,9 +139,9 @@ class User extends Authenticatable
         return $this->hasMany(Attendance\UserLeaveQuota::class);
     }
 
-    public function userLeaveQuotaHistories(): HasMany
+    public function userLeaveHistories(): HasMany
     {
-        return $this->hasMany(Attendance\UserLeaveQuotaHistory::class);
+        return $this->hasMany(Attendance\UserLeaveHistory::class);
     }
 
     public function userLeaveRequests(): HasMany
@@ -159,8 +159,8 @@ class User extends Authenticatable
         return $this->hasMany(Attendance\UserShiftRequest::class);
     }
 
-    public function leaveRequestCategory(): BelongsToMany
+    public function attendanceChangeLog(): HasMany
     {
-        return $this->belongsToMany(Attendance\LeaveRequestCategory::class, 'user_leave_request_categories');
+        return $this->hasMany(Attendance\AttendanceChangeLog::class);
     }
 }

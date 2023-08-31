@@ -595,13 +595,13 @@ class AttendanceController extends Controller
                     return $userAttendances->date;
                 })
                 ->addColumn('shift', function ($userAttendances) {
-                    return $userAttendances->shift_name;
+                    return $userAttendances->shift_name ?? "-";
                 })
                 ->addColumn('schedule_in', function ($userAttendances) {
-                    return $userAttendances->working_start;
+                    return $userAttendances->working_start ?? "-";
                 })
                 ->addColumn('schedule_out', function ($userAttendances) {
-                    return $userAttendances->working_end;
+                    return $userAttendances->working_end ?? "-";
                 })
                 ->addColumn('clock_in', function ($userAttendances) {
                     $checkIn = $userAttendances->check_in;
@@ -663,13 +663,13 @@ class AttendanceController extends Controller
                     return $userAttendances->date;
                 })
                 ->addColumn('shift', function ($userAttendances) {
-                    return $userAttendances->user->userEmployment->workingScheduleShift->workingShift->name;
+                    return $userAttendances->shift_name ?? "-";
                 })
                 ->addColumn('schedule_in', function ($userAttendances) {
-                    return $userAttendances->user->userEmployment->workingScheduleShift->workingShift->working_start;
+                    return $userAttendances->working_start ?? "-";
                 })
                 ->addColumn('schedule_out', function ($userAttendances) {
-                    return $userAttendances->user->userEmployment->workingScheduleShift->workingShift->working_end;
+                    return $userAttendances->working_end ?? "-";
                 })
                 ->addColumn('clock_in', function ($userAttendances) {
                     $checkIn = $userAttendances->check_in;

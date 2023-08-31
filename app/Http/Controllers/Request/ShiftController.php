@@ -2,33 +2,17 @@
 
 namespace App\Http\Controllers\Request;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Yajra\DataTables\DataTables;
-use Illuminate\Validation\Rule;
 
-use App\Utils\ErrorHandler;
-use App\Constants;
-use App\Exceptions\AuthorizationError;
 use App\Exceptions\InvariantError;
-use App\Exceptions\NotFoundError;
-use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserShiftRequest;
-use App\Models\Employee\UserEmployment;
+use Carbon\Carbon;
 
-class ShiftController extends Controller
+class ShiftController extends RequestController
 {
-    private $errorHandler;
-    private $constants;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-        $this->constants = new Constants();
-    }
-
     public function makeRequest(Request $request)
     {
         try {
@@ -38,7 +22,7 @@ class ShiftController extends Controller
                 "notes" => "nullable|string"
             ]);
 
-            $userShiftId = UserEmployment::where('user_id', Auth::user()->id)->first()->workingScheduleShift->workingShift->id;
+            $userShiftId = Auth::user()->userEmployment->workingScheduleShift->workingShift->id;
 
             if ($userShiftId == $request->working_shift_id) {
                 throw new InvariantError("Tidak dapat melakukan request shift terhadap shift yang sama");
@@ -66,7 +50,7 @@ class ShiftController extends Controller
     {
         if (request()->ajax()) {
             $shiftRequests = UserShiftRequest::where('user_id', $request->user_id)
-                ->orderBy('date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->with(['user.userEmployment', 'workingShift', 'approvalLine']);
 
             return DataTables::of($shiftRequests)
@@ -85,6 +69,20 @@ class ShiftController extends Controller
                     }
 
                     return $shiftRequest->user->userEmployment->approvalLine->name ?? "-";
+                })
+                ->addColumn('created_at', function ($shiftRequest) {
+                    $date = explode(" ", explode("T", $shiftRequest->created_at)[0])[0];
+
+                    $date = Carbon::createFromFormat('Y-m-d', $date);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
+                })
+                ->addColumn('date', function ($shiftRequest) {
+                    $date = Carbon::createFromFormat('Y-m-d', $shiftRequest->date);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
                 })
                 ->addColumn('shift', function ($shiftRequest) {
                     return $shiftRequest->workingShift->name;

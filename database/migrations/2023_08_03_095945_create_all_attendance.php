@@ -41,23 +41,15 @@ class CreateAllAttendance extends Migration
             $table->timestamps();
         });
 
-        Schema::create('user_leave_request_categories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
-            $table->softDeletes();
-            $table->timestamps();
-        });
-
         Schema::create('user_attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->date("date")->index();
             $table->enum("attendance_code", $this->constants->attendance_code)->default($this->constants->attendance_code[0])->index();
             $table->string("day_off_code", 10)->nullable();
-            $table->string("shift_name", 40);
-            $table->time("working_start")->index();
-            $table->time("working_end")->index();
+            $table->string("shift_name", 40)->nullable();
+            $table->time("working_start")->nullable()->index();
+            $table->time("working_end")->nullable()->index();
             $table->string("primary_shift_name", 40)->nullable(); // primary is history of shift if the shift changed
             $table->time("primary_working_start")->nullable();
             $table->time("primary_working_end")->nullable();
@@ -111,6 +103,7 @@ class CreateAllAttendance extends Migration
             $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
             $table->date("start_date");
             $table->date("end_date");
+            $table->tinyInteger("taken");
             $table->text("notes")->nullable();
             $table->text("comment")->nullable();
             $table->text("file")->nullable();
@@ -118,14 +111,14 @@ class CreateAllAttendance extends Migration
             $table->timestamps();
         });
 
-        Schema::create('user_leave_quota_histories', function (Blueprint $table) {
+        Schema::create('user_leave_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->string("leave_category", 60);
+            $table->string("code", 10);
             $table->string("approval_line", 100);
-            $table->tinyInteger("leave_quota_taken");
-            $table->date("start_date");
-            $table->date("end_date");
+            $table->date("date")->index();
+            $table->boolean("quota_taken")->default(0);
             $table->softDeletes()->index();
             $table->timestamps();
         });

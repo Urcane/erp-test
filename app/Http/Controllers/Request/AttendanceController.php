@@ -2,30 +2,18 @@
 
 namespace App\Http\Controllers\Request;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Yajra\DataTables\DataTables;
 
-use App\Utils\ErrorHandler;
-use App\Constants;
 use App\Exceptions\InvariantError;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendanceRequest;
 use Carbon\Carbon;
 
-class AttendanceController extends Controller
+class AttendanceController extends RequestController
 {
-    private $errorHandler;
-    private $constants;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-        $this->constants = new Constants();
-    }
-
     public function makeRequest(Request $request)
     {
         try {
@@ -92,7 +80,7 @@ class AttendanceController extends Controller
     {
         if (request()->ajax()) {
             $attendanceRequests = UserAttendanceRequest::where('user_id', $request->user_id)
-                ->orderBy('date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->with(['user.userEmployment', 'approvalLine']);
 
             return DataTables::of($attendanceRequests)
@@ -111,6 +99,20 @@ class AttendanceController extends Controller
                     }
 
                     return $attendanceRequest->user->userEmployment->approvalLine->name ?? "-";
+                })
+                ->addColumn('created_at', function ($attendanceRequest) {
+                    $date = explode(" ", explode("T", $attendanceRequest->created_at)[0])[0];
+
+                    $date = Carbon::createFromFormat('Y-m-d', $date);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
+                })
+                ->addColumn('date', function ($attendanceRequest) {
+                    $date = Carbon::createFromFormat('Y-m-d', $attendanceRequest->date);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
                 })
                 ->addColumn('check_in', function ($attendanceRequest) {
                     $checkIn = $attendanceRequest->check_in;

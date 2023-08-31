@@ -2,26 +2,18 @@
 
 namespace App\Http\Controllers\Api\Request;
 
-use App\Constants;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Utils\ErrorHandler;
+
 use App\Models\Attendance\UserShiftRequest;
 use App\Models\Employee\UserEmployment;
+use App\Models\Attendance\UserAttendance;
 
-class ShiftController extends Controller
+class ShiftController extends RequestController
 {
-    private $errorHandler;
-    private $constants;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-        $this->constants = new Constants();
-    }
-
     public function getRequest(Request $request)
     {
         try {
@@ -29,9 +21,48 @@ class ShiftController extends Controller
             $itemCount = $request->itemCount ?? 10;
 
             $userShiftRequest = UserShiftRequest::where('user_id', $request->user()->id)
-                ->orderBy('date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->with(['workingShift', 'approvalLine'])
                 ->paginate($itemCount, ['*'], 'page', $page);
+
+            $currentShift = null;
+
+            $userAttendance = UserAttendance::where('user_id', $request->user()->id)
+            ->whereDate('date', Carbon::now()->format('Y-m-d'))
+            ->first();
+
+            if ($userAttendance) {
+                $currentShift = [
+                    "name" => $userAttendance->shift_name,
+                    "working_start" => $userAttendance->working_start,
+                    "working_end" => $userAttendance->working_end,
+                    "break_start" => $userAttendance->break_start,
+                    "break_end" => $userAttendance->break_end,
+                    "late_check_in" => $userAttendance->late_check_in,
+                    "late_check_out" => $userAttendance->late_check_out,
+                    "start_attend" => $userAttendance->start_attend,
+                    "end_attend" => $userAttendance->end_attend,
+                    "overtime_before" => $userAttendance->overtime_before,
+                    "overtime_after" => $userAttendance->overtime_after,
+                ];
+            } else {
+                $workingShift = $request->user()
+                    ->userEmployment->workingScheduleShift->workingShift;
+
+                $currentShift = [
+                    "name" => $workingShift->name,
+                    "working_start" => $workingShift->working_start,
+                    "working_end" => $workingShift->working_end,
+                    "break_start" => $workingShift->break_start,
+                    "break_end" => $workingShift->break_end,
+                    "late_check_in" => $workingShift->late_check_in,
+                    "late_check_out" => $workingShift->late_check_out,
+                    "start_attend" => $workingShift->start_attend,
+                    "end_attend" => $workingShift->end_attend,
+                    "overtime_before" => $workingShift->overtime_before,
+                    "overtime_after" => $workingShift->overtime_after,
+                ];
+            }
 
             return response()->json([
                 "status" => "success",
@@ -39,6 +70,7 @@ class ShiftController extends Controller
                     "currentPage" => $userShiftRequest->currentPage(),
                     "itemCount" => $itemCount,
                     "userShiftRequest" => $userShiftRequest->items(),
+                    "currentShift" => $currentShift,
                 ],
             ]);
         } catch (\Throwable $th) {

@@ -160,7 +160,7 @@
                                                     <span class="fw-bold">Office Radius (Meter)</span>
                                                 </label>
                                                 <input type="number" value="{{ $subBranch->coordinate_radius ?? old('coordinate_radius') }}"
-                                                    class="form-control form-control-solid" placeholder="5"
+                                                    class="form-control form-control-solid" placeholder="40"
                                                     name="coordinate_radius" id="coordinate_radius"
                                                     @unlessrole('administrator') disabled @endunlessrole>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -328,26 +328,76 @@
 
 <script src="{{ asset('sense/plugins/custom/leaflet/leaflet.bundle.js') }}"></script>
 <script>
-    let map = L.map('map').setView([-1.2495105,116.8749959], 7);
+    $(document).ready(function () {
+        let map = L.map('map').setView([-1.2495105, 116.8749959], 7);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
 
-    let marker;
+        let marker;
 
-    map.on('click', function(e) {
-        let latitude = e.latlng.lat.toFixed(6);
-        let longitude = e.latlng.lng.toFixed(6);
+        function addMarker(lat, lng, openPopup) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
 
-        if (marker) {
-            map.removeLayer(marker);
+            marker = L.marker([lat, lng]).addTo(map);
+
+            if (openPopup) {
+                marker.bindPopup('You are here!').openPopup();
+                map.setView([lat, lng], 19);
+            }
+
+            $('#latitude').val(lat);
+            $('#longitude').val(lng);
         }
 
-        marker = L.marker(e.latlng).addTo(map);
+        function getCurrentLocation(event) {
+            event.stopPropagation();
 
-        document.getElementById('latitude').value = latitude;
-        document.getElementById('longitude').value = longitude;
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
+
+                    if (marker) {
+                        marker.closePopup();
+                    }
+
+                    addMarker(lat, lng, true);
+
+                    $('#latitude').val(lat.toFixed(6));
+                    $('#longitude').val(lng.toFixed(6));
+                });
+            } else {
+                console.log("Geolocation is not available.");
+            }
+        }
+
+        let getLocationBtn = L.control({ position: 'bottomright' });
+
+        getLocationBtn.onAdd = function () {
+            let div = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+            div.innerHTML = `
+                <button type="button" class="btn btn-info d-flex justify-content-center align-items-center"
+                    style="width: 40px; height: 40px;"
+                >
+                    <i class="fas fa-location-crosshairs ms-1" style="font-size: 16px;"></i>
+                </button>
+            `;
+            $(div).on('click', 'button', getCurrentLocation);
+            return div;
+        };
+
+        getLocationBtn.addTo(map);
+
+        map.on('click', function (e) {
+            let latitude = e.latlng.lat.toFixed(6);
+            let longitude = e.latlng.lng.toFixed(6);
+
+            addMarker(latitude, longitude, false);
+        });
     });
 </script>
 

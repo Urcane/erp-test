@@ -1,5 +1,5 @@
 <a href="{{ $params }}" class="btn btn-sm btn-outline btn-outline-info d-inline-flex align-items-center"
-    data-bs-toggle="modal" onclick="onAttendanceModalOpen({
+    data-bs-toggle="modal" onclick="onTimeOffModalOpen({
         id: '{{$query->id}}',
         name: '{{$query->user->name}}',
         nip: '{{$query->user->userEmployment->employee_id}}',
@@ -7,13 +7,14 @@
         org: '{{$query->user->department->department_name}}',
         position: '{{$query->user->division->divisi_name}}',
         level: '{{$query->user->getRoleNames()[0]}}',
-        shift: '{{$shift}}',
-        work: '{{$workHour}}',
+        taken: '{{$query->taken}}',
+        file: '{{$query->file}}',
+        type: '{{$query->leaveRequestCategory->name}} ({{$query->leaveRequestCategory->code}})',
         created: '{{$query->created_at}}',
-        checkin: '{{$query->check_in ?? '-'}}',
-        checkout: '{{$query->check_out ?? '-'}}',
         notes: '{{$query->notes ?? '-'}}',
-        status: '{{$query->status}}'
+        status: '{{$query->status}}',
+        startDate: '{{$query->start_date}}',
+        endDate: '{{$query->end_date}}'
     })">
     <i class="fas fa-eye mr-1"></i> Details
 </a>

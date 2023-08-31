@@ -8,8 +8,6 @@
             </div>
             <div class="modal-body mx-5 mx-lg-15 mb-7">
                 <form id="modal_create_attendance_request" class="form fv-plugins-bootstrap5 fv-plugins-framework">
-                    <input type="hidden" name="user_id" value="{{ $user->id }}">
-                    <input type="hidden" name="family_id" value="">
                     <div class="scroll-y me-n10 pe-10" data-kt-scroll-max-height="auto" data-kt-scroll-offset="300px">
                         <div class="row mb-9">
                             <div class="col-lg-12 text-center mb-9">
@@ -98,7 +96,8 @@
                 <thead class="">
                     <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                         <th class="text-center w-50px">#</th>
-                        <th class="w-150px">Date</th>
+                        <th class="w-150px">Created Date</th>
+                        <th class="w-150px">Request Date</th>
                         <th class="w-150px">Approval Line</th>
                         <th class="w-150px">Check In</th>
                         <th class="w-150px">Check Out</th>
@@ -154,6 +153,9 @@
                         data: 'DT_RowIndex',
                         orderable: false,
                         searchable: false
+                    },
+                    {
+                        data: 'created_at'
                     },
                     {
                         data: 'date'

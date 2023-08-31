@@ -88,16 +88,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
                     Route::post('/make', 'makeRequest');
                 });
+                Route::controller(Api\ShiftController::class)->group(function () {
+                    Route::get('/get/working-shift', 'getAllWorkingShift');
+                });
             });
 
-            // Route::prefix('time-off')->group(function () {
-            //     Route::controller(Request\TimeOffController::class)->group(function () {
-            //         Route::post('/get', 'getRequest');
-            //         Route::post('/get/detail', 'getRequestById');
+            Route::prefix('time-off')->group(function () {
+                Route::controller(Request\TimeOffController::class)->group(function () {
+                    Route::post('/get', 'getRequest');
+                    Route::post('/get/detail', 'getRequestById');
+                    Route::get('/get/category', 'getRequestCategory');
 
-            //         Route::post('/make', 'makeRequest');
-            //     });
-            // });
+                    Route::post('/make', 'makeRequest');
+                });
+            });
         });
     });
 });

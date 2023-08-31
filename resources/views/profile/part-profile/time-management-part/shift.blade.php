@@ -9,7 +9,6 @@
             <div class="modal-body mx-5 mx-lg-15 mb-7">
                 @if (!$dataShift->isEmpty())
                     <form id="modal_create_shift_request" class="form fv-plugins-bootstrap5 fv-plugins-framework">
-                        <input type="hidden" name="user_id" value="{{ $user->id }}">
                         <div class="scroll-y me-n10 pe-10" data-kt-scroll-max-height="auto"
                             data-kt-scroll-offset="300px">
                             <div class="row mb-9">
@@ -94,7 +93,8 @@
                 <thead class="">
                     <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                         <th class="text-center w-50px">#</th>
-                        <th class="w-150px">Date</th>
+                        <th class="w-150px">Created Date</th>
+                        <th class="w-150px">Request Date</th>
                         <th class="w-150px">Approval Line</th>
                         <th class="w-150px">Shift</th>
                         <th class="w-150px">Working Start</th>
@@ -111,91 +111,95 @@
 </div>
 
 <script>
-    let shiftTable;
+    $(document ).ready(function() {
+        let shiftTable;
+        $("#shift").on("click", function() {
+            shiftTable = $('#tb_shift_content').DataTable({
+                processing: true,
+                serverSide: true,
+                retrieve: true,
+                deferRender: true,
+                responsive: false,
+                aaSorting: [],
+                ajax: {
+                    url: "{{ route('req.shift.get-table-me') }}",
+                    data: function(data) {
+                        data.user_id = {{ $user->id }}
+                    }
+                },
+                language: {
+                    "lengthMenu": "Show _MENU_",
+                    "emptyTable": "Tidak ada data terbaru 📁",
+                    "zeroRecords": "Data tidak ditemukan 😞",
+                },
+                buttons: [],
+                dom: "<'row mb-2'" +
+                    "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
+                    "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+                    ">" +
 
-    $("#shift").on("click", function() {
-        shiftTable = $('#tb_shift_content').DataTable({
-            processing: true,
-            serverSide: true,
-            retrieve: true,
-            deferRender: true,
-            responsive: false,
-            aaSorting: [],
-            ajax: {
-                url: "{{ route('req.shift.get-table-me') }}",
-                data: function(data) {
-                    data.user_id = {{ $user->id }}
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+                    "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+                    ">",
+
+                columns: [{
+                        data: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'created_at'
+                    },
+                    {
+                        data: 'date'
+                    },
+                    {
+                        data: 'approval_line'
+                    },
+                    {
+                        data: 'shift'
+                    },
+                    {
+                        data: 'working_start'
+                    },
+                    {
+                        data: 'working_end'
+                    },
+                    {
+                        data: 'status'
+                    },
+                    {
+                        data: 'action'
+                    },
+                ],
+                columnDefs: [{
+                    targets: 0,
+                    searchable: false,
+                    className: 'text-center',
+                }, ],
+            });
+        })
+
+        $('#modal_create_shift_request').submit(function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: "{{ route('req.shift.create') }}",
+                type: 'POST',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    shiftTable.ajax.reload();
+                    toastr.success(data.message, 'Selamat 🚀 !');
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
                 }
-            },
-            language: {
-                "lengthMenu": "Show _MENU_",
-                "emptyTable": "Tidak ada data terbaru 📁",
-                "zeroRecords": "Data tidak ditemukan 😞",
-            },
-            buttons: [],
-            dom: "<'row mb-2'" +
-                "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
-                "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
-                ">" +
-
-                "<'table-responsive'tr>" +
-
-                "<'row'" +
-                "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
-                "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
-                ">",
-
-            columns: [{
-                    data: 'DT_RowIndex'
-                },
-                {
-                    data: 'date'
-                },
-                {
-                    data: 'approval_line'
-                },
-                {
-                    data: 'shift'
-                },
-                {
-                    data: 'working_start'
-                },
-                {
-                    data: 'working_end'
-                },
-                {
-                    data: 'status'
-                },
-                {
-                    data: 'action'
-                },
-            ],
-            columnDefs: [{
-                targets: 0,
-                searchable: false,
-                className: 'text-center',
-            }, ],
-        });
-    })
-
-    $('#modal_create_shift_request').submit(function(event) {
-        event.preventDefault();
-        var formData = $(this).serialize();
-        $.ajax({
-            url: "{{ route('req.shift.create') }}",
-            type: 'POST',
-            data: formData,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(data) {
-                shiftTable.ajax.reload();
-                toastr.success(data.message, 'Selamat 🚀 !');
-            },
-            error: function(xhr, status, error) {
-                const data = xhr.responseJSON;
-                toastr.error(data.message, 'Opps!');
-            }
+            });
         });
     });
 </script>
