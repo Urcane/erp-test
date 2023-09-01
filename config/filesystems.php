@@ -71,6 +71,7 @@ return [
         //segala file folder yang dibuat dinamis dari sistem,masuk ke sini. kalau tambah baru bikin storage link baru lagi habis itu stoagelink lagi
         public_path('sense/media/foto_pegawai') => storage_path('app/foto_pegawai'),
         public_path('sense/media/sign_pegawai') => storage_path('app/sign_pegawai'),
+        public_path('filestorage/sign-customer') => storage_path('app/sign-customer'),
         public_path('filestorage/soft-survey') => storage_path('app/soft-survey'),
     ],
 

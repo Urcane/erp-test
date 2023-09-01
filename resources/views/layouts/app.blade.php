@@ -90,9 +90,9 @@ class="app-default page-loading-enabled page-loading">
 	</div>
 </div>
 
-<div id="kt_scrolltop" class="scrolltop bg-info" data-kt-scrolltop="true">
-	<i class="fa-solid fa-arrow-up text-white"></i>
-</div>
+{{-- <div id="kt_scrolltop" class="scrolltop bg-info" data-kt-scrolltop="true">
+    <i class="fa-solid fa-arrow-up text-white"></i>
+</div> --}}
 
 <script>
 	var hostUrl = "{{asset('sense')}}/";
@@ -154,7 +154,7 @@ class="app-default page-loading-enabled page-loading">
         });
     }
 
-	function submitModal({modalName, tableName, ajaxLink, anotherTableName = null,validationMessages = {}}) {
+	function submitModal({modalName, tableName = null, ajaxLink, anotherTableName = null , validationMessages = {}, successCallback = () => {}}) {
         $(`#${modalName}_form`).validate({
             messages: validationMessages,
             submitHandler: function(form) {
@@ -177,6 +177,8 @@ class="app-default page-loading-enabled page-loading">
                         }
 
                         toastr.success(data.status,'Selamat 🚀 !');
+
+                        successCallback(data);
                     },
                     error: function (xhr, status, errorThrown) {
                         $(`#${modalName}_submit`).removeAttr('disabled','disabled');

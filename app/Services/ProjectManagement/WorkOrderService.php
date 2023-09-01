@@ -2,7 +2,9 @@
 
 namespace App\Services\ProjectManagement;
 
+use App\Http\Requests\ProjectManagement\WorkOrderApprovalRequest;
 use App\Http\Requests\ProjectManagement\WorkOrderRequest;
+use App\Models\ProjectManagement\WorkOrder;
 use App\Repositories\ProjectManagement\WorkOrderRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -80,10 +82,13 @@ class WorkOrderService
 
         return DataTables::of($data)
             ->addColumn('DT_RowChecklist', function($check) {
-                return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
+                if (!isset($check->approved_status)) {
+                    return '<div class="text-center w-50px"><input name="checkbox_work_order_ids" type="checkbox" value="'.$check->id.'"></div>';
+                }
+                return '';
             })
             ->editColumn('approved_status', function($query) {
-                if ($query->approved_status != null) {
+                if (isset($query->approved_status)) {
                     return $query->approved_status == 1 ? 'Approved' : 'Rejected';
                 }
                 return 'On Review...';
@@ -93,11 +98,16 @@ class WorkOrderService
 
                 if ($query->approved_status == 1) {
                     if ($query->surveyRequest->service_type_id == 1) {
-                        $additionalMenu .= "<li><a href=\"#kt_modal_create_survey_result_internet\" class=\"dropdown-item py-2 btn_create_survey_result_internet\" data-bs-toggle=\"modal\" data-id=\"$query->id\" data-surveyid=\"$query->survey_request_id\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result Internet</a></li>";
+                        // $additionalMenu .= "<li><a href=\"#kt_modal_create_survey_result_internet\" class=\"dropdown-item py-2 btn_create_survey_result_internet\" data-bs-toggle=\"modal\" data-id=\"$query->id\" data-surveyid=\"$query->survey_request_id\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result Internet</a></li>";
+                        $additionalMenu .= "<li><a href=\"". route('com.survey-result.create', ['workOrder' => $query->id, 'surveyRequestId' => $query->survey_request_id]) ."\" class=\"dropdown-item py-2\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result Internet</a></li>";
                     }
 
                     if ($query->surveyRequest->service_type_id == 2) {
-                        $additionalMenu .= "<li><a href=\"#kt_modal_create_survey_result_cctv\" class=\"dropdown-item py-2 btn_create_survey_result_cctv\" data-bs-toggle=\"modal\" data-id=\"$query->id\" data-surveyid=\"$query->survey_request_id\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result CCTV</a></li>";
+                        $additionalMenu .= "<li><a href=\"". route('com.survey-result.create', ['workOrder' => $query->id, 'surveyRequestId' => $query->survey_request_id]) ."\" class=\"dropdown-item py-2\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result CCTV</a></li>";
+                    }
+
+                    if ($query->surveyRequest->service_type_id == 3) {
+                        $additionalMenu .= "<li><a href=\"". route('com.survey-result.create', ['workOrder' => $query->id, 'surveyRequestId' => $query->survey_request_id]) ."\" class=\"dropdown-item py-2\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result GSM Booster</a></li>";
                     }
                 }
 
@@ -116,5 +126,13 @@ class WorkOrderService
 
     function getWorkOrderById(Request $request, int $id) : Builder {
         return $this->workOrderRepository->getById($id);
+    }
+
+    function updateApprove(WorkOrderApprovalRequest $request) : Collection {
+        $result = collect($request->work_order_id)->map(function($id) use($request) {
+            return $this->workOrderRepository->updateApprove($request, $id);
+        });
+
+        return $result;
     }
 }
