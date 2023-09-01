@@ -49,12 +49,12 @@
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
-                                 
+
                                     {{-- divv Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
                                         {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                            
+
                                             <div class="col-lg-5 col-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
@@ -83,37 +83,43 @@
 
                                         {{-- baris company contact --}}
                                         <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                            <input type="hidden" id="boq_id" name="boq_id"  value="{{$updateDraftBoqData['dataCompanyItem'][0]->id}}">
+                                            <input type="hidden" id="boq_id" name="boq_id"
+                                                value="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}">
                                         </div>
-                                        
+
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
 
-                                            <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class=""
+                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                             </div>
-                                            
 
-                                            <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+
+                                            <div class=""
+                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class=" form-label">Nama Kontak Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
-                                            <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class=""
+                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label">No Kontak Customer</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text border-0" id="">+62</span>
                                                     <input type="number" class="form-control form-control-solid" disabled
-                                                        minlength="8" name="customer_contact_phone" id="customer_contact_phone"
+                                                        minlength="8" name="customer_contact_phone"
+                                                        id="customer_contact_phone"
                                                         value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
                                                 </div>
                                             </div>
 
-                                            <div class="" style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class=""
+                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
@@ -130,34 +136,34 @@
                                                 style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label required">Sales</label>
                                                 <select class="form-select-solid form-select form-select-solid"
-                                                data-control="select2" name="sales_id" id="sales_id">
-                                                <option value="" disabled>Pilih Sales</option>
-                                                @if (isset($updateDraftBoqData['dataSales']))
-                                                    @foreach ($updateDraftBoqData['dataSales'] as $sales)
-                                                        <option value="{{ $sales->id }}"
-                                                            {{ $sales->id == ($updateDraftBoqData['dataCompanyItem'][0]->sales_id ?? null) ? 'selected' : '' }}>
-                                                            {{ $sales->name }}
-                                                        </option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
+                                                    data-control="select2" name="sales_id" id="sales_id">
+                                                    <option value="" disabled>Pilih Sales</option>
+                                                    @if (isset($updateDraftBoqData['dataSales']))
+                                                        @foreach ($updateDraftBoqData['dataSales'] as $sales)
+                                                            <option value="{{ $sales->id }}"
+                                                                {{ $sales->id == ($updateDraftBoqData['dataCompanyItem'][0]->sales_id ?? null) ? 'selected' : '' }}>
+                                                                {{ $sales->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
 
                                             <div class=""
                                                 style="flex-basis: 30%; min-width: 200px; margin-bottom: 15px;">
                                                 <label class="form-label required">Technician</label>
                                                 <select class="form-select-solid form-select form-select-solid"
-                                                data-control="select2" name="technician_id" id="technician_id">
-                                                <option value="" disabled>Pilih Technician</option>
-                                                @if (isset($updateDraftBoqData['dataTechnician']))
-                                                    @foreach ($updateDraftBoqData['dataTechnician'] as $technician)
-                                                        <option value="{{ $technician->id }}"
-                                                            {{ $technician->id == ($updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? null) ? 'selected' : '' }}>
-                                                            {{ $technician->name }}
-                                                        </option>
-                                                    @endforeach
-                                                @endif
-                                            </select>   
+                                                    data-control="select2" name="technician_id" id="technician_id">
+                                                    <option value="" disabled>Pilih Technician</option>
+                                                    @if (isset($updateDraftBoqData['dataTechnician']))
+                                                        @foreach ($updateDraftBoqData['dataTechnician'] as $technician)
+                                                            <option value="{{ $technician->id }}"
+                                                                {{ $technician->id == ($updateDraftBoqData['dataCompanyItem'][0]->technician_id ?? null) ? 'selected' : '' }}>
+                                                                {{ $technician->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select>
                                             </div>
 
                                             <div class=""
@@ -166,13 +172,13 @@
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="procurement_id" id="procurement_id">
                                                     @if (isset($updateDraftBoqData['dataProcurement']))
-                                                    @foreach ($updateDraftBoqData['dataProcurement'] as $procurement)
-                                                        <option value="{{ $procurement->id }}"
-                                                            {{ $procurement->id == ($updateDraftBoqData['dataCompanyItem'][0]->procurement_id ?? null) ? 'selected' : '' }}>
-                                                            {{ $procurement->name }}
-                                                        </option>
-                                                    @endforeach
-                                                @endif
+                                                        @foreach ($updateDraftBoqData['dataProcurement'] as $procurement)
+                                                            <option value="{{ $procurement->id }}"
+                                                                {{ $procurement->id == ($updateDraftBoqData['dataCompanyItem'][0]->procurement_id ?? null) ? 'selected' : '' }}>
+                                                                {{ $procurement->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
                                                 </select>
                                             </div>
 
@@ -187,7 +193,8 @@
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid required"
                                                         oninput="validateAndFormatNumber(this);" id="gpm"
-                                                        name="gpm" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->gpm ?? null}}"/>
+                                                        name="gpm"
+                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->gpm ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -198,7 +205,8 @@
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid required"
                                                         oninput="validateAndFormatNumber(this);" id="modal"
-                                                        name="modal" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->modal ?? null}}" />
+                                                        name="modal"
+                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->modal ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -209,7 +217,8 @@
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid required"
                                                         oninput="validateAndFormatNumber(this);" id="npm"
-                                                        name="npm" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->npm ?? null}}" />
+                                                        name="npm"
+                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->npm ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -220,7 +229,8 @@
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid required"
                                                         oninput="validateAndFormatNumber(this);" id="manpower"
-                                                        name="manpower" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->manpower ?? null}}" />
+                                                        name="manpower"
+                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->manpower ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -231,7 +241,8 @@
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid required"
                                                         oninput="validateAndFormatNumber(this);" id="percentage"
-                                                        name="percentage" value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null}}" />
+                                                        name="percentage"
+                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -384,7 +395,8 @@
                                                 <a href="" class="btn btn-light-info">Discard</a>
                                             </div>
                                             <div class="me-5">
-                                                <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Create Revision</a>
+                                                <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Create
+                                                    Revision</a>
                                             </div>
                                         </div>
                                     </div>
@@ -487,7 +499,7 @@
                     var percentage = $('#percentage').val();
 
                     var is_final = $('#is_final').is(':checked') ? 1 : 0;
-                     
+
                     // Validate the prospect_id
                     // if (!prospect_id) {
                     //     var errorMessageProspect =

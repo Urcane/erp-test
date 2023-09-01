@@ -233,17 +233,30 @@
                                         <div class="BundleItem">
 
 
-                                            <div
-                                                class="file-soft-quotation-bundle-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
+                                            <div class="d-flex justify-content-between mx-20 mb-5 mt-10">
 
-                                                <div class="" style="flex-basis: 35%; min-width: 200px;  ">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2" required>
-                                                        <span class="required fw-bold">Internet Bundle</span>
-                                                    </label>
-                                                    <select class="form-select form-select-solid drop-data" required
-                                                        data-control="select2" name="good_name_bundle" id="good_name_bundle">
-                                                        <option value="">Select Internet Bundle</option>
-                                                    </select>
+                                                <div class="d-flex justify-content-around align-items-center"
+                                                    style="flex-basis: 40%; min-width: 200px;">
+                                                    <div class="" style="flex-basis: 85%;">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            required>
+                                                            <span class="required fw-bold">Internet Bundle</span>
+                                                        </label>
+                                                        <select class="form-select form-select-solid drop-data" required
+                                                            data-control="select2" name="good_name_bundle"
+                                                            id="good_name_bundle">
+                                                            <option value="">Select Internet Bundle</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="d-flex justify-content-center align-items-end"
+                                                        style="flex-basis: 10%;">
+                                                        <a href="#kt_modal_tambah_bundle_internet" data-bs-toggle="modal"
+                                                            id="btn-bundle-internet"
+                                                            class="btn btn-light-info btn-sm btn_bundle_internet"
+                                                            style="flex-basis: 10%; width: 90%;">
+                                                            <i class="fa-solid fa-plus"></i></a>
+                                                        <div id="error-item"></div>
+                                                    </div>
                                                 </div>
 
                                                 <div class="" style="flex-basis: 14%; min-width: 150px;  ">
@@ -272,27 +285,17 @@
                                             </div>
 
                                         </div>
-
-                                        @role('administrator')
-                                            <div class="ms-15 w-20 mt-3 mb-3 ">
-                                                <a href="#kt_modal_tambah_bundle_internet" data-bs-toggle="modal"
-                                                    id="btn-bundle-internet"
-                                                    class="btn btn-light-info btn-sm me-3 btn_bundle_internet">
-                                                    <i class="fa-solid fa-plus"></i>Bundle Internet Baru</a>
-                                                <div id="error-item"></div>
-                                            </div>
-                                        @endrole
                                     </div>
 
                                     {{-- divv SUBMIT DAN TOTAL AMOUNT --}}
                                     <div>
-                                        <div class="d-flex justify-content-end mx-20">                                    
+                                        <div class="d-flex justify-content-end mx-20">
                                             <div class="w-20 me-10">
                                                 <span class="fw-bold">Total Amount : Rp<span id="totalsum"></span></span>
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-center mt-6">
-                                            
+
                                             <div class=" me-5">
                                                 <a href="" class="btn btn-light-info">Discard</a>
                                             </div>
@@ -408,7 +411,7 @@
                 url: "{{ route('com.quotation.get.internet.bundling') }}",
                 type: 'GET',
                 success: function(response) {
-                    console.log(response);
+                    // console.log(response);
                     dataFromFirstResponse = response; // Simpan data dari respons pertama
                     $('#good_name_bundle').empty(); // Hapus opsi yang ada sebelumnya
                     $('#good_name_bundle').append($('<option>', {
@@ -427,222 +430,111 @@
                 }
             });
 
-
-
             // Function Tambah Modal Bundling Internet
-            $('#btn-bundle-internet').on('click', '.btn_tambah_boq', function() {
+            $('#btn-bundle-internet').on('click', '.btn_bundle_internet', function() {
                 $('.drop-data').val("").trigger("change");
-                $('#kt_modal_tambah_boq_form').trigger("reset");
-                $('#kt_modal_tambah_boq_submit').removeAttr('disabled', 'disabled');
-            });
-
-            // Handler untuk peristiwa "change" pada select item
-            $('#good_name').on('change', function() {
-                var selectedItemId = $(this).val();
-                var url = $(this).data('url');
-
-                // Mengirim permintaan asinkron menggunakan AJAX untuk mendapatkan data jenis dan merek item
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    data: {
-                        item_id: selectedItemId
-                    }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
-                    success: function(response) {
-                        console.log(response);
-                        $('#good_type').val(response.good_type).prop('disabled', true);
-                        $('#merk').val(response.merk).prop('disabled', true);
-                        $('#detail').val(response.description).prop('disabled', true);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            });
-
-            // Function Hapus Item Frontend
-            $('.MultipleItem').on('click', '.clear-soft-survey-item', function() {
-                var random_string = $(this).data('random-string');
-                $(this).closest('.file-soft-boq-item-' + random_string).remove();
-                updateTotalSum();
+                $('#kt_modal_tambah_bundle_internet_form').trigger("reset");
+                $('#kt_modal_tambah_bundle_internet_submit').removeAttr('disabled', 'disabled');
             });
 
             // Function Submit Modal
-            $("#kt_modal_tambah_boq_form").validate({
+            $("#kt_modal_tambah_bundle_internet_form").validate({
                 messages: {
-                    good_name: {
-                        required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
+                    good_name_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Wajib Mengisi Nama Item</span>",
                     },
-                    purchase_price: {
-                        required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
-                        minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
+                    code_name_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Code Barang wajib diisi</span>",
                     },
-                    quantity: {
-                        required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
-                        minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
+                    merk_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Merk Barang wajib diisi</span>",
                     },
-                    purchase_delivery: {
-                        required: "<span class='fw-semibold fs-8 text-danger'>Jasa antar wajib diisi</span>",
-                        minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
+                    good_type_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Tipe Barang wajib diisi</span>",
                     },
+                    description_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Deskripsi Barang wajib diisi</span>",
+                    }
                 },
-                submitHandler: function(form) {
+                submitHandler: function() {
                     event.preventDefault();
+                    // Dapatkan referensi ke elemen form
+                    var form = document.getElementById("kt_modal_tambah_bundle_internet_form");
 
-                    // ngambil inputan nama dan merk
-                    var selectedItemId = $('#good_name').val();
-                    var itemName = $('#good_name option:selected').text();
-                    var itemMerk = $('#merk').val();
+                    // Dapatkan nilai dari input berdasarkan nama (name)
+                    var goodName = form.querySelector('input[name="good_name_update"]').value;
+                    var codeName = form.querySelector('input[name="code_name_update"]').value;
+                    var merk = form.querySelector('input[name="merk_update"]').value;
+                    var goodType = form.querySelector('input[name="good_type_update"]').value;
+                    var description = form.querySelector('textarea[name="description_update"]').value;
+                    var goodCategoryId = form.querySelector('input[name="good_category_id_update"]')
+                        .value;
 
-                    // Create a hidden input to pass the selected item's name
-                    var itemNameInput = $('<input>').attr({
-                        type: 'hidden',
-                        name: 'content[][good_name]',
-                        value: itemName
+                    // Sekarang, Anda memiliki nilai dari masing-masing input berdasarkan nama (name)
+                    // console.log("Nama Inventory Item:", goodName);
+                    // console.log("Code Item:", codeName);
+                    // console.log("Merk:", merk);
+                    // console.log("Tipe Barang:", goodType);
+                    // console.log("Detail Item Inventory:", description);
+                    // console.log("Good Category ID:", goodCategoryId);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('com.quotation.update.internet.bundling') }}", // Ganti dengan URL yang sesuai
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            good_category_id: goodCategoryId,
+                            good_name: goodName,
+                            code_name: codeName,
+                            merk: merk,
+                            good_type: goodType,
+                            description: description
+                        },
+                        success: function(response) {
+                            console.log("Data berhasil disimpan:", response);
+                            form.reset();
+
+                            $('#kt_modal_tambah_bundle_internet').modal('hide');
+                            // Hapus semua nilai dari dataFromFirstResponse
+                            dataFromFirstResponse = null;
+
+                            $.ajax({
+                                url: "{{ route('com.quotation.get.internet.bundling') }}",
+                                type: 'GET',
+                                success: function(response) {
+                                    console.log(response);
+                                    dataFromFirstResponse =
+                                        response; // Simpan data dari respons pertama
+                                    $('#good_name_bundle')
+                                        .empty(); // Hapus opsi yang ada sebelumnya
+                                    $('#good_name_bundle').append($(
+                                        '<option>', {
+                                            value: '',
+                                            text: 'Select Internet Bundle'
+                                        }));
+                                    $.each(response, function(index, item) {
+                                        $('#good_name_bundle').append($(
+                                            '<option>', {
+                                                value: item.id,
+                                                text: item
+                                                    .good_name
+                                            }));
+                                    });
+                                },
+                                error: function(error) {
+                                    console.log(error);
+                                }
+                            });
+
+                            $('#error-item').empty();
+                        },
+                        error: function(error) {
+                            console.error("Terjadi kesalahan:", error);
+                        },
                     });
-
-                    // Append the hidden input to the form
-                    $(form).append(itemNameInput);
-                    // console.log(form);
-                    let random_string = generateRandomString(4);
-                    var formData = new FormData(form);
-
-                    var newItem = `
-                <div class="file-soft-boq-item-${random_string} d-flex justify-content-between mx-20 mb-5 mt-10">
-                    <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                        <label for="" class="form-label">Item</label>
-                        <input type="text" class="form-control form-control-solid" name="content[][good_name]" value="${itemName}" />
-                    </div>
-
-                    <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                        <label for="" class="form-label">Merk</label>
-                        <div class="position-relative">
-                            <div class="position-absolute top-0"></div>
-                            <input type="text" class="form-control form-control-solid" name="content[][good_merk]" value="${itemMerk}" />
-                        </div>
-                    </div>
-
-                    <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                        <label for="" class="form-label">Price</label>
-                        <div class="position-relative">
-                            <div class="position-absolute top-0"></div>
-                            <input type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
-                        </div>
-                    </div>
-
-                    <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                        <label for="" class="form-label">Qty</label>
-                        <div class="position-relative">
-                            <div class="position-absolute top-0"></div>
-                            <input type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity_tambah')}" />
-                        </div>
-                    </div>
-
-                    <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                        <label for="" class="form-label">Jasa Antar</label>
-                        <div class="position-relative">
-                            <div class="position-absolute top-0"></div>
-                            <input type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
-                            </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between" style="flex-basis: 28%; min-width: 150px; margin: 10px;">
-                        <div style="flex-basis: 80%; min-width: 120px;">
-                            <label for="" class="form-label">Total Price</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total_tambah')}" />
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center align-items-center" style="flex-basis: 14%; min-width: 30px;">
-
-                            <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
-
-                                <ul class="dropdown-menu">
-                                    <li type="button" class="btn-update-boq-modal" 
-                                        data-random-string="${random_string}" 
-                                        data-item-id="${formData.get('good_name')}"
-
-                                        data-quantity="${formData.get('quantity_tambah')}"
-                                        data-total_price="${formData.get('total_tambah')}"
-                                        data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
-                                        data-purchase_price="${formData.get('purchase_price_tambah')}"
-                                        data-purchase_refrence="${formData.get('purchase_reference')}"
-                                        data-item_detail="${formData.get('item_detail')}"">                                            
-
-                                        <a class="dropdown-item py-2">
-                                        <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
-                                    </li>
-                                    <li type="button" class="clear-soft-survey-item-${random_string}"
-                                        data-random-string="${random_string}">
-                                        <a class="dropdown-item py-2">
-                                        <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
-                                    </li>
-                            </ul>
-                        </div>
-                    </div>  
-                    <div>
-                        <input type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
-                        <input type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
-                        <input type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
-                    </div>
-                </div>`;
-
-
-                    // Function Hapus per Item
-                    $('.MultipleItem').on('click', `.clear-soft-survey-item-${random_string}`,
-                        function() {
-                            $(this).parent().parent().parent().parent().remove();
-                            updateTotalSum();
-                        });
-
-                    // Function Update BOQ modal
-                    $('.MultipleItem').on('click', '.btn-update-boq-modal', function() {
-
-                        var randomString = $(this).data('random-string');
-                        var itemId = parseInt($(this).data('item-id'));
-                        var quantity = $(this).data('quantity');
-                        var total_price = $(this).data('total_price');
-                        var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
-                        var purchase_price = $(this).data('purchase_price');
-                        var purchase_refrence = $(this).data('purchase_refrence');
-                        var item_detail = $(this).data('item_detail');
-
-                        console.log(randomString, itemId, quantity, total_price,
-                            purchase_delivery_charge,
-                            purchase_price, purchase_refrence, item_detail);
-
-                        $('#good_name_update').val(itemId).trigger('change');
-
-                        $('#kt_modal_update_boq').modal('show');
-
-                        $('#uniq_id').val(randomString);
-
-                        $('#item_detail_update').val(item_detail);
-                        $('#purchase_refrence_update').val(purchase_refrence);
-                        $('#purchase_price_update').val(purchase_price);
-                        $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
-                        $('#total_price_update').val(total_price);
-                        $('#quantity_update').val(quantity);
-                        document.getElementById('total_update').textContent = total_price;
-                    });
-
-                    // Tambahkan item baru ke div "MultipleItem"
-                    $('.MultipleItem').append(newItem);
-
-                    // Bersihkan input setelah item ditambahkan
-                    form.reset();
-
-                    // Tutup modal
-                    $('#kt_modal_tambah_boq').modal('hide');
-
-                    // Clear any previous error message if items are present
-                    $('#error-item').empty();
-                    updateTotalSum();
                 }
             });
+
 
             function updateTotalSum() {
                 var totalSum = 0;
