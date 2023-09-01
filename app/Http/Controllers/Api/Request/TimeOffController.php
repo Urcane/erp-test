@@ -124,13 +124,14 @@ class TimeOffController extends RequestController
         }
     }
 
-    public function getRequestCategory()
+    public function getCategories()
     {
         try {
-            $leaveRequestCategories = LeaveRequestCategory::all();
+            $timeOffCategories = LeaveRequestCategory::all();
+
             return response()->json([
                 "status" => "success",
-                "data" => $leaveRequestCategories,
+                "data" => $timeOffCategories
             ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);

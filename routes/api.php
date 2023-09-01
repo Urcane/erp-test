@@ -59,17 +59,41 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('cmt-request')->group(function () {
+        Route::controller(Api\ShiftController::class)->group(function () {
+            Route::get('/get/working-shift', 'getAllWorkingShift');
+        });
+
+        Route::controller(Request\TimeOffController::class)->group(function () {
+            Route::get('/get/category', 'getCategories');
+        });
+
         Route::prefix('attendance')->group(function () {
             Route::controller(HC\Request\AttendanceController::class)->group(function () {
-                Route::post('/get', 'getRequest');
+                Route::post('/get', 'getRequests');
+                Route::post('/get/detail', 'getRequestById');
+                Route::post('/update/status', 'updateRequestStatusById');
             });
         });
 
-        // Route::prefix('shift')->group(function () {
-        //     Route::controller(HC\Request\ShiftController::class)->group(function () {
-        //         Route::post('/get', 'getRequest');
-        //     });
-        // });
+        Route::prefix('shift')->group(function () {
+            Route::controller(HC\Request\ShiftController::class)->group(function () {
+                Route::post('/get', 'getRequests');
+                Route::post('/get/detail', 'getRequestById');
+                Route::post('/update/status', 'updateRequestStatusById');
+            });
+
+            Route::controller(Api\ShiftController::class)->group(function () {
+                Route::get('/get/working-shift', 'getAllWorkingShift');
+            });
+        });
+
+        Route::prefix('timeoff')->group(function () {
+            Route::controller(HC\Request\TimeOffController::class)->group(function () {
+                Route::post('/get', 'getRequests');
+                Route::post('/get/detail', 'getRequestById');
+                Route::post('/update/status', 'updateRequestStatusById');
+            });
+        });
 
         Route::prefix('personal')->group(function () {
             Route::prefix('attendance')->group(function () {
@@ -88,16 +112,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
                     Route::post('/make', 'makeRequest');
                 });
-                Route::controller(Api\ShiftController::class)->group(function () {
-                    Route::get('/get/working-shift', 'getAllWorkingShift');
-                });
             });
 
             Route::prefix('time-off')->group(function () {
                 Route::controller(Request\TimeOffController::class)->group(function () {
                     Route::post('/get', 'getRequest');
                     Route::post('/get/detail', 'getRequestById');
-                    Route::get('/get/category', 'getRequestCategory');
 
                     Route::post('/make', 'makeRequest');
                 });
