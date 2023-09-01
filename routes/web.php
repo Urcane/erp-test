@@ -126,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
            Route::get('/update-quotation','updateQuotation')->name('com.quotation.update.quotation');
            Route::post('/store-data-quotation','saveAndStoreQuotation')->name('com.quotation.store.quotation');
            Route::get('/get-internet-bundling', 'getInternetBundling')->name('com.quotation.get.internet.bundling');
+           Route::post('/update-internet-bundling', 'updateInternetBundling')->name('com.quotation.update.internet.bundling');
         });
     });
 });

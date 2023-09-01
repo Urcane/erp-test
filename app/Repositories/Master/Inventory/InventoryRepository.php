@@ -53,11 +53,12 @@ class InventoryRepository
 
      function updateInternetBundling(Request $request) : JsonResponse {
       $validator = Validator::make($request->all(), [
-         'good_name' => 'required|string',
+        'good_category_id' => 'required|string',
+        'good_name' => 'required|string',
          'code_name' => 'required|string',
          'merk' => 'required|string',
          'good_type' => 'required|string',
-         'description' => 'nullable|string',
+         'description' => 'required|string',
      ]);
  
      if ($validator->fails()) {

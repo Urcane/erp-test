@@ -155,49 +155,7 @@ class BoqService
         $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
         return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
     }
-
-    // function createDraftBoqQuery(Request $request) {
-    //     $prospectId = $request->query('prospect_id');
-    
-    //     $dataProspect = $this->BoQRepository->getProspect()
-    //         ->doesntHave('itemableBillOfQuantity')
-    //         ->get();
-    
-    //     $dataCompany = $this->BoQRepository->getProspect()
-    //         ->where('id', $prospectId)
-    //         ->with('itemableBillOfQuantity')
-    //         ->first();
-    
-    //     $dataItem = $this->BoQRepository->getListItem();
-    
-    //     $dataSurvey = $this->BoQRepository->getSurvey()
-    //         ->where('customer_prospect_id', $prospectId)
-    //         ->get();
-    
-    //     return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
-    // }
-
-    // function createDraftBoqQuery(Request $request){
-    //     $prospectId = $request->query('prospect_id');
-    
-    //     $dataProspect = $this->BoQRepository->getProspect()
-    //         ->doesntHave('itemableBillOfQuantity')
-    //         ->get();
-    
-    //     $dataCompany = $this->BoQRepository->getProspect()
-    //         ->with('itemableBillOfQuantity')
-    //         ->find($prospectId);
-    
-    //     $dataItem = $this->BoQRepository->getListItem();
-    
-    //     $dataSurvey = $this->BoQRepository->getSurvey()
-    //         ->where('customer_prospect_id', $prospectId)
-    //         ->get();
-    
-    //     return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
-    // }
-    
-
+ 
     function createDraftBoqAjax(Request $request){
         $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
         $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
