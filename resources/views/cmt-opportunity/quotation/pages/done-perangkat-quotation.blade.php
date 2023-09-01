@@ -27,7 +27,7 @@
 @section('content')
     {{-- FORM BOQ --}}
     {{-- @dd($dataCompany) --}}
-    {{-- @dd($dataBoq["dataForm"])   --}}
+    {{-- @dd($dataQuotation["dataForm"])   --}}
 
 
     <div class="row justify-content-center">
@@ -40,7 +40,7 @@
 
                             <div class="row mb-6 align-items-center">
                                 <div class="col-lg-6 gap-3 d-flex align-items-center">
-                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Bill of Quantity</span>
+                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Quotation Perangkat</span>
                                 </div>
                             </div>
 
@@ -57,11 +57,11 @@
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $dataBoq['boqFinalData'][0]->customerProspect->prospect_title }} - {{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
+                                                    placeholder="{{ $dataQuotation['boqFinalData'][0]->customerProspect->prospect_title }} - {{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customer_name }}">
 
                                                 <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="prospect_id"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->prospect_id }}">
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->prospect_id }}">
 
                                                 <div id="error-prospect"></div>
                                             </div>
@@ -73,8 +73,8 @@
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     name="survey_request_id" id="survey_request_id"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->survey_request_id }}"
-                                                    {{ $dataBoq['boqFinalData'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->survey_request_id }}"
+                                                    {{ $dataQuotation['boqFinalData'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -87,7 +87,7 @@
                                                 <label class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customer_name }}">
                                             </div>
 
                                             <div class=""
@@ -95,7 +95,7 @@
                                                 <label class=" form-label">Nama Kontak Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
                                             <div class=""
@@ -106,7 +106,7 @@
                                                     <input type="number" class="form-control form-control-solid" disabled
                                                         minlength="8" name="customer_contact_phone"
                                                         id="customer_contact_phone"
-                                                        value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
+                                                        value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
                                                 </div>
                                             </div>
 
@@ -115,7 +115,7 @@
                                                 <label class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->bussinesType->type_name }}">
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->bussinesType->type_name }}">
                                             </div>
                                         </div>
                                     </div>
@@ -126,13 +126,10 @@
                                         <div class="MultipleItem">
                                             {{-- Cek Dari db items jika ada masukkan di sni
                                             {{-- inputan dari modal masuk kesni --}}
-                                            @if (isset($dataBoq['boqFinalData'][0]->itemable))
+                                            @if (isset($dataQuotation['boqFinalData'][0]->itemable))
 
-                                                @foreach ($dataBoq['boqFinalData'][0]->itemable as $relatedItem)
+                                                @foreach ($dataQuotation['boqFinalData'][0]->itemable as $relatedItem)
                                                     <!-- Display data from $relatedItem -->
-                                                    @php
-                                                        $random_string = \Illuminate\Support\Str::random(4);
-                                                    @endphp
                                                     <div
                                                         class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
                                                         <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
@@ -249,6 +246,15 @@
                                             @endif
 
                                         </div>
+
+                                        @role('administrator')
+                                            <div class="ms-15 w-20 mt-3 mb-3 ">
+                                                <a href="#kt_modal_tambah_boq" data-bs-toggle="modal" id="btn-tambah-boq"
+                                                    class="btn btn-light-info btn-sm me-3 btn_tambah_boq">
+                                                    <i class="fa-solid fa-plus"></i>Item Baru</a>
+                                                <div id="error-item"></div>
+                                            </div>
+                                        @endrole
                                     </div>
 
                                     {{-- divv akhir total amount --}}

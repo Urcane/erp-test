@@ -40,7 +40,7 @@ class BoQRepository
     }
 
     function getAll(Request $request){
-        $dataBoq = $this->model->with(['sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
+        $dataBoq = $this->model->with(['sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ])->doesntHave('itemableQuotationPart');
 
         if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'true' ) {
             $dataBoq->where('is_draft',1)->wherenull('is_done');

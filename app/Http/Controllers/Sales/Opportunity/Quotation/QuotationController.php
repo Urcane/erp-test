@@ -36,7 +36,7 @@ class QuotationController
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
-    function updateQuotation(Request $request) : JsonResponse{
+    function updateQuotation(Request $request){
         if ($request->query('quotation_id')) {
             return $this->quotationService->updateQuotation($request);
         } 

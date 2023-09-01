@@ -4,6 +4,7 @@ namespace App\Repositories\Sales\Opportunity\Quotation;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Models\Opportunity\BoQ\Item;
 use App\Services\Master\Inventory\InventoryService;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
@@ -12,16 +13,25 @@ class QuotationRepository
 {
     protected $model;
     protected $boqData;
+    protected $item;
 
-    function __construct(ItemableQuotationPart $model, ItemableBillOfQuantity $boqData, InventoryService $inventoryService) {
+    function __construct(ItemableQuotationPart $model, ItemableBillOfQuantity $boqData, Item $item) {
         $this->model = $model;
         $this->boqData = $boqData;
+        $this->item = $item;
     }
 
-    function getAll() : JsonResponse {
-        $dataQuotation = $this->model->with('ItemableQuotationPart')->get();
-        dd($dataQuotation);
-        return response()->json($dataQuotation);
+    function getAll(Request $request) {
+        $dataQuotation = $this->model->with('itemableBillOfQuantity.customerProspect.customer.customerContact', 'itemableBillOfQuantity.customerProspect.customer.customerContact');
+
+        if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'true') {
+            $dataQuotation->where('is_done',1);
+        }
+
+        if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'false') {
+            $dataQuotation->where('is_done',0);
+        }
+        return ($dataQuotation);
     }
 
     function createQuotation(Request $request) {
@@ -55,10 +65,34 @@ class QuotationRepository
                 'description' => $request->input('quotation.description'),
                 'total_price' => $request->input('quotation.total_price'),
                 'remark' => $request->input('quotation.remark'),
-                'is_done' => $request->input('quotation.is_done'), //kondisi jika quotation di cancel, request is_done = 0
+                'is_done' => $request->input('quotation.is_done', null), //kondisi jika quotation di cancel, request is_done = 0
             ]
         );        
         $quotationData->referenced_quotation_id = $quotationData->id;
+        $quotationData->is_done = null;
+
+        if (isset($quotationData->id)) {
+            $itemIds = $this->item->where('itemable_id', $quotationData->id)->pluck('id')->toArray();
+            $this->item->whereIn('id', $itemIds)->delete();
+        }
+        $itemsData = $request->input('items');
+
+        if (!empty($itemsData)) {
+            foreach ($itemsData as $itemData) {
+                $criteria = [
+                    'itemable_id' => $quotationData->id,
+                    'itemable_type' => $quotationData->itemable_type, 
+                ];
+                if (isset($itemData['id'])) {
+                    $criteria['id'] = $itemData['id'];
+                }
+                $data = [
+                    'quantity' => $itemData['quantity'],
+                    'total_price' => $itemData['total_price'],
+                ];
+                $quotationData->itemable()->updateOrCreate($criteria, $data);
+            }
+        }
         $quotationData->save();
         return $quotationData;
     }

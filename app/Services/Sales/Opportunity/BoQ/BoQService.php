@@ -57,14 +57,13 @@ class BoqService
             ->addColumn('action_quotation', function ($query) use($request)  {
                 $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">'; 
-                 // Check if 'calledFrom' key exists in $request->filters
                 if (isset($request->filters['calledFrom'])) {
                     if ($request->filters['calledFrom'] == 'Internet') {
-                        $actions .= '<li><a href="' . url("cmt-quotation/create-draft-quotation?boq_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
+                        $actions .= '<li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create Quotation Internet</a></li>';
                     }
                     elseif ($request->filters['calledFrom'] == 'Perangkat') {
-                        $actions .= '<li><a href="' . url("cmt-quotation/create-draft-quotation?boq_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
+                        $actions .= '<li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create Quotation Perangkat</a></li>';
                     }
                 } else {                    

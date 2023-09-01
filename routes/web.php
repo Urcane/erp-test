@@ -122,7 +122,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', 'index')->name('com.quotation.index'); // quotation internet
             Route::get('/quotation-perangkat', 'perangkat')->name('com.quotation.perangkat.index'); // quotation perangkat
            Route::get('/get-data/table/data-result','getDatatable')->name('com.quotation.render.datatable');
-           Route::get('/create-draft-quotation','createQuotation')->name('com.quotation.create.quotation');
+           Route::get('/create-quotation','createQuotation')->name('com.quotation.create.quotation');
            Route::get('/update-quotation','updateQuotation')->name('com.quotation.update.quotation');
            Route::post('/store-data-quotation','saveAndStoreQuotation')->name('com.quotation.store.quotation');
            Route::get('/get-internet-bundling', 'getInternetBundling')->name('com.quotation.get.internet.bundling');
