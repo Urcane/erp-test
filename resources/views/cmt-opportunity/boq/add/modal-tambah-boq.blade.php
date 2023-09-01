@@ -75,7 +75,7 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class=" fw-bold">Detail Item project</span>
                                 </label>
-                                <input class="form-control" type="text" name="item_detail" id="item_detail" >
+                                <input class="form-control form-control-solid" type="text" name="item_detail" id="item_detail" >
                             </div>
 
 
@@ -94,13 +94,24 @@
                                             name="purchase_price_tambah">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div> --}}
-                                    <div class="col-lg-12 col-6 mb-3">
+                                    <div class="col-lg-8 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
                                             min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_tambah', 'tambah');" name="quantity_tambah">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="required fw-bold">Tipe Unit</span>
+                                        </label>
+                                        <select class="form-select form-select-solid drop-data" data-control="select2" required data-placeholder="Select an Item" name="unit" id="unit" data-dropdown-parent="#kt_modal_tambah_boq">
+                                            <option></option>
+                                                @foreach ($dataUnit as $unit)
+                                                    <option value="{{ $unit->code }}">{{ $unit->name }}</option>
+                                                @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>

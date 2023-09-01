@@ -67,7 +67,7 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class=" fw-bold">Detail Item project</span>
                                 </label>
-                                <input class="form-control" type="text" name="item_detail" id="item_detail_update" >
+                                <input class="form-control form-control-solid" type="text" name="item_detail" id="item_detail_update" >
                             </div>
 
 
@@ -86,7 +86,7 @@
                                             name="purchase_price_update" id="purchase_price_update">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div> --}}
-                                    <div class="col-lg-12 col-6 mb-3">
+                                    <div class="col-lg-8 col-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
@@ -94,6 +94,17 @@
                                             min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update', 'update');" 
                                             name="quantity_update" id="quantity_update">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-lg-4 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="required fw-bold">Tipe Unit</span>
+                                        </label>
+                                        <select class="form-select form-select-solid drop-data" data-control="select2" required data-placeholder="Select an Item" name="unit_update" id="unit_update" data-dropdown-parent="#kt_modal_update_boq">
+                                            <option></option>
+                                                @foreach ($dataUnit as $unit)
+                                                    <option value="{{ $unit->code }}">{{ $unit->name }}</option>
+                                                @endforeach
+                                        </select>
                                     </div>
                                 </div>
                             </div>

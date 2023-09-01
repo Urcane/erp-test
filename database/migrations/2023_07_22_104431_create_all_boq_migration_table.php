@@ -19,8 +19,8 @@ class CreateAllBoqMigrationTable extends Migration
             $table->foreignId('inventory_good_id')->constrained();
             $table->string('item_detail')->nullable();
             $table->bigInteger('quantity');
-            $table->char('unit', 2)
-                ->comment('unit with char(2)');
+            $table->char('unit', 10)
+                ->comment('unit with char(10)');
             $table->foreign('unit')->references('code')->on('inventory_unit_masters');
             $table->string('delivery_route')->nullable()->comment('price request only');
             $table->string('delivery_type')->nullable()->comment('price request only');

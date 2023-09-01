@@ -146,11 +146,8 @@ class BoQRepository
                     }
                     $data = [
                         'quantity' => $itemData['quantity'],
-                        'purchase_price' => $itemData['purchase_price'],
-                        'total_price' => $itemData['total_price'],
-                        'purchase_delivery_charge' => $itemData['purchase_delivery'],
-                        'purchase_reference' => $itemData['purchase_reference'],
-                        'item_inventory_id' => $itemData['item_inventory_id'],
+                        'unit' => $itemData['unit'],
+                        'inventory_good_id' => $itemData['item_inventory_id'],
                         'item_detail' => $itemData['item_detail'],
                     ];
                     $itemableBoq->itemable()->updateOrCreate($criteria, $data);

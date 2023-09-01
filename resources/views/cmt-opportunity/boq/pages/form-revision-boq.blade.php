@@ -404,68 +404,6 @@
         @endrole
 
         <script>
-            function validateAndFormatNumber(input) {
-                // Mengambil nilai input tanpa karakter non-digit
-                let inputValue = input.value.replace(/\D/g, '');
-
-                // Pastikan nilai input tidak kosong
-                if (inputValue.length > 0) {
-                    // Pastikan nilai input tidak diawali dengan angka 0
-                    if (inputValue[0] === '0') {
-                        // Jika nilai input diawali dengan angka 0, hapus angka 0 di awal
-                        inputValue = inputValue.slice(1);
-                    }
-                }
-
-                // Mengatur nilai input kembali dengan angka yang telah diformat
-                input.value = inputValue;
-            };
-
-            //  function kalkulasi total di Modal
-            function calculateTotalAmount(totalElementId, modal) {
-                // Mengambil nilai dari masing-masing input menggunakan querySelector
-                const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${modal}']`).value);
-                const quantity = parseInt(document.querySelector(`[name='quantity_${modal}']`).value);
-                const purchaseDelivery = parseFloat(document.querySelector(`[name='purchase_delivery_${modal}']`).value);
-
-
-                // Cek jika nilai purchasePrice dan quantity adalah angka
-                if (isNaN(purchasePrice) || isNaN(quantity)) {
-                    // Jika ada input yang belum diisi atau bukan angka, tampilkan hasil kosong dan return
-                    document.getElementById(totalElementId).textContent = "";
-                    const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                    hiddenTotalInput.value = ""; // Set the hidden input value to empty string
-                    return;
-                }
-
-                // Melakukan perhitungan total
-                let totalAmount = purchasePrice * quantity;
-
-                // Tambahkan purchaseDelivery ke totalAmount jika nilai purchaseDelivery adalah angka
-                if (!isNaN(purchaseDelivery)) {
-                    totalAmount += purchaseDelivery;
-                }
-
-                // Cek jika totalAmount melebihi 12 karakter
-                // 9,007,199,254,740,991 maksimal karakter number
-                if (totalAmount.toString().length > 15) {
-                    document.getElementById(totalElementId).textContent = "Melewati limit angka";
-                    const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                    hiddenTotalInput.value = ""; // Set the hidden input value to empty string
-                    return;
-                }
-
-                // Menampilkan total dalam format dengan tanda titik setiap 3 digit dari kanan
-                const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
-
-                // Mengatur nilai total pada elemen dengan id 'totalDisplay'
-                document.getElementById(totalElementId).textContent = totalAmountWithCommas;
-
-                // Mengatur nilai total pada elemen dengan class 'total' (hidden input)
-                const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
-            }
-
             $(document).ready(function() {
                 // function Submit BOQ page BENERAN wkwkw
                 $('#submit-all-items').on('click', function(event) {
