@@ -341,7 +341,7 @@
                                                                         data-total_price="{{ $relatedItem->total_price }}"
                                                                         data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
                                                                         data-purchase_price="{{ $relatedItem->purchase_price }}"
-                                                                        data-purchase_refrence="{{ $relatedItem->purchase_refrence }}"
+                                                                        data-purchase_reference="{{ $relatedItem->purchase_reference }}"
                                                                         data-item_detail="{{ $relatedItem->item_detail }}">
                                                                         <a class="dropdown-item py-2">
                                                                             <i class="fa-solid fa-edit me-3"></i>Edit
@@ -365,7 +365,7 @@
                                                                 value="{{ $relatedItem->item_inventory_id ?? null }}" />
                                                             <input type="hidden" name="content[][purchase_reference]"
                                                                 disabled
-                                                                value="{{ $relatedItem->purchase_refrence ?? null }}" />
+                                                                value="{{ $relatedItem->purchase_reference ?? null }}" />
                                                             <input type="hidden" name="content[][item_detail]" disabled
                                                                 value="{{ $relatedItem->item_detail ?? null }}" />
                                                         </div>
@@ -416,68 +416,6 @@
         @endrole
 
         <script>
-            function validateAndFormatNumber(input) {
-                // Mengambil nilai input tanpa karakter non-digit
-                let inputValue = input.value.replace(/\D/g, '');
-
-                // Pastikan nilai input tidak kosong
-                if (inputValue.length > 0) {
-                    // Pastikan nilai input tidak diawali dengan angka 0
-                    if (inputValue[0] === '0') {
-                        // Jika nilai input diawali dengan angka 0, hapus angka 0 di awal
-                        inputValue = inputValue.slice(1);
-                    }
-                }
-
-                // Mengatur nilai input kembali dengan angka yang telah diformat
-                input.value = inputValue;
-            };
-
-            //  function kalkulasi total di Modal
-            function calculateTotalAmount(totalElementId, modal) {
-                // Mengambil nilai dari masing-masing input menggunakan querySelector
-                const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${modal}']`).value);
-                const quantity = parseInt(document.querySelector(`[name='quantity_${modal}']`).value);
-                const purchaseDelivery = parseFloat(document.querySelector(`[name='purchase_delivery_${modal}']`).value);
-
-
-                // Cek jika nilai purchasePrice dan quantity adalah angka
-                if (isNaN(purchasePrice) || isNaN(quantity)) {
-                    // Jika ada input yang belum diisi atau bukan angka, tampilkan hasil kosong dan return
-                    document.getElementById(totalElementId).textContent = "";
-                    const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                    hiddenTotalInput.value = ""; // Set the hidden input value to empty string
-                    return;
-                }
-
-                // Melakukan perhitungan total
-                let totalAmount = purchasePrice * quantity;
-
-                // Tambahkan purchaseDelivery ke totalAmount jika nilai purchaseDelivery adalah angka
-                if (!isNaN(purchaseDelivery)) {
-                    totalAmount += purchaseDelivery;
-                }
-
-                // Cek jika totalAmount melebihi 12 karakter
-                // 9,007,199,254,740,991 maksimal karakter number
-                if (totalAmount.toString().length > 15) {
-                    document.getElementById(totalElementId).textContent = "Melewati limit angka";
-                    const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                    hiddenTotalInput.value = ""; // Set the hidden input value to empty string
-                    return;
-                }
-
-                // Menampilkan total dalam format dengan tanda titik setiap 3 digit dari kanan
-                const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
-
-                // Mengatur nilai total pada elemen dengan id 'totalDisplay'
-                document.getElementById(totalElementId).textContent = totalAmountWithCommas;
-
-                // Mengatur nilai total pada elemen dengan class 'total' (hidden input)
-                const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
-            }
-
             $(document).ready(function() {
                 // function Submit BOQ page BENERAN wkwkw
                 $('#submit-all-items').on('click', function(event) {
@@ -609,10 +547,10 @@
                     var total_price = ($(this).data('total_price'));
                     var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
                     var purchase_price = ($(this).data('purchase_price'));
-                    var purchase_refrence = $(this).data('purchase_refrence');
+                    var purchase_reference = $(this).data('purchase_reference');
                     var item_detail = ($(this).data('item_detail'));
                     // console.log(randomString, itemId, quantity, total_price, purchase_delivery_charge,
-                    //     purchase_price, purchase_refrence, item_detail);
+                    //     purchase_price, purchase_reference, item_detail);
 
                     $('#good_name_update').val(itemId).trigger('change');
 
@@ -621,7 +559,7 @@
                     $('#uniq_id').val(randomString);
 
                     $('#item_detail_update').val(item_detail);
-                    $('#purchase_refrence_update').val(purchase_refrence);
+                    $('#purchase_reference_update').val(purchase_reference);
                     $('#purchase_price_update').val(purchase_price);
                     $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
                     $('#total_price_update').val(total_price);
@@ -707,7 +645,7 @@
                             'data-purchase_delivery_charge': formData.get(
                                 'purchase_delivery_update'),
                             'data-purchase_price': formData.get('purchase_price_update'),
-                            'data-purchase_refrence': formData.get('purchase_reference'),
+                            'data-purchase_reference': formData.get('purchase_reference'),
                             'data-item_detail': formData.get('item_detail')
                         });
 
@@ -717,7 +655,7 @@
                             'total_price': formData.get('total_update'),
                             'purchase_delivery_charge': formData.get('purchase_delivery_update'),
                             'purchase_price': formData.get('purchase_price_update'),
-                            'purchase_refrence': formData.get('purchase_reference'),
+                            'purchase_reference': formData.get('purchase_reference'),
                             'item_detail': formData.get('item_detail')
                         });
 
@@ -888,7 +826,7 @@
                                             data-total_price="${formData.get('total_tambah')}"
                                             data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
                                             data-purchase_price="${formData.get('purchase_price_tambah')}"
-                                            data-purchase_refrence="${formData.get('purchase_reference')}"
+                                            data-purchase_reference="${formData.get('purchase_reference')}"
                                             data-item_detail="${formData.get('item_detail')}"">                                            
                                             
                                             <a class="dropdown-item py-2">
@@ -926,12 +864,12 @@
                             var total_price = $(this).data('total_price');
                             var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
                             var purchase_price = $(this).data('purchase_price');
-                            var purchase_refrence = $(this).data('purchase_refrence');
+                            var purchase_reference = $(this).data('purchase_reference');
                             var item_detail = $(this).data('item_detail');
 
                             console.log(randomString, itemId, quantity, total_price,
                                 purchase_delivery_charge,
-                                purchase_price, purchase_refrence, item_detail);
+                                purchase_price, purchase_reference, item_detail);
 
                             $('#good_name_update').val(itemId).trigger('change');
 
@@ -940,7 +878,7 @@
                             $('#uniq_id').val(randomString);
 
                             $('#item_detail_update').val(item_detail);
-                            $('#purchase_refrence_update').val(purchase_refrence);
+                            $('#purchase_reference_update').val(purchase_reference);
                             $('#purchase_price_update').val(purchase_price);
                             $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
                             $('#total_price_update').val(total_price);

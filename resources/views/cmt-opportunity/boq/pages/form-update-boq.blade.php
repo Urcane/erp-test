@@ -48,11 +48,12 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     @csrf
+                                    <input type="hidden" name="boq_id" value="{{$updateDraftBoqData['dataCompanyItem'][0]->id}}">
                                     {{-- divv Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
                                         {{-- baris prospect company --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                            <div class="col-lg-5 col-6 mb-3">
+                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8 row">
+                                            <div class="col-lg-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
@@ -67,7 +68,7 @@
                                             </div>
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
-                                            <div class="col-lg-5 col-6 mb-3">
+                                            <div class="col-lg-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
@@ -80,26 +81,23 @@
                                         </div>
 
                                         {{-- baris company contact --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8 row">
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-3">
                                                 <label class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-3">
                                                 <label class=" form-label">Nama Kontak Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-3">
                                                 <label class="form-label">No Kontak Customer</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text border-0" id="">+62</span>
@@ -110,8 +108,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-3">
                                                 <label class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
@@ -134,15 +131,15 @@
                                                         $random_string = \Illuminate\Support\Str::random(4);
                                                     @endphp
                                                     <div
-                                                        class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10 row">
+                                                        <div class="col-lg-3">
                                                             <label class="form-label">Item</label>
                                                             <input type="text" class="form-control form-control-solid"
                                                                 disabled name="content[][good_name]"
                                                                 value="{{ $relatedItem->inventoryGood->good_name ?? null }}" />
                                                         </div>
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        <div class="col-lg-3">
                                                             <label class="form-label">Merk</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
@@ -153,7 +150,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        {{-- <div class="col-lg-3">
                                                             <label class="form-label">Price</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
@@ -162,10 +159,10 @@
                                                                     name="content[][purchase_price]"
                                                                     value="{{ $relatedItem->purchase_price ?? null }}" />
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                            <label class="form-label">Qty</label>
+                                                        <div class="col-lg-3">
+                                                            <label for="" class="form-label">Qty</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
                                                                 <input type="number"
@@ -175,7 +172,15 @@
                                                             </div>
                                                         </div>
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        <div class="col-lg-2">
+                                                            <label for="" class="form-label">Tipe Unit</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input disabled="disabled" type="text" class="form-control form-control-solid" name="content[][unit]" value="{{ $relatedItem->unit ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- <div class="col-lg-3">
                                                             <label class="form-label">Jasa
                                                                 Antar</label>
                                                             <div class="position-relative">
@@ -185,23 +190,11 @@
                                                                     name="content[][purchase_delivery]"
                                                                     value="{{ $relatedItem->purchase_delivery_charge ?? null }}" />
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
 
-                                                        <div class="d-flex justify-content-between"
-                                                            style="flex-basis: 28%; min-width: 150px; margin: 10px;">
-                                                            <div style="flex-basis: 80%; min-width: 120px;">
-                                                                <label class="form-label">Total
-                                                                    Price</label>
-                                                                <div class="position-relative">
-                                                                    <div class="position-absolute top-0"></div>
-                                                                    <input type="number"
-                                                                        class="total-price form-control form-control-solid"
-                                                                        disabled name="content[][total_price]"
-                                                                        value="{{ $relatedItem->total_price ?? null }}" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="d-flex justify-content-center align-items-center"
-                                                                style="flex-basis: 14%; min-width: 30px;">
+                                                        <div class="col-lg-1 d-flex justify-content-center align-items-center">
+                                                            <div class="my-auto">
+                                                                <div class="h-20px"></div>
                                                                 <button type="button"
                                                                     class="btn btn-secondary btn-icon btn-sm"
                                                                     data-kt-menu-placement="bottom-end"
@@ -211,22 +204,20 @@
                                                                 <ul class="dropdown-menu">
                                                                     <li type="button" class="btn-update-boq-modal"
                                                                         data-random-string="{{ $random_string }}"
-                                                                        data-item-id="{{ $relatedItem->item_inventory_id }}"
+                                                                        data-item-id="{{ $relatedItem->inventory_good_id }}"
                                                                         data-quantity="{{ $relatedItem->quantity }}"
+                                                                        data-unit="{{ $relatedItem->unit }}"
                                                                         data-total_price="{{ $relatedItem->total_price }}"
-                                                                        data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
-                                                                        data-purchase_price="{{ $relatedItem->purchase_price }}"
-                                                                        data-purchase_refrence="{{ $relatedItem->purchase_refrence }}"
                                                                         data-item_detail="{{ $relatedItem->item_detail }}">
                                                                         <a class="dropdown-item py-2">
-                                                                            <i class="fa-solid fa-edit me-3"></i>Edit
-                                                                            Item</a>
+                                                                            <i class="fa-solid fa-edit me-3"></i>Edit Item
+                                                                        </a>
                                                                     </li>
                                                                     <li type="button" class="clear-soft-survey-item"
                                                                         data-random-string="{{ $random_string }}">
                                                                         <a class="dropdown-item py-2">
-                                                                            <i class="fa-solid fa-trash me-3"></i>Hapus
-                                                                            Item</a>
+                                                                            <i class="fa-solid fa-trash me-3"></i>Hapus Item
+                                                                        </a>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -237,10 +228,10 @@
                                                                 value="{{ $relatedItem->id ?? null }}" />
                                                             <input type="hidden" name="content[][item_inventory_id]"
                                                                 disabled
-                                                                value="{{ $relatedItem->item_inventory_id ?? null }}" />
+                                                                value="{{ $relatedItem->inventory_good_id ?? null }}" />
                                                             <input type="hidden" name="content[][purchase_reference]"
                                                                 disabled
-                                                                value="{{ $relatedItem->purchase_refrence ?? null }}" />
+                                                                value="{{ $relatedItem->purchase_reference ?? null }}" />
                                                             <input type="hidden" name="content[][item_detail]" disabled
                                                                 value="{{ $relatedItem->item_detail ?? null }}" />
                                                         </div>
@@ -251,9 +242,9 @@
                                         </div>
 
                                         @role('administrator')
-                                            <div class="ms-15 w-20 mt-3 mb-3 ">
+                                            <div class="mx-20 my-10 col-lg-2">
                                                 <a href="#kt_modal_tambah_boq" data-bs-toggle="modal" id="btn-tambah-boq"
-                                                    class="btn btn-light-info btn-sm me-3 btn_tambah_boq">
+                                                    class="btn btn-light-info btn-sm mx-3 btn_tambah_boq">
                                                     <i class="fa-solid fa-plus"></i>Item Baru</a>
                                                 <div id="error-item"></div>
                                             </div>
@@ -264,21 +255,22 @@
                                     <div>
                                         <div class="d-flex justify-content-between mx-20">
                                             <div class="form-check form-check-custom form-check-success form-check-solid">
-                                                <input class="form-check-input" type="checkbox" value="0"
+                                                <input class="form-check-input" type="hidden"
                                                     id="is_draft" name="is_draft" />
-                                                <label class="form-check-label" for="is_draft">Next to Commercial</label>
-                                            </div>
-                                            <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Amount : Rp<span id="totalsum"></span></span>
+                                                {{-- <label class="form-check-label" for="is_draft">Next to Commercial</label> --}}
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-center mt-6">
                                             <div class=" me-5">
-                                                <a href="" class="btn btn-light-info">Discard</a>
+                                                <a href="" class="btn btn-light-danger">Discard</a>
                                             </div>
                                             <div class="me-5">
-                                                <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Submit</a>
+                                                <a id="submit-all-items" class="btn btn-light-info">Update</a>
                                             </div>
+                                            <div class="me-5">
+                                                <a id="publish-all-items" class="btn btn-info">Publish</a>
+                                            </div>
+                                            
                                         </div>
                                     </div>
 
@@ -298,77 +290,24 @@
     @endrole
 
     <script>
-        function validateAndFormatNumber(input) {
-            // Mengambil nilai input tanpa karakter non-digit
-            let inputValue = input.value.replace(/\D/g, '');
-
-            // Pastikan nilai input tidak kosong
-            if (inputValue.length > 0) {
-                // Pastikan nilai input tidak diawali dengan angka 0
-                if (inputValue[0] === '0') {
-                    // Jika nilai input diawali dengan angka 0, hapus angka 0 di awal
-                    inputValue = inputValue.slice(1);
-                }
-            }
-
-            // Mengatur nilai input kembali dengan angka yang telah diformat
-            input.value = inputValue;
-        };
-
-        //  function kalkulasi total di Modal
-        function calculateTotalAmount(totalElementId, modal) {
-            // Mengambil nilai dari masing-masing input menggunakan querySelector
-            const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${modal}']`).value);
-            const quantity = parseInt(document.querySelector(`[name='quantity_${modal}']`).value);
-            const purchaseDelivery = parseFloat(document.querySelector(`[name='purchase_delivery_${modal}']`).value);
-
-
-            // Cek jika nilai purchasePrice dan quantity adalah angka
-            if (isNaN(purchasePrice) || isNaN(quantity)) {
-                // Jika ada input yang belum diisi atau bukan angka, tampilkan hasil kosong dan return
-                document.getElementById(totalElementId).textContent = "";
-                const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                hiddenTotalInput.value = ""; // Set the hidden input value to empty string
-                return;
-            }
-
-            // Melakukan perhitungan total
-            let totalAmount = purchasePrice * quantity;
-
-            // Tambahkan purchaseDelivery ke totalAmount jika nilai purchaseDelivery adalah angka
-            if (!isNaN(purchaseDelivery)) {
-                totalAmount += purchaseDelivery;
-            }
-
-            // Cek jika totalAmount melebihi 12 karakter
-            // 9,007,199,254,740,991 maksimal karakter number
-            if (totalAmount.toString().length > 15) {
-                document.getElementById(totalElementId).textContent = "Melewati limit angka";
-                const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                hiddenTotalInput.value = ""; // Set the hidden input value to empty string
-                return;
-            }
-
-            // Menampilkan total dalam format dengan tanda titik setiap 3 digit dari kanan
-            const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
-
-            // Mengatur nilai total pada elemen dengan id 'totalDisplay'
-            document.getElementById(totalElementId).textContent = totalAmountWithCommas;
-
-            // Mengatur nilai total pada elemen dengan class 'total' (hidden input)
-            const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-            hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
-        }
-
         $(document).ready(function() {
+            $('#publish-all-items').on('click', function (e) {
+                e.preventDefault();
+
+                $('input[name="is_draft"]').val(0);
+
+                $('#submit-all-items').trigger('click');
+            })
+
             // function Submit BOQ page BENERAN wkwkw
             $('#submit-all-items').on('click', function(event) {
                 // event.preventDefault();
 
                 // Get Prospect ID and Survey ID from the HTML elements
+                var boq_id = $('input[name="boq_id"]').val();
                 var prospect_id = $('#prospect_id').val();
                 var survey_request_id = $('#survey_request_id').val();
-                var is_draft = $('#is_draft').is(':checked') ? 0 : 1;
+                var is_draft = $('#is_draft').val();
 
                 // Validate the prospect_id
                 if (!prospect_id) {
@@ -386,6 +325,7 @@
                 var items = [];
                 // Create an object to store prospect_id and survey_request_id
                 var boq = {
+                    boq_id: boq_id,
                     prospect_id: prospect_id,
                     survey_request_id: survey_request_id,
                     is_draft: is_draft
@@ -403,12 +343,13 @@
                     var item_detail = $(item).find(
                         'input[name="content[][item_detail]"]').val();
                     var quantity = $(item).find('input[name="content[][quantity]"]').val();
-                    var purchase_price = $(item).find(
-                        'input[name="content[][purchase_price]"]').val();
-                    var purchase_delivery = $(item).find(
-                        'input[name="content[][purchase_delivery]"]').val();
-                    var purchase_reference = $(item).find(
-                        'input[name="content[][purchase_reference]"]').val();
+                    var unit = $(item).find('input[name="content[][unit]"]').val();
+                    // var purchase_price = $(item).find(
+                    //     'input[name="content[][purchase_price]"]').val();
+                    // var purchase_delivery = $(item).find(
+                    //     'input[name="content[][purchase_delivery]"]').val();
+                    // var purchase_reference = $(item).find(
+                    //     'input[name="content[][purchase_reference]"]').val();
                     var total_price = $(item).find(
                         'input[name="content[][total_price]"]').val();
 
@@ -418,9 +359,10 @@
                         item_inventory_id: item_inventory_id,
                         item_detail: item_detail,
                         quantity: quantity,
-                        purchase_price: purchase_price,
-                        purchase_delivery: purchase_delivery,
-                        purchase_reference: purchase_reference,
+                        unit: unit,
+                        // purchase_price: purchase_price,
+                        // purchase_delivery: purchase_delivery,
+                        // purchase_reference: purchase_reference,
                         total_price: total_price
                     };
 
@@ -451,10 +393,14 @@
                     },
                     success: function(response) {
                         // Handle the response from the server, e.g., show a success message
-                        console.log(response);
+                        toastr.success(response.message);
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800);
                     },
                     error: function(error) {
                         // Handle errors if the request fails
+                        toastr.error(error.responseJSON.error);
                         console.error('Error submitting all item data: ', error);
                     }
                 });
@@ -467,13 +413,14 @@
                 console.log($(this).data('itemId'));
 
                 var quantity = $(this).data('quantity');
+                var unit = $(this).data('unit');
                 var total_price = ($(this).data('total_price'));
-                var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
-                var purchase_price = ($(this).data('purchase_price'));
-                var purchase_refrence = $(this).data('purchase_refrence');
+                // var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                // var purchase_price = ($(this).data('purchase_price'));
+                // var purchase_reference = $(this).data('purchase_reference');
                 var item_detail = ($(this).data('item_detail'));
                 // console.log(randomString, itemId, quantity, total_price, purchase_delivery_charge,
-                //     purchase_price, purchase_refrence, item_detail);
+                //     purchase_price, purchase_reference, item_detail);
 
                 $('#good_name_update').val(itemId).trigger('change');
 
@@ -482,11 +429,12 @@
                 $('#uniq_id').val(randomString);
 
                 $('#item_detail_update').val(item_detail);
-                $('#purchase_refrence_update').val(purchase_refrence);
-                $('#purchase_price_update').val(purchase_price);
-                $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
+                // $('#purchase_reference_update').val(purchase_reference);
+                // $('#purchase_price_update').val(purchase_price);
+                // $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
                 $('#total_price_update').val(total_price);
                 $('#quantity_update').val(quantity);
+                $('#unit_update').val(unit).trigger('change');
                 document.getElementById('total_update').textContent = total_price;
             });
 
@@ -520,18 +468,18 @@
                     good_name: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
                     },
-                    purchase_price: {
-                        required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
-                        minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
-                    },
+                    // purchase_price: {
+                    //     required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
+                    //     minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
+                    // },
                     quantity: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
                         minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
                     },
-                    purchase_delivery: {
-                        required: "<span class='fw-semibold fs-8 text-danger'>Jasa antar wajib diisi</span>",
-                        minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
-                    },
+                    // purchase_delivery: {
+                    //     required: "<span class='fw-semibold fs-8 text-danger'>Jasa antar wajib diisi</span>",
+                    //     minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
+                    // },
                 },
                 submitHandler: function(form) {
                     event.preventDefault();
@@ -564,33 +512,36 @@
                     data.attr({
                         'data-item-id': selectedItemId,
                         'data-quantity': formData.get('quantity_update'),
+                        'data-unit': formData.get('unit_update'),
                         'data-total_price': formData.get('total_update'),
-                        'data-purchase_delivery_charge': formData.get(
-                            'purchase_delivery_update'),
-                        'data-purchase_price': formData.get('purchase_price_update'),
-                        'data-purchase_refrence': formData.get('purchase_reference'),
+                        // 'data-purchase_delivery_charge': formData.get(
+                        //     'purchase_delivery_update'),
+                        // 'data-purchase_price': formData.get('purchase_price_update'),
+                        // 'data-purchase_reference': formData.get('purchase_reference'),
                         'data-item_detail': formData.get('item_detail')
                     });
 
                     data.data({
                         'item-id': selectedItemId,
                         'quantity': formData.get('quantity_update'),
+                        'unit': formData.get('unit_update'),
                         'total_price': formData.get('total_update'),
-                        'purchase_delivery_charge': formData.get('purchase_delivery_update'),
-                        'purchase_price': formData.get('purchase_price_update'),
-                        'purchase_refrence': formData.get('purchase_reference'),
+                        // 'purchase_delivery_charge': formData.get('purchase_delivery_update'),
+                        // 'purchase_price': formData.get('purchase_price_update'),
+                        // 'purchase_reference': formData.get('purchase_reference'),
                         'item_detail': formData.get('item_detail')
                     });
 
                     $('[name="content[][good_name]"]', item).val(itemName);
                     $('[name="content[][good_merk]"]', item).val(itemMerk);
-                    $('[name="content[][purchase_price]"]', item).val(formData.get(
-                        'purchase_price_update'));
+                    // $('[name="content[][purchase_price]"]', item).val(formData.get(
+                    //     'purchase_price_update'));
                     $('[name="content[][quantity]"]', item).val(formData.get('quantity_update'));
-                    $('[name="content[][purchase_delivery]"]', item).val(formData.get(
-                        'purchase_delivery_update'));
-                    $('[name="content[][purchase_reference]"]', item).val(formData.get(
-                        'purchase_reference'));
+                    $('[name="content[][unit]"]', item).val(formData.get('unit_update'));
+                    // $('[name="content[][purchase_delivery]"]', item).val(formData.get(
+                    //     'purchase_delivery_update'));
+                    // $('[name="content[][purchase_reference]"]', item).val(formData.get(
+                    //     'purchase_reference'));
                     $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
                     $('[name="content[][total_price]"]', item).val(formData.get('total_update'));
                     $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
@@ -653,18 +604,18 @@
                     good_name: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
                     },
-                    purchase_price: {
-                        required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
-                        minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
-                    },
+                    // purchase_price: {
+                    //     required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
+                    //     minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
+                    // },
                     quantity: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
                         minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
                     },
-                    purchase_delivery: {
-                        required: "<span class='fw-semibold fs-8 text-danger'>Jasa antar wajib diisi</span>",
-                        minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
-                    },
+                    // purchase_delivery: {
+                    //     required: "<span class='fw-semibold fs-8 text-danger'>Jasa antar wajib diisi</span>",
+                    //     minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
+                    // },
                 },
                 submitHandler: function(form) {
                     event.preventDefault();
@@ -688,57 +639,60 @@
                     var formData = new FormData(form);
 
                     var newItem = `
-                    <div class="file-soft-boq-item-${random_string} d-flex justify-content-between mx-20 mb-5 mt-10">
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                    <div class="file-soft-boq-item-${random_string} d-flex justify-content-between mx-20 mb-5 mt-10 row">
+                        <div class="col-lg-3">
                             <label for="" class="form-label">Item</label>
                             <input type="text" class="form-control form-control-solid" name="content[][good_name]" value="${itemName}" />
                         </div>
                         
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                            <label for="" class="form-label">Merk</label>
+                        <div class="col-lg-3">
+                            <label class="form-label">Merk</label>
                             <div class="position-relative">
                                 <div class="position-absolute top-0"></div>
                                 <input type="text" class="form-control form-control-solid" name="content[][good_merk]" value="${itemMerk}" />
                             </div>
                         </div>
-
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                            <label for="" class="form-label">Price</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
-                            </div>
-                        </div>
-
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                        `+
+                        // <div class="col-lg-3">
+                        //     <label for="" class="form-label">Price</label>
+                        //     <div class="position-relative">
+                        //         <div class="position-absolute top-0"></div>
+                        //         <input type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
+                        //     </div>
+                        // </div>
+                        `
+                        <div class="col-lg-3">
                             <label for="" class="form-label">Qty</label>
                             <div class="position-relative">
                                 <div class="position-absolute top-0"></div>
                                 <input type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity_tambah')}" />
                             </div>
                         </div>
-
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                            <label for="" class="form-label">Jasa Antar</label>
+                        <div class="col-lg-2">
+                            <label for="" class="form-label">Tipe Unit</label>
                             <div class="position-relative">
                                 <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
-                                </div>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between" style="flex-basis: 28%; min-width: 150px; margin: 10px;">
-                            <div style="flex-basis: 80%; min-width: 120px;">
-                                <label for="" class="form-label">Total Price</label>
-                                <div class="position-relative">
-                                    <div class="position-absolute top-0"></div>
-                                    <input type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total_tambah')}" />
-                                </div>
+                                <input type="text" class="form-control form-control-solid" name="content[][unit]" value="${formData.get('unit')}" />
                             </div>
-                            <div class="d-flex justify-content-center align-items-center" style="flex-basis: 14%; min-width: 30px;">
-                
-                                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </button>
+                        </div>
+                        `+
+                        // <div class="col-lg-3">
+                        //     <label for="" class="form-label">Jasa Antar</label>
+                        //     <div class="position-relative">
+                        //         <div class="position-absolute top-0"></div>
+                        //         <input type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
+                        //         </div>
+                        // </div>
+                        `
+                        <div class="col-lg-1 d-flex justify-content-center align-items-center">
+                                <div class="my-auto">
+                                    <div class="h-20px"></div>
+                                    <button type="button"
+                                        class="btn btn-secondary btn-icon btn-sm"
+                                        data-kt-menu-placement="bottom-end"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
                                 
                                     <ul class="dropdown-menu">
                                         <li type="button" class="btn-update-boq-modal" 
@@ -746,10 +700,13 @@
                                             data-item-id="${formData.get('good_name')}"
 
                                             data-quantity="${formData.get('quantity_tambah')}"
+                                            data-unit="${formData.get('unit')}"
                                             data-total_price="${formData.get('total_tambah')}"
-                                            data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
-                                            data-purchase_price="${formData.get('purchase_price_tambah')}"
-                                            data-purchase_refrence="${formData.get('purchase_reference')}"
+                                            `+
+                                            // data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
+                                            // data-purchase_price="${formData.get('purchase_price_tambah')}"
+                                            // data-purchase_reference="${formData.get('purchase_reference')}"
+                                            `
                                             data-item_detail="${formData.get('item_detail')}"">                                            
                                             
                                             <a class="dropdown-item py-2">
@@ -784,15 +741,16 @@
                         var randomString = $(this).data('random-string');
                         var itemId = parseInt($(this).data('item-id'));
                         var quantity = $(this).data('quantity');
+                        var unit = $(this).data('unit');
                         var total_price = $(this).data('total_price');
-                        var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
-                        var purchase_price = $(this).data('purchase_price');
-                        var purchase_refrence = $(this).data('purchase_refrence');
+                        // var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                        // var purchase_price = $(this).data('purchase_price');
+                        // var purchase_reference = $(this).data('purchase_reference');
                         var item_detail = $(this).data('item_detail');
 
-                        console.log(randomString, itemId, quantity, total_price,
-                            purchase_delivery_charge,
-                            purchase_price, purchase_refrence, item_detail);
+                        // console.log(randomString, itemId, quantity, total_price,
+                        //     purchase_delivery_charge,
+                        //     purchase_price, purchase_reference, item_detail);
 
                         $('#good_name_update').val(itemId).trigger('change');
 
@@ -801,11 +759,12 @@
                         $('#uniq_id').val(randomString);
 
                         $('#item_detail_update').val(item_detail);
-                        $('#purchase_refrence_update').val(purchase_refrence);
-                        $('#purchase_price_update').val(purchase_price);
-                        $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
+                        // $('#purchase_reference_update').val(purchase_reference);
+                        // $('#purchase_price_update').val(purchase_price);
+                        // $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
                         $('#total_price_update').val(total_price);
                         $('#quantity_update').val(quantity);
+                        $('#unit_update').val(unit).trigger('change');
                         document.getElementById('total_update').textContent = total_price;
                     });
 

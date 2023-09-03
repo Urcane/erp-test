@@ -13,24 +13,33 @@ class CreateAllInventoryMigrationTable extends Migration
      */
     public function up()
     {
-        
+        Schema::create('inventory_unit_masters', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50);
+            $table->char('code', 10)->unique();
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
 
         Schema::create('inventory_good_categories', function (Blueprint $table) {
-            $table->id()->index();
+            $table->id();
             $table->string('name');
             $table->string('description');
             $table->string('code_name');
+            $table->softDeletes()->index();
             $table->timestamps();
         });
 
         Schema::create('inventory_goods', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('good_category_id')->constrained('inventory_good_categories')->cascadeOnDelete();
+            $table->foreignId('good_category_id')->constrained('inventory_good_categories');
             $table->string('good_name');
+            $table->string('good_type')->nullable()->index();
             $table->string('code_name');
-            $table->string('merk');
-            $table->string('good_type');
-            $table->string('description');
+            $table->string('spesification')->nullable();
+            $table->string('merk')->nullable()->index();
+            $table->string('description')->nullable();
+            $table->softDeletes()->index();
             $table->timestamps();
         });
     }
@@ -44,5 +53,7 @@ class CreateAllInventoryMigrationTable extends Migration
     {
         Schema::dropIfExists('inventory_goods');
         Schema::dropIfExists('inventory_good_categories');
+        Schema::dropIfExists('inventory_unit_masters');
+
     }
 }

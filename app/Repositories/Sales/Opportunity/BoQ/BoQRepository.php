@@ -12,6 +12,7 @@ use App\Services\Master\Inventory\InventoryService;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Nette\Utils\Json;
 
 //use Your Model
@@ -40,7 +41,7 @@ class BoQRepository
     }
 
     function getAll(Request $request){
-        $dataBoq = $this->model->with(['sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
+        $dataBoq = $this->model;
 
         if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'true' ) {
             $dataBoq->where('is_draft',1)->wherenull('is_done');
@@ -64,7 +65,7 @@ class BoQRepository
         if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'false') {
             $dataBoq->where('is_done',0);
         }
-        return $dataBoq;
+        return $dataBoq->with([  'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
     }  
     
     function getProspect()  {
@@ -82,17 +83,18 @@ class BoQRepository
     function saveAndStoreBoq(Request $request) : JsonResponse {
         try {
             DB::beginTransaction();
+            $boq_id = $request->input('boq.boq_id');
             $prospect_id = $request->input('boq.prospect_id');
             $survey_request_id = $request->input('boq.survey_request_id');
             $is_draft = $request->input('boq.is_draft', 1);
             $sales_id = $request->input('boq.sales_id');
             $technician_id = $request->input('boq.technician_id');
             $procurement_id = $request->input('boq.procurement_id');
-            $gpm = $request->input('boq.gpm');
-            $modal = $request->input('boq.modal');
-            $npm = $request->input('boq.npm');
-            $percentage = $request->input('boq.percentage');
-            $manpower = $request->input('boq.manpower');
+            $gpm = $request->input('boq.gpm', 0);
+            $modal = $request->input('boq.modal', 0);
+            $npm = $request->input('boq.npm', 0);
+            $percentage = $request->input('boq.percentage', 0);
+            $manpower = $request->input('boq.manpower', 0);
             $is_final = $request->input('boq.is_final', 0);
 
             $itemableBoqIsDraft = ItemableBillOfQuantity::where([
@@ -108,10 +110,11 @@ class BoQRepository
 
             $itemableBoq = ItemableBillOfQuantity::updateOrCreate(
                 [
-                    'prospect_id' => $prospect_id, 
-                    'survey_request_id' => $survey_request_id,
+                    'id' => $boq_id,
                 ],
                 [
+                    'prospect_id' => $prospect_id, 
+                    'survey_request_id' => $survey_request_id,
                     'sales_id' => $sales_id,
                     'technician_id' => $technician_id,
                     'procurement_id' => $procurement_id,
@@ -121,6 +124,7 @@ class BoQRepository
                     'percentage' => $percentage,
                     'manpower' => $manpower,
                     'is_final' => $is_final,
+                    'reference_boq_id' => $boq_id,
                     'is_draft' => $is_draft,
                     'reference_boq_id' => 1,
                 ]
@@ -144,11 +148,8 @@ class BoQRepository
                     }
                     $data = [
                         'quantity' => $itemData['quantity'],
-                        'purchase_price' => $itemData['purchase_price'],
-                        'total_price' => $itemData['total_price'],
-                        'purchase_delivery_charge' => $itemData['purchase_delivery'],
-                        'purchase_refrence' => $itemData['purchase_reference'],
-                        'item_inventory_id' => $itemData['item_inventory_id'],
+                        'unit' => $itemData['unit'],
+                        'inventory_good_id' => $itemData['item_inventory_id'],
                         'item_detail' => $itemData['item_detail'],
                     ];
                     $itemableBoq->itemable()->updateOrCreate($criteria, $data);
@@ -160,6 +161,7 @@ class BoQRepository
             
         }catch (\Exception $e) { 
             DB::rollback();
+            Log::error($e);
             return response()->json(['error' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
     }
@@ -253,7 +255,7 @@ class BoQRepository
                         'purchase_price' => $itemData['purchase_price'],
                         'total_price' => $itemData['total_price'],
                         'purchase_delivery_charge' => $itemData['purchase_delivery'],
-                        'purchase_refrence' => $itemData['purchase_reference'],
+                        'purchase_reference' => $itemData['purchase_reference'],
                         'item_inventory_id' => $itemData['item_inventory_id'],
                         'item_detail' => $itemData['item_detail'],
                     ]);
@@ -284,6 +286,7 @@ class BoQRepository
 
         return [
             'dataCompanyItem' => $dataCompanyItem,
+            'dataBoq' => $boqData,
             'dataForm' => $dataForm,
             'dataSales' => $dataSales,
             'dataSalesSelected' => $dataSalesSelected,
