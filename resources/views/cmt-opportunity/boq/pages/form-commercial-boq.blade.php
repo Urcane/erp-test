@@ -43,7 +43,7 @@
                                     <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Commercial Bill of Quantity</span>
                                 </div>
                                 <div class="form-check form-check-custom form-check-success form-check-solid">
-                                    <input class="form-check-input" type="checkbox" value="1" id="is_final"
+                                    <input class="form-check-input" type="hidden" value="0" id="is_final"
                                         name="is_final" />
                                     <label class="form-check-label" for="is_final">Finalisasi</label>
                                 </div>
@@ -340,6 +340,26 @@
                                                                                 <i class="fa-solid fa-edit me-3"></i>Edit
                                                                                 Item</a>
                                                                         </li>
+                                                                        <li type="button" class="btn-update-price-modal"
+                                                                            data-random-string="{{ $random_string }}"
+                                                                            data-item-id="{{ $relatedItem->inventory_good_id }}"
+                                                                            data-quantity="{{ $relatedItem->quantity }}"
+                                                                            data-unit="{{ $relatedItem->unit }}"
+                                                                            data-total_price="{{ $relatedItem->total_price }}"
+                                                                            data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
+                                                                            data-purchase_price="{{ $relatedItem->purchase_price }}"
+                                                                            data-purchase_reference="{{ $relatedItem->purchase_reference }}"
+                                                                            data-item_detail="{{ $relatedItem->item_detail }}"
+                                                                            data-delivery_route="{{ $relatedItem->delivery_route }}"
+                                                                            data-delivery_type="{{ $relatedItem->delivery_type }}"
+                                                                            data-purchase_from="{{ $relatedItem->purchase_from }}"
+                                                                            data-payment_type="{{ $relatedItem->payment_type }}"
+                                                                            data-purchase_validity="{{ $relatedItem->purchase_validity }}"
+                                                                            >
+                                                                            <a class="dropdown-item py-2">
+                                                                                <i class="fa-solid fa-edit me-3"></i>Edit Harga
+                                                                                Item</a>
+                                                                        </li>
                                                                         <li type="button" class="clear-soft-survey-item"
                                                                             data-random-string="{{ $random_string }}">
                                                                             <a class="dropdown-item py-2">
@@ -360,6 +380,21 @@
                                                             <input type="hidden" name="content[][purchase_reference]"
                                                                 disabled
                                                                 value="{{ $relatedItem->purchase_reference ?? null }}" />
+                                                            <input type="hidden" name="content[][delivery_route]"
+                                                                disabled
+                                                                value="{{ $relatedItem->delivery_route ?? null }}" />
+                                                            <input type="hidden" name="content[][delivery_type]"
+                                                                disabled
+                                                                value="{{ $relatedItem->delivery_type ?? null }}" />
+                                                            <input type="hidden" name="content[][purchase_from]"
+                                                                disabled
+                                                                value="{{ $relatedItem->purchase_from ?? null }}" />
+                                                            <input type="hidden" name="content[][payment_type]"
+                                                                disabled
+                                                                value="{{ $relatedItem->payment_type ?? null }}" />
+                                                            <input type="hidden" name="content[][purchase_validity]"
+                                                                disabled
+                                                                value="{{ $relatedItem->purchase_validity ?? null }}" />
                                                             <input type="hidden" name="content[][item_detail]" disabled
                                                                 value="{{ $relatedItem->item_detail ?? null }}" />
                                                         </div>
@@ -388,10 +423,13 @@
                                         </div>
                                         <div class="d-flex justify-content-center mt-6">
                                             <div class=" me-5">
-                                                <a href="" class="btn btn-light-info">Discard</a>
+                                                <a href="" class="btn btn-light-danger">Discard</a>
                                             </div>
                                             <div class="me-5">
-                                                <button type="button" id="submit-all-items" class="btn btn-info">Submit</button>
+                                                <button id="submit-all-items" type="button" class="btn btn-light-info">Update</button>
+                                            </div>
+                                            <div class="me-5">
+                                                <button id="finalize-all-items" type="button" class="btn btn-info">Final</button>
                                             </div>
                                         </div>
                                     </div>
@@ -408,10 +446,19 @@
         @role('administrator')
             @include('cmt-opportunity.boq.add.modal-tambah-boq')
             @include('cmt-opportunity.boq.add.modal-update-boq')
+            @include('cmt-opportunity.boq.add.modal-update-price')
         @endrole
 
         <script>
             $(document).ready(function() {
+                $('#finalize-all-items').on('click', function (e) {
+                    e.preventDefault();
+
+                    $('input[name="is_final"]').val(1);
+
+                    $('#submit-all-items').trigger('click');
+                })
+
                 // function Submit BOQ page BENERAN wkwkw
                 $('#submit-all-items').on('click', function(event) {
                     // event.preventDefault();
@@ -431,7 +478,7 @@
                     var manpower = $('#manpower').val();
                     var percentage = $('#percentage').val();
 
-                    var is_final = $('#is_final').is(':checked') ? 1 : 0;
+                    var is_final = $('#is_final').val();
 
                     // Validate the prospect_id
                     // if (!prospect_id) {
@@ -483,6 +530,16 @@
                             'input[name="content[][purchase_delivery]"]').val();
                         var purchase_reference = $(item).find(
                             'input[name="content[][purchase_reference]"]').val();
+                        var delivery_route = $(item).find(
+                            'input[name="content[][delivery_route]"]').val();
+                        var delivery_type = $(item).find(
+                            'input[name="content[][delivery_type]"]').val();
+                        var purchase_from = $(item).find(
+                            'input[name="content[][purchase_from]"]').val();
+                        var payment_type = $(item).find(
+                            'input[name="content[][payment_type]"]').val();
+                        var purchase_validity = $(item).find(
+                            'input[name="content[][purchase_validity]"]').val();
                         var total_price = $(item).find(
                             'input[name="content[][total_price]"]').val();
 
@@ -496,6 +553,11 @@
                             purchase_price: purchase_price,
                             purchase_delivery: purchase_delivery,
                             purchase_reference: purchase_reference,
+                            delivery_route: delivery_route,
+                            delivery_type: delivery_type,
+                            purchase_from: purchase_from,
+                            payment_type: payment_type,
+                            purchase_validity: purchase_validity,
                             total_price: total_price
                         };
 
@@ -526,9 +588,18 @@
                         },
                         success: function(response) {
                             toastr.success(response.message);
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 800);
+
+                            if (response.data.is_final == 1) {
+                                setTimeout(() => {
+                                    window.location.href = `cmt-boq/on-review-boq?boq_id=${response.data.id}`;
+                                }, 800);                                
+                            } else {
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 800);
+                            }
+
+                            
                         },
                         error: function(error) {
                             toastr.error(error.responseJSON.error);
@@ -541,7 +612,6 @@
                 $('.btn-update-boq-modal').on('click', function() {
                     var randomString = $(this).data('random-string');
                     var itemId = parseInt($(this).data('itemId'));
-                    console.log($(this).data('itemId'));
 
                     var quantity = $(this).data('quantity');
                     var unit = $(this).data('unit');
@@ -569,6 +639,47 @@
                     document.getElementById('total_update').textContent = total_price;
                 });
 
+                $('.btn-update-price-modal').on('click', function() {
+                    var randomString = $(this).data('random-string');
+                    var itemId = parseInt($(this).data('itemId'));
+                    console.log($(this).data('itemId'));
+
+                    var quantity = $(this).data('quantity');
+                    var unit = $(this).data('unit');
+                    var total_price = ($(this).data('total_price'));
+                    var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                    var purchase_price = ($(this).data('purchase_price'));
+                    var purchase_reference = $(this).data('purchase_reference');
+                    var item_detail = ($(this).data('item_detail'));
+                    var delivery_route = ($(this).data('delivery_route'));
+                    var delivery_type = ($(this).data('delivery_type'));
+                    var purchase_from = ($(this).data('purchase_from'));
+                    var payment_type = ($(this).data('payment_type'));
+                    var purchase_validity = ($(this).data('purchase_validity'));
+                    // console.log(randomString, itemId, quantity, total_price, purchase_delivery_charge,
+                    //     purchase_price, purchase_reference, item_detail);
+
+                    $('#good_name_update_price').val(itemId).trigger('change');
+
+                    $('#kt_modal_update_price').modal('show');
+
+                    $('#uniq_id_price').val(randomString);
+
+                    $('#item_detail_update_price').val(item_detail);
+                    $('#purchase_from_update_price').val(purchase_from);
+                    $('#delivery_route_update_price').val(delivery_route);
+                    $('#delivery_type_update_price').val(delivery_type);
+                    $('#payment_type_update_price').val(payment_type);
+                    $('#purchase_validity_update_price').val(purchase_validity);
+                    $('#purchase_reference_update_price').val(purchase_reference);
+                    $('#purchase_price_update_price').val(purchase_price);
+                    $('#purchase_delivery_charge_update_price').val(purchase_delivery_charge);
+                    $('#total_price_update_price').val(total_price);
+                    $('#quantity_update_price').val(quantity);
+                    $('#unit_update_price').val(unit).trigger('change');
+                    document.getElementById('total_update_price').textContent = total_price;
+                });
+
                 // Handler untuk peristiwa "change" pada select item
                 $('#good_name_update').on('change', function() {
                     var selectedItemId = $(this).val();
@@ -593,6 +704,29 @@
                     });
                 });
 
+                $('#good_name_update_price').on('change', function() {
+                    var selectedItemId = $(this).val();
+                    var url = $(this).data('url');
+
+                    // Mengirim permintaan asinkron menggunakan AJAX untuk mendapatkan data jenis dan merek item
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        data: {
+                            item_id: selectedItemId
+                        }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
+                        success: function(response) {
+                            console.log(response);
+                            $('#good_type_update_price').val(response.good_type).prop('disabled', true);
+                            $('#merk_update_price').val(response.merk).prop('disabled', true);
+                            $('#detail_update_price').val(response.description).prop('disabled', true);
+                        },
+                        error: function(error) {
+                            console.log(error);
+                        }
+                    });
+                });
+
                 // Funcion Submit Update BOQ 
                 $("#kt_modal_update_boq_form").validate({
                     messages: {
@@ -609,10 +743,6 @@
                         },
                         unit: {
                             required: "<span class='fw-semibold fs-8 text-danger'>Unit wajib diisi</span>",
-                        },
-                        purchase_delivery: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Jasa antar wajib diisi</span>",
-                            minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
                         },
                     },
                     submitHandler: function(form) {
@@ -693,6 +823,118 @@
                     }
                 });
 
+                $("#kt_modal_update_price_form").validate({
+                    messages: {
+                        good_name: {
+                            required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
+                        },
+                        purchase_price: {
+                            required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
+                            minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
+                        },
+                        quantity: {
+                            required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
+                            minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
+                        },
+                        unit: {
+                            required: "<span class='fw-semibold fs-8 text-danger'>Unit wajib diisi</span>",
+                        },
+                    },
+                    submitHandler: function(form) {
+                        event.preventDefault();
+
+                        // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
+                        var selectedItemId = $('#good_name_update_price').val();
+                        var itemName = $('#good_name_update_price option:selected').text();
+                        var itemMerk = $('#merk_update_price').val();
+
+                        // Membuat elemen input tersembunyi untuk nama barang
+                        var itemNameInput = $('<input>').attr({
+                            type: 'text',
+                            name: 'content[][good_name]',
+                            value: itemName
+                        });
+
+                        // Menambahkan elemen input tersembunyi ke dalam form
+                        $(form).append(itemNameInput);
+
+                        var formData = new FormData(form);
+
+                        const uniq_id = formData.get('uniq_id_price');
+
+                        const item = document.querySelectorAll(
+                            `.MultipleItem .file-soft-boq-item-${uniq_id}`);
+
+                        let data = $(`.btn-update-price-modal[data-random-string="${uniq_id}"]`);
+
+                        // Mengatur ulang atribut-atribut elemen <li> berdasarkan formData
+                        data.attr({
+                            'data-item-id': selectedItemId,
+                            'data-quantity': formData.get('quantity_update_price'),
+                            'data-unit': formData.get('unit_update_price'),
+                            'data-total_price': formData.get('total_update_price'),
+                            'data-purchase_delivery_charge': formData.get(
+                                'purchase_delivery_update_price'),
+                            'data-purchase_price': formData.get('purchase_price_update_price'),
+                            'data-purchase_reference': formData.get('purchase_reference'),
+                            'data-item_detail': formData.get('item_detail'),
+                            'data-delivery_route': formData.get('delivery_route'),
+                            'data-delivery_type': formData.get('delivery_type'),
+                            'data-purchase_from': formData.get('purchase_from'),
+                            'data-payment_type': formData.get('payment_type'),
+                            'data-purchase_validity': formData.get('purchase_validity'),
+                        });
+
+                        data.data({
+                            'item-id': selectedItemId,
+                            'quantity': formData.get('quantity_update_price'),
+                            'unit': formData.get('unit_update_price'),
+                            'total_price': formData.get('total_update_price'),
+                            'purchase_delivery_charge': formData.get('purchase_delivery_update_price'),
+                            'purchase_price': formData.get('purchase_price_update_price'),
+                            'purchase_reference': formData.get('purchase_reference'),
+                            'item_detail': formData.get('item_detail'),
+                            'delivery_route': formData.get('delivery_route'),
+                            'delivery_type': formData.get('delivery_type'),
+                            'purchase_from': formData.get('purchase_from'),
+                            'payment_type': formData.get('payment_type'),
+                            'purchase_validity': formData.get('purchase_validity'),
+                        });
+
+                        $('[name="content[][good_name]"]', item).val(itemName);
+                        $('[name="content[][good_merk]"]', item).val(itemMerk);
+                        $('[name="content[][purchase_price]"]', item).val(formData.get(
+                            'purchase_price_update_price'));
+                        $('[name="content[][quantity]"]', item).val(formData.get('quantity_update_price'));
+                        $('[name="content[][unit]"]', item).val(formData.get('unit_update_price'));
+                        $('[name="content[][purchase_delivery]"]', item).val(formData.get(
+                            'purchase_delivery_update_price'));
+                        $('[name="content[][purchase_reference]"]', item).val(formData.get(
+                            'purchase_reference'));
+
+                        $('[name="content[][delivery_route]"]', item).val(formData.get('delivery_route'));
+                        $('[name="content[][delivery_type]"]', item).val(formData.get('delivery_type'));
+                        $('[name="content[][purchase_from]"]', item).val(formData.get('purchase_from'));
+                        $('[name="content[][payment_type]"]', item).val(formData.get('payment_type'));
+                        $('[name="content[][purchase_validity]"]', item).val(formData.get('purchase_validity'));
+                        
+                        $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
+                        $('[name="content[][total_price]"]', item).val(formData.get('total_update_price'));
+                        $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
+
+                        // Hapus elemen itemNameInput dari formulir
+                        itemNameInput.remove();
+
+                        // Bersihkan input setelah item ditambahkan
+                        form.reset();
+
+                        // // Tutup modal
+                        $('#kt_modal_update_price').modal('hide');
+
+                        updateTotalSum();
+                    }
+                });
+
 
                 // Function Tambah BOQ modal
                 $('#btn-tambah-boq').on('click', '.btn_tambah_boq', function() {
@@ -748,10 +990,6 @@
                         },
                         unit: {
                             required: "<span class='fw-semibold fs-8 text-danger'>unit wajib diisi</span>",
-                        },
-                        purchase_delivery: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Jasa antar wajib diisi</span>",
-                            minlength: "<span class='fw-semibold fs-8 text-danger'>Jasa Antar minimal memiliki 3 Angka</span>",
                         },
                     },
                     submitHandler: function(form) {
@@ -846,6 +1084,21 @@
                                                 <a class="dropdown-item py-2">
                                                 <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
                                             </li>
+                                            <li type="button" class="btn-update-price-modal" 
+                                                data-random-string="${random_string}" 
+                                                data-item-id="${formData.get('good_name')}"
+
+                                                data-quantity="${formData.get('quantity_tambah')}"
+                                                data-unit="${formData.get('unit')}"
+                                                data-total_price="${formData.get('total_tambah')}"
+                                                data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
+                                                data-purchase_price="${formData.get('purchase_price_tambah')}"
+                                                data-purchase_reference="${formData.get('purchase_reference')}"
+                                                data-item_detail="${formData.get('item_detail')}"">                                            
+                                                
+                                                <a class="dropdown-item py-2">
+                                                <i class="fa-solid fa-edit me-3"></i>Edit Harga Item</a>                                       
+                                            </li>
                                             <li type="button" class="clear-soft-survey-item-${random_string}"
                                                 data-random-string="${random_string}">
                                                 <a class="dropdown-item py-2">
@@ -858,6 +1111,11 @@
                         <div>
                             <input type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
                             <input type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
+                            <input type="hidden" name="content[][delivery_route]" value="${formData.get('delivery_route')}" disabled>
+                            <input type="hidden" name="content[][delivery_type]" value="${formData.get('delivery_type')}" disabled>
+                            <input type="hidden" name="content[][purchase_from]" value="${formData.get('purchase_from')}" disabled>
+                            <input type="hidden" name="content[][payment_type]" value="${formData.get('payment_type')}" disabled>
+                            <input type="hidden" name="content[][purchase_validity]" value="${formData.get('purchase_validity')}" disabled>
                             <input type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
                         </div>
                     </div>`;
@@ -901,6 +1159,38 @@
                             $('#quantity_update').val(quantity);
                             $('#unit_update').val(unit).trigger('change');
                             document.getElementById('total_update').textContent = total_price;
+                        });
+
+                        $('.MultipleItem').on('click', '.btn-update-price-modal', function() {
+
+                            var randomString = $(this).data('random-string');
+                            var itemId = parseInt($(this).data('item-id'));
+                            var quantity = $(this).data('quantity');
+                            var unit = $(this).data('unit');
+                            var total_price = $(this).data('total_price');
+                            var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                            var purchase_price = $(this).data('purchase_price');
+                            var purchase_reference = $(this).data('purchase_reference');
+                            var item_detail = $(this).data('item_detail');
+
+                            console.log(randomString, itemId, quantity, total_price,
+                                purchase_delivery_charge,
+                                purchase_price, purchase_reference, item_detail);
+
+                            $('#good_name_update_price').val(itemId).trigger('change');
+
+                            $('#kt_modal_update_price').modal('show');
+
+                            $('#uniq_id_price').val(randomString);
+
+                            $('#item_detail_update_price').val(item_detail);
+                            $('#purchase_reference_update_price').val(purchase_reference);
+                            $('#purchase_price_update_price').val(purchase_price);
+                            $('#purchase_delivery_charge_update_price').val(purchase_delivery_charge);
+                            $('#total_price_update_price').val(total_price);
+                            $('#quantity_update_price').val(quantity);
+                            $('#unit_update_price').val(unit).trigger('change');
+                            document.getElementById('total_update_price').textContent = total_price;
                         });
 
                         // Tambahkan item baru ke div "MultipleItem"

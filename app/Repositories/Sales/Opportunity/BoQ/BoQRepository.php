@@ -10,7 +10,10 @@ use App\Models\Customer\CustomerProspect;
 use App\Models\Opportunity\Survey\SurveyRequest;
 use App\Services\Master\Inventory\InventoryService;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
+use App\Models\Opportunity\BoQ\ItemablePriceRequest;
 use App\Models\User;
+use App\Repositories\Sales\Opportunity\PriceRequest\PriceRequestRepository;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Nette\Utils\Json;
@@ -125,11 +128,13 @@ class BoQRepository
                     'manpower' => $manpower,
                     'is_final' => $is_final,
                     'reference_boq_id' => $boq_id,
-                    'is_draft' => $is_draft,
-                    'reference_boq_id' => 1,
+                    'is_draft' => $is_draft ?? 1,
+                    // 'reference_boq_id' => 1,
                 ]
             );
-            $itemableBoq->reference_boq_id = $itemableBoq->id;
+
+            $itemablePriceRequest = PriceRequestRepository::storeFromBoq($itemableBoq);
+            // $itemableBoq->reference_boq_id = $itemableBoq->id;
 
             if (isset($itemableBoq->id)) {
                 $itemIds = Item::where('itemable_id', $itemableBoq->id)->pluck('id')->toArray();
@@ -146,9 +151,19 @@ class BoQRepository
                     if (isset($itemData['id'])) {
                         $criteria['id'] = $itemData['id'];
                     }
+
                     $data = [
                         'quantity' => $itemData['quantity'],
                         'unit' => $itemData['unit'],
+                        'purchase_price' => $itemData['purchase_price'] ?? 0,
+                        'total_price' => (($itemData['purchase_price'] ?? 0) * $itemData['quantity']) + ($itemData['purchase_delivery'] ?? 0),
+                        'purchase_delivery_charge' => $itemData['purchase_delivery'] ?? 0,
+                        'purchase_reference' => $itemData['purchase_reference'] ?? null,
+                        'delivery_route' => $itemData['delivery_route'] ?? null,
+                        'delivery_type' => $itemData['delivery_type'] ?? null,
+                        'purchase_from' => $itemData['purchase_from'] ?? null,
+                        'payment_type' => $itemData['payment_type'] ?? null,
+                        'purchase_validity' => $itemData['purchase_validity'] ?? null,
                         'inventory_good_id' => $itemData['item_inventory_id'],
                         'item_detail' => $itemData['item_detail'],
                     ];
@@ -157,7 +172,7 @@ class BoQRepository
             }
             $itemableBoq->save();
             DB::commit();
-            return response()->json(['message' => 'BoQ berhasil disimpan.'], 200);
+            return response()->json(['message' => 'BoQ berhasil disimpan.', 'data' => $itemableBoq], 200);
             
         }catch (\Exception $e) { 
             DB::rollback();

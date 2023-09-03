@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Http\Requests\Opportunity\Survey\SurveyRequest;
+use App\Models\Opportunity\Quotation\ItemableQuotationPart;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ItemableBillOfQuantity extends Model
 {
@@ -54,5 +56,29 @@ class ItemableBillOfQuantity extends Model
 
     function childItemableBillOfQuantity() : HasOne{
         return $this->hasOne(this::class, 'reference_bill_of_quantity_id', 'id');
+    }
+
+    function priceRequests() : HasMany {
+        return $this->hasMany(ItemablePriceRequest::class);
+    }
+
+    function scopeDraft() : ItemableBillOfQuantity {
+        return $this->where('is_draft', 1)->doesnthave('priceRequests');
+    }
+
+    function scopePublish() : ItemableBillOfQuantity {
+        return $this->where('is_draft', 0)->has('priceRequests');
+    }
+    
+    function scopeOnReview() : ItemableBillOfQuantity {
+        return $this->where('is_draft', 0)->where('is_final', 1)->has('priceRequests');
+    }
+
+    function scopeDone() : ItemablePriceRequest {
+        return $this->where('is_done', 1)->where(function($query) {
+            $query->where('approval_manager', 1)
+                  ->orWhere('approval_director', 1)
+                  ->orWhere('approval_finman', 1);
+        });
     }
 }
