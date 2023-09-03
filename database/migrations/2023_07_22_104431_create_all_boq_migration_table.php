@@ -37,8 +37,10 @@ class CreateAllBoqMigrationTable extends Migration
                 ->comment('status with char(2), example: DN = Done, PR = In Progress, FR = Freeze, PD = Pending');
             $table->foreign('status')->references('code')->on('work_statuses');
             $table->foreignId('procurement_id')->nullable()->constrained('users');
-            $table->boolean('approval_manager')->nullable();
-            $table->dateTime('approval_manager_date')->nullable();
+            $table->boolean('approval_manager_sales')->nullable();
+            $table->dateTime('approval_manager_sales_date')->nullable();
+            $table->boolean('approval_manager_operation')->nullable();
+            $table->dateTime('approval_manager_operation_date')->nullable();
             $table->boolean('approval_director')->nullable();
             $table->dateTime('approval_director_date')->nullable();
             $table->boolean('approval_finman')->nullable();
@@ -62,8 +64,10 @@ class CreateAllBoqMigrationTable extends Migration
             $table->boolean('is_done')->nullable();
             $table->boolean('is_final')->default(0);
             $table->string('remark')->nullable();
-            $table->boolean('approval_manager')->nullable();
-            $table->date('approval_manager_date')->nullable();
+            $table->boolean('approval_manager_sales')->nullable();
+            $table->dateTime('approval_manager_sales_date')->nullable();
+            $table->boolean('approval_manager_operation')->nullable();
+            $table->dateTime('approval_manager_operation_date')->nullable();
             $table->boolean('approval_director')->nullable();
             $table->date('approval_director_date')->nullable();
             $table->boolean('approval_finman')->nullable();

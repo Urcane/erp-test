@@ -50,11 +50,19 @@
                             </div>
 
                             <div class="card-toolbar p-3">
-                                <a href="#kt_modal_review_manager_boq_commercial"
+                                <a href="#kt_modal_review_manager_sales_boq_commercial"
                                     data-boq-id="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}"
                                     data-remark="{{ $updateDraftBoqData['dataCompanyItem'][0]->remark }}"
-                                    class="btn btn-md btn-info w-lg-150px btn_review_manager_boq_commercial"
-                                    data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager</a>
+                                    class="btn btn-md btn-info w-lg-150px btn_review_manager_sales_boq_commercial"
+                                    data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Sales</a>
+                            </div>
+
+                            <div class="card-toolbar p-3">
+                                <a href="#kt_modal_review_manager_operation_boq_commercial"
+                                    data-boq-id="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}"
+                                    data-remark="{{ $updateDraftBoqData['dataCompanyItem'][0]->remark }}"
+                                    class="btn btn-md btn-info w-lg-150px btn_review_manager_operation_boq_commercial"
+                                    data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Operation</a>
                             </div>
 
                             <div class="card-toolbar p-3">
@@ -374,7 +382,8 @@
         </div>
 
         @include('cmt-opportunity.boq.add.modal-review-director-boq-commercial')
-        @include('cmt-opportunity.boq.add.modal-review-manager-boq-commercial')
+        @include('cmt-opportunity.boq.add.modal-review-manager-sales-boq-commercial')
+        @include('cmt-opportunity.boq.add.modal-review-manager-operation-boq-commercial')
         @include('cmt-opportunity.boq.add.modal-review-finman-boq-commercial')
 
         <script>
@@ -431,9 +440,13 @@
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
@@ -461,9 +474,13 @@
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
@@ -503,9 +520,13 @@
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
@@ -534,9 +555,13 @@
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
@@ -548,75 +573,162 @@
 
 
 
-                $('.btn_review_manager_boq_commercial').on('click', function() {
+                $('.btn_review_manager_sales_boq_commercial').on('click', function() {
                     var boq_id = $(this).data('boq-id'); 
-                    $('#itemableBillOfQuantity_id_manager').val(boq_id); 
+                    $('#itemableBillOfQuantity_id_manager_sales').val(boq_id); 
                     var remark = $(this).data('remark');
-                    $('#remark_manager').val(remark);
+                    $('#remark_manager_sales').val(remark);
                     // console.log(boq_id, remark); 
                 });
 
-                $('#kt_modal_review_manager_boq_commercial_approve').on('click', function() {
-                    var isApprovalInput = $('input[name="is_approval_manager"]'); 
+                $('.btn_review_manager_operation_boq_commercial').on('click', function() {
+                    var boq_id = $(this).data('boq-id'); 
+                    $('#itemableBillOfQuantity_id_manager_operation').val(boq_id); 
+                    var remark = $(this).data('remark');
+                    $('#remark_manager_operation').val(remark);
+                    // console.log(boq_id, remark); 
+                });
+
+                $('#kt_modal_review_manager_sales_boq_commercial_approve').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager_sales"]'); 
                     isApprovalInput.val('1');
                     
-                    var is_approval = $('input[name="is_approval_manager"]');
-                    var is_approval_manager = is_approval.val();
-                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager').value;
-                    var remark = document.getElementById('remark_manager').value;
-                    // console.log(boq_id, is_approval_manager, remark);
+                    var is_approval = $('input[name="is_approval_manager_sales"]');
+                    var is_approval_manager_sales = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager_sales').value;
+                    var remark = document.getElementById('remark_manager_sales').value;
+                    // console.log(boq_id, is_approval_manager_sales, remark);
 
                     $.ajax({
                         url: "{{ route('com.boq.store.approval.boq') }}",
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
-                            is_approval_manager: is_approval_manager,
+                            is_approval_manager_sales: is_approval_manager_sales,
                             boq_id: boq_id,
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
                     is_approval.val('');
                     // Tutup modal
-                    $('#kt_modal_review_manager_boq_commercial').modal('hide'); 
+                    $('#kt_modal_review_manager_sales_boq_commercial').modal('hide'); 
                 });
 
-                $('#kt_modal_review_manager_boq_commercial_decline').on('click', function() {
-                    var isApprovalInput = $('input[name="is_approval_manager"]'); 
+                $('#kt_modal_review_manager_operation_boq_commercial_approve').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager_operation"]'); 
+                    isApprovalInput.val('1');
+                    
+                    var is_approval = $('input[name="is_approval_manager_operation"]');
+                    var is_approval_manager_operation = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager_operation').value;
+                    var remark = document.getElementById('remark_manager_operation').value;
+                    // console.log(boq_id, is_approval_manager_operation, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            is_approval_manager_operation: is_approval_manager_operation,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
+                        },
+                        error: function(error) {
+                            toastr.error(error.responseJSON.error);
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    // Tutup modal
+                    $('#kt_modal_review_manager_operation_boq_commercial').modal('hide'); 
+                });
+
+                $('#kt_modal_review_manager_sales_boq_commercial_decline').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager_sales"]'); 
                     isApprovalInput.val('0');
                     
-                    var is_approval = $('input[name="is_approval_manager"]');
-                    var is_approval_manager = is_approval.val();
-                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager').value;
-                    var remark = document.getElementById('remark_manager').value;
-                    // console.log(boq_id, is_approval_manager, remark);
+                    var is_approval = $('input[name="is_approval_manager_sales"]');
+                    var is_approval_manager_sales = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager_sales').value;
+                    var remark = document.getElementById('remark_manager_sales').value;
+                    // console.log(boq_id, is_approval_manager_sales, remark);
 
                     $.ajax({
                         url: "{{ route('com.boq.store.approval.boq') }}",
                         method: 'POST',
                         data: { 
                             _token: '{{ csrf_token() }}',
-                            is_approval_manager: is_approval_manager,
+                            is_approval_manager_sales: is_approval_manager_sales,
                             boq_id: boq_id,
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
                     is_approval.val('');
                     
                     // Tutup modal
-                    $('#kt_modal_review_manager_boq_commercial').modal('hide'); 
+                    $('#kt_modal_review_manager_sales_boq_commercial').modal('hide'); 
+                });
+
+                $('#kt_modal_review_manager_operation_boq_commercial_decline').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager_operation"]'); 
+                    isApprovalInput.val('0');
+                    
+                    var is_approval = $('input[name="is_approval_manager_operation"]');
+                    var is_approval_manager_operation = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager_operation').value;
+                    var remark = document.getElementById('remark_manager_operation').value;
+                    // console.log(boq_id, is_approval_manager_operation, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: { 
+                            _token: '{{ csrf_token() }}',
+                            is_approval_manager_operation: is_approval_manager_operation,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
+                        },
+                        error: function(error) {
+                            toastr.error(error.responseJSON.error);
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    
+                    // Tutup modal
+                    $('#kt_modal_review_manager_operation_boq_commercial').modal('hide'); 
                 });
 
 

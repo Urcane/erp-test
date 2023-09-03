@@ -127,7 +127,7 @@ class BoQRepository
                     'percentage' => $percentage,
                     'manpower' => $manpower,
                     'is_final' => $is_final,
-                    'reference_boq_id' => $boq_id,
+                    // 'reference_boq_id' => $boq_id,
                     'is_draft' => $is_draft ?? 1,
                     // 'reference_boq_id' => 1,
                 ]
@@ -188,14 +188,21 @@ class BoQRepository
         $boqData = $this->model->where('id', $boqId)->first();
         
         if ($boqData) {
-            $approval_manager = $request->input('is_approval_manager');
+            $approval_manager_sales = $request->input('is_approval_manager_sales');
+            $approval_manager_operation = $request->input('is_approval_manager_operation');
             $approval_director = $request->input('is_approval_director');
             $approval_finman = $request->input('is_approval_finman');
         
-            if ($approval_manager !== null) {
-                $boqData->approval_manager = $approval_manager;
-                if (empty($boqData->approval_manager_date)) {
-                    $boqData->approval_manager_date = date('Y-m-d H:i:s');
+            if ($approval_manager_sales !== null) {
+                $boqData->approval_manager_sales = $approval_manager_sales;
+                if (empty($boqData->approval_manager_sales_date)) {
+                    $boqData->approval_manager_sales_date = date('Y-m-d H:i:s');
+                }
+            }
+            if ($approval_manager_operation !== null) {
+                $boqData->approval_manager_operation = $approval_manager_operation;
+                if (empty($boqData->approval_manager_operation_date)) {
+                    $boqData->approval_manager_operation_date = date('Y-m-d H:i:s');
                 }
             }
             if ($approval_director !== null) {
@@ -211,16 +218,17 @@ class BoQRepository
                 }
             }
 
-            if ($boqData->approval_manager === null || $boqData->approval_director === null || $boqData->approval_finman === null) {
+            if ($boqData->approval_manager_sales === null || $boqData->approval_manager_operation === null || $boqData->approval_director === null || $boqData->approval_finman === null) {
                 $boqData->is_done = null;
+            } else {
+                if ($boqData->approval_manager_operation == 1 && $boqData->approval_manager_sales == 1 && $boqData->approval_director == 1 && $boqData->approval_finman == 1) {
+                    $boqData->is_done = 1;
+                    $boqData->is_draft = 0;
                 } else {
-                    if ($boqData->approval_manager == 1 && $boqData->approval_director == 1 && $boqData->approval_finman == 1) {
-                        $boqData->is_done = 1;
-                        $boqData->is_draft = 0;
-                    } else {
-                        $boqData->is_done = 0;
-                    }
+                    $boqData->is_done = 0;
+                }
             }
+
             if (isset($remark)) { 
                 $boqData->remark = $remark;
             }
