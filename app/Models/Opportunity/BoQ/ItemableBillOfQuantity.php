@@ -62,23 +62,33 @@ class ItemableBillOfQuantity extends Model
         return $this->hasMany(ItemablePriceRequest::class);
     }
 
-    function scopeDraft() : ItemableBillOfQuantity {
+    function scopeDraft() {
         return $this->where('is_draft', 1)->doesnthave('priceRequests');
     }
 
-    function scopePublish() : ItemableBillOfQuantity {
-        return $this->where('is_draft', 0)->has('priceRequests');
+    function scopePublish() {
+        return $this->where('is_draft', 0)->where('is_final', 0)->has('priceRequests');
     }
     
-    function scopeOnReview() : ItemableBillOfQuantity {
-        return $this->where('is_draft', 0)->where('is_final', 1)->has('priceRequests');
+    function scopeOnReview() {
+        return $this->where('is_draft', 0)->where('is_final', 1)->whereNull('is_done')->has('priceRequests');
     }
 
-    function scopeDone() : ItemablePriceRequest {
+    function scopeDone() {
         return $this->where('is_done', 1)->where(function($query) {
-            $query->where('approval_manager', 1)
+            $query->where('approval_manager_sales', 1)
+                  ->orWhere('approval_manager_operation', 1)
                   ->orWhere('approval_director', 1)
                   ->orWhere('approval_finman', 1);
+        });
+    }
+
+    function scopeCancel() {
+        return $this->where('is_done', 0)->orWhere(function($query) {
+            $query->where('approval_manager_sales', 0)
+                  ->orWhere('approval_manager_operation', 0)
+                  ->orWhere('approval_director', 0)
+                  ->orWhere('approval_finman', 0);
         });
     }
 }

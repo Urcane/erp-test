@@ -47,28 +47,30 @@ class BoQRepository
         $dataBoq = $this->model;
 
         if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'true' ) {
-            $dataBoq->where('is_draft',1)->wherenull('is_done');
+            $dataBoq = $dataBoq->draft();
         }
 
         if (isset($request->filters['is_draft']) && $request->filters['is_draft'] == 'false') {
-            $dataBoq->where('is_draft',0)->where('is_final',0)->wherenull('is_done');
+            $dataBoq = $dataBoq->publish();
         }
 
         if (isset($request->filters['is_final']) && $request->filters['is_final'] == 'true') {
-            $dataBoq->where('is_final',1)->whereNull('is_done');
+            $dataBoq = $dataBoq->onReview();
         }
 
         if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'true') {
-            $dataBoq->where('is_done',1);
+            $dataBoq = $dataBoq->done();
         }
 
         if (isset($request->filters['is_done']) && $request->filters['is_done'] == null) {
-            $dataBoq->where('is_done',null);
+            $dataBoq = $dataBoq->where('is_done',null);
         }
+        
         if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'false') {
-            $dataBoq->where('is_done',0);
+            $dataBoq = $dataBoq->where('is_done',0);
         }
-        return $dataBoq->with([  'sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog', ]);
+
+        return $dataBoq->with('sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog');
     }  
     
     function getProspect()  {
@@ -256,18 +258,22 @@ class BoQRepository
                 'npm' => $request->input('boq.npm'),
                 'percentage' => $request->input('boq.percentage'),
                 'manpower' => $request->input('boq.manpower'),
-                'approval_manager' => null,
-                'approval_manager_date' => null,
+                'approval_manager_sales' => null,
+                'approval_manager_sales_date' => null,
+                'approval_manager_operation' => null,
+                'approval_manager_operation_date' => null,
                 'approval_director' => null,
                 'approval_director_date' => null,
                 'approval_finman' => null,
                 'approval_finman_date' => null,
-                'is_draft' => 1,
+                'is_draft' => 0,
                 'is_final' => 0,
                 'remark' => null,
             ]);
-            $newBoq->reference_boq_id = $newBoq->id;
+            $newBoq->reference_boq_id = $rejectedBoq->id;
             $newBoq->save();
+
+            $itemablePriceRequest = PriceRequestRepository::storeFromBoq($newBoq);
     
             $itemsData = $request->input('items');
     
@@ -275,18 +281,24 @@ class BoQRepository
                 foreach ($itemsData as $itemData) {
                     $newBoq->itemable()->create([
                         'quantity' => $itemData['quantity'],
-                        'purchase_price' => $itemData['purchase_price'],
-                        'total_price' => $itemData['total_price'],
-                        'purchase_delivery_charge' => $itemData['purchase_delivery'],
-                        'purchase_reference' => $itemData['purchase_reference'],
-                        'item_inventory_id' => $itemData['item_inventory_id'],
+                        'unit' => $itemData['unit'],
+                        'purchase_price' => $itemData['purchase_price'] ?? 0,
+                        'total_price' => (($itemData['purchase_price'] ?? 0) * $itemData['quantity']) + ($itemData['purchase_delivery'] ?? 0),
+                        'purchase_delivery_charge' => $itemData['purchase_delivery'] ?? 0,
+                        'purchase_reference' => $itemData['purchase_reference'] ?? null,
+                        'delivery_route' => $itemData['delivery_route'] ?? null,
+                        'delivery_type' => $itemData['delivery_type'] ?? null,
+                        'purchase_from' => $itemData['purchase_from'] ?? null,
+                        'payment_type' => $itemData['payment_type'] ?? null,
+                        'purchase_validity' => $itemData['purchase_validity'] ?? null,
+                        'inventory_good_id' => $itemData['item_inventory_id'],
                         'item_detail' => $itemData['item_detail'],
                     ]);
                 }
             }
     
             DB::commit();
-            return response()->json(['message' => 'BOQ Baru Berhasil Dibuat.'], 200);
+            return response()->json(['message' => 'BOQ Baru Berhasil Dibuat.', 'data' => $newBoq], 200);
     
         } catch (\Exception $e) {
             DB::rollback();

@@ -192,7 +192,9 @@ class BoqService
 
     function getApprovalBoq(Request $request){
         $updateDraftBoqData = $this->BoQRepository->updateDraftBoq($request);
-        return view('cmt-opportunity.boq.pages.form-revision-boq', compact('updateDraftBoqData'));
+        $dataUnit = InventoryUnitMaster::get();
+
+        return view('cmt-opportunity.boq.pages.form-revision-boq', compact('updateDraftBoqData', 'dataUnit'));
     }
     
     function onReviewBoq(Request $request){
