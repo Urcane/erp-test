@@ -17,6 +17,7 @@ class CreateDepartmentsTable extends Migration
             $table->id();
             $table->string('department_name');
             $table->string('department_alias');
+            $table->foreignId("parent_id")->nullable()->constrained("departments");
             $table->timestamps();
         });
     }

@@ -90,7 +90,7 @@
                                                 <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterDepartment" id="filter_department" data-dropdown-parent="#filter_pegawai">
                                                     <option value="*">Semua Department</option>
                                                     @foreach ($dataDepartment as $dp)
-                                                    <option value="{{$dp->id}}">{{$dp->department_name}}</option>									
+                                                    <option value="{{$dp->id}}">{{$dp->department_name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -101,7 +101,7 @@
                                                 <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterDivisi" id="filter_divisi" data-dropdown-parent="#filter_pegawai">
                                                     <option value="*">Semua Divisi</option>
                                                     @foreach ($dataDivision as $dd)
-                                                    <option value="{{$dd->id}}">{{$dd->divisi_name}}</option>									
+                                                    <option value="{{$dd->id}}">{{$dd->divisi_name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -216,11 +216,11 @@
     $(document ).ready(function() {
         $('input[name="range_date"]').daterangepicker({autoUpdateInput: false}, (from_date, to_date) => {
             $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
-        }); 
-        
+        });
+
         var lead_ids = [];
         var prospect_ids = [];
-        
+
         $('body').on('click', '#tab_all', function () {
             $('.tab_all_menu_lead').show();
             $('.tab_all_menu_prospect').hide();
@@ -229,7 +229,7 @@
             $('.tab_all_menu_lead').hide();
             $('.tab_all_menu_prospect').show();
         });
-        
+
         window.tableLead  = $('#kt_table_lead')
         .DataTable({
             processing: true,
@@ -262,13 +262,13 @@
                 "zeroRecords": "Data tidak ditemukan 😞",
             },
             buttons: [
-            { 
+            {
                 extend: 'excel',
                 className: 'btn btn-light-success btn-sm ms-3',
                 title: 'Data Lead Comtelindo',
                 exportOptions: {
                     columns: [1,10,11,12,3,4,13,5,14,16,17,15,18,19,20,21,22,23,24]
-                } 
+                }
             },
             ],
             dom:
@@ -276,14 +276,14 @@
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
             ">" +
-            
+
             "<'table-responsive'tr>" +
-            
+
             "<'row'" +
             "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
             "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
             ">",
-            
+
             columns: [
             { data: 'DT_RowChecklist', orderable: false, searchable: false},
             { data: 'DT_RowIndex'},
@@ -310,7 +310,7 @@
             { data: 'lead_status', visible:false},
             { data: 'lead_note', visible:false},
             { data: 'lead_next_action', visible:false},
-            ],  
+            ],
             columnDefs: [
             {
                 targets: 0,
@@ -333,18 +333,18 @@
             tableLead.draw();
             tableProspect.draw();
         });
-        
+
         function removeFrom(array, item) {
             var index = array.indexOf(item);
             if (index !== -1) array.splice(index, 1);
         }
-        
+
         function removeFromProspect(array, item) {
             var index = array.indexOf(item);
             // Dont Use its a trap
             while (index !== -1) array.splice(index, 1);
         }
-        
+
         window.tableProspect  = $('#kt_table_prospect')
         .DataTable({
             processing: true,
@@ -382,14 +382,14 @@
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l>" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
             ">" +
-            
+
             "<'table-responsive'tr>" +
-            
+
             "<'row'" +
             "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
             "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
             ">",
-            
+
             columns: [
             { data: 'DT_RowChecklist', orderable: false, searchable: false},
             { data: 'DT_RowIndex'},
@@ -399,7 +399,7 @@
             { data: 'progress', orderable: false, searchable: false},
             { data: 'next_action', orderable: false, searchable: false},
             { data: 'action'},
-            ],  
+            ],
             columnDefs: [
             {
                 targets: 0,
@@ -417,7 +417,7 @@
             },
             ],
         });
-        
+
         $('body').on('click', '.btn_tambah_lead', function () {
             $('.drop-data').val("").trigger("change")
             $('#kt_modal_tambah_lead_form').trigger("reset")
@@ -451,7 +451,9 @@
                 },
                 customer_contact_phone: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
+                
                 },
             },
             submitHandler: function(form) {
@@ -460,7 +462,7 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("com.lead.store-lead")}}',
                     type: "POST",
                     dataType: 'json',
@@ -478,7 +480,7 @@
                 });
             }
         });
-        
+
         $('table').on('click', '.btn_edit_lead', function () {
             $('.drop-data').val("").trigger("change")
             $('#kt_modal_edit_lead_form').trigger("reset")
@@ -528,7 +530,8 @@
                 },
                 customer_contact_phone: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
                 },
             },
             submitHandler: function(form) {
@@ -537,7 +540,7 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("com.lead.update-lead")}}',
                     type: "POST",
                     dataType: 'json',
@@ -555,7 +558,7 @@
                 });
             }
         });
-        
+
         $('body').on('click', '#btn_tindak_lanjut_lead', function () {
             $('#kt_modal_tindak_lanjut_lead_submit').removeAttr('disabled','disabled');
             $('#containerTindakLanjutLead').html('');
@@ -581,15 +584,22 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("com.lead.tindak-lanjut-lead")}}',
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                        if(lead_ids.length === 0){
+                            $('#kt_modal_tindak_lanjut_lead_cancel').click();
+                             toastr.error('Tidak Ada Data Lead Yang Dipilih', 'Opps!');
+                        return;
+                        }
+
                         $('#kt_modal_tindak_lanjut_lead_cancel').click();
                         toastr.success(data.status,'Selamat 🚀 !');
                         location.reload();
-                        
+
                     },
                     error: function (xhr, status, errorThrown) {
                         $('#kt_modal_tindak_lanjut_lead_submit').removeAttr('disabled','disabled');
@@ -599,7 +609,7 @@
                 });
             }
         });
-        
+
         $('table').on('click', '.btn_update_prospect', function () {
             $('#kt_modal_update_prospect_form').trigger("reset")
             $('#kt_modal_update_prospect_submit').removeAttr('disabled','disabled');
@@ -626,7 +636,7 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("com.lead.update-prospect")}}',
                     type: "POST",
                     dataType: 'json',
@@ -645,7 +655,7 @@
                 });
             }
         });
-        
+
         $('body').on('click', '#btn_batal_prospect', function () {
             $('#kt_modal_batal_prospect_submit').removeAttr('disabled','disabled');
             $('#containerBatalProspect').html('');
@@ -671,15 +681,22 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("com.lead.batal-prospect")}}',
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                        if(prospect_ids.length === 0){
+                            $('#kt_modal_batal_prospect_cancel').click();
+                             toastr.error('Tidak Ada Prospect Yang Dipilih', 'Opps!');
+                        return;
+                        }
+
                         $('#kt_modal_batal_prospect_cancel').click();
                         toastr.success(data.status,'Selamat 🚀 !');
                         location.reload();
-                        
+
                     },
                     error: function (xhr, status, errorThrown) {
                         $('#kt_modal_batal_prospect_submit').removeAttr('disabled','disabled');
@@ -689,7 +706,7 @@
                 });
             }
         });
-        
+
     });
 </script>
 

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Client\Request;
 
 class WorkList extends Model
@@ -28,5 +29,9 @@ class WorkList extends Model
     function createTask(Request $request) : WorkList {
         
         return $this;
+    }
+
+    function itemablePriceRequest() : HasOne{
+        return $this->hasOne(ItemablePriceRequests::class, 'work_list_id', 'id');
     }
 }

@@ -6,6 +6,17 @@ use App\Models\Department;
 use App\Models\Division;
 use App\Models\Team\Team;
 use App\Models\User;
+use App\Models\Employee\EmploymentStatus;
+use App\Models\Employee\UserPersonalData;
+use App\Models\Employee\SubBranch;
+use App\Models\Employee\WorkingSchedule;
+use App\Models\Employee\PaymentSchedule;
+use App\Models\Employee\ProrateSetting;
+use App\Models\Employee\TaxStatus;
+use App\Models\Employee\WorkingScheduleShift;
+
+use App\Constants;
+
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +27,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
-{   
+{
     public function index()
     {
         $dataDivision = Division::all();
@@ -24,27 +35,45 @@ class UserController extends Controller
         $dataUser = User::where('status',1)->get();
         $dataRole = Role::all();
         $dataPlacement= Team::all();
-        return view('cmt-employee.index',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
+
+        return view('hc.cmt-employee.index',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
     }
-    
-    public function profile($id)
-    {
+
+    public function create() {
+
+        $dataDepartment = Department::all();
         $dataDivision = Division::all();
+        $user = null;
+        $users = User::get();
+        $dataTeam = Team::get();
+        $dataEmploymentStatus = EmploymentStatus::all();
         $dataRole = Role::all();
-        $dataPlacement= Team::all();
-        
-        $profile = DB::table('users')
-        ->join('teams','teams.id','users.team_id')
-        ->join('divisions','divisions.id','users.division_id')
-        ->join('model_has_roles','model_has_roles.model_id','users.id')
-        ->select('users.*','teams.team_name','divisions.divisi_name','model_has_roles.role_id as role_id')
-        ->where('users.id',$id)
-        ->first();
-        return view('cmt-employee.profile',compact('profile','dataDivision','dataRole','dataPlacement'));
+        $constants = new Constants();
+        $dataSubBranch = SubBranch::all();
+        $dataWorkingScheduleShift = WorkingScheduleShift::all();
+        $dataTaxStatus = TaxStatus::all();
+
+        $dataPaymentSchedule = PaymentSchedule::all();
+        $dataProrateSetting = ProrateSetting::all();
+
+        return view('hc.cmt-employee.form-tambah-pegawai',compact(
+            'user',
+            'users',
+            'dataDepartment',
+            "dataDivision",
+            "dataTeam",
+            "dataTaxStatus",
+            'dataRole',
+            'constants',
+            "dataEmploymentStatus",
+            "dataSubBranch",
+            "dataWorkingScheduleShift",
+            "dataPaymentSchedule",
+            "dataProrateSetting",
+        ));
     }
-    
-    public function store(Request $request)
-    {   
+
+    public function store(Request $request) {
         try {
             $getDiv = Division::where('id',$request->division_id)->first();
             $create = User::create([
@@ -59,76 +88,18 @@ class UserController extends Controller
                 'team_id'=>$request->team_id,
             ]);
             $create->assignRole($request->role_id);
-            
+
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        } 
+        }
         catch (\Throwable $th) {
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
     }
-    
-    public function update(Request $request)
-    {
-        $getUser = User::where('id',$request->user_id)->first();
-        try {
-            $file_sign = $request->pegawai_sign_url;
-            if ($file_sign != null && $file_sign != '') {
-                $image_parts = explode(";base64,", $file_sign);
-                $image_type_aux = explode("image/", $image_parts[0]);
-                $image_type = $image_type_aux[1];
-                $image_base64 = base64_decode($image_parts[1]);   
-                $file_sign = sys_get_temp_dir() . '/' . uniqid().'.'.$image_type;
-                file_put_contents($file_sign, $image_base64);
-                $tmpFile = new File($file_sign);
-                $file = new UploadedFile(
-                    $tmpFile->getPathname(),
-                    $tmpFile->getFilename(),
-                    $tmpFile->getMimeType(),
-                    0,
-                    true 
-                );
-                $file_sign = $file->store('sign_pegawai');
-            }else{
-                $file_sign = $getUser->sign_file;
-            }
-            
-            $updateUser = $getUser->update([
-                'name'=>$request->name,
-                'email'=>$request->email,
-                'nip'=>$request->nip,
-                'nik'=>$request->nik,
-                'kontak'=>$request->kontak,
-                'team_id'=>$request->team_id,
-                'sign_file'=>$file_sign,
-            ]);
-            
-            DB::table('model_has_roles')->where('model_id',$request->user_id)->delete();
-            $getUser->assignRole($request->role_id);
-            
-            if($request->new_password != null){
-                $getUser->update([
-                    'password' => bcrypt($request->new_password)
-                ]);
-            }
-            
-            $getDept = Division::where('id',$request->division_id)->first();
-            $getUser->update([
-                'division_id'=>$request->division_id,
-                'department_id'=>$getDept->department_id,
-            ]);
-            
-            return response()->json([
-                "status" => "Yeay Berhasil!! 💼",
-            ]);
-        } 
-        catch (\Throwable $th) {
-            Log::error($th);
-            return response()->json("Oopss, ada yang salah nih!", 500);
-        }
-    }
+
+
 
     public function statusPegawai(Request $request)
     {
@@ -144,17 +115,17 @@ class UserController extends Controller
                     ]);
                 }
             }
-            
+
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        } 
+        }
         catch (\Throwable $th) {
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
     }
-    
+
     public function resetPasswordPegawai(Request $request)
     {
         try {
@@ -163,19 +134,19 @@ class UserController extends Controller
                         'password' => bcrypt(12345678),
                     ]);
             }
-            
+
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        } 
+        }
         catch (\Throwable $th) {
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
     }
-    
+
     public function getTableEmployee(Request $request)
-    {  
+    {
         if (request()->ajax()) {
             $query = DB::table('users')
             ->join('departments','departments.id','users.department_id')
@@ -183,21 +154,21 @@ class UserController extends Controller
             ->select('users.*','departments.department_name','divisions.divisi_name')
             ->where('users.status',1)
             ->orderBy('users.id','DESC');
-            
+
             $filterDivisi = $request->filters['filterDivisi'];
             if(!empty($filterDivisi) && $filterDivisi !== '*'){
                 $query->where('users.division_id', $filterDivisi);
             }else{
                 $query;
             }
-            
+
             $filterDepartment = $request->filters['filterDepartment'];
             if(!empty($filterDepartment) && $filterDepartment !== '*'){
                 $query->where('users.department_id', $filterDepartment);
             }else{
                 $query;
             }
-            
+
             $query = $query->get();
             return DataTables::of($query)
             ->addColumn('emp', function ($emp){
@@ -233,7 +204,7 @@ class UserController extends Controller
             })
             ->addColumn('action', function ($action) {
                 $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                return '     
+                return '
                 <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 <ul class="dropdown-menu">
                 '.$mnue.'
@@ -252,7 +223,7 @@ class UserController extends Controller
             ->make(true);
         }
     }
-    
+
 }
 
 

@@ -77,7 +77,7 @@
                                                 <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterDepartment" id="filter_department" data-dropdown-parent="#filter_pegawai">
                                                     <option value="*">Semua Department</option>
                                                     @foreach ($dataDepartment as $dp)
-                                                    <option value="{{$dp->id}}">{{$dp->department_name}}</option>									
+                                                    <option value="{{$dp->id}}">{{$dp->department_name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -88,19 +88,19 @@
                                                 <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterDivisi" id="filter_divisi" data-dropdown-parent="#filter_pegawai">
                                                     <option value="*">Semua Divisi</option>
                                                     @foreach ($dataDivision as $dd)
-                                                    <option value="{{$dd->id}}">{{$dd->divisi_name}}</option>									
+                                                    <option value="{{$dd->id}}">{{$dd->divisi_name}}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             <div class="col-lg-12 mt-6 text-end">
-                                                <button class="btn btn-sm btn-light" id="btn_reset_filter">Reset</button>
+                                                <button class="btn btn-sm btn-warning" id="btn_reset_filter">Reset</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 @role('administrator')
                                 <div>
-                                    <a href="#kt_modal_tambah_pegawai" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
+                                    <a href="{{ route('hc.emp.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
                                 </div>
                                 @endrole
                             </div>
@@ -136,23 +136,23 @@
 </div>
 
 @role('administrator')
-@include('cmt-employee.add.modal-tambah-pegawai')
-@include('cmt-employee.add.modal-nonaktif-pegawai')
-@include('cmt-employee.add.modal-reset-password-pegawai')
+{{-- @include('hc.cmt-employee.add.modal-tambah-pegawai') --}}
+@include('hc.cmt-employee.add.modal-nonaktif-pegawai')
+@include('hc.cmt-employee.add.modal-reset-password-pegawai')
 @endrole
 
 <script>
     $(document ).ready(function() {
 
         var pegawai_ids = [];
-        
+
         var getFilter = function(){
             return {
                 'filterDivisi': $('#filter_divisi').val(),
                 'filterDepartment': $('#filter_department').val(),
             }
-        }   
-        
+        }
+
         window.tablePegawai  = $('#kt_table_pegawai')
         .DataTable({
             processing: true,
@@ -182,13 +182,13 @@
                 "zeroRecords": "Data tidak ditemukan 😞",
             },
             buttons: [
-            { 
+            {
                 extend: 'excel',
                 className: 'btn btn-light-success btn-sm ms-3',
                 title: 'Data Pegawai Comtelindo',
                 exportOptions: {
                     columns: [1,8,9,3,10,4,5,6]
-                } 
+                }
             },
             ],
             dom:
@@ -196,14 +196,14 @@
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
             ">" +
-            
+
             "<'table-responsive'tr>" +
-            
+
             "<'row'" +
             "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
             "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
             ">",
-            
+
             columns: [
             { data: 'DT_RowChecklist', orderable: false, searchable: false},
             { data: 'DT_RowIndex'},
@@ -236,12 +236,12 @@
             },
             ],
         });
-        
+
         $('#filter_department').change(function(){
-            tablePegawai.draw()  
+            tablePegawai.draw()
         });
         $('#filter_divisi').change(function(){
-            tablePegawai.draw()  
+            tablePegawai.draw()
         });
         $('body').on('click', '#btn_reset_filter', function () {
             $('#filter_department').val("*").trigger("change")
@@ -252,51 +252,88 @@
             var index = array.indexOf(item);
             if (index !== -1) array.splice(index, 1);
         }
-        
-        $('body').on('click', '.btn_tambah_pegawai', function () {
-            $('.drop-data').val("").trigger("change")
-            $('#kt_modal_tambah_pegawai_form').trigger("reset")
-            $('#kt_modal_tambah_pegawai_submit').removeAttr('disabled','disabled');
-        });
-        
-        $("#kt_modal_tambah_pegawai_form").validate({
+
+        // $('body').on('click', '.btn_tambah_pegawai', function () {
+        //     $('.drop-data').val("").trigger("change")
+        //     $('#kt_modal_tambah_pegawai_form').trigger("reset")
+        //     $('#kt_modal_tambah_pegawai_submit').removeAttr('disabled','disabled');
+        // });
+
+        $("#kt_create_emp_form").validate({
             messages: {
-                name: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Nama lengkap pegawai wajib diisi</span>",
-                },
-                email: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Email user wajib diisi</span>",
-                    email: "<span class='fw-semibold fs-8 text-danger'>Email user belum sesusai format</span>",
-                },
-                nip: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>NIP pegawai wajib diisi</span>",
-                },
-                nik: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>NIK pegawai wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 16 karakter</span>",
-                },
-                kontak: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Kontak pegawai wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
-                },
-                role_id: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Role wajib dipilih</span>",
-                },
-                division_id: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Divisi wajib dipilih</span>",
-                },
-                team_id: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Penempatan wajib dipilih</span>",
-                },
-                new_password: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Password wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Password minimal memiliki 8 karakter</span>",
-                    confirmed: "<span class='fw-semibold fs-8 text-danger'>Password tidak sama</span>",
-                },
-                new_password_confirmation: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Konfirmasi password wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Konfirmasi password minimal memiliki 8 karakter</span>",
-                },
+                // first_name : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Nama Depan pegawai wajib diisi</span>",
+                // },
+                // email: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Email user wajib diisi</span>",
+                //     email: "<span class='fw-semibold fs-8 text-danger'>Email user belum sesusai format</span>",
+                // },
+                // birthdate :{
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Tanggal lahir pegawai wajib diisi</span>",
+                // },
+                // maritial_status :{
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Status pernihakahan pegawai wajib diisi</span>",
+                // },
+                // religion :{
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Agama pegawai wajib diisi</span>",
+                // },
+                // employee_id : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Nomor Induk Pegawai wajib diisi</span>",
+                // }
+                // employment_status : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Status pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // join_date : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Tanggal bergabung pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // end_status_date : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Tanggal berhenti pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // branch : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Cabang pegawai mendaftar dalam perusahaan wajib diisi</span>",
+                // }
+                // organization : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Organisasi pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // job_position : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Posisi pekerjaan pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // job_level : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Level pekerjaan pegawai dalam perusahaan wajib diisi</span>",
+                // }
+                // jht_cost : {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Level pekerjaan pegawai dalam perusahaan wajib diisi</span>",
+                // }
+
+
+
+
+                // nip: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>NIP pegawai wajib diisi</span>",
+                // },
+                // nik: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>NIK pegawai wajib diisi</span>",
+                //     minlength: "<span class='fw-semibold fs-8 text-danger'>NIK minimal memiliki 16 karakter</span>",
+                // },
+
+                // role_id: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Role wajib dipilih</span>",
+                // },
+                // division_id: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Divisi wajib dipilih</span>",
+                // },
+                // team_id: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Penempatan wajib dipilih</span>",
+                // },
+                // new_password: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Password wajib diisi</span>",
+                //     minlength: "<span class='fw-semibold fs-8 text-danger'>Password minimal memiliki 8 karakter</span>",
+                //     confirmed: "<span class='fw-semibold fs-8 text-danger'>Password tidak sama</span>",
+                // },
+                // new_password_confirmation: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Konfirmasi password wajib diisi</span>",
+                //     minlength: "<span class='fw-semibold fs-8 text-danger'>Konfirmasi password minimal memiliki 8 karakter</span>",
+                // },
             },
             submitHandler: function(form) {
                 var formData = new FormData(form);
@@ -304,7 +341,7 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("hc.emp.store")}}',
                     type: "POST",
                     dataType: 'json',
@@ -325,6 +362,8 @@
         });
 
         $('body').on('click', '#btn_nonaktif_pegawai', function () {
+        
+  
             $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
             $('#containerUserNonAktif').html('');
             const form_edit = $('#kt_modal_nonaktif_pegawai_form');
@@ -342,28 +381,48 @@
             submitHandler: function(form) {
                 var formData = new FormData(form);
                 $('#kt_modal_nonaktif_pegawai_submit').attr('disabled', 'disabled');
+
+                var form_edit = $('#kt_modal_nonaktif_pegawai_form');
+            $.each(pegawai_ids, function(index, rowId) {
+                form_edit.find('#containerUserNonAktif').append(
+                $('<input>')
+                .attr('type', 'hidden')
+                .attr('name', 'pegawai_id[]')
+                .val(rowId)
+                );
+            });
+                
                 $.ajax({
-                    data: formData,
-                    processData: false,
-                    contentType: false, 
-                    url: '{{route("hc.emp.update-status")}}',
-                    type: "POST",
-                    dataType: 'json',
-                    success: function (data) {
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: '{{route("hc.emp.update-status")}}',
+                type: "POST",
+                dataType: 'json',
+                success: function(data) {
+
+                     // Check Selected Pegawai
+                    if (pegawai_ids.length === 0) {
                         $('#kt_modal_nonaktif_pegawai_cancel').click();
-                        var oTable = $('#kt_table_pegawai').dataTable();
-                        pegawai_ids = [];
-                        oTable.fnDraw(false);
-                        toastr.success(data.status,'Selamat 🚀 !');
-                    },
-                    error: function (xhr, status, errorThrown) {
-                        $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
-                        const data = JSON.parse(xhr.responseText);
-                        toastr.error(errorThrown ,'Opps!');
+                        toastr.error('Tidak Ada Data Pegawai Yang Dipilih', 'Opps!');
+                        return;
                     }
+
+                    $('#kt_modal_nonaktif_pegawai_cancel').click();
+                    var oTable = $('#kt_table_pegawai').dataTable();
+                    pegawai_ids = [];
+                    oTable.fnDraw(false);
+                    toastr.success(data.status, 'Selamat 🚀 !');
+                },
+                error: function(xhr, status, errorThrown) {
+                    $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled');
+                    const data = JSON.parse(xhr.responseText);
+                    toastr.error(errorThrown, 'Opps!');
+                }
                 });
             }
         });
+
 
         $('body').on('click', '#btn_reset_password_pegawai', function () {
             $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
@@ -386,11 +445,19 @@
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: '{{route("hc.emp.reset-password-pegawai")}}',
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                         // Check Selected Pegawai
+                        if (pegawai_ids.length === 0) {
+                            $('#kt_modal_reset_password_pegawai_cancel').click();
+                            toastr.error('Tidak Ada Password Pegawai Yang Dipilih', 'Opps!');
+                            return;
+                        }
+
                         $('#kt_modal_reset_password_pegawai_cancel').click();
                         var oTable = $('#kt_table_pegawai').dataTable();
                         pegawai_ids = [];
@@ -405,7 +472,7 @@
                 });
             }
         });
-        
+
     });
 </script>
 
