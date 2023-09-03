@@ -98,7 +98,7 @@
                                                                         </span>
                                                                     </a>
                                                                 </div>
-    
+
                                                                 <div class="menu-item">
                                                                     <a href="{{route('com.boq.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
@@ -109,7 +109,7 @@
                                                                         </span>
                                                                     </a>
                                                                 </div>
-    
+
                                                                 <div class="menu-item">
                                                                     <a href="{{route('com.quotation.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
@@ -151,6 +151,43 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0">
+                                                            <a href="{{route('hc.att.index')}}" class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-solid fa-calendar-days text-primary fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">CMT-Attendance</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Catatan Daftar Hadir Karyawan</span>
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0">
+                                                            <a href="{{route('hc.request.index')}}" class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-solid fa-handshake text-primary fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">CMT-Request</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Catatan Daftar Request Karyawan</span>
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0">
+                                                            <a href="{{route('hc.setting.company-info.index')}}" class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-solid fa-gear text-primary fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">CMT-Settings</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Setting jadwal sampai payroll</span>
+                                                                </span>
+                                                            </a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -243,7 +280,7 @@
                             </a>
                         </div>
                     </div>
-                </div> 
+                </div>
                 <div class="app-navbar-item ms-4" id="kt_header_user_menu_toggle">
                     @auth
                     <div class="cursor-pointer symbol symbol-circle symbol-35px symbol-md-45px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
@@ -266,13 +303,13 @@
                         <div class="menu-item px-5 my-0">
                             <a href="{{route('hc.emp.profile',['id'=>auth()->user()->id])}}" class="menu-link px-5 py-2">
                                 <span class="menu-title position-relative">Profile
-                                </span> 
+                                </span>
                             </a>
                         </div>
                         <div class="menu-item px-5 my-0">
                             <a href="#!" class="menu-link px-5 py-2">
                                 <span class="menu-title position-relative">Setting
-                                </span> 
+                                </span>
                             </a>
                         </div>
                         <div class="menu-item px-5 my-0">
