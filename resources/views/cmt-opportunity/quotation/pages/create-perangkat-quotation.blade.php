@@ -572,257 +572,257 @@
             var dataFromFirstResponse = null; // Variabel untuk menyimpan data dari respons pertama
 
             // Render opsi pertama saat halaman dimuat
-            // $.ajax({
-                //     url: "{{ route('com.quotation.get.internet.bundling') }}",
-                //     type: 'GET',
-                //     success: function(response) {
-                //         console.log(response);
-                //         // dataFromFirstResponse = response; // Simpan data dari respons pertama
-                //         $('#good_name_bundle').empty(); // Hapus opsi yang ada sebelumnya
-                //         $('#good_name_bundle').append($('<option>', {
-                //             value: '',
-                //             text: 'Select Internet Bundle'
-                //         }));
-                //         $.each(response, function(index, item) {
-                //             $('#good_name_bundle').append($('<option>', {
-                //                 value: item.id,
-                //                 text: item.good_name
-                //             }));
-                //         });
-                //     },
-                //     error: function(error) {
-                //         console.log(error);
-                //     }
-            // });
+            $.ajax({
+                    url: "{{ route('com.quotation.get.internet.bundling') }}",
+                    type: 'GET',
+                    success: function(response) {
+                        console.log(response);
+                        // dataFromFirstResponse = response; // Simpan data dari respons pertama
+                        $('#good_name_bundle').empty(); // Hapus opsi yang ada sebelumnya
+                        $('#good_name_bundle').append($('<option>', {
+                            value: '',
+                            text: 'Select Internet Bundle'
+                        }));
+                        $.each(response, function(index, item) {
+                            $('#good_name_bundle').append($('<option>', {
+                                value: item.id,
+                                text: item.good_name
+                            }));
+                        });
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+            });
 
-            // Handler untuk peristiwa "change" pada select item
-                // $('#good_name_bundle').on('change', function() {
-                //     var selectedItemId = $(this).val();
+            Handler untuk peristiwa "change" pada select item
+                $('#good_name_bundle').on('change', function() {
+                    var selectedItemId = $(this).val();
 
-                //     // Cek apakah data dari respons pertama sudah ada
-                //     if (dataFromFirstResponse) {
-                //         // Cari item dengan ID yang sesuai dalam data pertama
-                //         var selectedItem = dataFromFirstResponse.find(function(item) {
-                //             return item.id == selectedItemId;
-                //         });
+                    // Cek apakah data dari respons pertama sudah ada
+                    if (dataFromFirstResponse) {
+                        // Cari item dengan ID yang sesuai dalam data pertama
+                        var selectedItem = dataFromFirstResponse.find(function(item) {
+                            return item.id == selectedItemId;
+                        });
 
-                //         // Isi input dengan data dari item yang sesuai
-                //         if (selectedItem) {
-                //             $('#good_type_bundle').val(selectedItem.good_type).prop('disabled', true);
-                //             $('#merk_bundle').val(selectedItem.merk).prop('disabled', true);
-                //             $('#detail_bundle').val(selectedItem.description).prop('disabled', true);
-                //         }
-                //     }
-            // });
+                        // Isi input dengan data dari item yang sesuai
+                        if (selectedItem) {
+                            $('#good_type_bundle').val(selectedItem.good_type).prop('disabled', true);
+                            $('#merk_bundle').val(selectedItem.merk).prop('disabled', true);
+                            $('#detail_bundle').val(selectedItem.description).prop('disabled', true);
+                        }
+                    }
+            });
 
-            // Function Tambah Modal Bundling Internet
-            // $('#btn-bundle').on('click', function() {
-            //     // Find the parent container where you want to append new divs
-            //     const parentContainer = document.querySelector(".BundleItem");
+            Function Tambah Modal Bundling Internet
+            $('#btn-bundle').on('click', function() {
+                // Find the parent container where you want to append new divs
+                const parentContainer = document.querySelector(".BundleItem");
 
-            //     // Create a new div element
-            //     const newDiv = document.createElement("div");
-            //     newDiv.className =
-            //         "file-soft-quotation-bundle d-flex justify-content-between mx-20 mb-5 mt-10";
+                // Create a new div element
+                const newDiv = document.createElement("div");
+                newDiv.className =
+                    "file-soft-quotation-bundle d-flex justify-content-between mx-20 mb-5 mt-10";
 
-            //     const random_string = generateRandomString(4);
-            //     // Define the HTML structure as a string literal
-            //     const htmlStructure = `  
-            //         <div class="d-flex justify-content-around align-items-center" style="flex-basis: 35%; min-width: 200px;"> 
-            //             <div class="" style="flex-basis: 100%;">
-            //                 <label class="d-flex align-items-center fs-6 form-label mb-2"
-            //                     required>
-            //                     <span class="required fw-bold">Internet Bundle</span>
-            //                 </label>
-            //                 <select class="form-select form-select-solid drop-data" required
-            //                     data-control="select2" name="good_name_bundle"
-            //                     id="good_name_bundle_${random_string}">
-            //                     <option>Select Internet Bundle</option>
-            //                 </select>
-            //             </div> 
-            //         </div>
-            //         <div style="flex-basis: 14%; min-width: 150px;">
-            //             <label class="d-flex align-items-center fs-6 form-label mb-2">
-            //                 <span class="fw-bold required">Quantity</span>
-            //             </label>
-            //             <input class="form-control" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity">
-            //         </div>
-            //         <div style="flex-basis: 14%; min-width: 150px;">
-            //             <label class="d-flex align-items-center fs-6 form-label mb-2">
-            //                 <span class="fw-bold required">Purchase Price</span>
-            //             </label>
-            //             <input class="form-control" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price">
-            //         </div>
-            //         <div class="d-flex justify-content-around align-items-center flex-nowrap"  style="flex-basis: 20%; min-width: 180px;">
-            //             <div class="" style="flex-basis: 80%;">
-            //                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-            //                     <span class="fw-bold">Total Price</span>
-            //                 </label>
-            //                 <input class="form-control" type="text" required min="1" minlength="1" disabled oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="total_price" id="total_price_${random_string}">
-            //             </div>
-            //             <div class="" style="flex-basis: 15%;">
-            //                 <div>
-            //                     <div class="h-25px"></div> 
-            //                     <button type="button" class="btn btn-secondary btn-icon btn-sm h-44px" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
-            //                             <i class="fa-solid fa-ellipsis-vertical"></i>
-            //                     </button> 
-            //                     <ul class="dropdown-menu"> 
-            //                         <li type="button" class="clear-soft-survey-item-${random_string}"
-            //                             data-random-string="${random_string}">
-            //                             <a class="dropdown-item py-2">
-            //                             <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
-            //                         </li>
-            //                     </ul> 
-            //                 </div>
-            //             </div>
-            //         </div>
-            //     `;
+                const random_string = generateRandomString(4);
+                // Define the HTML structure as a string literal
+                const htmlStructure = `  
+                    <div class="d-flex justify-content-around align-items-center" style="flex-basis: 35%; min-width: 200px;"> 
+                        <div class="" style="flex-basis: 100%;">
+                            <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                required>
+                                <span class="required fw-bold">Internet Bundle</span>
+                            </label>
+                            <select class="form-select form-select-solid drop-data" required
+                                data-control="select2" name="good_name_bundle"
+                                id="good_name_bundle_${random_string}">
+                                <option>Select Internet Bundle</option>
+                            </select>
+                        </div> 
+                    </div>
+                    <div style="flex-basis: 14%; min-width: 150px;">
+                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                            <span class="fw-bold required">Quantity</span>
+                        </label>
+                        <input class="form-control" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity">
+                    </div>
+                    <div style="flex-basis: 14%; min-width: 150px;">
+                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                            <span class="fw-bold required">Purchase Price</span>
+                        </label>
+                        <input class="form-control" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price">
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center flex-nowrap"  style="flex-basis: 20%; min-width: 180px;">
+                        <div class="" style="flex-basis: 80%;">
+                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="fw-bold">Total Price</span>
+                            </label>
+                            <input class="form-control" type="text" required min="1" minlength="1" disabled oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="total_price" id="total_price_${random_string}">
+                        </div>
+                        <div class="" style="flex-basis: 15%;">
+                            <div>
+                                <div class="h-25px"></div> 
+                                <button type="button" class="btn btn-secondary btn-icon btn-sm h-44px" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button> 
+                                <ul class="dropdown-menu"> 
+                                    <li type="button" class="clear-soft-survey-item-${random_string}"
+                                        data-random-string="${random_string}">
+                                        <a class="dropdown-item py-2">
+                                        <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
+                                    </li>
+                                </ul> 
+                            </div>
+                        </div>
+                    </div>
+                `;
 
-            //     // Set the HTML content of the new div to the HTML structure
-            //     newDiv.innerHTML = htmlStructure;
+                // Set the HTML content of the new div to the HTML structure
+                newDiv.innerHTML = htmlStructure;
 
-            //     // Append the new div to the parent container
-            //     parentContainer.appendChild(newDiv);
+                // Append the new div to the parent container
+                parentContainer.appendChild(newDiv);
 
-            //     $.ajax({
-            //         url: "{{ route('com.quotation.get.internet.bundling') }}",
-            //         type: 'GET',
-            //         success: function(response) {
-            //             console.log(response);
-            //             // dataFromFirstResponse = response; // Simpan data dari respons pertama
-            //             $('#good_name_bundle_' + random_string)
-            //                 .empty(); // Hapus opsi yang ada sebelumnya
-            //             $('#good_name_bundle_' + random_string).append($('<option>', {
-            //                 value: '',
-            //                 text: 'Select Internet Bundle'
-            //             }));
-            //             $.each(response, function(index, item) {
-            //                 $('#good_name_bundle_' + random_string).append($(
-            //                     '<option>', {
-            //                         value: item.id,
-            //                         text: item.good_name
-            //                     }));
-            //             });
-            //         },
-            //         error: function(error) {
-            //             console.log(error);
-            //         }
-            //     });
+                $.ajax({
+                    url: "{{ route('com.quotation.get.internet.bundling') }}",
+                    type: 'GET',
+                    success: function(response) {
+                        console.log(response);
+                        // dataFromFirstResponse = response; // Simpan data dari respons pertama
+                        $('#good_name_bundle_' + random_string)
+                            .empty(); // Hapus opsi yang ada sebelumnya
+                        $('#good_name_bundle_' + random_string).append($('<option>', {
+                            value: '',
+                            text: 'Select Internet Bundle'
+                        }));
+                        $.each(response, function(index, item) {
+                            $('#good_name_bundle_' + random_string).append($(
+                                '<option>', {
+                                    value: item.id,
+                                    text: item.good_name
+                                }));
+                        });
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
 
-            //     // Function Hapus per Item
-            //     $('.BundleItem').on('click', `.clear-soft-survey-item-${random_string}`,
-            //         function() {
-            //             $(this).parent().parent().parent().parent().parent().remove();
-            //             updateTotalSumBundle();
-            //         });
+                // Function Hapus per Item
+                $('.BundleItem').on('click', `.clear-soft-survey-item-${random_string}`,
+                    function() {
+                        $(this).parent().parent().parent().parent().parent().remove();
+                        updateTotalSumBundle();
+                    });
 
 
-            // });
+            });
 
-            // Function Tambah Modal Bundling Internet
-            // $('#btn-bundle-internet').on('click', '.btn_bundle_internet', function() {
-            //     $('.drop-data').val("").trigger("change");
-            //     $('#kt_modal_tambah_bundle_internet_form').trigger("reset");
-            //     $('#kt_modal_tambah_bundle_internet_submit').removeAttr('disabled', 'disabled');
-            // });
+            Function Tambah Modal Bundling Internet
+            $('#btn-bundle-internet').on('click', '.btn_bundle_internet', function() {
+                $('.drop-data').val("").trigger("change");
+                $('#kt_modal_tambah_bundle_internet_form').trigger("reset");
+                $('#kt_modal_tambah_bundle_internet_submit').removeAttr('disabled', 'disabled');
+            });
 
-            // Function Submit Modal
-            // $("#kt_modal_tambah_bundle_internet_form").validate({
-            //     messages: {
-            //         good_name_update: {
-            //             required: "<span class='fw-semibold fs-8 text-danger'>Wajib Mengisi Nama Item</span>",
-            //         },
-            //         code_name_update: {
-            //             required: "<span class='fw-semibold fs-8 text-danger'>Code Barang wajib diisi</span>",
-            //         },
-            //         merk_update: {
-            //             required: "<span class='fw-semibold fs-8 text-danger'>Merk Barang wajib diisi</span>",
-            //         },
-            //         good_type_update: {
-            //             required: "<span class='fw-semibold fs-8 text-danger'>Tipe Barang wajib diisi</span>",
-            //         },
-            //         description_update: {
-            //             required: "<span class='fw-semibold fs-8 text-danger'>Deskripsi Barang wajib diisi</span>",
-            //         }
-            //     },
-            //     submitHandler: function() {
-            //         event.preventDefault();
-            //         // Dapatkan referensi ke elemen form
-            //         var form = document.getElementById("kt_modal_tambah_bundle_internet_form");
+            Function Submit Modal
+            $("#kt_modal_tambah_bundle_internet_form").validate({
+                messages: {
+                    good_name_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Wajib Mengisi Nama Item</span>",
+                    },
+                    code_name_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Code Barang wajib diisi</span>",
+                    },
+                    merk_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Merk Barang wajib diisi</span>",
+                    },
+                    good_type_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Tipe Barang wajib diisi</span>",
+                    },
+                    description_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Deskripsi Barang wajib diisi</span>",
+                    }
+                },
+                submitHandler: function() {
+                    event.preventDefault();
+                    // Dapatkan referensi ke elemen form
+                    var form = document.getElementById("kt_modal_tambah_bundle_internet_form");
 
-            //         // Dapatkan nilai dari input berdasarkan nama (name)
-            //         var goodName = form.querySelector('input[name="good_name_update"]').value;
-            //         var codeName = form.querySelector('input[name="code_name_update"]').value;
-            //         var merk = form.querySelector('input[name="merk_update"]').value;
-            //         var goodType = form.querySelector('input[name="good_type_update"]').value;
-            //         var description = form.querySelector('textarea[name="description_update"]').value;
-            //         var goodCategoryId = form.querySelector('input[name="good_category_id_update"]')
-            //             .value;
+                    // Dapatkan nilai dari input berdasarkan nama (name)
+                    var goodName = form.querySelector('input[name="good_name_update"]').value;
+                    var codeName = form.querySelector('input[name="code_name_update"]').value;
+                    var merk = form.querySelector('input[name="merk_update"]').value;
+                    var goodType = form.querySelector('input[name="good_type_update"]').value;
+                    var description = form.querySelector('textarea[name="description_update"]').value;
+                    var goodCategoryId = form.querySelector('input[name="good_category_id_update"]')
+                        .value;
 
-            //         // Sekarang, Anda memiliki nilai dari masing-masing input berdasarkan nama (name)
-            //         // console.log("Nama Inventory Item:", goodName);
-            //         // console.log("Code Item:", codeName);
-            //         // console.log("Merk:", merk);
-            //         // console.log("Tipe Barang:", goodType);
-            //         // console.log("Detail Item Inventory:", description);
-            //         // console.log("Good Category ID:", goodCategoryId);
+                    // Sekarang, Anda memiliki nilai dari masing-masing input berdasarkan nama (name)
+                    // console.log("Nama Inventory Item:", goodName);
+                    // console.log("Code Item:", codeName);
+                    // console.log("Merk:", merk);
+                    // console.log("Tipe Barang:", goodType);
+                    // console.log("Detail Item Inventory:", description);
+                    // console.log("Good Category ID:", goodCategoryId);
 
-            //         $.ajax({
-            //             type: "POST",
-            //             url: "{{ route('com.quotation.update.internet.bundling') }}", // Ganti dengan URL yang sesuai
-            //             data: {
-            //                 _token: '{{ csrf_token() }}',
-            //                 good_category_id: goodCategoryId,
-            //                 good_name: goodName,
-            //                 code_name: codeName,
-            //                 merk: merk,
-            //                 good_type: goodType,
-            //                 description: description
-            //             },
-            //             success: function(response) {
-            //                 console.log("Data berhasil disimpan:", response);
-            //                 form.reset();
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('com.quotation.update.internet.bundling') }}", // Ganti dengan URL yang sesuai
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            good_category_id: goodCategoryId,
+                            good_name: goodName,
+                            code_name: codeName,
+                            merk: merk,
+                            good_type: goodType,
+                            description: description
+                        },
+                        success: function(response) {
+                            console.log("Data berhasil disimpan:", response);
+                            form.reset();
 
-            //                 $('#kt_modal_tambah_bundle_internet').modal('hide');
-            //                 // Hapus semua nilai dari dataFromFirstResponse
-            //                 dataFromFirstResponse = null;
+                            $('#kt_modal_tambah_bundle_internet').modal('hide');
+                            // Hapus semua nilai dari dataFromFirstResponse
+                            dataFromFirstResponse = null;
 
-            //                 $.ajax({
-            //                     url: "{{ route('com.quotation.get.internet.bundling') }}",
-            //                     type: 'GET',
-            //                     success: function(response) {
-            //                         console.log(response);
-            //                         dataFromFirstResponse =
-            //                             response; // Simpan data dari respons pertama
-            //                         $('#good_name_bundle')
-            //                             .empty(); // Hapus opsi yang ada sebelumnya
-            //                         $('#good_name_bundle').append($(
-            //                             '<option>', {
-            //                                 value: '',
-            //                                 text: 'Select Internet Bundle'
-            //                             }));
-            //                         $.each(response, function(index, item) {
-            //                             $('#good_name_bundle').append($(
-            //                                 '<option>', {
-            //                                     value: item.id,
-            //                                     text: item
-            //                                         .good_name
-            //                                 }));
-            //                         });
-            //                     },
-            //                     error: function(error) {
-            //                         console.log(error);
-            //                     }
-            //                 });
+                            $.ajax({
+                                url: "{{ route('com.quotation.get.internet.bundling') }}",
+                                type: 'GET',
+                                success: function(response) {
+                                    console.log(response);
+                                    dataFromFirstResponse =
+                                        response; // Simpan data dari respons pertama
+                                    $('#good_name_bundle')
+                                        .empty(); // Hapus opsi yang ada sebelumnya
+                                    $('#good_name_bundle').append($(
+                                        '<option>', {
+                                            value: '',
+                                            text: 'Select Internet Bundle'
+                                        }));
+                                    $.each(response, function(index, item) {
+                                        $('#good_name_bundle').append($(
+                                            '<option>', {
+                                                value: item.id,
+                                                text: item
+                                                    .good_name
+                                            }));
+                                    });
+                                },
+                                error: function(error) {
+                                    console.log(error);
+                                }
+                            });
 
-            //                 $('#error-item').empty();
-            //             },
-            //             error: function(error) {
-            //                 console.error("Terjadi kesalahan:", error);
-            //             },
-            //         });
-            //     }
-            // });
+                            $('#error-item').empty();
+                        },
+                        error: function(error) {
+                            console.error("Terjadi kesalahan:", error);
+                        },
+                    });
+                }
+            });
 
 
             // function Submit BOQ page BENERAN wkwkw

@@ -19,7 +19,7 @@ class InventoryService
     }
 
     function getDataForm()  {
-        $dataFormInventory = $this->inventoryRepository->getAllData()->with(['inventoryGoodCategory.inventoryGood'])->get();
+        $dataFormInventory = $this->inventoryRepository->getAllData()->with(['inventoryGoodCategory.inventoryGood'])->where('good_category_id', '!=', 3)->get();
         return $dataFormInventory;
     }
     
