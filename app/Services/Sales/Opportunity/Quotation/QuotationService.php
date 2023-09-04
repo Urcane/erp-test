@@ -22,20 +22,12 @@ class QuotationService
     }
 
     function renderDatatable(Request $request) : JsonResponse {
-        $query = $this->quotationRepository->getAll($request)->get(); 
-        dd($query);
+        $query = $this->quotationRepository->getAll($request);
+
         return DataTables::of($query) 
             ->addColumn('DT_RowChecklist', function($check) {
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
             })
-            // ->addColumn('action_update', function ($query) {
-            //     return 
-            //     '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-            //                 <ul class="dropdown-menu">
-            //                     <li><a href="' . url("cmt-boq/update-quotation". $query->quotation ."?quotation_id=". $query->id ) .'" class="dropdown-item py-2">
-            //                     <i class="fa-solid fa-list-check me-3"></i>Update Quotation</a></li>
-            //                 </ul>';
-            // })
             ->addColumn('action_done', function ($query) {
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
@@ -113,8 +105,13 @@ class QuotationService
 
     function updateQuotation(Request $request)  {
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
-        return view('', compact('dataQuotation'));
-        // return response()->json($dataQuotation);
+        
+        if ($quotation === 'internet') { // Use === for strict comparison
+            return view('cmt-opportunity.quotation.pages.create-internet-quotation', compact('dataQuotation'));
+        } 
+        if ($quotation === 'perangkat') { // Use === for strict comparison
+            return view('cmt-opportunity.quotation.pages.create-perangkat-quotation', compact('dataQuotation'));
+        } 
     }
 
     function saveAndStoreQuotation(Request $request) : JsonResponse {
