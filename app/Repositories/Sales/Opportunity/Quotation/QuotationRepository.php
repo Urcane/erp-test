@@ -5,9 +5,9 @@ namespace App\Repositories\Sales\Opportunity\Quotation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Models\Opportunity\BoQ\Item;
 use App\Services\Master\Inventory\InventoryService;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
+use App\Models\Opportunity\BoQ\Item;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
 
 class QuotationRepository
@@ -80,7 +80,7 @@ class QuotationRepository
         $quotationData->is_done = null;
 
         if (isset($quotationData->id)) {
-            $itemIds = $this->item->where('itemable_id', $quotationData->id)->pluck('id')->toArray();
+            $itemIds = $this->item::where('itemable_id', $quotationData->id)->pluck('id')->toArray();
             $this->item->whereIn('id', $itemIds)->delete();
         }
         $bundles = $request->input('bundle');
@@ -99,7 +99,7 @@ class QuotationRepository
                     'purchase_price' => $bundle['purchase_price'],
                     'total_price' => $bundle['total_price'],
                 ];
-                $quotationData->itemable()->updateOrCreate($criteria, $data);
+                $quotationData->itemableQuotation()->updateOrCreate($criteria, $data);
             }
         }
         $quotationData->save();

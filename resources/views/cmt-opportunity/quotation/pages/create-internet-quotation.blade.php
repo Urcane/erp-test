@@ -831,7 +831,7 @@
 
             // function Submit BOQ page BENERAN wkwkw
             $('#submit-all-items').on('click', function(event) {
-                // event.preventDefault();
+                event.preventDefault();
 
                 // Get Prospect ID and Survey ID from the HTML elements
                 var boq_id = $('#id').val();

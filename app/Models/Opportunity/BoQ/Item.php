@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Opportunity\Quotation\ItemableQuotationParts;
 use App\Models\Inventory\InventoryGood;
 
-class Item extends Model
+class Item 
 {
     use HasFactory;
     protected $guarded = [];
