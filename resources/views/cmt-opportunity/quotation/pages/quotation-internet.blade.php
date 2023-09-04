@@ -78,17 +78,16 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <table class="table align-top table-striped border table-rounded gy-5"
-                                id="kt_tab_on_progress_quotation">
+                                id="kt_tabel_on_progress_quotation">
                                 <thead class="">
                                     <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                         <th class="text-center w-50px">#</th>
-                                        {{-- <th class="w-200px">Company Name</th> 
-                                        <th class="w-200px">Company Name</th> 
-                                        <th class="w-200px">Company Name</th> 
-                                        <th class="w-200px">Company Name</th> 
-                                        <th class="w-200px">Company Name</th> 
-                                        <th class="w-200px">Company Name</th> 
-                                        <th class="w-100px text-center">#</th> --}}
+                                        <th class="">Company Name</th>
+                                        <th class="w-100px">Contact Name</th>
+                                        <th class="w-100px">Prospected By</th>
+                                        <th class="w-300px">Last Progress</th>
+                                        <th class="w-300px">Last Next Action</th>
+                                        <th class="w-50px text-center">#</th>
                                     </tr>
                                 </thead>
                                 <tbody class="fs-7">
@@ -255,45 +254,45 @@
                 ]
             });
 
-            // $('body').on('click', '.btn_request_survey', function() {
-            //     const form_edit = $('#kt_modal_request_survey_form');
-            //     form_edit.find('#containerSelectedProspects').html('');
-            //     $('.drop-data').val("").trigger("change")
-            //     $('#kt_modal_request_survey_form').trigger("reset")
-            //     $('#kt_modal_request_survey_submit').removeAttr('disabled', 'disabled');
-
-            //     prospectIds = [];
-            //     const prospectId = $(this).data('id');
-            //     prospectIds.push(prospectId);
-
-            //     $.each(prospectIds.filter(onlyUnique), function(index, rowId) {
-            //         form_edit.find('#containerSelectedProspects').append(
-            //             $('<input>')
-            //             .attr('type', 'hidden')
-            //             .attr('name', 'prospect_id[]')
-            //             .val(rowId)
-            //         );
-            //     });
-            // });
-
-            // submitModal({
-            //     modalName: 'kt_modal_request_survey',
-            //     tableName: 'kt_table_opportunities',
-            //     anotherTableName: 'tableSurveyRequest',
-            //     ajaxLink: '{{ route('com.survey-request.store') }}',
-            //     validationMessages: surveyRequestValidationMessages,
-            // });
         });
 
-        $('#tab_on_progress_quotation').click(function() {
+        $('#tab_on_progress_quotation_content').click(function() {
             generateDatatable({
                 tableName: "tableOnProgressQuotation",
-                elementName: "#kt_tab_on_progress_quotation",
+                elementName: "#kt_tabel_on_progress_quotation",
                 ajaxLink: "{{ route('com.quotation.render.datatable') }}",
                 filters: {},
                 columnData: [{
-                    data: 'DT_RowIndex'
-                }, ],
+                        data: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'prospect.customer.customer_name'
+                    },
+                    {
+                        data: 'prospect.customer.customer_contact.customer_contact_phone',
+                        render: function(data, type, row) {
+                            // Check if the data is of type display or filter (not sorting)
+                            if (type === 'display' || type === 'filter') {
+                                // Prepend '0' to the phone number
+                                return '0' + data;
+                            }
+                            // For sorting and other purposes, return the original data
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'prospect.prospect_title'
+                    },
+                    {
+                        data: 'progress_pretified'
+                    },
+                    {
+                        data: 'next_action_pretified'
+                    },
+                    {
+                        data: 'action_quotation'
+                    },
+                ],
             });
         });
 

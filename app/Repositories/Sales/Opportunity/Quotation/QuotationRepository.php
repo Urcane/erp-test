@@ -20,7 +20,6 @@ class QuotationRepository
 
     function getAll() : JsonResponse {
         $dataQuotation = $this->model->with('ItemableQuotationPart')->get();
-        dd($dataQuotation);
         return response()->json($dataQuotation);
     }
 

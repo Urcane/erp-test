@@ -131,7 +131,7 @@
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
-                                                        oninput="validateAndFormatNumber(this);" id="gpm"
+                                                        oninput="validateAndFormatNumber(this);" id="gpm" disabled
                                                         name="gpm"
                                                         value="{{ $dataBoq['boqFinalData'][0]->gpm ?? null }}" />
                                                 </div>
@@ -142,7 +142,7 @@
                                                 <label class="form-label">Modal</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
-                                                    <input type="number" class="form-control form-control-solid"
+                                                    <input type="number" class="form-control form-control-solid"disabled
                                                         oninput="validateAndFormatNumber(this);" id="modal"
                                                         name="modal"
                                                         value="{{ $dataBoq['boqFinalData'][0]->modal ?? null }}" />
@@ -155,7 +155,7 @@
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
-                                                        oninput="validateAndFormatNumber(this);" id="npm"
+                                                        oninput="validateAndFormatNumber(this);" id="npm"disabled
                                                         name="npm"
                                                         value="{{ $dataBoq['boqFinalData'][0]->npm ?? null }}" />
                                                 </div>
@@ -168,7 +168,7 @@
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
                                                         oninput="validateAndFormatNumber(this);" id="manpower"
-                                                        name="manpower"
+                                                        name="manpower"disabled
                                                         value="{{ $dataBoq['boqFinalData'][0]->manpower ?? null }}" />
                                                 </div>
                                             </div>
@@ -180,7 +180,7 @@
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
                                                         oninput="validateAndFormatNumber(this);" id="percentage"
-                                                        name="percentage"
+                                                        name="percentage"disabled
                                                         value="{{ $dataBoq['boqFinalData'][0]->percentage ?? null }}" />
                                                 </div>
                                             </div>
