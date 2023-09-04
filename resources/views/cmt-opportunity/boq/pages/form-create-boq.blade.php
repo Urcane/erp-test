@@ -643,7 +643,7 @@
                                             data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
                                             data-purchase_price="${formData.get('purchase_price_tambah')}"
                                             data-purchase_refrence="${formData.get('purchase_reference')}"
-                                            data-item_detail="${formData.get('item_detail')}"">                                            
+                                            data-item_detail="${formData.get('item_detail')}">                                            
                                             
                                             <a class="dropdown-item py-2">
                                             <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       

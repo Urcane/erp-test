@@ -53,6 +53,7 @@ class QuotationRepository
                 'boq_id' => $request->input('quotation.boq_id'), //ini wajib selalu di isi
                 'no_quotation' => $request->input('quotation.no_quotation'),
                 'description' => $request->input('quotation.description'),
+                
                 'total_price' => $request->input('quotation.total_price'),
                 'remark' => $request->input('quotation.remark'),
                 'is_done' => $request->input('quotation.is_done'), //kondisi jika quotation di cancel, request is_done = 0
