@@ -83,20 +83,21 @@ class QuotationRepository
             $itemIds = $this->item->where('itemable_id', $quotationData->id)->pluck('id')->toArray();
             $this->item->whereIn('id', $itemIds)->delete();
         }
-        $itemsData = $request->input('items');
+        $bundles = $request->input('bundle');
 
-        if (!empty($itemsData)) {
-            foreach ($itemsData as $itemData) {
+        if (!empty($bundles)) {
+            foreach ($bundles as $bundle) {
                 $criteria = [
                     'itemable_id' => $quotationData->id,
                     'itemable_type' => $quotationData->itemable_type, 
                 ];
-                if (isset($itemData['id'])) {
-                    $criteria['id'] = $itemData['id'];
+                if (isset($bundle['id'])) {
+                    $criteria['id'] = $bundle['id'];
                 }
                 $data = [
-                    'quantity' => $itemData['quantity'],
-                    'total_price' => $itemData['total_price'],
+                    'quantity' => $bundle['quantity'],
+                    'purchase_price' => $bundle['purchase_price'],
+                    'total_price' => $bundle['total_price'],
                 ];
                 $quotationData->itemable()->updateOrCreate($criteria, $data);
             }

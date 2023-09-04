@@ -65,15 +65,7 @@ class QuotationService
 
                     $actions .= '</ul>';
                     return $actions; 
-            })
-            ->addColumn('action_update', function ($query) {
-                return 
-                '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                            <ul class="dropdown-menu">
-                            <li><a href="' . url("cmt-quotation/update-quotation?quotation_id=". $query->id) . '" class="dropdown-item py-2">
-                            <span class="dropdown-item py-2">Update Quotation</span></li>
-                            </ul>';
-            })
+            }) 
             ->addColumn('action_cancel', function ($query) {
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
