@@ -27,7 +27,7 @@ class QuotationRepository
     function createQuotation(Request $request) {
         $boqId = $request->query('boq_id');
         $boqData = $this->boqData->where('id', $boqId)->first();
-        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();        
+        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')->where("prospect_id",$boqData->prospect_id)->get();        
         return [
             'boqFinalData' => $boqFinalData
         ];
@@ -37,7 +37,7 @@ class QuotationRepository
         $quotationId = $request->query('quotation_id');
         $quotationData = $this->model->where('id', $quotationId)->first();
         $boqData = $this->boqData->where('id', $quotationData->boq_id)->first();
-        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();         
+        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')->where("prospect_id",$boqData->prospect_id)->get();         
         return [
             'quotationData' => $quotationData,
             'boqFinalData' => $boqFinalData
