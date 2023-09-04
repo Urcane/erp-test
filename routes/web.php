@@ -110,7 +110,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/get-revision-boq','getApprovalBoq')->name('com.boq.get.revision.boq');
             Route::post('/store-data-boq','saveAndStoreBoq')->name('com.boq.store.boq');
             Route::post('/store-approval-boq','storeApprovalBoq')->name('com.boq.store.approval.boq');
-            Route::get('/on-review-boq','onReviewBoq')->name('com.boq.on-review-boq');
+            
+            Route::get('/on-review-boq','onReviewBoq')->name('com.boq.on.review.boq');
+            Route::get('/review-done-boq','reviewDoneBoq')->name('com.boq.review.done.boq');
 
             Route::get('/get-merk-type','getMerkType')->name('get.merk.type');
             Route::get('/get-survey-company-item-inventory','getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory'); 
@@ -121,9 +123,15 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('cmt-quotation')->group(function(){
             Route::get('/', 'index')->name('com.quotation.index'); // quotation internet
             Route::get('/quotation-perangkat', 'perangkat')->name('com.quotation.perangkat.index'); // quotation perangkat
+
            Route::get('/get-data/table/data-result','getDatatable')->name('com.quotation.render.datatable');
-           Route::get('/create-draft-quotation','createQuotation')->name('com.quotation.create.quotation');
+
+           Route::get('/quotation-result-export/{isQuotation}/{id}','exportQuotationResult')->name('com.quotation.result.export');
+
+           Route::get('/create-quotation','createQuotation')->name('com.quotation.create.quotation');
            Route::get('/update-quotation','updateQuotation')->name('com.quotation.update.quotation');
+           Route::get('/review-done-quotation','reviewDoneQuotation')->name('com.quotation.review.done.quotation');
+
            Route::post('/store-data-quotation','saveAndStoreQuotation')->name('com.quotation.store.quotation');
            Route::get('/get-internet-bundling', 'getInternetBundling')->name('com.quotation.get.internet.bundling');
            Route::post('/update-internet-bundling', 'updateInternetBundling')->name('com.quotation.update.internet.bundling');

@@ -28,7 +28,7 @@ class InventoryRepository
      }
 
      function getAllData() {
-        $dataFormInventory = $this->model;
+        $dataFormInventory = $this->model->where('good_category_id', '!=', 3);
         return $dataFormInventory;
      }
 
