@@ -13,6 +13,15 @@
 @endsection
 
 @section('content')
+<style>
+    input.error {
+    }
+
+    label.error {
+        color: red !important
+    }
+</style>
+
 <div class="row justify-content-center mt-n20">
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center">
@@ -199,13 +208,14 @@
         formEmpStepper.on("kt.stepper.next", function (stepper) {
             const state = $('#kt_create_emp_form').valid();
 
-            // if (!state) {
-            //     $('#kt_create_emp_form :input').each(function() {
-            //         validate($(this), $(this).prop('required'), $(this).attr("data-length"))
-            //     });
-            // }
             if (state) {
                 stepper.goNext();
+            } else {
+                var firstError = $(".error:first");
+
+                $('html, body').animate({
+                    scrollTop: firstError.offset().top - 100
+                }, 500);
             }
         });
 
