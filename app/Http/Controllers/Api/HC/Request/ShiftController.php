@@ -170,7 +170,7 @@ class ShiftController extends RequestController
                 ]);
             }
 
-            if ($approvalLine->id != $request->id) {
+            if ($approvalLine->id != $request->user()->id) {
                 throw new AuthorizationError("Anda tidak berhak melakukan update status");
             }
 

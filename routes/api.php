@@ -6,7 +6,7 @@ use App\Http\Controllers\Profile\PersonalController;
 
 use App\Http\Controllers\Api\HC;
 use App\Http\Controllers\Api\Request;
-
+use App\Http\Controllers\Tests;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,7 +87,7 @@ Route::middleware('auth:sanctum')->group(function () {
             });
         });
 
-        Route::prefix('timeoff')->group(function () {
+        Route::prefix('time-off')->group(function () {
             Route::controller(HC\Request\TimeOffController::class)->group(function () {
                 Route::post('/get', 'getRequests');
                 Route::post('/get/detail', 'getRequestById');
