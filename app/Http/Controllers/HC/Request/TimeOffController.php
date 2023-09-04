@@ -120,11 +120,7 @@ class TimeOffController extends RequestController
                         ]);
                     }
 
-                    collect($schedule["takenDates"])->map(function ($data) use (
-                            $userId,
-                            $leaveCategoryName,
-                            $leaveCategoryCode,
-                        ) {
+                    collect($schedule["takenDates"])->map(function ($data) use ($userId, $leaveCategoryName, $leaveCategoryCode) {
                         $this->_updateAttendance(
                             $userId,
                             $data,
@@ -211,7 +207,7 @@ class TimeOffController extends RequestController
                         $userId,
                         $leaveCategoryName,
                         $leaveCategoryCode,
-                        $approvalName,
+                        $approvalName
                     ) {
                     $this->_updateAttendance(
                         $userId,
