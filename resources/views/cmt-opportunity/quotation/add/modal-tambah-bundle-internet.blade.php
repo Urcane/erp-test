@@ -65,7 +65,7 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2" >
                                     <span class="fw-bold required">Detail Item Inventory</span>
                                 </label>
-                                <textarea class="form-control form-control-solid required" id="description" name="description_update" value="" required
+                                <textarea class="form-control form-control-solid required" id="description_update" name="description_update" value="" required
                                     placeholder="" rows="2"></textarea>
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                             </div>
