@@ -83,10 +83,7 @@
                                     <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                         <th class="text-center w-50px">#</th>
                                         <th class="">Company Name</th>
-                                        <th class="w-100px">Contact Name</th>
-                                        <th class="w-100px">Prospected By</th>
-                                        <th class="w-300px">Last Progress</th>
-                                        <th class="w-300px">Last Next Action</th>
+                                        <th class="w-300px">Last Progress</th> 
                                         <th class="w-50px text-center">#</th>
                                     </tr>
                                 </thead>
@@ -264,24 +261,6 @@
                 filters: {},
                 columnData: [{
                         data: 'DT_RowIndex'
-                    },
-                    {
-                        data: 'prospect.customer.customer_name'
-                    },
-                    {
-                        data: 'prospect.customer.customer_contact.customer_contact_phone',
-                        render: function(data, type, row) {
-                            // Check if the data is of type display or filter (not sorting)
-                            if (type === 'display' || type === 'filter') {
-                                // Prepend '0' to the phone number
-                                return '0' + data;
-                            }
-                            // For sorting and other purposes, return the original data
-                            return data;
-                        }
-                    },
-                    {
-                        data: 'prospect.prospect_title'
                     },
                     {
                         data: 'progress_pretified'

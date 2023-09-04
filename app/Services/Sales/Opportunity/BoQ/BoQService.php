@@ -26,8 +26,7 @@ class BoqService
     }
 
     function renderDatatable(Request $request) : JsonResponse {
-        $query = $this->BoQRepository->getAll($request);
-
+        $query = $this->BoQRepository->getAll($request); 
         return DataTables::of($query)
             ->addColumn('DT_RowChecklist', function($check) {
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
