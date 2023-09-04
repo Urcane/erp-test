@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="menu-item">
-            <a class="menu-link fw-semibold @if($selected_side_bar_content == 'main') text-primary @else text-dark @endif" href="{{route('com.quotation.index')}}">
+            <a class="menu-link fw-semibold @if($selected_side_bar_content == 'quotation-internet') text-primary @else text-dark @endif" href="{{route('com.quotation.index')}}">
                 <span class="menu-icon">
                      <i class="fa-solid fa-file-lines"></i>
                 </span>
@@ -20,7 +20,7 @@
             </a>
         </div>
         <div class="menu-item">
-            <a class="menu-link fw-semibold @if($selected_side_bar_content == 'main') text-primary @else text-dark @endif" href="{{route('com.quotation.perangkat.index')}}">
+            <a class="menu-link fw-semibold @if($selected_side_bar_content == 'quotation-perangkat') text-primary @else text-dark @endif" href="{{route('com.quotation.perangkat.index')}}">
                 <span class="menu-icon">
                      <i class="fa-solid fa-file-lines"></i>
                 </span>

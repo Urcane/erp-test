@@ -51,7 +51,8 @@ class BoqService
             ->addColumn('action_done', function ($query) {
                 return '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                            <li><span class="dropdown-item py-2">No Action</span></li>
+                                <li><a href="' . url("cmt-boq/review-done-boq?boq_id=". $query->id) .'" class="dropdown-item py-2">
+                                <i class="fa-solid fa-list-check me-3"></i>Review Done</a></li>
                             </ul>';
             })
             ->addColumn('action_quotation', function ($query) use($request)  {
@@ -189,8 +190,13 @@ class BoqService
     }
     
     function onReviewBoq(Request $request){
-        $updateDraftBoqData = $this->BoQRepository->onReviewBoq($request); 
-            return view('cmt-opportunity.boq.pages.on-review-boq', compact('updateDraftBoqData')); 
+        $dataReviewBoq = $this->BoQRepository->reviewBoq($request); 
+        return view('cmt-opportunity.boq.pages.on-review-boq', compact('dataReviewBoq')); 
+    }
+
+    function reviewDoneBoq(Request $request) {
+        $dataReviewBoq = $this->BoQRepository->reviewBoq($request); 
+        return view('cmt-opportunity.boq.pages.review-done-boq', compact('dataReviewBoq')); 
     }
 
     function storeApprovalBoq(Request $request) : JsonResponse {

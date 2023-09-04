@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Sales\Opportunity\Quotation;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\Opportunity\BoQ\Item;
@@ -31,6 +32,11 @@ class QuotationRepository
         if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'false') {
             $dataQuotation->where('is_done',0);
         }
+
+        if (isset($request->filters['is_progress']) && $request->filters['is_progress'] == 'true') {
+            $dataQuotation->where('is_done', null);
+        }
+
         return ($dataQuotation);
     }
 
@@ -50,7 +56,7 @@ class QuotationRepository
         $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();         
         return [
             'quotationData' => $quotationData,
-            'boqFinalData' => $boqFinalData
+            'boqFinalData' => $boqFinalData,
         ];
     }
 
@@ -115,4 +121,37 @@ class QuotationRepository
         $newBoq->reference_boq_id = $newBoq->id;
         $newBoq->save();
     }
+
+    function exportQuotationResult($isQuotation, $id) {
+        $dataQuotation = $this->model->where('id', $id)->first();
+    
+        if (!$dataQuotation) {
+            return response()->json(['message' => 'Sayang Sekali :( Quotation tidak ditemukan'], 404);
+        }
+    
+        $dataBoq = $this->boqData->where('id', $dataQuotation->boq_id)->first();
+    
+        if (!$dataBoq) {
+            return response()->json(['message' => 'Sayang Sekali :( BoQ tidak ditemukan'], 404);
+        }
+    
+        $dataFinalBoq = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')
+            ->where('prospect_id', $dataBoq->prospect_id)
+            ->get();
+
+        $index = 1;
+        $finalPrice = 0;
+
+        $view = "cmt-opportunity.quotation.pages.print.$isQuotation-print";
+        $compact = [
+            'dataQuotation',
+            'dataFinalBoq',
+            'index',
+            'finalPrice'
+        ];
+
+        return view($view, compact(
+            ...$compact
+        ));
+    }    
 }

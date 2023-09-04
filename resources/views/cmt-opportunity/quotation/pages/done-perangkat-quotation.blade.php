@@ -268,9 +268,9 @@
                                             <div class=" me-5">
                                                 <a href="" class="btn btn-light-info">Discard</a>
                                             </div>
-                                            <div class="me-5">
-                                                <a href="cmt-boq" id="submit-all-items" class="btn btn-info">Submit</a>
-                                            </div>
+                                            <button type="button" class="btn btn-md btn-danger me-3 print-form">
+                                                <i class="fa-solid fa-print fs-6"></i>Print
+                                            </button>
                                         </div>
                                     </div>
 
@@ -283,6 +283,8 @@
             </div>
         </div>
     </div>
+    <div id="printerDiv" style="display:none"></div>
+
 
     @role('administrator')
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
@@ -835,5 +837,11 @@
                 $('#totalsum').text(totalPriceWithCommas);
             }
         });
+
+        $('.print-form').click(function () {
+            const div = document.getElementById("printerDiv");
+          div.innerHTML = `<iframe src="{{route('com.quotation.result.export',['isQuotation' => 'perangkat','id' => $dataQuotation['quotationData']->id])}}" onload="this.contentWindow.print();"></iframe>`;
+        });
+
     </script>
 @endsection

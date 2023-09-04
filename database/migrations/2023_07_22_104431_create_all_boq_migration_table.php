@@ -20,6 +20,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->foreignId('item_inventory_id')->nullable()->constrained('inventory_goods');
             $table->string('item_detail')->nullable();
             $table->string('quantity')->nullable();
+            $table->char('unit', 10)->nullable()->comment('unit with char(10)');
             $table->string('purchase_price')->nullable();
             $table->string('purchase_delivery_charge')->nullable();
             $table->string('purchase_refrence')->nullable();

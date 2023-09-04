@@ -127,7 +127,6 @@
                                             @if (isset($dataQuotation['boqFinalData'][0]->itemable))
 
                                                 @foreach ($dataQuotation['boqFinalData'][0]->itemable as $relatedItem)
-                                                    @endphp
                                                     <div
                                                         class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
                                                         <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
@@ -283,9 +282,9 @@
                                             <div class=" me-5">
                                                 <a href="" class="btn btn-light-info">Discard</a>
                                             </div>
-                                            <div class="me-5">
-                                                <a href="cmt-boq" id="submit-all-items" class="btn btn-danger">Print PDF</a>
-                                            </div>
+                                            <button type="button" class="btn btn-md btn-danger me-3 print-form">
+                                                <i class="fa-solid fa-print fs-6"></i>Print
+                                            </button>
                                         </div>
                                     </div>
 
@@ -298,6 +297,8 @@
             </div>
         </div>
     </div>
+    <div id="printerDiv" style="display:none"></div>
+
 
     @role('administrator')
         @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
@@ -649,5 +650,11 @@
             //  Calculate and update total sum on page load
             updateTotalSum();
         });
+
+        $('.print-form').click(function () {
+            const div = document.getElementById("printerDiv");
+          div.innerHTML = `<iframe src="{{route('com.quotation.result.export',['isQuotation' => 'internet','id' => $dataQuotation['quotationData']->id])}}" onload="this.contentWindow.print();"></iframe>`;
+        });
+        
     </script>
 @endsection

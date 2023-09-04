@@ -13,7 +13,13 @@ class CreateAllInventoryMigrationTable extends Migration
      */
     public function up()
     {
-        
+        Schema::create('inventory_unit_masters', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50);
+            $table->char('code', 10)->unique();
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
 
         Schema::create('inventory_good_categories', function (Blueprint $table) {
             $table->id()->index();
@@ -42,7 +48,8 @@ class CreateAllInventoryMigrationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inventory_goods');
         Schema::dropIfExists('inventory_good_categories');
+        Schema::dropIfExists('inventory_goods');
+        Schema::dropIfExists('inventory_unit_masters');
     }
 }

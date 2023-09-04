@@ -1,4 +1,7 @@
 @extends('cmt-opportunity.quotation.index')
+@php
+    $selected_side_bar_content = 'quotation-internet'
+@endphp
 
 @section('quotation-content')
     <div class="row mb-6 align-items-center">
@@ -148,12 +151,30 @@
 
     <script>
         $(document).ready(function() {
+
+        $('#tab_boq').click(function() {
+            $('#progress_bar').removeClass('badge-danger').addClass('badge-info');
+            $('#progress_bar').text('In Progress');
+        });
+        $('#tab_on_progress_quotation').click(function() {
+            $('#progress_bar').removeClass('badge-danger').addClass('badge-info');
+            $('#progress_bar').text('In Progress');
+        });
+        $('#tab_done_quotation').click(function() {
+            $('#progress_bar').removeClass('badge-danger').addClass('badge-info');
+            $('#progress_bar').text('Done');
+        });
+        $('#tab_cancel_quotation').click(function() {
+            $('#progress_bar').removeClass('badge-info').addClass('badge-danger');
+            $('#progress_bar').text('Cancel');
+        });
+
         generateDatatable({
             tableName: "tableDoneBoq",
             elementName: "#kt_table_boq_done",
             ajaxLink: "{{ route('com.boq.render.datatable') }}",
             filters: {
-                is_done: true,
+                is_quotation: false,
                 calledFrom: "Internet",
             },
             columnData: [{
@@ -197,6 +218,7 @@
                 ajaxLink: "{{ route('com.quotation.render.datatable') }}",
                 filters: {
                     calledFrom: "Internet",
+                    is_progress : true
                 },
                 columnData: [{
                     data: 'DT_RowIndex',
@@ -235,6 +257,7 @@
                 elementName: "#kt_table_done_quotation",
                 ajaxLink: "{{ route('com.quotation.render.datatable') }}",
                 filters: {
+                    calledFrom: "Internet",
                     is_done : true
                 },
                 columnData: [{
