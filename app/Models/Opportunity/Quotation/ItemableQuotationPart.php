@@ -3,6 +3,7 @@
 namespace App\Models\Opportunity\Quotation;
 
 use App\Traits\HasFile;
+use App\Models\Opportunity\BoQ\Item;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

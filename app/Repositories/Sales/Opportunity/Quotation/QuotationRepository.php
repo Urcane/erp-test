@@ -2,12 +2,9 @@
 
 namespace App\Repositories\Sales\Opportunity\Quotation;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use App\Services\Master\Inventory\InventoryService;
-use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\BoQ\Item;
+use Illuminate\Http\Request;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
 
 class QuotationRepository
@@ -16,10 +13,9 @@ class QuotationRepository
     protected $boqData;
     protected $item;
 
-    function __construct(ItemableQuotationPart $model, ItemableBillOfQuantity $boqData, Item $item) {
+    function __construct(ItemableQuotationPart $model, ItemableBillOfQuantity $boqData) {
         $this->model = $model;
         $this->boqData = $boqData;
-        $this->item = $item;
     }
 
 
@@ -80,8 +76,8 @@ class QuotationRepository
         $quotationData->is_done = null;
 
         if (isset($quotationData->id)) {
-            $itemIds = $this->item::where('itemable_id', $quotationData->id)->pluck('id')->toArray();
-            $this->item->whereIn('id', $itemIds)->delete();
+            $itemIds = Item::where('itemable_id', $quotationData->id)->pluck('id')->toArray();
+            Item::whereIn('id', $itemIds)->delete();
         }
         $bundles = $request->input('bundle');
 
