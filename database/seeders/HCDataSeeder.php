@@ -601,6 +601,48 @@ class HCDataSeeder extends Seeder
                 }
             }
         }
+
+        // $userEmployeeDataFaker = $this->makeEmployment(
+        //     1234567,
+        //     1,
+        //     "2021-09-09",
+        //     null,
+        //     null,
+        //     2,
+        //     "AAA",
+        //     "AAA",
+        //     1,
+        //     1,
+        //     null
+        // );
+
+        // for ($i = 4; $i < 1000; $i++) {
+        //     $userId = [
+        //         "user_id" => $i
+        //     ];
+
+        //     UserEmployment::create($userEmployeeDataFaker + $userId);
+        // }
+
+        // $userAttendancesFaker = $this->makeAttendance(
+        //     "2021-01-01",
+        //     now(),
+        //     "08:00:00",
+        //     "17:00:00"
+        // );
+
+        // for ($i = 4; $i < 1000; $i++) {
+        //     $userId = [
+        //         "user_id" => $i
+        //     ];
+
+        //     foreach ($userAttendancesFaker["attendance"] as $attendance) {
+        //         UserAttendance::create($attendance + $userId + [
+        //             "late_check_in" => 5,
+        //             "late_check_out" => 5,
+        //         ]);
+        //     }
+        // }
     }
 
     private function makePersonalData($birthdate, $place, $marital, $gender, $blood, $religion)
