@@ -221,7 +221,7 @@ class CreateAllEmployee extends Migration
         Schema::create('user_salary', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->integer("basic_salary");
+            $table->bigInteger("basic_salary");
             $table->enum("salary_type", $this->constants->salary_type)->nullable();
             $table->foreignId("payment_schedule_id")->nullable()->constrained("payment_schedules");
             $table->foreignId("prorate_setting_id")->nullable()->constrained("prorate_settings");

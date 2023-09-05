@@ -83,9 +83,9 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold text-dark">Role</span>
                             </label>
-                            <select class="drop-data form-select form-select-solid" data-control="select2" @unlessrole("administrator") disabled @endunlessrole>
+                            <select name="role_id" class="drop-data form-select form-select-solid" data-control="select2" @unlessrole("administrator") disabled @endunlessrole>
                                 @foreach ($dataRole as $dr)
-                                <option value="{{$dr->id}}" {{$dr->id == $user->role_id  ? 'selected' : ''}}>{{$dr->name}}</option>
+                                <option value="{{$dr->id}}" {{$dr->name == $user->getRoleNames()[0]  ? 'selected' : ''}}>{{$dr->name}}</option>
                                 @endforeach
                             </select>
                             <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -150,8 +150,8 @@
                                 toastr.success(data.message,'Selamat 🚀 !');
                             },
                             error: function(xhr, status, error) {
-                                const data = JSON.parse(xhr.responseText);
-                                toastr.error(errorThrown ,'Opps!');
+                                const data = xhr.responseJSON;
+                                toastr.error(data.message, 'Opps!');
                             }
                         });
                     });

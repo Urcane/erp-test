@@ -21,6 +21,7 @@ use App\Utils\ErrorHandler;
 use App\Constants;
 use App\Models\User;
 use App\Models\Employee\UserIdentity;
+use App\Models\Employee\UserPersonalData;
 use App\Models\PersonalInfo\UserFamily;
 use App\Models\PersonalInfo\UserEmergencyContact;
 use App\Models\PersonalInfo\UserFormalEducation;
@@ -596,7 +597,7 @@ class PersonalController extends Controller
 
         try {
             // dd("Asdf");
-            // $file_sign = $request->pegawai_sign_url;
+            $file_sign = $request->pegawai_sign_url;
             if ($file_sign != null && $file_sign != '') {
                 $image_parts = explode(";base64,", $file_sign);
                 $image_type_aux = explode("image/", $image_parts[0]);
@@ -624,13 +625,19 @@ class PersonalController extends Controller
                 'sign_file'=>$file_sign,
             ]);
 
-            $updateUserPersonalData = $getUser->userPersonalData->update([
-                "birthdate" => $request->birthdate,
-                "place_of_birth" => $request->place_of_birth,
-                "marital_status" => $request->marital_status,
-                "gender" => $request->gender,
-                "blood_type" => $request->blood_type,
-                "religion" => $request->religion,
+            $id = $getUser->userPersonalData->id ?? null;
+
+            UserPersonalData::updateOrCreate(
+            [
+                "id" => $id,
+            ], [
+                'user_id' => $getUser->id,
+                'birthdate' => $request->birthdate,
+                'place_of_birth' => $request->place_of_birth,
+                'marital_status' => $request->marital_status,
+                'gender' => $request->gender,
+                'blood_type' => $request->blood_type,
+                'religion' => $request->religion,
             ]);
 
             if ($request->role_id) {

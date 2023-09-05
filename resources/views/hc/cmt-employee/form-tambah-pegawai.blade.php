@@ -13,6 +13,15 @@
 @endsection
 
 @section('content')
+<style>
+    input.error {
+    }
+
+    label.error {
+        color: red !important
+    }
+</style>
+
 <div class="row justify-content-center mt-n20">
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center">
@@ -20,8 +29,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mx-5 mx-lg-15 my-9">
-                            <form method="post" action="{{route('hc.emp.store')}}" id="kt_create_emp_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
-                                @csrf
+                            <form id="kt_create_emp_form" class="form fv-plugins-bootstrap5 fv-plugins-framework">
                                 <div class="row rounded">
                                     <div class="col-lg-1">
                                         <a href="{{route("hc.emp.index")}}" class="fw-bold"><i class="fa-solid fa-arrow-left "></i> Back</a>
@@ -190,7 +198,29 @@
         </div>
     </div>
 </div>
-
+<script>
+    $('#kt_create_emp_form').submit(function(event) {
+        alert("SAdf")
+        event.preventDefault();
+        var formData = $(this).serialize();
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': "{{csrf_token()}}"
+            },
+            url: "{{route('hc.emp.store')}}",
+            type: 'POST',
+            data: formData,
+            success: function(data) {
+                window.location.href = "{{route('hc.emp.index')}}";
+                toastr.success(data.message,'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    });
+</script>
 <script>
     $(document).ready(function() {
         const formEmp = document.querySelector(".kt_stepper_form_emp");
@@ -199,13 +229,14 @@
         formEmpStepper.on("kt.stepper.next", function (stepper) {
             const state = $('#kt_create_emp_form').valid();
 
-            // if (!state) {
-            //     $('#kt_create_emp_form :input').each(function() {
-            //         validate($(this), $(this).prop('required'), $(this).attr("data-length"))
-            //     });
-            // }
             if (state) {
                 stepper.goNext();
+            } else {
+                var firstError = $(".error:first");
+
+                $('html, body').animate({
+                    scrollTop: firstError.offset().top - 100
+                }, 500);
             }
         });
 
@@ -230,7 +261,6 @@
 
             return;
         }
-
     })
 </script>
 @endsection
