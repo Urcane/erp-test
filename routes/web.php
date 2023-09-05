@@ -5,7 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Sales\Opportunity\Quotation\QuotationController;
 use App\Http\Controllers\Sales\Customer\CustomerController;
-use App\Http\Controllers\Sales\Opportunity\BOQ\BoqController;
+use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\Profile\ProfileController;
