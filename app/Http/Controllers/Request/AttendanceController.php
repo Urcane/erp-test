@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Request;
 
+use App\Exceptions\AuthorizationError;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Yajra\DataTables\DataTables;
 
 use App\Exceptions\InvariantError;
+use App\Exceptions\NotFoundError;
 use App\Models\Attendance\GlobalDayOff;
+use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserAttendanceRequest;
 use Carbon\Carbon;
 
@@ -76,6 +79,38 @@ class AttendanceController extends RequestController
         }
     }
 
+    public function cancelRequest(Request $request)
+    {
+        try {
+            $attendanceRequest = UserAttendanceRequest::whereId($request->id)->first();
+
+            if (!$attendanceRequest) {
+                throw new NotFoundError("Request Tidak ditemukan");
+            }
+
+            if ($attendanceRequest->user_id != Auth::user()->id) {
+                throw new AuthorizationError("Anda tidak berhak melakukan ini");
+            }
+
+            if ($attendanceRequest->status != $this->constants->approve_status[0]) {
+                throw new InvariantError("Tidak bisa melakukan cancel pada request");
+            }
+
+            $attendanceRequest->update([
+                "status" => $this->constants->approve_status[3]
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil cancel request attendance"
+            ],);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
@@ -84,14 +119,30 @@ class AttendanceController extends RequestController
                 ->with(['user.userEmployment', 'approvalLine']);
 
             return DataTables::of($attendanceRequests)
-                ->addColumn('action', function ($action) {
-                    $menu = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                    return '
-                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                    <ul class="dropdown-menu">
-                    '.$menu.'
-                    </ul>
-                    ';
+                ->addColumn('action', function ($query) {
+                    $constants = $this->constants;
+
+                    $shift = "-";
+                    $workHour = "-";
+
+                    $userAttendance = UserAttendance::where('user_id', $query->user->id)
+                        ->whereDate('date', $query->date)->first();
+
+                    if (!$userAttendance) {
+                        $workingShift = $query->user->userEmployment->workingScheduleShift->workingShift;
+                        $shift = $workingShift->name;
+                        $workHour = "$workingShift->working_start - $workingShift->working_end";
+                    } else {
+                        $shift = $userAttendance->shift_name;
+                        $workHour = "$userAttendance->working_start - $userAttendance->working_end";
+                    }
+
+                    $fileName = $query->file;
+                    $fileLink = asset("/storage/request/attendance/$fileName");
+
+                    return view('profile.part-profile.time-management-part.attendance.menu', compact([
+                        'query', 'constants', 'shift', 'workHour', 'fileName', 'fileLink'
+                    ]));
                 })
                 ->addColumn('approval_line', function ($attendanceRequest) {
                     if ($attendanceRequest->status != $this->constants->approve_status[0]) {

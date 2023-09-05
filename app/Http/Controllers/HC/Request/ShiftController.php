@@ -243,7 +243,7 @@ class ShiftController extends RequestController
                     break;
 
                 default:
-                    $query = $query->orderByRaw("FIELD(status, ?, ?, ?)", $this->constants->approve_status);
+                    $query = $query->orderByRaw("FIELD(status, ?, ?, ?)", array_slice($this->constants->approve_status, 0, 3));
                     break;
             };
 

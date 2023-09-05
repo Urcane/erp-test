@@ -19,5 +19,6 @@ abstract class RequestController extends Controller
     }
 
     abstract public function makeRequest(Request $request);
+    abstract public function cancelRequest(Request $request);
     abstract public function showRequestTableById(Request $request);
 }
