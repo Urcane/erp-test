@@ -21,6 +21,7 @@ use App\Utils\ErrorHandler;
 use App\Constants;
 use App\Models\User;
 use App\Models\Employee\UserIdentity;
+use App\Models\Employee\UserPersonalData;
 use App\Models\PersonalInfo\UserFamily;
 use App\Models\PersonalInfo\UserEmergencyContact;
 use App\Models\PersonalInfo\UserFormalEducation;
@@ -624,13 +625,19 @@ class PersonalController extends Controller
                 'sign_file'=>$file_sign,
             ]);
 
-            $updateUserPersonalData = $getUser->userPersonalData->update([
-                "birthdate" => $request->birthdate,
-                "place_of_birth" => $request->place_of_birth,
-                "marital_status" => $request->marital_status,
-                "gender" => $request->gender,
-                "blood_type" => $request->blood_type,
-                "religion" => $request->religion,
+            $id = $getUser->userPersonalData->id ?? null;
+
+            UserPersonalData::updateOrCreate(
+            [
+                "id" => $id,
+            ], [
+                'user_id' => $getUser->id,
+                'birthdate' => $request->birthdate,
+                'place_of_birth' => $request->place_of_birth,
+                'marital_status' => $request->marital_status,
+                'gender' => $request->gender,
+                'blood_type' => $request->blood_type,
+                'religion' => $request->religion,
             ]);
 
             if ($request->role_id) {
