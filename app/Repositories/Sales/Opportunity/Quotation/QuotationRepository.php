@@ -55,6 +55,10 @@ class QuotationRepository
             $query->where('good_category_id', 3);
        })->get();
         $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
+             $query->where('good_category_id', 3);
+        })
+        ->with('inventoryGood')
+        ->get();
         $boqData = $this->boqData->where('id', $quotationData->boq_id)->first();
         $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();         
         return [
