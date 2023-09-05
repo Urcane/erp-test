@@ -49,11 +49,13 @@ class QuotationRepository
     function updateQuotation(Request $request) {
         $quotationId = $request->query('quotation_id');
         $quotationData = $this->model->where('id', $quotationId)->first();
+        $quotationItem = Item::where('itemable_id', $quotationId)->get();
         $boqData = $this->boqData->where('id', $quotationData->boq_id)->first();
         $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();         
         return [
             'quotationData' => $quotationData,
             'boqFinalData' => $boqFinalData,
+            'quotationItem' => $quotationItem
         ];
     }
 
