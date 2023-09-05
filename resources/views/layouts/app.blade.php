@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" />
 	<link href="{{asset('sense')}}/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 
-	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
+	<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
 	<link href="{{asset('sense')}}/plugins/custom/signaturejs/css/jquery.signature.css" rel="stylesheet" type="text/css" />
 	
 	@stack('css')
@@ -27,7 +27,7 @@
 	<link href="{{asset('sense')}}/css/style.bundle.css" rel="stylesheet" type="text/css" />
 	
 	<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 	
 	<script type="text/javascript" src="{{asset('sense')}}/plugins/custom/touchjs/jquery.ui.touch-punch.min.js"></script>
