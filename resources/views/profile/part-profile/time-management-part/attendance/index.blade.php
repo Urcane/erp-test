@@ -1,78 +1,3 @@
-<div class="modal fade" id="attendance_request_modal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered mw-650px">
-        <div class="modal-content">
-            <div class="modal-header pb-0 border-0 justify-content-end">
-                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-            <div class="modal-body mx-5 mx-lg-15 mb-7">
-                <form id="modal_create_attendance_request" class="form fv-plugins-bootstrap5 fv-plugins-framework">
-                    <div class="scroll-y me-n10 pe-10" data-kt-scroll-max-height="auto" data-kt-scroll-offset="300px">
-                        <div class="row mb-9">
-                            <div class="col-lg-12 text-center mb-9">
-                                <span class="fs-1 fw-bolder text-dark d-block mb-1">Request Attendance</span>
-                                {{-- <span class="fs-7 fw-semibold text-gray-500">Ajukan absen</span> --}}
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Pilih Tanggal Attendance</span>
-                                </label>
-                                <input type="date" class="form-control form-control-solid" placeholder="Select Date"
-                                    required name="date">
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Shift</span>
-                                </label>
-                                <input type="text" class="form-control form-control-solid"
-                                    value="{{ $user->userEmployment->workingScheduleShift->workingShift->name  ?? ""}}"
-                                    disabled>
-                            </div>
-                            <div class="col-lg-6 mt-3 mb-3">
-                                <input type="checkbox" class="form-check-input checkbox-real" id="check_in_box">
-                                <label class="fs-6 form-check-label mb-2" for="permanent">
-                                    <span class="fw-bold">Check In</span>
-                                </label>
-                                <input type="time" class="form-control form-control-solid text-muted"
-                                    placeholder="Select Date" name="check_in" id="check_in">
-                            </div>
-                            <div class="col-lg-6 mt-3 mb-3">
-                                <input type="checkbox" class="form-check-input checkbox-real" id="check_out_box">
-                                <label class="fs-6 form-check-label mb-2" for="permanent">
-                                    <span class="fw-bold">Check Out</span>
-                                </label>
-                                <input type="time" class="form-control form-control-solid text-muted"
-                                    placeholder="Select Date" name="check_out" id="check_out">
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="fw-bold">File</span>
-                                </label>
-                                <input type="file" class="form-control form-control-solid" name="file">
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Notes</span>
-                                </label>
-                                <textarea class="form-control form-control-solid" name="notes"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-9">
-                        <button type="reset" id="modal_create_family_cancel"
-                            class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="modal_create_family_submit" class="btn btn-sm btn-info w-lg-200px"
-                            data-bs-dismiss="modal">
-                            <span class="indicator-label">Simpan</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="tab-pane fade show active" id="attendance_content" role="tabpanel">
     <div class="row p-4">
         <div class="col-lg-6 mb-9">
@@ -112,8 +37,84 @@
     </div>
 </div>
 
+@include('profile.part-profile.time-management-part.attendance.add-modal')
+@include('profile.part-profile.time-management-part.attendance.info-modal')
+
 <script>
     let attendanceTable;
+
+    const onAttendanceModalOpen = ({
+        id,
+        shift = "-",
+        work = "-",
+        created = "-",
+        checkin = "-",
+        checkout = "-",
+        notes = "-",
+        status,
+        fileLink = "-",
+        fileName = "-",
+        comment = "-"
+    }) => {
+        const createdFormated = formatDateTime(created);
+        const checkinFormated = formatDateTime(checkin);
+        const checkoutFormated = formatDateTime(checkout);
+
+        $('#attendance-request-id').val(id)
+        $('#att-shift-modal').text(shift);
+        $('#att-work-modal').text(work);
+        $('#att-created-modal').text(createdFormated);
+        $('#att-checkin-modal').text(checkinFormated);
+        $('#att-checkout-modal').text(checkoutFormated);
+        $('#att-notes-modal').text(notes);
+
+        if (fileName !== "-") {
+            $('#att-file-modal').attr('href', fileLink);
+        }
+
+        $('#att-file-modal').text(fileName);
+
+        switch (status) {
+            case approveStatusEnum[0]:
+                $('#attendance_approved_button').hide();
+                $('#attendance_rejected_button').hide();
+                $('#attendance_cancel_button').show();
+                $('#attendance_canceled_button').hide();
+
+                $('#attendance_comment').hide();
+                $('#att_comment_label').hide();
+                break;
+            case approveStatusEnum[1]:
+                $('#attendance_approved_button').show();
+                $('#attendance_rejected_button').hide();
+                $('#attendance_cancel_button').hide();
+                $('#attendance_canceled_button').hide();
+
+                $('#att_comment_label').show();
+                $('#attendance_comment').show();
+                $('#attendance_comment').val(comment);
+                break;
+            case approveStatusEnum[2]:
+                $('#attendance_approved_button').hide();
+                $('#attendance_rejected_button').show();
+                $('#attendance_cancel_button').hide();
+                $('#attendance_canceled_button').hide();
+
+                $('#att_comment_label').show();
+                $('#attendance_comment').show();
+                $('#attendance_comment').val(comment);
+                break;
+            case approveStatusEnum[3]:
+                $('#attendance_approved_button').hide();
+                $('#attendance_rejected_button').hide();
+                $('#attendance_cancel_button').hide();
+                $('#attendance_canceled_button').show();
+
+                $('#attendance_comment').hide();
+                $('#att_comment_label').hide();
+                break;
+        }
+    };
 
     $(document).ready(function() {
         $("#time_management").on("click", function() {
@@ -236,5 +237,26 @@
                 }
             });
         });
+
+        $('#attendance_cancel').on('click', function() {
+            $.ajax({
+                url: "{{ route('req.attd.cancel') }}",
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                data: {
+                    id: $('#attendance-request-id').val(),
+                },
+                success: function(data) {
+                    attendanceTable.draw();
+                    toastr.success(data.message, 'Selamat 🚀 !');
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
+        })
     });
 </script>

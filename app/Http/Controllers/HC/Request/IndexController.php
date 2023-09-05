@@ -20,7 +20,7 @@ class IndexController extends Controller
 
     public function index()
     {
-        $approveStatus = $this->constants->approve_status;
+        $approveStatus = array_slice($this->constants->approve_status, 0, 3);
         $dataDivision = Division::all();
         $dataDepartment = Department::all();
 

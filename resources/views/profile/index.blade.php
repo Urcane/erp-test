@@ -148,7 +148,7 @@
 
                                     {{-- Time Management Content --}}
                                     <div class="tab-pane fade" id="time_management_content" role="tabpanel">
-                                        @include('profile.part-profile.time-management-part')
+                                        @include('profile.part-profile.time-management-part.index')
                                     </div>
 
                                     {{-- Finance Content --}}

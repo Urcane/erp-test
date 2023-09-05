@@ -82,7 +82,7 @@ class TimeOffController extends RequestController
         try {
             $request->validate([
                 "id" => "required",
-                "status" => ["required", Rule::in($this->constants->approve_status)],
+                "status" => ["required", Rule::in(array_slice($this->constants->approve_status, 0, 3))],
                 "comment" => "nullable"
             ]);
 
@@ -367,7 +367,7 @@ class TimeOffController extends RequestController
                     break;
 
                 default:
-                    $query = $query->orderByRaw("FIELD(status, ?, ?, ?)", $this->constants->approve_status);
+                    $query = $query->orderByRaw("FIELD(status, ?, ?, ?)", array_slice($this->constants->approve_status, 0, 3));
                     break;
             };
 

@@ -17,13 +17,27 @@
     </div>
     <div class="tab-content mt-5" id="myTabContent">
 
-        @include('profile.part-profile.time-management-part.attendance')
+        @include('profile.part-profile.time-management-part.attendance.index')
 
-        @include('profile.part-profile.time-management-part.shift')
+        @include('profile.part-profile.time-management-part.shift.index')
 
         {{-- @include('profile.part-profile.time-management-part.overtime') --}}
 
-        @include('profile.part-profile.time-management-part.time-off')
+        @include('profile.part-profile.time-management-part.timeoff.index')
 
     </div>
 </div>
+
+<script>
+    const formatDate = (date) => {
+        const [year, month, day] = date.split("-");
+        return `${day}/${month}/${year}`;
+    }
+
+    const formatDateTime = (dateTime) => {
+        return dateTime === "-" ? "-" : dateTime.replace(" ", " at ");
+    }
+
+    const approveStatusEnum = @json($constants->approve_status);
+    console.log(approveStatusEnum)
+</script>

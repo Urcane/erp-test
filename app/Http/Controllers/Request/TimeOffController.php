@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Request;
 
+use App\Exceptions\AuthorizationError;
+use App\Exceptions\InvariantError;
+use App\Exceptions\NotFoundError;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -71,6 +74,38 @@ class TimeOffController extends RequestController
         }
     }
 
+    public function cancelRequest(Request $request)
+    {
+        try {
+            $timeoffRequest = UserLeaveRequest::whereId($request->id)->first();
+
+            if (!$timeoffRequest) {
+                throw new NotFoundError("Request Tidak ditemukan");
+            }
+
+            if ($timeoffRequest->user_id != Auth::user()->id) {
+                throw new AuthorizationError("Anda tidak berhak melakukan ini");
+            }
+
+            if ($timeoffRequest->status != $this->constants->approve_status[0]) {
+                throw new InvariantError("Tidak bisa melakukan cancel pada request");
+            }
+
+            $timeoffRequest->update([
+                "status" => $this->constants->approve_status[3]
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil cancel request attendance"
+            ],);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
@@ -79,14 +114,14 @@ class TimeOffController extends RequestController
                 ->with(['user.userEmployment', 'approvalLine', 'leaveRequestCategory']);
 
             return DataTables::of($leaveRequest)
-                ->addColumn('action', function ($action) {
-                    $menu = '<li><a href="' . route('hc.emp.profile', ['id' => $action->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                    return '
-                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                    <ul class="dropdown-menu">
-                    ' . $menu . '
-                    </ul>
-                    ';
+                ->addColumn('action', function ($query) {
+                    $constants = $this->constants;
+
+                    $fileName = $query->file;
+                    $fileLink = asset("/storage/request/timeoff/$fileName");
+                    return view('profile.part-profile.time-management-part.timeoff.menu', compact([
+                        'query', 'constants', 'fileName', 'fileLink'
+                    ]));
                 })
                 ->addColumn('created_at', function ($leaveRequest) {
                     $date = explode(" ", explode("T", $leaveRequest->created_at)[0])[0];
