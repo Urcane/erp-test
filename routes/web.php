@@ -301,6 +301,7 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(Request\AttendanceController::class)->group(function () {
                 Route::prefix('/attendance')->group(function () {
                     Route::post('/create', 'makeRequest')->name('req.attd.create');
+                    Route::put('/cancel', 'cancelRequest')->name('req.attd.cancel');
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.attd.get-table-me');
                 });
             });
@@ -308,6 +309,7 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(Request\ShiftController::class)->group(function () {
                 Route::prefix('/shift')->group(function () {
                     Route::post('/create', 'makeRequest')->name('req.shift.create');
+                    Route::put('/cancel', 'cancelRequest')->name('req.shift.cancel');
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.shift.get-table-me');
                 });
             });
@@ -315,6 +317,7 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(Request\TimeOffController::class)->group(function () {
                 Route::prefix('/time-off')->group(function () {
                     Route::post('/create', 'makeRequest')->name('req.time-off.create');
+                    Route::put('/cancel', 'cancelRequest')->name('req.time-off.cancel');
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.time-off.get-table-me');
                 });
             });

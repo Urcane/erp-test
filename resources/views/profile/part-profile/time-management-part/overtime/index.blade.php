@@ -29,7 +29,7 @@
 
 <script>
     $(document ).ready(function() {
-        $( "#overtime" ).on( "click", function() {
+        $("#overtime").on( "click", function() {
             $('#tb_overtime_content').DataTable({
                 processing: true,
                 serverSide: true,

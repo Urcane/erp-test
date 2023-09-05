@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Request;
 
+use App\Exceptions\AuthorizationError;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Yajra\DataTables\DataTables;
 
 use App\Exceptions\InvariantError;
+use App\Exceptions\NotFoundError;
+use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserShiftRequest;
 use Carbon\Carbon;
 
@@ -46,6 +49,38 @@ class ShiftController extends RequestController
         }
     }
 
+    public function cancelRequest(Request $request)
+    {
+        try {
+            $shiftRequest = UserShiftRequest::whereId($request->id)->first();
+
+            if (!$shiftRequest) {
+                throw new NotFoundError("Request Tidak ditemukan");
+            }
+
+            if ($shiftRequest->user_id != Auth::user()->id) {
+                throw new AuthorizationError("Anda tidak berhak melakukan ini");
+            }
+
+            if ($shiftRequest->status != $this->constants->approve_status[0]) {
+                throw new InvariantError("Tidak bisa melakukan cancel pada request");
+            }
+
+            $shiftRequest->update([
+                "status" => $this->constants->approve_status[3]
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil cancel request shift"
+            ],);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
@@ -54,14 +89,40 @@ class ShiftController extends RequestController
                 ->with(['user.userEmployment', 'workingShift', 'approvalLine']);
 
             return DataTables::of($shiftRequests)
-                ->addColumn('action', function ($action) {
-                    $menu = '<li><a href="' . route('hc.emp.profile', ['id' => $action->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
-                    return '
-                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                    <ul class="dropdown-menu">
-                    ' . $menu . '
-                    </ul>
-                    ';
+                ->addColumn('action', function ($query) {
+                    $constants = $this->constants;
+
+                    $shiftChanged = false;
+                    $shift = "-";
+                    $workHour = "-";
+                    $prmshift = "-";
+                    $prmworkHour = "-";
+
+                    $userAttendance = UserAttendance::where('user_id', $query->user->id)
+                        ->whereDate('date', $query->date)->first();
+
+                    if (!$userAttendance) {
+                        $workingShift = $query->user->userEmployment->workingScheduleShift->workingShift;
+                        $shift = $workingShift->name;
+                        $workHour = "{$workingShift->working_start} - {$workingShift->working_end}";
+                    } else {
+                        $shiftChanged = $userAttendance->shift_changed;
+
+                        if ($shiftChanged) {
+                            $prmshift = $userAttendance->primary_shift_name;
+                            $prmstart = $userAttendance->primary_working_start;
+                            $prmend = $userAttendance->primary_working_end;
+                            $prmworkHour = "{$prmstart} - {$prmend}";
+                        }
+
+                        $shift = $userAttendance->shift_name;
+                        $start = $userAttendance->working_start;
+                        $end = $userAttendance->working_end;
+                        $workHour = "{$start} - {$end}";
+                    }
+                    return view('profile.part-profile.time-management-part.shift.menu', compact([
+                        'query', 'shift', 'workHour', 'shiftChanged', 'prmshift', 'prmworkHour'
+                    ]));
                 })
                 ->addColumn('approval_line', function ($shiftRequest) {
                     if ($shiftRequest->status != $this->constants->approve_status[0]) {
