@@ -86,6 +86,33 @@
                                 <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
                                 <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
                             </div>
+
+                            <div>
+                                <button type="button" class="btn btn-light-info btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-filter me-2"></i>Filter</button>
+                                <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start" id="filter_pegawai" data-kt-menu="true" style="">
+                                    <div class="d-flex flex-column bgi-no-repeat rounded-top">
+                                        <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Filter Options</span>
+                                    </div>
+                                    <div class="separator mb-6"></div>
+                                    <div class="row px-8 pb-6">
+
+                                        <div class="col-lg-12 mb-3">
+                                            <label class="d-flex align-items-center fs-6 mb-2">
+                                                <span class="fw-bold textd-dark">Status</span>
+                                            </label>
+                                            <select class="form-select form-select-sm form-select-solid" data-control="select2" required name="filterStatus" id="filter_status" data-dropdown-parent="#filter_pegawai">
+                                                <option value="*">Semua Status</option>
+                                                @foreach ($constants->filter_status_attendance as $status)
+                                                    <option value="{{$status}}">{{$status}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-12 mt-6 text-end">
+                                            <button class="btn btn-sm btn-light" id="btn_reset_filter">Reset</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -145,7 +172,17 @@
     };
 
     $(document ).ready(function() {
-        $('input[name="range_date"]').daterangepicker({autoUpdateInput: false}, (from_date, to_date) => {
+        $('input[name="range_date"]').daterangepicker({
+            autoUpdateInput: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, (from_date, to_date) => {
             $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
         });
 
@@ -168,7 +205,7 @@
                 method: 'GET',
                 data: {
                     userId: {{$user->id}},
-                    dateFilter: $('#range_date').val()
+                    dateFilter: $('#range_date').val(),
                 },
                 success: function(data) {
                     const {
@@ -219,6 +256,7 @@
                 data: function(data){
                     data.user_id = {{$user->id}},
                     data.dateFilter = $('#range_date').val();
+                    data.filterStatus = $('#filter_status').val();
                 }
             },
             language: {
@@ -320,6 +358,10 @@
             tableAttendance.draw();
             deleteSummaries();
             renderSummaries();
+        });
+
+        $('#filter_status').change(function() {
+            tableAttendance.draw();
         });
 
         $('#modal_attendance_edit_modal').submit(function(event) {
