@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Sales\Opportunity\Quotation;
 
+use App\Models\Inventory\InventoryGood;
 use App\Models\Opportunity\BoQ\Item;
 use Illuminate\Http\Request;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
@@ -51,14 +52,16 @@ class QuotationRepository
         $quotationData = $this->model->where('id', $quotationId)->first();
         $quotationItem = Item::where('itemable_id', $quotationId)
         ->whereHas('inventoryGood', function($query){
-             $query->where('good_category_id', 3);
-        })->get();
+            $query->where('good_category_id', 3);
+       })->get();
+        $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
         $boqData = $this->boqData->where('id', $quotationData->boq_id)->first();
         $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();         
         return [
             'quotationData' => $quotationData,
             'boqFinalData' => $boqFinalData,
-            'quotationItem' => $quotationItem
+            'quotationItem' => $quotationItem,
+            'inventoryGoodInet' => $inventoryGoodInet,
         ];
     }
 
@@ -88,23 +91,21 @@ class QuotationRepository
                             ->pluck('id')
                             ->toArray();
                             
-            Item::where('id', $itemIds)->delete();
+            Item::whereIn('id', $itemIds)->delete();
         }
         $bundles = $request->input('bundle');
 
         if (!empty($bundles)) {
-            foreach ($bundles as $bundle) {
-                $criteria = [
-                    'itemable_id' => $quotationData->id,
-                    'itemable_type' => $quotationData->itemable_type, 
-                ];
+            foreach ($bundles as $bundle) { 
                 $data = [
+                    'itemable_id' => $quotationData->id,
+                    'itemable_type' => $quotationData->itemable_type,  
                     'item_inventory_id' => $bundle['id'],
                     'quantity' => $bundle['quantity'],
                     'purchase_price' => $bundle['purchase_price'],
                     'total_price' => $bundle['total_price'],
                 ];
-                $quotationData->itemableQuotation()->updateOrCreate($criteria, $data);
+                $quotationData->itemableQuotation()->Create($data);
             }
         }
         $quotationData->save();
