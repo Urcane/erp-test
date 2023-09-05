@@ -28,8 +28,8 @@
                             </div>
                         </div> 
                         <div id="containerSelectedBoqCommercials">
-                            <input type="text" name="itemableBillOfQuantity_id_finman" id="itemableBillOfQuantity_id_finman" value="">
-                            <input type="text" id="" name="is_approval_finman" value="">
+                            <input type="hidden" name="itemableBillOfQuantity_id_finman" id="itemableBillOfQuantity_id_finman" value="">
+                            <input type="hidden" id="" name="is_approval_finman" value="">
                         </div>
                     </div>
 

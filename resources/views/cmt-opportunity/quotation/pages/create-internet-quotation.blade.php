@@ -36,15 +36,13 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Create Internet
+                                    Quotation</span>
+                            </h3>
+                        </div>
                         <div class="card-body">
-
-                            <div class="row mb-6 align-items-center">
-                                <div class="col-lg-6 gap-3 d-flex align-items-center">
-                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Create Internet
-                                        Quotation</span>
-                                </div>
-                            </div>
-
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
@@ -397,7 +395,7 @@
                                                         name="total_price" id="total_price_{{ $random_string }}">
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="ms-15 w-20 mt-6 mb-5 ">
                                                 <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
                                                     <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
@@ -416,22 +414,24 @@
                                                 </button> 
                                             </div> --}}
                                             <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Price Bundle : Rp<span id="totalsumbundle"></span></span>
-                                            </div> 
+                                                <span class="fw-bold">Total Price Bundle : Rp<span
+                                                        id="totalsumbundle"></span></span>
+                                            </div>
                                         </div>
-                                        <div class="d-flex justify-content-center mt-6"> 
+                                        <div class="d-flex justify-content-center mt-6">
                                             <div class=" me-5">
                                                 <a href="cmt-quotation" class="btn btn-light-info">Discard</a>
                                             </div>
                                             <div class="me-5">
-                                                <a href="cmt-quotation" id="submit-all-items" class="btn btn-info">Submit</a>
+                                                <a href="cmt-quotation" id="submit-all-items"
+                                                    class="btn btn-info">Submit</a>
                                             </div>
                                         </div>
                                     </div>
                                     <div>
                                         <input type="hidden" name="id" id="id"
                                             value="{{ $dataBoq['boqFinalData'][0]->id }}">
-                                            <input type="hidden" name="total_price_bundle" id="total_price_bundle">
+                                        <input type="hidden" name="total_price_bundle" id="total_price_bundle">
                                     </div>
 
                                 </div>
@@ -503,9 +503,9 @@
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
             // Update the total sum element with the calculated value
             $('#totalsumbundle').text(totalPriceWithCommas);
-            
+
             const hiddenTotalInput = document.querySelector(`[name='total_price_bundle']`);
-                hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string
+            hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string
         }
 
 
@@ -627,7 +627,8 @@
 
                 // Create a new div element
                 const newDiv = document.createElement("div");
-                newDiv.className = "file-soft-quotation-bundle d-flex justify-content-between mx-20 mb-5 mt-10";
+                newDiv.className =
+                    "file-soft-quotation-bundle d-flex justify-content-between mx-20 mb-5 mt-10";
 
                 const random_string = generateRandomString(4);
                 // Define the HTML structure as a string literal

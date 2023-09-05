@@ -36,20 +36,22 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-header">
 
-                            @csrf
-                            <div class="mb-6 d-flex justify-content-between">
-                                <div class="col-lg-6 gap-3 d-flex align-items-center">
-                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Commercial Bill of
-                                        Quantity</span>
-                                </div>
+                            <h3 class="card-title">
+                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Commercial Bill of Quantity</span>
+                            </h3>
+                            <div class="d-flex justify-content-center">
                                 <div class="form-check form-check-custom form-check-success form-check-solid">
-                                    <input class="form-check-input" type="checkbox" value="1" id="is_final"
-                                        name="is_final" />
-                                    <label class="form-check-label" for="is_final">Finalisasi</label>
+                                    <input class="form-check-input" type="checkbox" value="1" id="is_final" name="is_final" style="width: 30px; height: 30px;" />
+                                    <label class="form-check-label" for="is_final" style="font-size: 18px; margin-right: 10px;">Finalisasi</label>
                                 </div>
                             </div>
+                             
+                        </div>
+                        <div class="card-body">
+
+
 
                             {{-- header company --}}
                             <div class="row">
