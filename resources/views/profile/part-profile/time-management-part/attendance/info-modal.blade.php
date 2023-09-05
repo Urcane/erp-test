@@ -11,7 +11,7 @@
                     <span class="fs-1 fw-bolder text-dark d-block mb-1">Attendances Request Details</span>
                     <span class="fs-7 fw-semibold text-gray-500"></span>
                 </div>
-                <input type="text" id="shift-request-id" hidden>
+                <input type="text" id="attendance-request-id" hidden>
                 <div class="scroll-y me-n6 pe-6" data-kt-scroll="true"
                     data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
                     data-kt-scroll-offset="300px">
