@@ -57,11 +57,11 @@
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Request Created</span>
                             <p class="fs-7 fw-normal" id="att-created-modal">-</p>
                         </div>
-                        <div class="col-lg-6 mb-1">
+                        <div class="col-lg-4 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Check In Request</span>
                             <p class="fs-7 fw-normal" id="att-checkin-modal">-</p>
                         </div>
-                        <div class="col-lg-6 mb-1">
+                        <div class="col-lg-4 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Check Out Request</span>
                             <p class="fs-7 fw-normal" id="att-checkout-modal">-</p>
                         </div>

@@ -16,6 +16,7 @@
         status: '{{$query->status}}',
         fileName: '{{$fileName ?? '-'}}',
         fileLink: '{{$fileLink}}',
+        comment: '{{$query->comment}}'
     })">
     <i class="fas fa-eye mr-1"></i> Details
 </a>

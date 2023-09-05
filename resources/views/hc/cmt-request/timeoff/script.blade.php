@@ -27,16 +27,25 @@
                 $('#timeoff_approved_button').hide();
                 $('#timeoff_rejected_button').hide();
                 $('#timeoff_waiting_button').show();
+                $('#timeoff_comment').val("");
+                $('#timeoff_comment').attr('placeholder', 'Write Comment Here');
+                $('#timeoff_comment').prop('disabled', false);
                 break;
             case approveStatusEnum[1]:
                 $('#timeoff_approved_button').show();
                 $('#timeoff_rejected_button').hide();
                 $('#timeoff_waiting_button').hide();
+                $('#timeoff_comment').val(comment);
+                $('#timeoff_comment').attr('placeholder', '-');
+                $('#timeoff_comment').prop('disabled', false);
                 break;
             case approveStatusEnum[2]:
                 $('#timeoff_approved_button').hide();
                 $('#timeoff_rejected_button').show();
                 $('#timeoff_waiting_button').hide();
+                $('#timeoff_comment').val(comment);
+                $('#timeoff_comment').attr('placeholder', '-');
+                $('#timeoff_comment').prop('disabled', false);
                 break;
         }
 
@@ -53,7 +62,6 @@
         $('#tmoff-created-modal').text(createdFormated);
         $('#tmoff-notes-modal').text(notes);
         $('#timeoff-request-id').val(id)
-        $('#timeoff_comment').val("");
 
         if (fileName !== "-") {
             $('#tmoff-file-modal').attr('href', fileLink);
@@ -113,7 +121,15 @@
         };
 
         $('input[name="range_date_timeoff"]').daterangepicker({
-            autoUpdateInput: false
+            autoUpdateInput: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
         }, (from_date, to_date) => {
             $('#range_date_timeoff').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format(
                 'MM/DD/YYYY'));
