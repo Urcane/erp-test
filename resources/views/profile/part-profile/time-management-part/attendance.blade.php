@@ -87,7 +87,7 @@
                             class="fa-solid fa-plus"></i>Request Attendance</a>
                 </div>
                 <div class="col-4">
-                    <button class="btn btn-info btn-sm me-3 fs-8"><i class="fa-solid fa-plus"></i>View Log</button>
+                    <a href="{{ route('hc.att.detail', ['id' => $user->id]) }}" class="btn btn-info btn-sm me-3 fs-8"><i class="fa-solid fa-eye"></i>View Log</a>
                 </div>
             </div>
         </div>

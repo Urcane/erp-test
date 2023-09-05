@@ -596,7 +596,7 @@ class PersonalController extends Controller
 
         try {
             // dd("Asdf");
-            // $file_sign = $request->pegawai_sign_url;
+            $file_sign = $request->pegawai_sign_url;
             if ($file_sign != null && $file_sign != '') {
                 $image_parts = explode(";base64,", $file_sign);
                 $image_type_aux = explode("image/", $image_parts[0]);
