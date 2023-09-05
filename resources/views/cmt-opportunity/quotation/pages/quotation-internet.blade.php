@@ -211,7 +211,7 @@
         });
         });
 
-        $('#tab_on_progress_quotation_content').click(function() {
+        $('#tab_on_progress_quotation').click(function() {
             generateDatatable({
                 tableName: "tableOnProgressQuotation",
                 elementName: "#kt_tabel_on_progress_quotation",

@@ -60,7 +60,7 @@ class QuotationRepository
     function saveAndStoreQuotation(Request $request)  {
         $quotationData = $this->model->updateOrCreate(
             [
-                'id' => $request->input('quotation.id') //jika quotation sudah ada, maka update, jika belum ada, maka create
+                'id' => $request->input('quotation.boq_id') //jika quotation sudah ada, maka update, jika belum ada, maka create
             ],
             [
                 'boq_id' => $request->input('quotation.boq_id'), //ini wajib selalu di isi
@@ -76,8 +76,14 @@ class QuotationRepository
         $quotationData->is_done = null;
 
         if (isset($quotationData->id)) {
-            $itemIds = Item::where('itemable_id', $quotationData->id)->pluck('id')->toArray();
-            Item::whereIn('id', $itemIds)->delete();
+            $itemIds = Item::where('itemable_id', $quotationData->id)
+                            ->whereHas('inventoryGood', function ($query) {
+                                $query->where('good_category_id', 3);
+                            })
+                            ->pluck('id')
+                            ->toArray();
+                            
+            Item::where('id', $itemIds)->delete();
         }
         $bundles = $request->input('bundle');
 
@@ -87,10 +93,8 @@ class QuotationRepository
                     'itemable_id' => $quotationData->id,
                     'itemable_type' => $quotationData->itemable_type, 
                 ];
-                if (isset($bundle['id'])) {
-                    $criteria['id'] = $bundle['id'];
-                }
                 $data = [
+                    'item_inventory_id' => $bundle['id'],
                     'quantity' => $bundle['quantity'],
                     'purchase_price' => $bundle['purchase_price'],
                     'total_price' => $bundle['total_price'],
