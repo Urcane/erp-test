@@ -17,7 +17,8 @@
         status,
         changed,
         prmshift,
-        prmwork
+        prmwork,
+        comment = "-"
     }) => {
         const createdFormated = formatDateTime(created);
 
@@ -26,16 +27,25 @@
                 $('#shift_approved_button').hide();
                 $('#shift_rejected_button').hide();
                 $('#shift_waiting_button').show();
+                $('#shift_comment').val("");
+                $('#shift_comment').attr('placeholder', 'Write Comment Here');
+                $('#shift_comment').prop('disabled', false);
                 break;
             case approveStatusEnum[1]:
                 $('#shift_approved_button').show();
                 $('#shift_rejected_button').hide();
                 $('#shift_waiting_button').hide();
+                $('#shift_comment').val(comment);
+                $('#shift_comment').attr('placeholder', '-');
+                $('#shift_comment').prop('disabled', false);
                 break;
             case approveStatusEnum[2]:
                 $('#shift_approved_button').hide();
                 $('#shift_rejected_button').show();
                 $('#shift_waiting_button').hide();
+                $('#shift_comment').val(comment);
+                $('#shift_comment').attr('placeholder', '-');
+                $('#shift_comment').prop('disabled', false);
                 break;
         }
 
@@ -53,7 +63,6 @@
         $('#shf-new-work-modal').text(newwork);
         $('#shf-notes-modal').text(notes);
         $('#shift-request-id').val(id)
-        $('#shift_comment').val("");
 
         if (changed == '1') {
             $('#shf-title-prm-shift-modal').text("Primary Shift");
@@ -132,7 +141,15 @@
         };
 
         $('input[name="range_date_shift"]').daterangepicker({
-            autoUpdateInput: false
+            autoUpdateInput: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
         }, (from_date, to_date) => {
             $('#range_date_shift').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format(
                 'MM/DD/YYYY'));

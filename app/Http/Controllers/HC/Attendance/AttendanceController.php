@@ -660,6 +660,78 @@ class AttendanceController extends Controller
                 $userAttendances = $userAttendances->orderBy('date', 'desc');
             }
 
+            $now = now();
+
+            switch ($request->filterStatus) {
+                case $this->constants->filter_status_attendance[0]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                    ->where(function ($query) use ($now) {
+                        $query->where(function ($query) use ($now) {
+                            $query->whereDate('date', '=', $now)
+                                ->where(function ($query) {
+                                    $query->where(function ($query) {
+                                        $query->whereNotNull('check_in')
+                                            ->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                                    })->orWhere(function ($query) {
+                                        $query->whereNotNull('check_out')
+                                            ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                    });
+                                });
+                        })->orWhere(function($query) use ($now) {
+                            $query->whereDate('date', '<', $now)
+                                ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                                ->whereNotNull('check_in')
+                                ->whereNotNull('check_out')
+                                ->where(function($q) {
+                                    $q->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
+                                        ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                                });
+                        });
+                });
+                    break;
+                case $this->constants->filter_status_attendance[1]:
+                    $userAttendances = $userAttendances->whereDate('date', '<=', $now)
+                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNotNull('check_in')
+                        ->whereRaw('TIME(check_in) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))');
+                    break;
+                case $this->constants->filter_status_attendance[2]:
+                    $userAttendances = $userAttendances->whereDate('date', '<=', $now)
+                        ->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNotNull('check_out')
+                        ->whereRaw('TIME(check_out) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
+                    break;
+                case $this->constants->filter_status_attendance[3]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNull('check_in')
+                        ->where(function ($query) use ($now) {
+                            $query->whereDate('date', '<', $now)->orWhere(function ($query) use ($now) {
+                                $query->whereDate('date', '=', $now)
+                                ->whereRaw('TIME(?) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))', [$now]);
+                            });
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[4]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[0])
+                        ->whereNull('check_out')
+                        ->where(function ($query) use ($now) {
+                            $query->whereDate('date', '<', $now)->orWhere(function ($query) use ($now) {
+                                $query->whereDate('date', '=', $now)
+                                ->whereRaw('TIME(?) < TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))', [$now]);
+                            });
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[5]:
+                    $userAttendances = $userAttendances->where(function($query) {
+                            $query->where('attendance_code', '=', $this->constants->attendance_code[2])
+                            ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
+                        });
+                    break;
+                case $this->constants->filter_status_attendance[6]:
+                    $userAttendances = $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[1]);
+                    break;
+            }
+
             return DataTables::of($userAttendances)
                 ->addColumn('DT_RowChecklist', function ($check) {
                     return '<div class="text-center w-50px"><input name="emergency_contact_ids" type="checkbox" value="' . $check->id . '"></div>';

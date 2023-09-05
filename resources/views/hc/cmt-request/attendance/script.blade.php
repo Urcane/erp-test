@@ -15,7 +15,8 @@
         notes = "-",
         status,
         fileLink = "-",
-        fileName = "-"
+        fileName = "-",
+        comment = "-"
     }) => {
         const createdFormated = formatDateTime(created);
         const checkinFormated = formatDateTime(checkin);
@@ -26,16 +27,25 @@
                 $('#attendance_approved_button').hide();
                 $('#attendance_rejected_button').hide();
                 $('#attendance_waiting_button').show();
+                $('#attendance_comment').val("");
+                $('#attendance_comment').attr('placeholder', 'Write Comment Here');
+                $('#attendance_comment').prop('disabled', false);
                 break;
             case approveStatusEnum[1]:
                 $('#attendance_approved_button').show();
                 $('#attendance_rejected_button').hide();
                 $('#attendance_waiting_button').hide();
+                $('#attendance_comment').val(comment);
+                $('#attendance_comment').attr('placeholder', '-');
+                $('#attendance_comment').prop('disabled', true);
                 break;
             case approveStatusEnum[2]:
                 $('#attendance_approved_button').hide();
                 $('#attendance_rejected_button').show();
                 $('#attendance_waiting_button').hide();
+                $('#attendance_comment').val(comment);
+                $('#attendance_comment').attr('placeholder', '-');
+                $('#attendance_comment').prop('disabled', true);
                 break;
         }
 
@@ -52,7 +62,6 @@
         $('#att-checkout-modal').text(checkoutFormated);
         $('#att-notes-modal').text(notes);
         $('#attendance-request-id').val(id)
-        $('#attendance_comment').val("");
 
         if (fileName !== "-") {
             $('#att-file-modal').attr('href', fileLink);
@@ -112,7 +121,15 @@
         };
 
         $('input[name="range_date_attendance"]').daterangepicker({
-            autoUpdateInput: false
+            autoUpdateInput: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
         }, (from_date, to_date) => {
             $('#range_date_attendance').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format(
                 'MM/DD/YYYY'));
