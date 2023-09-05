@@ -26,7 +26,7 @@
                                     <span class="required fw-bold">Shift</span>
                                 </label>
                                 <input type="text" class="form-control form-control-solid"
-                                    value="{{ $user->userEmployment->workingScheduleShift->workingShift->name }}"
+                                    value="{{ $user->userEmployment->workingScheduleShift->workingShift->name ?? "-"}}"
                                     disabled>
                             </div>
                             <div class="col-lg-6 mt-3 mb-3">

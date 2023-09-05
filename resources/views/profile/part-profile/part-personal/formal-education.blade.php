@@ -175,8 +175,8 @@
                 toastr.success(data.message,'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {
-                const data = JSON.parse(xhr.responseText);
-                toastr.error(errorThrown ,'Opps!');
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
             }
         });
     }
@@ -198,8 +198,8 @@
                 toastr.success(data.message,'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {
-                const data = JSON.parse(xhr.responseText);
-                toastr.error(errorThrown ,'Opps!');
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
             }
         });
     });
