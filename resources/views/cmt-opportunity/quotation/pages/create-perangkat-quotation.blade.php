@@ -36,15 +36,13 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Create Perangkat
+                                    Quotation</span>
+                            </h3>
+                        </div>
                         <div class="card-body">
-
-                            <div class="row mb-6 align-items-center">
-                                <div class="col-lg-6 gap-3 d-flex align-items-center">
-                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Create Perangkat
-                                        Quotation</span>
-                                </div>
-                            </div>
-
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
@@ -473,7 +471,7 @@
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
             // Update the total sum element with the calculated value
             $('#totalsum').text(totalPriceWithCommas);
-            
+
             const hiddenTotalInput = document.querySelector(`[name='total_price_bundle']`);
             hiddenTotalInput.value = totalSum; // Set the hidden input value to empty string
         }
@@ -573,49 +571,49 @@
 
             // Render opsi pertama saat halaman dimuat
             $.ajax({
-                    url: "{{ route('com.quotation.get.internet.bundling') }}",
-                    type: 'GET',
-                    success: function(response) {
-                        console.log(response);
-                        // dataFromFirstResponse = response; // Simpan data dari respons pertama
-                        $('#good_name_bundle').empty(); // Hapus opsi yang ada sebelumnya
+                url: "{{ route('com.quotation.get.internet.bundling') }}",
+                type: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    // dataFromFirstResponse = response; // Simpan data dari respons pertama
+                    $('#good_name_bundle').empty(); // Hapus opsi yang ada sebelumnya
+                    $('#good_name_bundle').append($('<option>', {
+                        value: '',
+                        text: 'Select Internet Bundle'
+                    }));
+                    $.each(response, function(index, item) {
                         $('#good_name_bundle').append($('<option>', {
-                            value: '',
-                            text: 'Select Internet Bundle'
+                            value: item.id,
+                            text: item.good_name
                         }));
-                        $.each(response, function(index, item) {
-                            $('#good_name_bundle').append($('<option>', {
-                                value: item.id,
-                                text: item.good_name
-                            }));
-                        });
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
+                    });
+                },
+                error: function(error) {
+                    console.log(error);
+                }
             });
 
-            Handler untuk peristiwa "change" pada select item
-                $('#good_name_bundle').on('change', function() {
-                    var selectedItemId = $(this).val();
+            // Handler untuk peristiwa "change" pada select item
+            $('#good_name_bundle').on('change', function() {
+                var selectedItemId = $(this).val();
 
-                    // Cek apakah data dari respons pertama sudah ada
-                    if (dataFromFirstResponse) {
-                        // Cari item dengan ID yang sesuai dalam data pertama
-                        var selectedItem = dataFromFirstResponse.find(function(item) {
-                            return item.id == selectedItemId;
-                        });
+                // Cek apakah data dari respons pertama sudah ada
+                if (dataFromFirstResponse) {
+                    // Cari item dengan ID yang sesuai dalam data pertama
+                    var selectedItem = dataFromFirstResponse.find(function(item) {
+                        return item.id == selectedItemId;
+                    });
 
-                        // Isi input dengan data dari item yang sesuai
-                        if (selectedItem) {
-                            $('#good_type_bundle').val(selectedItem.good_type).prop('disabled', true);
-                            $('#merk_bundle').val(selectedItem.merk).prop('disabled', true);
-                            $('#detail_bundle').val(selectedItem.description).prop('disabled', true);
-                        }
+                    // Isi input dengan data dari item yang sesuai
+                    if (selectedItem) {
+                        $('#good_type_bundle').val(selectedItem.good_type).prop('disabled', true);
+                        $('#merk_bundle').val(selectedItem.merk).prop('disabled', true);
+                        $('#detail_bundle').val(selectedItem.description).prop('disabled', true);
                     }
+                }
             });
 
-            Function Tambah Modal Bundling Internet
+            // Function Tambah Modal Bundling Internet
             $('#btn-bundle').on('click', function() {
                 // Find the parent container where you want to append new divs
                 const parentContainer = document.querySelector(".BundleItem");
@@ -719,14 +717,14 @@
 
             });
 
-            Function Tambah Modal Bundling Internet
+            // Function Tambah Modal Bundling Internet
             $('#btn-bundle-internet').on('click', '.btn_bundle_internet', function() {
                 $('.drop-data').val("").trigger("change");
                 $('#kt_modal_tambah_bundle_internet_form').trigger("reset");
                 $('#kt_modal_tambah_bundle_internet_submit').removeAttr('disabled', 'disabled');
             });
 
-            Function Submit Modal
+            // Function Submit Modal
             $("#kt_modal_tambah_bundle_internet_form").validate({
                 messages: {
                     good_name_update: {
@@ -868,15 +866,15 @@
                 // });
 
                 // Check if there is at least one item in the 'items' array
-                    // if (bundle.length === 0) {
-                    //     // Show an error message
-                    //     event.preventDefault();
-                    //     var errorMessageItem =
-                    //         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
-                    //     $('#error-item').html(errorMessageItem);
-                    //     return;
-                    // } else {
-                    //     $('#error-item').empty();
+                // if (bundle.length === 0) {
+                //     // Show an error message
+                //     event.preventDefault();
+                //     var errorMessageItem =
+                //         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
+                //     $('#error-item').html(errorMessageItem);
+                //     return;
+                // } else {
+                //     $('#error-item').empty();
                 // }
 
                 // console.log(bundle);
