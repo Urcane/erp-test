@@ -40,11 +40,12 @@
                             <h3 class="card-title">
                                 <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Internet
                                     Quotation</span>
-                            </h3> 
+                            </h3>
                             <div class="card-toolbar p-3">
-                                <a href="#kt_modal_create_purchase_order" class="btn_create_purchase_order p- btn btn-md btn-info w-lg-180px" 
-                                data-id="{{ $dataQuotation['quotationData']->id }}"
-                                data-bs-toggle="modal"><i class="fa-solid fa-file me-3"></i>Purchase Order</a>
+                                <a href="#kt_modal_create_purchase_order"
+                                    class="btn_create_purchase_order p- btn btn-md btn-info w-lg-180px"
+                                    data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal"><i
+                                        class="fa-solid fa-file me-3"></i>Purchase Order</a>
 
 
                                 {{-- <button class="btn btn-md btn-info w-lg-150px purchase_order_file"
@@ -400,7 +401,8 @@
                                                                 <input class="form-control" type="text" required
                                                                     min="1" minlength="1"
                                                                     oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                                    name="quantity_{{ $random_string }}" id="quantity_{{ $random_string }}"
+                                                                    name="quantity_{{ $random_string }}"
+                                                                    id="quantity_{{ $random_string }}"
                                                                     value="{{ $relatedItem->quantity }}">
                                                             </div>
 
@@ -459,17 +461,8 @@
                                                             </div>
                                                         </div>
                                                     @endforeach
-                                                @endif
-
-
-
-
-
-                                                {{-- <div class="ms-15 w-20 mt-6 mb-5 ">
-                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
-                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
-                                                </button> 
-                                            </div> --}}
+                                                @endif 
+                                                
                                             </div>
 
                                         </div>
@@ -491,12 +484,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="d-flex justify-content-end mx-20">
-                                                {{-- <div class="w-20 me-10">
-                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
-                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
-                                                </button> 
-                                            </div> --}}
+                                            <div class="d-flex justify-content-end mx-20"> 
                                                 <div class="w-20 me-10">
                                                     <span class="fw-bold">Total Price Bundle : Rp<span
                                                             id="totalsumbundle"></span></span>
@@ -539,19 +527,11 @@
             </div>
         </div>
     </div>
- 
-    @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
-    @include('cmt-opportunity.quotation.add.modal-create-purchase-order') 
 
-    <script>
-        function myFunction() {
-            var x = document.getElementById("fileInput");
-            if (x.style.display === "none") {
-                x.style.display = "block";
-            } else {
-                x.style.display = "none";
-            }
-        }
+    @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
+    @include('cmt-opportunity.quotation.add.modal-create-purchase-order')
+
+    <script> 
 
         function validateAndFormatNumber(input) {
             // Mengambil nilai input tanpa karakter non-digit
@@ -682,51 +662,7 @@
         $(document).ready(function() {
 
             var dataFromFirstResponse = null; // Variabel untuk menyimpan data dari respons pertama
-
-            // Render opsi pertama saat halaman dimuat
-            $.ajax({
-                url: "{{ route('com.quotation.get.internet.bundling') }}",
-                type: 'GET',
-                success: function(response) {
-                    console.log(response);
-                    // dataFromFirstResponse = response; // Simpan data dari respons pertama
-                    $('#good_name_bundle').empty(); // Hapus opsi yang ada sebelumnya
-                    $('#good_name_bundle').append($('<option>', {
-                        value: '',
-                        text: 'Select Internet Bundle'
-                    }));
-                    $.each(response, function(index, item) {
-                        $('#good_name_bundle').append($('<option>', {
-                            value: item.id,
-                            text: item.good_name
-                        }));
-                    });
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-
-            // Handler untuk peristiwa "change" pada select item
-            $('#good_name_bundle').on('change', function() {
-                var selectedItemId = $(this).val();
-
-                // Cek apakah data dari respons pertama sudah ada
-                if (dataFromFirstResponse) {
-                    // Cari item dengan ID yang sesuai dalam data pertama
-                    var selectedItem = dataFromFirstResponse.find(function(item) {
-                        return item.id == selectedItemId;
-                    });
-
-                    // Isi input dengan data dari item yang sesuai
-                    if (selectedItem) {
-                        $('#good_type_bundle').val(selectedItem.good_type).prop('disabled', true);
-                        $('#merk_bundle').val(selectedItem.merk).prop('disabled', true);
-                        $('#detail_bundle').val(selectedItem.description).prop('disabled', true);
-                    }
-                }
-            });
-
+  
             // Function Tambah Modal Bundling Internet
             $('#btn-bundle').on('click', function() {
                 // Find the parent container where you want to append new divs
@@ -1012,76 +948,29 @@
 
 
             $('body').on('click', '.btn_create_purchase_order', function() {
-                let random_string = generateRandomString(4);
-
-                const form_edit = $('#kt_modal_create_purchase_order_form');
-                form_edit.find('#containerSelectedSurveyRequests').html('');
+ 
                 $('.drop-data').val("").trigger("change")
                 $('#kt_modal_create_purchase_order_form').trigger("reset")
                 $('#kt_modal_create_purchase_order_submit').removeAttr('disabled', 'disabled');
 
-                surveyRequestIds = [];
-                const surveyRequestId = $(this).data('id');
-                surveyRequestIds.push(surveyRequestId);
-
-                $.each(surveyRequestIds.filter(onlyUnique), function(index, rowId) {
-                    form_edit.find('#containerSelectedSurveyRequests').append(
-                        $('<input>')
-                        .attr('type', 'text')
-                        .attr('name', 'survey_request_id[]')
-                        .val(rowId)
-                    );
-                });
+                var quo_id = $(this).data('id');
+                $('#quotation_id').val(quo_id);
 
                 $(`.file-purchase-order-item-initial`).change(function() {
                     imageReadURL(this);
                 });
 
-                form_edit.on('click', '.btn_add_more_purchase_order_item', function() {
-                    form_edit.find('#containerSoftSurveyItems').append(
-                        `
-                    <div class="row purchase-order-item mt-2">
-                        <div class="col-lg-12 mb-3">
-                            <div class="separator my-3 text-center text-gray-800"></div>
-                        </div>
-                        <div class="col-lg-10 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class="required fw-bold">Lampiran</span>
-                            </label>
-                            <input type="file" class="form-control form-control-solid file-purchase-order-item-${random_string}" placeholder="" required accept="image/*" name="content[][file_purchase_order_internet]">
-                            <div class="fv-plugins-message-container invalid-feedback"></div>
-                            <img id="containerImage" class="img-fluid m-5" src="#" alt="File Image" hidden="hidden"/>
-                        </div>
-                        <div class="col-lg-2 my-9">
-                            <button type="button" class="btn btn-sm btn-icon btn-danger clear-purchase-order-item-${random_string}"><i class="fa-solid fa-eraser"></i></button>
-                        </div>
-                    </div>
-                    `
-                    )
-
-                    $(`.file-purchase-order-item-${random_string}`).change(function() {
-                        imageReadURL(this);
-                    });
-
-                    $(`.clear-purchase-order-item-${random_string}`).click(function() {
-                        $(this).parent().parent().remove();
-                        console.log(random_string)
-                        random_string = generateRandomString(4);
-
-                        $('#countable_purchase_order_items').html($('.purchase-order-item')
-                            .length + 1);
-                    })
-
-                    $('#countable_purchase_order_items').html($('.purchase-order-item').length + 1);
-                    random_string = generateRandomString(4);
-                })
                 submitModal({
                     modalName: 'kt_modal_create_purchase_order',
                     tableName: 'kt_table_purchase_order',
                     anotherTableName: 'tableOnProgressPurchaseOrder',
-                    ajaxLink: "{{route('com.quotation.store.quotation')}}",
-                    // validationMessages: softSurveyValidationMessages,
-                   })
+                    ajaxLink: "{{ route('com.quotation.store.po') }}",
+                    successCallback: function(response) {
+                        // Redirect ke halaman yang sesuai setelah operasi berhasil
+                        window.location.href = "{{ route('com.quotation.index') }}";
+                    }
+                })
+
             });
 
 

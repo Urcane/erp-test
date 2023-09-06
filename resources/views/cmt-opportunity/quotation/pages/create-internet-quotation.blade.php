@@ -52,10 +52,12 @@
                                         {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
                                             <div class="col-lg-5 col-6 mb-3">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <label for="judul"
+                                                    class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
+                                                    id="judul"
                                                     placeholder="{{ $dataBoq['boqFinalData'][0]->customerProspect->prospect_title }} - {{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
 
                                                 <input type="hidden" class="form-control form-control-solid" disabled
@@ -67,7 +69,8 @@
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
                                             <div class="col-lg-5 col-6 mb-3">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <label for="survey_request_id"
+                                                    class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
@@ -83,7 +86,7 @@
 
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">Nama Perusahaan</label>
+                                                <label for="customer_name" class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
                                                     value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
@@ -91,7 +94,8 @@
 
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class=" form-label">Nama Kontak Customer</label>
+                                                <label for="customer_contact_name" class=" form-label">Nama Kontak
+                                                    Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
                                                     value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
@@ -99,7 +103,8 @@
 
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">No Kontak Customer</label>
+                                                <label for="customer_contact_phone" class="form-label">No Kontak
+                                                    Customer</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text border-0" id="">+62</span>
                                                     <input type="number" class="form-control form-control-solid" disabled
@@ -111,7 +116,7 @@
 
                                             <div class=""
                                                 style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">Jenis Project</label>
+                                                <label for="type_name" class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
                                                     value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->bussinesType->type_name }}">
@@ -125,7 +130,7 @@
 
                                             <div class=""
                                                 style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">GPM</label>
+                                                <label class="form-label" for="gpm">GPM</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
@@ -137,7 +142,7 @@
 
                                             <div class=""
                                                 style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">Modal</label>
+                                                <label for="modal" class="form-label">Modal</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"disabled
@@ -149,7 +154,7 @@
 
                                             <div class=""
                                                 style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">NPM</label>
+                                                <label for="npm" class="form-label">NPM</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
@@ -161,7 +166,7 @@
 
                                             <div class=""
                                                 style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">Manpower</label>
+                                                <label for="manpower" class="form-label">Manpower</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
@@ -173,41 +178,13 @@
 
                                             <div class=""
                                                 style="flex-basis: 10%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">Percentage</label>
+                                                <label for="percentage" class="form-label">Percentage</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
                                                         oninput="validateAndFormatNumber(this);" id="percentage"
                                                         name="percentage"disabled
                                                         value="{{ $dataBoq['boqFinalData'][0]->percentage ?? null }}" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{--  divv No Quota & Description --}}
-                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">
-                                                    <span class="fw-bold required">NO Quotation</span> </label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <input type="text" class="form-control form-control-solid required"
-                                                        required id="no_quotation" name="no_quotation" value=""
-                                                        placeholder="No Quotation Wajib Di isi" />
-                                                </div>
-                                            </div>
-
-                                            <div class=""
-                                                style="flex-basis: 75%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">
-                                                    <span class="fw-bold required">Description</span></label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <textarea class="form-control form-control-solid required" placeholder="Description Wajib Di isi" required
-                                                        name="description" id="description" cols="" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -226,53 +203,63 @@
                                                     <div
                                                         class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
                                                         <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                            <label class="form-label">Item</label>
+                                                            <label for="item_{{ $random_string }}"
+                                                                class="form-label">Item</label>
                                                             <input type="text" class="form-control form-control-solid"
                                                                 disabled name="content[][good_name]"
+                                                                id="item_{{ $random_string }}"
                                                                 value="{{ $relatedItem->inventoryGood->good_name ?? null }}" />
                                                         </div>
 
                                                         <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                            <label class="form-label">Merk</label>
+                                                            <label for="merk_{{ $random_string }}"
+                                                                class="form-label">Merk</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
                                                                 <input type="text"
                                                                     class="form-control form-control-solid" disabled
                                                                     name="content[][good_merk]"
+                                                                    id="merk_{{ $random_string }}"
                                                                     value="{{ $relatedItem->inventoryGood->merk ?? null }}" />
                                                             </div>
                                                         </div>
 
                                                         <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                            <label class="form-label">Price</label>
+                                                            <label for="price_{{ $random_string }}"
+                                                                class="form-label">Price</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
                                                                 <input type="number"
                                                                     class="form-control form-control-solid" disabled
                                                                     name="content[][purchase_price]"
+                                                                    id="price_{{ $random_string }}"
                                                                     value="{{ $relatedItem->purchase_price ?? null }}" />
                                                             </div>
                                                         </div>
 
                                                         <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                            <label class="form-label">Qty</label>
+                                                            <label for="quantity_{{ $random_string }}"
+                                                                class="form-label">Qty</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
                                                                 <input type="number"
                                                                     class="form-control form-control-solid" disabled
                                                                     name="content[][quantity]"
+                                                                    id="quantity_{{ $random_string }}"
                                                                     value="{{ $relatedItem->quantity ?? null }}" />
                                                             </div>
                                                         </div>
 
                                                         <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                            <label class="form-label">Jasa
+                                                            <label for="purchase_delivery_{{ $random_string }}"
+                                                                class="form-label">Jasa
                                                                 Antar</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
                                                                 <input type="number"
                                                                     class="form-control form-control-solid" disabled
                                                                     name="content[][purchase_delivery]"
+                                                                    id="purchase_delivery_{{ $random_string }}"
                                                                     value="{{ $relatedItem->purchase_delivery_charge ?? null }}" />
                                                             </div>
                                                         </div>
@@ -280,13 +267,15 @@
                                                         <div class=""
                                                             style="flex-basis: 28%; min-width: 150px; margin: 10px;">
                                                             <div style="flex-basis: 80%; min-width: 120px;">
-                                                                <label class="form-label">Total
+                                                                <label for="total_price_{{ $random_string }}"
+                                                                    class="form-label">Total
                                                                     Price</label>
                                                                 <div class="position-relative">
                                                                     <div class="position-absolute top-0"></div>
                                                                     <input type="number"
                                                                         class="total-price form-control form-control-solid"
                                                                         disabled name="content[][total_price]"
+                                                                        id="total_price_{{ $random_string }}"
                                                                         value="{{ $relatedItem->total_price ?? null }}" />
                                                                 </div>
                                                             </div>
@@ -317,122 +306,165 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- @role('administrator')
-                                            <div class="ms-15 w-20 mt-3 mb-3 ">
-                                                <a href="#kt_modal_tambah_boq" data-bs-toggle="modal" id="btn-tambah-boq"
-                                                    class="btn btn-light-info btn-sm me-3 btn_tambah_boq">
-                                                    <i class="fa-solid fa-plus"></i>Item Baru</a>
-                                                <div id="error-item"></div>
-                                            </div>
-                                        @endrole --}}
                                     </div>
 
-                                    {{--  divv BUNDLE INTERNET --}}
-                                    <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
+                                    <form id="kt_create_quotation_internet_form"
+                                        class="form fv-plugins-bootstrap5 fv-plugins-framework"
+                                        enctype="multipart/form-data">
 
-                                        <div class="BundleItem">
-
-
-                                            <div
-                                                class="file-soft-quotation-bundle d-flex justify-content-between mx-20 mb-5 mt-10">
-                                                @php
-                                                    $random_string = \Illuminate\Support\Str::random(4);
-                                                @endphp
-                                                <div class="d-flex justify-content-around align-items-center"
-                                                    style="flex-basis: 40%; min-width: 200px;">
-                                                    <div class="" style="flex-basis: 85%;">
-                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                            required>
-                                                            <span class="required fw-bold">Internet Bundle</span>
-                                                        </label>
-                                                        <select class="form-select form-select-solid drop-data" required
-                                                            data-control="select2" name="good_name_bundle"
-                                                            id="good_name_bundle">
-                                                            <option value="">Select Internet Bundle</option>
-                                                        </select>
+                                        @csrf
+                                        {{--  divv No Quota & Description --}}
+                                        <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
+                                            <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                                <div class=""
+                                                    style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                                    <label for="no_quotation" class="form-label">
+                                                        <span class="fw-bold required">NO Quotation</span> </label>
+                                                    <div class="position-relative">
+                                                        <div class="position-absolute top-0"></div>
+                                                        <input type="text"
+                                                            class="form-control form-control-solid required" required
+                                                            id="no_quotation" name="no_quotation" value=""
+                                                            placeholder="No Quotation Wajib Di isi" />
                                                     </div>
-                                                    <div class="d-flex justify-content-center align-items-end"
-                                                        style="flex-basis: 10%;">
-                                                        <div>
-                                                            <div class="h-25px"></div>
+                                                </div>
 
-                                                            <a href="#kt_modal_tambah_bundle_internet"
-                                                                data-bs-toggle="modal" id="btn-bundle-internet"
-                                                                class="btn btn-light-info btn-sm btn_bundle_internet"
-                                                                style="flex-basis: 10%; width: 90%;">
-                                                                <i class="fa-solid fa-plus"></i></a>
+                                                <div class=""
+                                                    style="flex-basis: 75%; min-width: 200px; margin-bottom: 15px;">
+                                                    <label for="description" class="form-label">
+                                                        <span class="fw-bold required">Description</span></label>
+                                                    <div class="position-relative">
+                                                        <div class="position-absolute top-0"></div>
+                                                        <textarea class="form-control form-control-solid required" placeholder="Description Wajib Di isi" required
+                                                            name="description" id="description" cols="" rows="2"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{--  divv BUNDLE INTERNET --}}
+                                        <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
+
+                                            <div class="BundleItem">
+
+
+                                                <div
+                                                    class="file-soft-quotation-bundle d-flex justify-content-between mx-20 mb-5 mt-10">
+                                                    @php
+                                                        $random_string = \Illuminate\Support\Str::random(4);
+                                                    @endphp
+                                                    <div class="d-flex justify-content-around align-items-center"
+                                                        style="flex-basis: 40%; min-width: 200px;">
+                                                        <div class="" style="flex-basis: 85%;">
+                                                            <label for="good_name_bundle_{{ $random_string }}"
+                                                                class="d-flex align-items-center fs-6 form-label mb-2"
+                                                                required>
+                                                                <span class="required fw-bold">Internet Bundle</span>
+                                                            </label>
+                                                            <select class="form-select form-select-solid drop-data"
+                                                                required data-control="select2"
+                                                                name="good_name_bundle_{{ $random_string }}"
+                                                                id="good_name_bundle_{{ $random_string }}">
+                                                                <option value="">Select Internet Bundle</option>
+                                                                @if (isset($dataBoq['inventoryGoodInet']))
+                                                                    @foreach ($dataBoq['inventoryGoodInet'] as $item)
+                                                                        <option value="{{ $item->id }}">
+                                                                            {{ $item->good_name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
+                                                        </div>
+                                                        <div class="d-flex justify-content-center align-items-end"
+                                                            style="flex-basis: 10%;">
+                                                            <div>
+                                                                <div class="h-25px"></div>
+
+                                                                <a href="#kt_modal_tambah_bundle_internet"
+                                                                    data-bs-toggle="modal" id="btn-bundle-internet"
+                                                                    class="btn btn-light-info btn-sm btn_bundle_internet"
+                                                                    style="flex-basis: 10%; width: 90%;">
+                                                                    <i class="fa-solid fa-plus"></i></a>
+                                                            </div>
                                                         </div>
                                                     </div>
+
+                                                    <div class="" style="flex-basis: 14%; min-width: 150px;">
+                                                        <label for="quantity_{{ $random_string }}"
+                                                            class="d-flex align-items-center fs-6 form-label mb-2">
+                                                            <span class="fw-bold required">Quantity</span>
+                                                        </label>
+                                                        <input class="form-control" type="text" required
+                                                            min="1" minlength="1"
+                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                            name="quantity_{{ $random_string }}"
+                                                            id="quantity_{{ $random_string }}">
+                                                    </div>
+
+                                                    <div class="" style="flex-basis: 14%; min-width: 150px;">
+                                                        <label for="purchase_price_{{ $random_string }}"
+                                                            class="d-flex align-items-center fs-6 form-label mb-2">
+                                                            <span class="fw-bold required">Purchase Price</span>
+                                                        </label>
+                                                        <input class="form-control" type="text" required
+                                                            min="1" minlength="1"
+                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                            name="purchase_price_{{ $random_string }}"
+                                                            id="purchase_price_{{ $random_string }}">
+                                                    </div>
+
+                                                    <div class="" style="flex-basis: 14%; min-width: 150px;">
+                                                        <label for="total_price_{{ $random_string }}"
+                                                            class="d-flex align-items-center fs-6 form-label mb-2">
+                                                            <span class="fw-bold">Total Price</span>
+                                                        </label>
+                                                        <input class="form-control" type="text" required
+                                                            min="1" minlength="1" disabled
+                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                            name="total_price{{ $random_string }}"
+                                                            id="total_price_{{ $random_string }}">
+                                                    </div>
                                                 </div>
 
-                                                <div class="" style="flex-basis: 14%; min-width: 150px;">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                        <span class="fw-bold required">Quantity</span>
-                                                    </label>
-                                                    <input class="form-control" type="text" required min="1"
-                                                        minlength="1"
-                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                        name="quantity_{{ $random_string }}" id="quantity">
+                                                <div class="ms-15 w-20 mt-6 mb-5 ">
+                                                    <button class="btn btn-light-info btn-sm me-3 btn_bundle"
+                                                        id="btn-bundle">
+                                                        <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
+                                                    </button>
+                                                    {{-- <div id="error-item"></div> --}}
                                                 </div>
-
-                                                <div class="" style="flex-basis: 14%; min-width: 150px;">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                        <span class="fw-bold required">Purchase Price</span>
-                                                    </label>
-                                                    <input class="form-control" type="text" required min="1"
-                                                        minlength="1"
-                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                        name="purchase_price_{{ $random_string }}" id="purchase_price">
-                                                </div>
-
-                                                <div class="" style="flex-basis: 14%; min-width: 150px;">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                        <span class="fw-bold">Total Price</span>
-                                                    </label>
-                                                    <input class="form-control" type="text" required min="1"
-                                                        minlength="1" disabled
-                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                        name="total_price" id="total_price_{{ $random_string }}">
-                                                </div>
-                                            </div>
-
-                                            <div class="ms-15 w-20 mt-6 mb-5 ">
-                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
-                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
-                                                </button>
-                                                {{-- <div id="error-item"></div> --}}
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {{-- divv SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
-                                    <div>
-                                        <div class="d-flex justify-content-end mx-20">
-                                            {{-- <div class="w-20 me-10">
-                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
-                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
-                                                </button> 
-                                            </div> --}}
-                                            <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Price Bundle : Rp<span
-                                                        id="totalsumbundle"></span></span>
+                                        {{-- divv SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
+                                        <div>
+                                            <div class="d-flex justify-content-end mx-20">
+                                                <div class="w-20 me-10">
+                                                    <span class="fw-bold">Total Price Bundle : Rp<span
+                                                            id="totalsumbundle"></span></span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-center mt-6">
+                                                <div class=" me-5">
+                                                    <button type="reset" id="kt_modal_tambah_boq_cancel"
+                                                        class="btn btn-sm btn-light-info me-3 w-lg-200px"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                                <div class="me-5">
+                                                    <button type="submit" id="kt_modal_tambah_boq_submit"
+                                                        class="btn btn-sm btn-info w-lg-200px">
+                                                        <span class="indicator-label">Submit</span>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-center mt-6">
-                                            <div class=" me-5">
-                                                <a href="cmt-quotation" class="btn btn-light-info">Discard</a>
-                                            </div>
-                                            <div class="me-5">
-                                                <a href="cmt-quotation" id="submit-all-items"
-                                                    class="btn btn-info">Submit</a>
-                                            </div>
+                                        {{-- div input hidden --}}
+                                        <div>
+                                            <input type="hidden" name="id" id="id"
+                                                value="{{ $dataBoq['boqFinalData'][0]->id }}">
+                                            <input type="hidden" name="total_price_bundle" id="total_price_bundle">
                                         </div>
-                                    </div>
-                                    <div>
-                                        <input type="hidden" name="id" id="id"
-                                            value="{{ $dataBoq['boqFinalData'][0]->id }}">
-                                        <input type="hidden" name="total_price_bundle" id="total_price_bundle">
-                                    </div>
+                                    </form>
 
                                 </div>
                             </div>
@@ -464,6 +496,8 @@
 
             // Mengatur nilai input kembali dengan angka yang telah diformat
             input.value = inputValue;
+
+            updateTotalSumBundle();
         };
 
 
@@ -471,7 +505,7 @@
             var totalSum = 0;
 
             // Loop through each item's total price input field and sum up the values
-            $('.MultipleItem input[name="content[][total_price]"]').each(function() {
+            $('.MultipleItem input[name^="content[][total_price]"]').each(function() {
                 var totalPriceValue = $(this).val();
 
                 if (totalPriceValue !== "") {
@@ -489,7 +523,7 @@
             const gpmVal = parseInt(document.querySelector(`[name='gpm']`).value);
 
             // Loop through each item's total price input field and sum up the values
-            $('.BundleItem input[name="total_price"]').each(function() {
+            $('.BundleItem input[name^="total_price"]').each(function() {
                 var totalPriceBundleValue = $(this).val();
 
                 if (totalPriceBundleValue !== "") {
@@ -573,54 +607,8 @@
             hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
         }
 
-        $(document).ready(function() {
-
-            var dataFromFirstResponse = null; // Variabel untuk menyimpan data dari respons pertama
-
-            // Render opsi pertama saat halaman dimuat
-            $.ajax({
-                url: "{{ route('com.quotation.get.internet.bundling') }}",
-                type: 'GET',
-                success: function(response) {
-                    console.log(response);
-                    // dataFromFirstResponse = response; // Simpan data dari respons pertama
-                    $('#good_name_bundle').empty(); // Hapus opsi yang ada sebelumnya
-                    $('#good_name_bundle').append($('<option>', {
-                        value: '',
-                        text: 'Select Internet Bundle'
-                    }));
-                    $.each(response, function(index, item) {
-                        $('#good_name_bundle').append($('<option>', {
-                            value: item.id,
-                            text: item.good_name
-                        }));
-                    });
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-            // Handler untuk peristiwa "change" pada select item
-            // $('#good_name_bundle').on('change', function() {
-            //     var selectedItemId = $(this).val();
-
-            //     // Cek apakah data dari respons pertama sudah ada
-            //     if (dataFromFirstResponse) {
-            //         // Cari item dengan ID yang sesuai dalam data pertama
-            //         var selectedItem = dataFromFirstResponse.find(function(item) {
-            //             return item.id == selectedItemId;
-            //         });
-
-            //         // Isi input dengan data dari item yang sesuai
-            //         if (selectedItem) {
-            //             $('#good_type_bundle').val(selectedItem.good_type).prop('disabled', true);
-            //             $('#merk_bundle').val(selectedItem.merk).prop('disabled', true);
-            //             $('#detail_bundle').val(selectedItem.description).prop('disabled', true);
-            //         }
-            //     }
-            // });
-
-            // Function Tambah Modal Bundling Internet
+        $(document).ready(function() { 
+            // Function Tambah Bundling Internet 
             $('#btn-bundle').on('click', function() {
                 // Find the parent container where you want to append new divs
                 const parentContainer = document.querySelector(".BundleItem");
@@ -635,35 +623,36 @@
                 const htmlStructure = `  
                     <div class="d-flex justify-content-around align-items-center" style="flex-basis: 35%; min-width: 200px;"> 
                         <div class="" style="flex-basis: 100%;">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                required>
+                            <label for="good_name_bundle_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Internet Bundle</span>
                             </label>
                             <select class="form-select form-select-solid drop-data" required
-                                data-control="select2" name="good_name_bundle"
+                                data-control="select2" name="good_name_bundle_${random_string}"
                                 id="good_name_bundle_${random_string}">
-                                <option>Select Internet Bundle</option>
+                                <option selected>Select Internet Bundle</option>
                             </select>
                         </div> 
                     </div>
                     <div style="flex-basis: 14%; min-width: 150px;">
-                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                        <label for="quantity_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
                             <span class="fw-bold required">Quantity</span>
                         </label>
-                        <input class="form-control" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity">
-                    </div>
+                        <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity_${random_string}">
+                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                        </div>
                     <div style="flex-basis: 14%; min-width: 150px;">
-                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                        <label for="purchase_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
                             <span class="fw-bold required">Purchase Price</span>
                         </label>
-                        <input class="form-control" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price">
-                    </div>
+                        <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price_${random_string}">
+                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                        </div>
                     <div class="d-flex justify-content-around align-items-center flex-nowrap"  style="flex-basis: 20%; min-width: 180px;">
                         <div class="" style="flex-basis: 80%;">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                            <label for="total_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="fw-bold">Total Price</span>
                             </label>
-                            <input class="form-control" type="text" required min="1" minlength="1" disabled oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="total_price" id="total_price_${random_string}">
+                            <input class="form-control" type="text" min="1" minlength="1" disabled oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="total_price_${random_string}" id="total_price_${random_string}">
                         </div>
                         <div class="" style="flex-basis: 15%;">
                             <div>
@@ -672,7 +661,7 @@
                                         <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </button> 
                                 <ul class="dropdown-menu"> 
-                                    <li type="button" class="clear-soft-survey-item-${random_string}"
+                                    <li type="button" class="clear-purchase-order-item-${random_string}"
                                         data-random-string="${random_string}">
                                         <a class="dropdown-item py-2">
                                         <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
@@ -686,45 +675,50 @@
                 // Set the HTML content of the new div to the HTML structure
                 newDiv.innerHTML = htmlStructure;
 
-                // Append the new div to the parent container
-                parentContainer.appendChild(newDiv);
-
                 $.ajax({
                     url: "{{ route('com.quotation.get.internet.bundling') }}",
                     type: 'GET',
                     success: function(response) {
-                        console.log(response);
-                        // dataFromFirstResponse = response; // Simpan data dari respons pertama
-                        $('#good_name_bundle_' + random_string)
+                        console.log(response); 
+                        $(newDiv).find('#good_name_bundle_' + random_string)
                             .empty(); // Hapus opsi yang ada sebelumnya
-                        $('#good_name_bundle_' + random_string).append($('<option>', {
-                            value: '',
-                            text: 'Select Internet Bundle'
-                        }));
+                        $(newDiv).find('#good_name_bundle_' + random_string).append($(
+                            '<option>', {
+                                value: '',
+                                text: 'Select Internet Bundle'
+                            }));
                         $.each(response, function(index, item) {
-                            $('#good_name_bundle_' + random_string).append($(
-                                '<option>', {
-                                    value: item.id,
-                                    text: item.good_name
-                                }));
+                            $(newDiv).find('#good_name_bundle_' + random_string).append(
+                                $(
+                                    '<option>', {
+                                        value: item.id,
+                                        text: item.good_name
+                                    }));
                         });
+
                     },
                     error: function(error) {
                         console.log(error);
                     }
                 });
 
+                // Append the new div to the parent container
+                parentContainer.appendChild(newDiv);
+
+                $(`select[name="good_name_bundle_${random_string}"]`).select2({
+                    dropdownAutoWidth: true
+                });
+
                 // Function Hapus per Item
-                $('.BundleItem').on('click', `.clear-soft-survey-item-${random_string}`,
+                $('.BundleItem').on('click', `.clear-purchase-order-item-${random_string}`,
                     function() {
                         $(this).parent().parent().parent().parent().parent().remove();
                         updateTotalSumBundle();
                     });
 
-
             });
 
-            // Function Tambah Modal Bundling Internet
+            // Function Muncul Modal Bundling Internet BARU
             $('#btn-bundle-internet').on('click', '.btn_bundle_internet', function() {
                 $('.drop-data').val("").trigger("change");
                 $('#kt_modal_tambah_bundle_internet_form').trigger("reset");
@@ -732,7 +726,7 @@
             });
 
             // Function Submit Modal
-            $("#kt_modal_tambah_bundle_internet_form").validate({
+            $("#kt_modal_tambah_bundle_internet_form").validate({ 
                 messages: {
                     good_name_update: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Wajib Mengisi Nama Item</span>",
@@ -749,7 +743,7 @@
                     description_update: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Deskripsi Barang wajib diisi</span>",
                     }
-                },
+                }, 
                 submitHandler: function() {
                     event.preventDefault();
                     // Dapatkan referensi ke elemen form
@@ -765,12 +759,12 @@
                         .value;
 
                     // Sekarang, Anda memiliki nilai dari masing-masing input berdasarkan nama (name)
-                    // console.log("Nama Inventory Item:", goodName);
-                    // console.log("Code Item:", codeName);
-                    // console.log("Merk:", merk);
-                    // console.log("Tipe Barang:", goodType);
-                    // console.log("Detail Item Inventory:", description);
-                    // console.log("Good Category ID:", goodCategoryId);
+                    console.log("Nama Inventory Item:", goodName);
+                    console.log("Code Item:", codeName);
+                    console.log("Merk:", merk);
+                    console.log("Tipe Barang:", goodType);
+                    console.log("Detail Item Inventory:", description);
+                    console.log("Good Category ID:", goodCategoryId);
 
                     $.ajax({
                         type: "POST",
@@ -785,42 +779,18 @@
                             description: description
                         },
                         success: function(response) {
-                            console.log("Data berhasil disimpan:", response);
+                            console.log("Data berhasil disimpan:", response.message);
                             form.reset();
 
-                            $('#kt_modal_tambah_bundle_internet').modal('hide');
-                            // Hapus semua nilai dari dataFromFirstResponse
-                            dataFromFirstResponse = null;
-
-                            $.ajax({
-                                url: "{{ route('com.quotation.get.internet.bundling') }}",
-                                type: 'GET',
-                                success: function(response) {
-                                    console.log(response);
-                                    dataFromFirstResponse =
-                                        response; // Simpan data dari respons pertama
-                                    $('#good_name_bundle')
-                                        .empty(); // Hapus opsi yang ada sebelumnya
-                                    $('#good_name_bundle').append($(
-                                        '<option>', {
-                                            value: '',
-                                            text: 'Select Internet Bundle'
-                                        }));
-                                    $.each(response, function(index, item) {
-                                        $('#good_name_bundle').append($(
-                                            '<option>', {
-                                                value: item.id,
-                                                text: item
-                                                    .good_name
-                                            }));
-                                    });
-                                },
-                                error: function(error) {
-                                    console.log(error);
-                                }
-                            });
+                            $('#kt_modal_tambah_bundle_internet').modal('hide'); 
 
                             $('#error-item').empty();
+
+                            $(`select[name^="good_name_bundle"]`).append($(
+                                '<option>', {
+                                    value: response.item.id,
+                                    text: response.item.good_name
+                                }));
                         },
                         error: function(error) {
                             console.error("Terjadi kesalahan:", error);
@@ -829,87 +799,85 @@
                 }
             });
 
+            // Function Submit Modal
+            $("#kt_create_quotation_internet_form").validate({
+                messages: {
+                    no_quotation: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>NO QUOTATION Wajib diisi</span>",
+                    },
+                    description: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>DESRCIPTION Wajib diisi</span>",
+                    }
+                },
 
-            // function Submit BOQ page BENERAN wkwkw
-            $('#submit-all-items').on('click', function(event) {
-                event.preventDefault();
+                submitHandler: function() {
 
-                // Get Prospect ID and Survey ID from the HTML elements
-                var boq_id = $('#id').val();
-                var total_price_bundle = $('#total_price_bundle').val();
-                var no_quotation = $('#no_quotation').val();
-                var description = $('#description').val();
+                    event.preventDefault();
 
-                // Array to store all item data
-                var bundle = [];
-                // Create an object to store prospect_id and survey_request_id
-                var quotation = {
-                    boq_id: boq_id,
-                    no_quotation: no_quotation,
-                    description: description,
-                    total_price: total_price_bundle
-                };
+                    // Get Prospect ID and Survey ID from the HTML elements
+                    var boq_id = $('#id').val();
+                    var total_price_bundle = $('#total_price_bundle').val();
+                    var no_quotation = $('#no_quotation').val();
+                    var description = $('#description').val();
 
-                // console.log(quotation);
-
-                // Loop through each .file-soft-boq-item div to get the data for each item
-                $('.BundleItem [class^="file-soft-quotation-bundle"]').each(function(index, item) {
-                    // Extract data for the specific item
-                    var id = $(item).find('select[name="good_name_bundle"]').val();
-                    var purchase_price = $(item).find('input[id="purchase_price"]').val();
-                    var quantity = $(item).find('input[id="quantity"]').val();
-                    var total_price = $(item).find('input[name="total_price"]').val();
-
-                    // Create an object to store the data for the specific item
-                    var itemData = {
-                        id: id,
-                        quantity: quantity,
-                        purchase_price: purchase_price,
-                        total_price: total_price
+                    // Array to store all item data
+                    var bundle = [];
+                    // Create an object to store prospect_id and survey_request_id
+                    var quotation = {
+                        boq_id: boq_id,
+                        no_quotation: no_quotation,
+                        description: description,
+                        total_price: total_price_bundle
                     };
 
-                    // Push the itemData object to the items array
-                    bundle.push(itemData);
-                });
+                    console.log(quotation);
 
-                // Check if there is at least one item in the 'items' array
-                // if (bundle.length === 0) {
-                //     // Show an error message
-                //     event.preventDefault();
-                //     var errorMessageItem =
-                //         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
-                //     $('#error-item').html(errorMessageItem);
-                //     return;
-                // } else {
-                //     $('#error-item').empty();
-                // }
+                    // Loop through each .file-soft-boq-item div to get the data for each item
+                    $('.BundleItem [class^="file-soft-quotation-bundle"]').each(function(index, item) {
+                        // Extract data for the specific item
+                        var id = $(item).find('select[name^="good_name_bundle"]').val();
+                        var purchase_price = $(item).find('input[id^="purchase_price"]').val();
+                        var quantity = $(item).find('input[id^="quantity"]').val();
+                        var total_price = $(item).find('input[name^="total_price"]').val();
 
-                console.log(bundle);
-                // Send the data to the server using AJAX
-                $.ajax({
-                    url: "{{ route('com.quotation.store.quotation') }}",
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        quotation: quotation,
-                        bundle: bundle
-                    },
-                    success: function(response) {
-                        // Handle the response from the server, e.g., show a success message
-                        toastr.success(response.message);
-                        console.log(response);
-                        setTimeout(() => {
-                            window.location.href = `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
-                        }, 800);
-                    },
-                    error: function(error) {
-                        // Handle errors if the request fails
-                        toastr.error(error.responseJSON.error);
-                        console.error('Error submitting all item data: ', error);
-                    }
-                });
+                        // Create an object to store the data for the specific item
+                        var itemData = {
+                            id: id,
+                            quantity: quantity,
+                            purchase_price: purchase_price,
+                            total_price: total_price
+                        };
+
+                        // Push the itemData object to the items array
+                        bundle.push(itemData);
+                    });
+                    console.log(bundle);
+
+                    $.ajax({
+                        url: "{{ route('com.quotation.store.quotation') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            quotation: quotation,
+                            bundle: bundle
+                        },
+                        success: function(response) {
+                            // Handle the response from the server, e.g., show a success message
+                            toastr.success(response.message);
+                            console.log(response);
+                            setTimeout(() => {
+                                window.location.href = `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
+                            }, 800);
+                        },
+                        error: function(error) {
+                            // Handle errors if the request fails
+                            toastr.error(error.responseJSON.error);
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+
+                }
             });
-
 
             //  Calculate and update total sum on page load
             updateTotalSum();
