@@ -32,6 +32,7 @@ Route::controller(QuotationController::class)->group(function(){
        Route::get('/create-quotation','createQuotation')->name('com.quotation.create.quotation');
        Route::get('/update-quotation','updateQuotation')->name('com.quotation.update.quotation');
        Route::post('/store-data-quotation','saveAndStoreQuotation')->name('com.quotation.store.quotation');
+       Route::post('/store-po-quotation','storePurchaseOrder')->name('com.quotation.store.quotation');
        Route::get('/get-internet-bundling', 'getInternetBundling')->name('com.quotation.get.internet.bundling');
        Route::post('/update-internet-bundling', 'updateInternetBundling')->name('com.quotation.update.internet.bundling');
     });
