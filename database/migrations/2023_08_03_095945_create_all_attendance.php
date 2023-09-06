@@ -25,7 +25,8 @@ class CreateAllAttendance extends Migration
         Schema::create('global_day_offs', function (Blueprint $table) {
             $table->id();
             $table->string("name", 40);
-            $table->date("date")->unique();
+            $table->date("start_date");
+            $table->date("end_date");
             $table->softDeletes()->index();
             $table->timestamps();
         });

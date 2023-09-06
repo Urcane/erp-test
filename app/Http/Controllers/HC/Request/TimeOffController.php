@@ -19,8 +19,38 @@ use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
 use App\Models\Attendance\UserLeaveHistory;
 
+use DateTime;
+use DateInterval;
+use DatePeriod;
+
 class TimeOffController extends RequestController
 {
+    private function _getGlobalDayOff($startDate, $endDate)
+    {
+        $globalDayOffs = GlobalDayOff::where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $startDate)->get();
+
+        $holidayDates = collect();
+
+        foreach ($globalDayOffs as $globalDayOff) {
+            $currentStartDate = max($globalDayOff->start_date, $startDate);
+            $currentEndDate = min($globalDayOff->end_date, $endDate);
+
+            $period = new DatePeriod(
+                new DateTime($currentStartDate),
+                new DateInterval('P1D'),
+                (new DateTime($currentEndDate))->modify('+1 day')  // To include the end_date
+            );
+
+            foreach ($period as $date) {
+                $holidayDates->push($date->format('Y-m-d'));
+            }
+        }
+
+        return $holidayDates->unique()->toArray();
+    }
+
+
     private function _updateAttendance($userId, $date, $attendanceCode, $leaveCategoryCode = null)
     {
         UserAttendance::updateOrCreate([
@@ -53,7 +83,7 @@ class TimeOffController extends RequestController
         $takenDates = [];
         $dayOffDates = [];
 
-        $holidayDates = GlobalDayOff::whereBetween('date', [$startDate, $endDate])->pluck('date')->toArray();
+        $holidayDates = $this->_getGlobalDayOff($startDate, $endDate);
 
         while ($startDate <= $endDate) {
             $currentDate = $startDate->copy();
