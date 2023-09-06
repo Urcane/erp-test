@@ -29,8 +29,7 @@ class UserSeeder extends Seeder
             'HC:view-all-request',
             'HC:change-all-status-request',
             'HC:view-attendance',
-            'HC:edit-delete-attendance',
-            'HC:export-attendance'
+            'HC:edit-delete-attendance'
         ]);
 
         $cmrAdminProject = ['Nisa Fajrin Alfalah', 'Bagus Hariyadi'];
