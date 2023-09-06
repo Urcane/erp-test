@@ -27,7 +27,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Lampiran</span>
                             </label>
-                            <input type="file" class="form-control form-control-solid file-purchase-order-item-initial" placeholder="" required accept="image/*" name="content[][file_purchase_order_internet]">
+                            <input type="file" class="form-control form-control-solid file-purchase-order-item-initial" placeholder="" required accept="image/*" name="file_purchase_order_internet">
                             <div class="fv-plugins-message-container invalid-feedback"></div>
                             <img id="containerImage" class="img-fluid m-5" src="#" alt="File Image" hidden="hidden"/>
                         </div>
