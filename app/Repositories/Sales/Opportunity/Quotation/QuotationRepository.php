@@ -41,9 +41,11 @@ class QuotationRepository
     function createQuotation(Request $request) {
         $boqId = $request->query('boq_id');
         $boqData = $this->boqData->where('id', $boqId)->first();
+        $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
         $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();        
         return [
-            'boqFinalData' => $boqFinalData
+            'boqFinalData' => $boqFinalData,
+            'inventoryGoodInet' => $inventoryGoodInet,
         ];
     }
 
@@ -55,10 +57,6 @@ class QuotationRepository
             $query->where('good_category_id', 3);
        })->get();
         $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
-        //      $query->where('good_category_id', 3);
-        // })
-        // ->with('inventoryGood')
-        // ->get();
         $boqData = $this->boqData->where('id', $quotationData->boq_id)->first();
         $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();         
         return [
@@ -115,8 +113,8 @@ class QuotationRepository
         return $quotationData;
     }
 
-    function storePurchaseOrder(Request $request){
-        $quotationId = $request->input('quotation.id');
+    function storePurchaseOrder(Request $request){ 
+        $quotationId = $request->input('quotation_id');
         $quotationData = $this->model->where('id', $quotationId)->first();
         
         if (!$quotationData) {

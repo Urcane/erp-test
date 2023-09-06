@@ -12,7 +12,7 @@
             <div class="modal-body mx-5 mx-lg-15 my-7">
                 <form id="kt_modal_create_purchase_order_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="purchase_order_id">
+                    <input type="hidden" id="quotation_id" name="quotation_id">
                     <div class="scroll-y me-n10 pe-10" id="kt_modal_create_purchase_order_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_create_purchase_order_header" data-kt-scroll-wrappers="#kt_modal_create_purchase_order_scroll" data-kt-scroll-offset="300px">
                     <div class="row mb-9">
                         <div class="col-lg-12 text-center mb-9">
@@ -24,10 +24,10 @@
                             <div class="separator my-3 text-center text-gray-800"></div>
                         </div>
                         <div class="col-lg-12 mb-3">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                            <label for="file_purchase_order_internet" class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Lampiran</span>
                             </label>
-                            <input type="file" class="form-control form-control-solid file-purchase-order-item-initial" placeholder="" required accept="image/*" name="file_purchase_order_internet">
+                            <input type="file" class="form-control form-control-solid file-purchase-order-item-initial" placeholder="" required accept="image/*" name="file_purchase_order_internet" id="file_purchase_order_internet">
                             <div class="fv-plugins-message-container invalid-feedback"></div>
                             <img id="containerImage" class="img-fluid m-5" src="#" alt="File Image" hidden="hidden"/>
                         </div>

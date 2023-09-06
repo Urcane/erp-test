@@ -152,9 +152,9 @@ class QuotationService
         $quotation = $request->query('quotation');
         //page update belum ada
         if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation'));
         } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation'));
         } 
     }
 
@@ -175,9 +175,10 @@ class QuotationService
 
     function storePurchaseOrder(Request $request) {
         $dataQuotation = $this->quotationRepository->storePurchaseOrder($request);
-        if (null !== ($request->file('quotation.customer_purchase_order'))) {
+        // dd($request->file('file_purchase_order_internet'));
+        if (null !== ($request->file('file_purchase_order_internet'))) {
             $file = $this->fileService->storeFile($dataQuotation, [
-                'file' => $request->file('quotation.customer_purchase_order'),
+                'file' => $request->file('file_purchase_order_internet'),
                 'filePath' => 'purchase-order-customer',
                 'fileName' => 'File Purchase Order Customer',
                 'additional' => 'quotation/purchase-order'
