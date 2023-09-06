@@ -25,6 +25,12 @@ class UserSeeder extends Seeder
             'team_id' => 1,
         ]);
         $superadmin->assignRole('administrator');
+        $superadmin->givePermissionTo([
+            'HC:view-all-request',
+            'HC:change-all-status-request',
+            'HC:view-attendance',
+            'HC:edit-delete-attendance'
+        ]);
 
         $cmrAdminProject = ['Nisa Fajrin Alfalah', 'Bagus Hariyadi'];
         $cmrAdminProjectEmail = ['nisa@comtelindo.com', 'agushaha@live.co.uk'];

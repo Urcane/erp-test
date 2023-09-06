@@ -90,31 +90,39 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/get/category', 'getCategories');
         });
 
-        Route::prefix('attendance')->group(function () {
-            Route::controller(HC\Request\AttendanceController::class)->group(function () {
-                Route::post('/get', 'getRequests');
-                Route::post('/get/detail', 'getRequestById');
-                Route::post('/update/status', 'updateRequestStatusById');
-            });
-        });
+        Route::middleware(['permission:Approval:view-request|HC:view-all-request'])->group(function () {
+            Route::prefix('attendance')->group(function () {
+                Route::controller(HC\Request\AttendanceController::class)->group(function () {
+                    Route::post('/get', 'getRequests');
+                    Route::post('/get/detail', 'getRequestById');
 
-        Route::prefix('shift')->group(function () {
-            Route::controller(HC\Request\ShiftController::class)->group(function () {
-                Route::post('/get', 'getRequests');
-                Route::post('/get/detail', 'getRequestById');
-                Route::post('/update/status', 'updateRequestStatusById');
+                    Route::post('/update/status', 'updateRequestStatusById')
+                        ->middleware(['permission:Approval:change-status-request|HC:change-all-status-request']);
+                });
             });
 
-            Route::controller(Api\ShiftController::class)->group(function () {
-                Route::get('/get/working-shift', 'getAllWorkingShift');
-            });
-        });
+            Route::prefix('shift')->group(function () {
+                Route::controller(HC\Request\ShiftController::class)->group(function () {
+                    Route::post('/get', 'getRequests');
+                    Route::post('/get/detail', 'getRequestById');
 
-        Route::prefix('time-off')->group(function () {
-            Route::controller(HC\Request\TimeOffController::class)->group(function () {
-                Route::post('/get', 'getRequests');
-                Route::post('/get/detail', 'getRequestById');
-                Route::post('/update/status', 'updateRequestStatusById');
+                    Route::post('/update/status', 'updateRequestStatusById')
+                        ->middleware(['permission:Approval:change-status-request|HC:change-all-status-request']);
+                });
+
+                Route::controller(Api\ShiftController::class)->group(function () {
+                    Route::get('/get/working-shift', 'getAllWorkingShift');
+                });
+            });
+
+            Route::prefix('time-off')->group(function () {
+                Route::controller(HC\Request\TimeOffController::class)->group(function () {
+                    Route::post('/get', 'getRequests');
+                    Route::post('/get/detail', 'getRequestById');
+
+                    Route::post('/update/status', 'updateRequestStatusById')
+                        ->middleware(['permission:Approval:change-status-request|HC:change-all-status-request']);
+                });
             });
         });
 

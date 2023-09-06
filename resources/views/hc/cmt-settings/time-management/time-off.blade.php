@@ -59,7 +59,7 @@
                 <div class="card">
                     <div class="card-body row">
                         <div class="col-lg-6 mb-9">
-                            <h4>Time Of</h4>
+                            <h4>Time Off</h4>
                         </div>
                         <div class="col-lg-6 d-flex justify-content-end">
                             <div>
