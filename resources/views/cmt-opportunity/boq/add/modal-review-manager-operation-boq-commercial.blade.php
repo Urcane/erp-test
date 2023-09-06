@@ -28,11 +28,14 @@
                             </div>
                         </div> 
                         <div id="containerSelectedBoqCommercials">
-                            <input type="text" name="itemableBillOfQuantity_id_manager_operation" id="itemableBillOfQuantity_id_manager_operation" value="">
-                            <input type="text" id="" name="is_approval_manager_operation" value="">
+                            <input type="hidden" name="itemableBillOfQuantity_id_manager_operation" id="itemableBillOfQuantity_id_manager_operation" value="">
+                            <input type="hidden" id="" name="is_approval_manager_operation" value="">
                         </div>
                     </div>
                     <div class="text-center row mb-12">
+                        <label class="d-flex align-items-center fs-6 form-label">
+                            <span class="required fw-bold">Remark / Notes: </span>
+                        </label>
                         <textarea class="form-control form-control-solid" id="remark_manager_operation" value="" placeholder=""
                             rows="2" style="resize:none"></textarea>
                     </div>
