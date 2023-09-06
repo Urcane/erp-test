@@ -310,7 +310,7 @@ class BoQRepository
         $boqId = $request->query('boq_id');
         $boqData = $this->model->where('id', $boqId)->first();
 
-        $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$boqData->prospect_id)->get();
+        $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType', 'surveyRequest')->where("prospect_id",$boqData->prospect_id)->get();
         $dataForm = $this->inventoryService->getDataForm();
         $dataSales = $this->user->where('department_id', 1)->get();
         $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first();

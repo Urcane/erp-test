@@ -75,9 +75,15 @@
                                                     <option value="" selected disabled>Pilih Survey</option>
                                                     @if (isset($dataSurvey))
                                                         @foreach ($dataSurvey as $survey)
-                                                            <option value="{{ $survey->id ?? null }}">
-                                                                {{ $survey->customerProspect->prospect_title ?? null }}
+                                                            @if ($selectedDataSurvey == $survey->id)
+                                                            <option value="{{ $survey->id ?? null }}" selected>
+                                                                {{ $survey->no_survey ?? null }}
                                                             </option>
+                                                            @else
+                                                            <option value="{{ $survey->id ?? null }}">
+                                                                {{ $survey->no_survey ?? null }}
+                                                            </option>
+                                                            @endif
                                                         @endforeach
                                                     @endif
                                                 </select>

@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use App\Http\Requests\Opportunity\Survey\SurveyRequest;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
+use App\Models\Opportunity\Survey\SurveyRequest;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ItemableBillOfQuantity extends Model

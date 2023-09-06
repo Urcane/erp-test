@@ -73,9 +73,11 @@
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
+                                                    placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->surveyRequest->no_survey ?? 'Survey Tidak ada' }}">
+
+                                                <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="survey_request_id" id="survey_request_id"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id }}"
-                                                    {{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
+                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id}}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>

@@ -45,7 +45,7 @@
                                 <div class="form-check form-check-custom form-check-success form-check-solid">
                                     <input class="form-check-input" type="hidden" value="0" id="is_final"
                                         name="is_final" />
-                                    <label class="form-check-label" for="is_final">Finalisasi</label>
+                                    {{-- <label class="form-check-label" for="is_final">Finalisasi</label> --}}
                                 </div>
                             </div>
 
@@ -77,9 +77,11 @@
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
+                                                    placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->surveyRequest->no_survey ?? 'Survey Tidak ada' }}">
+
+                                                <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="survey_request_id" id="survey_request_id"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id }}"
-                                                    {{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
+                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id}}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -420,6 +422,11 @@
                                             <div class="w-20 me-10">
                                                 <span class="fw-bold">Total Amount : Rp<span id="totalsum"></span></span>
                                             </div>
+                                            <div class="form-check form-check-custom form-check-success form-check-solid">
+                                                <input class="form-check-input" type="hidden"
+                                                    id="is_draft" name="is_draft" value="0"/>
+                                                {{-- <label class="form-check-label" for="is_draft">Next to Commercial</label> --}}
+                                            </div>
                                         </div>
                                         <div class="d-flex justify-content-center mt-6">
                                             <div class=" me-5">
@@ -467,6 +474,7 @@
                     // var survey_request_id = $('#survey_request_id').val();
                     var boq_id = $('#boq_id').val();
                     var prospect_id = $('#prospect_id').val();
+                    var is_draft = $('#is_draft').val();
 
                     var sales_id = $('#sales_id').val();
                     var technician_id = $('#technician_id').val();
@@ -497,6 +505,7 @@
                     var boq = {
                         boq_id: boq_id,
                         prospect_id: prospect_id,
+                        is_draft: is_draft,
                         is_final: is_final,
 
                         sales_id: sales_id,
