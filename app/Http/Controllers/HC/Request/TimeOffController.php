@@ -93,9 +93,10 @@ class TimeOffController extends RequestController
                 throw new NotFoundError("Time Off Request tidak ditemukan");
             }
 
-            $approvalLine = $leaveRequest->user->userEmployment->approvalLine;
+            /** @var App\Models\User $user */
+            $user = Auth::user();
 
-            if (!$approvalLine) {
+            if ($user->hasPermissionTo('HC:change-all-status-request')) {
                 if ($request->status == $this->constants->approve_status[1]) {
                     $workingDayOff = $leaveRequest
                         ->user
@@ -124,6 +125,7 @@ class TimeOffController extends RequestController
                             $userId,
                             $leaveCategoryName,
                             $leaveCategoryCode,
+                            $user
                         ) {
                         $this->_updateAttendance(
                             $userId,
@@ -135,7 +137,7 @@ class TimeOffController extends RequestController
                         $this->_createHistory(
                             $userId,
                             $data,
-                            null,
+                            $user->name,
                             $leaveCategoryName,
                             $leaveCategoryCode
                         );
@@ -145,7 +147,7 @@ class TimeOffController extends RequestController
                         $this->_updateAttendance(
                             $userId,
                             $data,
-                            $this->constants->attendance_code[2],
+                            $this->constants->attendance_code[2]
                         );
                     });
 
@@ -153,13 +155,13 @@ class TimeOffController extends RequestController
                         $this->_updateAttendance(
                             $userId,
                             $data,
-                            $this->constants->attendance_code[3],
+                            $this->constants->attendance_code[3]
                         );
                     });
                 }
 
                 $leaveRequest->update([
-                    "approval_line" => $approvalLine->id,
+                    "approval_line" => $user->id,
                     "status" => $request->status,
                     "comment" => $request->comment
                 ]);
@@ -170,7 +172,9 @@ class TimeOffController extends RequestController
                 ]);
             }
 
-            if ($approvalLine->id != Auth::user()->id) {
+            $approvalLine = $leaveRequest->user->userEmployment->approvalLine;
+
+            if ($approvalLine->id != $user->id || !$user->hasPermissionTo('Approval:change-status-request')) {
                 throw new AuthorizationError("Anda tidak berhak melakukan update status");
             }
 
@@ -193,7 +197,6 @@ class TimeOffController extends RequestController
 
                 $leaveCategoryName = $leaveRequest->leaveRequestCategory->name;
                 $leaveCategoryCode = $leaveRequest->leaveRequestCategory->code;
-                $approvalName = Auth::user()->name;
 
                 $schedule = $this->_getSchedule(
                     $workingDayOff,
@@ -211,7 +214,7 @@ class TimeOffController extends RequestController
                         $userId,
                         $leaveCategoryName,
                         $leaveCategoryCode,
-                        $approvalName,
+                        $user,
                     ) {
                     $this->_updateAttendance(
                         $userId,
@@ -223,7 +226,7 @@ class TimeOffController extends RequestController
                     $this->_createHistory(
                         $userId,
                         $data,
-                        $approvalName,
+                        $user->name,
                         $leaveCategoryName,
                         $leaveCategoryCode
                     );
@@ -247,7 +250,7 @@ class TimeOffController extends RequestController
             }
 
             $leaveRequest->update([
-                "approval_line" => $approvalLine->id,
+                "approval_line" => $user->id,
                 "status" => $request->status,
                 "comment" => $request->comment
             ]);
@@ -266,14 +269,24 @@ class TimeOffController extends RequestController
     public function getSummaries(Request $request)
     {
         try {
-            $query = UserLeaveRequest::where(function ($query) {
-                $query->where(function ($query) {
-                    $query->where('status', $this->constants->approve_status[0])
-                        ->whereHas('user.userEmployment', function ($query) {
-                            $query->where('approval_line', Auth::user()->id);
-                        });
-                })->orWhere('approval_line', Auth::user()->id);
-            });
+            /** @var App\Models\User $user */
+            $user = Auth::user();
+            $query = null;
+
+            if ($user->hasPermissionTo('HC:view-all-request')) {
+                $query = new UserLeaveRequest;
+            } else if ($user->hasPermissionTo('Approval:view-request')) {
+                $query = UserLeaveRequest::where(function ($query) use ($user) {
+                    $query->where(function ($query) use ($user) {
+                        $query->where('status', $this->constants->approve_status[0])
+                            ->whereHas('user.userEmployment', function ($query) use ($user) {
+                                $query->where('approval_line', $user->id);
+                            });
+                    })->orWhere('approval_line', $user->id);
+                });
+            } else {
+                throw new AuthorizationError("Anda tidak berhak mengakses ini");
+            }
 
             $search = $request->filters['search'];
             if (!empty($search)) {
@@ -348,14 +361,26 @@ class TimeOffController extends RequestController
     public function getTable(Request $request)
     {
         if (request()->ajax()) {
-            $query = UserLeaveRequest::where(function ($query) {
-                $query->where(function ($query) {
-                    $query->where('status', $this->constants->approve_status[0])
-                        ->whereHas('user.userEmployment', function ($query) {
-                            $query->where('approval_line', Auth::user()->id);
-                        });
-                })->orWhere('approval_line', Auth::user()->id);
-            })->with(['user.division', 'user.department', 'user.userEmployment.subBranch', 'leaveRequestCategory']);
+            /** @var App\Models\User $user */
+            $user = Auth::user();
+            $query = null;
+
+            if ($user->hasPermissionTo('HC:view-all-request')) {
+                $query = UserLeaveRequest::with([
+                    'user.division', 'user.department', 'user.userEmployment.subBranch', 'leaveRequestCategory'
+                ]);
+            } else if ($user->hasPermissionTo('Approval:view-request')) {
+                $query = UserLeaveRequest::where(function ($query) {
+                    $query->where(function ($query) {
+                        $query->where('status', $this->constants->approve_status[0])
+                            ->whereHas('user.userEmployment', function ($query) {
+                                $query->where('approval_line', Auth::user()->id);
+                            });
+                    })->orWhere('approval_line', Auth::user()->id);
+                })->with(['user.division', 'user.department', 'user.userEmployment.subBranch', 'leaveRequestCategory']);
+            } else {
+                throw new AuthorizationError("Anda tidak berhak mengakses ini");
+            }
 
             switch ($request->filters['filterStatus']) {
                 case $this->constants->approve_status[0]:
