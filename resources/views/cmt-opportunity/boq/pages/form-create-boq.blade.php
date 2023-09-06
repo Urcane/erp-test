@@ -72,7 +72,7 @@
                                                 </label>
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="survey_request_id" id="survey_request_id">
-                                                    <option value="" selected disabled>Pilih Survey</option>
+                                                    <option value="" disabled>Pilih Survey</option>
                                                     @if (isset($dataSurvey))
                                                         @foreach ($dataSurvey as $survey)
                                                             @if ($selectedDataSurvey == $survey->id)
@@ -305,6 +305,16 @@
                         // console.log(response);
                         const survey = response.dataSurvey;
                         const dataCompany = response.dataCompany;  
+
+                        $('#survey_request_id').empty();
+                        $('#survey_request_id').append($(
+                            '<option>', {
+                                selected: true,
+                                disabled: 'disabled',
+                                value: '',
+                                text: 'Pilih Survey'
+                            })).trigger('change');
+                            
                         if (survey.length >= 1) {
                             survey.forEach((item) => {
                                 $('#survey_request_id').append(new Option(item
