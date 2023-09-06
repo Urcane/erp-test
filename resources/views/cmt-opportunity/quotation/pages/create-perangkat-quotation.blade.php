@@ -38,20 +38,19 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Create Perangkat
+                                <span class="lh-xxl fw-bolder text-dark  d-md-lh-l ">Create Perangkat
                                     Quotation</span>
                             </h3>
                         </div>
                         <div class="card-body">
                             {{-- header company --}}
                             <div class="row">
-                                <div class="col-lg-12">
-                                    @csrf
+                                <div class="col-lg-12"> 
                                     {{-- Company --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
                                         {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around col-12 flex-wrap">
-                                            <div class="col-lg-5 mb-3">
+                                            <div class="col-lg-5 col-8 col-md-5 mb-3">
                                                 <label for="judul"
                                                     class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
@@ -68,7 +67,7 @@
                                             </div>
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
-                                            <div class="col-lg-5 mb-3">
+                                            <div class="col-lg-5 col-8 col-md-5 mb-3">
                                                 <label for="survey_request_id"
                                                     class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
@@ -82,31 +81,28 @@
                                         </div>
 
                                         {{-- baris company contact --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                        <div class="d-flex justify-content-around flex-wrap col-12">
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-md-5 col-8 mb-3">
                                                 <label for="customer_name" class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
                                                     value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="customer_contact_name" class=" form-label">Nama Kontak
+                                            <div class="col-lg-2 col-md-5 col-8 mb-3">
+                                                <label for="customer_contact_name" class="form-label">Nama Kontak
                                                     Customer</label>
-                                                <input type="text" class="form-control form-control-solid" placeholder=""
-                                                    disabled name="customer_contact_name" id="customer_contact_name"
+                                                <input type="text" class="form-control form-control-solid" disabled
+                                                    name="customer_contact_name" id="customer_contact_name"
                                                     value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-md-5 col-8 mb-3">
                                                 <label for="customer_contact_phone" class="form-label">No Kontak
                                                     Customer</label>
                                                 <div class="input-group">
-                                                    <span class="input-group-text border-0" id="">+62</span>
+                                                    <span class="input-group-text border-0">+62</span>
                                                     <input type="number" class="form-control form-control-solid" disabled
                                                         minlength="8" name="customer_contact_phone"
                                                         id="customer_contact_phone"
@@ -114,8 +110,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-md-5 col-8 mb-3">
                                                 <label for="type_name" class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
@@ -125,11 +120,10 @@
                                     </div>
 
                                     {{--  GPM --}}
-                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
+                                        <div class="d-flex justify-content-around col-12 flex-wrap">
 
-                                            <div class=""
-                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-8 col-md-5 mb-3">
                                                 <label class="form-label" for="gpm">GPM</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -140,8 +134,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-8 col-md-5 mb-3">
                                                 <label for="modal" class="form-label">Modal</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -152,8 +145,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-8 col-md-5 mb-3">
                                                 <label for="npm" class="form-label">NPM</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -164,8 +156,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-1 col-8 col-md-5 mb-3">
                                                 <label for="manpower" class="form-label">Manpower</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -176,8 +167,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 10%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-1 col-8 col-md-5 mb-3">
                                                 <label for="percentage" class="form-label">Percentage</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -191,7 +181,7 @@
                                     </div>
 
                                     {{--  ITEM --}}
-                                    <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
 
                                         <div class="MultipleItem">
                                             @if (isset($dataBoq['boqFinalData'][0]->itemable))
@@ -201,8 +191,8 @@
                                                         $random_string = \Illuminate\Support\Str::random(4);
                                                     @endphp
                                                     <div
-                                                        class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-around col-12 col-lg-12 flex-wrap">
+                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
                                                             <label for="item_{{ $random_string }}"
                                                                 class="form-label">Item</label>
                                                             <input type="text" class="form-control form-control-solid"
@@ -211,7 +201,7 @@
                                                                 value="{{ $relatedItem->inventoryGood->good_name ?? null }}" />
                                                         </div>
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        {{-- <div class="col-lg-1 col-8 col-md-5 col-sm-5 mb-3">
                                                             <label for="merk_{{ $random_string }}"
                                                                 class="form-label">Merk</label>
                                                             <div class="position-relative">
@@ -222,22 +212,9 @@
                                                                     id="merk_{{ $random_string }}"
                                                                     value="{{ $relatedItem->inventoryGood->merk ?? null }}" />
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                            <label for="price_{{ $random_string }}"
-                                                                class="form-label">Price</label>
-                                                            <div class="position-relative">
-                                                                <div class="position-absolute top-0"></div>
-                                                                <input type="number"
-                                                                    class="form-control form-control-solid" disabled
-                                                                    name="content[][purchase_price]"
-                                                                    id="price_{{ $random_string }}"
-                                                                    value="{{ $relatedItem->purchase_price ?? null }}" />
-                                                            </div>
-                                                        </div>
-
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        <div class="col-lg-1 col-8 col-md-5 col-sm-5 mb-3">
                                                             <label for="quantity_{{ $random_string }}"
                                                                 class="form-label">Qty</label>
                                                             <div class="position-relative">
@@ -250,7 +227,20 @@
                                                             </div>
                                                         </div>
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
+                                                            <label for="price_{{ $random_string }}"
+                                                                class="form-label">Price</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][purchase_price]"
+                                                                    id="price_{{ $random_string }}"
+                                                                    value="{{ $relatedItem->purchase_price ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
                                                             <label for="purchase_delivery_{{ $random_string }}"
                                                                 class="form-label">Jasa
                                                                 Antar</label>
@@ -264,123 +254,120 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class=""
-                                                            style="flex-basis: 28%; min-width: 150px; margin: 10px;">
-                                                            <div style="flex-basis: 80%; min-width: 120px;">
-                                                                <label for="total_price_{{ $random_string }}"
-                                                                    class="form-label">Total
-                                                                    Price</label>
-                                                                <div class="position-relative">
-                                                                    <div class="position-absolute top-0"></div>
-                                                                    <input type="number"
-                                                                        class="total-price form-control form-control-solid"
-                                                                        disabled name="content[][total_price]"
-                                                                        id="total_price_{{ $random_string }}"
-                                                                        value="{{ $relatedItem->total_price ?? null }}" />
-                                                                </div>
+                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
+                                                            <label for="total_price_{{ $random_string }}"
+                                                                class="form-label">Total
+                                                                Price</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="total-price form-control form-control-solid"
+                                                                    disabled name="content[][total_price]"
+                                                                    id="total_price_{{ $random_string }}"
+                                                                    value="{{ $relatedItem->total_price ?? null }}" />
                                                             </div>
                                                         </div>
-
-                                                        <div>
-                                                            <input type="hidden" name="content[][id]" disabled
-                                                                value="{{ $relatedItem->id ?? null }}" />
-                                                            <input type="hidden" name="content[][item_inventory_id]"
-                                                                disabled
-                                                                value="{{ $relatedItem->item_inventory_id ?? null }}" />
-                                                            <input type="hidden" name="content[][purchase_reference]"
-                                                                disabled
-                                                                value="{{ $relatedItem->purchase_refrence ?? null }}" />
-                                                            <input type="hidden" name="content[][item_detail]" disabled
-                                                                value="{{ $relatedItem->item_detail ?? null }}" />
-                                                        </div>
                                                     </div>
-                                                @endforeach
-                                            @endif
 
+                                                    <div>
+                                                        <input type="hidden" name="content[][id]" disabled
+                                                            value="{{ $relatedItem->id ?? null }}" />
+                                                        <input type="hidden" name="content[][item_inventory_id]" disabled
+                                                            value="{{ $relatedItem->item_inventory_id ?? null }}" />
+                                                        <input type="hidden" name="content[][purchase_reference]"
+                                                            disabled
+                                                            value="{{ $relatedItem->purchase_refrence ?? null }}" />
+                                                        <input type="hidden" name="content[][item_detail]" disabled
+                                                            value="{{ $relatedItem->item_detail ?? null }}" />
+                                                    </div>
                                         </div>
-                                        <div>
-                                            <div class="d-flex justify-content-end mx-20">
-                                                <div class="w-20 me-10">
-                                                    <span class="fw-bold">Total Price Item : Rp<span
-                                                            id="totalsum"></span></span>
+                                        @endforeach
+                                        @endif
+
+                                    </div>
+                                    <div>
+                                        <div class="d-flex justify-content-end mx-20">
+                                            <div class="w-20 me-10">
+                                                <span class="fw-bold">Total Price Item : Rp<span
+                                                        id="totalsum"></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form id="kt_create_quotation_internet_form"
+                                    class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+
+                                    @csrf
+                                    {{--  No Quota & Description --}}
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
+                                        <div class="d-flex justify-content-around flex-wrap col-12">
+
+                                            <div class="col-lg-3 col-md-4 col-8 mb-3">
+
+                                                <label for="no_quotation" class="form-label">
+                                                    <span class="fw-bold required">NO Quotation</span> </label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid required"
+                                                        required id="no_quotation" name="no_quotation" value=""
+                                                        placeholder="No Quotation Wajib Di isi" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-7 col-md-6 col-8 mb-3">
+
+                                                <label for="description" class="form-label">
+                                                    <span class="fw-bold required">Description</span></label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <textarea class="form-control form-control-solid required" placeholder="Description Wajib Di isi" required
+                                                        name="description" id="description" cols="" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <form id="kt_create_quotation_internet_form"
-                                        class="form fv-plugins-bootstrap5 fv-plugins-framework"
-                                        enctype="multipart/form-data">
-
-                                        @csrf
-                                        {{--  No Quota & Description --}}
-                                        <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                            <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                                <div class=""
-                                                    style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label for="no_quotation" class="form-label">
-                                                        <span class="fw-bold required">NO Quotation</span> </label>
-                                                    <div class="position-relative">
-                                                        <div class="position-absolute top-0"></div>
-                                                        <input type="text"
-                                                            class="form-control form-control-solid required" required
-                                                            id="no_quotation" name="no_quotation" value=""
-                                                            placeholder="No Quotation Wajib Di isi" />
-                                                    </div>
-                                                </div>
-
-                                                <div class=""
-                                                    style="flex-basis: 75%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label for="description" class="form-label">
-                                                        <span class="fw-bold required">Description</span></label>
-                                                    <div class="position-relative">
-                                                        <div class="position-absolute top-0"></div>
-                                                        <textarea class="form-control form-control-solid required" placeholder="Description Wajib Di isi" required
-                                                            name="description" id="description" cols="" rows="2"></textarea>
-                                                    </div>
-                                                </div>
+                                    {{-- SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
+                                    <div>
+                                        <div class="d-flex justify-content-end mx-20">
+                                            <div class="w-20 me-10">
+                                                <span class="fw-bold">Total Price Bundle : Rp<span
+                                                        id="totalsumbundle"></span></span>
                                             </div>
                                         </div>
-
-                                        {{-- SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
-                                        <div>
-                                            <div class="d-flex justify-content-end mx-20">
-                                                <div class="w-20 me-10">
-                                                    <span class="fw-bold">Total Price Bundle : Rp<span
-                                                            id="totalsumbundle"></span></span>
-                                                </div>
+                                        <div class="d-flex justify-content-center mt-6">
+                                            <div class=" me-5">
+                                                <button type="reset" id="kt_modal_tambah_boq_cancel"
+                                                    class="btn btn-sm btn-light-info me-3 w-lg-200px"
+                                                    data-bs-dismiss="modal">Cancel</button>
                                             </div>
-                                            <div class="d-flex justify-content-center mt-6">
-                                                <div class=" me-5">
-                                                    <button type="reset" id="kt_modal_tambah_boq_cancel"
-                                                        class="btn btn-sm btn-light-info me-3 w-lg-200px"
-                                                        data-bs-dismiss="modal">Cancel</button>
-                                                </div>
-                                                <div class="me-5">
-                                                    <button type="submit" id="kt_modal_tambah_boq_submit"
-                                                        class="btn btn-sm btn-info w-lg-200px">
-                                                        <span class="indicator-label">Submit</span>
-                                                    </button>
-                                                </div>
+                                            <div class="me-5">
+                                                <button type="submit" id="kt_modal_tambah_boq_submit"
+                                                    class="btn btn-sm btn-info w-lg-200px">
+                                                    <span class="indicator-label">Submit</span>
+                                                </button>
                                             </div>
                                         </div>
-                                        {{-- div input hidden --}}
-                                        <div>
-                                            <input type="hidden" name="id" id="id"
-                                                value="{{ $dataBoq['boqFinalData'][0]->id }}">
-                                            <input type="hidden" name="total_price_bundle" id="total_price_bundle">
-                                        </div>
+                                    </div>
 
-                                    </form>
+                                    {{-- input hidden --}}
+                                    <div>
+                                        <input type="hidden" name="id" id="id"
+                                            value="{{ $dataBoq['boqFinalData'][0]->id }}">
+                                        <input type="hidden" name="total_price_bundle" id="total_price_bundle">
+                                    </div>
 
-                                </div>
+                                </form>
+
                             </div>
-
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 
