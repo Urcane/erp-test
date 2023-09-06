@@ -152,9 +152,9 @@ class QuotationService
         $quotation = $request->query('quotation');
         //page update belum ada
         if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation'));
         } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation'));
         } 
     }
 
@@ -162,15 +162,15 @@ class QuotationService
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
         $quotation = $request->query('quotation');
         if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.done-internet-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.done-internet-quotation', compact('dataQuotation'));
         } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.done-perangkat-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.done-perangkat-quotation', compact('dataQuotation'));
         } 
     }
 
     function saveAndStoreQuotation(Request $request) : JsonResponse {
-        $this->quotationRepository->saveAndStoreQuotation($request);
-        return response()->json(['message' => 'Quotation berhasil disimpan.'], 200);
+        $data = $this->quotationRepository->saveAndStoreQuotation($request);
+        return response()->json(['message' => 'Quotation berhasil disimpan.', 'data' => $data], 200);
     }
 
     function storePurchaseOrder(Request $request) {

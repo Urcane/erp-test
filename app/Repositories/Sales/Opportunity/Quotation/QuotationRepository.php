@@ -103,7 +103,8 @@ class QuotationRepository
                 $data = [
                     'itemable_id' => $quotationData->id,
                     'itemable_type' => $quotationData->itemable_type, 
-                    'item_inventory_id' => $bundle['id'],
+                    'unit' => 'MTH',
+                    'inventory_good_id' => $bundle['id'],
                     'quantity' => $bundle['quantity'],
                     'purchase_price' => $bundle['purchase_price'],
                     'total_price' => $bundle['total_price'],
