@@ -23,7 +23,10 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2">
             <span class="fw-bold">Phone</span>
         </label>
-        <input type="number" value="{{ $user->kontak ?? old('kontak') }}" class="form-control form-control-solid" name="kontak" placeholder="Phone Number">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">+62</span>
+            <input type="number" value="{{ $user->kontak ?? old('kontak') }}" class="form-control form-control-solid" name="kontak" placeholder="Phone Number">
+          </div>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
 
