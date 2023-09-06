@@ -62,7 +62,8 @@ class MakeAttendance extends Command
 
     protected function isGlobalDayOff()
     {
-        return GlobalDayOff::where('date', $this->today)->exists();
+        return GlobalDayOff::where('start_date', '<=', $this->today)
+            ->where('end_date', '>=', $this->today)->exists();
     }
 
     protected function processGlobalDayOff()

@@ -40,7 +40,8 @@ class AttendanceController extends RequestController
             Carbon::setLocale($this->constants->locale);
             $now = Carbon::now();
             $today = $now->toDateString();
-            $globalDayOff = GlobalDayOff::where('date', $today)->first();
+            $globalDayOff = GlobalDayOff::where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)->first();
 
             if ($globalDayOff) {
                 throw new InvariantError("Tidak dapat request absen pada hari libur ($globalDayOff->name)");
