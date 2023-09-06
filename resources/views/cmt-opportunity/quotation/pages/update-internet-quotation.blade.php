@@ -38,7 +38,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Internet
+                                <span class="lh-xxl fw-bolder text-dark d-md-lh-l">Update Internet
                                     Quotation</span>
                             </h3>
                             <div class="card-toolbar p-3">

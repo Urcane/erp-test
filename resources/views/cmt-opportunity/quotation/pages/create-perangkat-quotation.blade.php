@@ -38,7 +38,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark  d-md-lh-l ">Create Perangkat
+                                <span class="lh-xxl fw-bolder text-dark d-md-lh-l">Create Perangkat
                                     Quotation</span>
                             </h3>
                         </div>
