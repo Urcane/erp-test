@@ -247,7 +247,7 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(Settings\TimeManagement\TimeOffController::class)->group(function () {
                 Route::prefix('time-off')->group(function () {
                     Route::get('/', 'index')->name('hc.setting.timeoff.index');
-                    Route::get('/table/timeoff', 'getTableTimeOff')->name('hc.setting.getTableTimeOf');
+                    Route::get('/table/timeoff', 'getTableTimeOff')->name('hc.setting.timeoff-get-table');
                     Route::post('/create/update/timeoff', 'createUpdateTimeOff')->name('hc.setting.timeoff.createUpdate');
                     Route::post('/delete/timeoff', 'deleteTimeOff')->name('hc.setting.timeoff.delete');
                 });

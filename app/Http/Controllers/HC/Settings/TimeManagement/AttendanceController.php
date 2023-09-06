@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\HC\Settings\TimeManagement;
 
+use App\Constants;
+use App\Exceptions\NotFoundError;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -15,6 +17,15 @@ use App\Models\Employee\WorkingScheduleShift;
 
 class AttendanceController extends Controller
 {
+    protected $errorHandler;
+    protected $constants;
+
+    public function __construct()
+    {
+        $this->errorHandler = new ErrorHandler();
+        $this->constants = new Constants();
+    }
+
     public function index() {
         $dataWorkingShift = WorkingShift::all();
 
@@ -23,7 +34,7 @@ class AttendanceController extends Controller
 
     public function getTableSchedule(Request $request) {
         if (request()->ajax()) {
-            $query = WorkingSchedule::all();
+            $query = new WorkingSchedule;
 
             // dd($query);
             return DataTables::of($query)
@@ -121,18 +132,30 @@ class AttendanceController extends Controller
     }
 
     public function deleteSchedule(Request $request) {
+        try {
+            $workingSchedule = WorkingSchedule::whereId($request->id);
 
-        WorkingSchedule::whereId($request->id)->delete();
+            if (!$workingSchedule) {
+                throw new NotFoundError("working schedule tidak ditemukan");
+            }
 
-        return response()->json([
-            'status' => "succes",
-            'message' => "Data berhasil dihapus",
-        ], 200);
+            $workingSchedule->delete();
+
+            return response()->json([
+                'status' => "success",
+                'message' => "Working schedule berhasil dihapus",
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+
     }
 
     public function getTableShift(Request $request) {
         if (request()->ajax()) {
-            $query = WorkingShift::all();
+            $query = new WorkingShift;
 
             // dd($query);
             return DataTables::of($query)
