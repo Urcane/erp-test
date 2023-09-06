@@ -58,7 +58,7 @@ class InventoryRepository
          'code_name' => 'required|string',
          'merk' => 'required|string',
          'good_type' => 'required|string',
-         'description' => 'required|string',
+        //  'description' => 'required|string',
      ]);
  
      if ($validator->fails()) {
@@ -71,10 +71,10 @@ class InventoryRepository
          'code_name' => $request->input('code_name'),
          'merk' => $request->input('merk'),
          'good_type' => $request->input('good_type'),
-         'description' => $request->input('description'),
+         'description' => $request->input('description') ?? '-',
      ]);
  
-     return response()->json(['message' => 'Quotation berhasil disimpan.'], 200);
+     return response()->json(['message' => 'Quotation berhasil disimpan.', 'item' => $dataBundling], 200);
 
      }
 }

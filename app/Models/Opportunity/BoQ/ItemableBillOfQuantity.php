@@ -4,17 +4,16 @@ namespace App\Models\Opportunity\BoQ;
 
 use App\Models\User;
 use App\Models\Opportunity\BoQ\Item;
-use App\Models\Customer\CustomerProspect;
-
 use Illuminate\Database\Eloquent\Model;
+
+use App\Models\Customer\CustomerProspect;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-use App\Models\Opportunity\Quotation\ItemableQuotationPart;
-use App\Models\Opportunity\Survey\SurveyRequest;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Http\Requests\Opportunity\Survey\SurveyRequest;
+use App\Models\Opportunity\Quotation\ItemableQuotationPart;
 
 class ItemableBillOfQuantity extends Model
 {
@@ -24,6 +23,10 @@ class ItemableBillOfQuantity extends Model
     function itemable(): MorphMany
     {
         return $this->morphMany(Item::class, 'itemable');
+    }
+
+    function itemableQuotationPart() : BelongsTo {
+        return $this->belongsTo(ItemableQuotationPart::class, 'id', 'boq_id');
     }
     
     function customerProspect() : BelongsTo {

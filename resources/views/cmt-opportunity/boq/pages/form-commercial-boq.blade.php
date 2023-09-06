@@ -36,19 +36,18 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card">
-                        <form class="card-body">
-                            @csrf
+                        <div class="card-body">
                             <div class="mb-6 d-flex justify-content-between">
-                                <div class="col-lg-6 gap-3 d-flex align-items-center">
+                                <h3 class="card-title">
                                     <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Commercial Bill of Quantity</span>
-                                </div>
+                                </h3>
                                 <div class="form-check form-check-custom form-check-success form-check-solid">
-                                    <input class="form-check-input" type="hidden" value="0" id="is_final"
-                                        name="is_final" />
+                                    <input class="form-check-input" type="hidden" value="0" id="is_final" name="is_final" />
                                     {{-- <label class="form-check-label" for="is_final">Finalisasi</label> --}}
                                 </div>
                             </div>
-
+                        </div>
+                        <form class="card-body">
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">

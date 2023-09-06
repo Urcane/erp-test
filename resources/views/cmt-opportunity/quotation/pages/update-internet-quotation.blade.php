@@ -27,8 +27,8 @@
 @section('content')
     {{-- FORM BOQ --}}
     {{-- @dd($dataCompany) --}}
-    {{-- @dd($dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name)   --}}
-    {{-- @dd($dataBoq['boqFinalData'][0]->id)   --}}
+    {{-- @dd($dataQuotation['quotationData'])   --}}
+    {{-- @dd($dataQuotation['quotationItem']) --}}
 
 
     <div class="row justify-content-center">
@@ -38,9 +38,18 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Create Perangkat
+                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Internet
                                     Quotation</span>
-                            </h3>
+                            </h3> 
+                            <div class="card-toolbar p-3">
+                                <a href="#kt_modal_create_purchase_order" class="btn_create_purchase_order p- btn btn-md btn-info w-lg-180px" 
+                                data-id="{{ $dataQuotation['quotationData']->id }}"
+                                data-bs-toggle="modal"><i class="fa-solid fa-file me-3"></i>Purchase Order</a>
+
+
+                                {{-- <button class="btn btn-md btn-info w-lg-150px purchase_order_file"
+                                    onclick="myFunction()">Input File</button> --}}
+                            </div>
                         </div>
                         <div class="card-body">
                             {{-- header company --}}
@@ -56,11 +65,11 @@
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $dataBoq['boqFinalData'][0]->customerProspect->prospect_title }} - {{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
+                                                    placeholder="{{ $dataQuotation['boqFinalData'][0]->customerProspect->prospect_title }} - {{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customer_name }}">
 
                                                 <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="prospect_id"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->prospect_id }}">
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->prospect_id }}">
 
                                                 <div id="error-prospect"></div>
                                             </div>
@@ -72,8 +81,8 @@
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     name="survey_request_id" id="survey_request_id"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->survey_request_id }}"
-                                                    {{ $dataBoq['boqFinalData'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->survey_request_id }}"
+                                                    {{ $dataQuotation['boqFinalData'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -86,7 +95,7 @@
                                                 <label class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customer_name }}">
                                             </div>
 
                                             <div class=""
@@ -94,7 +103,7 @@
                                                 <label class=" form-label">Nama Kontak Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
                                             <div class=""
@@ -105,7 +114,7 @@
                                                     <input type="number" class="form-control form-control-solid" disabled
                                                         minlength="8" name="customer_contact_phone"
                                                         id="customer_contact_phone"
-                                                        value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
+                                                        value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
                                                 </div>
                                             </div>
 
@@ -114,7 +123,7 @@
                                                 <label class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
-                                                    value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->bussinesType->type_name }}">
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->bussinesType->type_name }}">
                                             </div>
                                         </div>
                                     </div>
@@ -129,9 +138,9 @@
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
-                                                        oninput="validateAndFormatNumber(this);" id="gpm"
+                                                        oninput="validateAndFormatNumber(this);" id="gpm" disabled
                                                         name="gpm"
-                                                        value="{{ $dataBoq['boqFinalData'][0]->gpm ?? null }}" />
+                                                        value="{{ $dataQuotation['boqFinalData'][0]->gpm ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -140,10 +149,10 @@
                                                 <label class="form-label">Modal</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
-                                                    <input type="number" class="form-control form-control-solid"
+                                                    <input type="number" class="form-control form-control-solid"disabled
                                                         oninput="validateAndFormatNumber(this);" id="modal"
                                                         name="modal"
-                                                        value="{{ $dataBoq['boqFinalData'][0]->modal ?? null }}" />
+                                                        value="{{ $dataQuotation['boqFinalData'][0]->modal ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -153,9 +162,9 @@
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
-                                                        oninput="validateAndFormatNumber(this);" id="npm"
+                                                        oninput="validateAndFormatNumber(this);" id="npm"disabled
                                                         name="npm"
-                                                        value="{{ $dataBoq['boqFinalData'][0]->npm ?? null }}" />
+                                                        value="{{ $dataQuotation['boqFinalData'][0]->npm ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -166,8 +175,8 @@
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
                                                         oninput="validateAndFormatNumber(this);" id="manpower"
-                                                        name="manpower"
-                                                        value="{{ $dataBoq['boqFinalData'][0]->manpower ?? null }}" />
+                                                        name="manpower"disabled
+                                                        value="{{ $dataQuotation['boqFinalData'][0]->manpower ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -178,36 +187,8 @@
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid"
                                                         oninput="validateAndFormatNumber(this);" id="percentage"
-                                                        name="percentage"
-                                                        value="{{ $dataBoq['boqFinalData'][0]->percentage ?? null }}" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{--  divv No Quota & Description --}}
-                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">
-                                                    <span class="fw-bold required">NO Quotation</span> </label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <input type="text" class="form-control form-control-solid required"
-                                                        required id="no_quotation" name="no_quotation" value=""
-                                                        placeholder="No Quotation Wajib Di isi" />
-                                                </div>
-                                            </div>
-
-                                            <div class=""
-                                                style="flex-basis: 75%; min-width: 200px; margin-bottom: 15px;">
-                                                <label class="form-label">
-                                                    <span class="fw-bold required">Description</span></label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <textarea class="form-control form-control-solid required" placeholder="Description Wajib Di isi" required
-                                                        name="description" id="description" cols="" rows="2"></textarea>
+                                                        name="percentage"disabled
+                                                        value="{{ $dataQuotation['boqFinalData'][0]->percentage ?? null }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -217,9 +198,9 @@
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                         <div class="MultipleItem">
-                                            @if (isset($dataBoq['boqFinalData'][0]->itemable))
+                                            @if (isset($dataQuotation['boqFinalData'][0]->itemable))
 
-                                                @foreach ($dataBoq['boqFinalData'][0]->itemable as $relatedItem)
+                                                @foreach ($dataQuotation['boqFinalData'][0]->itemable as $relatedItem)
                                                     @php
                                                         $random_string = \Illuminate\Support\Str::random(4);
                                                     @endphp
@@ -309,6 +290,14 @@
                                             @endif
 
                                         </div>
+                                        <div>
+                                            <div class="d-flex justify-content-end mx-20">
+                                                <div class="w-20 me-10">
+                                                    <span class="fw-bold">Total Price Item : Rp<span
+                                                            id="totalsum"></span></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                         {{-- @role('administrator')
                                             <div class="ms-15 w-20 mt-3 mb-3 ">
                                                 <a href="#kt_modal_tambah_boq" data-bs-toggle="modal" id="btn-tambah-boq"
@@ -319,111 +308,227 @@
                                         @endrole --}}
                                     </div>
 
-                                    {{--  divv BUNDLE INTERNET --}}
-                                    {{-- <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
-                                        <div class="BundleItem">
+                                    <form id="kt_create_quotation_internet_form"
+                                        class="form fv-plugins-bootstrap5 fv-plugins-framework"
+                                        enctype="multipart/form-data">
 
-
-                                            <div
-                                                class="file-soft-quotation-bundle d-flex justify-content-between mx-20 mb-5 mt-10">
-                                                @php
-                                                    $random_string = \Illuminate\Support\Str::random(4);
-                                                @endphp
-                                                <div class="d-flex justify-content-around align-items-center"
-                                                    style="flex-basis: 40%; min-width: 200px;">
-                                                    <div class="" style="flex-basis: 85%;">
-                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                            required>
-                                                            <span class="required fw-bold">Internet Bundle</span>
-                                                        </label>
-                                                        <select class="form-select form-select-solid drop-data" required
-                                                            data-control="select2" name="good_name_bundle"
-                                                            id="good_name_bundle">
-                                                            <option value="">Select Internet Bundle</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="d-flex justify-content-center align-items-end"
-                                                        style="flex-basis: 10%;">
-                                                        <div>
-                                                            <div class="h-25px"></div>
-
-                                                            <a href="#kt_modal_tambah_bundle_internet"
-                                                                data-bs-toggle="modal" id="btn-bundle-internet"
-                                                                class="btn btn-light-info btn-sm btn_bundle_internet"
-                                                                style="flex-basis: 10%; width: 90%;">
-                                                                <i class="fa-solid fa-plus"></i></a>
-                                                        </div>
+                                        @csrf
+                                        {{--  divv No Quota & Description --}}
+                                        <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
+                                            <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                                <div class=""
+                                                    style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                                    <label class="form-label">
+                                                        <span class="fw-bold required">NO Quotation</span> </label>
+                                                    <div class="position-relative">
+                                                        <div class="position-absolute top-0"></div>
+                                                        <input type="text"
+                                                            class="form-control form-control-solid required" required
+                                                            id="no_quotation" name="no_quotation"
+                                                            value="{{ $dataQuotation['quotationData']->no_quotation }}"
+                                                            placeholder="No Quotation Wajib Di isi" />
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
                                                     </div>
                                                 </div>
 
-                                                <div class="" style="flex-basis: 14%; min-width: 150px;">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                        <span class="fw-bold required">Quantity</span>
-                                                    </label>
-                                                    <input class="form-control" type="text" required min="1"
-                                                        minlength="1"
-                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                        name="quantity_{{ $random_string }}" id="quantity">
+                                                <div class=""
+                                                    style="flex-basis: 75%; min-width: 200px; margin-bottom: 15px;">
+                                                    <label class="form-label">
+                                                        <span class="fw-bold required">Description</span></label>
+                                                    <div class="position-relative">
+                                                        <div class="position-absolute top-0"></div>
+                                                        <textarea class="form-control form-control-solid required"
+                                                            placeholder="{{ $dataQuotation['quotationData']->description ?? 'Description Wajib Di isi' }}" required
+                                                            name="description" id="description" cols="" rows="2">{{ $dataQuotation['quotationData']->description }}</textarea>
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
                                                 </div>
-
-                                                <div class="" style="flex-basis: 14%; min-width: 150px;">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                        <span class="fw-bold required">Purchase Price</span>
-                                                    </label>
-                                                    <input class="form-control" type="text" required min="1"
-                                                        minlength="1"
-                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                        name="purchase_price_{{ $random_string }}" id="purchase_price">
-                                                </div>
-
-                                                <div class="" style="flex-basis: 14%; min-width: 150px;">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                        <span class="fw-bold">Total Price</span>
-                                                    </label>
-                                                    <input class="form-control" type="text" required min="1"
-                                                        minlength="1" disabled
-                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                        name="total_price" id="total_price_{{ $random_string }}">
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="ms-15 w-20 mt-6 mb-5 ">
-                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
-                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
-                                                </button> 
                                             </div>
                                         </div>
-                                    </div> --}}
 
-                                    {{-- divv SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
-                                    <div>
-                                        <div class="d-flex justify-content-end mx-20">
-                                            {{-- <div class="w-20 me-10">
+                                        {{--  divv BUNDLE INTERNET --}}
+                                        <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
+
+                                            <div class="BundleItem">
+                                                @if (isset($dataQuotation['quotationItem']))
+
+                                                    @foreach ($dataQuotation['quotationItem'] as $relatedItem)
+                                                        @php
+                                                            $random_string = \Illuminate\Support\Str::random(4);
+                                                        @endphp
+
+                                                        <div
+                                                            class="file-soft-quotation-bundle-{{ $random_string }} d-flex justify-content-around flex-wrap mx-20 my-8">
+                                                            <!-- Internet Bundle -->
+                                                            <div class="d-flex justify-content-around align-items-center"
+                                                                style="flex-basis: 35%; min-width: 200px;">
+                                                                <div class="" style="flex-basis: 100%;">
+                                                                    <label
+                                                                        class="d-flex align-items-center fs-6 form-label mb-2">
+                                                                        <span class="required fw-bold">Internet
+                                                                            Bundle</span>
+                                                                    </label>
+                                                                    <select class="form-select form-select-solid drop-data"
+                                                                        data-control="select2"required
+                                                                        name="good_name_bundle_{{ $random_string }}"
+                                                                        id="good_name_bundle_{{ $random_string }}">
+
+                                                                        @foreach ($dataQuotation['inventoryGoodInet'] as $item)
+                                                                            @if ($relatedItem->item_inventory_id == $item->id)
+                                                                                <option selected
+                                                                                    value="{{ $item->id }}">
+                                                                                    {{ $item->good_name }}
+                                                                                </option>
+                                                                            @else
+                                                                                <option value="{{ $item->id }}">
+                                                                                    {{ $item->good_name }}
+                                                                                </option>
+                                                                            @endif
+                                                                        @endforeach
+
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Quantity -->
+                                                            <div style="flex-basis: 14%; min-width: 150px;">
+                                                                <label
+                                                                    class="d-flex align-items-center fs-6 form-label mb-2">
+                                                                    <span class="fw-bold required">Quantity</span>
+                                                                </label>
+                                                                <input class="form-control" type="text" required
+                                                                    min="1" minlength="1"
+                                                                    oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                                    name="quantity_{{ $random_string }}" id="quantity_{{ $random_string }}"
+                                                                    value="{{ $relatedItem->quantity }}">
+                                                            </div>
+
+                                                            <!-- Purchase Price -->
+                                                            <div style="flex-basis: 14%; min-width: 150px;">
+                                                                <label
+                                                                    class="d-flex align-items-center fs-6 form-label mb-2">
+                                                                    <span class="fw-bold required">Purchase Price</span>
+                                                                </label>
+                                                                <input class="form-control" type="text" required
+                                                                    min="1" minlength="1"
+                                                                    oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                                    name="purchase_price_{{ $random_string }}"
+                                                                    value="{{ $relatedItem->purchase_price }}"
+                                                                    id="purchase_price_{{ $random_string }}">
+                                                            </div>
+
+                                                            <!-- Total Price -->
+                                                            <div class="d-flex justify-content-around align-items-center flex-nowrap"
+                                                                style="flex-basis: 20%; min-width: 180px;">
+                                                                <div class="" style="flex-basis: 80%;">
+                                                                    <label
+                                                                        class="d-flex align-items-center fs-6 form-label mb-2">
+                                                                        <span class="fw-bold">Total Price</span>
+                                                                    </label>
+                                                                    <input class="form-control" type="text"
+                                                                        min="1" minlength="1" disabled
+                                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                                        name="total_price_{{ $random_string }}"
+                                                                        id="total_price_{{ $random_string }}"
+                                                                        value="{{ $relatedItem->total_price }}">
+                                                                </div>
+                                                                <div class="" style="flex-basis: 15%;">
+                                                                    <div>
+                                                                        <div class="h-25px"></div>
+                                                                        <button type="button"
+                                                                            class="btn btn-secondary btn-icon btn-sm h-44px"
+                                                                            data-kt-menu-placement="bottom-end"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false">
+                                                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li type="button"
+                                                                                class="clear-soft-quotation-bundle"
+                                                                                data-random-string="{{ $random_string }}">
+                                                                                <a class="dropdown-item py-2">
+                                                                                    <i
+                                                                                        class="fa-solid fa-trash me-3"></i>Hapus
+                                                                                    Item
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+
+
+
+
+
+                                                {{-- <div class="ms-15 w-20 mt-6 mb-5 ">
                                                 <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
                                                     <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
                                                 </button> 
                                             </div> --}}
-                                            <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Price Item : Rp<span
-                                                        id="totalsum"></span></span>
+                                            </div>
+
+                                        </div>
+
+                                        {{-- divv TAMBAH, SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
+                                        <div>
+                                            <div class="d-flex justify-content-start mx-20">
+                                                <div class="w-20 me-10">
+                                                    <button class="btn btn-light-info btn-sm me-3 btn_bundle"
+                                                        id="btn-bundle">
+                                                        <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
+                                                    </button>
+                                                </div>
+                                                <div class="w-20 me-10">
+                                                    <a href="#kt_modal_tambah_bundle_internet" data-bs-toggle="modal"
+                                                        id="btn-bundle-internet"
+                                                        class="btn btn-light-info btn-sm btn_bundle_internet">
+                                                        <i class="fa-solid fa-plus"></i>Tambah Bundle Baru</a>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-end mx-20">
+                                                {{-- <div class="w-20 me-10">
+                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
+                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
+                                                </button> 
+                                            </div> --}}
+                                                <div class="w-20 me-10">
+                                                    <span class="fw-bold">Total Price Bundle : Rp<span
+                                                            id="totalsumbundle"></span></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-center mt-6">
+
+                                                <div class=" me-5">
+                                                    <button type="reset" id="kt_modal_tambah_boq_cancel"
+                                                        class="btn btn-sm btn-light-info me-3 w-lg-200px"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                                <div class="me-5">
+
+                                                    <button type="submit" id="kt_modal_tambah_boq_submit"
+                                                        class="btn btn-sm btn-info w-lg-200px">
+                                                        <span class="indicator-label">Submit</span>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-center mt-6">
-                                            <div class=" me-5">
-                                                <a href="cmt-quotation" class="btn btn-light-info">Discard</a>
-                                            </div>
-                                            <div class="me-5">
-                                                <a href="cmt-quotation" id="submit-all-items"
-                                                    class="btn btn-info">Submit</a>
-                                            </div>
+
+                                        {{-- div input hidden --}}
+                                        <div>
+                                            <input type="hidden" name="id" id="id"
+                                                value="{{ $dataQuotation['boqFinalData'][0]->id }}">
+                                            <input type="hidden" name="total_price_bundle" id="total_price_bundle">
                                         </div>
-                                    </div>
-                                    <div>
-                                        <input type="hidden" name="id" id="id"
-                                            value="{{ $dataBoq['boqFinalData'][0]->id }}">
-                                        <input type="hidden" name="total_price_bundle" id="total_price_bundle">
-                                    </div>
+
+                                    </form>
+
 
                                 </div>
                             </div>
@@ -434,12 +539,20 @@
             </div>
         </div>
     </div>
-
-    @role('administrator')
-        @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
-    @endrole
+ 
+    @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
+    @include('cmt-opportunity.quotation.add.modal-create-purchase-order') 
 
     <script>
+        function myFunction() {
+            var x = document.getElementById("fileInput");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+
         function validateAndFormatNumber(input) {
             // Mengambil nilai input tanpa karakter non-digit
             let inputValue = input.value.replace(/\D/g, '');
@@ -455,13 +568,16 @@
 
             // Mengatur nilai input kembali dengan angka yang telah diformat
             input.value = inputValue;
+
+            updateTotalSumBundle();
         };
+
 
         function updateTotalSum() {
             var totalSum = 0;
 
             // Loop through each item's total price input field and sum up the values
-            $('.MultipleItem input[name="content[][total_price]"]').each(function() {
+            $('.MultipleItem input[name^="content[][total_price]"]').each(function() {
                 var totalPriceValue = $(this).val();
 
                 if (totalPriceValue !== "") {
@@ -471,9 +587,52 @@
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
             // Update the total sum element with the calculated value
             $('#totalsum').text(totalPriceWithCommas);
+        }
+
+        function updateTotalSumBundle() {
+            var totalSumBundle = 0;
+
+            const gpmVal = parseInt(document.querySelector(`[name='gpm']`).value);
+
+            // Loop through each item's total price input field and sum up the values
+            $('.BundleItem input[name^="total_price"]').each(function() {
+                var totalPriceBundleValue = $(this).val();
+
+                if (totalPriceBundleValue !== "") {
+                    totalSumBundle += parseInt(totalPriceBundleValue);
+                }
+            });
+
+            if (gpmVal <= totalSumBundle) {
+                return document.getElementById("totalsumbundle").textContent = "   MELEBIHI LIMIT GPM";
+            }
+            const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
+            // Update the total sum element with the calculated value
+            $('#totalsumbundle').text(totalPriceWithCommas);
 
             const hiddenTotalInput = document.querySelector(`[name='total_price_bundle']`);
-            hiddenTotalInput.value = totalSum; // Set the hidden input value to empty string
+            hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string
+        }
+
+
+        function calculateTotalBundle(uniq_id) {
+            const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${uniq_id}']`).value);
+            const quantity = parseInt(document.querySelector(`[name='quantity_${uniq_id}']`).value);
+
+            if (isNaN(purchasePrice) || isNaN(quantity)) {
+                return document.getElementById("total_price_" + uniq_id).value = "null";
+            }
+
+            let totalAmount = purchasePrice * quantity;
+
+            if (totalAmount.toString().length > 15) {
+                return document.getElementById("total_price_" + uniq_id).value = "Melewati limit angka";
+            }
+
+            // const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
+
+            document.getElementById("total_price_" + uniq_id).value = totalAmount;
+            updateTotalSumBundle()
         }
 
         function calculateTotalAmount(totalElementId, modal) {
@@ -519,51 +678,6 @@
             const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
             hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
         }
-
-        // function updateTotalSumBundle() {
-        //     var totalSumBundle = 0;
-
-        //     const gpmVal = parseInt(document.querySelector(`[name='gpm']`).value);
-
-        //     // Loop through each item's total price input field and sum up the values
-        //     $('.BundleItem input[name="total_price"]').each(function() {
-        //         var totalPriceBundleValue = $(this).val();
-
-        //         if (totalPriceBundleValue !== "") {
-        //             totalSumBundle += parseInt(totalPriceBundleValue);
-        //         }
-        //     });
-
-        //     if (gpmVal <= totalSumBundle) {
-        //         return document.getElementById("totalsumbundle").textContent = "   MELEBIHI LIMIT GPM";
-        //     }
-        //     const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
-        //     // Update the total sum element with the calculated value
-        //     $('#totalsumbundle').text(totalPriceWithCommas);
-
-        //     const hiddenTotalInput = document.querySelector(`[name='total_price_bundle']`);
-        //     hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string
-        // }
-
-        // function calculateTotalBundle(uniq_id) {
-        //     const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${uniq_id}']`).value);
-        //     const quantity = parseInt(document.querySelector(`[name='quantity_${uniq_id}']`).value);
-
-        //     if (isNaN(purchasePrice) || isNaN(quantity)) {
-        //         return document.getElementById("total_price_" + uniq_id).value = "null";
-        //     }
-
-        //     let totalAmount = purchasePrice * quantity;
-
-        //     if (totalAmount.toString().length > 15) {
-        //         return document.getElementById("total_price_" + uniq_id).value = "Melewati limit angka";
-        //     }
-
-        //     // const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
-
-        //     document.getElementById("total_price_" + uniq_id).value = totalAmount;
-        //     updateTotalSumBundle()
-        // }
 
         $(document).ready(function() {
 
@@ -628,14 +742,13 @@
                 const htmlStructure = `  
                     <div class="d-flex justify-content-around align-items-center" style="flex-basis: 35%; min-width: 200px;"> 
                         <div class="" style="flex-basis: 100%;">
-                            <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                required>
+                            <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Internet Bundle</span>
                             </label>
                             <select class="form-select form-select-solid drop-data" required
-                                data-control="select2" name="good_name_bundle"
+                                data-control="select2" name="good_name_bundle_${random_string}"
                                 id="good_name_bundle_${random_string}">
-                                <option>Select Internet Bundle</option>
+                                <option selected>Select Internet Bundle</option>
                             </select>
                         </div> 
                     </div>
@@ -643,20 +756,22 @@
                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                             <span class="fw-bold required">Quantity</span>
                         </label>
-                        <input class="form-control" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity">
-                    </div>
+                        <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity_${random_string}">
+                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                        </div>
                     <div style="flex-basis: 14%; min-width: 150px;">
                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                             <span class="fw-bold required">Purchase Price</span>
                         </label>
-                        <input class="form-control" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price">
-                    </div>
+                        <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price_${random_string}">
+                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                        </div>
                     <div class="d-flex justify-content-around align-items-center flex-nowrap"  style="flex-basis: 20%; min-width: 180px;">
                         <div class="" style="flex-basis: 80%;">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="fw-bold">Total Price</span>
                             </label>
-                            <input class="form-control" type="text" required min="1" minlength="1" disabled oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="total_price" id="total_price_${random_string}">
+                            <input class="form-control" type="text" min="1" minlength="1" disabled oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="total_price_${random_string}" id="total_price_${random_string}">
                         </div>
                         <div class="" style="flex-basis: 15%;">
                             <div>
@@ -665,7 +780,7 @@
                                         <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </button> 
                                 <ul class="dropdown-menu"> 
-                                    <li type="button" class="clear-soft-survey-item-${random_string}"
+                                    <li type="button" class="clear-purchase-order-item-${random_string}"
                                         data-random-string="${random_string}">
                                         <a class="dropdown-item py-2">
                                         <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
@@ -679,42 +794,56 @@
                 // Set the HTML content of the new div to the HTML structure
                 newDiv.innerHTML = htmlStructure;
 
-                // Append the new div to the parent container
-                parentContainer.appendChild(newDiv);
-
                 $.ajax({
                     url: "{{ route('com.quotation.get.internet.bundling') }}",
                     type: 'GET',
                     success: function(response) {
                         console.log(response);
-                        // dataFromFirstResponse = response; // Simpan data dari respons pertama
-                        $('#good_name_bundle_' + random_string)
+                        dataFromFirstResponse = response; // Simpan data dari respons pertama
+                        $(newDiv).find('#good_name_bundle_' + random_string)
                             .empty(); // Hapus opsi yang ada sebelumnya
-                        $('#good_name_bundle_' + random_string).append($('<option>', {
-                            value: '',
-                            text: 'Select Internet Bundle'
-                        }));
+                        $(newDiv).find('#good_name_bundle_' + random_string).append($(
+                            '<option>', {
+                                value: '',
+                                text: 'Select Internet Bundle'
+                            }));
                         $.each(response, function(index, item) {
-                            $('#good_name_bundle_' + random_string).append($(
-                                '<option>', {
-                                    value: item.id,
-                                    text: item.good_name
-                                }));
+                            $(newDiv).find('#good_name_bundle_' + random_string).append(
+                                $(
+                                    '<option>', {
+                                        value: item.id,
+                                        text: item.good_name
+                                    }));
                         });
+
                     },
                     error: function(error) {
                         console.log(error);
                     }
                 });
 
+                // Append the new div to the parent container
+                parentContainer.appendChild(newDiv);
+
+                $(`select[name="good_name_bundle_${random_string}"]`).select2({
+                    dropdownAutoWidth: true
+                });
+
                 // Function Hapus per Item
-                $('.BundleItem').on('click', `.clear-soft-survey-item-${random_string}`,
+                $('.BundleItem').on('click', `.clear-purchase-order-item-${random_string}`,
                     function() {
                         $(this).parent().parent().parent().parent().parent().remove();
                         updateTotalSumBundle();
                     });
 
 
+            });
+
+            // Function Hapus Bundle Frontend
+            $('.BundleItem').on('click', '.clear-soft-quotation-bundle', function() {
+                var random_string = $(this).data('random-string');
+                $(this).closest('.file-soft-quotation-bundle-' + random_string).remove();
+                updateTotalSumBundle();
             });
 
             // Function Tambah Modal Bundling Internet
@@ -726,6 +855,9 @@
 
             // Function Submit Modal
             $("#kt_modal_tambah_bundle_internet_form").validate({
+
+
+
                 messages: {
                     good_name_update: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Wajib Mengisi Nama Item</span>",
@@ -743,6 +875,9 @@
                         required: "<span class='fw-semibold fs-8 text-danger'>Deskripsi Barang wajib diisi</span>",
                     }
                 },
+
+
+
                 submitHandler: function() {
                     event.preventDefault();
                     // Dapatkan referensi ke elemen form
@@ -758,12 +893,12 @@
                         .value;
 
                     // Sekarang, Anda memiliki nilai dari masing-masing input berdasarkan nama (name)
-                    // console.log("Nama Inventory Item:", goodName);
-                    // console.log("Code Item:", codeName);
-                    // console.log("Merk:", merk);
-                    // console.log("Tipe Barang:", goodType);
-                    // console.log("Detail Item Inventory:", description);
-                    // console.log("Good Category ID:", goodCategoryId);
+                    console.log("Nama Inventory Item:", goodName);
+                    console.log("Code Item:", codeName);
+                    console.log("Merk:", merk);
+                    console.log("Tipe Barang:", goodType);
+                    console.log("Detail Item Inventory:", description);
+                    console.log("Good Category ID:", goodCategoryId);
 
                     $.ajax({
                         type: "POST",
@@ -778,42 +913,20 @@
                             description: description
                         },
                         success: function(response) {
-                            console.log("Data berhasil disimpan:", response);
+                            console.log("Data berhasil disimpan:", response.message);
                             form.reset();
 
                             $('#kt_modal_tambah_bundle_internet').modal('hide');
                             // Hapus semua nilai dari dataFromFirstResponse
                             dataFromFirstResponse = null;
 
-                            $.ajax({
-                                url: "{{ route('com.quotation.get.internet.bundling') }}",
-                                type: 'GET',
-                                success: function(response) {
-                                    console.log(response);
-                                    dataFromFirstResponse =
-                                        response; // Simpan data dari respons pertama
-                                    $('#good_name_bundle')
-                                        .empty(); // Hapus opsi yang ada sebelumnya
-                                    $('#good_name_bundle').append($(
-                                        '<option>', {
-                                            value: '',
-                                            text: 'Select Internet Bundle'
-                                        }));
-                                    $.each(response, function(index, item) {
-                                        $('#good_name_bundle').append($(
-                                            '<option>', {
-                                                value: item.id,
-                                                text: item
-                                                    .good_name
-                                            }));
-                                    });
-                                },
-                                error: function(error) {
-                                    console.log(error);
-                                }
-                            });
-
                             $('#error-item').empty();
+
+                            $(`select[name^="good_name_bundle"]`).append($(
+                                '<option>', {
+                                    value: response.item.id,
+                                    text: response.item.good_name
+                                }));
                         },
                         error: function(error) {
                             console.error("Terjadi kesalahan:", error);
@@ -822,85 +935,159 @@
                 }
             });
 
-
-            // function Submit BOQ page BENERAN wkwkw
-            $('#submit-all-items').on('click', function(event) {
-                // event.preventDefault();
-
-                // Get Prospect ID and Survey ID from the HTML elements
-                var boq_id = $('#id').val();
-                var total_price_bundle = $('#total_price_bundle').val();
-                var no_quotation = $('#no_quotation').val();
-                var description = $('#description').val();
-
-                // Array to store all item data
-                // var bundle = [];
-                // Create an object to store prospect_id and survey_request_id
-                var quotation = {
-                    boq_id: boq_id,
-                    no_quotation: no_quotation,
-                    description: description,
-                    total_price: total_price_bundle
-                };
-
-                console.log(quotation);
-
-                // Loop through each .file-soft-boq-item div to get the data for each item
-                // $('.BundleItem [class^="file-soft-quotation-bundle"]').each(function(index, item) {
-                //     // Extract data for the specific item
-                //     var id = $(item).find('select[name="good_name_bundle"]').val();
-                //     var purchase_price = $(item).find('input[id="purchase_price"]').val();
-                //     var quantity = $(item).find('input[id="quantity"]').val();
-                //     var total_price = $(item).find('input[name="total_price"]').val();
-
-                //     // Create an object to store the data for the specific item
-                //     var itemData = {
-                //         id: id,
-                //         quantity: quantity,
-                //         purchase_price: purchase_price,
-                //         total_price: total_price
-                //     };
-
-                //     // Push the itemData object to the items array
-                //     bundle.push(itemData);
-                // });
-
-                // Check if there is at least one item in the 'items' array
-                // if (bundle.length === 0) {
-                //     // Show an error message
-                //     event.preventDefault();
-                //     var errorMessageItem =
-                //         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
-                //     $('#error-item').html(errorMessageItem);
-                //     return;
-                // } else {
-                //     $('#error-item').empty();
-                // }
-
-                // console.log(bundle);
-                // Send the data to the server using AJAX
-                $.ajax({
-                    url: "{{ route('com.quotation.store.quotation') }}",
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        quotation: quotation
-                        // bundle: bundle
+            // Function Submit Modal
+            $("#kt_create_quotation_internet_form").validate({
+                messages: {
+                    no_quotation: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>NO QUOTATION Wajib diisi</span>",
                     },
-                    success: function(response) {
-                        // Handle the response from the server, e.g., show a success message
-                        console.log(response);
-                    },
-                    error: function(error) {
-                        // Handle errors if the request fails
-                        console.error('Error submitting all bundle data: ', error);
+                    description: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>DESRCIPTION Wajib diisi</span>",
                     }
+                },
+
+                submitHandler: function() {
+
+                    event.preventDefault();
+
+                    // Get Prospect ID and Survey ID from the HTML elements
+                    var boq_id = $('#id').val();
+                    var total_price_bundle = $('#total_price_bundle').val();
+                    var no_quotation = $('#no_quotation').val();
+                    var description = $('#description').val();
+
+                    // Array to store all item data
+                    var bundle = [];
+                    // Create an object to store prospect_id and survey_request_id
+                    var quotation = {
+                        boq_id: boq_id,
+                        no_quotation: no_quotation,
+                        description: description,
+                        total_price: total_price_bundle
+                    };
+
+                    console.log(quotation);
+
+                    // Loop through each .file-soft-boq-item div to get the data for each item
+                    $('.BundleItem [class^="file-soft-quotation-bundle"]').each(function(index, item) {
+                        // Extract data for the specific item
+                        var id = $(item).find('select[name^="good_name_bundle"]').val();
+                        var purchase_price = $(item).find('input[id^="purchase_price"]').val();
+                        var quantity = $(item).find('input[id^="quantity"]').val();
+                        var total_price = $(item).find('input[name^="total_price"]').val();
+
+                        // Create an object to store the data for the specific item
+                        var itemData = {
+                            id: id,
+                            quantity: quantity,
+                            purchase_price: purchase_price,
+                            total_price: total_price
+                        };
+
+                        // Push the itemData object to the items array
+                        bundle.push(itemData);
+                    });
+                    console.log(bundle);
+
+                    $.ajax({
+                        url: "{{ route('com.quotation.store.quotation') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            quotation: quotation,
+                            bundle: bundle
+                        },
+                        success: function(response) {
+                            // Handle the response from the server, e.g., show a success message
+                            console.log(response);
+                        },
+                        error: function(error) {
+                            // Handle errors if the request fails
+                            console.error('Error submitting all bundle data: ', error);
+                        }
+                    });
+
+                }
+            });
+
+
+            $('body').on('click', '.btn_create_purchase_order', function() {
+                let random_string = generateRandomString(4);
+
+                const form_edit = $('#kt_modal_create_purchase_order_form');
+                form_edit.find('#containerSelectedSurveyRequests').html('');
+                $('.drop-data').val("").trigger("change")
+                $('#kt_modal_create_purchase_order_form').trigger("reset")
+                $('#kt_modal_create_purchase_order_submit').removeAttr('disabled', 'disabled');
+
+                surveyRequestIds = [];
+                const surveyRequestId = $(this).data('id');
+                surveyRequestIds.push(surveyRequestId);
+
+                $.each(surveyRequestIds.filter(onlyUnique), function(index, rowId) {
+                    form_edit.find('#containerSelectedSurveyRequests').append(
+                        $('<input>')
+                        .attr('type', 'text')
+                        .attr('name', 'survey_request_id[]')
+                        .val(rowId)
+                    );
                 });
+
+                $(`.file-purchase-order-item-initial`).change(function() {
+                    imageReadURL(this);
+                });
+
+                form_edit.on('click', '.btn_add_more_purchase_order_item', function() {
+                    form_edit.find('#containerSoftSurveyItems').append(
+                        `
+                    <div class="row purchase-order-item mt-2">
+                        <div class="col-lg-12 mb-3">
+                            <div class="separator my-3 text-center text-gray-800"></div>
+                        </div>
+                        <div class="col-lg-10 mb-3">
+                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="required fw-bold">Lampiran</span>
+                            </label>
+                            <input type="file" class="form-control form-control-solid file-purchase-order-item-${random_string}" placeholder="" required accept="image/*" name="content[][file_purchase_order_internet]">
+                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                            <img id="containerImage" class="img-fluid m-5" src="#" alt="File Image" hidden="hidden"/>
+                        </div>
+                        <div class="col-lg-2 my-9">
+                            <button type="button" class="btn btn-sm btn-icon btn-danger clear-purchase-order-item-${random_string}"><i class="fa-solid fa-eraser"></i></button>
+                        </div>
+                    </div>
+                    `
+                    )
+
+                    $(`.file-purchase-order-item-${random_string}`).change(function() {
+                        imageReadURL(this);
+                    });
+
+                    $(`.clear-purchase-order-item-${random_string}`).click(function() {
+                        $(this).parent().parent().remove();
+                        console.log(random_string)
+                        random_string = generateRandomString(4);
+
+                        $('#countable_purchase_order_items').html($('.purchase-order-item')
+                            .length + 1);
+                    })
+
+                    $('#countable_purchase_order_items').html($('.purchase-order-item').length + 1);
+                    random_string = generateRandomString(4);
+                })
+                submitModal({
+                    modalName: 'kt_modal_create_purchase_order',
+                    tableName: 'kt_table_purchase_order',
+                    anotherTableName: 'tableOnProgressPurchaseOrder',
+                    ajaxLink: "{{route('com.quotation.store.quotation')}}",
+                    // validationMessages: softSurveyValidationMessages,
+                   })
             });
 
 
             //  Calculate and update total sum on page load
             updateTotalSum();
+            updateTotalSumBundle();
         });
     </script>
 @endsection
