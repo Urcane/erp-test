@@ -48,21 +48,24 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(Attendance\AttendanceController::class)->group(function () {
         Route::prefix('cmt-attendance')->group(function () {
-            Route::get('/list', 'index')->name('hc.att.index');
+            Route::middleware(['permission:HC:view-attendance'])->group(function () {
+                Route::get('/list', 'index')->name('hc.att.index');
+
+                Route::get('/summaries', 'getAttendanceSummaries')->name('hc.att.all-summaries');
+                Route::get('/get-data/table/summaries', 'getAttendanceSummariesTable')->name('hc.att.get-table-attendance-summaries');
+                Route::get('/get-data/table/attendance', 'getTableAttendance')->name('hc.att.get-table-attendance');
+                Route::get('/export/all', 'exportAllAttendance')->name('hc.att.export.all');
+            });
+
+            Route::middleware(['permission:HC:edit-delete-attendance'])->group(function () {
+                Route::put('/attendances', 'update')->name('hc.att.edit');
+                Route::delete('/attendances', 'destroy')->name('hc.att.delete');
+            });
+
             Route::get('/list/{id}', 'show')->name('hc.att.detail');
-
-            Route::put('/attendances', 'update')->name('hc.att.edit');
-            Route::delete('/attendances', 'destroy')->name('hc.att.delete');
-
-            Route::get('/summaries', 'getAttendanceSummaries')->name('hc.att.all-summaries');
-            Route::get('/summaries/user', 'getAttendanceSummariesById')->name('hc.att.user-summaries');
-
-            Route::get('/get-data/table/attendance', 'getTableAttendance')->name('hc.att.get-table-attendance');
-            Route::get('/get-data/table/summaries', 'getAttendanceSummariesTable')->name('hc.att.get-table-attendance-summaries');
-            Route::get('/get-data/table/attendance/detail', 'getTableAttendanceDetail')->name('hc.att.get-table-attendance-detail');
-
-            Route::get('/export/all', 'exportAllAttendance')->name('hc.att.export.all');
             Route::get('/export/personal', 'exportPersonalAttendance')->name('hc.att.export.personal');
+            Route::get('/summaries/user', 'getAttendanceSummariesById')->name('hc.att.user-summaries');
+            Route::get('/get-data/table/attendance/detail', 'getTableAttendanceDetail')->name('hc.att.get-table-attendance-detail');
         });
     });
 
@@ -251,34 +254,42 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('cmt-request')->group(function () {
-        Route::controller(HCRequest\IndexController::class)->group(function () {
-            Route::get('/list', 'index')->name('hc.request.index');
-        });
-
-        Route::prefix('attendance')->group(function () {
-            Route::controller(HCRequest\AttendanceController::class)->group(function () {
-                Route::put('/update/status', 'updateRequestStatus')->name('hc.request.att.update');
-                Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.att.summaries');
-
-                Route::get('/get-data/table', 'getTable')->name('hc.request.att.get-table');
+        Route::middleware(['permission:Approval:view-request|HC:view-all-request'])->group(function () {
+            Route::controller(HCRequest\IndexController::class)->group(function () {
+                Route::get('/list', 'index')->name('hc.request.index');
             });
-        });
 
-        Route::prefix('shift')->group(function () {
-            Route::controller(HCRequest\ShiftController::class)->group(function () {
-                Route::put('/update/status', 'updateRequestStatus')->name('hc.request.shf.update');
-                Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.shf.summaries');
+            Route::prefix('attendance')->group(function () {
+                Route::controller(HCRequest\AttendanceController::class)->group(function () {
+                    Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.att.summaries');
+                    Route::get('/get-data/table', 'getTable')->name('hc.request.att.get-table');
 
-                Route::get('/get-data/table', 'getTable')->name('hc.request.shf.get-table');
+                    Route::put('/update/status', 'updateRequestStatus')
+                        ->middleware(['permission:Approval:change-status-request|HC:change-all-status-request'])
+                        ->name('hc.request.att.update');
+                });
             });
-        });
 
-        Route::prefix('time-off')->group(function () {
-            Route::controller(HCRequest\TimeOffController::class)->group(function () {
-                Route::put('/update/status', 'updateRequestStatus')->name('hc.request.tmoff.update');
-                Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.tmoff.summaries');
+            Route::prefix('shift')->group(function () {
+                Route::controller(HCRequest\ShiftController::class)->group(function () {
+                    Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.shf.summaries');
+                    Route::get('/get-data/table', 'getTable')->name('hc.request.shf.get-table');
 
-                Route::get('/get-data/table', 'getTable')->name('hc.request.tmoff.get-table');
+                    Route::put('/update/status', 'updateRequestStatus')
+                        ->middleware(['permission:Approval:change-status-request|HC:change-all-status-request'])
+                        ->name('hc.request.shf.update');
+                });
+            });
+
+            Route::prefix('time-off')->group(function () {
+                Route::controller(HCRequest\TimeOffController::class)->group(function () {
+                    Route::get('/get-data/summaries', 'getSummaries')->name('hc.request.tmoff.summaries');
+                    Route::get('/get-data/table', 'getTable')->name('hc.request.tmoff.get-table');
+
+                    Route::put('/update/status', 'updateRequestStatus')
+                        ->middleware(['permission:Approval:change-status-request|HC:change-all-status-request'])
+                        ->name('hc.request.tmoff.update');
+                });
             });
         });
 
@@ -286,6 +297,7 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(Request\AttendanceController::class)->group(function () {
                 Route::prefix('/attendance')->group(function () {
                     Route::post('/create', 'makeRequest')->name('req.attd.create');
+                    Route::put('/cancel', 'cancelRequest')->name('req.attd.cancel');
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.attd.get-table-me');
                 });
             });
@@ -293,6 +305,7 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(Request\ShiftController::class)->group(function () {
                 Route::prefix('/shift')->group(function () {
                     Route::post('/create', 'makeRequest')->name('req.shift.create');
+                    Route::put('/cancel', 'cancelRequest')->name('req.shift.cancel');
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.shift.get-table-me');
                 });
             });
@@ -300,6 +313,7 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(Request\TimeOffController::class)->group(function () {
                 Route::prefix('/time-off')->group(function () {
                     Route::post('/create', 'makeRequest')->name('req.time-off.create');
+                    Route::put('/cancel', 'cancelRequest')->name('req.time-off.cancel');
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.time-off.get-table-me');
                 });
             });

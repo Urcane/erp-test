@@ -80,7 +80,7 @@ class AttendanceController extends RequestController
         try {
             $request->validate([
                 "id" => "required",
-                "status" => ["required", Rule::in($this->constants->approve_status)],
+                "status" => ["required", Rule::in(array_slice($this->constants->approve_status, 0, 3))],
                 "comment" => "nullable"
             ]);
 
@@ -90,9 +90,10 @@ class AttendanceController extends RequestController
                 throw new NotFoundError("Attendance Request tidak ditemukan");
             }
 
-            $approvalLine = $attendanceRequest->user->userEmployment->approvalLine;
+            /** @var App\Models\User $user */
+            $user = Auth::user();
 
-            if (!$approvalLine) {
+            if ($user->hasPermissionTo('HC:change-all-status-request')) {
                 if ($request->status == $this->constants->approve_status[1]) {
                     $this->_updateAttendance(
                         $attendanceRequest->user_id,
@@ -103,7 +104,7 @@ class AttendanceController extends RequestController
                 }
 
                 $attendanceRequest->update([
-                    "approval_line" => $approvalLine->id,
+                    "approval_line" => $user->id,
                     "status" => $request->status,
                     "comment" => $request->comment
                 ]);
@@ -114,7 +115,9 @@ class AttendanceController extends RequestController
                 ]);
             }
 
-            if ($approvalLine->id != Auth::user()->id) {
+            $approvalLine = $attendanceRequest->user->userEmployment->approvalLine;
+
+            if ($approvalLine->id != $user->id || !$user->hasPermissionTo('Approval:change-status-request')) {
                 throw new AuthorizationError("Anda tidak berhak melakukan update status");
             }
 
@@ -136,7 +139,7 @@ class AttendanceController extends RequestController
             }
 
             $attendanceRequest->update([
-                "approval_line" => $approvalLine->id,
+                "approval_line" => $user->id,
                 "status" => $request->status,
                 "comment" => $request->comment
             ]);
@@ -155,14 +158,24 @@ class AttendanceController extends RequestController
     public function getSummaries(Request $request)
     {
         try {
-            $query = UserAttendanceRequest::where(function ($query) {
-                $query->where(function ($query) {
-                    $query->where('status', $this->constants->approve_status[0])
-                        ->whereHas('user.userEmployment', function ($query) {
-                            $query->where('approval_line', Auth::user()->id);
-                        });
-                })->orWhere('approval_line', Auth::user()->id);
-            });
+            /** @var App\Models\User $user */
+            $user = Auth::user();
+            $query = null;
+
+            if ($user->hasPermissionTo('HC:view-all-request')) {
+                $query = new UserAttendanceRequest;
+            } else if ($user->hasPermissionTo('Approval:view-request')) {
+                $query = UserAttendanceRequest::where(function ($query) use ($user) {
+                    $query->where(function ($query) use ($user) {
+                        $query->where('status', $this->constants->approve_status[0])
+                            ->whereHas('user.userEmployment', function ($query) use ($user) {
+                                $query->where('approval_line', $user->id);
+                            });
+                    })->orWhere('approval_line', $user->id);
+                });
+            } else {
+                throw new AuthorizationError("Anda tidak berhak mengakses ini");
+            }
 
             $search = $request->filters['search'];
             if (!empty($search)) {
@@ -234,14 +247,24 @@ class AttendanceController extends RequestController
     public function getTable(Request $request)
     {
         if (request()->ajax()) {
-            $query = UserAttendanceRequest::where(function ($query) {
-                $query->where(function ($query) {
-                    $query->where('status', $this->constants->approve_status[0])
-                        ->whereHas('user.userEmployment', function ($query) {
-                            $query->where('approval_line', Auth::user()->id);
-                        });
-                })->orWhere('approval_line', Auth::user()->id);
-            })->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
+            /** @var App\Models\User $user */
+            $user = Auth::user();
+            $query = null;
+
+            if ($user->hasPermissionTo('HC:view-all-request')) {
+                $query = UserAttendanceRequest::with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
+            } else if ($user->hasPermissionTo('Approval:view-request')) {
+                $query = UserAttendanceRequest::where(function ($query) {
+                    $query->where(function ($query) {
+                        $query->where('status', $this->constants->approve_status[0])
+                            ->whereHas('user.userEmployment', function ($query) {
+                                $query->where('approval_line', Auth::user()->id);
+                            });
+                    })->orWhere('approval_line', Auth::user()->id);
+                })->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
+            } else {
+                throw new AuthorizationError("Anda tidak berhak mengakses ini");
+            }
 
             switch ($request->filters['filterStatus']) {
                 case $this->constants->approve_status[0]:
@@ -257,7 +280,7 @@ class AttendanceController extends RequestController
                     break;
 
                 default:
-                    $query = $query->orderByRaw("FIELD(status, ?, ?, ?)", $this->constants->approve_status);
+                    $query = $query->orderByRaw("FIELD(status, ?, ?, ?)", array_slice($this->constants->approve_status, 0, 3));
                     break;
             };
 
