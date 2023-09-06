@@ -40,13 +40,15 @@
                             <h3 class="card-title">
                                 <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Internet
                                     Quotation</span>
-                            </h3>
-  
-                                <input type="file" class="card-toolbar p-3 btn btn-md btn-info w-lg-150px purchase_order_file"
-                                    id="fileInput" style="display: none;"> 
-
+                            </h3> 
                             <div class="card-toolbar p-3">
-                                <button  class="btn btn-md btn-info w-lg-150px purchase_order_file" onclick="myFunction()">Input File</button>  
+                                <a href="#kt_modal_create_purchase_order" class="btn_create_purchase_order p- btn btn-md btn-info w-lg-180px" 
+                                data-id="{{ $dataQuotation['quotationData']->id }}"
+                                data-bs-toggle="modal"><i class="fa-solid fa-file me-3"></i>Purchase Order</a>
+
+
+                                {{-- <button class="btn btn-md btn-info w-lg-150px purchase_order_file"
+                                    onclick="myFunction()">Input File</button> --}}
                             </div>
                         </div>
                         <div class="card-body">
@@ -357,7 +359,7 @@
                                                         @endphp
 
                                                         <div
-                                                            class="file-soft-quotation-bundle-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
+                                                            class="file-soft-quotation-bundle-{{ $random_string }} d-flex justify-content-around flex-wrap mx-20 my-8">
                                                             <!-- Internet Bundle -->
                                                             <div class="d-flex justify-content-around align-items-center"
                                                                 style="flex-basis: 35%; min-width: 200px;">
@@ -398,7 +400,7 @@
                                                                 <input class="form-control" type="text" required
                                                                     min="1" minlength="1"
                                                                     oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                                    name="quantity_{{ $random_string }}" id="quantity"
+                                                                    name="quantity_{{ $random_string }}" id="quantity_{{ $random_string }}"
                                                                     value="{{ $relatedItem->quantity }}">
                                                             </div>
 
@@ -413,7 +415,7 @@
                                                                     oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
                                                                     name="purchase_price_{{ $random_string }}"
                                                                     value="{{ $relatedItem->purchase_price }}"
-                                                                    id="purchase_price">
+                                                                    id="purchase_price_{{ $random_string }}">
                                                             </div>
 
                                                             <!-- Total Price -->
@@ -427,7 +429,7 @@
                                                                     <input class="form-control" type="text"
                                                                         min="1" minlength="1" disabled
                                                                         oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                                        name="total_price"
+                                                                        name="total_price_{{ $random_string }}"
                                                                         id="total_price_{{ $random_string }}"
                                                                         value="{{ $relatedItem->total_price }}">
                                                                 </div>
@@ -537,10 +539,9 @@
             </div>
         </div>
     </div>
-
-    @role('administrator')
-        @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
-    @endrole
+ 
+    @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
+    @include('cmt-opportunity.quotation.add.modal-create-purchase-order') 
 
     <script>
         function myFunction() {
@@ -779,7 +780,7 @@
                                         <i class="fa-solid fa-ellipsis-vertical"></i>
                                 </button> 
                                 <ul class="dropdown-menu"> 
-                                    <li type="button" class="clear-soft-survey-item-${random_string}"
+                                    <li type="button" class="clear-purchase-order-item-${random_string}"
                                         data-random-string="${random_string}">
                                         <a class="dropdown-item py-2">
                                         <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
@@ -829,7 +830,7 @@
                 });
 
                 // Function Hapus per Item
-                $('.BundleItem').on('click', `.clear-soft-survey-item-${random_string}`,
+                $('.BundleItem').on('click', `.clear-purchase-order-item-${random_string}`,
                     function() {
                         $(this).parent().parent().parent().parent().parent().remove();
                         updateTotalSumBundle();
@@ -1008,6 +1009,81 @@
 
                 }
             });
+
+
+            $('body').on('click', '.btn_create_purchase_order', function() {
+                let random_string = generateRandomString(4);
+
+                const form_edit = $('#kt_modal_create_purchase_order_form');
+                form_edit.find('#containerSelectedSurveyRequests').html('');
+                $('.drop-data').val("").trigger("change")
+                $('#kt_modal_create_purchase_order_form').trigger("reset")
+                $('#kt_modal_create_purchase_order_submit').removeAttr('disabled', 'disabled');
+
+                surveyRequestIds = [];
+                const surveyRequestId = $(this).data('id');
+                surveyRequestIds.push(surveyRequestId);
+
+                $.each(surveyRequestIds.filter(onlyUnique), function(index, rowId) {
+                    form_edit.find('#containerSelectedSurveyRequests').append(
+                        $('<input>')
+                        .attr('type', 'text')
+                        .attr('name', 'survey_request_id[]')
+                        .val(rowId)
+                    );
+                });
+
+                $(`.file-purchase-order-item-initial`).change(function() {
+                    imageReadURL(this);
+                });
+
+                form_edit.on('click', '.btn_add_more_purchase_order_item', function() {
+                    form_edit.find('#containerSoftSurveyItems').append(
+                        `
+                    <div class="row purchase-order-item mt-2">
+                        <div class="col-lg-12 mb-3">
+                            <div class="separator my-3 text-center text-gray-800"></div>
+                        </div>
+                        <div class="col-lg-10 mb-3">
+                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="required fw-bold">Lampiran</span>
+                            </label>
+                            <input type="file" class="form-control form-control-solid file-purchase-order-item-${random_string}" placeholder="" required accept="image/*" name="content[][file_purchase_order_internet]">
+                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                            <img id="containerImage" class="img-fluid m-5" src="#" alt="File Image" hidden="hidden"/>
+                        </div>
+                        <div class="col-lg-2 my-9">
+                            <button type="button" class="btn btn-sm btn-icon btn-danger clear-purchase-order-item-${random_string}"><i class="fa-solid fa-eraser"></i></button>
+                        </div>
+                    </div>
+                    `
+                    )
+
+                    $(`.file-purchase-order-item-${random_string}`).change(function() {
+                        imageReadURL(this);
+                    });
+
+                    $(`.clear-purchase-order-item-${random_string}`).click(function() {
+                        $(this).parent().parent().remove();
+                        console.log(random_string)
+                        random_string = generateRandomString(4);
+
+                        $('#countable_purchase_order_items').html($('.purchase-order-item')
+                            .length + 1);
+                    })
+
+                    $('#countable_purchase_order_items').html($('.purchase-order-item').length + 1);
+                    random_string = generateRandomString(4);
+                })
+                submitModal({
+                    modalName: 'kt_modal_create_purchase_order',
+                    tableName: 'kt_table_purchase_order',
+                    anotherTableName: 'tableOnProgressPurchaseOrder',
+                    ajaxLink: "{{route('com.quotation.store.quotation')}}",
+                    // validationMessages: softSurveyValidationMessages,
+                   })
+            });
+
 
             //  Calculate and update total sum on page load
             updateTotalSum();

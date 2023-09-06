@@ -172,7 +172,8 @@ class QuotationService
 
     function saveAndStoreQuotation(Request $request) : JsonResponse {
         $dataQuotation = $this->quotationRepository->saveAndStoreQuotation($request);
-        
+        dd($dataQuotation);
+
         if (null !== ($request->file('quotation.customer_purchase_order'))) {
             $file = $this->fileService->storeFile($dataQuotation, [
                 'file' => $request->file('quotation.customer_purchase_order'),
