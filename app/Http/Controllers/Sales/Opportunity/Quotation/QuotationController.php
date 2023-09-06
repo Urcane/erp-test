@@ -58,6 +58,13 @@ class QuotationController
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
+    function storePurchaseOrder(Request $request) {
+        if ($request->ajax()) {
+            return $this->quotationService->storePurchaseOrder($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
     function getInternetBundling(Request $request) : JsonResponse {
         if ($request->ajax()) {
             return $this->quotationService->getInternetBundling($request);

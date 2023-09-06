@@ -149,7 +149,6 @@ class QuotationService
 
     function updateQuotation(Request $request)  {
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
-        $random_string = Str::random(4);
         $quotation = $request->query('quotation');
         //page update belum ada
         if ($quotation === 'internet') { 
@@ -161,7 +160,6 @@ class QuotationService
 
     function reviewDoneQuotation(Request $request) {
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
-        $random_string = Str::random(4);
         $quotation = $request->query('quotation');
         if ($quotation === 'internet') { 
             return view('cmt-opportunity.quotation.pages.done-internet-quotation', compact('dataQuotation', 'random_string'));
@@ -171,8 +169,12 @@ class QuotationService
     }
 
     function saveAndStoreQuotation(Request $request) : JsonResponse {
-        $dataQuotation = $this->quotationRepository->saveAndStoreQuotation($request);
-        
+        $this->quotationRepository->saveAndStoreQuotation($request);
+        return response()->json(['message' => 'Quotation berhasil disimpan.'], 200);
+    }
+
+    function storePurchaseOrder(Request $request) {
+        $dataQuotation = $this->quotationRepository->storePurchaseOrder($request);
         if (null !== ($request->file('quotation.customer_purchase_order'))) {
             $file = $this->fileService->storeFile($dataQuotation, [
                 'file' => $request->file('quotation.customer_purchase_order'),

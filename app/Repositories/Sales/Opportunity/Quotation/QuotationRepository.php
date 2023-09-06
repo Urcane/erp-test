@@ -80,7 +80,6 @@ class QuotationRepository
             ]
         );        
         $quotationData->referenced_quotation_id = $quotationData->id;
-        $quotationData->is_done = null;
 
         if (isset($quotationData->id)) {
             $itemIds = Item::where('itemable_id', $quotationData->id)
@@ -90,29 +89,37 @@ class QuotationRepository
                             ->pluck('id')
                             ->toArray();
                             
-            Item::where('id', $itemIds)->delete();
+            Item::whereIn('id', $itemIds)->delete();
         }
         $bundles = $request->input('bundle');
 
         if (!empty($bundles)) {
             foreach ($bundles as $bundle) {
-                $criteria = [
+                $data = [
                     'itemable_id' => $quotationData->id,
                     'itemable_type' => $quotationData->itemable_type, 
-                ];
-                $data = [
                     'item_inventory_id' => $bundle['id'],
                     'quantity' => $bundle['quantity'],
                     'purchase_price' => $bundle['purchase_price'],
                     'total_price' => $bundle['total_price'],
                 ];
-                $quotationData->itemableQuotation()->updateOrCreate($criteria, $data);
+                $quotationData->itemableQuotation()->create( $data);
             }
         }
         $quotationData->save();
         return $quotationData;
     }
 
+    function storePurchaseOrder(Request $request){
+        $quotationId = $request->input('quotation.id');
+        $quotationData = $this->model->where('id', $quotationId)->first();
+        
+        if (!$quotationData) {
+            return response()->json(['message' => 'Quotation not found'], 404);
+        }
+        return $quotationData;
+    }
+    
     function revisionQuotation(Request $request){
         //dipanggil pada tombol revision quotation
         $revisionQuotation = $this->model->findOrFail($request->input('quotation.id'));
