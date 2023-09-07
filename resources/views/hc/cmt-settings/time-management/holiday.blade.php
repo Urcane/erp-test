@@ -91,7 +91,7 @@
                         </div>
                         <div class="col-lg-12 row p-6 m-1 rounded border border-2 border-secondary">
                             <div class="d-flex justify-content-end mb-2">
-                                <div class="input-group w-150px w-md-250px mx-4">
+                                <div class="input-group w-150px w-md-250px">
                                     <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
                                     <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date"
                                         id="range_date">
