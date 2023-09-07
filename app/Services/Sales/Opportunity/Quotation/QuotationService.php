@@ -53,11 +53,11 @@ class QuotationService
                     if (isset($request->filters['calledFrom'])) {
                         if ($request->filters['calledFrom'] == 'Internet') {
                             $actions .= '<li><a href="' . url("cmt-quotation/review-done-quotation?quotation_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
-                                    <i class="fa-solid fa-list-check me-3"></i>Update Quotation Internet</a></li>';
+                                    <i class="fa-solid fa-list-check me-3"></i>Done Quotation Internet</a></li>';
                         }
                         elseif ($request->filters['calledFrom'] == 'Perangkat') {
                             $actions .= '<li><a href="' . url("cmt-quotation/review-done-quotation?quotation_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
-                                    <i class="fa-solid fa-list-check me-3"></i>Update Quotation Perangkat</a></li>';
+                                    <i class="fa-solid fa-list-check me-3"></i>Done Quotation Perangkat</a></li>';
                         }
                     } else {                    
                     $actions .= '<li><span class="dropdown-item py-2">No Action</span></li>';
@@ -175,9 +175,10 @@ class QuotationService
 
     function storePurchaseOrder(Request $request) {
         $dataQuotation = $this->quotationRepository->storePurchaseOrder($request);
-        if (null !== ($request->file('quotation.customer_purchase_order'))) {
+        // dd($request->file('file_purchase_order_internet'));
+        if (null !== ($request->file('file_purchase_order_internet'))) {
             $file = $this->fileService->storeFile($dataQuotation, [
-                'file' => $request->file('quotation.customer_purchase_order'),
+                'file' => $request->file('file_purchase_order_internet'),
                 'filePath' => 'purchase-order-customer',
                 'fileName' => 'File Purchase Order Customer',
                 'additional' => 'quotation/purchase-order'

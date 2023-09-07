@@ -19,7 +19,7 @@
                         data-kt-scroll-wrappers="#kt_modal_tambah_bundle_internet_scroll" data-kt-scroll-offset="300px">
                         <div class="row mb-5">
                             <div class="col-lg-12 mb-5">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2" required>
+                                <label for="good_name" class="d-flex align-items-center fs-6 form-label mb-2" required>
                                     <span class="fw-bold required">Nama Inventory Item</span>
                                 </label>
                                 <input type="text" class="form-control form-control-solid required" name="good_name_update"required
@@ -32,7 +32,7 @@
                             <div class="col-lg-12">
                                 <div class="d-flex justify-content-between mb-4">
                                     <div class="col-lg-3 col-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2" >
+                                        <label for="code_name" class="d-flex align-items-center fs-6 form-label mb-2" >
                                             <span class="fw-bold required">Code Item</span>
                                         </label>
                                         <input class="form-control required " type="text" name="code_name_update"required
@@ -41,7 +41,7 @@
                                     </div>
 
                                     <div class="col-lg-3 col-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2" >
+                                        <label for="Merk" class="d-flex align-items-center fs-6 form-label mb-2" >
                                             <span class=" fw-bold required">Merk</span>
                                         </label>
                                         <input class="form-control required" type="text" name="merk_update" id="Merk" required>
@@ -49,7 +49,7 @@
                                     </div>
 
                                     <div class="col-lg-3 col-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2" >
+                                        <label for="good_type" class="d-flex align-items-center fs-6 form-label mb-2" >
                                             <span class="fw-bold required">Tipe Barang</span>
                                         </label>
                                         <input class="form-control required" type="text" name="good_type_update" required
@@ -62,7 +62,7 @@
 
                         <div class="row mb-6">
                             <div class="col-lg-12">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2" >
+                                <label for="description_update" class="d-flex align-items-center fs-6 form-label mb-2" >
                                     <span class="fw-bold required">Detail Item Inventory</span>
                                 </label>
                                 <textarea class="form-control form-control-solid required" id="description_update" name="description_update" value="" required
