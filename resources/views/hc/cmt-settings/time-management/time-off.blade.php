@@ -46,6 +46,20 @@
                                     <input type="text" class="form-control form-control-solid" placeholder="Code"
                                         required name="code">
                                 </div>
+                                <div class="col-lg-12 mb-3">
+                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                        <span class="required fw-bold">Effective Date</span>
+                                    </label>
+                                    <input type="date" class="form-control form-control-solid"
+                                        required name="effective_date">
+                                </div>
+                                <div class="col-lg-12 mb-3">
+                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                        <span class="fw-bold">Expired Date</span>
+                                    </label>
+                                    <input type="date" class="form-control form-control-solid"
+                                        name="expired_date">
+                                </div>
                             </div>
                         </div>
                         <div class="text-center mt-9">
@@ -76,7 +90,7 @@
                             <div class="col-lg-6 d-flex justify-content-end">
                                 <div>
                                     <a href="#modal_create_time_off" data-bs-toggle="modal"
-                                        class="btn btn-info btn-sm me-3 btn_tambah_job_level">
+                                        class="btn btn-info btn-sm me-3 btn-add-category">
                                         <i class="fa-solid fa-plus"></i>
                                         Add Category
                                     </a>
@@ -90,9 +104,10 @@
                                                 <th class="text-center w-50px">#</th>
                                                 <th class="w-150px">Name</th>
                                                 <th class="w-150px">Code</th>
-                                                {{-- <th class="w-150px">Effective Date</th>
-                                            <th class="w-150px">Expired Date</th>
-                                            <th class="w-150px">Assigned To</th> --}}
+                                                <th class="w-150px">Effective Date</th>
+                                                <th class="w-150px">Expire Date</th>
+                                                {{-- <th class="w-150px">Expired Date</th>
+                                                <th class="w-150px">Assigned To</th> --}}
                                                 <th class="w-100px">#</th>
                                             </tr>
                                         </thead>
@@ -111,11 +126,28 @@
     <script>
         let dataTableTimeOff;
 
-        $(".btn_tambah_job_level").on("click", function() {
-            $("input").val("")
-        })
-
         $(document).ready(function() {
+            function deleteTimeOff(id) {
+                $.ajax({
+                    url: "{{ route('hc.setting.timeoff.delete') }}",
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    type: 'POST',
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        dataTableTimeOff.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
+            }
+
             dataTableTimeOff = $('#tb_timeoff').DataTable({
                 processing: true,
                 serverSide: true,
@@ -144,7 +176,8 @@
                     "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
                     ">",
 
-                columns: [{
+                columns: [
+                    {
                         data: 'DT_RowIndex'
                     },
                     {
@@ -152,6 +185,12 @@
                     },
                     {
                         data: 'code'
+                    },
+                    {
+                        data: 'effective_date'
+                    },
+                    {
+                        data: 'expired_date'
                     },
                     // { data: 'effective_date'},
                     // { data: 'expired_date'},
@@ -166,47 +205,30 @@
                     className: 'text-center',
                 }],
             });
-        })
 
-        function deleteTimeOff(id) {
-            $.ajax({
-                url: "{{ route('hc.setting.timeoff.delete') }}",
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                type: 'POST',
-                data: {
-                    id: id
-                },
-                success: function(data) {
-                    dataTableTimeOff.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
-                }
-            });
-        }
+            $(".btn-add-category").on("click", function() {
+                $("input").val("")
+            })
 
-        $('#modal_create_time_off_form').submit(function(event) {
-            event.preventDefault();
-            var formData = $(this).serialize();
-            $.ajax({
-                url: "{{ route('hc.setting.timeoff.createUpdate') }}",
-                type: 'POST',
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    dataTableTimeOff.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
-                }
+            $('#modal_create_time_off_form').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: "{{ route('hc.setting.timeoff.createUpdate') }}",
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        dataTableTimeOff.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
             });
         });
     </script>

@@ -247,9 +247,18 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(Settings\TimeManagement\TimeOffController::class)->group(function () {
                 Route::prefix('time-off')->group(function () {
                     Route::get('/', 'index')->name('hc.setting.timeoff.index');
-                    Route::get('/table/timeoff', 'getTableTimeOff')->name('hc.setting.timeoff-get-table');
-                    Route::post('/create/update/timeoff', 'createUpdateTimeOff')->name('hc.setting.timeoff.createUpdate');
-                    Route::post('/delete/timeoff', 'deleteTimeOff')->name('hc.setting.timeoff.delete');
+                    Route::get('/table', 'getTable')->name('hc.setting.timeoff-get-table');
+                    Route::post('/create/update', 'createUpdate')->name('hc.setting.timeoff.createUpdate');
+                    Route::post('/delete', 'destroy')->name('hc.setting.timeoff.delete');
+                });
+            });
+
+            Route::controller(Settings\TimeManagement\HolidayController::class)->group(function () {
+                Route::prefix('holiday')->group(function () {
+                    Route::get('/', 'index')->name('hc.setting.holiday.index');
+                    Route::get('/table', 'getTable')->name('hc.setting.holiday-get-table');
+                    Route::post('/create/update', 'createUpdate')->name('hc.setting.holiday.createUpdate');
+                    Route::post('/delete', 'destroy')->name('hc.setting.holiday.delete');
                 });
             });
         });

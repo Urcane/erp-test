@@ -34,7 +34,7 @@ class AttendanceController extends Controller
 
     public function getTableSchedule(Request $request) {
         if (request()->ajax()) {
-            $query = new WorkingSchedule;
+            $query = WorkingSchedule::query();
 
             // dd($query);
             return DataTables::of($query)
@@ -155,7 +155,7 @@ class AttendanceController extends Controller
 
     public function getTableShift(Request $request) {
         if (request()->ajax()) {
-            $query = new WorkingShift;
+            $query = WorkingShift::query();
 
             // dd($query);
             return DataTables::of($query)

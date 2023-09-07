@@ -2,52 +2,75 @@
 
 namespace App\Http\Controllers\HC\Settings\TimeManagement;
 
-use App\Constants;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance\LeaveRequestCategory;
-use App\Models\Employee\WorkingShift;
-use App\Utils\ErrorHandler;
+use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
-class TimeOffController extends Controller
+class TimeOffController extends TimeManagementController
 {
-    protected $errorHandler;
-    protected $constants;
-
-    public function __construct()
+    public function index()
     {
-        $this->errorHandler = new ErrorHandler();
-        $this->constants = new Constants();
-    }
-
-    public function index() {
         return view("hc.cmt-settings.time-management.time-off");
     }
 
-    public function getTableTimeOff(Request $request) {
+    public function getTable(Request $request)
+    {
         if (request()->ajax()) {
             $query = LeaveRequestCategory::orderBy('created_at', 'desc');
 
             return DataTables::of($query)
-            ->addColumn('action', function ($action) {
-                return "-";
-            })
-            // ->addColumn('assigned_to', function($data) {
-            //     $count = $data->users->count();
-            //     return $count;
-            // })
-            ->addIndexColumn()
-            ->rawColumns(['action'])
-            ->make(true);
+                ->addColumn('action', function ($action) {
+                    return "-";
+                })
+                ->addColumn('effective_date', function ($query) {
+                    $date = Carbon::createFromFormat('Y-m-d', $query->effective_date);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
+                })
+                ->addColumn('expired_date', function ($query) {
+                    $expiredDate = $query->expired_date;
+
+                    if (!$expiredDate) {
+                        return "Permanent";
+                    }
+
+                    $date = Carbon::createFromFormat('Y-m-d', $expiredDate);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
+                })
+                // ->addColumn('assigned_to', function($data) {
+                //     $count = $data->users->count();
+                //     return $count;
+                // })
+                ->addIndexColumn()
+                ->rawColumns(['action'])
+                ->make(true);
         }
     }
 
-    public function createUpdateTimeOff(Request $request) {
+    public function createUpdate(Request $request)
+    {
         try {
             $request->validate([
                 "name" => "required",
-                "code" => "required"
+                "code" => "required",
+                "effective_date" => "required",
+                "expired_date" => "nullable"
+            ]);
+
+            LeaveRequestCategory::create([
+                "name" => $request->name,
+                "code" => $request->code,
+                "effective_date" => $request->effective_date,
+                "expired_date" => $request->expired_date
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil menambah kategori time off"
             ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);
@@ -56,7 +79,8 @@ class TimeOffController extends Controller
         }
     }
 
-    public function deleteTimeOff(Request $request) {
+    public function destroy(Request $request)
+    {
         try {
             //code...
         } catch (\Throwable $th) {
