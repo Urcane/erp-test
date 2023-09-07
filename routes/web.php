@@ -134,7 +134,6 @@ Route::middleware(['auth'])->group(function () {
 
            Route::post('/store-po-quotation','storePurchaseOrder')->name('com.quotation.store.po');
            Route::post('/store-data-quotation','saveAndStoreQuotation')->name('com.quotation.store.quotation');
-       Route::post('/store-po-quotation','storePurchaseOrder')->name('com.quotation.store.quotation');
 
            Route::post('/cancel-quotation','cancelQuotation')->name('com.quotation.cancel.quotation');
 
