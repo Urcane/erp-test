@@ -8,14 +8,14 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="employee_id">
             <span class="required fw-bold">Employee ID</span>
         </label>
-        <input type="text" value="{{$user->userEmployment->employee_id ?? old('employee_id') }}" class="form-control form-control-solid" name="employee_id" required placeholder="Employee ID" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="text" value="{{$user->userEmployment->employee_id ?? old('employee_id') }}" class="form-control form-control-solid" name="employee_id" required placeholder="Employee ID" @cannot("HC:update-profile") disabled @endcannot>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
     <div class="col-lg-6 mb-3">
         <label class="d-flex align-items-center fs-6 form-label mb-2">
             <span class="required fw-bold">Employment Status</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="employment_status_id" required name="employment_status_id" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="employment_status_id" required name="employment_status_id" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userEmployment->employment_status_id ?? "") == "" && old('employment_status_id') == null)
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif
@@ -30,14 +30,14 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="join_date">
             <span class="required fw-bold">Join Date</span>
         </label>
-        <input type="date" value="{{$user->userEmployment->join_date ?? old('join_date') }}" class="form-control form-control-solid" required name="join_date" id="join_date" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="date" value="{{$user->userEmployment->join_date ?? old('join_date') }}" class="form-control form-control-solid" required name="join_date" id="join_date" @cannot("HC:update-profile") disabled @endcannot>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
     <div class="col-lg-6">
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="end_date">
             <span class="required fw-bold">End Status Date</span>
         </label>
-        <input type="date" value="{{$user->userEmployment->end_date ?? old('end_date') }}" class="form-control form-control-solid" required name="end_date" id="end_date" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="date" value="{{$user->userEmployment->end_date ?? old('end_date') }}" class="form-control form-control-solid" required name="end_date" id="end_date" @cannot("HC:update-profile") disabled @endcannot>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
 
@@ -45,7 +45,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="team_id">
             <span class="required fw-bold">Team</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="team_id" required name="team_id" id="team_id" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="team_id" required name="team_id" id="team_id" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->team_id ?? "") == "" && old('team_id') == null)
                 <option value="" selected hidden disabled>Select employment team</option>
             @endif
@@ -60,7 +60,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="sub_branch_id">
             <span class="required fw-bold">Branch</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="sub_branch_id" required name="sub_branch_id" id="sub_branch_id" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="sub_branch_id" required name="sub_branch_id" id="sub_branch_id" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userEmployment->sub_branch_id ?? "") == "" && old('sub_branch_id') == null)
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif
@@ -74,7 +74,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="department_id">
             <span class="required fw-bold">Organization</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="department_id" required name="department_id" id="department_id" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="department_id" required name="department_id" id="department_id" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->department_id ?? "") == "" && old('department_id') == null)
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif
@@ -89,7 +89,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="division_id">
             <span class="required fw-bold">Job Position</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="division_id" required name="division_id" id="division_id" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="division_id" required name="division_id" id="division_id" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->division_id ?? "") == "" && old('division_id') == null)
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif
@@ -103,7 +103,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="role_id">
             <span class="required fw-bold">Job Level</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="role_id" required name="role_id" id="role_id" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="role_id" required name="role_id" id="role_id" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user ?? "") == "" && old('role_id') == null)
                 <option value="" selected hidden disabled>Select job level</option>
             @endif
@@ -118,7 +118,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="working_schedule_shift_id">
             <span class="required fw-bold">Schedule</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="working_schedule_shift_id" required name="working_schedule_shift_id" id="working_schedule_shift_id" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="working_schedule_shift_id" required name="working_schedule_shift_id" id="working_schedule_shift_id" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userEmployment->workingSchedule->name ?? old('working_schedule_shift_id')) == null)
                 <option value="" selected hidden disabled>Select job level</option>
             @endif
@@ -132,7 +132,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="approval_line">
             <span class="required fw-bold">Approval Line</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="approval_line" required name="approval_line" id="approval_line" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="approval_line" required name="approval_line" id="approval_line" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userEmployment->approval_line ?? old('approval_line')) == null)
             <option value="" selected hidden disabled>Select Approval Line</option>
             @endif
@@ -147,7 +147,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="barcode">
             <span class="fw-bold">Barcode</span>
         </label>
-        <input type="text" class="form-control form-control-solid" value="{{$user->userEmployment->barcode ?? old('barcode') }}" placeholder="barcode" name="barcode" id="barcode" @unlessrole("administrator") disabled @endunlessrole>
+        <input type="text" class="form-control form-control-solid" value="{{$user->userEmployment->barcode ?? old('barcode') }}" placeholder="barcode" name="barcode" id="barcode" @cannot("HC:update-profile") disabled @endcannot>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
 </section>

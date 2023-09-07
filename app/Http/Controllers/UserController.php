@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\File\File;
 use Yajra\DataTables\Facades\DataTables;
+use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
@@ -40,7 +41,7 @@ class UserController extends Controller
     }
 
     public function create() {
-
+        $dataPermissions = Permission::all();
         $dataDepartment = Department::all();
         $dataDivision = Division::all();
         $user = null;
@@ -70,6 +71,7 @@ class UserController extends Controller
             "dataWorkingScheduleShift",
             "dataPaymentSchedule",
             "dataProrateSetting",
+            'dataPermissions'
         ));
     }
 

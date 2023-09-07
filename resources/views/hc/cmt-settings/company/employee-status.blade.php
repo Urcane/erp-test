@@ -113,13 +113,13 @@
 </div>
 
 <script>
-    let dataTableJobLevel
+    let dataTableEmploymentStatus
     $(".btn_tambah_employment_status").on( "click", function() {
         $("input").val("")
     })
 
     $(document).ready(function () {
-        dataTableJobLevel = $('#tb_employment_status').DataTable({
+        dataTableEmploymentStatus = $('#tb_employment_status').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
@@ -181,25 +181,6 @@
         });
     })
 
-    function deleteJobLevel(id) {
-        $.ajax({
-            url: "{{ route('hc.setting.employment-status.delete') }}",
-            headers: {
-                'X-CSRF-TOKEN': "{{csrf_token()}}"
-            },
-            type: 'POST',
-            data: { id : id},
-            success: function(data) {
-                dataTableJobLevel.ajax.reload();
-                toastr.success(data.message,'Selamat 🚀 !');
-            },
-            error: function(xhr, status, error) {
-                const data = xhr.responseJSON;
-                toastr.error(data.message, 'Opps!');
-            }
-        });
-    }
-
     $('#modal_create_employment_status_form').submit(function(event) {
         event.preventDefault();
         var formData = $(this).serialize();
@@ -211,7 +192,7 @@
                 'X-CSRF-TOKEN': "{{csrf_token()}}"
             },
             success: function(data) {
-                dataTableJobLevel.ajax.reload();
+                dataTableEmploymentStatus.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {
@@ -221,5 +202,7 @@
         });
     });
 </script>
+
+@include('components.delete-confirmation', ["id" => "EmploymentStatus", "route" => route('hc.setting.employment-status.delete')])
 
 @endsection

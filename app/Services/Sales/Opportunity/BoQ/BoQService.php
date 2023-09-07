@@ -164,16 +164,23 @@ class BoqService
     function createDraftBoqAjax(Request $request){
         $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
         $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
+
+        $dataUnit = InventoryUnitMaster::get();
+
         return response()->json([
             'dataCompany' => $dataCompany,
             'dataSurvey' => $dataSurvey,
+            'dataUnit' => $dataUnit
         ]);
     }
 
     function createDraftBoq(){
         $dataProspect = $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
         $dataItem = $this->BoQRepository->getListItem();
-        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem'));
+
+        $dataUnit = InventoryUnitMaster::get();
+
+        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem', 'dataUnit'));
         // return response()->json([
         //     'dataProspect' => $dataProspect,
         //     'dataItem' => $dataItem,

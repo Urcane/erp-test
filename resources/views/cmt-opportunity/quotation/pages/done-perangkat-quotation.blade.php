@@ -351,7 +351,7 @@
     </div>
     </div>
 
-    <div id="printerDiv"></div>
+    <div id="printerDiv" style="display: hidden;"></div>
     <script>   
         function updateTotalSum() {
             var totalSum = 0;

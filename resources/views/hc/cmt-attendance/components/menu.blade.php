@@ -6,7 +6,7 @@
     <li><a href="{{ route('hc.att.detail', ['id' => $userAttendances->user->id]) }}" class="dropdown-item py-2">
             <i class="fa-solid fa-eye me-3"></i>Detail</a>
     </li>
-    @can('HC:edit-delete-attendance')
+    @cannot('HC:edit-delete-attendance')
         <li>
             <div
                 onclick="onEditButtonClick({
@@ -33,5 +33,5 @@
                     <i class="fa-solid fa-trash me-3"></i>Hapus</a>
             </div>
         </li>
-    @endcan
+    @endcannot
 </ul>

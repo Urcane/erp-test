@@ -772,9 +772,6 @@
 
             // Function Submit Modal
             $("#kt_modal_tambah_bundle_internet_form").validate({
-
-
-
                 messages: {
                     good_name_update: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Wajib Mengisi Nama Item</span>",
@@ -792,9 +789,6 @@
                         required: "<span class='fw-semibold fs-8 text-danger'>Deskripsi Barang wajib diisi</span>",
                     }
                 },
-
-
-
                 submitHandler: function() {
                     event.preventDefault();
                     // Dapatkan referensi ke elemen form
@@ -916,11 +910,15 @@
                         },
                         success: function(response) {
                             // Handle the response from the server, e.g., show a success message
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.href = `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
+                            }, 800);
                         },
                         error: function(error) {
                             // Handle errors if the request fails
-                            console.error('Error submitting all bundle data: ', error);
+                            toastr.error(error);
+                            console.error('Error submitting all item data: ', error);
                         }
                     });
 
@@ -948,7 +946,7 @@
                     ajaxLink: "{{ route('com.quotation.store.po') }}",
                     successCallback: function(response) {
                         // Redirect ke halaman yang sesuai setelah operasi berhasil
-                        window.location.href = "{{ route('com.quotation.index') }}";
+                        window.location.reload();
                     }
                 })
 

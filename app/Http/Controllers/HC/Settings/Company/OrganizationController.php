@@ -2,14 +2,24 @@
 
 namespace App\Http\Controllers\HC\Settings\Company;
 
+use App\Exceptions\NotFoundError;
+use App\Exceptions\InvariantError;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 use App\Models\Department;
+use App\Utils\ErrorHandler;
 
 class OrganizationController extends Controller
 {
+    private $errorHandler;
+
+    public function __construct()
+    {
+        $this->errorHandler = new ErrorHandler();
+    }
+
     private function _loopChild($department) {
         $data = [];
 
@@ -66,7 +76,7 @@ class OrganizationController extends Controller
                 ';
 
 
-                $delete = '<li><button data-family_id="' . $action->id . '" onclick="deleteOrganization(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</button></li>';
+                $delete = '<li><a href="#delete_confirmation_Organization" data-bs-toggle="modal" onclick="deleteOrganization(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</a></li>';
                 return '
                 <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 <ul class="dropdown-menu">
@@ -88,33 +98,61 @@ class OrganizationController extends Controller
     }
 
     public function createUpdate(Request $request) {
-        $request->validate([
-            "department_name" => "required",
-            "department_alias" => "required",
-            "parent_id" => "required",
-        ]);
+        try {
+            $request->validate([
+                "department_name" => "required",
+                "department_alias" => "required",
+                "parent_id" => "required",
+            ]);
 
-        $subBranch = Department::updateOrCreate([
-            "id" => $request->organization_id,
-        ], [
-            "department_name" => $request->department_name,
-            "department_alias" => $request->department_alias,
-            "parent_id" => $request->parent_id,
-        ]);
+            Department::updateOrCreate([
+                "id" => $request->organization_id,
+            ], [
+                "department_name" => $request->department_name,
+                "department_alias" => $request->department_alias,
+                "parent_id" => $request->parent_id,
+            ]);
 
-        return response()->json([
-            'status' => "succes",
-            'message' => "Data berhasil disimpan",
-        ], 200);;
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil disimpan",
+            ], 200);
+        } catch (\Throwable $th) {
+
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function delete(Request $request) {
+        // dd("asdf");
 
-        Department::whereId($request->id)->delete();
+        try {
+            $department = Department::whereId($request->id)->first();
+            if (!$department) {
+                throw new NotFoundError("Data tidak ditemukan");
+            }
 
-        return response()->json([
-            'status' => "succes",
-            'message' => "Data berhasil dihapus",
-        ], 200);
+            if ($department->children->first() || $department->users->first()) {
+                throw new InvariantError("Departement masi memiliki bawahan");
+            }
+
+            if ($department->divisions->first()) {
+                throw new InvariantError("Departement masi memiliki division");
+            }
+
+            Department::whereId($request->id)->delete();
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil dihapus",
+            ], 200);
+        } catch (\Throwable $th) {
+
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 }

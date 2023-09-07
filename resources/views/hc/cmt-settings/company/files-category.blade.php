@@ -175,25 +175,6 @@
         });
     })
 
-    function deleteFileCategory(id) {
-        $.ajax({
-            url: "{{ route('hc.setting.file-category.delete') }}",
-            headers: {
-                'X-CSRF-TOKEN': "{{csrf_token()}}"
-            },
-            type: 'POST',
-            data: { id : id},
-            success: function(data) {
-                dataTableFileCategory.ajax.reload();
-                toastr.success(data.message,'Selamat 🚀 !');
-            },
-            error: function(xhr, status, error) {
-                const data = xhr.responseJSON;
-                toastr.error(data.message, 'Opps!');
-            }
-        });
-    }
-
     $('#file_category_form').submit(function(event) {
         event.preventDefault();
         var formData = $(this).serialize();
@@ -215,5 +196,7 @@
         });
     });
 </script>
+
+@include('components.delete-confirmation', ["id" => "FileCategory", "route" => route('hc.setting.file-category.delete')])
 
 @endsection

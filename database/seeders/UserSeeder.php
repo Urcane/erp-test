@@ -26,10 +26,20 @@ class UserSeeder extends Seeder
         ]);
         $superadmin->assignRole('administrator');
         $superadmin->givePermissionTo([
+            // request
             'HC:view-all-request',
             'HC:change-all-status-request',
+
+            // attendance
             'HC:view-attendance',
-            'HC:edit-delete-attendance'
+            'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            'HC:setting'
         ]);
 
         $cmrAdminProject = ['Nisa Fajrin Alfalah', 'Bagus Hariyadi'];
