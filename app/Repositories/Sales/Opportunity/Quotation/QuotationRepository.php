@@ -177,7 +177,8 @@ class QuotationRepository
     }    
 
     function cancelQuotation(Request $request) : JsonResponse {
-        $quotationId = $request->input('quotation.id');
+        // dd($request->quotation_id2);
+        $quotationId = $request->quotation_id2;
         $quotationData = $this->model->where('id', $quotationId)->first();
         $quotationData->is_done = 0;
         $quotationData->save();

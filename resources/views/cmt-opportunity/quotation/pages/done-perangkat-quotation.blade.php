@@ -396,11 +396,20 @@
             });
 
             $('body').on('click', '.btn_cancel_quotation', function() { 
-                $('#kt_modal_cancel_quotation_form').trigger("reset")
                 $('#kt_modal_cancel_quotation_submit').removeAttr('disabled', 'disabled');
 
                 var quo_id = $(this).data('id');
                 $('#quotation_id2').val(quo_id); 
+                submitModal({
+                    modalName: 'kt_modal_cancel_quotation',
+                    tableName: 'kt_table_cancel_quotation',
+                    anotherTableName: 'tableCancelQuotation',
+                    ajaxLink: "{{ route('com.quotation.cancel.quotation') }}",
+                    successCallback: function(response) {
+                        // Redirect ke halaman yang sesuai setelah operasi berhasil
+                        window.location.href = "{{ route('com.quotation.index') }}";
+                    }
+                })
             });
 
             $('.print-form').click(function() {
