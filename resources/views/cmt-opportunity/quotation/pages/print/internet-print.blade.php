@@ -1,4 +1,4 @@
-{{-- @dd($dataQuotation); --}}
+{{-- @dd($dataQuotation->itemableQuotation); --}}
 <div class="h-200px"></div>
 <div class="mt-0 row">
     <div class="col-8">
@@ -19,11 +19,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (isset($dataFinalBoq[0]->itemable))
-                            @foreach ($dataFinalBoq[0]->itemable->where('inventoryGood.good_category_id',3) as $relatedItem)
+                        @if (isset($dataQuotation->itemableQuotation))
+                            @foreach ($dataQuotation->itemableQuotation as $relatedItem)
                                 <tr>
                                     <td>{{ $index++ }}</td>
-                                    <td>{{ $dataFinalBoq[0]->customerProspect->customer->customer_name ?? null }}</td>
+                                    <td>{{ $dataBoq[0]->customerProspect->customer->customer_name ?? null }}</td>
                                     <td>{{ $relatedItem->inventoryGood->good_name ?? null }}</td>
                                     <td></td>
                                     <td>{{ $relatedItem->quantity ?? null }}</td>
@@ -31,9 +31,17 @@
                                     <td>{{ $relatedItem->purchase_price ?? null }}</td>
                                     <td>{{ $relatedItem->total_price ?? null }}</td>
                                 </tr>
+                                @php
+                                $finalPrice += $relatedItem->total_price ?? 0; // Add the item's total price to the total
+                            @endphp
                             @endforeach
                         @endif
                     </tbody>
+                    <tr >
+                        <td colspan="6"></td> 
+                        <td class="font-weight-bold">Total Price:</td>
+                        <td class="font-weight-bold">{{ $finalPrice }}</td> <!-- Display the calculated total price -->
+                    </tr>
                 </table>
             </div>
             
