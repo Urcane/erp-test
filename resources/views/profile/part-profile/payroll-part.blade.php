@@ -20,16 +20,16 @@
             <div class="row p-4">
                 <div class="row">
                     {{-- salary --}}
-                    @role("administrator")
+                    @can('HC:update-profile')
                     <form id="kt_salary_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                         @csrf
                         @if($errors->any())
                             {!! implode('', $errors->all('<div>:message</div>')) !!}
                         @endif
                         <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
-                        @endrole
+                        @endcan
                         @include("hc.cmt-employee.part-form.form-salary")
-                        @role("administrator")
+                        @can('HC:update-profile')
                         <div class="col-lg-12 mt-9 text-end">
                             <button type="submit" id="kt_salary_submit" class="btn btn-info btn-sm w-md-200px w-100">Simpan</button>
                         </div>
@@ -56,22 +56,22 @@
                             });
                         </script>
                     </form>
-                    @endrole
+                    @endcan
                 </div>
             </div>
         </div>
         <div class="tab-pane fade" id="tax_configuration_content" role="tabpanel">
             <div class="row p-4">
-                @role("administrator")
+                @can('HC:update-profile')
                 <form id="kt_tax_configuration_content_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
                     @if($errors->any())
                         {!! implode('', $errors->all('<div>:message</div>')) !!}
                     @endif
                     <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
-                    @endrole
+                    @endcan
                     @include("hc.cmt-employee.part-form.form-tax-configuration")
-                    @role("administrator")
+                    @can('HC:update-profile')
                     <div class="col-lg-12 mt-9 text-end">
                         <button type="submit" id="kt_tax_configuration_content_submit" class="btn btn-info btn-sm w-md-200px w-100">Simpan</button>
                     </div>
@@ -98,21 +98,21 @@
                         });
                     </script>
                 </form>
-                @endrole
+                @endcan
             </div>
         </div>
         <div class="tab-pane fade" id="bpjs_configuration_content" role="tabpanel">
             <div class="row p-4">
-                @role("administrator")
+                @can('HC:update-profile')
                 <form id="kt_bpjs_configuration_content_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
                     @if($errors->any())
                         {!! implode('', $errors->all('<div>:message</div>')) !!}
                     @endif
                     <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
-                    @endrole
+                    @endcan
                     @include("hc.cmt-employee.part-form.form-bpjs-configuration")
-                    @role("administrator")
+                    @can('HC:update-profile')
                     <div class="col-lg-12 mt-9 text-end">
                         <button type="submit" id="kt_bpjs_configuration_content_submit" class="btn btn-info btn-sm w-md-200px w-100">Simpan</button>
                     </div>
@@ -139,21 +139,21 @@
                         });
                     </script>
                 </form>
-                @endrole
+                @endcan
             </div>
         </div>
         <div class="tab-pane fade" id="bank_account_content" role="tabpanel">
             <div class="row p-4">
-                @role("administrator")
+                @can('HC:update-profile')
                 <form id="kt_bank_account_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
                     @if($errors->any())
                         {!! implode('', $errors->all('<div>:message</div>')) !!}
                     @endif
                     <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
-                    @endrole
+                    @endcan
                     @include("hc.cmt-employee.part-form.form-bank-account")
-                    @role("administrator")
+                    @can('HC:update-profile')
                     <div class="col-lg-12 mt-9 text-end">
                         <button type="submit" id="kt_bank_account_submit" class="btn btn-info btn-sm w-md-200px w-100">Simpan</button>
                     </div>
@@ -180,7 +180,7 @@
                         });
                     </script>
                 </form>
-                @endrole
+                @endcan
             </div>
         </div>
     </div>

@@ -15,22 +15,24 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         $permission = [
-            // Profile
-
-            // Employee
-
-            // Attendance
-            'HC:view-attendance',
-            'HC:edit-delete-attendance',
-
             // Request (Approval)
             'Approval:view-request',
             'Approval:change-status-request',
 
+            // request
             'HC:view-all-request',
             'HC:change-all-status-request',
 
-            // Settings
+            // attendance
+            'HC:view-attendance',
+            'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            'HC:setting'
         ];
 
         collect($permission)->map(function ($data) {

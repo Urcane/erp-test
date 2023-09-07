@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title-apps','Settings')
-@section('sub-title-apps','Organization')
+@section('sub-title-apps','Job Position')
 
 @section('navbar')
 @include('layouts.navbar.navbar')
@@ -170,13 +170,13 @@
 </script>
 
 <script>
-    let dataTableOrganization
+    let dataTableJobPosition
     $(".btn_tambah_job_position").on( "click", function() {
         $("input").val("")
     })
 
     $(document).ready(function () {
-        dataTableOrganization = $('#tb_job_position').DataTable({
+        dataTableJobPosition = $('#tb_job_position').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
@@ -243,25 +243,6 @@
         });
     })
 
-    function deleteJobPosition(id) {
-        $.ajax({
-            url: "{{ route('hc.setting.job-position.delete') }}",
-            headers: {
-                'X-CSRF-TOKEN': "{{csrf_token()}}"
-            },
-            type: 'POST',
-            data: { id : id},
-            success: function(data) {
-                dataTableOrganization.ajax.reload();
-                toastr.success(data.message,'Selamat 🚀 !');
-            },
-            error: function(xhr, status, error) {
-                const data = xhr.responseJSON;
-                toastr.error(data.message, 'Opps!');
-            }
-        });
-    }
-
     $('#modal_create_job_position_form').submit(function(event) {
         event.preventDefault();
         var formData = $(this).serialize();
@@ -273,7 +254,7 @@
                 'X-CSRF-TOKEN': "{{csrf_token()}}"
             },
             success: function(data) {
-                dataTableOrganization.ajax.reload();
+                dataTableJobPosition.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {
@@ -283,5 +264,6 @@
         });
     });
 </script>
+@include('components.delete-confirmation', ["id" => "JobPosition", "route" => route('hc.setting.job-position.delete')])
 
 @endsection

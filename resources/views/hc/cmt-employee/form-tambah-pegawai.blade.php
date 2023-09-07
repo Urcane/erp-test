@@ -130,38 +130,20 @@
                                                     <div class="m-auto p-10">
                                                         <img src="" alt="">
                                                         <div class="m-auto">
-                                                            <h4 class="text-center">Invite the employee to access CMT-EMP</h4>
-                                                            <p class="text-center">You have successfully added employee data. To continue the process, you can invite employees to access CMT-EMP.</p>
+                                                            <h4 class="text-center">Invite the employee to access CMT-ERP</h4>
+                                                            <p class="text-center">You can grant some permissions to employees for accessing certain features.</p>
                                                         </div>
                                                         <div class="m-auto align-items-center justify-content-center">
                                                             <div class="p-10 rounded row align-items-center justify-content-center" style="background-color: #f1f5fb69">
-                                                                <div class="col-lg-12 mb-4">
-                                                                    <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="invite_to_cmt-emp" id="invite_to_cmt-emp" value=false>
-                                                                    <label class="fw-bold mb-2" for="invite_to_cmt-emp">
-                                                                        <span class="fw-bold">Invite to CMT-EMP</span>
-                                                                    </label><br>
-                                                                    <span class="fw-bold">Invite to give them access to platform using Employee Self Service feature. You can do this later at settings page</span>
-                                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
-                                                                </div>
-
-                                                                <div class="col-lg-12 mb-4">
-                                                                    <label class="d-flex align-items-center fs-6 form-label" for="jht_cost">
-                                                                        <span class="fw-bold">Role Access</span>
-                                                                    </label>
-                                                                    <select class="drop-data form-select" data-control="jht_cost" name="jht_cost" id="jht_cost">
-                                                                        <option value="By Employee" >Select Role Access</option>
-                                                                        <option value="Role Access 1" >Role Access 1</option>
-                                                                        <option value="ROle Access 2" >ROle Access 2</option>
-                                                                    </select>
-                                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
-                                                                </div>
-
-                                                                <div class="col-lg-12 mb-3">
-                                                                    <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="use_onboarding" id="use_onboarding" value=false>
-                                                                    <label class="fw-bold mb-2" for="use_onboarding">
-                                                                        <span class="fw-bold">Use onboarding for this employee</span>
-                                                                    </label>
-                                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                                <div class="col-lg-12 mb-4 row">
+                                                                    @foreach ($dataPermissions as $data)
+                                                                        <div class="col-lg-4 col-md-2">
+                                                                            <input type="checkbox" class="form-check-input" placeholder="" name="permissions[]" id="{{$data->name}}" value="{{$data->name}}">
+                                                                            <label class="fw-bold mb-2" for="{{$data->name}}">
+                                                                                <span class="fw-bold">{{$data->name}}</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    @endforeach
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -200,7 +182,6 @@
 </div>
 <script>
     $('#kt_create_emp_form').submit(function(event) {
-        alert("SAdf")
         event.preventDefault();
         var formData = $(this).serialize();
         $.ajax({

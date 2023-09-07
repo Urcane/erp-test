@@ -12,7 +12,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">Rp.</span>
             </div>
-            <input type="number" value="{{$user->userSalary->basic_salary ?? old('basic_salary') }}" class="form-control form-control-solid" required placeholder="0" name="basic_salary" id="basic_salary" @unlessrole("administrator") disabled @endunlessrole>
+            <input type="number" value="{{$user->userSalary->basic_salary ?? old('basic_salary') }}" class="form-control form-control-solid" required placeholder="0" name="basic_salary" id="basic_salary" @cannot("HC:update-profile") disabled @endcannot>
         </div><br>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -20,7 +20,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="salary_type">
             <span class="fw-bold">Salary Type</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="salary_type" name="salary_type" id="salary_type" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="salary_type" name="salary_type" id="salary_type" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userSalary->salary_type ?? old('salary_type')) == null)
                 <option value="" selected hidden disabled>Select salary type</option>
             @endif
@@ -35,7 +35,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="payment_schedule_id">
             <span class="fw-bold">Payment Schedule</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="payment_schedule_id" name="payment_schedule_id" id="payment_schedule_id" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="payment_schedule_id" name="payment_schedule_id" id="payment_schedule_id" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userSalary->salary_type ?? old('payment_schedule_id')) == null)
                 <option value="" selected hidden disabled>Select peyment schedule</option>
             @endif
@@ -49,7 +49,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="prorate_setting_id">
             <span class="fw-bold">Prorate Setting</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="prorate_setting_id" name="prorate_setting_id" id="prorate_setting_id" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="prorate_setting_id" name="prorate_setting_id" id="prorate_setting_id" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userSalary->salary_type ?? old('prorate_setting_id')) == null)
                 <option value="" selected hidden disabled>Select prorate setting</option>
             @endif
@@ -64,7 +64,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="allow_for_overtime">
             <span class="fw-bold">Allowed for Overtime</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="allow_for_overtime" name="allow_for_overtime" id="allow_for_overtime" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="allow_for_overtime" name="allow_for_overtime" id="allow_for_overtime" @cannot("HC:update-profile") disabled @endcannot>
             <option value="1" @if (($user->userSalary->allow_for_overtime ?? old('allow_for_overtime')) == "1") selected @endif>Iya</option>
             <option value="0" @if (($user->userSalary->allow_for_overtime ?? old('allow_for_overtime')) == "0") selected @endif>Tidak</option>
         </select>
@@ -74,7 +74,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="overtime_working_day">
             <span class="fw-bold">Overtime Working Day Default</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="overtime_working_day" name="overtime_working_day" id="overtime_working_day" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="overtime_working_day" name="overtime_working_day" id="overtime_working_day" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userSalary->overtime_working_day ?? old('overtime_working_day')) == null)
             <option value="" selected hidden disabled>Select Overtime Working Day Default</option>
             @endif
@@ -89,7 +89,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="overtime_day_off">
             <span class="fw-bold">Overtime Day Off Default</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="overtime_day_off" name="overtime_day_off" id="overtime_day_off" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="overtime_day_off" name="overtime_day_off" id="overtime_day_off" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userSalary->overtime_day_off ?? old('overtime_day_off')) == null)
             <option value="" selected hidden disabled>Select Overtime Day Off Default</option>
             @endif
@@ -103,7 +103,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="overtime_national_holiday">
             <span class="fw-bold">Overtime National Holiday Default</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="overtime_national_holiday" name="overtime_national_holiday" id="overtime_national_holiday" @unlessrole("administrator") disabled @endunlessrole>
+        <select class="drop-data form-select form-select-solid" data-control="overtime_national_holiday" name="overtime_national_holiday" id="overtime_national_holiday" @cannot("HC:update-profile") disabled @endcannot>
             @if (($user->userSalary->overtime_national_holiday ?? old('overtime_national_holiday')) == null)
             <option value="" selected hidden disabled>Select Overtime National Holiday Default</option>
             @endif
