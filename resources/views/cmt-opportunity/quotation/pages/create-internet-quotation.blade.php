@@ -38,7 +38,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Create Internet
+                                <span class="lh-xxl fw-bolder text-dark d-md-lh-l">Create Internet
                                     Quotation</span>
                             </h3>
                         </div>
@@ -46,12 +46,11 @@
                             {{-- header company --}}
                             <div class="row">
                                 <div class="col-lg-12">
-                                    @csrf
-                                    {{-- divv Company --}}
-                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
+                                    {{-- Company --}}
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
                                         {{-- baris prospect company --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                            <div class="col-lg-5 col-6 mb-3">
+                                        <div class="d-flex justify-content-around col-12 flex-wrap">
+                                            <div class="col-lg-5 col-8 col-md-5 mb-3">
                                                 <label for="judul"
                                                     class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
@@ -68,7 +67,7 @@
                                             </div>
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
-                                            <div class="col-lg-5 col-6 mb-3">
+                                            <div class="col-lg-5 col-8 col-md-5 mb-3">
                                                 <label for="survey_request_id"
                                                     class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
@@ -82,31 +81,28 @@
                                         </div>
 
                                         {{-- baris company contact --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                        <div class="d-flex justify-content-around flex-wrap col-12">
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-md-5 col-8 mb-3">
                                                 <label for="customer_name" class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
                                                     value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name }}">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="customer_contact_name" class=" form-label">Nama Kontak
+                                            <div class="col-lg-2 col-md-5 col-8 mb-3">
+                                                <label for="customer_contact_name" class="form-label">Nama Kontak
                                                     Customer</label>
-                                                <input type="text" class="form-control form-control-solid" placeholder=""
-                                                    disabled name="customer_contact_name" id="customer_contact_name"
+                                                <input type="text" class="form-control form-control-solid" disabled
+                                                    name="customer_contact_name" id="customer_contact_name"
                                                     value="{{ $dataBoq['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-md-5 col-8 mb-3">
                                                 <label for="customer_contact_phone" class="form-label">No Kontak
                                                     Customer</label>
                                                 <div class="input-group">
-                                                    <span class="input-group-text border-0" id="">+62</span>
+                                                    <span class="input-group-text border-0">+62</span>
                                                     <input type="number" class="form-control form-control-solid" disabled
                                                         minlength="8" name="customer_contact_phone"
                                                         id="customer_contact_phone"
@@ -114,8 +110,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-md-5 col-8 mb-3">
                                                 <label for="type_name" class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
@@ -124,12 +119,11 @@
                                         </div>
                                     </div>
 
-                                    {{--  divv GPM --}}
-                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                    {{--  GPM --}}
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
+                                        <div class="d-flex justify-content-around col-12 flex-wrap">
 
-                                            <div class=""
-                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-8 col-md-5 mb-3">
                                                 <label class="form-label" for="gpm">GPM</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -140,8 +134,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-8 col-md-5 mb-3">
                                                 <label for="modal" class="form-label">Modal</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -152,8 +145,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-2 col-8 col-md-5 mb-3">
                                                 <label for="npm" class="form-label">NPM</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -164,8 +156,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 18%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-1 col-8 col-md-5 mb-3">
                                                 <label for="manpower" class="form-label">Manpower</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -176,8 +167,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 10%; min-width: 200px; margin-bottom: 15px;">
+                                            <div class="col-lg-1 col-8 col-md-5 mb-3">
                                                 <label for="percentage" class="form-label">Percentage</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -190,8 +180,8 @@
                                         </div>
                                     </div>
 
-                                    {{--  divv ITEM --}}
-                                    <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
+                                    {{--  ITEM --}}
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
 
                                         <div class="MultipleItem">
                                             @if (isset($dataBoq['boqFinalData'][0]->itemable))
@@ -201,8 +191,8 @@
                                                         $random_string = \Illuminate\Support\Str::random(4);
                                                     @endphp
                                                     <div
-                                                        class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10">
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-around col-12 col-lg-12 flex-wrap">
+                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
                                                             <label for="item_{{ $random_string }}"
                                                                 class="form-label">Item</label>
                                                             <input type="text" class="form-control form-control-solid"
@@ -211,7 +201,7 @@
                                                                 value="{{ $relatedItem->inventoryGood->good_name ?? null }}" />
                                                         </div>
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        {{-- <div class="col-lg-1 col-8 col-md-5 col-sm-5 mb-3">
                                                             <label for="merk_{{ $random_string }}"
                                                                 class="form-label">Merk</label>
                                                             <div class="position-relative">
@@ -222,22 +212,9 @@
                                                                     id="merk_{{ $random_string }}"
                                                                     value="{{ $relatedItem->inventoryGood->merk ?? null }}" />
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                                                            <label for="price_{{ $random_string }}"
-                                                                class="form-label">Price</label>
-                                                            <div class="position-relative">
-                                                                <div class="position-absolute top-0"></div>
-                                                                <input type="number"
-                                                                    class="form-control form-control-solid" disabled
-                                                                    name="content[][purchase_price]"
-                                                                    id="price_{{ $random_string }}"
-                                                                    value="{{ $relatedItem->purchase_price ?? null }}" />
-                                                            </div>
-                                                        </div>
-
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        <div class="col-lg-1 col-8 col-md-5 col-sm-5 mb-3">
                                                             <label for="quantity_{{ $random_string }}"
                                                                 class="form-label">Qty</label>
                                                             <div class="position-relative">
@@ -250,7 +227,20 @@
                                                             </div>
                                                         </div>
 
-                                                        <div style="flex-basis: 14%; min-width: 150px; margin: 10px;">
+                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
+                                                            <label for="price_{{ $random_string }}"
+                                                                class="form-label">Price</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="form-control form-control-solid" disabled
+                                                                    name="content[][purchase_price]"
+                                                                    id="price_{{ $random_string }}"
+                                                                    value="{{ $relatedItem->purchase_price ?? null }}" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
                                                             <label for="purchase_delivery_{{ $random_string }}"
                                                                 class="form-label">Jasa
                                                                 Antar</label>
@@ -264,216 +254,207 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class=""
-                                                            style="flex-basis: 28%; min-width: 150px; margin: 10px;">
-                                                            <div style="flex-basis: 80%; min-width: 120px;">
-                                                                <label for="total_price_{{ $random_string }}"
-                                                                    class="form-label">Total
-                                                                    Price</label>
-                                                                <div class="position-relative">
-                                                                    <div class="position-absolute top-0"></div>
-                                                                    <input type="number"
-                                                                        class="total-price form-control form-control-solid"
-                                                                        disabled name="content[][total_price]"
-                                                                        id="total_price_{{ $random_string }}"
-                                                                        value="{{ $relatedItem->total_price ?? null }}" />
-                                                                </div>
+                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
+                                                            <label for="total_price_{{ $random_string }}"
+                                                                class="form-label">Total
+                                                                Price</label>
+                                                            <div class="position-relative">
+                                                                <div class="position-absolute top-0"></div>
+                                                                <input type="number"
+                                                                    class="total-price form-control form-control-solid"
+                                                                    disabled name="content[][total_price]"
+                                                                    id="total_price_{{ $random_string }}"
+                                                                    value="{{ $relatedItem->total_price ?? null }}" />
                                                             </div>
                                                         </div>
-
-                                                        <div>
-                                                            <input type="hidden" name="content[][id]" disabled
-                                                                value="{{ $relatedItem->id ?? null }}" />
-                                                            <input type="hidden" name="content[][item_inventory_id]"
-                                                                disabled
-                                                                value="{{ $relatedItem->item_inventory_id ?? null }}" />
-                                                            <input type="hidden" name="content[][purchase_reference]"
-                                                                disabled
-                                                                value="{{ $relatedItem->purchase_refrence ?? null }}" />
-                                                            <input type="hidden" name="content[][item_detail]" disabled
-                                                                value="{{ $relatedItem->item_detail ?? null }}" />
-                                                        </div>
                                                     </div>
-                                                @endforeach
-                                            @endif
 
+                                                    <div>
+                                                        <input type="hidden" name="content[][id]" disabled
+                                                            value="{{ $relatedItem->id ?? null }}" />
+                                                        <input type="hidden" name="content[][item_inventory_id]" disabled
+                                                            value="{{ $relatedItem->item_inventory_id ?? null }}" />
+                                                        <input type="hidden" name="content[][purchase_reference]"
+                                                            disabled
+                                                            value="{{ $relatedItem->purchase_refrence ?? null }}" />
+                                                        <input type="hidden" name="content[][item_detail]" disabled
+                                                            value="{{ $relatedItem->item_detail ?? null }}" />
+                                                    </div>
                                         </div>
-                                        <div>
-                                            <div class="d-flex justify-content-end mx-20">
-                                                <div class="w-20 me-10">
-                                                    <span class="fw-bold">Total Price Item : Rp<span
-                                                            id="totalsum"></span></span>
+                                        @endforeach
+                                        @endif
+
+                                    </div>
+                                    <div>
+                                        <div class="d-flex justify-content-end mx-20">
+                                            <div class="w-20 me-10">
+                                                <span class="fw-bold">Total Price Item : Rp<span
+                                                        id="totalsum"></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form id="kt_create_quotation_internet_form"
+                                    class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+
+                                    @csrf
+                                    {{--  No Quota & Description --}}
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
+                                        <div class="d-flex justify-content-around flex-wrap col-12">
+
+                                            <div class="col-lg-3 col-md-4 col-8 mb-3">
+
+                                                <label for="no_quotation" class="form-label">
+                                                    <span class="fw-bold required">NO Quotation</span> </label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid required"
+                                                        required id="no_quotation" name="no_quotation" value=""
+                                                        placeholder="No Quotation Wajib Di isi" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-7 col-md-6 col-8 mb-3">
+
+                                                <label for="description" class="form-label">
+                                                    <span class="fw-bold required">Description</span></label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <textarea class="form-control form-control-solid required" placeholder="Description Wajib Di isi" required
+                                                        name="description" id="description" cols="" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <form id="kt_create_quotation_internet_form"
-                                        class="form fv-plugins-bootstrap5 fv-plugins-framework"
-                                        enctype="multipart/form-data">
-
-                                        @csrf
-                                        {{--  divv No Quota & Description --}}
-                                        <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                            <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
-                                                <div class=""
-                                                    style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label for="no_quotation" class="form-label">
-                                                        <span class="fw-bold required">NO Quotation</span> </label>
-                                                    <div class="position-relative">
-                                                        <div class="position-absolute top-0"></div>
-                                                        <input type="text"
-                                                            class="form-control form-control-solid required" required
-                                                            id="no_quotation" name="no_quotation" value=""
-                                                            placeholder="No Quotation Wajib Di isi" />
-                                                    </div>
-                                                </div>
-
-                                                <div class=""
-                                                    style="flex-basis: 75%; min-width: 200px; margin-bottom: 15px;">
-                                                    <label for="description" class="form-label">
-                                                        <span class="fw-bold required">Description</span></label>
-                                                    <div class="position-relative">
-                                                        <div class="position-absolute top-0"></div>
-                                                        <textarea class="form-control form-control-solid required" placeholder="Description Wajib Di isi" required
-                                                            name="description" id="description" cols="" rows="2"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {{--  divv BUNDLE INTERNET --}}
-                                        <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
-
-                                            <div class="BundleItem">
-
-
+                                    {{--  BUNDLE INTERNET --}}
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12"> 
+                                        <div class="BundleItem"> 
+                                            <div
+                                                class="file-soft-quotation-bundle d-flex justify-content-around flex-wrap col-12">
+                                                @php
+                                                    $random_string = \Illuminate\Support\Str::random(4);
+                                                @endphp
                                                 <div
-                                                    class="file-soft-quotation-bundle d-flex justify-content-between mx-20 mb-5 mt-10">
-                                                    @php
-                                                        $random_string = \Illuminate\Support\Str::random(4);
-                                                    @endphp
-                                                    <div class="d-flex justify-content-around align-items-center"
-                                                        style="flex-basis: 40%; min-width: 200px;">
-                                                        <div class="" style="flex-basis: 85%;">
-                                                            <label for="good_name_bundle_{{ $random_string }}"
-                                                                class="d-flex align-items-center fs-6 form-label mb-2"
-                                                                required>
-                                                                <span class="required fw-bold">Internet Bundle</span>
-                                                            </label>
-                                                            <select class="form-select form-select-solid drop-data"
-                                                                required data-control="select2"
-                                                                name="good_name_bundle_{{ $random_string }}"
-                                                                id="good_name_bundle_{{ $random_string }}">
-                                                                <option value="">Select Internet Bundle</option>
-                                                                @if (isset($dataBoq['inventoryGoodInet']))
-                                                                    @foreach ($dataBoq['inventoryGoodInet'] as $item)
-                                                                        <option value="{{ $item->id }}">
-                                                                            {{ $item->good_name }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                @endif
-                                                            </select>
-                                                        </div>
-                                                        <div class="d-flex justify-content-center align-items-end"
-                                                            style="flex-basis: 10%;">
-                                                            <div>
-                                                                <div class="h-25px"></div>
-
-                                                                <a href="#kt_modal_tambah_bundle_internet"
-                                                                    data-bs-toggle="modal" id="btn-bundle-internet"
-                                                                    class="btn btn-light-info btn-sm btn_bundle_internet"
-                                                                    style="flex-basis: 10%; width: 90%;">
-                                                                    <i class="fa-solid fa-plus"></i></a>
-                                                            </div>
+                                                    class="d-flex justify-content-around flex-nowrap col-lg-5 col-md-5 col-8 mb-3">
+                                                    <div class="col-lg-9 col-md-9 col-9 col-sm-9">
+                                                        <label for="good_name_bundle_{{ $random_string }}"
+                                                            class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            required>
+                                                            <span class="required fw-bold">Internet Bundle</span>
+                                                        </label>
+                                                        <select class="form-select form-select-solid drop-data" required
+                                                            data-control="select2"
+                                                            name="good_name_bundle_{{ $random_string }}"
+                                                            id="good_name_bundle_{{ $random_string }}">
+                                                            <option value="">Select Internet Bundle</option>
+                                                            @if (isset($dataBoq['inventoryGoodInet']))
+                                                                @foreach ($dataBoq['inventoryGoodInet'] as $item)
+                                                                    <option value="{{ $item->id }}">
+                                                                        {{ $item->good_name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                    <div
+                                                        class="d-flex align-items-center flex-nowrap col-lg-2 col-md-1 col-1 col-sm-1">
+                                                        <div class="col-12">
+                                                            <div class="h-25px"></div>
+                                                            <a href="#kt_modal_tambah_bundle_internet"
+                                                                data-bs-toggle="modal" id="btn-bundle-internet"
+                                                                class="btn btn-light-info btn-sm btn_bundle_internet">
+                                                                <i class="fa-solid fa-plus"></i></a>
                                                         </div>
                                                     </div>
-
-                                                    <div class="" style="flex-basis: 14%; min-width: 150px;">
-                                                        <label for="quantity_{{ $random_string }}"
-                                                            class="d-flex align-items-center fs-6 form-label mb-2">
-                                                            <span class="fw-bold required">Quantity</span>
-                                                        </label>
-                                                        <input class="form-control" type="text" required
-                                                            min="1" minlength="1"
-                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                            name="quantity_{{ $random_string }}"
-                                                            id="quantity_{{ $random_string }}">
-                                                    </div>
-
-                                                    <div class="" style="flex-basis: 14%; min-width: 150px;">
-                                                        <label for="purchase_price_{{ $random_string }}"
-                                                            class="d-flex align-items-center fs-6 form-label mb-2">
-                                                            <span class="fw-bold required">Purchase Price</span>
-                                                        </label>
-                                                        <input class="form-control" type="text" required
-                                                            min="1" minlength="1"
-                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                            name="purchase_price_{{ $random_string }}"
-                                                            id="purchase_price_{{ $random_string }}">
-                                                    </div>
-
-                                                    <div class="" style="flex-basis: 14%; min-width: 150px;">
-                                                        <label for="total_price_{{ $random_string }}"
-                                                            class="d-flex align-items-center fs-6 form-label mb-2">
-                                                            <span class="fw-bold">Total Price</span>
-                                                        </label>
-                                                        <input class="form-control" type="text" required
-                                                            min="1" minlength="1" disabled
-                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                            name="total_price{{ $random_string }}"
-                                                            id="total_price_{{ $random_string }}">
-                                                    </div>
                                                 </div>
 
-                                                <div class="ms-15 w-20 mt-6 mb-5 ">
-                                                    <button class="btn btn-light-info btn-sm me-3 btn_bundle"
-                                                        id="btn-bundle">
-                                                        <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
-                                                    </button>
-                                                    {{-- <div id="error-item"></div> --}}
+                                                <div class="col-lg-1 col-md-5 col-8 mb-3">
+                                                    <label for="quantity_{{ $random_string }}"
+                                                        class="d-flex align-items-center fs-6 form-label mb-2">
+                                                        <span class="fw-bold required">Quantity</span>
+                                                    </label>
+                                                    <input class="form-control" type="text" required min="1"
+                                                        minlength="1"
+                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                        name="quantity_{{ $random_string }}"
+                                                        id="quantity_{{ $random_string }}">
+                                                </div>
+
+                                                <div class="col-lg-2 col-md-5 col-8 mb-3">
+                                                    <label for="purchase_price_{{ $random_string }}"
+                                                        class="d-flex align-items-center fs-6 form-label mb-2">
+                                                        <span class="fw-bold required">Purchase Price</span>
+                                                    </label>
+                                                    <input class="form-control" type="text" required min="1"
+                                                        minlength="1"
+                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                        name="purchase_price_{{ $random_string }}"
+                                                        id="purchase_price_{{ $random_string }}">
+                                                </div>
+
+                                                <div class="col-lg-2 col-md-5 col-8 mb-3">
+                                                    <label for="total_price_{{ $random_string }}"
+                                                        class="d-flex align-items-center fs-6 form-label mb-2">
+                                                        <span class="fw-bold">Total Price</span>
+                                                    </label>
+                                                    <input class="form-control" type="text" required min="1"
+                                                        minlength="1" disabled
+                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                        name="total_price{{ $random_string }}"
+                                                        id="total_price_{{ $random_string }}">
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        {{-- divv SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
-                                        <div>
-                                            <div class="d-flex justify-content-end mx-20">
-                                                <div class="w-20 me-10">
-                                                    <span class="fw-bold">Total Price Bundle : Rp<span
-                                                            id="totalsumbundle"></span></span>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-center mt-6">
-                                                <div class=" me-5">
-                                                    <button type="reset" id="kt_modal_tambah_boq_cancel"
-                                                        class="btn btn-sm btn-light-info me-3 w-lg-200px"
-                                                        data-bs-dismiss="modal">Cancel</button>
-                                                </div>
-                                                <div class="me-5">
-                                                    <button type="submit" id="kt_modal_tambah_boq_submit"
-                                                        class="btn btn-sm btn-info w-lg-200px">
-                                                        <span class="indicator-label">Submit</span>
-                                                    </button>
-                                                </div>
+                                            <div class="ms-15 w-20 mt-6 mb-10 col-lg-3">
+                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
+                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
+                                                </button>
+                                                {{-- <div id="error-item"></div> --}}
                                             </div>
                                         </div>
-                                        {{-- div input hidden --}}
-                                        <div>
-                                            <input type="hidden" name="id" id="id"
-                                                value="{{ $dataBoq['boqFinalData'][0]->id }}">
-                                            <input type="hidden" name="total_price_bundle" id="total_price_bundle">
-                                        </div>
-                                    </form>
+                                    </div>
 
-                                </div>
+                                    {{-- SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
+                                    <div>
+                                        <div class="d-flex justify-content-end mx-20">
+                                            <div class="w-20 me-10">
+                                                <span class="fw-bold">Total Price Bundle : Rp<span
+                                                        id="totalsumbundle"></span></span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center mt-6">
+                                            <div class=" me-5">
+                                                <button type="reset" id="kt_modal_tambah_boq_cancel"
+                                                    class="btn btn-sm btn-light-info me-3 w-lg-200px"
+                                                    data-bs-dismiss="modal">Cancel</button>
+                                            </div>
+                                            <div class="me-5">
+                                                <button type="submit" id="kt_modal_tambah_boq_submit"
+                                                    class="btn btn-sm btn-info w-lg-200px">
+                                                    <span class="indicator-label">Submit</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- input hidden --}}
+                                    <div>
+                                        <input type="hidden" name="id" id="id"
+                                            value="{{ $dataBoq['boqFinalData'][0]->id }}">
+                                        <input type="hidden" name="total_price_bundle" id="total_price_bundle">
+                                    </div>
+                                </form>
+
                             </div>
-
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     @role('administrator')
@@ -607,7 +588,7 @@
             hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
         }
 
-        $(document).ready(function() { 
+        $(document).ready(function() {
             // Function Tambah Bundling Internet 
             $('#btn-bundle').on('click', function() {
                 // Find the parent container where you want to append new divs
@@ -616,45 +597,44 @@
                 // Create a new div element
                 const newDiv = document.createElement("div");
                 newDiv.className =
-                    "file-soft-quotation-bundle d-flex justify-content-between mx-20 mb-5 mt-10";
+                    "file-soft-quotation-bundle d-flex justify-content-around flex-wrap mb-10 col-12";
 
                 const random_string = generateRandomString(4);
                 // Define the HTML structure as a string literal
-                const htmlStructure = `  
-                    <div class="d-flex justify-content-around align-items-center" style="flex-basis: 35%; min-width: 200px;"> 
-                        <div class="" style="flex-basis: 100%;">
-                            <label for="good_name_bundle_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class="required fw-bold">Internet Bundle</span>
-                            </label>
-                            <select class="form-select form-select-solid drop-data" required
-                                data-control="select2" name="good_name_bundle_${random_string}"
-                                id="good_name_bundle_${random_string}">
-                                <option selected>Select Internet Bundle</option>
-                            </select>
-                        </div> 
+                const htmlStructure = `   
+                    <div class="col-lg-5 col-md-5 col-8 mb-3">
+                        <label for="good_name_bundle_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                            <span class="required fw-bold">Internet Bundle</span>
+                        </label>
+                        <select class="form-select form-select-solid drop-data" required
+                            data-control="select2" name="good_name_bundle_${random_string}"
+                            id="good_name_bundle_${random_string}">
+                            <option selected>Select Internet Bundle</option>
+                        </select> 
+                        <div class="fv-plugins-message-container invalid-feedback"></div>
                     </div>
-                    <div style="flex-basis: 14%; min-width: 150px;">
+                    <div class="col-lg-1 col-md-5 col-8 mb-3">
                         <label for="quantity_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
                             <span class="fw-bold required">Quantity</span>
                         </label>
                         <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity_${random_string}">
                         <div class="fv-plugins-message-container invalid-feedback"></div>
-                        </div>
-                    <div style="flex-basis: 14%; min-width: 150px;">
+                    </div>
+                    <div class="col-lg-2 col-md-5 col-8 mb-3">
                         <label for="purchase_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
                             <span class="fw-bold required">Purchase Price</span>
                         </label>
                         <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price_${random_string}">
                         <div class="fv-plugins-message-container invalid-feedback"></div>
-                        </div>
-                    <div class="d-flex justify-content-around align-items-center flex-nowrap"  style="flex-basis: 20%; min-width: 180px;">
-                        <div class="" style="flex-basis: 80%;">
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center flex-nowrap col-lg-2 col-md-5 col-8 mb-3">
+                        <div class="col-lg-9 col-md-9 col-9 mb-3" >
                             <label for="total_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="fw-bold">Total Price</span>
                             </label>
                             <input class="form-control" type="text" min="1" minlength="1" disabled oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="total_price_${random_string}" id="total_price_${random_string}">
                         </div>
-                        <div class="" style="flex-basis: 15%;">
+                        <div class="col-lg-2 col-md-2 col-2 mb-3">
                             <div>
                                 <div class="h-25px"></div> 
                                 <button type="button" class="btn btn-secondary btn-icon btn-sm h-44px" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
@@ -679,7 +659,7 @@
                     url: "{{ route('com.quotation.get.internet.bundling') }}",
                     type: 'GET',
                     success: function(response) {
-                        console.log(response); 
+                        console.log(response);
                         $(newDiv).find('#good_name_bundle_' + random_string)
                             .empty(); // Hapus opsi yang ada sebelumnya
                         $(newDiv).find('#good_name_bundle_' + random_string).append($(
@@ -726,7 +706,7 @@
             });
 
             // Function Submit Modal
-            $("#kt_modal_tambah_bundle_internet_form").validate({ 
+            $("#kt_modal_tambah_bundle_internet_form").validate({
                 messages: {
                     good_name_update: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Wajib Mengisi Nama Item</span>",
@@ -743,7 +723,7 @@
                     description_update: {
                         required: "<span class='fw-semibold fs-8 text-danger'>Deskripsi Barang wajib diisi</span>",
                     }
-                }, 
+                },
                 submitHandler: function() {
                     event.preventDefault();
                     // Dapatkan referensi ke elemen form
@@ -782,7 +762,7 @@
                             console.log("Data berhasil disimpan:", response.message);
                             form.reset();
 
-                            $('#kt_modal_tambah_bundle_internet').modal('hide'); 
+                            $('#kt_modal_tambah_bundle_internet').modal('hide');
 
                             $('#error-item').empty();
 
@@ -812,7 +792,7 @@
 
                 submitHandler: function() {
 
-                    event.preventDefault();
+                    // event.preventDefault();
 
                     // Get Prospect ID and Survey ID from the HTML elements
                     var boq_id = $('#id').val();
