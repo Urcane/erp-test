@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             UserSeeder::class,
             ProjectSeeder::class,
+            HolidaySeeder::class,
             HCDataSeeder::class,
         ]);
     }

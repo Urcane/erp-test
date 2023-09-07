@@ -31,7 +31,7 @@ use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
 use App\Models\PersonalInfo\NonFormalEducationCategory;
-Use App\Models\PersonalInfo\UserFileCategory;
+use App\Models\PersonalInfo\UserFileCategory;
 
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\WorkingShift;
@@ -45,7 +45,8 @@ class ProfileController extends Controller
     private $constants;
     private $errorHandler;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
@@ -80,9 +81,13 @@ class ProfileController extends Controller
         $dataProrateSetting = ProrateSetting::all();
         $dataCategory = UserFileCategory::all();
 
-        $leaveRequestCategory = LeaveRequestCategory::all();
+        $leaveRequestCategory = LeaveRequestCategory::whereDate('effective_date', "<=", now())
+            ->where(function ($query) {
+                $query->whereDate('expired_date', '>=', now())
+                    ->orWhereNull('expired_date');
+            })->get();
 
-        return view('profile.index',compact(
+        return view('profile.index', compact(
             'user',
             'users',
             'dataNonFormalEducationCategory',
@@ -104,7 +109,8 @@ class ProfileController extends Controller
 
     }
 
-    public function updateEmployment(Request $request) {
+    public function updateEmployment(Request $request)
+    {
         try {
             $request->validate([
                 // update on table user
@@ -156,7 +162,8 @@ class ProfileController extends Controller
         }
     }
 
-    public function updateSalary(Request $request) {
+    public function updateSalary(Request $request)
+    {
         try {
             $request->validate([
                 'basic_salary' => 'required|integer',
@@ -191,7 +198,8 @@ class ProfileController extends Controller
         }
     }
 
-    public function updateBank(Request $request) {
+    public function updateBank(Request $request)
+    {
         try {
             $request->validate([
                 'bank_name' => 'nullable|string|max:55',
@@ -216,7 +224,8 @@ class ProfileController extends Controller
         }
     }
 
-    public function updateTax(Request $request) {
+    public function updateTax(Request $request)
+    {
         try {
             $request->validate([
                 'npwp' => 'nullable|string|max:18',
@@ -251,7 +260,8 @@ class ProfileController extends Controller
         }
     }
 
-    public function updateBpjs(Request $request) {
+    public function updateBpjs(Request $request)
+    {
         try {
             $request->validate([
                 'ketenagakerjaan_number' => 'nullable|string|max:12',

@@ -255,7 +255,8 @@ class AttendanceController extends Controller
             $today = $now->toDateString();
 
             // global checkup
-            $globalDayOff = GlobalDayOff::where('date', $today)->first();
+            $globalDayOff = GlobalDayOff::where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)->first();
 
             if ($globalDayOff) {
                 throw new InvariantError("Tidak dapat absen pada hari libur ($globalDayOff->name)");
@@ -423,7 +424,8 @@ class AttendanceController extends Controller
             $today = $now->toDateString();
 
             // global checkup
-            $globalDayOff = GlobalDayOff::where('date', $today)->first();
+            $globalDayOff = GlobalDayOff::where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)->first();
 
             if ($globalDayOff) {
                 throw new InvariantError("Tidak dapat absen pada hari libur ($globalDayOff->name)");
