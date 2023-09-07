@@ -7,6 +7,7 @@ use App\Models\Opportunity\BoQ\Item;
 use Illuminate\Http\Request;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
+use Illuminate\Http\JsonResponse;
 
 class QuotationRepository
 {
@@ -176,4 +177,12 @@ class QuotationRepository
             ...$compact
         ));
     }    
+
+    function cancelQuotation(Request $request) : JsonResponse {
+        $quotationId = $request->input('quotation.id');
+        $quotationData = $this->model->where('id', $quotationId)->first();
+        $quotationData->is_done = 0;
+        $quotationData->save();
+        return response()->json(['message' => 'Quotation has been canceled'], 200);
+    }
 }

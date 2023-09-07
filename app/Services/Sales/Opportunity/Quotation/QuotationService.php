@@ -152,9 +152,9 @@ class QuotationService
         $quotation = $request->query('quotation');
         //page update belum ada
         if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation'));
         } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation'));
         } 
     }
 
@@ -162,9 +162,9 @@ class QuotationService
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
         $quotation = $request->query('quotation');
         if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.done-internet-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.done-internet-quotation', compact('dataQuotation'));
         } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.done-perangkat-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.done-perangkat-quotation', compact('dataQuotation'));
         } 
     }
 
@@ -199,5 +199,9 @@ class QuotationService
 
     function exportQuotationResult($isQuotation,$id){
         return $this->quotationRepository->exportQuotationResult($isQuotation, $id);
+    }
+
+    function cancelQuotation(Request $request) : JsonResponse {
+        return $this->quotationRepository->cancelQuotation($request);
     }
 }

@@ -82,4 +82,11 @@ class QuotationController
     function exportQuotationResult($isQuotation, $id) {
         return $this->quotationService->exportQuotationResult($isQuotation,$id);
     }
+
+    function cancelQuotation(Request $request) : JsonResponse {
+        if ($request->ajax()) {
+            return $this->quotationService->cancelQuotation($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
 }
