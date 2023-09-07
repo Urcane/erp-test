@@ -53,11 +53,11 @@ class QuotationService
                     if (isset($request->filters['calledFrom'])) {
                         if ($request->filters['calledFrom'] == 'Internet') {
                             $actions .= '<li><a href="' . url("cmt-quotation/review-done-quotation?quotation_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
-                                    <i class="fa-solid fa-list-check me-3"></i>Update Quotation Internet</a></li>';
+                                    <i class="fa-solid fa-list-check me-3"></i>Done Quotation Internet</a></li>';
                         }
                         elseif ($request->filters['calledFrom'] == 'Perangkat') {
                             $actions .= '<li><a href="' . url("cmt-quotation/review-done-quotation?quotation_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
-                                    <i class="fa-solid fa-list-check me-3"></i>Update Quotation Perangkat</a></li>';
+                                    <i class="fa-solid fa-list-check me-3"></i>Done Quotation Perangkat</a></li>';
                         }
                     } else {                    
                     $actions .= '<li><span class="dropdown-item py-2">No Action</span></li>';
@@ -162,9 +162,9 @@ class QuotationService
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
         $quotation = $request->query('quotation');
         if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.done-internet-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.done-internet-quotation', compact('dataQuotation'));
         } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.done-perangkat-quotation', compact('dataQuotation', 'random_string'));
+            return view('cmt-opportunity.quotation.pages.done-perangkat-quotation', compact('dataQuotation'));
         } 
     }
 
