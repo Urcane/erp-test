@@ -436,7 +436,7 @@
     </div>
 
     <div id="printerDiv"></div>
-    
+
     @include('cmt-opportunity.quotation.add.modal-see-purchase-order')
     @include('cmt-opportunity.quotation.add.modal-cancel-quotation')
     <script>
@@ -481,7 +481,7 @@
         $(document).ready(function() {
 
             $('body').on('click', '.btn_create_purchase_order', function() {
- 
+
                 $('#kt_modal_create_purchase_order_form').trigger("reset")
                 $('#kt_modal_create_purchase_order_submit').removeAttr('disabled', 'disabled');
 
@@ -505,24 +505,37 @@
 
             });
 
-            $('body').on('click', '.btn_cancel_quotation', function() {  
-                $('#kt_modal_cancel_quotation_form').trigger("reset")
+            $('body').on('click', '.btn_cancel_quotation', function(e) {
+
+                $('#kt_modal_cancel_quotation_form').trigger("reset");
                 $('#kt_modal_cancel_quotation_submit').removeAttr('disabled', 'disabled');
 
                 var quo_id = $(this).data('id');
-                $('#quo_id').val(quo_id); 
+                $('#quo_id').val(quo_id);
 
-                submitModal({
-                    modalName: 'kt_modal_cancel_quotation',
-                    tableName: 'kt_table_cancel_quotation',
-                    anotherTableName: 'tableCancelQuotation',
-                    ajaxLink: "{{ route('com.quotation.cancel.quotation') }}",
-                    successCallback: function(response) {
-                        // Redirect ke halaman yang sesuai setelah operasi berhasil
-                        window.location.href = "{{ route('com.quotation.index') }}";
+                // Validate the form
+                $('#kt_modal_cancel_quotation_form').validate({
+                    messages: {
+                        remark: {
+                            required: "<span class='fw-semibold fs-8 text-danger'>REMARK Wajib diisi</span>",
+                        },
+                    },
+                    submitHandler: function(form) {  
+                        submitModal({
+                            modalName: 'kt_modal_cancel_quotation',
+                            tableName: 'kt_table_cancel_quotation',
+                            anotherTableName: 'tableCancelQuotation',
+                            ajaxLink: "{{ route('com.quotation.cancel.quotation') }}",
+                            successCallback: function(response) {
+                                // Redirect ke halaman yang sesuai setelah operasi berhasil
+                                window.location.href =
+                                    "{{ route('com.quotation.index') }}";
+                            }
+                        });
                     }
-                })
+                });
             });
+
 
             $('.print-form').click(function() {
                 const div = document.getElementById("printerDiv");
