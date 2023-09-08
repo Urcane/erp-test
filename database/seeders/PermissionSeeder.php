@@ -19,9 +19,10 @@ class PermissionSeeder extends Seeder
             'Approval:view-request',
             'Approval:change-status-request',
 
-            // request
             'HC:view-all-request',
             'HC:change-all-status-request',
+
+            // Request
 
             // attendance
             'HC:view-attendance',
