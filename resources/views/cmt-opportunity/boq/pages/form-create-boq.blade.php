@@ -250,6 +250,7 @@
 
                     // Push the itemData object to the items array
                     items.push(itemData);
+                    console.log(items)
                 });
 
                 // Check if there is at least one item in the 'items' array
@@ -433,7 +434,7 @@
                         'purchase_reference'));
                     $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
                     $('[name="content[][total_price]"]', item).val(formData.get('total_update'));
-                    $('[name="content[][unit]"]', item).val(formData.get('unit'));
+                    $('[name="content[][unit]"]', item).val(formData.get('unit_update'));
                     $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
 
                     // Bersihkan input setelah item ditambahkan
@@ -639,13 +640,13 @@
                         $('#uniq_id').val(randomString);
 
                         $('#item_detail_update').val(item_detail);
-                        $('#purchase_reference_update').val(purchase_reference);
-                        $('#purchase_price_update').val(purchase_price);
-                        $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
+                        // $('#purchase_reference_update').val(purchase_reference);
+                        // $('#purchase_price_update').val(purchase_price);
+                        // $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
                         $('#total_price_update').val(total_price);
-                        $('#unit_update').val(unit);
+                        $('#unit_update').val(unit).trigger('change');
                         $('#quantity_update').val(quantity);
-                        document.getElementById('total_update').textContent = total_price;
+                        // document.getElementById('total_update').textContent = total_price;
                     });
 
                     // Tambahkan item baru ke div "MultipleItem"

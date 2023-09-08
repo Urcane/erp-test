@@ -514,24 +514,18 @@
                 $('#quo_id').val(quo_id);
 
                 // Validate the form
-                $('#kt_modal_cancel_quotation_form').validate({
-                    messages: {
+                submitModal({
+                    modalName: 'kt_modal_cancel_quotation',
+                    ajaxLink: "{{ route('com.quotation.cancel.quotation') }}",
+                    validationMessages: {
                         remark: {
                             required: "<span class='fw-semibold fs-8 text-danger'>REMARK Wajib diisi</span>",
                         },
-                    },
-                    submitHandler: function(form) {  
-                        submitModal({
-                            modalName: 'kt_modal_cancel_quotation',
-                            tableName: 'kt_table_cancel_quotation',
-                            anotherTableName: 'tableCancelQuotation',
-                            ajaxLink: "{{ route('com.quotation.cancel.quotation') }}",
-                            successCallback: function(response) {
-                                // Redirect ke halaman yang sesuai setelah operasi berhasil
-                                window.location.href =
-                                    "{{ route('com.quotation.index') }}";
-                            }
-                        });
+                    }
+                    successCallback: function(response) {
+                        // Redirect ke halaman yang sesuai setelah operasi berhasil
+                        window.location.href =
+                            "{{ route('com.quotation.index') }}";
                     }
                 });
             });
