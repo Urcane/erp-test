@@ -42,27 +42,43 @@
                             </h3>
 
                             <div class="card-toolbar p-3">
+                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_director))
                                 <a href="#kt_modal_review_director_boq_commercial"
                                     data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
                                     data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
                                     class="btn btn-md btn-info w-lg-150px btn_review_director_boq_commercial"
                                     data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Director</a>
+                                @endif
                             </div>
 
                             <div class="card-toolbar p-3">
-                                <a href="#kt_modal_review_manager_boq_commercial"
+                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_sales))
+                                <a href="#kt_modal_review_manager_sales_boq_commercial"
                                     data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
                                     data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
-                                    class="btn btn-md btn-info w-lg-150px btn_review_manager_boq_commercial"
-                                    data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager</a>
+                                    class="btn btn-md btn-info w-lg-150px btn_review_manager_sales_boq_commercial"
+                                    data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Sales</a>
+                                @endif
                             </div>
 
                             <div class="card-toolbar p-3">
+                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_operation))
+                                <a href="#kt_modal_review_manager_operation_boq_commercial"
+                                    data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
+                                    data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
+                                    class="btn btn-md btn-info w-lg-150px btn_review_manager_operation_boq_commercial"
+                                    data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Operation</a>
+                                @endif
+                            </div>
+
+                            <div class="card-toolbar p-3">
+                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_finman))
                                 <a href="#kt_modal_review_finman_boq_commercial"
                                     data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"                                    
                                     data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
                                     class="btn btn-md btn-info w-lg-150px btn_review_finman_boq_commercial"
                                     data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Finman</a>
+                                @endif    
                             </div>
 
                         </div>
@@ -95,9 +111,11 @@
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
+                                                    placeholder="{{ $dataReviewBoq['dataCompanyItem'][0]->surveyRequest->no_survey ?? 'Survey Tidak ada' }}">
+
+                                                <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="survey_request_id" id="survey_request_id"
-                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->survey_request_id }}"
-                                                    {{ $dataReviewBoq['dataCompanyItem'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
+                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->survey_request_id}}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -327,7 +345,7 @@
                                                                 value="{{ $relatedItem->item_inventory_id ?? null }}" />
                                                             <input type="hidden" name="content[][purchase_reference]"
                                                                 disabled
-                                                                value="{{ $relatedItem->purchase_refrence ?? null }}" />
+                                                                value="{{ $relatedItem->purchase_reference ?? null }}" />
                                                             <input type="hidden" name="content[][item_detail]" disabled
                                                                 value="{{ $relatedItem->item_detail ?? null }}" />
                                                         </div>
@@ -374,7 +392,8 @@
         </div>
 
         @include('cmt-opportunity.boq.add.modal-review-director-boq-commercial')
-        @include('cmt-opportunity.boq.add.modal-review-manager-boq-commercial')
+        @include('cmt-opportunity.boq.add.modal-review-manager-sales-boq-commercial')
+        @include('cmt-opportunity.boq.add.modal-review-manager-operation-boq-commercial')
         @include('cmt-opportunity.boq.add.modal-review-finman-boq-commercial')
 
         <script>
@@ -401,68 +420,6 @@
                     }
                 });
             });
-
-            function validateAndFormatNumber(input) {
-                // Mengambil nilai input tanpa karakter non-digit
-                let inputValue = input.value.replace(/\D/g, '');
-
-                // Pastikan nilai input tidak kosong
-                if (inputValue.length > 0) {
-                    // Pastikan nilai input tidak diawali dengan angka 0
-                    if (inputValue[0] === '0') {
-                        // Jika nilai input diawali dengan angka 0, hapus angka 0 di awal
-                        inputValue = inputValue.slice(1);
-                    }
-                }
-
-                // Mengatur nilai input kembali dengan angka yang telah diformat
-                input.value = inputValue;
-            };
-
-            //  function kalkulasi total di Modal
-            function calculateTotalAmount(totalElementId, modal) {
-                // Mengambil nilai dari masing-masing input menggunakan querySelector
-                const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${modal}']`).value);
-                const quantity = parseInt(document.querySelector(`[name='quantity_${modal}']`).value);
-                const purchaseDelivery = parseFloat(document.querySelector(`[name='purchase_delivery_${modal}']`).value);
-
-
-                // Cek jika nilai purchasePrice dan quantity adalah angka
-                if (isNaN(purchasePrice) || isNaN(quantity)) {
-                    // Jika ada input yang belum diisi atau bukan angka, tampilkan hasil kosong dan return
-                    document.getElementById(totalElementId).textContent = "";
-                    const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                    hiddenTotalInput.value = ""; // Set the hidden input value to empty string
-                    return;
-                }
-
-                // Melakukan perhitungan total
-                let totalAmount = purchasePrice * quantity;
-
-                // Tambahkan purchaseDelivery ke totalAmount jika nilai purchaseDelivery adalah angka
-                if (!isNaN(purchaseDelivery)) {
-                    totalAmount += purchaseDelivery;
-                }
-
-                // Cek jika totalAmount melebihi 12 karakter
-                // 9,007,199,254,740,991 maksimal karakter number
-                if (totalAmount.toString().length > 15) {
-                    document.getElementById(totalElementId).textContent = "Melewati limit angka";
-                    const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                    hiddenTotalInput.value = ""; // Set the hidden input value to empty string
-                    return;
-                }
-
-                // Menampilkan total dalam format dengan tanda titik setiap 3 digit dari kanan
-                const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
-
-                // Mengatur nilai total pada elemen dengan id 'totalDisplay'
-                document.getElementById(totalElementId).textContent = totalAmountWithCommas;
-
-                // Mengatur nilai total pada elemen dengan class 'total' (hidden input)
-                const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
-                hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
-            }
 
             $(document).ready(function() {
                 $('.btn_review_director_boq_commercial').on('click', function() {
@@ -493,9 +450,13 @@
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
@@ -523,9 +484,13 @@
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
@@ -565,9 +530,13 @@
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
@@ -596,9 +565,13 @@
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
@@ -610,75 +583,162 @@
 
 
 
-                $('.btn_review_manager_boq_commercial').on('click', function() {
+                $('.btn_review_manager_sales_boq_commercial').on('click', function() {
                     var boq_id = $(this).data('boq-id'); 
-                    $('#itemableBillOfQuantity_id_manager').val(boq_id); 
+                    $('#itemableBillOfQuantity_id_manager_sales').val(boq_id); 
                     var remark = $(this).data('remark');
-                    $('#remark_manager').val(remark);
+                    $('#remark_manager_sales').val(remark);
                     // console.log(boq_id, remark); 
                 });
 
-                $('#kt_modal_review_manager_boq_commercial_approve').on('click', function() {
-                    var isApprovalInput = $('input[name="is_approval_manager"]'); 
+                $('.btn_review_manager_operation_boq_commercial').on('click', function() {
+                    var boq_id = $(this).data('boq-id'); 
+                    $('#itemableBillOfQuantity_id_manager_operation').val(boq_id); 
+                    var remark = $(this).data('remark');
+                    $('#remark_manager_operation').val(remark);
+                    // console.log(boq_id, remark); 
+                });
+
+                $('#kt_modal_review_manager_sales_boq_commercial_approve').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager_sales"]'); 
                     isApprovalInput.val('1');
                     
-                    var is_approval = $('input[name="is_approval_manager"]');
-                    var is_approval_manager = is_approval.val();
-                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager').value;
-                    var remark = document.getElementById('remark_manager').value;
-                    // console.log(boq_id, is_approval_manager, remark);
+                    var is_approval = $('input[name="is_approval_manager_sales"]');
+                    var is_approval_manager_sales = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager_sales').value;
+                    var remark = document.getElementById('remark_manager_sales').value;
+                    // console.log(boq_id, is_approval_manager_sales, remark);
 
                     $.ajax({
                         url: "{{ route('com.boq.store.approval.boq') }}",
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
-                            is_approval_manager: is_approval_manager,
+                            is_approval_manager_sales: is_approval_manager_sales,
                             boq_id: boq_id,
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
                     is_approval.val('');
                     // Tutup modal
-                    $('#kt_modal_review_manager_boq_commercial').modal('hide'); 
+                    $('#kt_modal_review_manager_sales_boq_commercial').modal('hide'); 
                 });
 
-                $('#kt_modal_review_manager_boq_commercial_decline').on('click', function() {
-                    var isApprovalInput = $('input[name="is_approval_manager"]'); 
+                $('#kt_modal_review_manager_operation_boq_commercial_approve').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager_operation"]'); 
+                    isApprovalInput.val('1');
+                    
+                    var is_approval = $('input[name="is_approval_manager_operation"]');
+                    var is_approval_manager_operation = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager_operation').value;
+                    var remark = document.getElementById('remark_manager_operation').value;
+                    // console.log(boq_id, is_approval_manager_operation, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            is_approval_manager_operation: is_approval_manager_operation,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
+                        },
+                        error: function(error) {
+                            toastr.error(error.responseJSON.error);
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    // Tutup modal
+                    $('#kt_modal_review_manager_operation_boq_commercial').modal('hide'); 
+                });
+
+                $('#kt_modal_review_manager_sales_boq_commercial_decline').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager_sales"]'); 
                     isApprovalInput.val('0');
                     
-                    var is_approval = $('input[name="is_approval_manager"]');
-                    var is_approval_manager = is_approval.val();
-                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager').value;
-                    var remark = document.getElementById('remark_manager').value;
-                    // console.log(boq_id, is_approval_manager, remark);
+                    var is_approval = $('input[name="is_approval_manager_sales"]');
+                    var is_approval_manager_sales = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager_sales').value;
+                    var remark = document.getElementById('remark_manager_sales').value;
+                    // console.log(boq_id, is_approval_manager_sales, remark);
 
                     $.ajax({
                         url: "{{ route('com.boq.store.approval.boq') }}",
                         method: 'POST',
                         data: { 
                             _token: '{{ csrf_token() }}',
-                            is_approval_manager: is_approval_manager,
+                            is_approval_manager_sales: is_approval_manager_sales,
                             boq_id: boq_id,
                             remark : remark
                         },
                         success: function(response) {
-                            console.log(response);
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         },
                         error: function(error) {
+                            toastr.error(error.responseJSON.error);
                             console.error('Error submitting all item data: ', error);
                         }
                     });
                     is_approval.val('');
                     
                     // Tutup modal
-                    $('#kt_modal_review_manager_boq_commercial').modal('hide'); 
+                    $('#kt_modal_review_manager_sales_boq_commercial').modal('hide'); 
+                });
+
+                $('#kt_modal_review_manager_operation_boq_commercial_decline').on('click', function() {
+                    var isApprovalInput = $('input[name="is_approval_manager_operation"]'); 
+                    isApprovalInput.val('0');
+                    
+                    var is_approval = $('input[name="is_approval_manager_operation"]');
+                    var is_approval_manager_operation = is_approval.val();
+                    var boq_id = document.getElementById('itemableBillOfQuantity_id_manager_operation').value;
+                    var remark = document.getElementById('remark_manager_operation').value;
+                    // console.log(boq_id, is_approval_manager_operation, remark);
+
+                    $.ajax({
+                        url: "{{ route('com.boq.store.approval.boq') }}",
+                        method: 'POST',
+                        data: { 
+                            _token: '{{ csrf_token() }}',
+                            is_approval_manager_operation: is_approval_manager_operation,
+                            boq_id: boq_id,
+                            remark : remark
+                        },
+                        success: function(response) {
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
+                        },
+                        error: function(error) {
+                            toastr.error(error.responseJSON.error);
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+                    is_approval.val('');
+                    
+                    // Tutup modal
+                    $('#kt_modal_review_manager_operation_boq_commercial').modal('hide'); 
                 });
 
 

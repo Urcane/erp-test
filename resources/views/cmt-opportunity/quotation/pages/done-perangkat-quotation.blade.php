@@ -348,7 +348,7 @@
     </div>
     </div>
 
-    <div id="printerDiv"></div>
+    <div id="printerDiv" style="display: hidden;"></div>
 
     @include('cmt-opportunity.quotation.add.modal-see-purchase-order')
     @include('cmt-opportunity.quotation.add.modal-cancel-quotation')

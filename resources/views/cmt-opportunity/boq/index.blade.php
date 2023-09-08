@@ -145,8 +145,8 @@
                                                                     <th class="w-200px">No. Survey Request</th>
                                                                     <th class="w-200px">No. Work Order</th>
                                                                     <th class="w-100px">Service Type</th>
-                                                                    <th class="w-100px">Building Type</th>
-                                                                    <th class="w-100px">Building Height</th>
+                                                                    <th class="w-100px">Covered Status</th>
+                                                                    <th class="w-100px">Notes</th>
                                                                     <th class="w-100px text-center">#</th>
                                                                 </tr>
                                                             </thead>
@@ -410,12 +410,13 @@
                 elementName: "#kt_table_survey",
                 ajaxLink: "{{ route('com.survey-request.datatable') }}",
                 filters: {
-                    'status': 'DN'
+                    'status': 'DN',
+                    'calledFrom': 'BOQ'
                 },
                 columnData: [
                     // { data: 'DT_RowChecklist', orderable: false, searchable: false},
                     {
-                        data: 'DT_RowIndex'
+                        data: 'DT_RowIndex', searchable: false
                     },
                     {
                         data: 'customer_prospect.customer.customer_name'

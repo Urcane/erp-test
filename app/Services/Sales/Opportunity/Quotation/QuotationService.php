@@ -169,8 +169,8 @@ class QuotationService
     }
 
     function saveAndStoreQuotation(Request $request) : JsonResponse {
-        $this->quotationRepository->saveAndStoreQuotation($request);
-        return response()->json(['message' => 'Quotation berhasil disimpan.'], 200);
+        $data = $this->quotationRepository->saveAndStoreQuotation($request);
+        return response()->json(['message' => 'Quotation berhasil disimpan.', 'data' => $data], 200);
     }
 
     function storePurchaseOrder(Request $request) {

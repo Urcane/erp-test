@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-use App\Http\Requests\Opportunity\Survey\SurveyRequest;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
+use App\Models\Opportunity\Survey\SurveyRequest;
 
 class ItemableBillOfQuantity extends Model
 {
@@ -59,5 +59,39 @@ class ItemableBillOfQuantity extends Model
 
     function childItemableBillOfQuantity() : HasOne{
         return $this->hasOne(this::class, 'reference_bill_of_quantity_id', 'id');
+    }
+
+    function priceRequests() : HasMany {
+        return $this->hasMany(ItemablePriceRequest::class);
+    }
+
+    function scopeDraft() {
+        return $this->where('is_draft', 1)->doesnthave('priceRequests');
+    }
+
+    function scopePublish() {
+        return $this->where('is_draft', 0)->where('is_final', 0)->has('priceRequests');
+    }
+    
+    function scopeOnReview() {
+        return $this->where('is_draft', 0)->where('is_final', 1)->whereNull('is_done')->has('priceRequests');
+    }
+
+    function scopeDone() {
+        return $this->where('is_done', 1)->where(function($query) {
+            $query->where('approval_manager_sales', 1)
+                  ->orWhere('approval_manager_operation', 1)
+                  ->orWhere('approval_director', 1)
+                  ->orWhere('approval_finman', 1);
+        });
+    }
+
+    function scopeCancel() {
+        return $this->where('is_done', 0)->orWhere(function($query) {
+            $query->where('approval_manager_sales', 0)
+                  ->orWhere('approval_manager_operation', 0)
+                  ->orWhere('approval_director', 0)
+                  ->orWhere('approval_finman', 0);
+        });
     }
 }

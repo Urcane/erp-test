@@ -19,13 +19,14 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('nip');
+            $table->string('nip')->nullable();
             $table->string('nik')->nullable();
             $table->string('kontak')->nullable();
             $table->string('sign_file')->nullable();
             $table->string('foto_file')->nullable();
             $table->integer('status')->default(1);
             $table->rememberToken();
+            $table->softDeletes()->index();
         });
     }
 

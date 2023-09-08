@@ -43,7 +43,7 @@ class QuotationRepository
         $boqId = $request->query('boq_id');
         $boqData = $this->boqData->where('id', $boqId)->first();
         $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
-        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();        
+        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')->where("prospect_id",$boqData->prospect_id)->get();        
         return [
             'boqFinalData' => $boqFinalData,
             'inventoryGoodInet' => $inventoryGoodInet,
@@ -59,7 +59,7 @@ class QuotationRepository
        })->get();
         $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
         $boqData = $this->boqData->where('id', $quotationData->boq_id)->first();
-        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact',)->where("prospect_id",$boqData->prospect_id)->get();         
+        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')->where("prospect_id",$boqData->prospect_id)->get();         
         return [
             'quotationData' => $quotationData,
             'boqFinalData' => $boqFinalData,
@@ -102,7 +102,8 @@ class QuotationRepository
                 $data = [
                     'itemable_id' => $quotationData->id,
                     'itemable_type' => $quotationData->itemable_type, 
-                    'item_inventory_id' => $bundle['id'],
+                    'unit' => 'MTH',
+                    'inventory_good_id' => $bundle['id'],
                     'quantity' => $bundle['quantity'],
                     'purchase_price' => $bundle['purchase_price'],
                     'total_price' => $bundle['total_price'],

@@ -26,6 +26,9 @@
                     </div>
                     
                     <div class="text-center row mb-12">
+                        <label class="d-flex align-items-center fs-6 form-label">
+                            <span class="required fw-bold">Remark / Notes: </span>
+                        </label>
                         <textarea class="form-control form-control-solid" id="remark_director"  value="" placeholder="" rows="2" style="resize:none"></textarea>
                     </div>
 

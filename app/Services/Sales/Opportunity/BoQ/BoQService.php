@@ -5,6 +5,7 @@ namespace App\Services\Sales\Opportunity\BoQ;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Models\Customer\CustomerProspect;
+use App\Models\Inventory\InventoryUnitMaster;
 use App\Services\Master\Item\ItemService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repositories\Sales\Opportunity\BoQ\BoQRepository;
@@ -153,22 +154,33 @@ class BoqService
         $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
         $dataItem = $this->BoQRepository->getListItem();
         $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
-        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey'));
+        $selectedDataSurvey = $request->query('survey_id');
+
+        $dataUnit = InventoryUnitMaster::get();
+
+        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataCompany', 'dataItem', 'dataSurvey', 'selectedDataSurvey', 'dataUnit'));
     }
  
     function createDraftBoqAjax(Request $request){
         $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
         $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
+
+        $dataUnit = InventoryUnitMaster::get();
+
         return response()->json([
             'dataCompany' => $dataCompany,
             'dataSurvey' => $dataSurvey,
+            'dataUnit' => $dataUnit
         ]);
     }
 
     function createDraftBoq(){
         $dataProspect = $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
         $dataItem = $this->BoQRepository->getListItem();
-        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem'));
+
+        $dataUnit = InventoryUnitMaster::get();
+
+        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem', 'dataUnit'));
         // return response()->json([
         //     'dataProspect' => $dataProspect,
         //     'dataItem' => $dataItem,
@@ -177,15 +189,19 @@ class BoqService
 
     function updateDraftBoq(Request $request){
         $updateDraftBoqData = $this->BoQRepository->updateDraftBoq($request);
-        if ($request->query('is_draft',1)) {
-            return view('cmt-opportunity.boq.pages.form-update-boq', compact('updateDraftBoqData'));
+        $dataUnit = InventoryUnitMaster::get();
+
+        if ($updateDraftBoqData['dataBoq']->is_draft == 1) {
+            return view('cmt-opportunity.boq.pages.form-update-boq', compact('updateDraftBoqData', 'dataUnit'));
         }
-        return view('cmt-opportunity.boq.pages.form-commercial-boq', compact('updateDraftBoqData'));
+        return view('cmt-opportunity.boq.pages.form-commercial-boq', compact('updateDraftBoqData', 'dataUnit'));
     }
 
     function getApprovalBoq(Request $request){
         $updateDraftBoqData = $this->BoQRepository->updateDraftBoq($request);
-        return view('cmt-opportunity.boq.pages.form-revision-boq', compact('updateDraftBoqData'));
+        $dataUnit = InventoryUnitMaster::get();
+
+        return view('cmt-opportunity.boq.pages.form-revision-boq', compact('updateDraftBoqData', 'dataUnit'));
     }
     
     function onReviewBoq(Request $request){

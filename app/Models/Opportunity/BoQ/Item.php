@@ -19,7 +19,7 @@ class Item extends Model
     }
 
     public function inventoryGood(): BelongsTo {
-        return $this->belongsTo(InventoryGood::class, 'item_inventory_id', 'id');
+        return $this->belongsTo(InventoryGood::class);
     }
 
     // function itemable() : MorphTo {
