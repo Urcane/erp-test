@@ -16,7 +16,8 @@
         endDate = "-",
         status,
         fileLink = "-",
-        fileName = "-"
+        fileName = "-",
+        comment = "-"
     }) => {
         const createdFormated = formatDateTime(created);
         const startDateFormated = formatDate(startDate);
@@ -37,7 +38,7 @@
                 $('#timeoff_waiting_button').hide();
                 $('#timeoff_comment').val(comment);
                 $('#timeoff_comment').attr('placeholder', '-');
-                $('#timeoff_comment').prop('disabled', false);
+                $('#timeoff_comment').prop('disabled', true);
                 break;
             case approveStatusEnum[2]:
                 $('#timeoff_approved_button').hide();
@@ -45,7 +46,7 @@
                 $('#timeoff_waiting_button').hide();
                 $('#timeoff_comment').val(comment);
                 $('#timeoff_comment').attr('placeholder', '-');
-                $('#timeoff_comment').prop('disabled', false);
+                $('#timeoff_comment').prop('disabled', true);
                 break;
         }
 
