@@ -178,10 +178,10 @@ class QuotationRepository
     }    
 
     function cancelQuotation(Request $request) : JsonResponse {
-        // dd($request->quotation_id2);
-        $quotationId = $request->quotation_id2;
+        $quotationId = $request->quo_id;
         $quotationData = $this->model->where('id', $quotationId)->first();
         $quotationData->is_done = 0;
+        $quotationData->remark = $request->remark;
         $quotationData->save();
         return response()->json(['message' => 'Quotation has been canceled'], 200);
     }
