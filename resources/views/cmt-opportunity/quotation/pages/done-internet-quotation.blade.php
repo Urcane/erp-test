@@ -37,15 +37,21 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">
+                            <h3 class="card-title col-lg-4 col-md-3 col-sm-12">
                                 <span class="lh-xxl fw-bolder text-dark d-md-lh-l">Done Internet
                                     Quotation</span>
                             </h3>
-                            <div class="card-toolbar p-3">
-                                <a href="#kt_modal_create_purchase_order"
-                                    class="btn_create_purchase_order p- btn btn-md btn-info w-lg-180px"
+                            <div class="card-toolbar col-12 col-lg-2 col-md-3 col-sm-12 ">
+                                <a href="#kt_modal_cancel_quotation"
+                                    class="btn_cancel_quotation btn btn-md btn-danger w-lg-180px col-12"
                                     data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal"><i
-                                        class="fa-solid fa-file me-3"></i>Purchase Order</a> 
+                                        class="fa-solid fa-xmark me-3"></i>Cancel Quotation</a>
+                            </div>
+                            <div class="card-toolbar col-12 col-lg-3 col-md-3 col-sm-12 ">
+                                <a href="#kt_modal_see_purchase_order"
+                                    class="btn_see_purchase_order btn btn-md btn-info w-lg-180px col-12"
+                                    data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal"><i
+                                        class="fa-solid fa-file me-3"></i>Lihat Purchase Order</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -66,7 +72,7 @@
                                                     placeholder="{{ $dataQuotation['boqFinalData'][0]->customerProspect->prospect_title }} - {{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customer_name }}">
                                                 <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="prospect_id"
-                                                    value="{{ $dataQuotation['boqFinalData'][0]->prospect_id }}"> 
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->prospect_id }}">
                                                 <div id="error-prospect"></div>
                                             </div>
 
@@ -92,14 +98,14 @@
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
                                                     value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customer_name }}">
-                                            </div> 
+                                            </div>
                                             <div class="col-lg-2 col-md-5 col-8 mb-3">
                                                 <label for="customer_contact_name" class="form-label">Nama Kontak
                                                     Customer</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     name="customer_contact_name" id="customer_contact_name"
                                                     value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
-                                            </div> 
+                                            </div>
                                             <div class="col-lg-2 col-md-5 col-8 mb-3">
                                                 <label for="customer_contact_phone" class="form-label">No Kontak
                                                     Customer</label>
@@ -121,9 +127,39 @@
                                         </div>
                                     </div>
 
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
+                                        <div class="d-flex justify-content-around flex-wrap col-12">
+
+                                            <div class="col-lg-3 col-md-4 col-8 mb-3">
+                                                <label for="no_quotation" class="form-label">
+                                                    <span class="fw-bold ">NO Quotation</span> </label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid " disabled
+                                                        id="no_quotation" name="no_quotation"
+                                                        value="{{ $dataQuotation['quotationData']->no_quotation }}"
+                                                        placeholder="No Quotation Wajib Di isi" />
+                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-7 col-md-6 col-8 mb-3">
+                                                <label for="description" class="form-label">
+                                                    <span class="fw-bold ">Description</span></label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <textarea class="form-control form-control-solid "
+                                                        placeholder="{{ $dataQuotation['quotationData']->description ?? 'Description Wajib Di isi' }}" disabled
+                                                        name="description" id="description" cols="" rows="2">{{ $dataQuotation['quotationData']->description }}</textarea>
+                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     {{--  GPM --}}
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
-                                        <div class="d-flex justify-content-around col-12 flex-wrap"> 
+                                        <div class="d-flex justify-content-around col-12 flex-wrap">
                                             <div class="col-lg-2 col-8 col-md-5 mb-3">
                                                 <label class="form-label" for="gpm">GPM</label>
                                                 <div class="position-relative">
@@ -274,7 +310,7 @@
 
                                     </div>
                                     <div>
-                                        <div class="d-flex justify-content-end mx-20">
+                                        <div class="d-flex justify-content-end mx-20 mt-3 mb-5">
                                             <div class="w-20 me-10">
                                                 <span class="fw-bold">Total Price Item : Rp<span
                                                         id="totalsum"></span></span>
@@ -284,37 +320,7 @@
                                 </div>
 
 
-                                <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
-                                    <div class="d-flex justify-content-around flex-wrap col-12">
-
-                                        <div class="col-lg-3 col-md-4 col-8 mb-3">
-                                            <label for="no_quotation" class="form-label">
-                                                <span class="fw-bold ">NO Quotation</span> </label>
-                                            <div class="position-relative">
-                                                <div class="position-absolute top-0"></div>
-                                                <input type="text" class="form-control form-control-solid " disabled
-                                                     id="no_quotation" name="no_quotation"
-                                                    value="{{ $dataQuotation['quotationData']->no_quotation }}"
-                                                    placeholder="No Quotation Wajib Di isi" />
-                                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-7 col-md-6 col-8 mb-3">
-                                            <label for="description" class="form-label">
-                                                <span class="fw-bold ">Description</span></label>
-                                            <div class="position-relative">
-                                                <div class="position-absolute top-0"></div>
-                                                <textarea class="form-control form-control-solid "
-                                                    placeholder="{{ $dataQuotation['quotationData']->description ?? 'Description Wajib Di isi' }}"  disabled
-                                                    name="description" id="description" cols="" rows="2">{{ $dataQuotation['quotationData']->description }}</textarea>
-                                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {{--  divv BUNDLE INTERNET --}}
+                                {{--  BUNDLE INTERNET --}}
                                 <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                     <div class="BundleItem">
@@ -335,7 +341,7 @@
                                                                 Bundle</span>
                                                         </label>
                                                         <select class="form-control form-control-solid  drop-data"
-                                                            data-control="select2"  disabled
+                                                            data-control="select2" disabled
                                                             name="good_name_bundle_{{ $random_string }}"
                                                             id="good_name_bundle_{{ $random_string }}">
 
@@ -360,7 +366,7 @@
                                                             class="d-flex align-items-center fs-6 form-label mb-2">
                                                             <span class="fw-bold ">Quantity</span>
                                                         </label>
-                                                        <input class="form-control form-control-solid " type="text" 
+                                                        <input class="form-control form-control-solid " type="text"
                                                             min="1" minlength="1" disabled
                                                             name="quantity_{{ $random_string }}"
                                                             id="quantity_{{ $random_string }}"
@@ -373,7 +379,7 @@
                                                             for="purchase_price_{{ $random_string }}">
                                                             <span class="fw-bold ">Purchase Price</span>
                                                         </label>
-                                                        <input class="form-control form-control-solid " type="text" 
+                                                        <input class="form-control form-control-solid " type="text"
                                                             min="1" minlength="1" disabled
                                                             name="purchase_price_{{ $random_string }}"
                                                             value="{{ $relatedItem->purchase_price }}"
@@ -381,18 +387,17 @@
                                                     </div>
 
                                                     <!-- Total Price -->
-                                                    <div
-                                                        class="col-lg-2 col-md-5 col-8 mb-3">
-                                                         
-                                                            <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                                for="total_price_{{ $random_string }}">
-                                                                <span class="fw-bold">Total Price</span>
-                                                            </label>
-                                                            <input class="form-control form-control-solid " type="text" min="1"
-                                                                minlength="1" disabled 
-                                                                name="total_price_{{ $random_string }}"
-                                                                id="total_price_{{ $random_string }}"
-                                                                value="{{ $relatedItem->total_price }}"> 
+                                                    <div class="col-lg-2 col-md-5 col-8 mb-3">
+
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="total_price_{{ $random_string }}">
+                                                            <span class="fw-bold">Total Price</span>
+                                                        </label>
+                                                        <input class="form-control form-control-solid " type="text"
+                                                            min="1" minlength="1" disabled
+                                                            name="total_price_{{ $random_string }}"
+                                                            id="total_price_{{ $random_string }}"
+                                                            value="{{ $relatedItem->total_price }}">
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -402,7 +407,7 @@
 
                                 </div>
 
-                                {{-- divv TAMBAH, SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
+                                {{-- TAMBAH, SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
                                 <div>
                                     <div class="d-flex justify-content-end mx-20 mb-5">
                                         <div class="w-20 me-10">
@@ -431,7 +436,10 @@
     </div>
 
     <div id="printerDiv" style="display: hidden;"></div>
-    <script>   
+    
+    @include('cmt-opportunity.quotation.add.modal-see-purchase-order')
+    @include('cmt-opportunity.quotation.add.modal-cancel-quotation')
+    <script>
         function updateTotalSum() {
             var totalSum = 0;
 
@@ -446,7 +454,7 @@
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
             // Update the total sum element with the calculated value
             $('#totalsum').text(totalPriceWithCommas);
-        } 
+        }
 
         function updateTotalSumBundle() {
             var totalSumBundle = 0;
@@ -467,14 +475,13 @@
             }
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
             // Update the total sum element with the calculated value
-            $('#totalsumbundle').text(totalPriceWithCommas); 
-        } 
+            $('#totalsumbundle').text(totalPriceWithCommas);
+        }
 
         $(document).ready(function() {
 
             $('body').on('click', '.btn_create_purchase_order', function() {
-
-                $('.drop-data').val("").trigger("change")
+ 
                 $('#kt_modal_create_purchase_order_form').trigger("reset")
                 $('#kt_modal_create_purchase_order_submit').removeAttr('disabled', 'disabled');
 
@@ -496,6 +503,25 @@
                     }
                 })
 
+            });
+
+            $('body').on('click', '.btn_cancel_quotation', function() {  
+                $('#kt_modal_cancel_quotation_form').trigger("reset")
+                $('#kt_modal_cancel_quotation_submit').removeAttr('disabled', 'disabled');
+
+                var quo_id = $(this).data('id');
+                $('#quo_id').val(quo_id); 
+
+                submitModal({
+                    modalName: 'kt_modal_cancel_quotation',
+                    tableName: 'kt_table_cancel_quotation',
+                    anotherTableName: 'tableCancelQuotation',
+                    ajaxLink: "{{ route('com.quotation.cancel.quotation') }}",
+                    successCallback: function(response) {
+                        // Redirect ke halaman yang sesuai setelah operasi berhasil
+                        window.location.href = "{{ route('com.quotation.index') }}";
+                    }
+                })
             });
 
             $('.print-form').click(function() {

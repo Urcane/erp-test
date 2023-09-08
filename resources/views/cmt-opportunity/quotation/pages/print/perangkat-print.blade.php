@@ -1,4 +1,4 @@
-{{-- @dd($dataFinalBoq); --}}
+{{-- @dd($dataBoq); --}}
 <div class="h-200px"></div>
 <div class="mt-0 row">
     <div class="col-8">
@@ -18,8 +18,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (isset($dataFinalBoq[0]->itemable))
-                            @foreach ($dataFinalBoq[0]->itemable->where('inventoryGood.good_category_id', '!=', 3) as $relatedItem)
+                        @if (isset($dataBoq[0]->itemable))
+                            @foreach ($dataBoq[0]->itemable as $relatedItem)
                                 <tr>
                                     <td>{{ $index++ }}</td>
                                     <td>{{ $relatedItem->inventoryGood->good_name ?? null }}</td>

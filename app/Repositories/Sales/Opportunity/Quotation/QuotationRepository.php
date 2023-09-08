@@ -7,6 +7,7 @@ use App\Models\Opportunity\BoQ\Item;
 use Illuminate\Http\Request;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
+use Illuminate\Http\JsonResponse;
 
 class QuotationRepository
 {
@@ -144,29 +145,30 @@ class QuotationRepository
     }
 
     function exportQuotationResult($isQuotation, $id) {
-        $dataQuotation = $this->model->where('id', $id)->first();
+        $dataQuotation = $this->model->where('id', $id)->with('itemableQuotation.inventoryGood')->first();
     
         if (!$dataQuotation) {
             return response()->json(['message' => 'Sayang Sekali :( Quotation tidak ditemukan'], 404);
         }
     
-        $dataBoq = $this->boqData->where('id', $dataQuotation->boq_id)->first();
+        $data = $this->boqData->where('id', $dataQuotation->boq_id)->first();
     
-        if (!$dataBoq) {
+        if (!$data) {
             return response()->json(['message' => 'Sayang Sekali :( BoQ tidak ditemukan'], 404);
         }
     
-        $dataFinalBoq = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')
-            ->where('prospect_id', $dataBoq->prospect_id)
+        $dataBoq = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')
+            ->where('prospect_id', $data->prospect_id)
             ->get();
 
+            
         $index = 1;
         $finalPrice = 0;
 
         $view = "cmt-opportunity.quotation.pages.print.$isQuotation-print";
         $compact = [
             'dataQuotation',
-            'dataFinalBoq',
+            'dataBoq',
             'index',
             'finalPrice'
         ];
@@ -175,4 +177,13 @@ class QuotationRepository
             ...$compact
         ));
     }    
+
+    function cancelQuotation(Request $request)  { 
+        $quotationId = $request->quo_id;
+        $quotationData = $this->model->where('id', $quotationId)->first();
+        $quotationData->is_done = 0;
+        $quotationData->remark = $request->remark;
+        $quotationData->save();
+        return response()->json(['message' => 'Quotation has been canceled'], 200);
+    }
 }

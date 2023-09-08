@@ -36,20 +36,22 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
+                        <div class="card-header col-lg-12">
+                            <h3 class="card-title col-lg-4 col-md-3 col-sm-12">
                                 <span class="lh-xxl fw-bolder text-dark d-md-lh-l">Done Perangkat
                                     Quotation</span>
                             </h3>
-                            <div class="card-toolbar p-3">
-                                <a href="#kt_modal_create_purchase_order"
-                                    class="btn_create_purchase_order p- btn btn-md btn-info w-lg-180px"
+                            <div class="card-toolbar col-12 col-lg-2 col-md-3 col-sm-12 ">
+                                <a href="#kt_modal_cancel_quotation"
+                                    class="btn_cancel_quotation btn btn-md btn-danger w-lg-180px col-12"
                                     data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal"><i
-                                        class="fa-solid fa-file me-3"></i>Purchase Order</a>
-
-
-                                {{-- <button class="btn btn-md btn-info w-lg-150px purchase_order_file"
-                                    onclick="myFunction()">Input File</button> --}}
+                                        class="fa-solid fa-xmark me-3"></i>Cancel Quotation</a>
+                            </div>
+                            <div class="card-toolbar col-12 col-lg-3 col-md-3 col-sm-12 ">
+                                <a href="#kt_modal_see_purchase_order"
+                                    class="btn_see_purchase_order btn btn-md btn-info w-lg-180px col-12"
+                                    data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal"><i
+                                        class="fa-solid fa-file me-3"></i>Lihat Purchase Order</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -125,6 +127,36 @@
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
                                                     value="{{ $dataQuotation['boqFinalData'][0]->customerProspect->customer->bussinesType->type_name }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
+                                        <div class="d-flex justify-content-around flex-wrap col-12">
+
+                                            <div class="col-lg-3 col-md-4 col-8 mb-3">
+                                                <label for="no_quotation" class="form-label">
+                                                    <span class="fw-bold ">NO Quotation</span> </label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid " disabled
+                                                        id="no_quotation" name="no_quotation"
+                                                        value="{{ $dataQuotation['quotationData']->no_quotation }}"
+                                                        placeholder="No Quotation Wajib Di isi" />
+                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-7 col-md-6 col-8 mb-3">
+                                                <label for="description" class="form-label">
+                                                    <span class="fw-bold ">Description</span></label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <textarea class="form-control form-control-solid "
+                                                        placeholder="{{ $dataQuotation['quotationData']->description ?? 'Description Wajib Di isi' }}" disabled
+                                                        name="description" id="description" cols="" rows="2">{{ $dataQuotation['quotationData']->description }}</textarea>
+                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -283,7 +315,7 @@
 
                                     </div>
                                     <div>
-                                        <div class="d-flex justify-content-end mx-20">
+                                        <div class="d-flex justify-content-end mx-20 mb-5 mt-3">
                                             <div class="w-20 me-10">
                                                 <span class="fw-bold">Total Price Item : Rp<span
                                                         id="totalsum"></span></span>
@@ -293,44 +325,9 @@
                                 </div>
 
 
-                                <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
-                                    <div class="d-flex justify-content-around flex-wrap col-12">
 
-                                        <div class="col-lg-3 col-md-4 col-8 mb-3">
-                                            <label for="no_quotation" class="form-label">
-                                                <span class="fw-bold ">NO Quotation</span> </label>
-                                            <div class="position-relative">
-                                                <div class="position-absolute top-0"></div>
-                                                <input type="text" class="form-control form-control-solid " disabled
-                                                     id="no_quotation" name="no_quotation"
-                                                    value="{{ $dataQuotation['quotationData']->no_quotation }}"
-                                                    placeholder="No Quotation Wajib Di isi" />
-                                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-7 col-md-6 col-8 mb-3">
-                                            <label for="description" class="form-label">
-                                                <span class="fw-bold ">Description</span></label>
-                                            <div class="position-relative">
-                                                <div class="position-absolute top-0"></div>
-                                                <textarea class="form-control form-control-solid "
-                                                    placeholder="{{ $dataQuotation['quotationData']->description ?? 'Description Wajib Di isi' }}"  disabled
-                                                    name="description" id="description" cols="" rows="2">{{ $dataQuotation['quotationData']->description }}</textarea>
-                                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
- 
                                 {{-- divv TAMBAH, SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
                                 <div>
-                                    <div class="d-flex justify-content-end mx-20 mb-5">
-                                        <div class="w-20 me-10">
-                                            <span class="fw-bold">Total Price Bundle : Rp<span
-                                                    id="totalsumbundle"></span></span>
-                                        </div>
-                                    </div>
                                     <div class="d-flex justify-content-center mt-6">
                                         <div class=" me-5">
                                             <a href="" class="btn btn-light-info">Discard</a>
@@ -352,7 +349,10 @@
     </div>
 
     <div id="printerDiv" style="display: hidden;"></div>
-    <script>   
+
+    @include('cmt-opportunity.quotation.add.modal-see-purchase-order')
+    @include('cmt-opportunity.quotation.add.modal-cancel-quotation')
+    <script>
         function updateTotalSum() {
             var totalSum = 0;
 
@@ -367,15 +367,13 @@
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
             // Update the total sum element with the calculated value
             $('#totalsum').text(totalPriceWithCommas);
-        }  
+        }
 
         $(document).ready(function() {
 
-            $('body').on('click', '.btn_create_purchase_order', function() {
-
-                $('.drop-data').val("").trigger("change")
-                $('#kt_modal_create_purchase_order_form').trigger("reset")
-                $('#kt_modal_create_purchase_order_submit').removeAttr('disabled', 'disabled');
+            $('body').on('click', '.btn_see_purchase_order', function() { 
+                $('#kt_modal_see_purchase_order_form').trigger("reset")
+                $('#kt_modal_see_purchase_order_submit').removeAttr('disabled', 'disabled');
 
                 var quo_id = $(this).data('id');
                 $('#quotation_id').val(quo_id);
@@ -385,7 +383,7 @@
                 });
 
                 submitModal({
-                    modalName: 'kt_modal_create_purchase_order',
+                    modalName: 'kt_modal_see_purchase_order',
                     tableName: 'kt_table_purchase_order',
                     anotherTableName: 'tableOnProgressPurchaseOrder',
                     ajaxLink: "{{ route('com.quotation.store.po') }}",
@@ -397,13 +395,30 @@
 
             });
 
+            $('body').on('click', '.btn_cancel_quotation', function() { 
+                $('#kt_modal_cancel_quotation_submit').removeAttr('disabled', 'disabled');
+
+                var quo_id = $(this).data('id');
+                $('#quotation_id2').val(quo_id); 
+                submitModal({
+                    modalName: 'kt_modal_cancel_quotation',
+                    tableName: 'kt_table_cancel_quotation',
+                    anotherTableName: 'tableCancelQuotation',
+                    ajaxLink: "{{ route('com.quotation.cancel.quotation') }}",
+                    successCallback: function(response) {
+                        // Redirect ke halaman yang sesuai setelah operasi berhasil
+                        window.location.href = "{{ route('com.quotation.index') }}";
+                    }
+                })
+            });
+
             $('.print-form').click(function() {
                 const div = document.getElementById("printerDiv");
                 div.innerHTML =
                     `<iframe src="{{ route('com.quotation.result.export', ['isQuotation' => 'perangkat', 'id' => $dataQuotation['quotationData']->id]) }}" onload="this.contentWindow.print();"></iframe>`;
-            }); 
+            });
 
-            updateTotalSum(); 
+            updateTotalSum();
         });
     </script>
 @endsection

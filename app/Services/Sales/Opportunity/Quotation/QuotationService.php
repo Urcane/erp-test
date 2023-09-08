@@ -201,4 +201,8 @@ class QuotationService
     function exportQuotationResult($isQuotation,$id){
         return $this->quotationRepository->exportQuotationResult($isQuotation, $id);
     }
+
+    function cancelQuotation(Request $request) : JsonResponse {
+        return $this->quotationRepository->cancelQuotation($request);
+    }
 }
