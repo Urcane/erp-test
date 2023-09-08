@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Opportunity\Quotation\ItemableQuotationParts;
 use App\Models\Inventory\InventoryGood;
 
 class Item extends Model

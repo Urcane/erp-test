@@ -70,6 +70,9 @@ class BoQRepository
             $dataBoq = $dataBoq->where('is_done',0);
         }
 
+        if (isset($request->filters['is_quotation']) && $request->filters['is_quotation'] == 'false') {
+            $dataBoq->where('is_done',1)->doesntHave('itemableQuotationPart');
+        }
         return $dataBoq->with('sales', 'prospect.customer.customerContact' ,'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog');
     }  
     
@@ -184,7 +187,6 @@ class BoQRepository
     }
 
     function storeApprovalBoq(Request $request) : JsonResponse {
-        // dd($request->input('boq.boq_id'));
         $boqId = $request->input('boq_id');
         $remark = $request->input('remark');
         $boqData = $this->model->where('id', $boqId)->first();
@@ -332,9 +334,10 @@ class BoQRepository
         ];
     }
 
-    function onReviewBoq(Request $request){
+    function reviewBoq(Request $request){
         $boqId = $request->query('boq_id');
         $boqData = $this->model->where('id', $boqId)->first();
+
 
         $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id",$boqData->prospect_id)->get();       
         $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first(); 

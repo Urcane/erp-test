@@ -53,7 +53,7 @@
                                                 <input type="file" style="width: 112px"
                                                     class="form-control form-control-solid"
                                                     placeholder="Logo Perusahaan" name="logo" id="logo"
-                                                    @unlessrole('administrator') disabled @endunlessrole>
+                                                    @unlessrole('administrator') disabled @endcannot>
                                             </div>
 
                                             <div class="col-lg-6 mb-3 mt-5">
@@ -64,7 +64,7 @@
                                                 <input type="text" value="{{ $subBranch->name ?? old('name') }}"
                                                     class="form-control form-control-solid"
                                                     placeholder="Nama Perusahaan" name="name" id="name"
-                                                    @unlessrole('administrator') disabled @endunlessrole>
+                                                    @unlessrole('administrator') disabled @endcannot>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                             <div class="col-lg-6 mb-3 mt-5">
@@ -77,7 +77,7 @@
                                                     class="form-control form-control-solid"
                                                     placeholder="Nomor yang dapat dihubungi" name="phone_number"
                                                     id="phone_number"
-                                                    @unlessrole('administrator') disabled @endunlessrole>
+                                                    @unlessrole('administrator') disabled @endcannot>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
@@ -89,7 +89,7 @@
                                                 <input type="email" value="{{ $subBranch->email ?? old('email') }}"
                                                     class="form-control form-control-solid" placeholder="Email cabang"
                                                     name="email" id="email"
-                                                    @unlessrole('administrator') disabled @endunlessrole>
+                                                    @unlessrole('administrator') disabled @endcannot>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                             <div class="col-lg-6 mb-3">
@@ -100,7 +100,7 @@
                                                 <input type="number" value="{{ $subBranch->umr ?? old('umr') }}"
                                                     class="form-control form-control-solid" placeholder="UMR"
                                                     name="umr" id="umr"
-                                                    @unlessrole('administrator') disabled @endunlessrole>
+                                                    @unlessrole('administrator') disabled @endcannot>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
@@ -110,7 +110,7 @@
                                                     <span class="fw-bold">Address</span>
                                                 </label>
                                                 <textarea name="address" class="form-control form-control-solid" placeholder="Alamat lengkap perusahaan" id="address"
-                                                    cols="30" rows="5" @unlessrole('administrator') disabled @endunlessrole>{{ $subBranch->address ?? old('address') }}</textarea>
+                                                    cols="30" rows="5" @unlessrole('administrator') disabled @endcannot>{{ $subBranch->address ?? old('address') }}</textarea>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
@@ -125,7 +125,7 @@
                                                             value="{{ $subBranch->city ?? old('city') }}"
                                                             class="form-control form-control-solid" placeholder="Kota"
                                                             name="city" id="city"
-                                                            @unlessrole('administrator') disabled @endunlessrole>
+                                                            @unlessrole('administrator') disabled @endcannot>
                                                         <div class="fv-plugins-message-container invalid-feedback">
                                                         </div>
                                                     </div>
@@ -138,7 +138,7 @@
                                                             value="{{ $subBranch->province ?? old('province') }}"
                                                             class="form-control form-control-solid"
                                                             placeholder="Provinsi" name="province" id="province"
-                                                            @unlessrole('administrator') disabled @endunlessrole>
+                                                            @unlessrole('administrator') disabled @endcannot>
                                                         <div class="fv-plugins-message-container invalid-feedback">
                                                         </div>
                                                     </div>
@@ -162,7 +162,7 @@
                                                 <input type="number" value="{{ $subBranch->coordinate_radius ?? old('coordinate_radius') }}"
                                                     class="form-control form-control-solid" placeholder="40"
                                                     name="coordinate_radius" id="coordinate_radius"
-                                                    @unlessrole('administrator') disabled @endunlessrole>
+                                                    @unlessrole('administrator') disabled @endcannot>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
@@ -174,7 +174,7 @@
                                                 <input type="email" value="{{ $subBranch->email ?? old('email') }}"
                                                     class="form-control form-control-solid" placeholder="Email cabang"
                                                     name="email" id="email"
-                                                    @unlessrole('administrator') disabled @endunlessrole>
+                                                    @unlessrole('administrator') disabled @endcannot>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
@@ -185,7 +185,7 @@
                                                 </label>
                                                 <select class="drop-data form-select form-select-solid"
                                                     data-control="parent_id" name="parent_id" id="parent_id"
-                                                    @unlessrole('administrator') disabled @endunlessrole>
+                                                    @unlessrole('administrator') disabled @endcannot>
                                                     @foreach ($dataParent as $option)
                                                         <option value="{{ $option->id }}"
                                                             @if ($subBranch->parent_id ?? old('parent_id') == $option->id) selected @endif>
@@ -220,7 +220,7 @@
                                                         value="{{ $subBranch->npwp ?? old('npwp') }}"
                                                         class="form-control form-control-solid"
                                                         placeholder="Company NPWP" name="npwp" id="npwp"
-                                                        @unlessrole('administrator') disabled @endunlessrole>
+                                                        @unlessrole('administrator') disabled @endcannot>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                                 <div class="col-lg-6 mb-3">
@@ -232,7 +232,7 @@
                                                         value="{{ $subBranch->tax_name ?? old('tax_name') }}"
                                                         class="form-control form-control-solid" name="tax_name"
                                                         id="tax_name"
-                                                        @unlessrole('administrator') disabled @endunlessrole>
+                                                        @unlessrole('administrator') disabled @endcannot>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                                 <div class="col-lg-6 mb-3">
@@ -245,7 +245,7 @@
                                                         class="form-control form-control-solid"
                                                         placeholder="Nama Perusahaan" name="tax_person_name"
                                                         id="tax_person_name"
-                                                        @unlessrole('administrator') disabled @endunlessrole>
+                                                        @unlessrole('administrator') disabled @endcannot>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                                 <div class="col-lg-6 mb-3">
@@ -258,7 +258,7 @@
                                                         class="form-control form-control-solid"
                                                         placeholder="Nomor rekening" name="tax_person_npwp"
                                                         id="tax_person_npwp"
-                                                        @unlessrole('administrator') disabled @endunlessrole>
+                                                        @unlessrole('administrator') disabled @endcannot>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                             </section>
@@ -274,7 +274,7 @@
                                                     <input type="text" value="{{ $subBranch->klu ?? old('klu') }}"
                                                         class="form-control form-control-solid"
                                                         placeholder="Nomor rekening" name="klu" id="klu"
-                                                        @unlessrole('administrator') disabled @endunlessrole>
+                                                        @unlessrole('administrator') disabled @endcannot>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
 
@@ -287,7 +287,7 @@
                                                         value="{{ $subBranch->signature ?? old('signature') }}"
                                                         class="form-control form-control-solid"
                                                         placeholder="Nama Perusahaan" name="signature" id="signature"
-                                                        @unlessrole('administrator') disabled @endunlessrole>
+                                                        @unlessrole('administrator') disabled @endcannot>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                                 <div class="col-lg-6 mb-3">

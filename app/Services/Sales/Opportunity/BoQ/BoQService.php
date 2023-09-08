@@ -27,8 +27,7 @@ class BoqService
     }
 
     function renderDatatable(Request $request) : JsonResponse {
-        $query = $this->BoQRepository->getAll($request);
-
+        $query = $this->BoQRepository->getAll($request); 
         return DataTables::of($query)
             ->addColumn('DT_RowChecklist', function($check) {
                 return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
@@ -52,20 +51,20 @@ class BoqService
             ->addColumn('action_done', function ($query) {
                 return '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                            <li><span class="dropdown-item py-2">No Action</span></li>
+                                <li><a href="' . url("cmt-boq/review-done-boq?boq_id=". $query->id) .'" class="dropdown-item py-2">
+                                <i class="fa-solid fa-list-check me-3"></i>Review Done</a></li>
                             </ul>';
             })
             ->addColumn('action_quotation', function ($query) use($request)  {
                 $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">'; 
-                 // Check if 'calledFrom' key exists in $request->filters
                 if (isset($request->filters['calledFrom'])) {
                     if ($request->filters['calledFrom'] == 'Internet') {
-                        $actions .= '<li><a href="' . url("cmt-quotation/create-draft-quotation?boq_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
+                        $actions .= '<li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create Quotation Internet</a></li>';
                     }
                     elseif ($request->filters['calledFrom'] == 'Perangkat') {
-                        $actions .= '<li><a href="' . url("cmt-quotation/create-draft-quotation?boq_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
+                        $actions .= '<li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create Quotation Perangkat</a></li>';
                     }
                 } else {                    
@@ -165,16 +164,23 @@ class BoqService
     function createDraftBoqAjax(Request $request){
         $dataCompany = $this->BoQRepository->getProspect()->where('id', $request->query('prospect_id'))->first();
         $dataSurvey = $this->BoQRepository->getSurvey()->where('customer_prospect_id', $request->query('prospect_id'))->get();
+
+        $dataUnit = InventoryUnitMaster::get();
+
         return response()->json([
             'dataCompany' => $dataCompany,
             'dataSurvey' => $dataSurvey,
+            'dataUnit' => $dataUnit
         ]);
     }
 
     function createDraftBoq(){
         $dataProspect = $this->BoQRepository->getProspect()->doesntHave('itemableBillOfQuantity')->get();
         $dataItem = $this->BoQRepository->getListItem();
-        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem'));
+
+        $dataUnit = InventoryUnitMaster::get();
+
+        return view('cmt-opportunity.boq.pages.form-create-boq', compact('dataProspect', 'dataItem', 'dataUnit'));
         // return response()->json([
         //     'dataProspect' => $dataProspect,
         //     'dataItem' => $dataItem,
@@ -199,8 +205,13 @@ class BoqService
     }
     
     function onReviewBoq(Request $request){
-        $updateDraftBoqData = $this->BoQRepository->onReviewBoq($request); 
-            return view('cmt-opportunity.boq.pages.on-review-boq', compact('updateDraftBoqData')); 
+        $dataReviewBoq = $this->BoQRepository->reviewBoq($request); 
+        return view('cmt-opportunity.boq.pages.on-review-boq', compact('dataReviewBoq')); 
+    }
+
+    function reviewDoneBoq(Request $request) {
+        $dataReviewBoq = $this->BoQRepository->reviewBoq($request); 
+        return view('cmt-opportunity.boq.pages.review-done-boq', compact('dataReviewBoq')); 
     }
 
     function storeApprovalBoq(Request $request) : JsonResponse {

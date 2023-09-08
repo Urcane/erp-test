@@ -74,19 +74,27 @@ class AttendanceController extends RequestController
     public function getRequests(Request $request)
     {
         try {
+            $user = $request->user();
+
+            $userRequests = null;
             $page = $request->page ?? 1;
             $itemCount = $request->itemCount ?? 10;
-            $userId = $request->user()->id;
 
-            $userRequests = UserAttendanceRequest::where(function ($query) use ($userId) {
-                $query->where(function ($query) use ($userId) {
-                    $query->where('status', $this->constants->approve_status[0])
-                        ->whereHas('user.userEmployment', function ($query) use ($userId) {
-                            $query->where('approval_line', $userId);
-                        });
-                })->orWhere('approval_line', $userId);
-            })->with(['user.division', 'user.department'])
-                ->paginate($itemCount, ['*'], 'page', $page);
+            if ($user->hasPermissionTo('HC:view-all-request')) {
+                $userRequests = new UserAttendanceRequest;
+            } else if ($user->hasPermissionTo('Approval:view-request')) {
+                $userRequests = UserAttendanceRequest::where(function ($query) use ($user) {
+                    $query->where(function ($query) use ($user) {
+                        $query->where('status', $this->constants->approve_status[0])
+                            ->whereHas('user.userEmployment', function ($query) use ($user) {
+                                $query->where('approval_line', $user->id);
+                            });
+                    })->orWhere('approval_line', $user->id);
+                })->with(['user.division', 'user.department'])
+                    ->paginate($itemCount, ['*'], 'page', $page);
+            } else {
+                throw new AuthorizationError("Anda tidak berhak mengakses ini");
+            }
 
             return response()->json([
                 "status" => "success",
@@ -121,9 +129,9 @@ class AttendanceController extends RequestController
                 throw new NotFoundError("Request Tidak ditemukan");
             }
 
-            $userId = $request->user()->id;
+            $user = $request->user();
 
-            if (!$userRequest->approvalLine) {
+            if ($user->hasPermissionTo('HC:view-all-request')) {
                 return response()->json([
                     "status" => "success",
                     "data" => $userRequest
@@ -131,8 +139,8 @@ class AttendanceController extends RequestController
             }
 
             if (
-                $userRequest->approvalLine->id != $userId
-                || $userRequest->user->userEmployment->approvalLine->id != $userId
+                ($userRequest->approvalLine && $userRequest->approvalLine->id != $user->id)
+                || $userRequest->user->userEmployment->approvalLine->id != $user->id
             ) {
                 throw new AuthorizationError("Anda tidak berhak mengakses ini!");
             }
@@ -163,9 +171,9 @@ class AttendanceController extends RequestController
                 throw new NotFoundError("Attendance Request tidak ditemukan");
             }
 
-            $approvalLine = $attendanceRequest->user->userEmployment->approvalLine;
+            $user = $request->user();
 
-            if (!$approvalLine) {
+            if ($user->hasPermissionTo('HC:change-all-status-request')) {
                 if ($request->status == $this->constants->approve_status[1]) {
                     $this->_updateAttendance(
                         $attendanceRequest->user_id,
@@ -177,7 +185,7 @@ class AttendanceController extends RequestController
                 }
 
                 $attendanceRequest->update([
-                    "approval_line" => $approvalLine->id,
+                    "approval_line" => $user->id,
                     "status" => $request->status,
                     "comment" => $request->comment
                 ]);
@@ -188,7 +196,9 @@ class AttendanceController extends RequestController
                 ]);
             }
 
-            if ($approvalLine->id != $request->user()->id) {
+            $approvalLine = $attendanceRequest->user->userEmployment->approvalLine;
+
+            if ($approvalLine->id != $user->id || !$user->hasPermissionTo('Approval:change-status-request')) {
                 throw new AuthorizationError("Anda tidak berhak melakukan update status");
             }
 
@@ -206,12 +216,12 @@ class AttendanceController extends RequestController
                     $attendanceRequest->date,
                     $attendanceRequest->check_in,
                     $attendanceRequest->check_out,
-                    $request->user()->id
+                    $user->id
                 );
             }
 
             $attendanceRequest->update([
-                "approval_line" => $approvalLine->id,
+                "approval_line" => $user->id,
                 "status" => $request->status,
                 "comment" => $request->comment
             ]);

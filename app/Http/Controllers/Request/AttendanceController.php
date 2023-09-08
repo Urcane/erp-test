@@ -40,7 +40,8 @@ class AttendanceController extends RequestController
             Carbon::setLocale($this->constants->locale);
             $now = Carbon::now();
             $today = $now->toDateString();
-            $globalDayOff = GlobalDayOff::where('date', $today)->first();
+            $globalDayOff = GlobalDayOff::where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)->first();
 
             if ($globalDayOff) {
                 throw new InvariantError("Tidak dapat request absen pada hari libur ($globalDayOff->name)");
@@ -114,6 +115,12 @@ class AttendanceController extends RequestController
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
+            /** @var App\Models\User $user */
+            $user = Auth::user();
+            if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
+                throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
+            }
+
             $attendanceRequests = UserAttendanceRequest::where('user_id', $request->user_id)
                 ->orderBy('created_at', 'desc')
                 ->with(['user.userEmployment', 'approvalLine']);

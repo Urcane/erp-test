@@ -19,13 +19,12 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body">
-                            <div class="row mb-6 align-items-center">
-                                <div class="col-lg-6 gap-3 d-flex align-items-center">
-                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Bill of Quantity</span>
-                                </div>
-                            </div>
-
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Create Bill of Quantity</span>
+                            </h3> 
+                        </div> 
+                        <div class="card-body">  
                             {{-- header company --}}
                             <div class="row">
                                 <form class="col-lg-12" id="kt_create_draft_boq_form">

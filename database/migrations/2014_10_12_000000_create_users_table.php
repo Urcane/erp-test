@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('foto_file')->nullable();
             $table->integer('status')->default(1);
             $table->rememberToken();
+            $table->softDeletes()->index();
         });
     }
 

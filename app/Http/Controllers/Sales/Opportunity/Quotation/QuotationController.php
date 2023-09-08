@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Sales\Opportunity\Quotation;
 
-use App\Services\Sales\Opportunity\Quotation\QuotationService;
-use Illuminate\Http\JsonResponse;
+use Id;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Services\Sales\Opportunity\Quotation\QuotationService;
 
 class QuotationController
 {
@@ -36,9 +37,16 @@ class QuotationController
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
 
-    function updateQuotation(Request $request) : JsonResponse{
+    function updateQuotation(Request $request){
         if ($request->query('quotation_id')) {
             return $this->quotationService->updateQuotation($request);
+        } 
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
+    function reviewDoneQuotation(Request $request){
+        if ($request->query('quotation_id')) {
+            return $this->quotationService->reviewDoneQuotation($request);
         } 
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
@@ -46,6 +54,13 @@ class QuotationController
     function saveAndStoreQuotation(Request $request) : JsonResponse {
         if ($request->ajax()) {
             return $this->quotationService->saveAndStoreQuotation($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
+    function storePurchaseOrder(Request $request) {
+        if ($request->ajax()) {
+            return $this->quotationService->storePurchaseOrder($request);
         }
         return response()->json('Oops, Somethin\' Just Broke :(');
     }
@@ -58,9 +73,20 @@ class QuotationController
     }
 
     function updateInternetBundling(Request $request) : JsonResponse {
-        // if ($request->ajax()) {
+        if ($request->ajax()) {
             return $this->quotationService->updateInternetBundling($request);
-        // }
-        // return response()->json('Oops, Somethin\' Just Broke :(');
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
+    }
+
+    function exportQuotationResult($isQuotation, $id) {
+        return $this->quotationService->exportQuotationResult($isQuotation,$id);
+    }
+
+    function cancelQuotation(Request $request) : JsonResponse {
+        if ($request->ajax()) {
+            return $this->quotationService->cancelQuotation($request);
+        }
+        return response()->json('Oops, Somethin\' Just Broke :(');
     }
 }

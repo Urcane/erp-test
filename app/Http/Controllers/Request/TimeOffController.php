@@ -14,8 +14,37 @@ use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserLeaveRequest;
 use Carbon\Carbon;
 
+use DateTime;
+use DateInterval;
+use DatePeriod;
+
 class TimeOffController extends RequestController
 {
+    private function _getGlobalDayOff($startDate, $endDate)
+    {
+        $globalDayOffs = GlobalDayOff::where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $startDate)->get();
+
+        $holidayDates = collect();
+
+        foreach ($globalDayOffs as $globalDayOff) {
+            $currentStartDate = max($globalDayOff->start_date, $startDate);
+            $currentEndDate = min($globalDayOff->end_date, $endDate);
+
+            $period = new DatePeriod(
+                new DateTime($currentStartDate),
+                new DateInterval('P1D'),
+                (new DateTime($currentEndDate))->modify('+1 day')  // To include the end_date
+            );
+
+            foreach ($period as $date) {
+                $holidayDates->push($date->format('Y-m-d'));
+            }
+        }
+
+        return $holidayDates->unique()->toArray();
+    }
+
     public function makeRequest(Request $request)
     {
         try {
@@ -34,7 +63,8 @@ class TimeOffController extends RequestController
 
             $taken = 0;
             $workingDayOff = Auth::user()->userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('name')->toArray();
-            $holidayDates = GlobalDayOff::whereBetween('date', [$startDate, $endDate])->pluck('date')->toArray();
+
+            $holidayDates = $this->_getGlobalDayOff($startDate, $endDate);
 
             while ($startDate <= $endDate) {
                 $currentDate = $startDate->copy();
@@ -109,6 +139,12 @@ class TimeOffController extends RequestController
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
+            /** @var App\Models\User $user */
+            $user = Auth::user();
+            if (!($user->id == $request->user_id|| $user->hasPermissionTo('HC:view-attendance'))) {
+                abort(403);
+            }
+
             $leaveRequest = UserLeaveRequest::where('user_id', $request->user_id)
                 ->orderBy('created_at', 'desc')
                 ->with(['user.userEmployment', 'approvalLine', 'leaveRequestCategory']);

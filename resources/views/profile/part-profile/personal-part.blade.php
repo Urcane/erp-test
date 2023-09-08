@@ -24,12 +24,11 @@
         <div class="tab-pane fade show active" id="basic_info_content" role="tabpanel">
             <div class="row p-4">
                 <div class="row">
-                    @role("administrator")
-                    {{-- Personal data --}}
+                    @can("HC:update-profile")                    {{-- Personal data --}}
                     <form id="kt_personal_data_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" value="{{$user->id ?? ""}}" name="user_id">
-                        @endrole
+                        @endcan
                         @include("hc.cmt-employee.part-form.form-personal-data")
                         <div class="col-lg-12 mb-3">
                             <div class="row">
@@ -83,7 +82,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold text-dark">Role</span>
                             </label>
-                            <select name="role_id" class="drop-data form-select form-select-solid" data-control="select2" @unlessrole("administrator") disabled @endunlessrole>
+                            <select name="role_id" class="drop-data form-select form-select-solid" data-control="select2" @cannot("HC:update-profile") disabled @endcannot>
                                 @foreach ($dataRole as $dr)
                                 <option value="{{$dr->id}}" {{$dr->name == $user->getRoleNames()[0]  ? 'selected' : ''}}>{{$dr->name}}</option>
                                 @endforeach
@@ -110,27 +109,24 @@
                                 </div>
                             </div>
                         </div>
-                        @role("administrator")
-                        <div class="col-lg-12 mt-9 text-end">
+                        @can("HC:update-profile")                        <div class="col-lg-12 mt-9 text-end">
                             <button type="submit" id="kt_personal_data_submit" class="btn btn-info btn-sm w-md-200px w-100">Simpan</button>
                         </div>
                     </form>
-                    @endrole
+                    @endcan
                 </div>
             </div>
         </div>
 
         <div class="tab-pane fade" id="identity_address" role="tabpanel">
             <div class="row p-4">
-                @role("administrator")
-                <form id="kt_identity_address_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                @can("HC:update-profile")                <form id="kt_identity_address_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" value="{{$user->id}}" name="user_id">
-                    @endrole
+                    @endcan
                     @include("hc.cmt-employee.part-form.form-identity-address")
 
-                    @role("administrator")
-                    <div class="col-lg-12 mt-9 text-end">
+                    @can("HC:update-profile")                    <div class="col-lg-12 mt-9 text-end">
                         <button type="submit" id="kt_identity_address_submit" class="btn btn-info btn-sm w-md-200px w-100">Simpan</button>
                     </div>
                 </form>
@@ -156,7 +152,7 @@
                         });
                     });
                 </script>
-                @endrole
+                @endcan
                 {{-- Content --}}
             </div>
         </div>

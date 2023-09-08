@@ -11,15 +11,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\Constants;
-
+use App\Exceptions\AuthorizationError;
 use App\Utils\ErrorHandler;
-use App\Exceptions\InvariantError;
-use App\Exceptions\NotFoundError;
 use App\Exports\Attendance\AllAttendance;
 use App\Exports\Attendance\PersonalAttendance;
 use App\Models\User;
 use App\Models\Attendance\AttendanceChangeLog;
-use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
 use App\Models\Division;
 use App\Models\Department;
@@ -131,6 +128,13 @@ class AttendanceController extends Controller
 
     public function show(string $id)
     {
+        /** @var App\Models\User $authUser */
+        $authUser = Auth::user();
+
+        if (!($authUser->id == $id || $authUser->hasPermissionTo('HC:view-attendance'))) {
+            abort(403);
+        }
+
         $user = User::has('userEmployment')->has('userAttendances')->whereId($id)->first();
         $constants = $this->constants;
 
@@ -445,6 +449,13 @@ class AttendanceController extends Controller
     public function getAttendanceSummariesById(Request $request)
     {
         try {
+            /** @var App\Models\User $user */
+            $user = Auth::user();
+
+            if (!($user->id == $request->userId || $user->hasPermissionTo('HC:view-attendance'))) {
+                abort(403);
+            }
+
             $userAttendances = UserAttendance::where('user_id', $request->userId)
                 ->has('user.userEmployment')->with('user.userEmployment');
 
@@ -647,6 +658,13 @@ class AttendanceController extends Controller
     public function getTableAttendanceDetail(Request $request)
     {
         if (request()->ajax()) {
+            /** @var App\Models\User $user */
+            $user = Auth::user();
+
+            if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
+                throw new AuthorizationError("Anda tidak berhak mengakses ini!");
+            }
+
             $userAttendances = UserAttendance::where('user_id', $request->user_id)
                 ->has('user.userEmployment')->with('user.userEmployment');;
 
@@ -803,6 +821,13 @@ class AttendanceController extends Controller
     public function exportPersonalAttendance(Request $request)
     {
         try {
+            /** @var App\Models\User $user */
+            $user = Auth::user();
+
+            if (!($user->id == $request->userId || $user->hasPermissionTo('HC:view-attendance'))) {
+                abort(403);
+            }
+
             return Excel::download(new PersonalAttendance(
                 $request->userId,
                 $request->rangeDate,

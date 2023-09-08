@@ -28,7 +28,7 @@
     {{-- BOQ  COMMERCIAL --}}
     {{-- @dd($dataSurvey) --}}
     {{-- @dd($dataProspect) --}}
-    {{-- @dd($updateDraftBoqData['dataCompanyItem'][0]) --}}
+    {{-- @dd($dataReviewBoq['dataCompanyItem'][0]) --}}
 
 
     <div class="row justify-content-center">
@@ -42,40 +42,40 @@
                             </h3>
 
                             <div class="card-toolbar p-3">
-                                @if (!isset($updateDraftBoqData['dataCompanyItem'][0]->approval_director))
+                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_director))
                                 <a href="#kt_modal_review_director_boq_commercial"
-                                    data-boq-id="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}"
-                                    data-remark="{{ $updateDraftBoqData['dataCompanyItem'][0]->remark }}"
+                                    data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
+                                    data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
                                     class="btn btn-md btn-info w-lg-150px btn_review_director_boq_commercial"
                                     data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Director</a>
                                 @endif
                             </div>
 
                             <div class="card-toolbar p-3">
-                                @if (!isset($updateDraftBoqData['dataCompanyItem'][0]->approval_manager_sales))
+                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_sales))
                                 <a href="#kt_modal_review_manager_sales_boq_commercial"
-                                    data-boq-id="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}"
-                                    data-remark="{{ $updateDraftBoqData['dataCompanyItem'][0]->remark }}"
+                                    data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
+                                    data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
                                     class="btn btn-md btn-info w-lg-150px btn_review_manager_sales_boq_commercial"
                                     data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Sales</a>
                                 @endif
                             </div>
 
                             <div class="card-toolbar p-3">
-                                @if (!isset($updateDraftBoqData['dataCompanyItem'][0]->approval_manager_operation))
+                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_operation))
                                 <a href="#kt_modal_review_manager_operation_boq_commercial"
-                                    data-boq-id="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}"
-                                    data-remark="{{ $updateDraftBoqData['dataCompanyItem'][0]->remark }}"
+                                    data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
+                                    data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
                                     class="btn btn-md btn-info w-lg-150px btn_review_manager_operation_boq_commercial"
                                     data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Operation</a>
                                 @endif
                             </div>
 
                             <div class="card-toolbar p-3">
-                                @if (!isset($updateDraftBoqData['dataCompanyItem'][0]->approval_finman))
+                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_finman))
                                 <a href="#kt_modal_review_finman_boq_commercial"
-                                    data-boq-id="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}"                                    
-                                    data-remark="{{ $updateDraftBoqData['dataCompanyItem'][0]->remark }}"
+                                    data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"                                    
+                                    data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
                                     class="btn btn-md btn-info w-lg-150px btn_review_finman_boq_commercial"
                                     data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Finman</a>
                                 @endif    
@@ -98,10 +98,10 @@
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->prospect_title }} - {{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
+                                                    placeholder="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->prospect_title }} - {{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                                 <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="boq_id"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}">
+                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}">
                                                 <div id="error-prospect"></div>
                                             </div>
 
@@ -111,11 +111,11 @@
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->surveyRequest->no_survey ?? 'Survey Tidak ada' }}">
+                                                    placeholder="{{ $dataReviewBoq['dataCompanyItem'][0]->surveyRequest->no_survey ?? 'Survey Tidak ada' }}">
 
                                                 <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="survey_request_id" id="survey_request_id"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id}}">
+                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->survey_request_id}}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -128,7 +128,7 @@
                                                 <label class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
+                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                             </div>
 
                                             <div class=""
@@ -136,7 +136,7 @@
                                                 <label class=" form-label">Nama Kontak Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
+                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
                                             <div class=""
@@ -147,7 +147,7 @@
                                                     <input type="number" class="form-control form-control-solid" disabled
                                                         minlength="8" name="customer_contact_phone"
                                                         id="customer_contact_phone"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
+                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
                                                 </div>
                                             </div>
 
@@ -156,7 +156,7 @@
                                                 <label class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->bussinesType->type_name }}">
+                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->bussinesType->type_name }}">
                                             </div>
                                         </div>
                                     </div>
@@ -171,7 +171,7 @@
                                                 <input type="number" class="form-control form-control-solid disabled"
                                                     oninput="validateAndFormatNumber(this);" id="sales_id"
                                                     name="sales_id"
-                                                    placeholder="{{ $updateDraftBoqData['dataSalesSelected']->name ?? 'Sales Tidak Ada' }}" />
+                                                    placeholder="{{ $dataReviewBoq['dataSalesSelected']->name ?? 'Sales Tidak Ada' }}" />
                                             </div>
 
                                             <div class=""
@@ -180,7 +180,7 @@
                                                 <input type="number" class="form-control form-control-solid disabled"
                                                     oninput="validateAndFormatNumber(this);" id="technician_id"
                                                     name="technician_id"
-                                                    placeholder="{{ $updateDraftBoqData['dataTechnicianSelected']->name ?? 'Technician Tidak Ada' }}" />
+                                                    placeholder="{{ $dataReviewBoq['dataTechnicianSelected']->name ?? 'Technician Tidak Ada' }}" />
                                             </div>
 
                                             <div class=""
@@ -189,7 +189,7 @@
                                                 <input type="number" class="form-control form-control-solid disabled"
                                                     oninput="validateAndFormatNumber(this);" id="procurement_id"
                                                     name="procurement_id"
-                                                    placeholder="{{ $updateDraftBoqData['dataProcurementSelected']->name ?? 'Procurement Tidak Ada' }}" />
+                                                    placeholder="{{ $dataReviewBoq['dataProcurementSelected']->name ?? 'Procurement Tidak Ada' }}" />
                                             </div>
 
                                         </div>
@@ -204,7 +204,7 @@
                                                     <input type="number" class="form-control form-control-solid disabled"
                                                         oninput="validateAndFormatNumber(this);" id="gpm"
                                                         name="gpm"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->gpm ?? null }}" />
+                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->gpm ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -216,7 +216,7 @@
                                                     <input type="number" class="form-control form-control-solid disabled"
                                                         oninput="validateAndFormatNumber(this);" id="modal"
                                                         name="modal"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->modal ?? null }}" />
+                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->modal ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -228,7 +228,7 @@
                                                     <input type="number" class="form-control form-control-solid disabled"
                                                         oninput="validateAndFormatNumber(this);" id="npm"
                                                         name="npm"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->npm ?? null }}" />
+                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->npm ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -240,7 +240,7 @@
                                                     <input type="number" class="form-control form-control-solid disabled"
                                                         oninput="validateAndFormatNumber(this);" id="manpower"
                                                         name="manpower"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->manpower ?? null }}" />
+                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->manpower ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -252,7 +252,7 @@
                                                     <input type="number" class="form-control form-control-solid disabled"
                                                         oninput="validateAndFormatNumber(this);" id="percentage"
                                                         name="percentage"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->percentage ?? null }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -263,8 +263,8 @@
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                         <div class="MultipleItem">
-                                            @if (isset($updateDraftBoqData['dataCompanyItem'][0]->itemable))
-                                                @foreach ($updateDraftBoqData['dataCompanyItem'][0]->itemable as $relatedItem)
+                                            @if (isset($dataReviewBoq['dataCompanyItem'][0]->itemable))
+                                                @foreach ($dataReviewBoq['dataCompanyItem'][0]->itemable as $relatedItem)
                                                     @php
                                                         $random_string = \Illuminate\Support\Str::random(4);
                                                     @endphp

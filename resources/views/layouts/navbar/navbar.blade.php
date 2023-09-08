@@ -137,32 +137,36 @@
                                         <div class="row">
                                             <div class="col-lg-12 mb-6 mb-lg-0">
                                                 <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="menu-item p-0 m-0">
-                                                            <a href="{{route('hc.emp.index')}}" class="menu-link">
-                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
-                                                                    <i class="fa-solid fa-users text-primary fs-3"></i>
-                                                                </span>
-                                                                <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-EMP</span>
-                                                                    <span class="fs-7 fw-semibold text-gray-500">Database Pegawai Comtelindo</span>
-                                                                </span>
-                                                            </a>
+                                                    @can('HC:view-employee')
+                                                        <div class="col-lg-6">
+                                                            <div class="menu-item p-0 m-0">
+                                                                <a href="{{route('hc.emp.index')}}" class="menu-link">
+                                                                    <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                        <i class="fa-solid fa-users text-primary fs-3"></i>
+                                                                    </span>
+                                                                    <span class="d-flex flex-column">
+                                                                        <span class="fs-6 fw-bold text-dark">CMT-EMP</span>
+                                                                        <span class="fs-7 fw-semibold text-gray-500">Database Pegawai Comtelindo</span>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="menu-item p-0 m-0">
-                                                            <a href="{{route('hc.att.index')}}" class="menu-link">
-                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
-                                                                    <i class="fa-solid fa-calendar-days text-primary fs-3"></i>
-                                                                </span>
-                                                                <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-Attendance</span>
-                                                                    <span class="fs-7 fw-semibold text-gray-500">Catatan Daftar Hadir Karyawan</span>
-                                                                </span>
-                                                            </a>
+                                                    @endcan
+                                                    @can("HC:view-attendance")
+                                                        <div class="col-lg-6">
+                                                            <div class="menu-item p-0 m-0">
+                                                                <a href="{{route('hc.att.index')}}" class="menu-link">
+                                                                    <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                        <i class="fa-solid fa-calendar-days text-primary fs-3"></i>
+                                                                    </span>
+                                                                    <span class="d-flex flex-column">
+                                                                        <span class="fs-6 fw-bold text-dark">CMT-Attendance</span>
+                                                                        <span class="fs-7 fw-semibold text-gray-500">Catatan Daftar Hadir Karyawan</span>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    @endcan
                                                     <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('hc.request.index')}}" class="menu-link">
@@ -176,19 +180,21 @@
                                                             </a>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="menu-item p-0 m-0">
-                                                            <a href="{{route('hc.setting.company-info.index')}}" class="menu-link">
-                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
-                                                                    <i class="fa-solid fa-gear text-primary fs-3"></i>
-                                                                </span>
-                                                                <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-Settings</span>
-                                                                    <span class="fs-7 fw-semibold text-gray-500">Setting jadwal sampai payroll</span>
-                                                                </span>
-                                                            </a>
+                                                    @can('HC:setting')
+                                                        <div class="col-lg-6">
+                                                            <div class="menu-item p-0 m-0">
+                                                                <a href="{{route('hc.setting.company-info.index')}}" class="menu-link">
+                                                                    <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                        <i class="fa-solid fa-gear text-primary fs-3"></i>
+                                                                    </span>
+                                                                    <span class="d-flex flex-column">
+                                                                        <span class="fs-6 fw-bold text-dark">CMT-Settings</span>
+                                                                        <span class="fs-7 fw-semibold text-gray-500">Setting jadwal sampai payroll</span>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    @endcan
                                                 </div>
                                             </div>
                                         </div>

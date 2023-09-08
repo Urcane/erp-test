@@ -40,9 +40,9 @@
                             <li><a class="dropdown-item" href="{{route("hc.setting.schedule.index")}}">Attendance</a></li>
                             <li><a class="dropdown-item" href="#">Live Attendance</a></li>
                             <li><a class="dropdown-item" href="#">Portal</a></li>
-                            <li><a class="dropdown-item" href="{{route("hc.setting.timeoff.index")}}">Time Of</a></li>
+                            <li><a class="dropdown-item" href="{{route("hc.setting.timeoff.index")}}">Time Off</a></li>
                             <li><a class="dropdown-item" href="#">Overtime</a></li>
-                            <li><a class="dropdown-item" href="#">Holiday</a></li>
+                            <li><a class="dropdown-item" href="{{route("hc.setting.holiday.index")}}">Holiday</a></li>
                         </ul>
                     </div>
                     <div class="dropend mb-8">
