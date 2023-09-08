@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Request;
 
+use App\Exceptions\AuthorizationError;
+use App\Exceptions\InvariantError;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -14,6 +16,7 @@ use App\Models\Attendance\LeaveRequestCategory;
 use DateTime;
 use DateInterval;
 use DatePeriod;
+use Illuminate\Support\Facades\Auth;
 
 class TimeOffController extends RequestController
 {
@@ -41,7 +44,6 @@ class TimeOffController extends RequestController
 
         return $holidayDates->unique()->toArray();
     }
-
 
     public function getRequest(Request $request)
     {
@@ -164,6 +166,38 @@ class TimeOffController extends RequestController
                 "status" => "success",
                 "data" => $timeOffCategories
             ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function cancelRequest(Request $request)
+    {
+        try {
+            $timeoffRequest = UserLeaveRequest::whereId($request->id)->first();
+
+            if (!$timeoffRequest) {
+                throw new NotFoundError("Request Tidak ditemukan");
+            }
+
+            if ($timeoffRequest->user_id != Auth::user()->id) {
+                throw new AuthorizationError("Anda tidak berhak melakukan ini");
+            }
+
+            if ($timeoffRequest->status != $this->constants->approve_status[0]) {
+                throw new InvariantError("Tidak bisa melakukan cancel pada request");
+            }
+
+            $timeoffRequest->update([
+                "status" => $this->constants->approve_status[3]
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil cancel request attendance"
+            ],);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);
 
