@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Request;
 
+use App\Exceptions\AuthorizationError;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -11,6 +12,7 @@ use App\Exceptions\NotFoundError;
 use App\Models\Attendance\UserShiftRequest;
 use App\Models\Employee\UserEmployment;
 use App\Models\Attendance\UserAttendance;
+use Illuminate\Support\Facades\Auth;
 
 class ShiftController extends RequestController
 {
@@ -133,6 +135,38 @@ class ShiftController extends RequestController
                 "status" => "success",
                 "message" => "Berhasil melakukan request shift"
             ], 201);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function cancelRequest(Request $request)
+    {
+        try {
+            $shiftRequest = UserShiftRequest::whereId($request->id)->first();
+
+            if (!$shiftRequest) {
+                throw new NotFoundError("Request Tidak ditemukan");
+            }
+
+            if ($shiftRequest->user_id != Auth::user()->id) {
+                throw new AuthorizationError("Anda tidak berhak melakukan ini");
+            }
+
+            if ($shiftRequest->status != $this->constants->approve_status[0]) {
+                throw new InvariantError("Tidak bisa melakukan cancel pada request");
+            }
+
+            $shiftRequest->update([
+                "status" => $this->constants->approve_status[3]
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil cancel request shift"
+            ],);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);
 

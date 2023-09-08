@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Api\Request;
 
+use App\Exceptions\AuthorizationError;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
 use App\Models\Attendance\GlobalDayOff;
 use Illuminate\Http\Request;
 use App\Models\Attendance\UserAttendanceRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AttendanceController extends RequestController
 {
@@ -161,6 +163,38 @@ class AttendanceController extends RequestController
                 "status" => "success",
                 "message" => "Berhasil melakukan request attendance"
             ], 201);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function cancelRequest(Request $request)
+    {
+        try {
+            $attendanceRequest = UserAttendanceRequest::whereId($request->id)->first();
+
+            if (!$attendanceRequest) {
+                throw new NotFoundError("Request Tidak ditemukan");
+            }
+
+            if ($attendanceRequest->user_id != Auth::user()->id) {
+                throw new AuthorizationError("Anda tidak berhak melakukan ini");
+            }
+
+            if ($attendanceRequest->status != $this->constants->approve_status[0]) {
+                throw new InvariantError("Tidak bisa melakukan cancel pada request");
+            }
+
+            $attendanceRequest->update([
+                "status" => $this->constants->approve_status[3]
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil cancel request attendance"
+            ],);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);
 
