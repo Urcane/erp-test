@@ -10,7 +10,7 @@
                 <form id="kt_modal_cancel_quotation_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
                     enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" id="quotation_id2" name="quotation_id2">
+                    <input type="hidden" id="quo_id" name="quo_id">
                     <div class="scroll-y me-n10 pe-10" id="kt_modal_cancel_quotation_scroll" data-kt-scroll="true"
                         data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
                         data-kt-scroll-dependencies="#kt_modal_cancel_quotation_header"
@@ -23,7 +23,14 @@
                                         class="text-danger">Membatalkan</b> pada Quotation ini<span
                                         id="prospect_name"></span> ?</span>
                             </div>  
-                        </div>
+                        </div> 
+                        <div class="col-lg-12 mb-3">
+							<label class="d-flex align-items-center fs-6 form-label mb-2">
+								<span class="required fw-bold">Deskripsi Pekerjaan</span>
+							</label>
+                            <textarea class="form-control form-control-solid h-100px" placeholder="Fill Notes" name="remark"></textarea>
+							<div class="fv-plugins-message-container invalid-feedback"></div>
+						</div>
                     </div>
                     <div class="text-center mt-9 col-12">
                         <button type="reset" id="kt_modal_cancel_quotation_submit"

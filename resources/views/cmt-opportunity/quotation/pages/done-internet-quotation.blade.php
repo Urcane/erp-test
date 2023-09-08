@@ -510,7 +510,7 @@
                 $('#kt_modal_cancel_quotation_submit').removeAttr('disabled', 'disabled');
 
                 var quo_id = $(this).data('id');
-                $('#quotation_id2').val(quo_id); 
+                $('#quo_id').val(quo_id); 
 
                 submitModal({
                     modalName: 'kt_modal_cancel_quotation',
