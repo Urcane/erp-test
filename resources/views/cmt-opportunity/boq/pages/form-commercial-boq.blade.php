@@ -28,7 +28,8 @@
     {{-- BOQ  COMMERCIAL --}}
     {{-- @dd($dataSurvey) --}}
     {{-- @dd($dataProspect) --}}
-    {{-- @dd($updateDraftBoqData['dataSalesSelected']) --}}
+    {{-- @dd($updateDraftBoqData['inventoryGoodInet']) --}}
+    {{-- @dd($updateDraftBoqData['quotationItem']) --}}
 
 
     <div class="row justify-content-center">
@@ -36,245 +37,224 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body">
-                            <div class="mb-6 d-flex justify-content-between">
-                                <h3 class="card-title">
-                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Commercial Bill of Quantity</span>
-                                </h3>
-                                <div class="form-check form-check-custom form-check-success form-check-solid">
-                                    <input class="form-check-input" type="hidden" value="0" id="is_final" name="is_final" />
-                                    {{-- <label class="form-check-label" for="is_final">Finalisasi</label> --}}
-                                </div>
-                            </div>
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span class="lh-xxl fw-bolder text-dark d-md-lh-sm">Commercial Bill of Quantity</span>
+                            </h3>
                         </div>
-                        <form class="card-body">
-                            {{-- header company --}}
-                            <div class="row">
-                                <div class="col-lg-12">
+                    </div>
+                    <div class="card-body">
+                        {{-- header company --}}
+                        <div class="row">
+                            <div class="col-lg-12">
 
-                                    {{-- divv Company --}}
-                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
-                                        {{-- baris prospect company --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8 row">
+                                {{-- divv Company --}}
+                                <div
+                                    class="d-flex justify-content-around flex-wrap col-lg-12 mb-5 border-dashed border-gray-100">
+                                    {{-- baris prospect company --}}
+                                    <div class="my-8 d-flex justify-content-around flex-wrap col-12">
 
-                                            <input type="hidden" id="boq_id" name="boq_id"  value="{{$updateDraftBoqData['dataCompanyItem'][0]->id}}">
-                                            
-                                            <div class="col-lg-6">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                    <span class="fw-bold">Judul Prospect</span>
-                                                </label>
-                                                <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->prospect_title }} - {{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
-                                                <input type="hidden" class="form-control form-control-solid" disabled
-                                                    name="prospect_id" id="prospect_id"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->prospect_id }}">
-                                                <div id="error-prospect"></div>
-                                            </div>
+                                        <input type="hidden" id="boq_id" name="boq_id"
+                                            value="{{ $updateDraftBoqData['dataCompanyItem'][0]->id }}">
 
-                                            <div class="col-lg-6">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                    <span class=" fw-bold">Survey ID</span>
-                                                </label>
-                                                <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->surveyRequest->no_survey ?? 'Survey Tidak ada' }}">
-
-                                                <input type="hidden" class="form-control form-control-solid" disabled
-                                                    name="survey_request_id" id="survey_request_id"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id}}">
-                                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                                            </div>
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-8 ">
+                                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <span class="fw-bold">Judul Prospect</span>
+                                            </label>
+                                            <input type="text" class="form-control form-control-solid" disabled
+                                                placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->prospect_title }} - {{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
+                                            <input type="hidden" class="form-control form-control-solid" disabled
+                                                name="prospect_id" id="prospect_id"
+                                                value="{{ $updateDraftBoqData['dataCompanyItem'][0]->prospect_id }}">
+                                            <div id="error-prospect"></div>
                                         </div>
 
-                                        {{-- baris company contact --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8 row">
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-8 ">
+                                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <span class=" fw-bold">Survey ID</span>
+                                            </label>
+                                            <input type="text" class="form-control form-control-solid" disabled
+                                                placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->surveyRequest->no_survey ?? 'Survey Tidak ada' }}">
 
-                                            <div class="col-lg-3">
-                                                <label class="form-label">Nama Perusahaan</label>
-                                                <input type="text" class="form-control form-control-solid" disabled
-                                                    id="customer_name"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
-                                            </div>
-
-                                            <div class="col-lg-3">
-                                                <label class=" form-label">Nama Kontak Customer</label>
-                                                <input type="text" class="form-control form-control-solid" placeholder=""
-                                                    disabled name="customer_contact_name" id="customer_contact_name"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
-                                            </div>
-
-                                            <div class="col-lg-3">
-                                                <label class="form-label">No Kontak Customer</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text border-0" id="">+62</span>
-                                                    <input type="number" class="form-control form-control-solid" disabled
-                                                        minlength="8" name="customer_contact_phone"
-                                                        id="customer_contact_phone"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-3">
-                                                <label class="form-label">Jenis Project</label>
-                                                <input type="text" class="form-control form-control-solid" placeholder=""
-                                                    disabled name="type_name" id="type_name"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->bussinesType->type_name }}">
-                                            </div>
+                                            <input type="hidden" class="form-control form-control-solid" disabled
+                                                name="survey_request_id" id="survey_request_id"
+                                                value="{{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id }}">
+                                            <div class="fv-plugins-message-container invalid-feedback"></div>
                                         </div>
                                     </div>
 
-                                    {{-- sales & gpm required --}}
-                                    <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8 row">
+                                    {{-- baris company contact --}}
+                                    <div class="my-8 d-flex justify-content-around flex-wrap col-12">
 
-                                            <div class="col-lg-4">
-                                                <label class="form-label required">Sales</label>
-                                                <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" name="sales_id" id="sales_id">
-                                                    <option
-                                                        value="{{ $updateDraftBoqData['dataSalesSelected']->id ?? null }}"
-                                                        selected disabled>
-                                                        {{ $updateDraftBoqData['dataSalesSelected']->name ?? 'Pilih Sales' }}
-                                                    </option>
-                                                    @if (isset($updateDraftBoqData['dataSales']))
-                                                        @foreach ($updateDraftBoqData['dataSales'] as $sales)
-                                                            <option value="{{ $sales->id ?? null }}">
-                                                                {{ $sales->name ?? null }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-
-                                            <div class="col-lg-4">
-                                                <label class="form-label required">Technician</label>
-                                                <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" name="technician_id" id="technician_id">
-                                                    <option
-                                                        value="{{ $updateDraftBoqData['dataTechnicianSelected']->id ?? null }}"
-                                                        selected disabled>
-                                                        {{ $updateDraftBoqData['dataTechnicianSelected']->name ?? 'Pilih Technician' }}
-                                                    </option>
-                                                    @if (isset($updateDraftBoqData['dataTechnician']))
-                                                        @foreach ($updateDraftBoqData['dataTechnician'] as $Technician)
-                                                            <option value="{{ $Technician->id ?? null }}">
-                                                                {{ $Technician->name ?? null }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-
-                                            <div class="col-lg-4">
-                                                <label class="form-label required">Procurement</label>
-                                                <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" name="procurement_id" id="procurement_id">
-                                                    <option
-                                                        value="{{ $updateDraftBoqData['dataProcurementSelected']->id ?? null }}"
-                                                        selected disabled>
-                                                        {{ $updateDraftBoqData['dataProcurementSelected']->name ?? 'Pilih Procurement' }}
-                                                    </option>
-                                                    @if (isset($updateDraftBoqData['dataProcurement']))
-                                                        @foreach ($updateDraftBoqData['dataProcurement'] as $procurement)
-                                                            <option value="{{ $procurement->id ?? null }}">
-                                                                {{ $procurement->name ?? null }}
-                                                            </option>
-                                                        @endforeach
-                                                    @endif
-                                                </select>
-                                            </div>
-
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-8 mt-2 mb-3">
+                                            <label class="form-label">Nama Perusahaan</label>
+                                            <input type="text" class="form-control form-control-solid" disabled
+                                                id="customer_name"
+                                                value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                         </div>
 
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-8 mt-2 mb-3">
+                                            <label class=" form-label">Nama Kontak Customer</label>
+                                            <input type="text" class="form-control form-control-solid" placeholder=""
+                                                disabled name="customer_contact_name" id="customer_contact_name"
+                                                value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
+                                        </div>
 
-                                            <div class="col-lg-2">
-                                                <label class="form-label required">GPM</label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <input type="number" class="form-control form-control-solid required"
-                                                        oninput="validateAndFormatNumber(this);" id="gpm"
-                                                        name="gpm"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->gpm ?? null }}" />
-                                                </div>
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-8 mt-2 mb-3">
+                                            <label class="form-label">No Kontak Customer</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text border-0" id="">+62</span>
+                                                <input type="number" class="form-control form-control-solid" disabled
+                                                    minlength="8" name="customer_contact_phone" id="customer_contact_phone"
+                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
                                             </div>
+                                        </div>
 
-                                            <div class="col-lg-2">
-                                                <label class="form-label required">Modal</label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <input type="number" class="form-control form-control-solid required"
-                                                        oninput="validateAndFormatNumber(this);" id="modal"
-                                                        name="modal"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->modal ?? null }}" />
-                                                </div>
-                                            </div>
+                                        <div class="col-lg-5 col-md-5 col-sm-5 col-8 mt-2 mb-3">
+                                            <label class="form-label">Jenis Project</label>
+                                            <input type="text" class="form-control form-control-solid" placeholder=""
+                                                disabled name="type_name" id="type_name"
+                                                value="{{ $updateDraftBoqData['dataCompanyItem'][0]->customerProspect->customer->bussinesType->type_name }}">
+                                        </div>
+                                    </div>
+                                </div>
 
-                                            <div class="col-lg-2">
-                                                <label class="form-label required">NPM</label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <input type="number" class="form-control form-control-solid required"
-                                                        oninput="validateAndFormatNumber(this);" id="npm"
-                                                        name="npm"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->npm ?? null }}" />
-                                                </div>
-                                            </div>
+                                {{-- sales & gpm required --}}
+                                <div class="mb-6 border-dashed border-gray-100">
+                                    <div class="d-flex justify-content-around flex-wrap my-8 row">
 
-                                            <div class="col-lg-2">
-                                                <label class="form-label required">Manpower</label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <input type="number" class="form-control form-control-solid required"
-                                                        oninput="validateAndFormatNumber(this);" id="manpower"
-                                                        name="manpower"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->manpower ?? null }}" />
-                                                </div>
-                                            </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-8">
+                                            <label class="form-label required">Sales</label>
+                                            <select class="form-select-solid form-select form-select-solid"
+                                                data-control="select2" name="sales_id" id="sales_id">
+                                                <option value="{{ $updateDraftBoqData['dataSalesSelected']->id ?? null }}"
+                                                    selected disabled>
+                                                    {{ $updateDraftBoqData['dataSalesSelected']->name ?? 'Pilih Sales' }}
+                                                </option>
+                                                @if (isset($updateDraftBoqData['dataSales']))
+                                                    @foreach ($updateDraftBoqData['dataSales'] as $sales)
+                                                        <option value="{{ $sales->id ?? null }}">
+                                                            {{ $sales->name ?? null }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
 
-                                            <div class="col-lg-2">
-                                                <label class="form-label required">Percentage</label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <input type="number" class="form-control form-control-solid required"
-                                                        oninput="validateAndFormatNumber(this);" id="percentage"
-                                                        name="percentage"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
-                                                </div>
-                                            </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-8">
+                                            <label class="form-label required">Technician</label>
+                                            <select class="form-select-solid form-select form-select-solid"
+                                                data-control="select2" name="technician_id" id="technician_id">
+                                                <option
+                                                    value="{{ $updateDraftBoqData['dataTechnicianSelected']->id ?? null }}"
+                                                    selected disabled>
+                                                    {{ $updateDraftBoqData['dataTechnicianSelected']->name ?? 'Pilih Technician' }}
+                                                </option>
+                                                @if (isset($updateDraftBoqData['dataTechnician']))
+                                                    @foreach ($updateDraftBoqData['dataTechnician'] as $Technician)
+                                                        <option value="{{ $Technician->id ?? null }}">
+                                                            {{ $Technician->name ?? null }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-8">
+                                            <label class="form-label required">Procurement</label>
+                                            <select class="form-select-solid form-select form-select-solid"
+                                                data-control="select2" name="procurement_id" id="procurement_id">
+                                                <option
+                                                    value="{{ $updateDraftBoqData['dataProcurementSelected']->id ?? null }}"
+                                                    selected disabled>
+                                                    {{ $updateDraftBoqData['dataProcurementSelected']->name ?? 'Pilih Procurement' }}
+                                                </option>
+                                                @if (isset($updateDraftBoqData['dataProcurement']))
+                                                    @foreach ($updateDraftBoqData['dataProcurement'] as $procurement)
+                                                        <option value="{{ $procurement->id ?? null }}">
+                                                            {{ $procurement->name ?? null }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                         </div>
 
                                     </div>
 
-                                    {{-- Tempat Items --}}
-                                    <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
+                                    <div class="d-flex justify-content-around flex-wrap my-8">
+                                        <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
+                                            <label class="form-label required">Modal</label>
+                                            <div class="position-relative">
+                                                <div class="position-absolute top-0"></div>
+                                                <input type="number" disabled
+                                                    class="form-control form-control-solid required"
+                                                    oninput="validateAndFormatNumber(this);" id="modal"
+                                                    name="modal"
+                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->modal ?? null }}" />
+                                            </div>
+                                        </div>
 
-                                        <div class="MultipleItem">
-                                            @if (isset($updateDraftBoqData['dataCompanyItem'][0]->itemable))
-                                                @foreach ($updateDraftBoqData['dataCompanyItem'][0]->itemable as $relatedItem)
-                                                    @php
-                                                        $random_string = \Illuminate\Support\Str::random(4);
-                                                    @endphp
+                                        <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
+                                            <label class="form-label required">GPM</label>
+                                            <div class="position-relative">
+                                                <div class="position-absolute top-0"></div>
+                                                <input type="number" disabled
+                                                    class="form-control form-control-solid required"
+                                                    oninput="validateAndFormatNumber(this);" id="gpm"
+                                                    name="gpm"
+                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->gpm ?? null }}" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
+                                            <label class="form-label required">NPM</label>
+                                            <div class="position-relative">
+                                                <div class="position-absolute top-0"></div>
+                                                <input type="number" disabled
+                                                    class="form-control form-control-solid required"
+                                                    oninput="validateAndFormatNumber(this);" id="npm"
+                                                    name="npm"
+                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->npm ?? null }}" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
+                                            <label class="form-label required">Percentage</label>
+                                            <div class="position-relative">
+                                                <div class="position-absolute top-0"></div>
+                                                <input type="number" disabled
+                                                    class="form-control form-control-solid required"
+                                                    oninput="validateAndFormatNumber(this);" id="percentage"
+                                                    name="percentage"
+                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                {{-- Tempat Items --}}
+                                <div class="mb-6 border-dashed border-gray-100">
+
+                                    <div class="MultipleItem d-flex justify-content-center row">
+                                        @if (isset($updateDraftBoqData['dataCompanyItem'][0]->itemable))
+                                            @foreach ($updateDraftBoqData['dataCompanyItem'][0]->itemable as $relatedItem)
+                                                @php
+                                                    $random_string = \Illuminate\Support\Str::random(4);
+                                                @endphp
+                                                <div
+                                                    class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mb-5 mt-10 row col-lg-11 col-md-11 col-sm-11 col-11">
+
+                                                    <div class="col-8 col-lg-3 col-sm-12 col-md-12">
+                                                        <label class="form-label">Item</label>
+                                                        <input type="text" class="form-control form-control-solid"
+                                                            disabled name="content[][good_name]"
+                                                            value="{{ $relatedItem->inventoryGood->good_name ?? null }} - {{ $relatedItem->inventoryGood->merk ?? null }}" />
+                                                    </div>
+
                                                     <div
-                                                        class="file-soft-boq-item-{{ $random_string }} d-flex justify-content-between mx-20 mb-5 mt-10 row">
-                                                        <div class="col-lg-3">
-                                                            <label class="form-label">Item</label>
-                                                            <input type="text" class="form-control form-control-solid"
-                                                                disabled name="content[][good_name]"
-                                                                value="{{ $relatedItem->inventoryGood->good_name ?? null }} - {{ $relatedItem->inventoryGood->merk ?? null }}" />
-                                                        </div>
-
-                                                        <div class="col-lg-2">
-                                                            <label class="form-label">Price</label>
-                                                            <div class="position-relative">
-                                                                <div class="position-absolute top-0"></div>
-                                                                <input type="number"
-                                                                    class="form-control form-control-solid" disabled
-                                                                    name="content[][purchase_price]"
-                                                                    value="{{ $relatedItem->purchase_price ?? null }}" />
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="col-lg-1">
+                                                        class="col-8 col-lg-2 col-sm-5 col-md-5 d-flex wrap-nowrap justify-content-between">
+                                                        <div class="col-7 col-md-6">
                                                             <label class="form-label">Qty</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
@@ -284,745 +264,951 @@
                                                                     value="{{ $relatedItem->quantity ?? null }}" />
                                                             </div>
                                                         </div>
-
-                                                        <div class="col-lg-1">
-                                                            <label for="" class="form-label">Tipe Unit</label>
+                                                        <div class="col-4 col-md-5">
+                                                            <label class="form-label"> Unit</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
-                                                                <input disabled="disabled" type="text" class="form-control form-control-solid" name="content[][unit]" value="{{ $relatedItem->unit ?? null }}" />
+                                                                <input disabled="disabled" type="text"
+                                                                    class="form-control form-control-solid"
+                                                                    name="content[][unit]"
+                                                                    value="{{ $relatedItem->unit ?? null }}" />
                                                             </div>
                                                         </div>
+                                                    </div>
 
-                                                        <div class="col-lg-2">
-                                                            <label class="form-label">Jasa
-                                                                Antar</label>
+                                                    <div class="col-8 col-lg-2 col-sm-5 col-md-5">
+                                                        <label class="form-label">Price</label>
+                                                        <div class="position-relative">
+                                                            <div class="position-absolute top-0"></div>
+                                                            <input type="number" class="form-control form-control-solid"
+                                                                disabled name="content[][purchase_price]"
+                                                                value="{{ $relatedItem->purchase_price ?? null }}" />
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- <div class="col-lg-1"> 
+                                                        </div> --}}
+
+                                                    <div class="col-8 col-lg-2 col-sm-5 col-md-5">
+                                                        <label class="form-label">Jasa
+                                                            Antar</label>
+                                                        <div class="position-relative">
+                                                            <div class="position-absolute top-0"></div>
+                                                            <input type="number" class="form-control form-control-solid"
+                                                                disabled name="content[][purchase_delivery]"
+                                                                value="{{ $relatedItem->purchase_delivery_charge ?? null }}" />
+                                                        </div>
+                                                    </div>
+
+                                                    <div
+                                                        class="col-8 col-lg-2 col-sm-5 col-md-5 d-flex justify-content-between align-items-center flex-nowrap">
+
+                                                        <div class="col-lg-9 col-md-9 col-9 col-sm-9">
+                                                            <label class="form-label">Total
+                                                                Price</label>
                                                             <div class="position-relative">
                                                                 <div class="position-absolute top-0"></div>
                                                                 <input type="number"
-                                                                    class="form-control form-control-solid" disabled
-                                                                    name="content[][purchase_delivery]"
-                                                                    value="{{ $relatedItem->purchase_delivery_charge ?? null }}" />
+                                                                    class="total-price form-control form-control-solid"
+                                                                    disabled name="content[][total_price]"
+                                                                    value="{{ $relatedItem->total_price ?? null }}" />
                                                             </div>
                                                         </div>
-
-                                                        <div class="col-lg-2">
-                                                            <div class="row">
-                                                                <div class="col-lg-10">
-                                                                    <label class="form-label">Total
-                                                                        Price</label>
-                                                                    <div class="position-relative">
-                                                                        <div class="position-absolute top-0"></div>
-                                                                        <input type="number"
-                                                                            class="total-price form-control form-control-solid"
-                                                                            disabled name="content[][total_price]"
-                                                                            value="{{ $relatedItem->total_price ?? null }}" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-2">
-                                                                    <div class="h-30px"></div>
-                                                                    <button type="button"
-                                                                        class="btn btn-secondary btn-icon btn-sm"
-                                                                        data-kt-menu-placement="bottom-end"
-                                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                                    </button>
-                                                                    <ul class="dropdown-menu">
-                                                                        <li type="button" class="btn-update-boq-modal"
-                                                                            data-random-string="{{ $random_string }}"
-                                                                            data-item-id="{{ $relatedItem->inventory_good_id }}"
-                                                                            data-quantity="{{ $relatedItem->quantity }}"
-                                                                            data-unit="{{ $relatedItem->unit }}"
-                                                                            data-total_price="{{ $relatedItem->total_price }}"
-                                                                            data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
-                                                                            data-purchase_price="{{ $relatedItem->purchase_price }}"
-                                                                            data-purchase_reference="{{ $relatedItem->purchase_reference }}"
-                                                                            data-item_detail="{{ $relatedItem->item_detail }}">
-                                                                            <a class="dropdown-item py-2">
-                                                                                <i class="fa-solid fa-edit me-3"></i>Edit
-                                                                                Item</a>
-                                                                        </li>
-                                                                        <li type="button" class="btn-update-price-modal"
-                                                                            data-random-string="{{ $random_string }}"
-                                                                            data-item-id="{{ $relatedItem->inventory_good_id }}"
-                                                                            data-quantity="{{ $relatedItem->quantity }}"
-                                                                            data-unit="{{ $relatedItem->unit }}"
-                                                                            data-total_price="{{ $relatedItem->total_price }}"
-                                                                            data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
-                                                                            data-purchase_price="{{ $relatedItem->purchase_price }}"
-                                                                            data-purchase_reference="{{ $relatedItem->purchase_reference }}"
-                                                                            data-item_detail="{{ $relatedItem->item_detail }}"
-                                                                            data-delivery_route="{{ $relatedItem->delivery_route }}"
-                                                                            data-delivery_type="{{ $relatedItem->delivery_type }}"
-                                                                            data-purchase_from="{{ $relatedItem->purchase_from }}"
-                                                                            data-payment_type="{{ $relatedItem->payment_type }}"
-                                                                            data-purchase_validity="{{ $relatedItem->purchase_validity }}"
-                                                                            >
-                                                                            <a class="dropdown-item py-2">
-                                                                                <i class="fa-solid fa-edit me-3"></i>Edit Harga
-                                                                                Item</a>
-                                                                        </li>
-                                                                        <li type="button" class="clear-soft-survey-item"
-                                                                            data-random-string="{{ $random_string }}">
-                                                                            <a class="dropdown-item py-2">
-                                                                                <i class="fa-solid fa-trash me-3"></i>Hapus
-                                                                                Item</a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div>
-                                                            <input type="hidden" name="content[][id]" disabled
-                                                                value="{{ $relatedItem->id ?? null }}" />
-                                                            <input type="hidden" name="content[][item_inventory_id]"
-                                                                disabled
-                                                                value="{{ $relatedItem->inventory_good_id ?? null }}" />
-                                                            <input type="hidden" name="content[][purchase_reference]"
-                                                                disabled
-                                                                value="{{ $relatedItem->purchase_reference ?? null }}" />
-                                                            <input type="hidden" name="content[][delivery_route]"
-                                                                disabled
-                                                                value="{{ $relatedItem->delivery_route ?? null }}" />
-                                                            <input type="hidden" name="content[][delivery_type]"
-                                                                disabled
-                                                                value="{{ $relatedItem->delivery_type ?? null }}" />
-                                                            <input type="hidden" name="content[][purchase_from]"
-                                                                disabled
-                                                                value="{{ $relatedItem->purchase_from ?? null }}" />
-                                                            <input type="hidden" name="content[][payment_type]"
-                                                                disabled
-                                                                value="{{ $relatedItem->payment_type ?? null }}" />
-                                                            <input type="hidden" name="content[][purchase_validity]"
-                                                                disabled
-                                                                value="{{ $relatedItem->purchase_validity ?? null }}" />
-                                                            <input type="hidden" name="content[][item_detail]" disabled
-                                                                value="{{ $relatedItem->item_detail ?? null }}" />
+                                                        <div class="col-lg-2 col-md-2 col-2 col-sm-2">
+                                                            <div class="h-25px"></div>
+                                                            <button type="button"
+                                                                class="btn btn-secondary btn-icon btn-md"
+                                                                data-kt-menu-placement="bottom-end"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li type="button" class="btn-update-boq-modal"
+                                                                    data-random-string="{{ $random_string }}"
+                                                                    data-item-id="{{ $relatedItem->inventory_good_id }}"
+                                                                    data-quantity="{{ $relatedItem->quantity }}"
+                                                                    data-unit="{{ $relatedItem->unit }}"
+                                                                    data-total_price="{{ $relatedItem->total_price }}"
+                                                                    data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
+                                                                    data-purchase_price="{{ $relatedItem->purchase_price }}"
+                                                                    data-purchase_reference="{{ $relatedItem->purchase_reference }}"
+                                                                    data-item_detail="{{ $relatedItem->item_detail }}">
+                                                                    <a class="dropdown-item py-2">
+                                                                        <i class="fa-solid fa-edit me-3"></i>Edit
+                                                                        Item</a>
+                                                                </li>
+                                                                <li type="button" class="btn-update-price-modal"
+                                                                    data-random-string="{{ $random_string }}"
+                                                                    data-item-id="{{ $relatedItem->inventory_good_id }}"
+                                                                    data-quantity="{{ $relatedItem->quantity }}"
+                                                                    data-unit="{{ $relatedItem->unit }}"
+                                                                    data-total_price="{{ $relatedItem->total_price }}"
+                                                                    data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
+                                                                    data-purchase_price="{{ $relatedItem->purchase_price }}"
+                                                                    data-purchase_reference="{{ $relatedItem->purchase_reference }}"
+                                                                    data-item_detail="{{ $relatedItem->item_detail }}"
+                                                                    data-delivery_route="{{ $relatedItem->delivery_route }}"
+                                                                    data-delivery_type="{{ $relatedItem->delivery_type }}"
+                                                                    data-purchase_from="{{ $relatedItem->purchase_from }}"
+                                                                    data-payment_type="{{ $relatedItem->payment_type }}"
+                                                                    data-purchase_validity="{{ $relatedItem->purchase_validity }}">
+                                                                    <a class="dropdown-item py-2">
+                                                                        <i class="fa-solid fa-edit me-3"></i>Edit Harga
+                                                                        Item</a>
+                                                                </li>
+                                                                <li type="button" class="clear-soft-survey-item"
+                                                                    data-random-string="{{ $random_string }}">
+                                                                    <a class="dropdown-item py-2">
+                                                                        <i class="fa-solid fa-trash me-3"></i>Hapus
+                                                                        Item</a>
+                                                                </li>
+                                                            </ul>
                                                         </div>
                                                     </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
 
-                                        @role('administrator')
-                                            <div class="mx-20 my-10 col-lg-2">
-                                                <a href="#kt_modal_tambah_boq" data-bs-toggle="modal"
-                                                    class="btn btn-light-info btn-sm mx-3 btn_tambah_boq">
-                                                    <i class="fa-solid fa-plus"></i>Item Baru</a>
-                                                <div id="error-item"></div>
-                                            </div>
-                                        @endrole
-
+                                                    <input type="hidden" name="content[][id]" disabled
+                                                        value="{{ $relatedItem->id ?? null }}" />
+                                                    <input type="hidden" name="content[][item_inventory_id]" disabled
+                                                        value="{{ $relatedItem->inventory_good_id ?? null }}" />
+                                                    <input type="hidden" name="content[][purchase_reference]" disabled
+                                                        value="{{ $relatedItem->purchase_reference ?? null }}" />
+                                                    <input type="hidden" name="content[][delivery_route]" disabled
+                                                        value="{{ $relatedItem->delivery_route ?? null }}" />
+                                                    <input type="hidden" name="content[][delivery_type]" disabled
+                                                        value="{{ $relatedItem->delivery_type ?? null }}" />
+                                                    <input type="hidden" name="content[][purchase_from]" disabled
+                                                        value="{{ $relatedItem->purchase_from ?? null }}" />
+                                                    <input type="hidden" name="content[][payment_type]" disabled
+                                                        value="{{ $relatedItem->payment_type ?? null }}" />
+                                                    <input type="hidden" name="content[][purchase_validity]" disabled
+                                                        value="{{ $relatedItem->purchase_validity ?? null }}" />
+                                                    <input type="hidden" name="content[][item_detail]" disabled
+                                                        value="{{ $relatedItem->item_detail ?? null }}" />
+                                                </div>
+                                            @endforeach
+                                        @endif
                                     </div>
 
-                                    {{-- layer total dan submit --}}
-                                    <div>
-                                        <div class="d-flex justify-content-end mx-20">
-                                            <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Amount : Rp<span id="totalsum"></span></span>
-                                            </div>
-                                            <div class="form-check form-check-custom form-check-success form-check-solid">
-                                                <input class="form-check-input" type="hidden"
-                                                    id="is_draft" name="is_draft" value="0"/>
-                                                {{-- <label class="form-check-label" for="is_draft">Next to Commercial</label> --}}
-                                            </div>
+                                    @role('administrator')
+                                        <div class="d-flex justify-content-start mx-20 mb-8">
+                                            <a href="#kt_modal_tambah_boq" data-bs-toggle="modal"
+                                                class="btn btn-light-info btn-sm mx-3 btn_tambah_boq">
+                                                <i class="fa-solid fa-plus"></i>Item Baru</a>
+                                            <div id="error-item"></div>
                                         </div>
-                                        <div class="d-flex justify-content-center mt-6">
-                                            <div class=" me-5">
-                                                <a href="" class="btn btn-light-danger">Discard</a>
-                                            </div>
-                                            <div class="me-5">
-                                                <button id="submit-all-items" type="button" class="btn btn-light-info">Update</button>
-                                            </div>
-                                            <div class="me-5">
-                                                <button id="finalize-all-items" type="button" class="btn btn-info">Final</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @endrole
 
                                 </div>
-                            </div>
 
-                        </form>
+                                {{--  divv BUNDLE INTERNET --}}
+                                <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
+
+                                    <div class="BundleItem">
+                                        @if (isset($updateDraftBoqData['quotationItem']))
+
+                                            @foreach ($updateDraftBoqData['quotationItem'] as $relatedItem)
+                                                @php
+                                                    $random_string = \Illuminate\Support\Str::random(4);
+                                                @endphp
+
+                                                <div
+                                                    class="file-soft-quotation-bundle-{{ $random_string }} d-flex justify-content-around flex-wrap col-lg-12 mb-10">
+                                                    <!-- Internet Bundle -->
+                                                    <div class="col-lg-5 col-md-5 col-8 mb-3">
+                                                        <label for="good_name_bundle_{{ $random_string }}"
+                                                            class="d-flex align-items-center fs-6 form-label mb-2">
+                                                            <span class="required fw-bold">Internet
+                                                                Bundle</span>
+                                                        </label>
+                                                        <select class="form-select form-select-solid drop-data"
+                                                            data-control="select2"required
+                                                            name="good_name_bundle_{{ $random_string }}"
+                                                            id="good_name_bundle_{{ $random_string }}">
+
+                                                            @foreach ($updateDraftBoqData['inventoryGoodInet'] as $item)
+                                                                @if ($relatedItem->item_inventory_id == $item->id)
+                                                                    <option selected value="{{ $item->id }}">
+                                                                        {{ $item->good_name }}
+                                                                    </option>
+                                                                @else
+                                                                    <option value="{{ $item->id }}">
+                                                                        {{ $item->good_name }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- Quantity -->
+                                                    <div class="col-lg-1 col-md-5 col-8 mb-3">
+                                                        <label for="quantity_{{ $random_string }}"
+                                                            class="d-flex align-items-center fs-6 form-label mb-2">
+                                                            <span class="fw-bold required">Quantity</span>
+                                                        </label>
+                                                        <input class="form-control" type="text" required
+                                                            min="1" minlength="1"
+                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                            name="quantity_{{ $random_string }}"
+                                                            id="quantity_{{ $random_string }}"
+                                                            value="{{ $relatedItem->quantity }}">
+                                                    </div>
+
+                                                    <!-- Purchase Price -->
+                                                    <div class="col-lg-2 col-md-5 col-8 mb-3">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="purchase_price_{{ $random_string }}">
+                                                            <span class="fw-bold required">Purchase Price</span>
+                                                        </label>
+                                                        <input class="form-control" type="text" required
+                                                            min="1" minlength="1"
+                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                            name="purchase_price_{{ $random_string }}"
+                                                            value="{{ $relatedItem->purchase_price }}"
+                                                            id="purchase_price_{{ $random_string }}">
+                                                    </div>
+
+                                                    <!-- Total Price -->
+                                                    <div
+                                                        class="d-flex justify-content-around align-items-center flex-nowrap col-lg-2 col-md-5 col-8 mb-3">
+                                                        <div class="col-lg-9 col-md-9 col-9 col-sm-9">
+                                                            <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                                for="total_price_{{ $random_string }}">
+                                                                <span class="fw-bold">Total Price</span>
+                                                            </label>
+                                                            <input class="form-control" type="text" min="1"
+                                                                minlength="1" disabled
+                                                                oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                                name="total_price_{{ $random_string }}"
+                                                                id="total_price_{{ $random_string }}"
+                                                                value="{{ $relatedItem->total_price }}">
+                                                        </div>
+                                                        <div class="col-lg-2 col-md-1 col-1 col-sm-1">
+                                                            <div class="col-12">
+                                                                <div class="h-25px"></div>
+                                                                <button type="button"
+                                                                    class="btn btn-secondary btn-icon btn-sm h-44px"
+                                                                    data-kt-menu-placement="bottom-end"
+                                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li type="button" class="clear-soft-quotation-bundle"
+                                                                        data-random-string="{{ $random_string }}">
+                                                                        <a class="dropdown-item py-2">
+                                                                            <i class="fa-solid fa-trash me-3"></i>Hapus
+                                                                            Item
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+
+                                    </div>
+                                    @role('administrator')
+                                        <div class="d-flex justify-content-start mx-20 mt-8 mb-5">
+                                            <div class="w-20 me-10">
+                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
+                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
+                                                </button>
+                                            </div>
+                                            <div class="w-20 me-10">
+                                                <a href="#kt_modal_tambah_bundle_internet" data-bs-toggle="modal"
+                                                    id="btn-bundle-internet"
+                                                    class="btn btn-light-info btn-sm btn_bundle_internet">
+                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Baru</a>
+                                            </div>
+                                        </div>
+                                    @endrole
+
+                                </div>
+
+                                {{-- layer total dan submit --}}
+                                <div>
+                                    <div class="d-flex justify-content-end">
+                                        <div class="w-20 me-10">
+                                            <span class="fw-bold">Total Amount : Rp<span id="totalsum"></span></span>
+                                        </div>
+                                        <div class="form-check form-check-custom form-check-success form-check-solid">
+                                            <input class="form-check-input" type="hidden" id="is_draft"
+                                                name="is_draft" value="0" />
+                                            {{-- <label class="form-check-label" for="is_draft">Next to Commercial</label> --}}
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center mt-6">
+                                        <div class=" me-5">
+                                            <a href="" class="btn btn-light-danger">Discard</a>
+                                        </div>
+                                        <div class="me-5">
+                                            <button id="submit-all-items" type="button"
+                                                class="btn btn-light-info">Update</button>
+                                        </div>
+                                        <div class="me-5">
+                                            <button id="finalize-all-items" type="button"
+                                                class="btn btn-info">Final</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        @role('administrator')
-            @include('cmt-opportunity.boq.add.modal-tambah-boq')
-            @include('cmt-opportunity.boq.add.modal-update-boq')
-            @include('cmt-opportunity.boq.add.modal-update-price')
-        @endrole
+    @role('administrator')
+        @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
 
-        <script>
-            $(document).ready(function() {
-                $('#finalize-all-items').on('click', function (e) {
-                    e.preventDefault();
+        @include('cmt-opportunity.boq.add.modal-tambah-boq')
+        @include('cmt-opportunity.boq.add.modal-update-boq')
+        @include('cmt-opportunity.boq.add.modal-update-price')
+    @endrole
 
-                    $('input[name="is_final"]').val(1);
+    <script>
+        function updateTotalSumBundle() {
+            var totalSumBundle = 0;
 
-                    $('#submit-all-items').trigger('click');
-                })
+            // const gpmVal = parseInt(document.querySelector(`[name='gpm']`).value);
 
-                // function Submit BOQ page BENERAN wkwkw
-                $('#submit-all-items').on('click', function(event) {
-                    // event.preventDefault();
+            // Loop through each item's total price input field and sum up the values
+            $('.BundleItem input[name^="total_price"]').each(function() {
+                var totalPriceBundleValue = $(this).val();
 
-                    // Get Prospect ID and Survey ID from the HTML elements
-                    // var survey_request_id = $('#survey_request_id').val();
-                    var boq_id = $('#boq_id').val();
-                    var prospect_id = $('#prospect_id').val();
-                    var is_draft = $('#is_draft').val();
+                if (totalPriceBundleValue !== "") {
+                    totalSumBundle += parseInt(totalPriceBundleValue);
+                }
+            });
 
-                    var sales_id = $('#sales_id').val();
-                    var technician_id = $('#technician_id').val();
-                    var procurement_id = $('#procurement_id').val();
+            // if (gpmVal <= totalSumBundle) {
+            //     return document.getElementById("totalsumbundle").textContent = "   MELEBIHI LIMIT GPM";
+            // }
 
-                    var modal = $('#modal').val();
-                    var gpm = $('#gpm').val();
-                    var npm = $('#npm').val();
-                    var manpower = $('#manpower').val();
-                    var percentage = $('#percentage').val();
+            // const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
+            // // Update the total sum element with the calculated value
+            // $('#totalsumbundle').text(totalPriceWithCommas);
 
-                    var is_final = $('#is_final').val();
+            $('#gpm').val(totalSumBundle);
 
-                    // Validate the prospect_id
-                    // if (!prospect_id) {
-                    //     var errorMessageProspect =
-                    //         "<span class='fw-semibold fs-8 text-danger'>Pilih Prospect Terlebih Dahulu.</span>";
-                    //     $('#error-prospect').html(errorMessageProspect);
-                    //     return;
-                    // } else {
-                    //     $('#error-prospect').empty();
-                    // }
+            // const hiddenTotalInput = document.querySelector(`[name='total_price_bundle']`);
+            // hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string
+        }
+
+        function calculateTotalBundle(uniq_id) {
+            const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${uniq_id}']`)
+                .value);
+            const quantity = parseInt(document.querySelector(`[name='quantity_${uniq_id}']`).value);
+
+            if (isNaN(purchasePrice) || isNaN(quantity)) {
+                return document.getElementById("total_price_" + uniq_id).value = "null";
+            }
+
+            let totalAmount = purchasePrice * quantity;
+
+            // if (totalAmount.toString().length > 15) {
+            //     return document.getElementById("total_price_" + uniq_id).value = "Melewati limit angka";
+            // }
+
+            // const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
+
+            document.getElementById("total_price_" + uniq_id).value = totalAmount;
+            updateTotalSumBundle()
+        }
+
+        function updateTotalSum() {
+            var totalSum = 0;
+
+            // Loop through each item's total price input field and sum up the values
+            $('.MultipleItem input[name="content[][total_price]"]').each(function() {
+                var totalPriceValue = $(this).val();
+
+                if (totalPriceValue !== "") {
+                    totalSum += parseInt(totalPriceValue);
+                }
+            });
+            const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
+            // Update the total sum element with the calculated value
+            $('#totalsum').text(totalPriceWithCommas);
+            // console.log(totalPriceWithCommas);
+            $('#modal').val(totalSum);
+        }
+
+        $(document).ready(function() {
+            //  FINAL COMERCIAL
+            $('#finalize-all-items').on('click', function(e) {
+                e.preventDefault();
+
+                $('input[name="is_final"]').val(1);
+
+                $('#submit-all-items').trigger('click');
+            })
+
+            // UPDATE COMERCIAL
+            $('#submit-all-items').on('click', function(event) {
+                // event.preventDefault();
+
+                // Get Prospect ID and Survey ID from the HTML elements
+                // var survey_request_id = $('#survey_request_id').val();
+                var boq_id = $('#boq_id').val();
+                var prospect_id = $('#prospect_id').val();
+                var is_draft = $('#is_draft').val();
+
+                var sales_id = $('#sales_id').val();
+                var technician_id = $('#technician_id').val();
+                var procurement_id = $('#procurement_id').val();
+
+                var modal = $('#modal').val();
+                var gpm = $('#gpm').val();
+                var npm = $('#npm').val();
+                var manpower = $('#manpower').val();
+                var percentage = $('#percentage').val();
+
+                var is_final = $('#is_final').val();
+
+                // Validate the prospect_id
+                // if (!prospect_id) {
+                //     var errorMessageProspect =
+                //         "<span class='fw-semibold fs-8 text-danger'>Pilih Prospect Terlebih Dahulu.</span>";
+                //     $('#error-prospect').html(errorMessageProspect);
+                //     return;
+                // } else {
+                //     $('#error-prospect').empty();
+                // }
 
 
-                    // Array to store all item data
-                    var items = [];
-                    // Create an object to store prospect_id and survey_request_id
-                    var boq = {
-                        boq_id: boq_id,
-                        prospect_id: prospect_id,
-                        is_draft: is_draft,
-                        is_final: is_final,
+                // Array to store all item data
+                var items = [];
+                // Create an object to store prospect_id and survey_request_id
+                var boq = {
+                    boq_id: boq_id,
+                    prospect_id: prospect_id,
+                    is_draft: is_draft,
+                    is_final: is_final,
 
-                        sales_id: sales_id,
-                        technician_id: technician_id,
-                        procurement_id,
-                        procurement_id,
+                    sales_id: sales_id,
+                    technician_id: technician_id,
+                    procurement_id,
+                    procurement_id,
 
-                        modal: modal,
-                        gpm: gpm,
-                        npm: npm,
-                        manpower: manpower,
-                        percentage: percentage
+                    modal: modal,
+                    gpm: gpm,
+                    npm: npm,
+                    manpower: manpower,
+                    percentage: percentage
+                };
+
+                console.log(boq);
+
+                // Loop through each .file-soft-boq-item div to get the data for each item
+                $('.MultipleItem [class^="file-soft-boq-item"]').each(function(index, item) {
+                    // Extract data for the specific item
+                    var id = $(item).find(
+                        'input[name="content[][id]"]').val();
+                    var item_inventory_id = $(item).find(
+                        'input[name="content[][item_inventory_id]"]').val();
+                    var item_detail = $(item).find(
+                        'input[name="content[][item_detail]"]').val();
+                    var quantity = $(item).find('input[name="content[][quantity]"]').val();
+                    var unit = $(item).find('input[name="content[][unit]"]').val();
+                    var purchase_price = $(item).find(
+                        'input[name="content[][purchase_price]"]').val();
+                    var purchase_delivery = $(item).find(
+                        'input[name="content[][purchase_delivery]"]').val();
+                    var purchase_reference = $(item).find(
+                        'input[name="content[][purchase_reference]"]').val();
+                    var delivery_route = $(item).find(
+                        'input[name="content[][delivery_route]"]').val();
+                    var delivery_type = $(item).find(
+                        'input[name="content[][delivery_type]"]').val();
+                    var purchase_from = $(item).find(
+                        'input[name="content[][purchase_from]"]').val();
+                    var payment_type = $(item).find(
+                        'input[name="content[][payment_type]"]').val();
+                    var purchase_validity = $(item).find(
+                        'input[name="content[][purchase_validity]"]').val();
+                    var total_price = $(item).find(
+                        'input[name="content[][total_price]"]').val();
+
+                    // Create an object to store the data for the specific item
+                    var itemData = {
+                        id: id,
+                        item_inventory_id: item_inventory_id,
+                        item_detail: item_detail,
+                        quantity: quantity,
+                        unit: unit,
+                        purchase_price: purchase_price,
+                        purchase_delivery: purchase_delivery,
+                        purchase_reference: purchase_reference,
+                        delivery_route: delivery_route,
+                        delivery_type: delivery_type,
+                        purchase_from: purchase_from,
+                        payment_type: payment_type,
+                        purchase_validity: purchase_validity,
+                        total_price: total_price
                     };
 
-                    console.log(boq);
-
-                    // Loop through each .file-soft-boq-item div to get the data for each item
-                    $('.MultipleItem [class^="file-soft-boq-item"]').each(function(index, item) {
-                        // Extract data for the specific item
-                        var id = $(item).find(
-                            'input[name="content[][id]"]').val();
-                        var item_inventory_id = $(item).find(
-                            'input[name="content[][item_inventory_id]"]').val();
-                        var item_detail = $(item).find(
-                            'input[name="content[][item_detail]"]').val();
-                        var quantity = $(item).find('input[name="content[][quantity]"]').val();
-                        var unit = $(item).find('input[name="content[][unit]"]').val();
-                        var purchase_price = $(item).find(
-                            'input[name="content[][purchase_price]"]').val();
-                        var purchase_delivery = $(item).find(
-                            'input[name="content[][purchase_delivery]"]').val();
-                        var purchase_reference = $(item).find(
-                            'input[name="content[][purchase_reference]"]').val();
-                        var delivery_route = $(item).find(
-                            'input[name="content[][delivery_route]"]').val();
-                        var delivery_type = $(item).find(
-                            'input[name="content[][delivery_type]"]').val();
-                        var purchase_from = $(item).find(
-                            'input[name="content[][purchase_from]"]').val();
-                        var payment_type = $(item).find(
-                            'input[name="content[][payment_type]"]').val();
-                        var purchase_validity = $(item).find(
-                            'input[name="content[][purchase_validity]"]').val();
-                        var total_price = $(item).find(
-                            'input[name="content[][total_price]"]').val();
-
-                        // Create an object to store the data for the specific item
-                        var itemData = {
-                            id: id,
-                            item_inventory_id: item_inventory_id,
-                            item_detail: item_detail,
-                            quantity: quantity,
-                            unit: unit,
-                            purchase_price: purchase_price,
-                            purchase_delivery: purchase_delivery,
-                            purchase_reference: purchase_reference,
-                            delivery_route: delivery_route,
-                            delivery_type: delivery_type,
-                            purchase_from: purchase_from,
-                            payment_type: payment_type,
-                            purchase_validity: purchase_validity,
-                            total_price: total_price
-                        };
-
-                        // Push the itemData object to the items array
-                        items.push(itemData);
-                    });
-
-                    // Check if there is at least one item in the 'items' array
-                    if (items.length === 0) {
-                        // Show an error message
-                        var errorMessageItem =
-                            "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
-                        $('#error-item').html(errorMessageItem);
-                        return;
-                    } else {
-                        $('#error-item').empty();
-                    }
-                    console.log(items);
-
-                    // Send the data to the server using AJAX
-                    $.ajax({
-                        url: "{{ route('com.boq.store.boq') }}",
-                        method: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            boq: boq,
-                            items: items
-                        },
-                        success: function(response) {
-                            toastr.success(response.message);
-
-                            if (response.data.is_final == 1) {
-                                setTimeout(() => {
-                                    window.location.href = `cmt-boq/on-review-boq?boq_id=${response.data.id}`;
-                                }, 800);                                
-                            } else {
-                                setTimeout(() => {
-                                    window.location.reload();
-                                }, 800);
-                            }
-
-                            
-                        },
-                        error: function(error) {
-                            toastr.error(error.responseJSON.error);
-                            console.error('Error submitting all item data: ', error);
-                        }
-                    });
+                    // Push the itemData object to the items array
+                    items.push(itemData);
                 });
 
-                // Function Update BOQ modal
-                $('.btn-update-boq-modal').on('click', function() {
-                    var randomString = $(this).data('random-string');
-                    var itemId = parseInt($(this).data('itemId'));
+                // Check if there is at least one item in the 'items' array
+                if (items.length === 0) {
+                    // Show an error message
+                    var errorMessageItem =
+                        "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
+                    $('#error-item').html(errorMessageItem);
+                    return;
+                } else {
+                    $('#error-item').empty();
+                }
+                console.log(items);
 
-                    var quantity = $(this).data('quantity');
-                    var unit = $(this).data('unit');
-                    var total_price = ($(this).data('total_price'));
-                    var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
-                    var purchase_price = ($(this).data('purchase_price'));
-                    var purchase_reference = $(this).data('purchase_reference');
-                    var item_detail = ($(this).data('item_detail'));
-                    // console.log(randomString, itemId, quantity, total_price, purchase_delivery_charge,
-                    //     purchase_price, purchase_reference, item_detail);
-
-                    $('#good_name_update').val(itemId).trigger('change');
-
-                    $('#kt_modal_update_boq').modal('show');
-
-                    $('#uniq_id').val(randomString);
-
-                    $('#item_detail_update').val(item_detail);
-                    $('#purchase_reference_update').val(purchase_reference);
-                    $('#purchase_price_update').val(purchase_price);
-                    $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
-                    $('#total_price_update').val(total_price);
-                    $('#quantity_update').val(quantity);
-                    $('#unit_update').val(unit).trigger('change');
-                    document.getElementById('total_update').textContent = total_price;
-                });
-
-                $('.btn-update-price-modal').on('click', function() {
-                    var randomString = $(this).data('random-string');
-                    var itemId = parseInt($(this).data('itemId'));
-                    console.log($(this).data('itemId'));
-
-                    var quantity = $(this).data('quantity');
-                    var unit = $(this).data('unit');
-                    var total_price = ($(this).data('total_price'));
-                    var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
-                    var purchase_price = ($(this).data('purchase_price'));
-                    var purchase_reference = $(this).data('purchase_reference');
-                    var item_detail = ($(this).data('item_detail'));
-                    var delivery_route = ($(this).data('delivery_route'));
-                    var delivery_type = ($(this).data('delivery_type'));
-                    var purchase_from = ($(this).data('purchase_from'));
-                    var payment_type = ($(this).data('payment_type'));
-                    var purchase_validity = ($(this).data('purchase_validity'));
-                    // console.log(randomString, itemId, quantity, total_price, purchase_delivery_charge,
-                    //     purchase_price, purchase_reference, item_detail);
-
-                    $('#good_name_update_price').val(itemId).trigger('change');
-
-                    $('#kt_modal_update_price').modal('show');
-
-                    $('#uniq_id_price').val(randomString);
-
-                    $('#item_detail_update_price').val(item_detail);
-                    $('#purchase_from_update_price').val(purchase_from);
-                    $('#delivery_route_update_price').val(delivery_route);
-                    $('#delivery_type_update_price').val(delivery_type);
-                    $('#payment_type_update_price').val(payment_type);
-                    $('#purchase_validity_update_price').val(purchase_validity);
-                    $('#purchase_reference_update_price').val(purchase_reference);
-                    $('#purchase_price_update_price').val(purchase_price);
-                    $('#purchase_delivery_charge_update_price').val(purchase_delivery_charge);
-                    $('#total_price_update_price').val(total_price);
-                    $('#quantity_update_price').val(quantity);
-                    $('#unit_update_price').val(unit).trigger('change');
-                    document.getElementById('total_update_price').textContent = total_price;
-                });
-
-                // Handler untuk peristiwa "change" pada select item
-                $('#good_name_update').on('change', function() {
-                    var selectedItemId = $(this).val();
-                    var url = $(this).data('url');
-
-                    // Mengirim permintaan asinkron menggunakan AJAX untuk mendapatkan data jenis dan merek item
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        data: {
-                            item_id: selectedItemId
-                        }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
-                        success: function(response) {
-                            console.log(response);
-                            $('#good_type_update').val(response.good_type).prop('disabled', true);
-                            $('#merk_update').val(response.merk).prop('disabled', true);
-                            $('#detail_update').val(response.description).prop('disabled', true);
-                        },
-                        error: function(error) {
-                            console.log(error);
-                        }
-                    });
-                });
-
-                $('#good_name_update_price').on('change', function() {
-                    var selectedItemId = $(this).val();
-                    var url = $(this).data('url');
-
-                    // Mengirim permintaan asinkron menggunakan AJAX untuk mendapatkan data jenis dan merek item
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        data: {
-                            item_id: selectedItemId
-                        }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
-                        success: function(response) {
-                            console.log(response);
-                            $('#good_type_update_price').val(response.good_type).prop('disabled', true);
-                            $('#merk_update_price').val(response.merk).prop('disabled', true);
-                            $('#detail_update_price').val(response.description).prop('disabled', true);
-                        },
-                        error: function(error) {
-                            console.log(error);
-                        }
-                    });
-                });
-
-                // Funcion Submit Update BOQ 
-                $("#kt_modal_update_boq_form").validate({
-                    messages: {
-                        good_name: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
-                        },
-                        purchase_price: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
-                            minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
-                        },
-                        quantity: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
-                            minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
-                        },
-                        unit: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Unit wajib diisi</span>",
-                        },
+                // Send the data to the server using AJAX
+                $.ajax({
+                    url: "{{ route('com.boq.store.boq') }}",
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        boq: boq,
+                        items: items
                     },
-                    submitHandler: function(form) {
-                        event.preventDefault();
+                    success: function(response) {
+                        toastr.success(response.message);
 
-                        // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
-                        var selectedItemId = $('#good_name_update').val();
-                        var itemName = $('#good_name_update option:selected').text();
-                        var itemMerk = $('#merk_update').val();
-
-                        // Membuat elemen input tersembunyi untuk nama barang
-                        var itemNameInput = $('<input>').attr({
-                            type: 'text',
-                            name: 'content[][good_name]',
-                            value: itemName
-                        });
-
-                        // Menambahkan elemen input tersembunyi ke dalam form
-                        $(form).append(itemNameInput);
-
-                        var formData = new FormData(form);
-
-                        const uniq_id = formData.get('uniq_id');
-
-                        const item = document.querySelectorAll(
-                            `.MultipleItem .file-soft-boq-item-${uniq_id}`);
-
-                        let data = $(`.btn-update-boq-modal[data-random-string="${uniq_id}"]`);
-
-                        // Mengatur ulang atribut-atribut elemen <li> berdasarkan formData
-                        data.attr({
-                            'data-item-id': selectedItemId,
-                            'data-quantity': formData.get('quantity_update'),
-                            'data-unit': formData.get('unit_update'),
-                            'data-total_price': formData.get('total_update'),
-                            'data-purchase_delivery_charge': formData.get(
-                                'purchase_delivery_update'),
-                            'data-purchase_price': formData.get('purchase_price_update'),
-                            'data-purchase_reference': formData.get('purchase_reference'),
-                            'data-item_detail': formData.get('item_detail')
-                        });
-
-                        data.data({
-                            'item-id': selectedItemId,
-                            'quantity': formData.get('quantity_update'),
-                            'unit': formData.get('unit_update'),
-                            'total_price': formData.get('total_update'),
-                            'purchase_delivery_charge': formData.get('purchase_delivery_update'),
-                            'purchase_price': formData.get('purchase_price_update'),
-                            'purchase_reference': formData.get('purchase_reference'),
-                            'item_detail': formData.get('item_detail')
-                        });
-
-                        $('[name="content[][good_name]"]', item).val(itemName);
-                        $('[name="content[][good_merk]"]', item).val(itemMerk);
-                        $('[name="content[][purchase_price]"]', item).val(formData.get(
-                            'purchase_price_update'));
-                        $('[name="content[][quantity]"]', item).val(formData.get('quantity_update'));
-                        $('[name="content[][unit]"]', item).val(formData.get('unit_update'));
-                        $('[name="content[][purchase_delivery]"]', item).val(formData.get(
-                            'purchase_delivery_update'));
-                        $('[name="content[][purchase_reference]"]', item).val(formData.get(
-                            'purchase_reference'));
-                        $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
-                        $('[name="content[][total_price]"]', item).val(formData.get('total_update'));
-                        $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
-
-                        // Hapus elemen itemNameInput dari formulir
-                        itemNameInput.remove();
-
-                        // Bersihkan input setelah item ditambahkan
-                        form.reset();
-
-                        // // Tutup modal
-                        $('#kt_modal_update_boq').modal('hide');
-
-                        updateTotalSum();
-                    }
-                });
-
-                $("#kt_modal_update_price_form").validate({
-                    messages: {
-                        good_name: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
-                        },
-                        purchase_price: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
-                            minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
-                        },
-                        quantity: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
-                            minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
-                        },
-                        unit: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Unit wajib diisi</span>",
-                        },
-                    },
-                    submitHandler: function(form) {
-                        event.preventDefault();
-
-                        // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
-                        var selectedItemId = $('#good_name_update_price').val();
-                        var itemName = $('#good_name_update_price option:selected').text();
-                        var itemMerk = $('#merk_update_price').val();
-
-                        // Membuat elemen input tersembunyi untuk nama barang
-                        var itemNameInput = $('<input>').attr({
-                            type: 'text',
-                            name: 'content[][good_name]',
-                            value: itemName
-                        });
-
-                        // Menambahkan elemen input tersembunyi ke dalam form
-                        $(form).append(itemNameInput);
-
-                        var formData = new FormData(form);
-
-                        const uniq_id = formData.get('uniq_id_price');
-
-                        const item = document.querySelectorAll(
-                            `.MultipleItem .file-soft-boq-item-${uniq_id}`);
-
-                        let data = $(`.btn-update-price-modal[data-random-string="${uniq_id}"]`);
-
-                        // Mengatur ulang atribut-atribut elemen <li> berdasarkan formData
-                        data.attr({
-                            'data-item-id': selectedItemId,
-                            'data-quantity': formData.get('quantity_update_price'),
-                            'data-unit': formData.get('unit_update_price'),
-                            'data-total_price': formData.get('total_update_price'),
-                            'data-purchase_delivery_charge': formData.get(
-                                'purchase_delivery_update_price'),
-                            'data-purchase_price': formData.get('purchase_price_update_price'),
-                            'data-purchase_reference': formData.get('purchase_reference'),
-                            'data-item_detail': formData.get('item_detail'),
-                            'data-delivery_route': formData.get('delivery_route'),
-                            'data-delivery_type': formData.get('delivery_type'),
-                            'data-purchase_from': formData.get('purchase_from'),
-                            'data-payment_type': formData.get('payment_type'),
-                            'data-purchase_validity': formData.get('purchase_validity'),
-                        });
-
-                        data.data({
-                            'item-id': selectedItemId,
-                            'quantity': formData.get('quantity_update_price'),
-                            'unit': formData.get('unit_update_price'),
-                            'total_price': formData.get('total_update_price'),
-                            'purchase_delivery_charge': formData.get('purchase_delivery_update_price'),
-                            'purchase_price': formData.get('purchase_price_update_price'),
-                            'purchase_reference': formData.get('purchase_reference'),
-                            'item_detail': formData.get('item_detail'),
-                            'delivery_route': formData.get('delivery_route'),
-                            'delivery_type': formData.get('delivery_type'),
-                            'purchase_from': formData.get('purchase_from'),
-                            'payment_type': formData.get('payment_type'),
-                            'purchase_validity': formData.get('purchase_validity'),
-                        });
-
-                        $('[name="content[][good_name]"]', item).val(itemName);
-                        $('[name="content[][good_merk]"]', item).val(itemMerk);
-                        $('[name="content[][purchase_price]"]', item).val(formData.get(
-                            'purchase_price_update_price'));
-                        $('[name="content[][quantity]"]', item).val(formData.get('quantity_update_price'));
-                        $('[name="content[][unit]"]', item).val(formData.get('unit_update_price'));
-                        $('[name="content[][purchase_delivery]"]', item).val(formData.get(
-                            'purchase_delivery_update_price'));
-                        $('[name="content[][purchase_reference]"]', item).val(formData.get(
-                            'purchase_reference'));
-
-                        $('[name="content[][delivery_route]"]', item).val(formData.get('delivery_route'));
-                        $('[name="content[][delivery_type]"]', item).val(formData.get('delivery_type'));
-                        $('[name="content[][purchase_from]"]', item).val(formData.get('purchase_from'));
-                        $('[name="content[][payment_type]"]', item).val(formData.get('payment_type'));
-                        $('[name="content[][purchase_validity]"]', item).val(formData.get('purchase_validity'));
-                        
-                        $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
-                        $('[name="content[][total_price]"]', item).val(formData.get('total_update_price'));
-                        $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
-
-                        // Hapus elemen itemNameInput dari formulir
-                        itemNameInput.remove();
-
-                        // Bersihkan input setelah item ditambahkan
-                        form.reset();
-
-                        // // Tutup modal
-                        $('#kt_modal_update_price').modal('hide');
-
-                        updateTotalSum();
-                    }
-                });
-
-
-                // Function Tambah BOQ modal
-                $('#btn-tambah-boq').on('click', '.btn_tambah_boq', function() {
-                    $('.drop-data').val("").trigger("change");
-                    $('#kt_modal_tambah_boq_form').trigger("reset");
-                    $('#kt_modal_tambah_boq_submit').removeAttr('disabled', 'disabled');
-                });
-
-                // Handler untuk peristiwa "change" pada select item
-                $('#good_name').on('change', function() {
-                    var selectedItemId = $(this).val();
-                    var url = $(this).data('url');
-
-                    // Mengirim permintaan asinkron menggunakan AJAX untuk mendapatkan data jenis dan merek item
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        data: {
-                            item_id: selectedItemId
-                        }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
-                        success: function(response) {
-                            console.log(response);
-                            $('#good_type').val(response.good_type).prop('disabled', true);
-                            $('#merk').val(response.merk).prop('disabled', true);
-                            $('#detail').val(response.description).prop('disabled', true);
-                        },
-                        error: function(error) {
-                            console.log(error);
+                        if (response.data.is_final == 1) {
+                            setTimeout(() => {
+                                window.location.href =
+                                    `cmt-boq/on-review-boq?boq_id=${response.data.id}`;
+                            }, 800);
+                        } else {
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 800);
                         }
-                    });
-                });
 
-                // Function Hapus Item Frontend
-                $('.MultipleItem').on('click', '.clear-soft-survey-item', function() {
-                    var random_string = $(this).data('random-string');
-                    $(this).closest('.file-soft-boq-item-' + random_string).remove();
+
+                    },
+                    error: function(error) {
+                        toastr.error(error.responseJSON.error);
+                        console.error('Error submitting all item data: ', error);
+                    }
+                });
+            });
+
+            // Function Update ITEM BOQ / MODAL
+            $('.btn-update-boq-modal').on('click', function() {
+                var randomString = $(this).data('random-string');
+                var itemId = parseInt($(this).data('itemId'));
+
+                var quantity = $(this).data('quantity');
+                var unit = $(this).data('unit');
+                var total_price = ($(this).data('total_price'));
+                var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                var purchase_price = ($(this).data('purchase_price'));
+                var purchase_reference = $(this).data('purchase_reference');
+                var item_detail = ($(this).data('item_detail'));
+                // console.log(randomString, itemId, quantity, total_price, purchase_delivery_charge,
+                //     purchase_price, purchase_reference, item_detail);
+
+                $('#good_name_update').val(itemId).trigger('change');
+
+                $('#kt_modal_update_boq').modal('show');
+
+                $('#uniq_id').val(randomString);
+
+                $('#item_detail_update').val(item_detail);
+                $('#purchase_reference_update').val(purchase_reference);
+                $('#purchase_price_update').val(purchase_price);
+                $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
+                $('#total_price_update').val(total_price);
+                $('#quantity_update').val(quantity);
+                $('#unit_update').val(unit).trigger('change');
+                document.getElementById('total_update').textContent = total_price;
+            });
+
+            $('.btn-update-price-modal').on('click', function() {
+                var randomString = $(this).data('random-string');
+                var itemId = parseInt($(this).data('itemId'));
+                console.log($(this).data('itemId'));
+
+                var quantity = $(this).data('quantity');
+                var unit = $(this).data('unit');
+                var total_price = ($(this).data('total_price'));
+                var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                var purchase_price = ($(this).data('purchase_price'));
+                var purchase_reference = $(this).data('purchase_reference');
+                var item_detail = ($(this).data('item_detail'));
+                var delivery_route = ($(this).data('delivery_route'));
+                var delivery_type = ($(this).data('delivery_type'));
+                var purchase_from = ($(this).data('purchase_from'));
+                var payment_type = ($(this).data('payment_type'));
+                var purchase_validity = ($(this).data('purchase_validity'));
+                // console.log(randomString, itemId, quantity, total_price, purchase_delivery_charge,
+                //     purchase_price, purchase_reference, item_detail);
+
+                $('#good_name_update_price').val(itemId).trigger('change');
+
+                $('#kt_modal_update_price').modal('show');
+
+                $('#uniq_id_price').val(randomString);
+
+                $('#item_detail_update_price').val(item_detail);
+                $('#purchase_from_update_price').val(purchase_from);
+                $('#delivery_route_update_price').val(delivery_route);
+                $('#delivery_type_update_price').val(delivery_type);
+                $('#payment_type_update_price').val(payment_type);
+                $('#purchase_validity_update_price').val(purchase_validity);
+                $('#purchase_reference_update_price').val(purchase_reference);
+                $('#purchase_price_update_price').val(purchase_price);
+                $('#purchase_delivery_charge_update_price').val(purchase_delivery_charge);
+                $('#total_price_update_price').val(total_price);
+                $('#quantity_update_price').val(quantity);
+                $('#unit_update_price').val(unit).trigger('change');
+                document.getElementById('total_update_price').textContent = total_price;
+            });
+
+            // Handler untuk peristiwa "change" pada select item
+            $('#good_name_update').on('change', function() {
+                var selectedItemId = $(this).val();
+                var url = $(this).data('url');
+
+                // Mengirim permintaan asinkron menggunakan AJAX untuk mendapatkan data jenis dan merek item
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        item_id: selectedItemId
+                    }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
+                    success: function(response) {
+                        console.log(response);
+                        $('#good_type_update').val(response.good_type).prop('disabled', true);
+                        $('#merk_update').val(response.merk).prop('disabled', true);
+                        $('#detail_update').val(response.description).prop('disabled', true);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            $('#good_name_update_price').on('change', function() {
+                var selectedItemId = $(this).val();
+                var url = $(this).data('url');
+
+                // Mengirim permintaan asinkron menggunakan AJAX untuk mendapatkan data jenis dan merek item
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        item_id: selectedItemId
+                    }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
+                    success: function(response) {
+                        console.log(response);
+                        $('#good_type_update_price').val(response.good_type).prop('disabled',
+                            true);
+                        $('#merk_update_price').val(response.merk).prop('disabled', true);
+                        $('#detail_update_price').val(response.description).prop('disabled',
+                            true);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+            // Funcion Submit Update BOQ 
+            $("#kt_modal_update_boq_form").validate({
+                messages: {
+                    good_name: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
+                    },
+                    purchase_price: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
+                        minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
+                    },
+                    quantity: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
+                        minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
+                    },
+                    unit: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Unit wajib diisi</span>",
+                    },
+                },
+                submitHandler: function(form) {
+                    event.preventDefault();
+
+                    // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
+                    var selectedItemId = $('#good_name_update').val();
+                    var itemName = $('#good_name_update option:selected').text();
+                    var itemMerk = $('#merk_update').val();
+
+                    // Membuat elemen input tersembunyi untuk nama barang
+                    var itemNameInput = $('<input>').attr({
+                        type: 'text',
+                        name: 'content[][good_name]',
+                        value: itemName
+                    });
+
+                    // Menambahkan elemen input tersembunyi ke dalam form
+                    $(form).append(itemNameInput);
+
+                    var formData = new FormData(form);
+
+                    const uniq_id = formData.get('uniq_id');
+
+                    const item = document.querySelectorAll(
+                        `.MultipleItem .file-soft-boq-item-${uniq_id}`);
+
+                    let data = $(`.btn-update-boq-modal[data-random-string="${uniq_id}"]`);
+
+                    // Mengatur ulang atribut-atribut elemen <li> berdasarkan formData
+                    data.attr({
+                        'data-item-id': selectedItemId,
+                        'data-quantity': formData.get('quantity_update'),
+                        'data-unit': formData.get('unit_update'),
+                        'data-total_price': formData.get('total_update'),
+                        'data-purchase_delivery_charge': formData.get(
+                            'purchase_delivery_update'),
+                        'data-purchase_price': formData.get('purchase_price_update'),
+                        'data-purchase_reference': formData.get('purchase_reference'),
+                        'data-item_detail': formData.get('item_detail')
+                    });
+
+                    data.data({
+                        'item-id': selectedItemId,
+                        'quantity': formData.get('quantity_update'),
+                        'unit': formData.get('unit_update'),
+                        'total_price': formData.get('total_update'),
+                        'purchase_delivery_charge': formData.get('purchase_delivery_update'),
+                        'purchase_price': formData.get('purchase_price_update'),
+                        'purchase_reference': formData.get('purchase_reference'),
+                        'item_detail': formData.get('item_detail')
+                    });
+
+                    $('[name="content[][good_name]"]', item).val(itemName);
+                    $('[name="content[][good_merk]"]', item).val(itemMerk);
+                    $('[name="content[][purchase_price]"]', item).val(formData.get(
+                        'purchase_price_update'));
+                    $('[name="content[][quantity]"]', item).val(formData.get('quantity_update'));
+                    $('[name="content[][unit]"]', item).val(formData.get('unit_update'));
+                    $('[name="content[][purchase_delivery]"]', item).val(formData.get(
+                        'purchase_delivery_update'));
+                    $('[name="content[][purchase_reference]"]', item).val(formData.get(
+                        'purchase_reference'));
+                    $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
+                    $('[name="content[][total_price]"]', item).val(formData.get('total_update'));
+                    $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
+
+                    // Hapus elemen itemNameInput dari formulir
+                    itemNameInput.remove();
+
+                    // Bersihkan input setelah item ditambahkan
+                    form.reset();
+
+                    // // Tutup modal
+                    $('#kt_modal_update_boq').modal('hide');
+
                     updateTotalSum();
-                });
+                }
+            });
 
-                // Function Submit BOQ modal
-                $("#kt_modal_tambah_boq_form").validate({
-                    messages: {
-                        good_name: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
-                        },
-                        purchase_price: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
-                            minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
-                        },
-                        quantity: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
-                            minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
-                        },
-                        unit: {
-                            required: "<span class='fw-semibold fs-8 text-danger'>unit wajib diisi</span>",
-                        },
+            $("#kt_modal_update_price_form").validate({
+                messages: {
+                    good_name: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
                     },
-                    submitHandler: function(form) {
-                        event.preventDefault();
+                    purchase_price: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
+                        minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
+                    },
+                    quantity: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
+                        minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
+                    },
+                    unit: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Unit wajib diisi</span>",
+                    },
+                },
+                submitHandler: function(form) {
+                    event.preventDefault();
 
-                        // ngambil inputan nama dan merk
-                        var selectedItemId = $('#good_name').val();
-                        var itemName = $('#good_name option:selected').text();
-                        var itemMerk = $('#merk').val();
+                    // Menggunakan jQuery untuk mendapatkan inputan nama dan merk
+                    var selectedItemId = $('#good_name_update_price').val();
+                    var itemName = $('#good_name_update_price option:selected').text();
+                    var itemMerk = $('#merk_update_price').val();
 
-                        // Create a hidden input to pass the selected item's name
-                        var itemNameInput = $('<input>').attr({
-                            type: 'hidden',
-                            name: 'content[][good_name]',
-                            value: itemName
-                        });
+                    // Membuat elemen input tersembunyi untuk nama barang
+                    var itemNameInput = $('<input>').attr({
+                        type: 'text',
+                        name: 'content[][good_name]',
+                        value: itemName
+                    });
 
-                        // Append the hidden input to the form
-                        $(form).append(itemNameInput);
-                        // console.log(form);
-                        let random_string = generateRandomString(4);
-                        var formData = new FormData(form);
+                    // Menambahkan elemen input tersembunyi ke dalam form
+                    $(form).append(itemNameInput);
 
-                        var newItem = `
-                    <div class="file-soft-boq-item-${random_string} d-flex justify-content-between mx-20 mb-5 mt-10 row">
+                    var formData = new FormData(form);
+
+                    const uniq_id = formData.get('uniq_id_price');
+
+                    const item = document.querySelectorAll(
+                        `.MultipleItem .file-soft-boq-item-${uniq_id}`);
+
+                    let data = $(`.btn-update-price-modal[data-random-string="${uniq_id}"]`);
+
+                    // Mengatur ulang atribut-atribut elemen <li> berdasarkan formData
+                    data.attr({
+                        'data-item-id': selectedItemId,
+                        'data-quantity': formData.get('quantity_update_price'),
+                        'data-unit': formData.get('unit_update_price'),
+                        'data-total_price': formData.get('total_update_price'),
+                        'data-purchase_delivery_charge': formData.get(
+                            'purchase_delivery_update_price'),
+                        'data-purchase_price': formData.get('purchase_price_update_price'),
+                        'data-purchase_reference': formData.get('purchase_reference'),
+                        'data-item_detail': formData.get('item_detail'),
+                        'data-delivery_route': formData.get('delivery_route'),
+                        'data-delivery_type': formData.get('delivery_type'),
+                        'data-purchase_from': formData.get('purchase_from'),
+                        'data-payment_type': formData.get('payment_type'),
+                        'data-purchase_validity': formData.get('purchase_validity'),
+                    });
+
+                    data.data({
+                        'item-id': selectedItemId,
+                        'quantity': formData.get('quantity_update_price'),
+                        'unit': formData.get('unit_update_price'),
+                        'total_price': formData.get('total_update_price'),
+                        'purchase_delivery_charge': formData.get(
+                            'purchase_delivery_update_price'),
+                        'purchase_price': formData.get('purchase_price_update_price'),
+                        'purchase_reference': formData.get('purchase_reference'),
+                        'item_detail': formData.get('item_detail'),
+                        'delivery_route': formData.get('delivery_route'),
+                        'delivery_type': formData.get('delivery_type'),
+                        'purchase_from': formData.get('purchase_from'),
+                        'payment_type': formData.get('payment_type'),
+                        'purchase_validity': formData.get('purchase_validity'),
+                    });
+
+                    $('[name="content[][good_name]"]', item).val(itemName);
+                    $('[name="content[][good_merk]"]', item).val(itemMerk);
+                    $('[name="content[][purchase_price]"]', item).val(formData.get(
+                        'purchase_price_update_price'));
+                    $('[name="content[][quantity]"]', item).val(formData.get('quantity_update_price'));
+                    $('[name="content[][unit]"]', item).val(formData.get('unit_update_price'));
+                    $('[name="content[][purchase_delivery]"]', item).val(formData.get(
+                        'purchase_delivery_update_price'));
+                    $('[name="content[][purchase_reference]"]', item).val(formData.get(
+                        'purchase_reference'));
+
+                    $('[name="content[][delivery_route]"]', item).val(formData.get('delivery_route'));
+                    $('[name="content[][delivery_type]"]', item).val(formData.get('delivery_type'));
+                    $('[name="content[][purchase_from]"]', item).val(formData.get('purchase_from'));
+                    $('[name="content[][payment_type]"]', item).val(formData.get('payment_type'));
+                    $('[name="content[][purchase_validity]"]', item).val(formData.get(
+                        'purchase_validity'));
+
+                    $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
+                    $('[name="content[][total_price]"]', item).val(formData.get('total_update_price'));
+                    $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
+
+                    // Hapus elemen itemNameInput dari formulir
+                    itemNameInput.remove();
+
+                    // Bersihkan input setelah item ditambahkan
+                    form.reset();
+
+                    // // Tutup modal
+                    $('#kt_modal_update_price').modal('hide');
+                    updateTotalSum();
+                }
+            });
+
+
+            // Function Tambah BOQ modal
+            $('#btn-tambah-boq').on('click', '.btn_tambah_boq', function() {
+                $('.drop-data').val("").trigger("change");
+                $('#kt_modal_tambah_boq_form').trigger("reset");
+                $('#kt_modal_tambah_boq_submit').removeAttr('disabled', 'disabled');
+            });
+ 
+            $('#good_name').on('change', function() {
+                var selectedItemId = $(this).val();
+                var url = $(this).data('url');
+ 
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: {
+                        item_id: selectedItemId
+                    }, // Ganti "item_id" sesuai dengan nama parameter yang diharapkan pada controller
+                    success: function(response) {
+                        console.log(response);
+                        $('#good_type').val(response.good_type).prop('disabled', true);
+                        $('#merk').val(response.merk).prop('disabled', true);
+                        $('#detail').val(response.description).prop('disabled', true);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                    });
+            });
+
+            // Function Hapus Item Frontend
+            $('.MultipleItem').on('click', '.clear-soft-survey-item', function() {
+                var random_string = $(this).data('random-string');
+                $(this).closest('.file-soft-boq-item-' + random_string).remove();
+                updateTotalSum();
+            });
+
+            // Function Submit BOQ modal
+            $("#kt_modal_tambah_boq_form").validate({
+                messages: {
+                    good_name: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Pilih Item Terlebih Dahulu</span>",
+                    },
+                    purchase_price: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Harga Barang wajib diisi</span>",
+                        minlength: "<span class='fw-semibold fs-8 text-danger'>Harga minimal memiliki 3 Angka</span>",
+                    },
+                    quantity: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Quantity wajib diisi</span>",
+                        minlength: "<span class='fw-semibold fs-8 text-danger'>Quantity minimal memiliki 1 angka</span>",
+                    },
+                    unit: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>unit wajib diisi</span>",
+                    },
+                },
+                submitHandler: function(form) {
+                    event.preventDefault();
+
+                    // ngambil inputan nama dan merk
+                    var selectedItemId = $('#good_name').val();
+                    var itemName = $('#good_name option:selected').text();
+                    var itemMerk = $('#merk').val();
+
+                    // Create a hidden input to pass the selected item's name
+                    var itemNameInput = $('<input>').attr({
+                        type: 'hidden',
+                        name: 'content[][good_name]',
+                        value: itemName
+                    });
+
+                    // Append the hidden input to the form
+                    $(form).append(itemNameInput);
+                    // console.log(form);
+                    let random_string = generateRandomString(4);
+                    var formData = new FormData(form);
+
+                    var newItem = `
+                    <div class="file-soft-boq-item-${random_string} d-flex justify-content-between mb-5 mt-10 row">
                         <div class="col-lg-3">
                             <label for="" class="form-label">Item</label>
                             <input type="text" class="form-control form-control-solid" name="content[][good_name]" value="${itemName} - ${itemMerk}" />
@@ -1129,112 +1315,488 @@
                     </div>`;
 
 
-                        // Function Hapus per Item
-                        $('.MultipleItem').on('click', `.clear-soft-survey-item-${random_string}`,
-                            function() {
-                                $(this).parent().parent().parent().parent().remove();
-                                updateTotalSum();
-                            });
-
-                        // Function Update BOQ modal
-                        $('.MultipleItem').on('click', '.btn-update-boq-modal', function() {
-
-                            var randomString = $(this).data('random-string');
-                            var itemId = parseInt($(this).data('item-id'));
-                            var quantity = $(this).data('quantity');
-                            var unit = $(this).data('unit');
-                            var total_price = $(this).data('total_price');
-                            var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
-                            var purchase_price = $(this).data('purchase_price');
-                            var purchase_reference = $(this).data('purchase_reference');
-                            var item_detail = $(this).data('item_detail');
-
-                            console.log(randomString, itemId, quantity, total_price,
-                                purchase_delivery_charge,
-                                purchase_price, purchase_reference, item_detail);
-
-                            $('#good_name_update').val(itemId).trigger('change');
-
-                            $('#kt_modal_update_boq').modal('show');
-
-                            $('#uniq_id').val(randomString);
-
-                            $('#item_detail_update').val(item_detail);
-                            $('#purchase_reference_update').val(purchase_reference);
-                            $('#purchase_price_update').val(purchase_price);
-                            $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
-                            $('#total_price_update').val(total_price);
-                            $('#quantity_update').val(quantity);
-                            $('#unit_update').val(unit).trigger('change');
-                            document.getElementById('total_update').textContent = total_price;
+                    // Function Hapus per Item
+                    $('.MultipleItem').on('click', `.clear-soft-survey-item-${random_string}`,
+                        function() {
+                            $(this).parent().parent().parent().parent().remove();
+                            updateTotalSum();
                         });
 
-                        $('.MultipleItem').on('click', '.btn-update-price-modal', function() {
+                    // Function Update BOQ modal
+                    $('.MultipleItem').on('click', '.btn-update-boq-modal', function() {
 
-                            var randomString = $(this).data('random-string');
-                            var itemId = parseInt($(this).data('item-id'));
-                            var quantity = $(this).data('quantity');
-                            var unit = $(this).data('unit');
-                            var total_price = $(this).data('total_price');
-                            var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
-                            var purchase_price = $(this).data('purchase_price');
-                            var purchase_reference = $(this).data('purchase_reference');
-                            var item_detail = $(this).data('item_detail');
+                        var randomString = $(this).data('random-string');
+                        var itemId = parseInt($(this).data('item-id'));
+                        var quantity = $(this).data('quantity');
+                        var unit = $(this).data('unit');
+                        var total_price = $(this).data('total_price');
+                        var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                        var purchase_price = $(this).data('purchase_price');
+                        var purchase_reference = $(this).data('purchase_reference');
+                        var item_detail = $(this).data('item_detail');
 
-                            console.log(randomString, itemId, quantity, total_price,
-                                purchase_delivery_charge,
-                                purchase_price, purchase_reference, item_detail);
+                        console.log(randomString, itemId, quantity, total_price,
+                            purchase_delivery_charge,
+                            purchase_price, purchase_reference, item_detail);
 
-                            $('#good_name_update_price').val(itemId).trigger('change');
+                        $('#good_name_update').val(itemId).trigger('change');
 
-                            $('#kt_modal_update_price').modal('show');
+                        $('#kt_modal_update_boq').modal('show');
 
-                            $('#uniq_id_price').val(randomString);
+                        $('#uniq_id').val(randomString);
 
-                            $('#item_detail_update_price').val(item_detail);
-                            $('#purchase_reference_update_price').val(purchase_reference);
-                            $('#purchase_price_update_price').val(purchase_price);
-                            $('#purchase_delivery_charge_update_price').val(purchase_delivery_charge);
-                            $('#total_price_update_price').val(total_price);
-                            $('#quantity_update_price').val(quantity);
-                            $('#unit_update_price').val(unit).trigger('change');
-                            document.getElementById('total_update_price').textContent = total_price;
+                        $('#item_detail_update').val(item_detail);
+                        $('#purchase_reference_update').val(purchase_reference);
+                        $('#purchase_price_update').val(purchase_price);
+                        $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
+                        $('#total_price_update').val(total_price);
+                        $('#quantity_update').val(quantity);
+                        $('#unit_update').val(unit).trigger('change');
+                        document.getElementById('total_update').textContent = total_price;
+                    });
+
+                    $('.MultipleItem').on('click', '.btn-update-price-modal', function() {
+
+                        var randomString = $(this).data('random-string');
+                        var itemId = parseInt($(this).data('item-id'));
+                        var quantity = $(this).data('quantity');
+                        var unit = $(this).data('unit');
+                        var total_price = $(this).data('total_price');
+                        var purchase_delivery_charge = $(this).data('purchase_delivery_charge');
+                        var purchase_price = $(this).data('purchase_price');
+                        var purchase_reference = $(this).data('purchase_reference');
+                        var item_detail = $(this).data('item_detail');
+
+                        console.log(randomString, itemId, quantity, total_price,
+                            purchase_delivery_charge,
+                            purchase_price, purchase_reference, item_detail);
+
+                        $('#good_name_update_price').val(itemId).trigger('change');
+
+                        $('#kt_modal_update_price').modal('show');
+
+                        $('#uniq_id_price').val(randomString);
+
+                        $('#item_detail_update_price').val(item_detail);
+                        $('#purchase_reference_update_price').val(purchase_reference);
+                        $('#purchase_price_update_price').val(purchase_price);
+                        $('#purchase_delivery_charge_update_price').val(
+                            purchase_delivery_charge);
+                        $('#total_price_update_price').val(total_price);
+                        $('#quantity_update_price').val(quantity);
+                        $('#unit_update_price').val(unit).trigger('change');
+                        document.getElementById('total_update_price').textContent = total_price;
+                    });
+
+                    // Tambahkan item baru ke div "MultipleItem"
+                    $('.MultipleItem').append(newItem);
+
+                    // Bersihkan input setelah item ditambahkan
+                    form.reset();
+
+                    // Tutup modal
+                    $('#kt_modal_tambah_boq').modal('hide');
+
+                    // Clear any previous error message if items are present
+                    $('#error-item').empty();
+                    updateTotalSum();
+                }
+            });
+
+
+            
+            // Function Tambah Bundling Internet 
+            $('#btn-bundle').on('click', function() {
+                // Find the parent container where you want to append new divs
+                const parentContainer = document.querySelector(".BundleItem");
+
+                // Create a new div element
+                const newDiv = document.createElement("div");
+                newDiv.className =
+                    "file-soft-quotation-bundle d-flex justify-content-around flex-wrap mt-8 col-lg-12 col-md-11 col-12 col-sm-12";
+
+                const random_string = generateRandomString(4);
+                // Define the HTML structure as a string literal
+                const htmlStructure = `   
+                    <div class="col-lg-3 col-md-5 col-8 mb-3">
+                        <label for="good_name_bundle_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                            <span class="required fw-bold">Internet Bundle</span>
+                        </label>
+                        <select class="form-select form-select-solid drop-data" required
+                            data-control="select2" name="good_name_bundle_${random_string}"
+                            id="good_name_bundle_${random_string}">
+                            <option selected>Select Internet Bundle</option>
+                        </select> 
+                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                    </div>
+                    <div class="col-lg-2 col-md-5 col-8 mb-3 d-flex wrap-nowrap justify-content-between"> 
+
+                        <div class="col-7 col-md-6">
+                            <label for="quantity_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="fw-bold required">Quantity</span>
+                            </label>
+                            <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity_${random_string}">
+                            <div class="fv-plugins-message-container invalid-feedback"></div> 
+                        </div>
+
+                        <div class="col-4 col-md-5"> 
+                            <label for="_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="required fw-bold">Unit</span>
+                                        </label>
+                                        <select class="form-select form-select-solid drop-data" data-control="select2" required name="unit_${random_string}" id="unit_${random_string}">
+                                            <option></option>
+                                                @foreach ($dataUnit as $unit)
+                                                    <option value="{{ $unit->code }}">{{ $unit->name }}</option>
+                                                @endforeach
+                                        </select>
+                        </div>  
+                    
+                    </div>
+                    <div class="col-lg-2 col-md-5 col-8 mb-3">
+                        <label for="purchase_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                            <span class="fw-bold required">Purchase Price</span>
+                        </label>
+                        <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price_${random_string}">
+                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center flex-nowrap col-lg-2 col-md-5 col-8 mb-3">
+                        <div class="col-lg-9 col-md-9 col-9 mb-3" >
+                            <label for="total_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="fw-bold">Total Price</span>
+                            </label>
+                            <input class="form-control" type="text" min="1" minlength="1" disabled oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="total_price_${random_string}" id="total_price_${random_string}">
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-2 mb-3">
+                            <div>
+                                <div class="h-25px"></div> 
+                                <button type="button" class="btn btn-secondary btn-icon btn-md h-44px" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button> 
+                                <ul class="dropdown-menu"> 
+                                    <li type="button" class="clear-purchase-order-item-${random_string}"
+                                        data-random-string="${random_string}">
+                                        <a class="dropdown-item py-2">
+                                        <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
+                                    </li>
+                                </ul> 
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Set the HTML content of the new div to the HTML structure
+                newDiv.innerHTML = htmlStructure;
+
+                $.ajax({
+                    url: "{{ route('com.quotation.get.internet.bundling') }}",
+                    type: 'GET',
+                    success: function(response) {
+                        console.log(response);
+                        $(newDiv).find('#good_name_bundle_' + random_string)
+                            .empty(); // Hapus opsi yang ada sebelumnya
+                        $(newDiv).find('#good_name_bundle_' + random_string).append($(
+                            '<option>', {
+                                value: '',
+                                text: 'Select Internet Bundle'
+                            }));
+                        $.each(response, function(index, item) {
+                            $(newDiv).find('#good_name_bundle_' + random_string).append(
+                                $(
+                                    '<option>', {
+                                        value: item.id,
+                                        text: item.good_name
+                                    }));
                         });
 
-                        // Tambahkan item baru ke div "MultipleItem"
-                        $('.MultipleItem').append(newItem);
-
-                        // Bersihkan input setelah item ditambahkan
-                        form.reset();
-
-                        // Tutup modal
-                        $('#kt_modal_tambah_boq').modal('hide');
-
-                        // Clear any previous error message if items are present
-                        $('#error-item').empty();
-                        updateTotalSum();
+                    },
+                    error: function(error) {
+                        console.log(error);
                     }
                 });
 
-                //  Calculate and update total sum on page load
-                updateTotalSum();
+                // Append the new div to the parent container
+                parentContainer.appendChild(newDiv);
 
-                function updateTotalSum() {
-                    var totalSum = 0;
+                $(`select[name="good_name_bundle_${random_string}"]`).select2({
+                    dropdownAutoWidth: true
+                });
 
-                    // Loop through each item's total price input field and sum up the values
-                    $('.MultipleItem input[name="content[][total_price]"]').each(function() {
-                        var totalPriceValue = $(this).val();
-
-                        if (totalPriceValue !== "") {
-                            totalSum += parseInt(totalPriceValue);
-                        }
+                // Function Hapus per Item
+                $('.BundleItem').on('click', `.clear-purchase-order-item-${random_string}`,
+                    function() {
+                        $(this).parent().parent().parent().parent().parent().remove();
+                        updateTotalSumBundle();
                     });
-                    const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
-                    // Update the total sum element with the calculated value
-                    $('#totalsum').text(totalPriceWithCommas);
+
+            });
+
+            // Function Hapus Bundle Frontend
+            $('.BundleItem').on('click', '.clear-soft-quotation-bundle', function() {
+                var random_string = $(this).data('random-string');
+                $(this).closest('.file-soft-quotation-bundle-' + random_string).remove();
+                updateTotalSumBundle();
+            });
+
+            // Function Tambah Modal Bundling Internet
+            $('#btn-bundle-internet').on('click', '.btn_bundle_internet', function() {
+                $('.drop-data').val("").trigger("change");
+                $('#kt_modal_tambah_bundle_internet_form').trigger("reset");
+                $('#kt_modal_tambah_bundle_internet_submit').removeAttr('disabled', 'disabled');
+            });
+
+            // Function Submit Modal
+            $("#kt_modal_tambah_bundle_internet_form").validate({
+                messages: {
+                    good_name_update_bundle: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Wajib Mengisi Nama Item</span>",
+                    },
+                    code_name_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Code Barang wajib diisi</span>",
+                    },
+                    merk_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Merk Barang wajib diisi</span>",
+                    },
+                    good_type_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Tipe Barang wajib diisi</span>",
+                    },
+                    description_update: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>Deskripsi Barang wajib diisi</span>",
+                    }
+                },
+                submitHandler: function() {
+                    event.preventDefault();
+                    // Dapatkan referensi ke elemen form
+                    var form = document.getElementById("kt_modal_tambah_bundle_internet_form");
+
+                    // Dapatkan nilai dari input berdasarkan nama (name)
+                    var goodName = form.querySelector('input[name="good_name_update_bundle"]').value;
+                    var codeName = form.querySelector('input[name="code_name_update"]').value;
+                    var merk = form.querySelector('input[name="merk_update"]').value;
+                    var goodType = form.querySelector('input[name="good_type_update"]').value;
+                    var description = form.querySelector('textarea[name="description_update"]').value;
+                    var goodCategoryId = form.querySelector('input[name="good_category_id_update"]')
+                        .value;
+
+                    // Sekarang, Anda memiliki nilai dari masing-masing input berdasarkan nama (name)
+                    console.log("Nama Inventory Item:", goodName);
+                    console.log("Code Item:", codeName);
+                    console.log("Merk:", merk);
+                    console.log("Tipe Barang:", goodType);
+                    console.log("Detail Item Inventory:", description);
+                    console.log("Good Category ID:", goodCategoryId);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('com.quotation.update.internet.bundling') }}", // Ganti dengan URL yang sesuai
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            good_category_id: goodCategoryId,
+                            good_name: goodName,
+                            code_name: codeName,
+                            merk: merk,
+                            good_type: goodType,
+                            description: description
+                        },
+                        success: function(response) {
+                            console.log("Data berhasil disimpan:", response.message);
+                            form.reset();
+
+                            $('#kt_modal_tambah_bundle_internet').modal('hide');
+                            // Hapus semua nilai dari dataFromFirstResponse
+                            dataFromFirstResponse = null;
+
+                            $('#error-item').empty();
+
+                            $(`select[name^="good_name_bundle"]`).append($(
+                                '<option>', {
+                                    value: response.item.id,
+                                    text: response.item.good_name
+                                }));
+                        },
+                        error: function(error) {
+                            console.error("Terjadi kesalahan:", error);
+                        },
+                    });
                 }
             });
-        </script>
 
-    @endsection
+            // Function Submit Modal
+            $("#kt_create_quotation_internet_form").validate({
+                messages: {
+                    no_quotation: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>NO QUOTATION Wajib diisi</span>",
+                    },
+                    description: {
+                        required: "<span class='fw-semibold fs-8 text-danger'>DESRCIPTION Wajib diisi</span>",
+                    }
+                },
+
+                submitHandler: function() {
+
+                    event.preventDefault();
+
+                    // Get Prospect ID and Survey ID from the HTML elements
+                    var boq_id = $('#id').val();
+                    var total_price_bundle = $('#total_price_bundle').val();
+                    var no_quotation = $('#no_quotation').val();
+                    var description = $('#description').val();
+
+                    // Array to store all item data
+                    var bundle = [];
+                    // Create an object to store prospect_id and survey_request_id
+                    var quotation = {
+                        boq_id: boq_id,
+                        no_quotation: no_quotation,
+                        description: description,
+                        total_price: total_price_bundle
+                    };
+
+                    console.log(quotation);
+
+                    // Loop through each .file-soft-boq-item div to get the data for each item
+                    $('.BundleItem [class^="file-soft-quotation-bundle"]').each(function(index, item) {
+                        // Extract data for the specific item
+                        var id = $(item).find('select[name^="good_name_bundle"]').val();
+                        var purchase_price = $(item).find('input[id^="purchase_price"]').val();
+                        var quantity = $(item).find('input[id^="quantity"]').val();
+                        var total_price = $(item).find('input[name^="total_price"]').val();
+
+                        // Create an object to store the data for the specific item
+                        var itemData = {
+                            id: id,
+                            quantity: quantity,
+                            purchase_price: purchase_price,
+                            total_price: total_price
+                        };
+
+                        // Push the itemData object to the items array
+                        bundle.push(itemData);
+                    });
+                    console.log(bundle);
+
+                    $.ajax({
+                        url: "{{ route('com.quotation.store.quotation') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            quotation: quotation,
+                            bundle: bundle
+                        },
+                        success: function(response) {
+                            // Handle the response from the server, e.g., show a success message
+                            toastr.success(response.message);
+                            setTimeout(() => {
+                                window.location.href =
+                                    `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
+                            }, 800);
+                        },
+                        error: function(error) {
+                            // Handle errors if the request fails
+                            toastr.error(error);
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
+
+                }
+            });
+
+
+            $('body').on('click', '.btn_create_purchase_order', function() {
+
+                $('.drop-data').val("").trigger("change")
+                $('#kt_modal_create_purchase_order_form').trigger("reset")
+                $('#kt_modal_create_purchase_order_submit').removeAttr('disabled', 'disabled');
+
+                var quo_id = $(this).data('id');
+                $('#quotation_id').val(quo_id);
+
+                $(`.file-purchase-order-item-initial`).change(function() {
+                    imageReadURL(this);
+                });
+
+                submitModal({
+                    modalName: 'kt_modal_create_purchase_order',
+                    tableName: 'kt_table_purchase_order',
+                    anotherTableName: 'tableOnProgressPurchaseOrder',
+                    ajaxLink: "{{ route('com.quotation.store.po') }}",
+                    successCallback: function(response) {
+                        // Redirect ke halaman yang sesuai setelah operasi berhasil
+                        window.location.reload();
+                    }
+                })
+
+            }); 
+
+            function updateTotalSumBundle() {
+                var totalSumBundle = 0;
+
+                // const gpmVal = parseInt(document.querySelector(`[name='gpm']`).value);
+
+                // Loop through each item's total price input field and sum up the values
+                $('.BundleItem input[name^="total_price"]').each(function() {
+                    var totalPriceBundleValue = $(this).val();
+
+                    if (totalPriceBundleValue !== "") {
+                        totalSumBundle += parseInt(totalPriceBundleValue);
+                    }
+                });
+
+                // if (gpmVal <= totalSumBundle) {
+                //     return document.getElementById("totalsumbundle").textContent = "   MELEBIHI LIMIT GPM";
+                // }
+
+                // const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
+                // // Update the total sum element with the calculated value
+                // $('#totalsumbundle').text(totalPriceWithCommas);
+
+                $('#gpm').val(totalSumBundle);
+
+                // const hiddenTotalInput = document.querySelector(`[name='total_price_bundle']`);
+                // hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string
+            }
+
+            function calculateTotalBundle(uniq_id) {
+                const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${uniq_id}']`)
+                    .value);
+                const quantity = parseInt(document.querySelector(`[name='quantity_${uniq_id}']`).value);
+
+                if (isNaN(purchasePrice) || isNaN(quantity)) {
+                    return document.getElementById("total_price_" + uniq_id).value = "null";
+                }
+
+                let totalAmount = purchasePrice * quantity;
+
+                // if (totalAmount.toString().length > 15) {
+                //     return document.getElementById("total_price_" + uniq_id).value = "Melewati limit angka";
+                // }
+
+                // const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
+
+                document.getElementById("total_price_" + uniq_id).value = totalAmount;
+                updateTotalSumBundle()
+            }
+
+            function updateTotalSum() {
+                var totalSum = 0;
+
+                // Loop through each item's total price input field and sum up the values
+                $('.MultipleItem input[name="content[][total_price]"]').each(function() {
+                    var totalPriceValue = $(this).val();
+
+                    if (totalPriceValue !== "") {
+                        totalSum += parseInt(totalPriceValue);
+                    }
+                });
+                const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
+                // Update the total sum element with the calculated value
+                $('#totalsum').text(totalPriceWithCommas);
+                // console.log(totalPriceWithCommas);
+                $('#modal').val(totalSum);
+            }
+
+            updateTotalSum();
+            // updateTotalSumBundle();
+        });
+    </script>
+
+@endsection

@@ -94,15 +94,15 @@
                                             name="purchase_price_tambah">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div> --}}
-                                    <div class="col-lg-8 col-6 mb-3">
+                                    <div class="col-lg-8 col-sm-5 col-sm-5 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_tambah', 'tambah');" name="quantity_tambah">
+                                            min="1" minlength="1" oninput="validateAndFormatNumber(this);" name="quantity_tambah">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
-                                    <div class="col-lg-4 mb-3">
+                                    <div class="col-lg-4 col-sm-5 col-sm-5 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Tipe Unit</span>
                                         </label>
