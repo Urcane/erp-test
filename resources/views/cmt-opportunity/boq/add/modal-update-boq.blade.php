@@ -91,7 +91,8 @@
                                             <span class="required fw-bold">Quantity</span>
                                         </label>
                                         <input type="number" class="form-control form-control-solid required" required
-                                            min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update', 'update');" 
+                                            min="1" minlength="1" 
+                                            {{-- oninput="validateAndFormatNumber(this); calculateTotalAmount('total_update', 'update');"  --}}
                                             name="quantity_update" id="quantity_update">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
