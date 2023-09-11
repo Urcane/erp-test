@@ -481,7 +481,7 @@
         $(document).ready(function() {
 
             $('body').on('click', '.btn_create_purchase_order', function() {
- 
+
                 $('#kt_modal_create_purchase_order_form').trigger("reset")
                 $('#kt_modal_create_purchase_order_submit').removeAttr('disabled', 'disabled');
 
@@ -505,24 +505,31 @@
 
             });
 
-            $('body').on('click', '.btn_cancel_quotation', function() {  
-                $('#kt_modal_cancel_quotation_form').trigger("reset")
+            $('body').on('click', '.btn_cancel_quotation', function(e) {
+
+                $('#kt_modal_cancel_quotation_form').trigger("reset");
                 $('#kt_modal_cancel_quotation_submit').removeAttr('disabled', 'disabled');
 
                 var quo_id = $(this).data('id');
-                $('#quo_id').val(quo_id); 
+                $('#quo_id').val(quo_id);
 
+                // Validate the form
                 submitModal({
                     modalName: 'kt_modal_cancel_quotation',
-                    tableName: 'kt_table_cancel_quotation',
-                    anotherTableName: 'tableCancelQuotation',
                     ajaxLink: "{{ route('com.quotation.cancel.quotation') }}",
+                    validationMessages: {
+                        remark: {
+                            required: "<span class='fw-semibold fs-8 text-danger'>REMARK Wajib diisi</span>",
+                        },
+                    }
                     successCallback: function(response) {
                         // Redirect ke halaman yang sesuai setelah operasi berhasil
-                        window.location.href = "{{ route('com.quotation.index') }}";
+                        window.location.href =
+                            "{{ route('com.quotation.index') }}";
                     }
-                })
+                });
             });
+
 
             $('.print-form').click(function() {
                 const div = document.getElementById("printerDiv");
