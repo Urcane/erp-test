@@ -20,6 +20,6 @@ abstract class TimeManagementController extends Controller
 
     abstract public function index();
     abstract public function getTable(Request $request);
-    abstract public function createUpdate(Request $request);
+    // abstract public function createUpdate(Request $request);
     abstract public function destroy(Request $request);
 }

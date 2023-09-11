@@ -22,10 +22,12 @@
                             </label>
                         </div>
                         <div class="col-lg-12">
-                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="show_in_request" id="show_in_request">
-                            <label class="fs-6 form-check-label mb-2" for="show_in_request">
-                                <span class="fw-bold">Show In Request</span>
-                            </label>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="show_in_request" id="show_in_request">
+                                <label class="fs-6 form-check-label mb-2" for="show_in_request">
+                                    <span class="fw-bold">Show In Request</span>
+                                </label>
+                            </div>
                         </div>
 
                         <div class="col-lg-12 mb-3">
@@ -67,10 +69,12 @@
 							</label>
 						</div>
                         <div class="col-lg-12">
-                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="add_attendance_validation" id="add_attendance_validation" onclick="toggleHidden('#attendance_validation')">
-                            <label class="fs-6 form-check-label mb-2" for="add_attendance_validation">
-                                <span class="fw-bold">Add attendance validation</span>
-                            </label>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="add_attendance_validation" id="add_attendance_validation" onclick="toggleHidden('#attendance_validation')">
+                                <label class="fs-6 form-check-label mb-2" for="add_attendance_validation">
+                                    <span class="fw-bold">Add attendance validation</span>
+                                </label>
+                            </div>
                         </div>
                         <div class="row" id="attendance_validation">
                             <div class="col-lg-6 mb-3">
@@ -88,10 +92,12 @@
                         </div>
 
                         <div class="col-lg-12">
-                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="add_grace_period" id="add_grace_period" onclick="toggleHidden('#grace_period')">
-                            <label class="fs-6 form-check-label mb-2" for="add_grace_period">
-                                <span class="fw-bold">Add grace period</span>
-                            </label>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="add_grace_period" id="add_grace_period" onclick="toggleHidden('#grace_period')">
+                                <label class="fs-6 form-check-label mb-2" for="add_grace_period">
+                                    <span class="fw-bold">Add grace period</span>
+                                </label>
+                            </div>
                         </div>
 
                         <div class="row" id="grace_period">
@@ -110,10 +116,12 @@
                         </div>
 
                         <div class="col-lg-12">
-                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="enable_auto_overtime" id="enable_auto_overtime" onclick="toggleHidden('#auto_overtime')">
-                            <label class="fs-6 form-check-label mb-2" for="enable_auto_overtime">
-                                <span class="fw-bold">Enable auto overtime</span>
-                            </label>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="enable_auto_overtime" id="enable_auto_overtime" onclick="toggleHidden('#auto_overtime')">
+                                <label class="fs-6 form-check-label mb-2" for="enable_auto_overtime">
+                                    <span class="fw-bold">Enable auto overtime</span>
+                                </label>
+                            </div>
                         </div>
 
                         <div class="row" id="auto_overtime">

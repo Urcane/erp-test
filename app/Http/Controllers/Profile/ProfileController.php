@@ -81,11 +81,9 @@ class ProfileController extends Controller
         $dataProrateSetting = ProrateSetting::all();
         $dataCategory = UserFileCategory::all();
 
-        $leaveRequestCategory = LeaveRequestCategory::whereDate('effective_date', "<=", now())
-            ->where(function ($query) {
-                $query->whereDate('expired_date', '>=', now())
-                    ->orWhereNull('expired_date');
-            })->get();
+        $leaveRequestCategory = LeaveRequestCategory::where("show_in_request", true)
+            ->whereDate('effective_date', "<=", now())
+            ->get();
 
         return view('profile.index', compact(
             'user',

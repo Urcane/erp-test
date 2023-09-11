@@ -260,8 +260,10 @@ Route::middleware(['auth'])->group(function () {
                     Route::prefix('time-off')->group(function () {
                         Route::get('/', 'index')->name('hc.setting.timeoff.index');
                         Route::get('/table', 'getTable')->name('hc.setting.timeoff-get-table');
-                        Route::post('/create/update', 'createUpdate')->name('hc.setting.timeoff.createUpdate');
                         Route::post('/delete', 'destroy')->name('hc.setting.timeoff.delete');
+
+                        Route::get('/create', 'create')->name('hc.setting.timeoff.create');
+                        Route::post('/store', 'store')->name('hc.setting.timeoff.store');
                     });
                 });
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Attendance\LeaveRequestCategory;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Validation\Rule;
 
 class TimeOffController extends TimeManagementController
 {
@@ -51,26 +52,90 @@ class TimeOffController extends TimeManagementController
         }
     }
 
-    public function createUpdate(Request $request)
+    public function create(Request $request)
+    {
+        $balanceTypes = $this->constants->balance_type;
+
+        return view("hc.cmt-settings.time-management.add-time-off", compact([
+            'balanceTypes'
+        ]));
+    }
+
+    public function store(Request $request)
     {
         try {
             $request->validate([
-                "name" => "required",
-                "code" => "required",
-                "effective_date" => "required",
-                "expired_date" => "nullable"
+                'name' => 'required|string|max:100|unique:leave_request_categories,name',
+                'code' => 'required|string|max:8|unique:leave_request_categories,code',
+                'effective_date' => 'required|date',
+                'attachment' => 'nullable',
+                'show_in_request' => 'nullable',
+                'max_request' => 'integer|nullable|min:0|max:255',
+                'use_quota' => 'nullable',
+                'unlimited_balance' => 'boolean',
+
+                // use balance
+                'min_works' => 'nullable',
+                'balance' => 'nullable',
+                'balance_type' => [
+                    'nullable',
+                    Rule::in($this->constants->balance_type),
+                    'required_if:unlimited_balance,false',
+                ],
+                'expired' => 'nullable',
+                'carry_amount' => 'integer|nullable|min:0|max:255|required_if:expired,true',
+                'carry_expired' => 'integer|nullable|min:0|max:255|required_if:expired,true',
+
+                // use half day
+                'half_day' => 'nullable',
+
+                'minus_amount' => 'integer|nullable|min:0|max:255',
+                'duration' => 'integer|nullable|min:0|max:255',
             ]);
 
-            LeaveRequestCategory::create([
-                "name" => $request->name,
-                "code" => $request->code,
-                "effective_date" => $request->effective_date,
-                "expired_date" => $request->expired_date
-            ]);
+            $data = [
+                'name' => $request->name,
+                'code' => $request->code,
+                'effective_date' => $request->effective_date,
+                'attachment' => $request->input('attachment', 0),
+                'show_in_request' => $request->input('show_in_request', 0),
+                'max_request' => $request->max_request,
+                'use_quota' => $request->input('use_quota', 0),
+                'unlimited_balance' => $request->input('unlimited_balance', 0),
+            ];
+
+            if (!$request->unlimited_balance) {
+                $data += [
+                    'min_works' => $request->min_works,
+                    'balance' => $request->balance,
+                    'balance_type' => $request->balance_type,
+                    'expired' => $request->input('expired', 0),
+                ];
+            }
+
+            if ($request->expired) {
+                $data += [
+                    'carry_amount' => $request->carry_amount,
+                    'carry_expired' => $request->carry_expired,
+                ];
+            }
+
+            if ($request->half_day) {
+                $data += [
+                    'half_day' => $request->half_day,
+                ];
+            } else {
+                $data += [
+                    'minus_amount' => $request->minus_amount,
+                    'duration' => $request->duration,
+                ];
+            }
+
+            LeaveRequestCategory::create($data);
 
             return response()->json([
                 "status" => "success",
-                "message" => "Berhasil menambah kategori time off"
+                "message" => "Berhasil menambahkan Kategori Time Off"
             ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);

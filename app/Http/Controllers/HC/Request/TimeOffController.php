@@ -73,7 +73,7 @@ class TimeOffController extends RequestController
         ]);
     }
 
-    private function _getSchedule($workingDayOff ,$start_date, $end_date)
+    private function _getSchedule($workingDayOff, $start_date, $end_date)
     {
         Carbon::setLocale($this->constants->locale);
 
@@ -152,11 +152,11 @@ class TimeOffController extends RequestController
                     }
 
                     collect($schedule["takenDates"])->map(function ($data) use (
-                            $userId,
-                            $leaveCategoryName,
-                            $leaveCategoryCode,
-                            $user
-                        ) {
+                        $userId,
+                        $leaveCategoryName,
+                        $leaveCategoryCode,
+                        $user
+                    ) {
                         $this->_updateAttendance(
                             $userId,
                             $data,
@@ -241,11 +241,11 @@ class TimeOffController extends RequestController
                 }
 
                 collect($schedule["takenDates"])->map(function ($data) use (
-                        $userId,
-                        $leaveCategoryName,
-                        $leaveCategoryCode,
-                        $user,
-                    ) {
+                    $userId,
+                    $leaveCategoryName,
+                    $leaveCategoryCode,
+                    $user,
+                ) {
                     $this->_updateAttendance(
                         $userId,
                         $data,
@@ -351,10 +351,7 @@ class TimeOffController extends RequestController
                 ->groupBy('status')
                 ->get();
 
-            $viewDate = $query->where(function ($query) use ($range_date) {
-                    $query->whereBetween('start_date', $range_date)
-                        ->orWhereBetween('end_date', $range_date);
-                })
+            $viewDate = $query->whereBetween('created_at', $range_date)
                 ->select('status', DB::raw('count(*) as total'))
                 ->groupBy('status')
                 ->get();
@@ -396,9 +393,10 @@ class TimeOffController extends RequestController
             $query = null;
 
             if ($user->hasPermissionTo('HC:view-all-request')) {
-                $query = UserLeaveRequest::with([
-                    'user.division', 'user.department', 'user.userEmployment.subBranch', 'leaveRequestCategory'
-                ]);
+                $query = UserLeaveRequest::whereIn('status', array_slice($this->constants->approve_status, 0, 3))
+                    ->with([
+                        'user.division', 'user.department', 'user.userEmployment.subBranch', 'leaveRequestCategory'
+                    ]);
             } else if ($user->hasPermissionTo('Approval:view-request')) {
                 $query = UserLeaveRequest::where(function ($query) {
                     $query->where(function ($query) {
@@ -435,10 +433,7 @@ class TimeOffController extends RequestController
                     return Carbon::parse($item)->toDateString();
                 })->toArray();
 
-                $query = $query->where(function ($query) use ($range_date) {
-                        $query->whereBetween('start_date', $range_date)
-                            ->orWhereBetween('end_date', $range_date);
-                    })->orderBy('start_date', 'desc');
+                $query = $query->whereBetween('created_at', $range_date)->orderBy('start_date', 'desc');
             } else {
                 $query = $query->orderBy('start_date', 'desc');
             }

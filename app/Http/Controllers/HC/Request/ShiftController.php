@@ -195,7 +195,7 @@ class ShiftController extends RequestController
                 ->groupBy('status')
                 ->get();
 
-            $viewDate = $query->whereBetween('date', $range_date)
+            $viewDate = $query->whereBetween('created_at', $range_date)
                 ->select('status', DB::raw('count(*) as total'))
                 ->groupBy('status')
                 ->get();
@@ -237,7 +237,8 @@ class ShiftController extends RequestController
             $query = null;
 
             if ($user->hasPermissionTo('HC:view-all-request')) {
-                $query = UserShiftRequest::with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
+                $query = UserShiftRequest::whereIn('status', array_slice($this->constants->approve_status, 0, 3))
+                    ->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
             } else if ($user->hasPermissionTo('Approval:view-request')) {
                 $query = UserShiftRequest::where(function ($query) {
                     $query->where(function ($query) {
@@ -283,7 +284,7 @@ class ShiftController extends RequestController
                     return Carbon::parse($item)->toDateString();
                 })->toArray();
 
-                $query = $query->whereBetween('date', $range_date)->orderBy('date', 'desc');
+                $query = $query->whereBetween('created_at', $range_date)->orderBy('date', 'desc');
             } else {
                 $query = $query->orderBy('date', 'desc');
             }
