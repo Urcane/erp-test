@@ -158,19 +158,17 @@
                                             <th class="text-center w-50px">#</th>
                                             <th class="text-center w-50px">#</th>
                                             <th class="w-400px">Nama Pegawai</th>
-                                            <div class="overflow-x-auto">
-                                                <th class="w-150px">Nip</th>
-                                                <th class="w-150px">Date</th>
-                                                <th class="w-150px">Shift</th>
-                                                <th class="w-150px text-center">Schedule In</th>
-                                                <th class="w-150px text-center">Schedule Out</th>
-                                                <th class="w-250px text-center">Clock In</th>
-                                                <th class="w-250px text-center">Clock Out</th>
-                                                <th class="w-150px">Overtime</th>
-                                                <th class="w-150px">Attendance Code</th>
-                                                <th class="w-150px">Time Off Code</th>
-                                            </div>
-                                            <th class="w-100px">#</th>
+                                            <th class="w-150px">Nip</th>
+                                            <th class="w-150px">Date</th>
+                                            <th class="w-150px">Shift</th>
+                                            <th class="w-150px text-center">Schedule In</th>
+                                            <th class="w-150px text-center">Schedule Out</th>
+                                            <th class="w-250px text-center">Clock In</th>
+                                            <th class="w-250px text-center">Clock Out</th>
+                                            <th class="w-150px">Overtime</th>
+                                            <th class="w-150px">Attendance Code</th>
+                                            <th class="w-150px">Time Off Code</th>
+                                            <th class="w-150px">#</th>
                                         </tr>
                                     </thead>
                                     <tbody class="fs-7">
@@ -185,12 +183,13 @@
     </div>
 </div>
 
-@cannot('HC:edit-delete-attendance')
+@can('HC:edit-delete-attendance')
     @include('hc.cmt-attendance.modal.edit-attendance')
     @include('hc.cmt-attendance.modal.delete-attendance')
-@endcannot
+@endcan
 
 @include('hc.cmt-attendance.modal.export-attendance')
+@include('hc.cmt-attendance.modal.detail-attendance')
 
 <script>
     const attendanceCodeEnum = @json($constants->attendance_code_view);
@@ -220,14 +219,18 @@
             'filterStatus': $('#filter_status').val(),
             'filterDate': $('#range_date').val(),
             'search': $('#search_attendance').val()
-        }
-    }
+        };
+    };
 
     const paramToView = (param) => {
         const parts = param.split('-');
         const formattedParts = parts.map(part => part.charAt(0).toUpperCase() + part.slice(1));
         return formattedParts.join(' ');
-    }
+    };
+
+    const onDetailButtonClick = (data) => {
+        detailInit(data);
+    };
 
     $(document ).ready(function() {
         $('input[name="range_date"]').daterangepicker({
@@ -516,7 +519,7 @@
             renderSummaries();
         });
 
-        @cannot('HC:edit-delete-attendance')
+        @can('HC:edit-delete-attendance')
 
             $('#modal_attendance_edit_modal').submit(function(event) {
                 event.preventDefault();
@@ -562,7 +565,7 @@
                 });
             });
 
-        @endcannot
+        @endcan
 
         $('.summaries').each(function () {
             $(this).on('click', function () {

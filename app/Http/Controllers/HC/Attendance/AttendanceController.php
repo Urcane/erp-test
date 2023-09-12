@@ -647,7 +647,7 @@ class AttendanceController extends Controller
                     $checkIn = $userAttendances->check_in ? date('H:i', strtotime($userAttendances->check_in)) : null;
                     $checkOut = $userAttendances->check_out ? date('H:i', strtotime($userAttendances->check_out)) : null;
 
-                    return view('hc.cmt-attendance.components.menu', compact(['checkIn', 'checkOut', 'userAttendances']));
+                    return view('hc.cmt-attendance.components.index-menu', compact(['checkIn', 'checkOut', 'userAttendances']));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])
