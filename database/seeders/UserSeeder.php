@@ -238,6 +238,34 @@ class UserSeeder extends Seeder
             'HC:setting'
         ]);
 
+        $yadi = User::create([
+            'name' => 'yadi',
+            'email' => 'yadi@comtelindo.com',
+            'password' => bcrypt('12345678'),
+            'nip' => 0000,
+            'sign_file' => 'sign-Super Admin.png',
+            'department_id' => 2,
+            'division_id' => 5,
+            'team_id' => 1,
+        ]);
+        $yadi->assignRole('staff');
+        $yadi->givePermissionTo([
+            // request
+            'HC:view-all-request',
+            'HC:change-all-status-request',
+
+            // attendance
+            'HC:view-attendance',
+            'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            'HC:setting'
+        ]);
+
         $cmrAdminProject = ['Nisa Fajrin Alfalah', 'Bagus Hariyadi'];
         $cmrAdminProjectEmail = ['nisa@comtelindo.com', 'agushaha@live.co.uk'];
         for ($i = 0; $i < count($cmrAdminProject); $i++) {
