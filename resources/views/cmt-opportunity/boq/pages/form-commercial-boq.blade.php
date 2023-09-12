@@ -30,7 +30,7 @@
     {{-- @dd($dataProspect) --}}
     {{-- @dd($updateDraftBoqData['inventoryGoodInet']) --}}
     {{-- @dd($updateDraftBoqData['quotationItem']) --}}
-
+    {{-- @dd($updateDraftBoqData['quotationItem']); --}}
 
     <div class="row justify-content-center">
         <div class="col-lg-12 mt-n20">
@@ -232,7 +232,7 @@
                                 {{-- Tempat Items --}}
                                 <div class="mb-6 border-dashed border-gray-100">
 
-                                    <div class="MultipleItem justify-content-center mx-10  mt-5 mb-8 row">
+                                    <div class="MultipleItem justify-content-center mx-10 mt-5 mb-8 row">
                                         @if (isset($updateDraftBoqData['dataCompanyItem'][0]->itemable))
                                             @foreach ($updateDraftBoqData['dataCompanyItem'][0]->itemable as $relatedItem)
                                                 @php
@@ -248,10 +248,9 @@
                                                                 value="{{ $relatedItem->inventoryGood->good_name ?? null }} - {{ $relatedItem->inventoryGood->merk ?? null }}" />
                                                         </div>
 
-                                                        <div
-                                                            class="col-12 col-md-6 col-lg-2">
+                                                        <div class="col-12 col-md-6 col-lg-2">
                                                             <div class="row justify-content-between">
-                                                                <div class="col-7 col-md-6">
+                                                                <div class="col-7">
                                                                     <label class="form-label">Qty</label>
                                                                     <div class="position-relative">
                                                                         <div class="position-absolute top-0"></div>
@@ -261,7 +260,7 @@
                                                                             value="{{ $relatedItem->quantity ?? null }}" />
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-4 col-md-5">
+                                                                <div class="col-5">
                                                                     <label class="form-label"> Unit</label>
                                                                     <div class="position-relative">
                                                                         <div class="position-absolute top-0"></div>
@@ -282,10 +281,7 @@
                                                                     disabled name="content[][purchase_price]"
                                                                     value="{{ $relatedItem->purchase_price ?? null }}" />
                                                             </div>
-                                                        </div>
-
-                                                        {{-- <div class="col-lg-1"> 
-                                                            </div> --}}
+                                                        </div> 
 
                                                         <div class="col-12 col-lg-2 col-md-6">
                                                             <label class="form-label">Jasa
@@ -298,10 +294,9 @@
                                                             </div>
                                                         </div>
 
-                                                        <div
-                                                            class="col-12 col-lg-3 col-md-6">
+                                                        <div class="col-12 col-lg-3 col-md-6">
                                                             <div class="row justify-content-between align-items-center">
-                                                                <div class="col-lg-9 col-md-9 col-9 col-sm-9">
+                                                                <div class="col-lg-10 col-md-10 col-10 col-sm-10">
                                                                     <label class="form-label">Total
                                                                         Price</label>
                                                                     <div class="position-relative">
@@ -410,114 +405,150 @@
                                 {{--  divv BUNDLE INTERNET --}}
                                 <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
-                                    <div class="BundleItem">
+                                    <div class="BundleItem justify-content-center mx-10 mt-5 mb-8 row">
                                         @if (isset($updateDraftBoqData['quotationItem']))
 
                                             @foreach ($updateDraftBoqData['quotationItem'] as $relatedItem)
                                                 @php
                                                     $random_string = \Illuminate\Support\Str::random(4);
                                                 @endphp
-
+                                                <input type="hidden" name="bundle_id" disabled
+                                                value="{{ $relatedItem->id ?? null }}" />
                                                 <div
-                                                    class="file-soft-quotation-bundle-{{ $random_string }} d-flex justify-content-around flex-wrap col-lg-12 mb-10">
-                                                    <!-- Internet Bundle -->
-                                                    <div class="col-lg-5 col-md-5 col-8 mb-3">
-                                                        <label for="good_name_bundle_{{ $random_string }}"
-                                                            class="d-flex align-items-center fs-6 form-label mb-2">
-                                                            <span class="required fw-bold">Internet
-                                                                Bundle</span>
-                                                        </label>
-                                                        <select class="form-select form-select-solid drop-data"
-                                                            data-control="select2"required
-                                                            name="good_name_bundle_{{ $random_string }}"
-                                                            id="good_name_bundle_{{ $random_string }}">
-
-                                                            @foreach ($updateDraftBoqData['inventoryGoodInet'] as $item)
-                                                                @if ($relatedItem->item_inventory_id == $item->id)
-                                                                    <option selected value="{{ $item->id }}">
-                                                                        {{ $item->good_name }}
-                                                                    </option>
-                                                                @else
-                                                                    <option value="{{ $item->id }}">
-                                                                        {{ $item->good_name }}
-                                                                    </option>
-                                                                @endif
-                                                            @endforeach
-
-                                                        </select>
-                                                    </div>
-
-                                                    <!-- Quantity -->
-                                                    <div class="col-lg-1 col-md-5 col-8 mb-3">
-                                                        <label for="quantity_{{ $random_string }}"
-                                                            class="d-flex align-items-center fs-6 form-label mb-2">
-                                                            <span class="fw-bold required">Quantity</span>
-                                                        </label>
-                                                        <input class="form-control" type="text" required
-                                                            min="1" minlength="1"
-                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                            name="quantity_{{ $random_string }}"
-                                                            id="quantity_{{ $random_string }}"
-                                                            value="{{ $relatedItem->quantity }}">
-                                                    </div>
-
-                                                    <!-- Purchase Price -->
-                                                    <div class="col-lg-2 col-md-5 col-8 mb-3">
-                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                            for="purchase_price_{{ $random_string }}">
-                                                            <span class="fw-bold required">Purchase Price</span>
-                                                        </label>
-                                                        <input class="form-control" type="text" required
-                                                            min="1" minlength="1"
-                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                            name="purchase_price_{{ $random_string }}"
-                                                            value="{{ $relatedItem->purchase_price }}"
-                                                            id="purchase_price_{{ $random_string }}">
-                                                    </div>
-
-                                                    <!-- Total Price -->
-                                                    <div
-                                                        class="d-flex justify-content-around align-items-center flex-nowrap col-lg-2 col-md-5 col-8 mb-3">
-                                                        <div class="col-lg-9 col-md-9 col-9 col-sm-9">
-                                                            <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                                for="total_price_{{ $random_string }}">
-                                                                <span class="fw-bold">Total Price</span>
+                                                    class="file-soft-quotation-bundle-{{ $random_string }} col-12 mb-5 mt-10">
+                                                    <div class="row d-flex justify-content-between"> 
+ 
+                                                        <!-- Internet Bundle -->
+                                                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                                                            <label for="good_name_bundle_{{ $random_string }}"
+                                                                class="d-flex align-items-center fs-6 form-label mb-2">
+                                                                <span class="required fw-bold">Internet
+                                                                    Bundle</span>
                                                             </label>
-                                                            <input class="form-control" type="text" min="1"
-                                                                minlength="1" disabled
-                                                                oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                                name="total_price_{{ $random_string }}"
-                                                                id="total_price_{{ $random_string }}"
-                                                                value="{{ $relatedItem->total_price }}">
+                                                            <select class="form-select form-select-solid drop-data"
+                                                                data-control="select2"required
+                                                                name="good_name_bundle_{{ $random_string }}"
+                                                                id="good_name_bundle_{{ $random_string }}">
+
+                                                                @foreach ($updateDraftBoqData['inventoryGoodInet'] as $item)
+                                                                    @if ($relatedItem->item_inventory_id == $item->id)
+                                                                        <option selected value="{{ $item->id }}">
+                                                                            {{ $item->good_name }}
+                                                                        </option>
+                                                                    @else
+                                                                        <option value="{{ $item->id }}">
+                                                                            {{ $item->good_name }}
+                                                                        </option>
+                                                                    @endif
+                                                                @endforeach
+
+                                                            </select>
                                                         </div>
-                                                        <div class="col-lg-2 col-md-1 col-1 col-sm-1">
-                                                            <div class="col-12">
-                                                                <div class="h-25px"></div>
-                                                                <button type="button"
-                                                                    class="btn btn-secondary btn-icon btn-sm h-44px"
-                                                                    data-kt-menu-placement="bottom-end"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                                                </button>
-                                                                <ul class="dropdown-menu">
-                                                                    <li type="button" class="clear-soft-quotation-bundle"
-                                                                        data-random-string="{{ $random_string }}">
-                                                                        <a class="dropdown-item py-2">
-                                                                            <i class="fa-solid fa-trash me-3"></i>Hapus
-                                                                            Item
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
+                                                          
+                                                        <!-- Quantity -->
+                                                        <div class="col-lg-3 col-md-6 col-12 mb-3"> 
+                                                            <div class="row d-flex justify-content-between ">
+                                                                <div class="col-7 col-md-6"> 
+                                                                    <label for="quantity_{{ $random_string }}"
+                                                                        class="d-flex align-items-center fs-6 form-label mb-2">
+                                                                        <span class="fw-bold required">Quantity</span>
+                                                                    </label>
+                                                                    <input class="form-control" type="text" required
+                                                                        min="1" minlength="1"
+                                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                                        name="quantity_{{ $random_string }}"
+                                                                        id="quantity_{{ $random_string }}"
+                                                                        value="{{ $relatedItem->quantity }}">
+                                                                </div>
+                                                                <div class="col-5 col-md-6"> 
+                                                                    <label for="unit_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                                                                        <span class="required fw-bold">Unit</span>
+                                                                    </label>
+                                                                    <select class="form-select form-select-solid drop-data" data-control="select2" required name="unit_${random_string}" id="unit_${random_string}">                                                                       
+                                                                        @foreach($dataUnit as $unit)
+                                                                            @if ($relatedItem->unit == $unit->code)
+                                                                                <option selected value="{{ $unit->code }}">
+                                                                                    {{ $unit->name }}
+                                                                                </option>
+                                                                            @else 
+                                                                                    <option value="{{ $unit->code }}">{{ $unit->name }}</option> 
+                                                                            @endif 
+                                                                        @endforeach       
+                                                                    </select>
+                                                                </div> 
+                                                            </div> 
+                                                        </div> 
+
+                                                        <!-- Purchase Price -->
+                                                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                                                            <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                                for="purchase_price_{{ $random_string }}">
+                                                                <span class="fw-bold required">Purchase Price</span>
+                                                            </label>
+                                                            <input class="form-control" type="text" required
+                                                                min="1" minlength="1"
+                                                                oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                                name="purchase_price_{{ $random_string }}"
+                                                                value="{{ $relatedItem->purchase_price }}"
+                                                                id="purchase_price_{{ $random_string }}">
+                                                        </div>
+
+                                                        <!-- Total Price -->
+                                                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                                                            <div class="row d-flex justify-content-between ">
+
+                                                                <div class="col-10" > 
+                                                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                                        for="total_price_{{ $random_string }}">
+                                                                        <span class="fw-bold">Total Price</span>
+                                                                    </label>
+                                                                    <input class="form-control" type="text" min="1"
+                                                                        minlength="1" disabled
+                                                                        oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
+                                                                        name="total_price_{{ $random_string }}"
+                                                                        id="total_price_{{ $random_string }}"
+                                                                        value="{{ $relatedItem->total_price }}">
+                                                                </div>  
+
+                                                                <div class="col-2" > 
+                                                                    <div>
+                                                                        <div class="h-25px"></div>
+                                                                        <button type="button"
+                                                                            class="btn btn-secondary btn-icon btn-md h-44px"
+                                                                            data-kt-menu-placement="bottom-end"
+                                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li type="button" class="clear-soft-quotation-bundle"
+                                                                                data-random-string="{{ $random_string }}">
+                                                                                <a class="dropdown-item py-2">
+                                                                                    <i class="fa-solid fa-trash me-3"></i>Hapus
+                                                                                    Item
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div> 
+                                                                </div>
+
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> 
                                                 </div>
+
+
                                             @endforeach
                                         @endif
 
                                     </div>
                                     @role('administrator')
-                                        <div class="d-flex justify-content-start mx-20 mt-8">
+                                        <div class="d-flex justify-content-end mt-5">
+                                            <div class="w-20 me-10">
+                                                <span class="fw-bold">Total Amount : Rp<span id="total_bundle_price"></span></span>
+                                            </div>  
+                                        </div>
+
+                                        <div class="d-flex justify-content-start mx-20 mb-5">
                                             <div class="w-20 me-10">
                                                 <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
                                                     <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
@@ -530,11 +561,7 @@
                                                     <i class="fa-solid fa-plus"></i>Tambah Bundle Baru</a>
                                             </div>
                                         </div>
-                                        <div class="d-flex justify-content-end mb-5">
-                                            <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Amount : Rp<span id="total_bundle_price"></span></span>
-                                            </div>  
-                                        </div>
+
                                     @endrole
 
                                 </div>
@@ -591,7 +618,7 @@
             });
 
             if (modalVal >= totalSumBundle) {
-                return document.getElementById("total_bundle_price").textContent = "   MELEBIHI MODAL";
+                return document.getElementById("total_bundle_price").textContent = "   KURANG MODAL";
             }
 
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle); 
@@ -692,7 +719,8 @@
                 var is_final = $('#is_final').val();
  
  
-                var items = [];
+                var items = []; 
+                // var bundle = [];
                 
                 var boq = {
                     boq_id: boq_id,
@@ -765,18 +793,44 @@
                     // Push the itemData object to the items array
                     items.push(itemData);
                 });
+                
+                // Loop through each .file-soft-boq-item div to get the data for each item
+                $('.BundleItem [class^="file-soft-quotation-bundle"]').each(function(index, item) {
+                        // Extract data for the specific item
+                        var id = $(item).find('input[name^="bundle_id"]').val();
+                        var item_inventory_id = $(item).find('select[name^="good_name_bundle"]').val();
+                        var purchase_price = $(item).find('input[id^="purchase_price"]').val();
+                        var quantity = $(item).find('input[id^="quantity"]').val();
+                        var unit = $(item).find('select[id^="unit"]').val();
+                        var total_price = $(item).find('input[name^="total_price"]').val();
 
-                // Check if there is at least one item in the 'items' array
-                if (items.length === 0) {
-                    // Show an error message
-                    var errorMessageItem =
-                        "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
-                    $('#error-item').html(errorMessageItem);
-                    return;
-                } else {
-                    $('#error-item').empty();
-                }
+                        // Create an object to store the data for the specific item
+                        var itemData = {
+                            id: id,
+                            item_inventory_id: item_inventory_id,
+                            quantity: quantity,
+                            unit: unit,
+                            purchase_price: purchase_price,
+                            total_price: total_price
+                        };
+
+                        // Push the itemData object to the items array
+                        items.push(itemData);
+                });
+
+                // console.log(bundle);
                 console.log(items);
+
+                    // Check if there is at least one item in the 'items' array
+                // if (items.length === 0) {
+                //     // Show an error message
+                //     var errorMessageItem =
+                //         "<span class='fw-semibold fs-8 text-danger'>Please add at least one Item.</span>";
+                //     $('#error-item').html(errorMessageItem);
+                //     return;
+                // } else {
+                //     $('#error-item').empty();
+                // }
 
                 // Send the data to the server using AJAX
                 $.ajax({
@@ -785,22 +839,22 @@
                     data: {
                         _token: '{{ csrf_token() }}',
                         boq: boq,
-                        items: items
+                        items: items,
+                        // bundle: bundle
                     },
                     success: function(response) {
                         toastr.success(response.message);
 
-                        if (response.data.is_final == 1) {
-                            setTimeout(() => {
-                                window.location.href =
-                                    `cmt-boq/on-review-boq?boq_id=${response.data.id}`;
-                            }, 800);
-                        } else {
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 800);
-                        }
-
+                        // if (response.data.is_final == 1) {
+                        //     setTimeout(() => {
+                        //         window.location.href =
+                        //             `cmt-boq/on-review-boq?boq_id=${response.data.id}`;
+                        //     }, 800);
+                        // } else {
+                        //     setTimeout(() => {
+                        //         window.location.reload();
+                        //     }, 800);
+                        // } 
 
                     },
                     error: function(error) {
@@ -1197,110 +1251,120 @@
                     var formData = new FormData(form);
 
                     var newItem = `
-                    <div class="file-soft-boq-item-${random_string} d-flex justify-content-between mb-5 mt-10 row">
-                        <div class="col-lg-3">
-                            <label for="" class="form-label">Item</label>
-                            <input type="text" class="form-control form-control-solid" name="content[][good_name]" value="${itemName} - ${itemMerk}" />
-                        </div>
-
-                        <div class="col-lg-2">
-                            <label for="" class="form-label">Price</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
-                            </div>
-                        </div>
-
-                        <div class="col-lg-1">
-                            <label for="" class="form-label">Qty</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity_tambah')}" />
-                            </div>
-                        </div>
-
-                        <div class="col-lg-1">
-                            <label for="" class="form-label">Tipe Unit</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input type="text" class="form-control form-control-solid" name="content[][unit]" value="${formData.get('unit')}" />
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2">
-                            <label for="" class="form-label">Jasa Antar</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
-                                </div>
-                        </div>
+                    <div class="file-soft-boq-item-${random_string} mb-5 mt-10 col-12"> 
+                        <div class="row justify-content-between">
                         
-                        <div class="col-lg-2">
-                            <div class="row">
-                                <div class="col-lg-10">
-                                    <label class="form-label">Total
-                                        Price</label>
-                                    <div class="position-relative">
-                                        <div class="position-absolute top-0"></div>
-                                        <input type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total_tambah')}" />
+                            <div class="col-lg-3 col-12">
+                                <label class="form-label">Item</label>
+                                <input type="text" class="form-control form-control-solid" name="content[][good_name]" value="${itemName} - ${itemMerk}" />
+                            </div>
+
+                            
+                            <div class="col-lg-2 col-12 col-md-6"> 
+                                <div class="row justify-content-between">
+                                    <div class="col-7"> 
+                                        <label class="form-label">Qty</label>
+                                        <div class="position-relative">
+                                            <div class="position-absolute top-0"></div>
+                                            <input type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity_tambah')}" />
+                                        </div>
+                                    </div> 
+                                    <div class="col-5">
+                                        <label class="form-label">Unit</label>
+                                        <div class="position-relative">
+                                            <div class="position-absolute top-0"></div>
+                                            <input type="text" class="form-control form-control-solid" name="content[][unit]" value="${formData.get('unit')}" />
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
-                                    <div class="h-30px"></div>
-                                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
-                                    
-                                        <ul class="dropdown-menu">
-                                            <li type="button" class="btn-update-boq-modal" 
-                                                data-random-string="${random_string}" 
-                                                data-item-id="${formData.get('good_name')}"
+                            </div>
 
-                                                data-quantity="${formData.get('quantity_tambah')}"
-                                                data-unit="${formData.get('unit')}"
-                                                data-total_price="${formData.get('total_tambah')}"
-                                                data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
-                                                data-purchase_price="${formData.get('purchase_price_tambah')}"
-                                                data-purchase_reference="${formData.get('purchase_reference')}"
-                                                data-item_detail="${formData.get('item_detail')}"">                                            
-                                                
-                                                <a class="dropdown-item py-2">
-                                                <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
-                                            </li>
-                                            <li type="button" class="btn-update-price-modal" 
-                                                data-random-string="${random_string}" 
-                                                data-item-id="${formData.get('good_name')}"
-
-                                                data-quantity="${formData.get('quantity_tambah')}"
-                                                data-unit="${formData.get('unit')}"
-                                                data-total_price="${formData.get('total_tambah')}"
-                                                data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
-                                                data-purchase_price="${formData.get('purchase_price_tambah')}"
-                                                data-purchase_reference="${formData.get('purchase_reference')}"
-                                                data-item_detail="${formData.get('item_detail')}"">                                            
-                                                
-                                                <a class="dropdown-item py-2">
-                                                <i class="fa-solid fa-edit me-3"></i>Edit Harga Item</a>                                       
-                                            </li>
-                                            <li type="button" class="clear-soft-survey-item-${random_string}"
-                                                data-random-string="${random_string}">
-                                                <a class="dropdown-item py-2">
-                                                <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
-                                            </li>
-                                    </ul>
+                            <div class="col-lg-2 col-12 col-md-6">
+                                <label class="form-label">Price</label>
+                                <div class="position-relative">
+                                    <div class="position-absolute top-0"></div>
+                                    <input type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
                                 </div>
                             </div>
-                        </div>  
-                        <div>
-                            <input type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
-                            <input type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
-                            <input type="hidden" name="content[][delivery_route]" value="${formData.get('delivery_route')}" disabled>
-                            <input type="hidden" name="content[][delivery_type]" value="${formData.get('delivery_type')}" disabled>
-                            <input type="hidden" name="content[][purchase_from]" value="${formData.get('purchase_from')}" disabled>
-                            <input type="hidden" name="content[][payment_type]" value="${formData.get('payment_type')}" disabled>
-                            <input type="hidden" name="content[][purchase_validity]" value="${formData.get('purchase_validity')}" disabled>
-                            <input type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
+
+                            <div class="col-lg-2 col-12 col-md-6">
+                                <label class="form-label">Jasa Antar</label>
+                                <div class="position-relative">
+                                    <div class="position-absolute top-0"></div>
+                                    <input type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
+                                    </div>
+                            </div>
+                            
+                            <div class="col-lg-3 col-12 col-md-6">
+                                <div class="row justify-content-between">
+                                    <div class="col-10">
+                                        <label class="form-label">Total
+                                            Price</label>
+                                        <div class="position-relative">
+                                            <div class="position-absolute top-0"></div>
+                                            <input type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total_tambah')}" />
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="h-30px"></div>
+                                        <button type="button" class="btn btn-secondary btn-icon btn-md" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button>
+                                        
+                                            <ul class="dropdown-menu">
+                                                <li type="button" class="btn-update-boq-modal" 
+                                                    data-random-string="${random_string}" 
+                                                    data-item-id="${formData.get('good_name')}"
+
+                                                    data-quantity="${formData.get('quantity_tambah')}"
+                                                    data-unit="${formData.get('unit')}"
+                                                    data-total_price="${formData.get('total_tambah')}"
+                                                    data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
+                                                    data-purchase_price="${formData.get('purchase_price_tambah')}"
+                                                    data-purchase_reference="${formData.get('purchase_reference')}"
+                                                    data-item_detail="${formData.get('item_detail')}"">                                            
+                                                    
+                                                    <a class="dropdown-item py-2">
+                                                    <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
+                                                </li>
+                                                <li type="button" class="btn-update-price-modal" 
+                                                    data-random-string="${random_string}" 
+                                                    data-item-id="${formData.get('good_name')}"
+
+                                                    data-quantity="${formData.get('quantity_tambah')}"
+                                                    data-unit="${formData.get('unit')}"
+                                                    data-total_price="${formData.get('total_tambah')}"
+                                                    data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
+                                                    data-purchase_price="${formData.get('purchase_price_tambah')}"
+                                                    data-purchase_reference="${formData.get('purchase_reference')}"
+                                                    data-item_detail="${formData.get('item_detail')}"">                                            
+                                                    
+                                                    <a class="dropdown-item py-2">
+                                                    <i class="fa-solid fa-edit me-3"></i>Edit Harga Item</a>                                       
+                                                </li>
+                                                <li type="button" class="clear-soft-survey-item-${random_string}"
+                                                    data-random-string="${random_string}">
+                                                    <a class="dropdown-item py-2">
+                                                    <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
+                                                </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>  
+
+                            <div>
+                                <input type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
+                                <input type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
+                                <input type="hidden" name="content[][delivery_route]" value="${formData.get('delivery_route')}" disabled>
+                                <input type="hidden" name="content[][delivery_type]" value="${formData.get('delivery_type')}" disabled>
+                                <input type="hidden" name="content[][purchase_from]" value="${formData.get('purchase_from')}" disabled>
+                                <input type="hidden" name="content[][payment_type]" value="${formData.get('payment_type')}" disabled>
+                                <input type="hidden" name="content[][purchase_validity]" value="${formData.get('purchase_validity')}" disabled>
+                                <input type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
+                            </div>
+                            
                         </div>
+
                     </div>`;
 
 
@@ -1395,88 +1459,103 @@
 
 
             // Function Tambah Bundling Internet 
-            $('#btn-bundle').on('click', function() {
+            $('#btn-bundle').on('click', function() {[]
                 // Find the parent container where you want to append new divs
                 const parentContainer = document.querySelector(".BundleItem");
 
                 // Create a new div element
                 const newDiv = document.createElement("div");
                 newDiv.className =
-                    "file-soft-quotation-bundle d-flex justify-content-around flex-wrap mt-8 col-lg-12 col-md-11 col-12 col-sm-12";
+                    "file-soft-quotation-bundle mt-10 mb-5 col-12";
 
                 const random_string = generateRandomString(4);
                 // Define the HTML structure as a string literal
-                const htmlStructure = `   
-                    <div class="col-lg-3 col-md-5 col-8 mb-3">
-                        <label for="good_name_bundle_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
-                            <span class="required fw-bold">Internet Bundle</span>
-                        </label>
-                        <select class="form-select form-select-solid drop-data" required
-                            data-control="select2" name="good_name_bundle_${random_string}"
-                            id="good_name_bundle_${random_string}">
-                            <option selected>Select Internet Bundle</option>
-                        </select> 
-                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                    </div>
-                    <div class="col-lg-2 col-md-5 col-8 mb-3 d-flex wrap-nowrap justify-content-between"> 
+                const htmlStructure = `    
+                    <div class="row d-flex justify-content-between">
+                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                            <label for="good_name_bundle_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="required fw-bold">Internet Bundle</span>
+                            </label>
+                            <select class="form-select form-select-solid drop-data" required
+                                data-control="select2" name="good_name_bundle_${random_string}"
+                                id="good_name_bundle_${random_string}">
+                                <option selected>Select Internet Bundle</option>
+                            </select> 
+                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                        </div>
 
-                        <div class="col-7 col-md-6">
-                            <label for="quantity_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class="fw-bold required">Quantity</span>
-                            </label>
-                            <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity_${random_string}">
-                            <div class="fv-plugins-message-container invalid-feedback"></div> 
-                        </div> 
-                        <div class="col-4 col-md-5"> 
-                            <label for="unit_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Unit</span>
-                                        </label>
-                                        <select class="form-select form-select-solid drop-data" data-control="select2" required name="unit_${random_string}" id="unit_${random_string}">
-                                            <option selected disabled></option>
-                                        </select>
-                        </div>   
-                    </div>
-                    <div class="col-lg-2 col-md-5 col-8 mb-3">
-                        <label for="purchase_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
-                            <span class="fw-bold required">Purchase Price</span>
-                        </label>
-                        <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price_${random_string}">
-                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center flex-nowrap col-lg-2 col-md-5 col-8 mb-3">
-                        <div class="col-lg-9 col-md-9 col-9 mb-3" >
-                            <label for="total_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class="fw-bold">Total Price</span>
-                            </label>
-                            <input class="form-control" type="text" min="1" minlength="1" disabled  name="total_price_${random_string}" id="total_price_${random_string}">
+                        <div class="col-lg-3 col-md-6 col-12 mb-3"> 
+                            <div class="row d-flex justify-content-between ">
+                                <div class="col-7 col-md-6">
+                                    <label for="quantity_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                                        <span class="fw-bold required">Quantity</span>
+                                    </label>
+                                    <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="quantity_${random_string}" id="quantity_${random_string}">
+                                    <div class="fv-plugins-message-container invalid-feedback"></div> 
+                                </div> 
+                                <div class="col-5 col-md-6"> 
+                                    <label for="unit_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                                                    <span class="required fw-bold">Unit</span>
+                                                </label>
+                                                <select class="form-select form-select-solid drop-data" data-control="select2" required name="unit_${random_string}" id="unit_${random_string}">
+                                                    <option selected disabled></option>
+                                                </select>
+                                </div>   
+                            </div> 
                         </div>
-                        <div class="col-lg-2 col-md-2 col-2 mb-3">
-                            <div>
-                                <div class="h-25px"></div> 
-                                <button type="button" class="btn btn-secondary btn-icon btn-md h-44px" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </button> 
-                                <ul class="dropdown-menu"> 
-                                    <li type="button" class="clear-purchase-order-item-${random_string}"
-                                        data-random-string="${random_string}">
-                                        <a class="dropdown-item py-2">
-                                        <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
-                                    </li>
-                                </ul> 
+
+                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                            <label for="purchase_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="fw-bold required">Purchase Price</span>
+                            </label>
+                            <input class="form-control required" type="text" required min="1" minlength="1" oninput="validateAndFormatNumber(this); calculateTotalBundle('${random_string}');" name="purchase_price_${random_string}" id="purchase_price_${random_string}">
+                            <div class="fv-plugins-message-container invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 col-12 mb-3">
+                            <div class="row d-flex justify-content-between ">
+                                <div class="col-10" >
+                                    <label for="total_price_${random_string}" class="d-flex align-items-center fs-6 form-label mb-2">
+                                        <span class="fw-bold">Total Price</span>
+                                    </label>
+                                    <input class="form-control" type="text" min="1" minlength="1" disabled  name="total_price_${random_string}" id="total_price_${random_string}">
+                                </div>
+                                <div class="col-2">
+                                    <div>
+                                        <div class="h-25px"></div> 
+                                        <button type="button" class="btn btn-secondary btn-icon btn-md h-44px" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button> 
+                                        <ul class="dropdown-menu"> 
+                                            <li type="button" class="clear-purchase-order-item-${random_string}"
+                                                data-random-string="${random_string}">
+                                                <a class="dropdown-item py-2">
+                                                <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
+                                            </li>
+                                        </ul> 
+                                    </div>
+                                </div> 
                             </div>
+
                         </div>
+
                     </div>
+
                 `;
 
                 // Set the HTML content of the new div to the HTML structure
                 newDiv.innerHTML = htmlStructure;
+
+                $(newDiv).find('#unit_' + random_string).select2();
 
                 $(newDiv).find('#unit_' + random_string).empty();
 
                 $(newDiv).find('#unit_' + random_string).append($(
                     '<option>', {
                         value: '',
-                        text: ''
+                        text: 'Pilih',
+                        disabled: 'disabled',
+                        selected: 'selected'
                     }));
 
                 $.each(dataUnit, function(index, item) {
@@ -1525,7 +1604,7 @@
                 // Function Hapus per Item
                 $('.BundleItem').on('click', `.clear-purchase-order-item-${random_string}`,
                     function() {
-                        $(this).parent().parent().parent().parent().parent().remove();
+                        $(this).parent().parent().parent().parent().parent().parent().parent().remove();
                         updateTotalSumBundle();
                     });
 

@@ -164,6 +164,8 @@ class BoQRepository
                         $criteria['id'] = $itemData['id'];
                     }
 
+                    Log::info($itemData);
+
                     $data = [
                         'quantity' => $itemData['quantity'],
                         'unit' => $itemData['unit'],
@@ -177,7 +179,7 @@ class BoQRepository
                         'payment_type' => $itemData['payment_type'] ?? null,
                         'purchase_validity' => $itemData['purchase_validity'] ?? null,
                         'inventory_good_id' => $itemData['item_inventory_id'],
-                        'item_detail' => $itemData['item_detail'],
+                        'item_detail' => $itemData['item_detail'] ?? null,
                     ];
                     $itemableBoq->itemable()->updateOrCreate($criteria, $data);
                 }
@@ -320,15 +322,26 @@ class BoQRepository
         $boqId = $request->query('boq_id');
         $boqData = $this->model->where('id', $boqId)->first();
 
-        $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType', 'surveyRequest')->where("prospect_id", $boqData->prospect_id)->get();
+        $dataCompanyItem = $this->model->with([
+            'itemable' => function ($query) {
+                $query->whereHas('inventoryGood', function ($subQuery) {
+                    $subQuery->where('good_category_id', '!=', 3);
+                });
+            },
+            'customerProspect.customer.customerContact',
+            'customerProspect.customer.bussinesType',
+            'surveyRequest'
+        ])->where("prospect_id", $boqData->prospect_id)->get(); 
+         
         $dataForm = $this->inventoryService->getDataForm(); 
 
         $quotationItem = Item::where('itemable_id', $boqId)
             ->whereHas('inventoryGood', function ($query) {
                 $query->where('good_category_id', 3);
             })->get();
+
         $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1, 2])->get();
-// dd($inventoryGoodInet);
+        
         $dataSales = $this->user->where('department_id', 1)->get();
         $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first();
         $dataProcurement = $this->user->where('department_id', 2)->get();
