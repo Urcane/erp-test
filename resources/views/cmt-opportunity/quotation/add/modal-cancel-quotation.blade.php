@@ -25,10 +25,10 @@
                             </div>  
                         </div> 
                         <div class="col-lg-12 mb-3">
-							<label class="d-flex align-items-center fs-6 form-label mb-2">
+							<label for="remark"  class="d-flex align-items-center fs-6 form-label mb-2">
 								<span class="required fw-bold">Deskripsi Pekerjaan</span>
 							</label>
-                            <textarea class="form-control form-control-solid h-100px" placeholder="Fill Notes" name="remark"></textarea>
+                            <textarea class="form-control form-control-solid h-100px" placeholder="Fill Remark" required  name="remark" id="remark"></textarea>
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
                     </div>

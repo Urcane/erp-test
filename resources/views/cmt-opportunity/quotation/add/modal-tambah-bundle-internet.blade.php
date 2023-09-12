@@ -19,11 +19,11 @@
                         data-kt-scroll-wrappers="#kt_modal_tambah_bundle_internet_scroll" data-kt-scroll-offset="300px">
                         <div class="row mb-5">
                             <div class="col-lg-12 mb-5">
-                                <label for="good_name" class="d-flex align-items-center fs-6 form-label mb-2" required>
+                                <label for="good_name_update_bundle" class="d-flex align-items-center fs-6 form-label mb-2" required>
                                     <span class="fw-bold required">Nama Inventory Item</span>
                                 </label>
-                                <input type="text" class="form-control form-control-solid required" name="good_name_update"required
-                                    id="good_name">
+                                <input type="text" class="form-control form-control-solid required" name="good_name_update_bundle"required
+                                    id="good_name_update_bundle">
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                             </div>
                         </div>

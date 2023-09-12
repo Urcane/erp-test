@@ -29,15 +29,16 @@
                             <div class="row">
                                 <form class="col-lg-12" id="kt_create_draft_boq_form">
                                     @csrf
-                                    {{-- divv Company --}}
-                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
+                                    {{-- Company --}}
+                                    <div class="col-lg-12 mb-5 mt-3 border-dashed border-gray-100">
 
                                         {{-- baris Rilll --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                        <div class="my-8 d-flex justify-content-around flex-wrap col-lg-12">
                                             <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
                                             <input type="hidden" name="boq_id" value="">
-                                            <div class="col-lg-5 col-6 mb-3">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2" required>
+                                            
+                                            <div class="col-lg-5 col-8 col-sm-5 col-md-5  mb-3">
+                                                <label for="prospect_id" class="d-flex align-items-center fs-6 form-label mb-2 required" >
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
 
@@ -53,25 +54,23 @@
                                                             {{ $prospect->customer->customer_name ?? null }}</option>
                                                     @endforeach
                                                 </select>
-                                                <div id="error-prospect"></div>
-
+                                                <div id="error-prospect"></div> 
                                                 {{-- <input type="text" class="form-control form-control-solid" disabled
                                                     placeholder="{{ $dataCompany->prospect_title ?? null }} {{ $dataCompany->customer->customer_name ?? null }}">
 
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="prospect_id"
-                                                    value="{{ $dataCompany->id ?? null }}"> --}}
-
+                                                    value="{{ $dataCompany->id ?? null }}"> --}} 
                                             </div>
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
-                                            <div class="col-lg-5 col-6 mb-3">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <div class="col-lg-5 col-8 col-sm-5 col-md-5  mb-3">
+                                                <label for="survey_request_id" class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="survey_request_id" id="survey_request_id">
-                                                    <option value="" disabled>Pilih Survey</option>
+                                                    <option disabled selected>Pilih Survey</option>
                                                     @if (isset($dataSurvey))
                                                         @foreach ($dataSurvey as $survey)
                                                             @if ($selectedDataSurvey == $survey->id)
@@ -91,28 +90,25 @@
                                         </div>
 
                                         {{-- baris Rilll --}}
-                                        <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
+                                        <div class="my-8 d-flex justify-content-around flex-wrap col-lg-12">
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class="form-label">Nama Perusahaan</label>
+                                            <div class="col-lg-2 col-8 col-sm-5 col-md-5 mb-3">
+                                                <label for="customer_name" class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     name="customer_name" id="customer_name"
                                                     value="{{ $dataCompany->customer->customer_name ?? null }}">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class=" form-label">Nama Kontak Customer</label>
+                                            <div class="col-lg-2 col-8 col-sm-5 col-md-5 mb-3">
+                                                <label for="customer_contact_name" class=" form-label">Nama Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
                                                     value="{{ $dataCompany->customer->customerContact->customer_contact_name ?? null }}"
                                                     name="">
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class="form-label">No Kontak Customer</label>
+                                            <div class="col-lg-2 col-8 col-sm-5 col-md-5 mb-3">
+                                                <label for="customer_contact_phone" class="form-label">No Kontak Customer</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text border-0" id="">+62</span>
                                                     <input type="number" class="form-control form-control-solid" disabled
@@ -123,9 +119,8 @@
                                                 </div>
                                             </div>
 
-                                            <div class=""
-                                                style="flex-basis: 20%; min-width: 200px; margin-bottom: 15px;">
-                                                <label for="" class="form-label">Jenis Project</label>
+                                            <div class="col-lg-2 col-8 col-sm-5 col-md-5 mb-3">
+                                                <label for="type_name" class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
                                                     value="{{ $dataCompany->customer->bussinesType->type_name ?? null }}">
@@ -133,10 +128,10 @@
                                         </div>
                                     </div>
 
-                                    {{--  divv item --}}
-                                    <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
+                                    {{--  item --}}
+                                    <div class="col-lg-12 mb-6 border-dashed border-gray-100">
 
-                                        <div class="MultipleItem">
+                                        <div class="MultipleItem col-lg-12">
 
                                         </div>
 
@@ -151,7 +146,7 @@
                                         @endrole
                                     </div>
 
-                                    {{-- divv akhir total amount --}}
+                                    {{-- akhir total amount --}}
                                     <div>
                                         {{-- <div class="d-flex justify-content-end mx-20">
                                             <div class="w-20 me-10">
@@ -187,7 +182,7 @@
 
     <script>
         $(document).ready(function() {
-            // function Submit BOQ page BENERAN wkwkw
+            // function SUBMIT FORM
             $('#submit-all-items').on('click', function(event) {
                 // event.preventDefault();
 
@@ -250,6 +245,7 @@
 
                     // Push the itemData object to the items array
                     items.push(itemData);
+                    console.log(items)
                 });
 
                 // Check if there is at least one item in the 'items' array
@@ -356,7 +352,6 @@
 
 
 
-
             // Handler untuk peristiwa "change" pada select item Update
             $('#good_name_update').on('change', function() {
                 var selectedItemId = $(this).val();
@@ -379,7 +374,6 @@
                     }
                 });
             });
-
             // Funcion Submit Update BOQ 
             $("#kt_modal_update_boq_form").validate({
                 messages: {
@@ -433,7 +427,7 @@
                         'purchase_reference'));
                     $('[name="content[][item_detail]"]', item).val(formData.get('item_detail'));
                     $('[name="content[][total_price]"]', item).val(formData.get('total_update'));
-                    $('[name="content[][unit]"]', item).val(formData.get('unit'));
+                    $('[name="content[][unit]"]', item).val(formData.get('unit_update'));
                     $('[name="content[][item_inventory_id]"]', item).val(formData.get('good_name'));
 
                     // Bersihkan input setelah item ditambahkan
@@ -448,6 +442,14 @@
 
 
 
+
+            // Function Tambah BOQ modal
+            $('#btn-tambah-boq').on('click', '.btn_tambah_boq', function() {
+                $('.drop-data').val("").trigger("change");
+                $('#kt_modal_tambah_boq_form').trigger("reset");
+                $('#kt_modal_tambah_boq_submit').removeAttr('disabled', 'disabled');
+            });
+            
             // Handler untuk peristiwa "change" pada select item
             $('#good_name').on('change', function() {
                 var selectedItemId = $(this).val();
@@ -513,97 +515,89 @@
                     var formData = new FormData(form);
 
                     var newItem = `
-                    <div class="file-soft-boq-item-${random_string} d-flex justify-content-between mx-20 mb-5 mt-10">
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                            <label for="" class="form-label">Item</label>
-                            <input disabled="disabled" type="text" class="form-control form-control-solid" name="content[][good_name]" value="${itemName}" />
+                    <div class="file-soft-boq-item-${random_string} d-flex justify-content-around flex-wrap col-12 mb-5 mt-10">
+                        <div class="col-lg-2 col-md-2 col-sm-5 col-8">
+                            <label for="good_name_${random_string}"  class="form-label">Item</label>
+                            <input id="good_name_${random_string}" disabled="disabled" type="text" class="form-control form-control-solid" name="content[][good_name]" value="${itemName}" />
                         </div>
                         
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                            <label for="" class="form-label">Merk</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input disabled="disabled" type="text" class="form-control form-control-solid" name="content[][good_merk]" value="${itemMerk}" />
-                            </div>
+                        <div class="col-lg-2 col-md-2 col-sm-5 col-8">
+                            <label for="good_merk_${random_string}"  class="form-label">Merk</label> 
+                                <div class=" top-0"></div>
+                                <input id="good_merk_${random_string}" disabled="disabled" type="text" class="form-control form-control-solid" name="content[][good_merk]" value="${itemMerk}" />
+                             
                         </div>
                         `+
-                        // <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                        //     <label for="" class="form-label">Price</label>
-                        //     <div class="position-relative">
+                        // <div class="col-lg-2 col-8">
+                        //     <label for="${random_string}"  class="form-label">Price</label>
+                        //     
                         //         <div class="position-absolute top-0"></div>
-                        //         <input disabled="disabled" type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
-                        //     </div>
+                        //         <input id="purchase_price_${random_string}" disabled="disabled" type="number" class="form-control form-control-solid" name="content[][purchase_price]" value="${formData.get('purchase_price_tambah')}" />
+                        //      
                         // </div>
                         `
 
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                            <label for="" class="form-label">Qty</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input disabled="disabled" type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity_tambah')}" />
-                            </div>
+                        <div class="col-lg-2 col-md-2 col-sm-5 col-8">
+                            <label for="quantity_${random_string}"  class="form-label">Qty</label> 
+                                <div class=" top-0"></div>
+                                <input id="quantity_${random_string}" disabled="disabled" type="number" class="form-control form-control-solid" name="content[][quantity]" value="${formData.get('quantity_tambah')}" />
+                             
                         </div>
-                        <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                            <label for="" class="form-label">Unit</label>
-                            <div class="position-relative">
-                                <div class="position-absolute top-0"></div>
-                                <input disabled="disabled" type="text" class="form-control form-control-solid" name="content[][unit]" value="${formData.get('unit')}" />
-                            </div>
-                        </div>
-                        `+ 
-                        // <div class="" style="flex-basis: 14%; min-width: 150px; margin: 10px;">
-                        //     <label for="" class="form-label">Jasa Antar</label>
-                        //     <div class="position-relative">
-                        //         <div class="position-absolute top-0"></div>
-                        //         <input disabled="disabled" type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
-                        //         </div>
-                        // </div>
-                        
-                        `<div class="d-flex justify-content-between" style="flex-basis: 28%; min-width: 150px; margin: 10px;">
-                            `+
-                            // <div style="flex-basis: 80%; min-width: 120px;">
-                            //     <label for="" class="form-label">Total Price</label>
-                            //     <div class="position-relative">
-                            //         <div class="position-absolute top-0"></div>
-                            //         <input disabled="disabled" type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total_tambah')}" />
-                            //     </div>
-                            // </div>
-                            `<div class="d-flex justify-content-center align-items-center" style="flex-basis: 14%; min-width: 30px;">
-                
-                                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </button>
-                                
-                                    <ul class="dropdown-menu">
-                                        <li type="button" class="btn-update-boq-modal" 
-                                            data-random-string="${random_string}" 
-                                            data-item-id="${formData.get('good_name')}"
+                        <div class="d-flex justify-content-between align-items-center flex-nowrap col-lg-2 col-md-2 col-sm-5 col-8">
+                             
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-9"> 
+                                    <label for="unit_${random_string}"  class="form-label">Unit</label>  
+                                    <input id="unit_${random_string}" disabled="disabled" type="text" class="form-control form-control-solid" name="content[][unit]" value="${formData.get('unit')}" />
+                                </div>
+                                `+ 
+                                    // <div class="col-lg-2 col-8">
+                                    //     <label for="${random_string}"  class="form-label">Jasa Antar</label>
+                                    //     <div class="">
+                                    //         <div class=" top-0"></div>
+                                    //         <input id="purchase_delivery_${random_string}" disabled="disabled" type="number" class="form-control form-control-solid" name="content[][purchase_delivery]" value="${formData.get('purchase_delivery_tambah')}" />
+                                    //         </div>
+                                    // </div>
+                                    // <div style="flex-basis: 80%; min-width: 120px;">
+                                    //     <label for="${random_string}"  class="form-label">Total Price</label>
+                                    //     <div class="">
+                                    //         <div class=" top-0"></div>
+                                    //         <input id="total_price_${random_string}" disabled="disabled" type="number" class="form-control form-control-solid" name="content[][total_price]" value="${formData.get('total_tambah')}" />
+                                    //     </div>
+                                    // </div>
+                                    `  
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-2" > 
+                                        <div class="h-25px"></div> 
+                                        <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li type="button" class="btn-update-boq-modal" 
+                                                data-random-string="${random_string}" 
+                                                data-item-id="${formData.get('good_name')}"
 
-                                            data-quantity="${formData.get('quantity_tambah')}"
-                                            data-total_price="${formData.get('total_tambah')}"
-                                            data-unit="${formData.get('unit')}"`+
-                                            // data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
-                                            // data-purchase_price="${formData.get('purchase_price_tambah')}"
-                                            // data-purchase_reference="${formData.get('purchase_reference')}"
-                                            `
-                                            data-item_detail="${formData.get('item_detail')}"">                                            
-                                            
-                                            <a class="dropdown-item py-2">
-                                            <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
-                                        </li>
-                                        <li type="button" class="clear-soft-survey-item-${random_string}"
-                                            data-random-string="${random_string}">
-                                            <a class="dropdown-item py-2">
-                                            <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
-                                        </li>
-                                </ul>
-                            </div>
+                                                data-quantity="${formData.get('quantity_tambah')}"
+                                                data-total_price="${formData.get('total_tambah')}"
+                                                data-unit="${formData.get('unit')}"`+
+                                                // data-purchase_delivery_charge="${formData.get('purchase_delivery_tambah')}"
+                                                // data-purchase_price="${formData.get('purchase_price_tambah')}"
+                                                // data-purchase_reference="${formData.get('purchase_reference')}"
+                                                `
+                                                data-item_detail="${formData.get('item_detail')}">                                            
+                                                
+                                                <a class="dropdown-item py-2">
+                                                <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
+                                            </li>
+                                            <li type="button" class="clear-soft-survey-item-${random_string}"
+                                                data-random-string="${random_string}">
+                                                <a class="dropdown-item py-2">
+                                                <i class="fa-solid fa-trash me-3"></i>Hapus Item</a>
+                                            </li>
+                                        </ul>       
+                                </div>   
                         </div>  
-                        <div>
-                            <input disabled="disabled" type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
-                            <input disabled="disabled" type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
-                            <input disabled="disabled" type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
-                        </div>
+                        <input disabled="disabled" type="hidden" name="content[][item_inventory_id]" value="${formData.get('good_name')}" disabled>
+                        <input disabled="disabled" type="hidden" name="content[][purchase_reference]" value="${formData.get('purchase_reference')}" disabled>
+                        <input disabled="disabled" type="hidden" name="content[][item_detail]" value="${formData.get('item_detail')}" disabled>
                     </div>`;
 
 
@@ -639,13 +633,13 @@
                         $('#uniq_id').val(randomString);
 
                         $('#item_detail_update').val(item_detail);
-                        $('#purchase_reference_update').val(purchase_reference);
-                        $('#purchase_price_update').val(purchase_price);
-                        $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
+                        // $('#purchase_reference_update').val(purchase_reference);
+                        // $('#purchase_price_update').val(purchase_price);
+                        // $('#purchase_delivery_charge_update').val(purchase_delivery_charge);
                         $('#total_price_update').val(total_price);
-                        $('#unit_update').val(unit);
+                        $('#unit_update').val(unit).trigger('change');
                         $('#quantity_update').val(quantity);
-                        document.getElementById('total_update').textContent = total_price;
+                        // document.getElementById('total_update').textContent = total_price;
                     });
 
                     // Tambahkan item baru ke div "MultipleItem"
@@ -661,13 +655,6 @@
                     $('#error-item').empty();
                     updateTotalSum();
                 }
-            });
-
-            // Function Tambah BOQ modal
-            $('#btn-tambah-boq').on('click', '.btn_tambah_boq', function() {
-                $('.drop-data').val("").trigger("change");
-                $('#kt_modal_tambah_boq_form').trigger("reset");
-                $('#kt_modal_tambah_boq_submit').removeAttr('disabled', 'disabled');
             });
 
 
