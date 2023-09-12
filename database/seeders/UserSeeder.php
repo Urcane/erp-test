@@ -54,20 +54,20 @@ class UserSeeder extends Seeder
         ]);
         $sofyan->assignRole('staff');
         $sofyan->givePermissionTo([
-            // // request
-            // 'HC:view-all-request',
-            // 'HC:change-all-status-request',
+            // request
+            'HC:view-all-request',
+            'HC:change-all-status-request',
 
             // attendance
             'HC:view-attendance',
-            // 'HC:edit-delete-attendance',
+            'HC:edit-delete-attendance',
 
             // employee
             'HC:view-employee',
             'HC:update-profile',
 
             // setting
-            // 'HC:setting'
+            'HC:setting'
         ]);
 
         $alan = User::create([
@@ -82,20 +82,20 @@ class UserSeeder extends Seeder
         ]);
         $alan->assignRole('staff');
         $alan->givePermissionTo([
-            // // request
-            // 'HC:view-all-request',
-            // 'HC:change-all-status-request',
+            // request
+            'HC:view-all-request',
+            'HC:change-all-status-request',
 
             // attendance
             'HC:view-attendance',
-            // 'HC:edit-delete-attendance',
+            'HC:edit-delete-attendance',
 
             // employee
             'HC:view-employee',
             'HC:update-profile',
 
             // setting
-            // 'HC:setting'
+            'HC:setting'
         ]);
 
         $hengki = User::create([
@@ -110,20 +110,20 @@ class UserSeeder extends Seeder
         ]);
         $hengki->assignRole('staff');
         $hengki->givePermissionTo([
-            // // request
-            // 'HC:view-all-request',
-            // 'HC:change-all-status-request',
+            // request
+            'HC:view-all-request',
+            'HC:change-all-status-request',
 
             // attendance
             'HC:view-attendance',
-            // 'HC:edit-delete-attendance',
+            'HC:edit-delete-attendance',
 
             // employee
             'HC:view-employee',
             'HC:update-profile',
 
             // setting
-            // 'HC:setting'
+            'HC:setting'
         ]);
 
         $owen = User::create([
@@ -138,20 +138,20 @@ class UserSeeder extends Seeder
         ]);
         $owen->assignRole('staff');
         $owen->givePermissionTo([
-            // // request
-            // 'HC:view-all-request',
-            // 'HC:change-all-status-request',
+            // request
+            'HC:view-all-request',
+            'HC:change-all-status-request',
 
             // attendance
             'HC:view-attendance',
-            // 'HC:edit-delete-attendance',
+            'HC:edit-delete-attendance',
 
             // employee
             'HC:view-employee',
             'HC:update-profile',
 
             // setting
-            // 'HC:setting'
+            'HC:setting'
         ]);
 
         $rizka = User::create([
@@ -166,20 +166,20 @@ class UserSeeder extends Seeder
         ]);
         $rizka->assignRole('spv');
         $rizka->givePermissionTo([
-            // // request
-            // 'HC:view-all-request',
-            // 'HC:change-all-status-request',
+            // request
+            'HC:view-all-request',
+            'HC:change-all-status-request',
 
             // attendance
             'HC:view-attendance',
-            // 'HC:edit-delete-attendance',
+            'HC:edit-delete-attendance',
 
             // employee
             'HC:view-employee',
             'HC:update-profile',
 
             // setting
-            // 'HC:setting'
+            'HC:setting'
         ]);
 
         $terano = User::create([
@@ -194,20 +194,20 @@ class UserSeeder extends Seeder
         ]);
         $terano->assignRole('staff');
         $terano->givePermissionTo([
-            // // request
-            // 'HC:view-all-request',
-            // 'HC:change-all-status-request',
+            // request
+            'HC:view-all-request',
+            'HC:change-all-status-request',
 
             // attendance
             'HC:view-attendance',
-            // 'HC:edit-delete-attendance',
+            'HC:edit-delete-attendance',
 
             // employee
             'HC:view-employee',
             'HC:update-profile',
 
             // setting
-            // 'HC:setting'
+            'HC:setting'
         ]);
 
         $kevin = User::create([
@@ -222,20 +222,20 @@ class UserSeeder extends Seeder
         ]);
         $kevin->assignRole('staff');
         $kevin->givePermissionTo([
-            // // // request
-            // 'HC:view-all-request',
-            // 'HC:change-all-status-request',
+            // request
+            'HC:view-all-request',
+            'HC:change-all-status-request',
 
             // attendance
             'HC:view-attendance',
-            // 'HC:edit-delete-attendance',
+            'HC:edit-delete-attendance',
 
             // employee
             'HC:view-employee',
             'HC:update-profile',
 
             // setting
-            // 'HC:setting'
+            'HC:setting'
         ]);
 
         $cmrAdminProject = ['Nisa Fajrin Alfalah', 'Bagus Hariyadi'];
