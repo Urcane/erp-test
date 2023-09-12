@@ -42,6 +42,202 @@ class UserSeeder extends Seeder
             'HC:setting'
         ]);
 
+        $sofyan = User::create([
+            'name' => 'Sofyan',
+            'email' => 'sofyan@comtelindo.com',
+            'password' => bcrypt('12345678'),
+            'nip' => 0000,
+            'sign_file' => 'sign-Super Admin.png',
+            'department_id' => 2,
+            'division_id' => 5,
+            'team_id' => 1,
+        ]);
+        $sofyan->assignRole('staff');
+        $sofyan->givePermissionTo([
+            // // request
+            // 'HC:view-all-request',
+            // 'HC:change-all-status-request',
+
+            // attendance
+            'HC:view-attendance',
+            // 'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            // 'HC:setting'
+        ]);
+
+        $alan = User::create([
+            'name' => 'alan',
+            'email' => 'alan@comtelindo.com',
+            'password' => bcrypt('12345678'),
+            'nip' => 0000,
+            'sign_file' => 'sign-Super Admin.png',
+            'department_id' => 2,
+            'division_id' => 5,
+            'team_id' => 1,
+        ]);
+        $alan->assignRole('staff');
+        $alan->givePermissionTo([
+            // // request
+            // 'HC:view-all-request',
+            // 'HC:change-all-status-request',
+
+            // attendance
+            'HC:view-attendance',
+            // 'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            // 'HC:setting'
+        ]);
+
+        $hengki = User::create([
+            'name' => 'Hengki',
+            'email' => 'hengki@comtelindo.com',
+            'password' => bcrypt('12345678'),
+            'nip' => 0000,
+            'sign_file' => 'sign-Super Admin.png',
+            'department_id' => 2,
+            'division_id' => 5,
+            'team_id' => 1,
+        ]);
+        $hengki->assignRole('staff');
+        $hengki->givePermissionTo([
+            // // request
+            // 'HC:view-all-request',
+            // 'HC:change-all-status-request',
+
+            // attendance
+            'HC:view-attendance',
+            // 'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            // 'HC:setting'
+        ]);
+
+        $owen = User::create([
+            'name' => 'Owen',
+            'email' => 'owen@comtelindo.com',
+            'password' => bcrypt('12345678'),
+            'nip' => 0000,
+            'sign_file' => 'sign-Super Admin.png',
+            'department_id' => 2,
+            'division_id' => 5,
+            'team_id' => 1,
+        ]);
+        $owen->assignRole('staff');
+        $owen->givePermissionTo([
+            // // request
+            // 'HC:view-all-request',
+            // 'HC:change-all-status-request',
+
+            // attendance
+            'HC:view-attendance',
+            // 'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            // 'HC:setting'
+        ]);
+
+        $rizka = User::create([
+            'name' => 'Rizka',
+            'email' => 'rizka@comtelindo.com',
+            'password' => bcrypt('12345678'),
+            'nip' => 0000,
+            'sign_file' => 'sign-Super Admin.png',
+            'department_id' => 2,
+            'division_id' => 5,
+            'team_id' => 1,
+        ]);
+        $rizka->assignRole('spv');
+        $rizka->givePermissionTo([
+            // // request
+            // 'HC:view-all-request',
+            // 'HC:change-all-status-request',
+
+            // attendance
+            'HC:view-attendance',
+            // 'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            // 'HC:setting'
+        ]);
+
+        $terano = User::create([
+            'name' => 'Terano',
+            'email' => 'terano@comtelindo.com',
+            'password' => bcrypt('12345678'),
+            'nip' => 0000,
+            'sign_file' => 'sign-Super Admin.png',
+            'department_id' => 2,
+            'division_id' => 5,
+            'team_id' => 1,
+        ]);
+        $terano->assignRole('staff');
+        $terano->givePermissionTo([
+            // // request
+            // 'HC:view-all-request',
+            // 'HC:change-all-status-request',
+
+            // attendance
+            'HC:view-attendance',
+            // 'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            // 'HC:setting'
+        ]);
+
+        $kevin = User::create([
+            'name' => 'Kevin',
+            'email' => 'kevin@comtelindo.com',
+            'password' => bcrypt('12345678'),
+            'nip' => 0000,
+            'sign_file' => 'sign-Super Admin.png',
+            'department_id' => 2,
+            'division_id' => 5,
+            'team_id' => 1,
+        ]);
+        $kevin->assignRole('staff');
+        $kevin->givePermissionTo([
+            // // // request
+            // 'HC:view-all-request',
+            // 'HC:change-all-status-request',
+
+            // attendance
+            'HC:view-attendance',
+            // 'HC:edit-delete-attendance',
+
+            // employee
+            'HC:view-employee',
+            'HC:update-profile',
+
+            // setting
+            // 'HC:setting'
+        ]);
+
         $cmrAdminProject = ['Nisa Fajrin Alfalah', 'Bagus Hariyadi'];
         $cmrAdminProjectEmail = ['nisa@comtelindo.com', 'agushaha@live.co.uk'];
         for ($i = 0; $i < count($cmrAdminProject); $i++) {
