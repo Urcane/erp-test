@@ -151,6 +151,7 @@
     @include('hc.cmt-attendance.modal.delete-attendance')
 @endcan
 
+@include('hc.cmt-attendance.modal.detail-attendance')
 @include('hc.cmt-attendance.modal.export-attendance')
 
 <script>
@@ -172,6 +173,10 @@
         }
 
         return false;
+    };
+
+    const onDetailButtonClick = (data) => {
+        detailInit(data);
     };
 
     $(document ).ready(function() {
