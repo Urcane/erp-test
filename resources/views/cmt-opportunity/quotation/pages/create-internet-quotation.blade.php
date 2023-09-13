@@ -28,7 +28,7 @@
     {{-- FORM BOQ --}}
     {{-- @dd($dataCompany) --}}
     {{-- @dd($dataBoq['boqFinalData'][0]->customerProspect->customer->customer_name)   --}}
-    {{-- @dd($dataBoq['boqFinalData'][0]->id)   --}}
+    {{-- @dd($dataBoq['quotationItem'])   --}}
 
 
     <div class="row justify-content-center">
@@ -48,22 +48,23 @@
                                 <div class="col-lg-12">
 
                                     {{-- divv Company --}}
-                                    <div class="d-flex justify-content-around flex-wrap col-lg-12 mb-5 border-dashed border-gray-100">
+                                    <div
+                                        class="d-flex justify-content-around flex-wrap col-lg-12 mb-5 border-dashed border-gray-100">
                                         {{-- baris prospect company --}}
                                         <div class="my-8 d-flex justify-content-around flex-wrap col-12">
 
                                             <input type="hidden" id="boq_id" name="boq_id"
-                                                value="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}">
+                                                value="{{ $dataBoq['dataCompanyItem'][0]->id }}">
 
                                             <div class="col-lg-5 col-md-5 col-sm-5 col-8 ">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->prospect_title }} - {{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
+                                                    placeholder="{{ $dataBoq['dataCompanyItem'][0]->customerProspect->prospect_title }} - {{ $dataBoq['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                                 <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="prospect_id" id="prospect_id"
-                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->prospect_id }}">
+                                                    value="{{ $dataBoq['dataCompanyItem'][0]->prospect_id }}">
                                                 <div id="error-prospect"></div>
                                             </div>
 
@@ -72,11 +73,11 @@
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" disabled
-                                                    placeholder="{{ $dataReviewBoq['dataCompanyItem'][0]->surveyRequest->no_survey ?? 'Survey Tidak ada' }}">
+                                                    placeholder="{{ $dataBoq['dataCompanyItem'][0]->surveyRequest->no_survey ?? 'Survey Tidak ada' }}">
 
                                                 <input type="hidden" class="form-control form-control-solid" disabled
                                                     name="survey_request_id" id="survey_request_id"
-                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->survey_request_id }}">
+                                                    value="{{ $dataBoq['dataCompanyItem'][0]->survey_request_id }}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                         </div>
@@ -88,14 +89,14 @@
                                                 <label class="form-label">Nama Perusahaan</label>
                                                 <input type="text" class="form-control form-control-solid" disabled
                                                     id="customer_name"
-                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
+                                                    value="{{ $dataBoq['dataCompanyItem'][0]->customerProspect->customer->customer_name }}">
                                             </div>
 
                                             <div class="col-lg-5 col-md-5 col-sm-5 col-8 mt-2 mb-3">
                                                 <label class=" form-label">Nama Kontak Customer</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="customer_contact_name" id="customer_contact_name"
-                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
+                                                    value="{{ $dataBoq['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_name }}">
                                             </div>
 
                                             <div class="col-lg-5 col-md-5 col-sm-5 col-8 mt-2 mb-3">
@@ -105,7 +106,7 @@
                                                     <input type="number" class="form-control form-control-solid" disabled
                                                         minlength="8" name="customer_contact_phone"
                                                         id="customer_contact_phone"
-                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
+                                                        value="{{ $dataBoq['dataCompanyItem'][0]->customerProspect->customer->customerContact->customer_contact_phone }}">
                                                 </div>
                                             </div>
 
@@ -113,7 +114,7 @@
                                                 <label class="form-label">Jenis Project</label>
                                                 <input type="text" class="form-control form-control-solid" placeholder=""
                                                     disabled name="type_name" id="type_name"
-                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->customerProspect->customer->bussinesType->type_name }}">
+                                                    value="{{ $dataBoq['dataCompanyItem'][0]->customerProspect->customer->bussinesType->type_name }}">
                                             </div>
                                         </div>
                                     </div>
@@ -127,12 +128,12 @@
                                                 {{-- <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="sales_id" id="sales_id">
                                                     <option
-                                                        value="{{ $dataReviewBoq['dataSalesSelected']->id ?? null }}"
+                                                        value="{{ $dataBoq['dataSalesSelected']->id ?? null }}"
                                                         selected disabled>
-                                                        {{ $dataReviewBoq['dataSalesSelected']->name ?? 'Pilih Sales' }}
+                                                        {{ $dataBoq['dataSalesSelected']->name ?? 'Pilih Sales' }}
                                                     </option>
-                                                    @if (isset($dataReviewBoq['dataSales']))
-                                                        @foreach ($dataReviewBoq['dataSales'] as $sales)
+                                                    @if (isset($dataBoq['dataSales']))
+                                                        @foreach ($dataBoq['dataSales'] as $sales)
                                                             <option value="{{ $sales->id ?? null }}">
                                                                 {{ $sales->name ?? null }}
                                                             </option>
@@ -142,7 +143,7 @@
 
                                                 <input type="text" disabled class="form-control form-control-solid "
                                                     id="sales_id" name="sales_id"
-                                                    value="{{ $dataReviewBoq['dataSalesSelected']->name ?? 'Sales tidak ada ' }}" />
+                                                    value="{{ $dataBoq['dataSalesSelected']->name ?? 'Sales tidak ada ' }}" />
                                             </div>
 
                                             <div class="col-lg-3 col-md-3 col-sm-3 col-8">
@@ -150,12 +151,12 @@
                                                 {{-- <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="technician_id" id="technician_id">
                                                     <option
-                                                        value="{{ $dataReviewBoq['dataTechnicianSelected']->id ?? null }}"
+                                                        value="{{ $dataBoq['dataTechnicianSelected']->id ?? null }}"
                                                         selected disabled>
-                                                        {{ $dataReviewBoq['dataTechnicianSelected']->name ?? 'Pilih Technician' }}
+                                                        {{ $dataBoq['dataTechnicianSelected']->name ?? 'Pilih Technician' }}
                                                     </option>
-                                                    @if (isset($dataReviewBoq['dataTechnician']))
-                                                        @foreach ($dataReviewBoq['dataTechnician'] as $Technician)
+                                                    @if (isset($dataBoq['dataTechnician']))
+                                                        @foreach ($dataBoq['dataTechnician'] as $Technician)
                                                             <option value="{{ $Technician->id ?? null }}">
                                                                 {{ $Technician->name ?? null }}
                                                             </option>
@@ -164,7 +165,7 @@
                                                 </select> --}}
                                                 <input type="text" disabled class="form-control form-control-solid "
                                                     id="technician_id" name="technician_id"
-                                                    value="{{ $dataReviewBoq['dataTechnicianSelected']->name ?? 'Technician tidak ada ' }}" />
+                                                    value="{{ $dataBoq['dataTechnicianSelected']->name ?? 'Technician tidak ada ' }}" />
                                             </div>
 
                                             <div class="col-lg-3 col-md-3 col-sm-3 col-8">
@@ -172,12 +173,12 @@
                                                 {{-- <select class="form-select-solid form-select form-select-solid"
                                                     data-control="select2" name="procurement_id" id="procurement_id">
                                                     <option
-                                                        value="{{ $dataReviewBoq['dataProcurementSelected']->id ?? null }}"
+                                                        value="{{ $dataBoq['dataProcurementSelected']->id ?? null }}"
                                                         selected disabled>
-                                                        {{ $dataReviewBoq['dataProcurementSelected']->name ?? 'Pilih Procurement' }}
+                                                        {{ $dataBoq['dataProcurementSelected']->name ?? 'Pilih Procurement' }}
                                                     </option>
-                                                    @if (isset($dataReviewBoq['dataProcurement']))
-                                                        @foreach ($dataReviewBoq['dataProcurement'] as $procurement)
+                                                    @if (isset($dataBoq['dataProcurement']))
+                                                        @foreach ($dataBoq['dataProcurement'] as $procurement)
                                                             <option value="{{ $procurement->id ?? null }}">
                                                                 {{ $procurement->name ?? null }}
                                                             </option>
@@ -187,7 +188,7 @@
 
                                                 <input type="text" disabled class="form-control form-control-solid "
                                                     id="procurement_id" name="procurement_id"
-                                                    value="{{ $dataReviewBoq['dataProcurementSelected']->name ?? 'Procurement tidak ada ' }}" />
+                                                    value="{{ $dataBoq['dataProcurementSelected']->name ?? 'Procurement tidak ada ' }}" />
                                             </div>
 
                                         </div>
@@ -200,7 +201,7 @@
                                                     <input type="number" disabled
                                                         class="form-control form-control-solid " id="modal"
                                                         name="modal"
-                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->modal ?? null }}" />
+                                                        value="{{ $dataBoq['dataCompanyItem'][0]->modal ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -211,7 +212,7 @@
                                                     <input type="number" disabled
                                                         class="form-control form-control-solid " id="gpm"
                                                         name="gpm"
-                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->gpm ?? null }}" />
+                                                        value="{{ $dataBoq['dataCompanyItem'][0]->gpm ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -222,7 +223,7 @@
                                                     <input type="number" disabled
                                                         class="form-control form-control-solid " id="npm"
                                                         name="npm"
-                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->npm ?? null }}" />
+                                                        value="{{ $dataBoq['dataCompanyItem'][0]->npm ?? null }}" />
                                                 </div>
                                             </div>
 
@@ -233,7 +234,7 @@
                                                     <input type="number" disabled
                                                         class="form-control form-control-solid " id="percentage"
                                                         name="percentage"
-                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                        value="{{ $dataBoq['dataCompanyItem'][0]->percentage ?? null }}" />
                                                 </div>
                                             </div>
                                         </div>
@@ -244,8 +245,8 @@
                                     <div class="mb-6 border-dashed border-gray-100">
 
                                         <div class="MultipleItem justify-content-center mx-10 mt-5 mb-8 row">
-                                            @if (isset($dataReviewBoq['dataCompanyItem'][0]->itemable))
-                                                @foreach ($dataReviewBoq['dataCompanyItem'][0]->itemable as $relatedItem)
+                                            @if (isset($dataBoq['dataCompanyItem'][0]->itemable))
+                                                @foreach ($dataBoq['dataCompanyItem'][0]->itemable as $relatedItem)
                                                     @php
                                                         $random_string = \Illuminate\Support\Str::random(4);
                                                     @endphp
@@ -407,18 +408,51 @@
 
                                     </div>
 
+                                </div>
+
+                                <form id="kt_create_quotation_internet_form"
+                                    class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+
+                                    @csrf
+                                    {{--  No Quota & Description --}}
+                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
+                                        <div class="d-flex justify-content-around flex-wrap mt-5 mb-5 col-12">
+
+                                            <div class="col-lg-3 col-md-4 col-8 mb-3">
+
+                                                <label for="no_quotation" class="form-label">
+                                                    <span class="fw-bold required">NO Quotation</span> </label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <input type="text" class="form-control form-control-solid required"
+                                                        required id="no_quotation" name="no_quotation" value=""
+                                                        placeholder="No Quotation Wajib Di isi" />
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-7 col-md-6 col-8 mb-3">
+
+                                                <label for="description" class="form-label">
+                                                    <span class="fw-bold required">Description</span></label>
+                                                <div class="position-relative">
+                                                    <div class="position-absolute top-0"></div>
+                                                    <textarea class="form-control form-control-solid required" placeholder="Description Wajib Di isi" required
+                                                        name="description" id="description" cols="" rows="2"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     {{--  divv BUNDLE INTERNET --}}
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                         <div class="BundleItem justify-content-center mx-10 mt-5 mb-8 row">
-                                            @if (isset($dataReviewBoq['quotationItem']))
+                                            @if (isset($dataBoq['quotationItem']))
 
-                                                @foreach ($dataReviewBoq['quotationItem'] as $relatedItem)
+                                                @foreach ($dataBoq['quotationItem'] as $relatedItem)
                                                     @php
                                                         $random_string = \Illuminate\Support\Str::random(4);
                                                     @endphp
-                                                    <input type="hidden" name="bundle_id" disabled
-                                                        value="{{ $relatedItem->id ?? null }}" />
                                                     <div
                                                         class="file-soft-quotation-bundle-{{ $random_string }} col-12 mb-5 mt-10">
                                                         <div class="row d-flex justify-content-between">
@@ -435,7 +469,7 @@
                                                                     name="good_name_bundle_{{ $random_string }}"
                                                                     id="good_name_bundle_{{ $random_string }}">
 
-                                                                    @foreach ($dataReviewBoq['inventoryGoodInet'] as $item)
+                                                                    @foreach ($dataBoq['inventoryGoodInet'] as $item)
                                                                         @if ($relatedItem->inventory_good_id == $item->id)
                                                                             <option selected value="{{ $item->id }}">
                                                                                 {{ $item->good_name }}
@@ -445,7 +479,9 @@
 
                                                                 </select> --}}
 
-                                                                @foreach ($dataReviewBoq['inventoryGoodInet'] as $item)
+                                                                <input type="hidden" name="bundle_inventory_id" disabled
+                                                                    value="{{ $relatedItem->inventory_good_id ?? null }}" />
+                                                                @foreach ($dataBoq['inventoryGoodInet'] as $item)
                                                                     @if ($relatedItem->inventory_good_id == $item->id)
                                                                         <input class="form-control form-control-solid"
                                                                             type="text" disabled
@@ -500,209 +536,11 @@
                                                                                 value="{{ $unit->code }}">
                                                                                 {{ $unit->name }}
                                                                             </option>  --}}
-
                                                                                 <input
                                                                                     class="form-control form-control-solid"
-                                                                                    type="text" disabled
-                                                                                    value="{{ $unit->code }} - {{ $unit->name }}">
-                                                                            @endif
-                                                                        @endforeach
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <!-- Purchase Price -->
-                                                            <div class="col-lg-3 col-md-6 col-12 mb-3">
-                                                                <label
-                                                                    class="d-flex align-items-center fs-6 form-label mb-2"
-                                                                    for="purchase_price_{{ $random_string }}">
-                                                                    <span class="fw-bold ">Purchase Price</span>
-                                                                </label>
-                                                                <input class="form-control form-control-solid"
-                                                                    type="text" min="1" minlength="1" disabled
-                                                                    oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                                    name="purchase_price_{{ $random_string }}"
-                                                                    value="{{ $relatedItem->purchase_price }}"
-                                                                    id="purchase_price_{{ $random_string }}">
-                                                            </div>
-
-                                                            <!-- Total Price -->
-                                                            <div class="col-lg-3 col-md-6 col-12 mb-3">
-
-                                                                <label
-                                                                    class="d-flex align-items-center fs-6 form-label mb-2"
-                                                                    for="total_price_{{ $random_string }}">
-                                                                    <span class="fw-bold">Total Price</span>
-                                                                </label>
-                                                                <input class="form-control form-control-solid"
-                                                                    type="text" min="1" minlength="1" disabled
-                                                                    oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                                    name="total_price_{{ $random_string }}"
-                                                                    id="total_price_{{ $random_string }}"
-                                                                    value="{{ $relatedItem->total_price }}">
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            @endif
-
-                                        </div>
-                                        <div class="d-flex justify-content-end mt-5">
-                                            <div class="w-20 me-10">
-                                                <span class="fw-bold">Total Amount : Rp<span
-                                                        id="total_bundle_price"></span></span>
-                                            </div>
-                                        </div>
-
-                                        {{-- <div class="d-flex justify-content-start mx-20 mb-5">
-                                            <div class="w-20 me-10">
-                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
-                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
-                                                </button>
-                                            </div>
-                                            <div class="w-20 me-10">
-                                                <a href="#kt_modal_tambah_bundle_internet" data-bs-toggle="modal"
-                                                    id="btn-bundle-internet"
-                                                    class="btn btn-light-info btn-sm btn_bundle_internet">
-                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Baru</a>
-                                            </div>
-                                        </div> --}}
-
-
-                                    </div>
-
-                                </div>
-
-                                <form id="kt_create_quotation_internet_form"
-                                    class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
-
-                                    @csrf
-                                    {{--  No Quota & Description --}}
-                                    <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
-                                        <div class="d-flex justify-content-around flex-wrap col-12">
-
-                                            <div class="col-lg-3 col-md-4 col-8 mb-3">
-
-                                                <label for="no_quotation" class="form-label">
-                                                    <span class="fw-bold required">NO Quotation</span> </label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <input type="text" class="form-control form-control-solid required"
-                                                        required id="no_quotation" name="no_quotation" value=""
-                                                        placeholder="No Quotation Wajib Di isi" />
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-7 col-md-6 col-8 mb-3">
-
-                                                <label for="description" class="form-label">
-                                                    <span class="fw-bold required">Description</span></label>
-                                                <div class="position-relative">
-                                                    <div class="position-absolute top-0"></div>
-                                                    <textarea class="form-control form-control-solid required" placeholder="Description Wajib Di isi" required
-                                                        name="description" id="description" cols="" rows="2"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{--  divv BUNDLE INTERNET --}}
-                                    <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
-
-                                        <div class="BundleItem justify-content-center mx-10 mt-5 mb-8 row">
-                                            @if (isset($dataReviewBoq['quotationItem']))
-
-                                                @foreach ($dataReviewBoq['quotationItem'] as $relatedItem)
-                                                    @php
-                                                        $random_string = \Illuminate\Support\Str::random(4);
-                                                    @endphp
-                                                    <input type="hidden" name="bundle_id" disabled
-                                                        value="{{ $relatedItem->id ?? null }}" />
-                                                    <div
-                                                        class="file-soft-quotation-bundle-{{ $random_string }} col-12 mb-5 mt-10">
-                                                        <div class="row d-flex justify-content-between">
-
-                                                            <!-- Internet Bundle -->
-                                                            <div class="col-lg-3 col-md-6 col-12 mb-3">
-                                                                <label
-                                                                    class="d-flex align-items-center fs-6 form-label mb-2">
-                                                                    <span class=" fw-bold">Internet
-                                                                        Bundle</span>
-                                                                </label>
-                                                                {{-- <select class="form-select form-select-solid drop-data" 
-                                                                    data-control="select2" disabled
-                                                                    name="good_name_bundle_{{ $random_string }}"
-                                                                    id="good_name_bundle_{{ $random_string }}">
-
-                                                                    @foreach ($dataReviewBoq['inventoryGoodInet'] as $item)
-                                                                        @if ($relatedItem->inventory_good_id == $item->id)
-                                                                            <option selected value="{{ $item->id }}">
-                                                                                {{ $item->good_name }}
-                                                                            </option> 
-                                                                        @endif
-                                                                    @endforeach
-
-                                                                </select> --}}
-
-                                                                @foreach ($dataReviewBoq['inventoryGoodInet'] as $item)
-                                                                    @if ($relatedItem->inventory_good_id == $item->id)
-                                                                        <input class="form-control form-control-solid"
-                                                                            type="text" disabled
-                                                                            value="{{ $item->good_name }}">
-                                                                    @endif
-                                                                @endforeach
-
-
-                                                            </div>
-
-                                                            <!-- Quantity -->
-                                                            <div class="col-lg-3 col-md-6 col-12 mb-3">
-                                                                <div class="row d-flex justify-content-between ">
-                                                                    <div class="col-7 col-md-6">
-                                                                        <label for="quantity_{{ $random_string }}"
-                                                                            class="d-flex align-items-center fs-6 form-label mb-2">
-                                                                            <span class="fw-bold ">Quantity</span>
-                                                                        </label>
-                                                                        <input class="form-control form-control-solid"
-                                                                            type="text" min="1" minlength="1"
-                                                                            disabled
-                                                                            oninput="validateAndFormatNumber(this); calculateTotalBundle('{{ $random_string }}');"
-                                                                            name="quantity_{{ $random_string }}"
-                                                                            id="quantity_{{ $random_string }}"
-                                                                            value="{{ $relatedItem->quantity }}">
-                                                                    </div>
-                                                                    <div class="col-5 col-md-6">
-                                                                        <label
-                                                                            class="d-flex align-items-center fs-6 form-label mb-2">
-                                                                            <span class=" fw-bold">Unit</span>
-                                                                        </label>
-                                                                        {{-- <select
-                                                                            class="form-select form-select-solid drop-data" 
-                                                                            data-control="select2"  disabled
-                                                                            name="unit_${random_string}"
-                                                                            id="unit_${random_string}">
-                                                                            @foreach ($dataUnit as $unit)
-                                                                                @if ($relatedItem->unit == $unit->code)
-                                                                                    <option selected
-                                                                                        value="{{ $unit->code }}">
-                                                                                        {{ $unit->name }}
-                                                                                    </option>
-                                                                                @else
-                                                                                    <option value="{{ $unit->code }}">
-                                                                                        {{ $unit->name }}</option>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </select> --}}
-                                                                        @foreach ($dataUnit as $unit)
-                                                                            @if ($relatedItem->unit == $unit->code)
-                                                                                {{-- <option selected
-                                                                                value="{{ $unit->code }}">
-                                                                                {{ $unit->name }}
-                                                                            </option>  --}} 
-                                                                                <input
-                                                                                    class="form-control form-control-solid"
-                                                                                    type="text" disabled placeholder="{{ $unit->code }} - {{ $unit->name }}"
+                                                                                    name="unit_code" type="text"
+                                                                                    disabled
+                                                                                    placeholder="{{ $unit->code }} - {{ $unit->name }}"
                                                                                     value="{{ $unit->code }}">
                                                                             @endif
                                                                         @endforeach
@@ -790,8 +628,8 @@
 
                                     {{-- input hidden --}}
                                     <input type="hidden" name="id" id="id"
-                                        value="{{ $dataBoq['boqFinalData'][0]->id }}">
-                                    <input type="hidden" name="total_price_bundle" id="total_price_bundle">
+                                        value="{{ $dataBoq['dataCompanyItem'][0]->id }}">
+                                    <input type="text" name="total_price_bundle" id="total_price_bundle">
 
                                 </form>
 
@@ -826,6 +664,7 @@
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
 
             $('#total_bundle_price').text(totalPriceWithCommas);
+            $('#total_price_bundle').val(totalSumBundle);
         }
 
         function updateTotalSum() {
@@ -899,13 +738,7 @@
                 $('#unit_item_detail').val(unit);
                 // $('#unit_item_detail').val(unit).trigger('change');
                 document.getElementById('total_item_detail').textContent = total_price;
-            });
-
-
-
-
-
-
+            }); 
 
             // Function Submit Modal
             $("#kt_create_quotation_internet_form").validate({
@@ -918,24 +751,22 @@
                     }
                 },
 
-                submitHandler: function() {
-
-                    // event.preventDefault();
+                submitHandler: function() { 
+                    // event.preventDefault(); 
 
                     // Get Prospect ID and Survey ID from the HTML elements
-                    var boq_id = $('#id').val();
-                    var total_price_bundle = $('#total_price_bundle').val();
-                    var no_quotation = $('#no_quotation').val();
-                    var description = $('#description').val();
-
+                    let boq_id = $('#id').val();
+                    let total_price = $('#total_price_bundle').val();
+                    let no_quotation = $('#no_quotation').val();
+                    let description = $('#description').val();
                     // Array to store all item data
-                    var bundle = [];
+                    let bundle = [];
                     // Create an object to store prospect_id and survey_request_id
-                    var quotation = {
+                    let quotation = {
                         boq_id: boq_id,
                         no_quotation: no_quotation,
                         description: description,
-                        total_price: total_price_bundle
+                        total_price: total_price
                     };
 
                     console.log(quotation);
@@ -943,19 +774,21 @@
                     // Loop through each .file-soft-boq-item div to get the data for each item
                     $('.BundleItem [class^="file-soft-quotation-bundle"]').each(function(index, item) {
                         // Extract data for the specific item
-                        var id = $(item).find('input[name^="bundle_id"]').val();
-                        var unit = $(item).find('input[name^="unit_code"]').val();
+                        let id = $(item).find('input[name^="bundle_inventory_id"]').val();
+                        let unit = $(item).find('input[name^="unit_code"]').val();
 
-                        var purchase_price = $(item).find('input[id^="purchase_price"]').val();
-                        var quantity = $(item).find('input[id^="quantity"]').val();
-                        var total_price = $(item).find('input[name^="total_price"]').val();
+                        let purchase_price = $(item).find('input[id^="purchase_price"]').val();
+                        let quantity = $(item).find('input[id^="quantity"]').val();
+                        // let total_price = $(item).find('input[name^=""]').val();
+
 
                         // Create an object to store the data for the specific item
-                        var itemData = {
+                        let itemData = {
                             id: id,
+                            unit: unit,
                             quantity: quantity,
-                            purchase_price: purchase_price,
-                            total_price: total_price
+                            purchase_price: purchase_price
+                            // total_price: total_price
                         };
 
                         // Push the itemData object to the items array
@@ -963,29 +796,29 @@
                     });
                     console.log(bundle);
 
-                    // $.ajax({
-                    //     url: "{{ route('com.quotation.store.quotation') }}",
-                    //     method: 'POST',
-                    //     data: {
-                    //         _token: '{{ csrf_token() }}',
-                    //         quotation: quotation,
-                    //         bundle: bundle
-                    //     },
-                    //     success: function(response) {
-                    //         // Handle the response from the server, e.g., show a success message
-                    //         toastr.success(response.message);
-                    //         console.log(response);
-                    //         // setTimeout(() => {
-                    //         //     window.location.href =
-                    //         //         `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
-                    //         // }, 800);
-                    //     },
-                    //     error: function(error) {
-                    //         // Handle errors if the request fails
-                    //         toastr.error(error.responseJSON.error);
-                    //         console.error('Error submitting all item data: ', error);
-                    //     }
-                    // });
+                    $.ajax({
+                        url: "{{ route('com.quotation.store.quotation') }}",
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            quotation: quotation,
+                            bundle: bundle
+                        },
+                        success: function(response) {
+                            // Handle the response from the server, e.g., show a success message
+                            toastr.success(response.message);
+                            console.log(response);
+                            // setTimeout(() => {
+                            //     window.location.href =
+                            //         `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
+                            // }, 800);
+                        },
+                        error: function(error) {
+                            // Handle errors if the request fails
+                            toastr.error(error.responseJSON.error);
+                            console.error('Error submitting all item data: ', error);
+                        }
+                    });
 
                 }
             });

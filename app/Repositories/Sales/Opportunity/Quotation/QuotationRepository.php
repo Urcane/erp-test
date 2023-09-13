@@ -45,15 +45,32 @@ class QuotationRepository
     function createQuotation(Request $request) {
         $boqId = $request->query('boq_id');
         $boqData = $this->boqData->where('id', $boqId)->first();
+
         $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
-        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')->where("prospect_id",$boqData->prospect_id)->get();  
         
+        $dataCompanyItem = $this->boqData->with([
+            'itemable' => function ($query) {
+                $query->whereHas('inventoryGood', function ($subQuery) {
+                    $subQuery->where('good_category_id', '!=', 3);
+                });
+            },
+            'customerProspect.customer.customerContact',
+            'customerProspect.customer.bussinesType',
+            'surveyRequest'
+        ])->where("prospect_id", $boqData->prospect_id)->get(); 
         
+        $quotationItem = Item::where('itemable_id', $boqId)
+            ->whereHas('inventoryGood', function ($query) {
+                $query->where('good_category_id', 3);
+            })->get();
+
         $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first();
         $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->first();
         $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->first();
         return [
-            'boqFinalData' => $boqFinalData,
+            'dataCompanyItem' => $dataCompanyItem,
+            
+            'quotationItem' => $quotationItem,
             'inventoryGoodInet' => $inventoryGoodInet,
             
             'dataSalesSelected' => $dataSalesSelected,
@@ -88,14 +105,13 @@ class QuotationRepository
             [
                 'boq_id' => $request->input('quotation.boq_id'), //ini wajib selalu di isi
                 'no_quotation' => $request->input('quotation.no_quotation'),
-                'description' => $request->input('quotation.description'),
-                
+                'description' => $request->input('quotation.description'), 
                 'total_price' => $request->input('quotation.total_price'),
-                'remark' => $request->input('quotation.remark'),
+                'remark' => $request->input('quotation.remark', null),
                 'is_done' => $request->input('quotation.is_done', null), //kondisi jika quotation di cancel, request is_done = 0
             ]
         );        
-        $quotationData->referenced_quotation_id = $quotationData->id;
+        // $quotationData->referenced_quotation_id = $quotationData->id;
 
         if (isset($quotationData->id)) {
             $itemIds = Item::where('itemable_id', $quotationData->id)
@@ -107,6 +123,7 @@ class QuotationRepository
                             
             Item::whereIn('id', $itemIds)->delete();
         }
+
         $bundles = $request->input('bundle');
 
         if (!empty($bundles)) {
@@ -114,13 +131,13 @@ class QuotationRepository
                 $data = [
                     'itemable_id' => $quotationData->id,
                     'itemable_type' => $quotationData->itemable_type, 
-                    'unit' => 'MTH',
                     'inventory_good_id' => $bundle['id'],
                     'quantity' => $bundle['quantity'],
+                    'unit' => $bundle['unit'],
                     'purchase_price' => $bundle['purchase_price'],
-                    'total_price' => $bundle['total_price'],
+                    'total_price' => $bundle['quantity'] * $bundle['purchase_price'],
                 ];
-                $quotationData->itemableQuotation()->create( $data);
+                $quotationData->itemableQuotation()->create($data);
             }
         }
         $quotationData->save();
