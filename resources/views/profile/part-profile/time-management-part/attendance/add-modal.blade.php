@@ -30,18 +30,22 @@
                                     disabled>
                             </div>
                             <div class="col-lg-6 mt-3 mb-3">
-                                <input type="checkbox" class="form-check-input checkbox-real" id="check_in_box">
-                                <label class="fs-6 form-check-label mb-2" for="permanent">
-                                    <span class="fw-bold">Check In</span>
-                                </label>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input checkbox-real" id="check_in_box">
+                                    <label class="fs-6 form-check-label mb-2" for="permanent">
+                                        <span class="fw-bold">Check In</span>
+                                    </label>
+                                </div>
                                 <input type="time" class="form-control form-control-solid text-muted"
                                     placeholder="Select Date" name="check_in" id="check_in">
                             </div>
                             <div class="col-lg-6 mt-3 mb-3">
-                                <input type="checkbox" class="form-check-input checkbox-real" id="check_out_box">
-                                <label class="fs-6 form-check-label mb-2" for="permanent">
-                                    <span class="fw-bold">Check Out</span>
-                                </label>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input checkbox-real" id="check_out_box">
+                                    <label class="fs-6 form-check-label mb-2" for="permanent">
+                                        <span class="fw-bold">Check Out</span>
+                                    </label>
+                                </div>
                                 <input type="time" class="form-control form-control-solid text-muted"
                                     placeholder="Select Date" name="check_out" id="check_out">
                             </div>

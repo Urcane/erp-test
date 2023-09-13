@@ -146,8 +146,12 @@
     </div>
 </div>
 
-@include('hc.cmt-attendance.modal.edit-attendance')
-@include('hc.cmt-attendance.modal.delete-attendance')
+@can('HC:edit-delete-attendance')
+    @include('hc.cmt-attendance.modal.edit-attendance')
+    @include('hc.cmt-attendance.modal.delete-attendance')
+@endcan
+
+@include('hc.cmt-attendance.modal.detail-attendance')
 @include('hc.cmt-attendance.modal.export-attendance')
 
 <script>
@@ -169,6 +173,10 @@
         }
 
         return false;
+    };
+
+    const onDetailButtonClick = (data) => {
+        detailInit(data);
     };
 
     $(document ).ready(function() {
@@ -364,6 +372,8 @@
             tableAttendance.draw();
         });
 
+        @can('HC:edit-delete-attendance')
+
         $('#modal_attendance_edit_modal').submit(function(event) {
             event.preventDefault();
             var formData = $(this).serialize();
@@ -407,6 +417,8 @@
                 }
             });
         });
+
+        @endcan
 
         $('#modal_attendance_export_submit').on('click', function() {
             const rangeDate = $('#range_date_export').val();

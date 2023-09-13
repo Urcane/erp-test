@@ -210,7 +210,7 @@ class AttendanceController extends RequestController
                 ->groupBy('status')
                 ->get();
 
-            $viewDate = $query->whereBetween('date', $range_date)
+            $viewDate = $query->whereBetween('created_at', $range_date)
                 ->select('status', DB::raw('count(*) as total'))
                 ->groupBy('status')
                 ->get();
@@ -252,7 +252,8 @@ class AttendanceController extends RequestController
             $query = null;
 
             if ($user->hasPermissionTo('HC:view-all-request')) {
-                $query = UserAttendanceRequest::with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
+                $query = UserAttendanceRequest::whereIn('status', array_slice($this->constants->approve_status, 0, 3))
+                    ->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
             } else if ($user->hasPermissionTo('Approval:view-request')) {
                 $query = UserAttendanceRequest::where(function ($query) {
                     $query->where(function ($query) {
@@ -289,7 +290,7 @@ class AttendanceController extends RequestController
                     return Carbon::parse($item)->toDateString();
                 })->toArray();
 
-                $query = $query->whereBetween('date', $range_date)->orderBy('date', 'desc');
+                $query = $query->whereBetween('created_at', $range_date)->orderBy('date', 'desc');
             } else {
                 $query = $query->orderBy('date', 'desc');
             }

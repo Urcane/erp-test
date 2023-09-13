@@ -102,16 +102,10 @@ class CreateAllEmployee extends Migration
             $table->timestamps();
         });
 
-        Schema::create('days', function (Blueprint $table) {
-            $table->id();
-            $table->enum("name", $this->constants->day);
-            $table->timestamps();
-        });
-
         Schema::create('working_schedule_day_offs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("day_id")->constrained("days");
             $table->foreignId("working_schedule_id")->constrained("working_schedules");
+            $table->enum("day", $this->constants->day);
             $table->timestamps();
         });
 
