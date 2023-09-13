@@ -120,7 +120,7 @@ class JobPositionController extends Controller
                 "parent_id" => "required",
             ]);
 
-            $subBranch = Division::updateOrCreate([
+            Division::updateOrCreate([
                 "id" => $request->id,
             ], [
                 "divisi_name" => $request->divisi_name,

@@ -58,6 +58,22 @@
                                 <span class="fw-bold">Flexible</span>
                             </label>
                         </div>
+
+                        <div class="col-lg-12">
+							<label class="d-flex align-items-center fs-6 form-label mb-2">
+								<span class="fw-bold">Day Off</span>
+							</label>
+						</div>
+
+                        @foreach ($dataDays as $day)
+                            <div class="col-lg-3 col-md-4 mb-3">
+                                <input type="checkbox" class="form-check-input" placeholder="" name="day_off[]" value="{{$day}}" id="{{$day}}">
+                                <label class="fs-6 form-check-label mb-2" for="{{$day}}">
+                                    <span class="fw-bold">{{$day}}</span>
+                                </label>
+                            </div>
+                        @endforeach
+
                         <div class="col-lg-12 mt-6 mb-3">
                             <h4>Set Shift</h4>
                             <span class="fs-7 fw-semibold text-gray-500">Set your shift combination for this schedule.</span>
@@ -149,7 +165,7 @@
 <script>
     let dataTableSchedule
     $(".btn_create_schdule").on( "click", function() {
-        $("input").val("")
+        $("input:not(:checkbox)").val("")
         addShiftComponent()
         var parentElement = $("#table-shift");
         var lastChild = parentElement.children().last();
@@ -164,6 +180,7 @@
         $("[name=\'override_national_holiday\']").prop("checked", false);
         $("[name=\'override_company_holiday\']").prop("checked", false);
         $("[name=\'override_special_holiday\']").prop("checked", false);
+        $("[name=\'day_off[]\']").prop("checked", false);
         $("[name=\'flexible\']").prop("checked", false);
     })
 
@@ -380,7 +397,9 @@
 
         var dataShift = [];
 
-        // console.log($("#table-shift").children())
+        var dataDayOff = $("[name='day_off[]']:checked").map(function() {
+            return $(this).val();
+        }).get();
 
         $("#table-shift").children().each(function(index, child) {
             const id = $(child).attr("id").split("-")[1]
@@ -404,7 +423,8 @@
                     flexible : $("[name='flexible']").val(),
                     late_check_in : $("[name='late_check_in']").val(),
                     late_check_out : $("[name='late_check_out']").val(),
-                    shift_id : dataShift
+                    shift_id : dataShift,
+                    day_off : dataDayOff,
                 },
                 headers: {
                     'X-CSRF-TOKEN': "{{csrf_token()}}"

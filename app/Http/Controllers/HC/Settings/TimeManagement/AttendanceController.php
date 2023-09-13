@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Utils\ErrorHandler;
 
 use App\Models\Employee\WorkingSchedule;
+use App\Models\Employee\WorkingScheduleDayOff;
 use App\Models\Employee\WorkingShift;
 use App\Models\Employee\WorkingScheduleShift;
 
@@ -28,8 +29,9 @@ class AttendanceController extends Controller
 
     public function index() {
         $dataWorkingShift = WorkingShift::all();
+        $dataDays = $this->constants->day;
 
-        return view("hc.cmt-settings.time-management.attendance", compact(["dataWorkingShift"]));
+        return view("hc.cmt-settings.time-management.attendance", compact(["dataWorkingShift", "dataDays"]));
     }
 
     public function getTableSchedule(Request $request) {
@@ -95,13 +97,14 @@ class AttendanceController extends Controller
 
     public function createUpdateSchedule(Request $request) {
 
+        dd($request);
         $request->validate([
             "name" => "required",
             "effective_date" => "required",
             "shift_id" => "required",
         ]);
 
-        // DB::transaction(function () use ($request) {
+        DB::transaction(function () use ($request) {
             $workingSchedule = WorkingSchedule::updateOrCreate([
                 "id" => $request->id,
             ], [
@@ -112,6 +115,10 @@ class AttendanceController extends Controller
                 "override_special_holiday" => $request->override_special_holiday,
                 "flexible" => $request->flexible,
             ]);
+
+            foreach ($workingSchedule->dayOffs as $data) {
+                $data->delete();
+            }
 
             foreach ($workingSchedule->workingScheduleShifts as $data) {
                 $data->delete();
@@ -124,11 +131,18 @@ class AttendanceController extends Controller
                 ]);
             }
 
+            foreach ($request->day_off as $day_off) {
+                WorkingScheduleDayOff::create([
+                    'day_id' => $day_off,
+                    'working_schedule_id' => $workingSchedule->id,
+                ]);
+            }
+
             return response()->json([
                 'status' => "succes",
                 'message' => "Data berhasil disimpan",
             ], 200);
-        // });
+        });
     }
 
     public function deleteSchedule(Request $request) {

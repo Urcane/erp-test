@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Feature;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
@@ -14,32 +15,38 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $permission = [
-            // Request (Approval)
-            'Approval:view-request',
-            'Approval:change-status-request',
-
-            'HC:view-all-request',
-            'HC:change-all-status-request',
-
-            // Request
-
-            // attendance
-            'HC:view-attendance',
-            'HC:edit-delete-attendance',
-
-            // employee
-            'HC:view-employee',
-            'HC:update-profile',
-
-            // setting
-            'HC:setting'
+        $feature = [
+            [
+                'HC',
+                // Request (Approval)
+                'Approval:view-request',
+                'Approval:change-status-request',
+                // Request
+                'HC:view-all-request',
+                'HC:change-all-status-request',
+                // attendance
+                'HC:view-attendance',
+                'HC:edit-delete-attendance',
+                // employee
+                'HC:view-employee',
+                'HC:update-profile',
+                // setting
+                'HC:setting'
+            ],
         ];
 
-        collect($permission)->map(function ($data) {
-            Permission::create([
-                "name" => $data
+        collect($feature)->map(function ($data) {
+            $feature = Feature::create([
+                "name" => $data[0],
             ]);
+            collect($data)->map(function ($permission) use ($data, $feature) {
+                if ($permission != $data[0]) {
+                    Permission::create([
+                        "name" => $permission,
+                        "feature_id" => $feature->id,
+                    ]);
+                }
+            });
         });
     }
 }

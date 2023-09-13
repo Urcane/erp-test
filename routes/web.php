@@ -240,6 +240,17 @@ Route::middleware(['auth'])->group(function () {
                 });
             });
 
+            Route::prefix('users')->group(function () {
+                Route::controller(Settings\Users\PermissionController::class)->group(function () {
+                    Route::prefix('permission')->group(function () {
+                        Route::get('/', 'index')->name('hc.setting.permission.index');
+                        Route::get('/table/permission', 'getTableSchedule')->name('hc.setting.permission.getTable');
+                        Route::get('/detail/user/{user}', 'detailUserPermission')->name('hc.setting.permission.detailUser');
+                        Route::post('/assign/user/{user}', 'assignPermission')->name('hc.setting.permission.assignPermission');
+                    });
+                });
+            });
+
             Route::prefix('time-management')->group(function () {
                 Route::controller(Settings\TimeManagement\AttendanceController::class)->group(function () {
                     Route::prefix('attendance')->group(function () {
@@ -253,6 +264,18 @@ Route::middleware(['auth'])->group(function () {
                         Route::post('/create/update/shift', 'createUpdateShift')->name('hc.setting.shift.createUpdate');
                         Route::post('/delete/shift', 'deleteShift')->name('hc.setting.shift.delete');
                         Route::post('/create/update/shift/show/in/request', 'udpateShowInRequest')->name('hc.setting.shift.udpateShowInRequest');
+                    });
+                });
+
+                Route::controller(Settings\TimeManagement\LiveLocationController::class)->group(function () {
+                    Route::prefix('live-location')->group(function () {
+                        Route::get('/', 'index')->name('hc.setting.live-location.index');
+                        Route::get('/table', 'getTable')->name('hc.setting.live-location.getTable');
+                        Route::get('/detail/branch/location/{branch}', 'detailBranchLocation')->name('hc.setting.live-location.detailBranchLocation');
+                        Route::get('/table/location/{branchId}', 'getTableLocation')->name('hc.setting.live-location.getTableLocation');
+
+                        Route::post('/create/update/{branchId}', 'createUpdate')->name('hc.setting.live-location.createUpdate');
+                        Route::post('/delete', 'destroy')->name('hc.setting.live-location.delete');
                     });
                 });
 

@@ -12,11 +12,11 @@ class Division extends Model
 
 
     public function parent() {
-        return $this->belongsTo(DIvision::class, "parent_id");
+        return $this->belongsTo(Division::class, "parent_id");
     }
 
     public function children() {
-        return $this->hasMany(DIvision::class, "parent_id");
+        return $this->hasMany(Division::class, "parent_id");
     }
 
     public function users() {
