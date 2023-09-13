@@ -206,12 +206,15 @@ class BoqService
     
     function onReviewBoq(Request $request){
         $dataReviewBoq = $this->BoQRepository->reviewBoq($request); 
-        return view('cmt-opportunity.boq.pages.on-review-boq', compact('dataReviewBoq')); 
+        $dataUnit = InventoryUnitMaster::get();
+        
+        return view('cmt-opportunity.boq.pages.on-review-boq', compact('dataReviewBoq', 'dataUnit')); 
     }
 
     function reviewDoneBoq(Request $request) {
         $dataReviewBoq = $this->BoQRepository->reviewBoq($request); 
-        return view('cmt-opportunity.boq.pages.review-done-boq', compact('dataReviewBoq')); 
+        $dataUnit = InventoryUnitMaster::get();
+        return view('cmt-opportunity.boq.pages.review-done-boq', compact('dataReviewBoq', 'dataUnit')); 
     }
 
     function storeApprovalBoq(Request $request) : JsonResponse {
