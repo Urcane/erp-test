@@ -52,6 +52,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->id();
             $table->foreignId('prospect_id')->constrained('customer_prospects');
             $table->foreignId('survey_request_id')->nullable()->constrained();
+            $table->string('boq_type')->default('perangkat')->index();
             $table->foreignId('sales_id')->nullable()->constrained('users');
             $table->foreignId('technician_id')->nullable()->constrained('users');
             $table->foreignId('procurement_id')->nullable()->constrained('users');
@@ -69,9 +70,9 @@ class CreateAllBoqMigrationTable extends Migration
             $table->boolean('approval_manager_operation')->nullable();
             $table->dateTime('approval_manager_operation_date')->nullable();
             $table->boolean('approval_director')->nullable();
-            $table->date('approval_director_date')->nullable();
+            $table->dateTime('approval_director_date')->nullable();
             $table->boolean('approval_finman')->nullable();
-            $table->date('approval_finman_date')->nullable();
+            $table->dateTime('approval_finman_date')->nullable();
             $table->foreignId('reference_boq_id')->nullable()->constrained('itemable_bill_of_quantities');
             $table->timestamps();
         });

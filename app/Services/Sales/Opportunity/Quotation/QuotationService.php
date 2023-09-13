@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Services\Master\FileService;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\Inventory\InventoryUnitMaster;
 use App\Services\Master\Inventory\InventoryService;
 use App\Repositories\Sales\Opportunity\Quotation\QuotationRepository;
 
@@ -138,24 +139,24 @@ class QuotationService
     }
 
     function createQuotation(Request $request)  {
-        $dataBoq = $this->quotationRepository->createQuotation($request);
-        dd($dataBoq);
+        $dataBoq = $this->quotationRepository->createQuotation($request);  
+        $dataUnit = InventoryUnitMaster::get();
         $quotation = $request->query('quotation');
         if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.create-internet-quotation', compact('dataBoq'));
+            return view('cmt-opportunity.quotation.pages.create-internet-quotation', compact('dataBoq', 'dataUnit'));
         } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.create-perangkat-quotation', compact('dataBoq'));
+            return view('cmt-opportunity.quotation.pages.create-perangkat-quotation', compact('dataBoq', 'dataUnit'));
         } 
     }
 
     function updateQuotation(Request $request)  {
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
-        $quotation = $request->query('quotation');
-        //page update belum ada
+        $dataUnit = InventoryUnitMaster::get();
+        $quotation = $request->query('quotation'); 
         if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation'));
+            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation', 'dataUnit'));
         } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation'));
+            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation', 'dataUnit'));
         } 
     }
 

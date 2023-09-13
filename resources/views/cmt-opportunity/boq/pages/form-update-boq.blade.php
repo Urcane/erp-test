@@ -466,7 +466,7 @@
             $('.btn-update-boq-modal').on('click', function() {
                 var randomString = $(this).data('random-string');
                 var itemId = parseInt($(this).data('itemId'));
-                console.log($(this).data('itemId'));
+                // console.log($(this).data('itemId'));
 
                 var quantity = $(this).data('quantity');
                 var unit = $(this).data('unit');
