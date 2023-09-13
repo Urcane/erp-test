@@ -101,6 +101,7 @@ class BoQRepository
             $boq_id = $request->input('boq.boq_id');
             $prospect_id = $request->input('boq.prospect_id');
             $survey_request_id = $request->input('boq.survey_request_id');
+            $boq_type = $request->input('boq.boq_type');
             $is_draft = $request->input('boq.is_draft', 1);
             $sales_id = $request->input('boq.sales_id');
             $technician_id = $request->input('boq.technician_id');
@@ -130,6 +131,7 @@ class BoQRepository
                 [
                     'prospect_id' => $prospect_id,
                     'survey_request_id' => $survey_request_id,
+                    'boq_type' => $boq_type,
                     'sales_id' => $sales_id,
                     'technician_id' => $technician_id,
                     'procurement_id' => $procurement_id,
@@ -171,6 +173,7 @@ class BoQRepository
                         'unit' => $itemData['unit'],
                         'purchase_price' => $itemData['purchase_price'] ?? 0,
                         'total_price' => (($itemData['purchase_price'] ?? 0) * $itemData['quantity']) + ($itemData['purchase_delivery'] ?? 0),
+                        'markup_price' => $itemData['markup_price'] ?? 0,
                         'purchase_delivery_charge' => $itemData['purchase_delivery'] ?? 0,
                         'purchase_reference' => $itemData['purchase_reference'] ?? null,
                         'delivery_route' => $itemData['delivery_route'] ?? null,

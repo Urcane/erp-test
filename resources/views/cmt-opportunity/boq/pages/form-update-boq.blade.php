@@ -50,7 +50,7 @@
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x">
                                         {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8 row">
-                                            <div class="col-lg-6 mb-3">
+                                            <div class="col-lg-4 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
@@ -65,7 +65,7 @@
                                             </div>
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
-                                            <div class="col-lg-6 mb-3">
+                                            <div class="col-lg-4 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
@@ -76,6 +76,18 @@
                                                     name="survey_request_id" id="survey_request_id"
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id}}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+
+                                            <div class="col-lg-4 mb-3">
+                                                <label for="boq_type" class="d-flex align-items-center fs-6 form-label mb-2 required" >
+                                                    <span class="fw-bold">Tipe BOQ</span>
+                                                </label>
+                                                <select class="form-select-solid form-select form-select-solid"
+                                                    data-control="select2" required name="boq_type" id="boq_type">
+                                                    <option selected disabled value="">Pilih</option>
+                                                    <option @if ($updateDraftBoqData['dataCompanyItem'][0]->boq_type == "perangkat") selected @endif value="perangkat">Perangkat</option>
+                                                    <option @if ($updateDraftBoqData['dataCompanyItem'][0]->boq_type == "internet") selected @endif value="internet">Internet</option>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -347,6 +359,7 @@
                 // Get Prospect ID and Survey ID from the HTML elements
                 var boq_id = $('input[name="boq_id"]').val();
                 var prospect_id = $('#prospect_id').val();
+                var boq_type = $('#boq_type').val();
                 var survey_request_id = $('#survey_request_id').val();
                 var is_draft = $('#is_draft').val();
 
@@ -369,7 +382,8 @@
                     boq_id: boq_id,
                     prospect_id: prospect_id,
                     survey_request_id: survey_request_id,
-                    is_draft: is_draft
+                    is_draft: is_draft,
+                    boq_type: boq_type,
                 };
 
                 // console.log(boq);

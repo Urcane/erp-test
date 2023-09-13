@@ -142,7 +142,16 @@
                                             name="purchase_delivery_item_detail" id="purchase_delivery_charge_item_detail">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
-                                    
+                                    @if(isset($boq_type) && $boq_type == "perangkat")
+                                    <div class="col-12">
+                                        <label class="form-label">Markup Price</label>
+                                        <div class="position-relative">
+                                            <div class="position-absolute top-0"></div>
+                                            <input type="number" disabled="disabled" class="form-control form-control-solid" oninput="validateAndFormatNumber(this);"
+                                            name="markup_item_detail" id="markup_item_detail">
+                                        </div>
+                                    </div>
+                                    @endif
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class=" fw-bold">Lokasi Barang</span>
@@ -185,10 +194,10 @@
                     <div class="text-center mt-9">
                         <button type="reset" id="kt_modal_item_detail_cancel"
                             class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="kt_modal_item_detail_submit"
+                        {{-- <button type="submit" id="kt_modal_item_detail_submit"
                             class="btn btn-sm btn-info w-lg-200px">
                             <span class="indicator-label">Simpan</span>
-                        </button>
+                        </button> --}}
                     </div>
 
                     <div>

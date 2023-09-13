@@ -374,35 +374,6 @@ input[type="number"]::-webkit-outer-spin-button {
         updateTotalSumBundle()
     }
 
-    function updateTotalSum() {
-        let totalSum = 0;
-
-        // Loop through each item's total price input field and sum up the values
-        $('.MultipleItem input[name="content[][total_price]"]').each(function() {
-            let totalPriceValue = $(this).val();
-
-            if (totalPriceValue !== "") {
-                totalSum += parseInt(totalPriceValue);
-            }
-        });
-        const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
-
-        $('#total_item_price').text(totalPriceWithCommas);
-        $('#modal').val(totalSum);
-
-        // Ambil nilai gpm dan modal
-        let gpm = parseFloat($('#gpm').val()); // gunakan parseFloat untuk memastikan nilai numerik
-        let modal = parseFloat($('#modal').val()); // gunakan parseFloat untuk memastikan nilai numerik
-
-        if (!isNaN(gpm) && !isNaN(modal)) {
-            let npm = gpm - modal;
-            let percentage = (npm / gpm) * 100;
-
-            $('#npm').val(npm);
-            $('#percentage').val(percentage.toFixed(2));
-        }
-    }
-
 </script>
 </body>
 </html>

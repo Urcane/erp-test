@@ -137,7 +137,16 @@
                                             name="purchase_delivery_update_price" id="purchase_delivery_charge_update_price">
                                         <div class="fv-plugins-message-container invalid-feedback"></div>
                                     </div>
-                                    
+                                    @if(isset($boq_type) && $boq_type == "perangkat")
+                                    <div class="col-12">
+                                        <label class="form-label">Markup Price</label>
+                                        <div class="position-relative">
+                                            <div class="position-absolute top-0"></div>
+                                            <input type="number" class="form-control form-control-solid" oninput="validateAndFormatNumber(this);"
+                                            name="markup_update_price" id="markup_update_price">
+                                        </div>
+                                    </div>
+                                    @endif
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class=" fw-bold">Lokasi Barang</span>

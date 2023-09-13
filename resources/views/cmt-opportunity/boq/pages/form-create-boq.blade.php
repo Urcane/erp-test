@@ -37,7 +37,7 @@
                                             <!-- Tambahkan atribut "data-url" pada select item untuk menyimpan URL endpoint untuk mengambil data jenis dan merek item -->
                                             <input type="hidden" name="boq_id" value="">
                                             
-                                            <div class="col-lg-5 col-8 col-sm-5 col-md-5  mb-3">
+                                            <div class="col-lg-4 col-8 col-sm-4 col-md-4  mb-3">
                                                 <label for="prospect_id" class="d-flex align-items-center fs-6 form-label mb-2 required" >
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
@@ -64,7 +64,7 @@
                                             </div>
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
-                                            <div class="col-lg-5 col-8 col-sm-5 col-md-5  mb-3">
+                                            <div class="col-lg-4 col-8 col-sm-4 col-md-4  mb-3">
                                                 <label for="survey_request_id" class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
@@ -86,6 +86,18 @@
                                                     @endif
                                                 </select>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+
+                                            <div class="col-lg-2 col-8 col-sm-2 col-md-2  mb-3">
+                                                <label for="boq_type" class="d-flex align-items-center fs-6 form-label mb-2 required" >
+                                                    <span class="fw-bold">Tipe BOQ</span>
+                                                </label>
+                                                <select class="form-select-solid form-select form-select-solid"
+                                                    data-control="select2" required name="boq_type" id="boq_type">
+                                                    <option selected disabled value="">Pilih</option>
+                                                    <option value="perangkat">Perangkat</option>
+                                                    <option value="internet">Internet</option>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -189,6 +201,7 @@
                 // Get Prospect ID and Survey ID from the HTML elements
                 var prospect_id = $('#prospect_id').val();
                 var survey_request_id = $('#survey_request_id').val();
+                var boq_type = $('#boq_type').val();
 
                 // Validate the prospect_id
                 if (!prospect_id) {
@@ -206,7 +219,8 @@
                 // Create an object to store prospect_id and survey_request_id
                 var boq = {
                     prospect_id: prospect_id,
-                    survey_request_id: survey_request_id
+                    survey_request_id: survey_request_id,
+                    boq_type: boq_type,
                 };
 
                 // Loop through each .file-soft-boq-item div to get the data for each item

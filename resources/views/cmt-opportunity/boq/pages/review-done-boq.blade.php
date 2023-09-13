@@ -96,7 +96,7 @@
                                             <input type="hidden" id="boq_id" name="boq_id"
                                                 value="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}">
 
-                                            <div class="col-lg-5 col-md-5 col-sm-5 col-8 ">
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-8 ">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
@@ -108,7 +108,7 @@
                                                 <div id="error-prospect"></div>
                                             </div>
 
-                                            <div class="col-lg-5 col-md-5 col-sm-5 col-8 ">
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-8 ">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
@@ -119,6 +119,18 @@
                                                     name="survey_request_id" id="survey_request_id"
                                                     value="{{ $dataReviewBoq['dataCompanyItem'][0]->survey_request_id }}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+
+                                            <div class="col-lg-2 col-8 col-sm-2 col-md-2 ">
+                                                <label for="boq_type" class="d-flex align-items-center fs-6 form-label mb-2 required" >
+                                                    <span class="fw-bold">Tipe BOQ</span>
+                                                </label>
+                                                <input type="text" class="form-control form-control-solid" disabled
+                                                    placeholder="{{ $dataReviewBoq['dataCompanyItem'][0]->boq_type }}">
+                                                <input type="hidden" class="form-control form-control-solid" disabled
+                                                    name="boq_type" id="boq_type"
+                                                    value="{{ $dataReviewBoq['dataCompanyItem'][0]->boq_type }}">
+                                                <div id="error-prospect"></div> 
                                             </div>
                                         </div>
 
@@ -352,7 +364,7 @@
                                                             <div class="col-12 col-lg-3 col-md-6">
                                                                 <div
                                                                     class="row justify-content-between align-items-center">
-                                                                    <div class="col-lg-10 col-md-10 col-10 col-sm-10">
+                                                                    <div class="@if($dataReviewBoq['dataCompanyItem'][0]->boq_type == "perangkat") col-lg-5 col-md-5 col-5 col-sm-5 @else col-lg-10 col-md-10 col-10 col-sm-10 @endif">
                                                                         <label class="form-label">Total
                                                                             Price</label>
                                                                         <div class="position-relative">
@@ -363,6 +375,18 @@
                                                                                 value="{{ $relatedItem->total_price ?? null }}" />
                                                                         </div>
                                                                     </div>
+                                                                    @if($dataReviewBoq['dataCompanyItem'][0]->boq_type == "perangkat")
+                                                                    <div class="col-lg-5 col-md-5 col-5 col-sm-5">
+                                                                        <label class="form-label">Markup Price</label>
+                                                                        <div class="position-relative">
+                                                                            <div class="position-absolute top-0"></div>
+                                                                            <input type="number"
+                                                                                class="form-control form-control-solid" disabled
+                                                                                name="content[][markup_price]"
+                                                                                value="{{ $relatedItem->markup_price ?? 0 }}" />
+                                                                        </div>
+                                                                    </div>
+                                                                    @endif
                                                                     <div class="col-lg-2 col-md-2 col-2 col-sm-2">
                                                                         <div class="h-25px"></div>
                                                                         <button type="button"
@@ -386,6 +410,7 @@
                                                                                 data-total_price="{{ $relatedItem->total_price }}"
                                                                                 data-purchase_delivery_charge="{{ $relatedItem->purchase_delivery_charge }}"
                                                                                 data-purchase_price="{{ $relatedItem->purchase_price }}"
+                                                                                data-markup_price="{{ $relatedItem->markup_price }}"
                                                                                 data-purchase_reference="{{ $relatedItem->purchase_reference }}"
                                                                                 data-item_detail="{{ $relatedItem->item_detail }}"
                                                                                 data-delivery_route="{{ $relatedItem->delivery_route }}"
@@ -438,6 +463,15 @@
                                                             id="total_item_price"></span></span>
                                                 </div>
                                             </div>
+                                            @if ($dataReviewBoq['dataCompanyItem'][0]->boq_type == "perangkat")
+                                            <div class="d-flex justify-content-end mt-5">
+                                                <div class="w-20 me-10">
+                                                    <span class="fw-bold">Total Markup : Rp<span
+                                                            id="total_markup_price"></span></span>
+                                                </div>
+                                            </div>
+                                            @endif
+
                                             {{-- <div class="d-flex justify-content-start mx-20 mb-5">
                                                 <a href="#kt_modal_tambah_boq" data-bs-toggle="modal"
                                                     class="btn btn-light-info btn-sm mx-3 btn_tambah_boq">
@@ -449,6 +483,7 @@
                                     </div>
 
                                     {{--  divv BUNDLE INTERNET --}}
+                                    @if ($dataReviewBoq['dataCompanyItem'][0]->boq_type == "internet")
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
                                         <div class="BundleItem justify-content-center mx-10 mt-5 mb-8 row">
@@ -612,9 +647,10 @@
 
 
                                     </div>
-
+                                    @endif
                                 </div>
-                            </div> 
+                            </div>
+
                         </div>
                         
                     </div>
@@ -626,7 +662,7 @@
         @include('cmt-opportunity.boq.add.modal-review-manager-sales-boq-commercial')
         @include('cmt-opportunity.boq.add.modal-review-manager-operation-boq-commercial')
         @include('cmt-opportunity.boq.add.modal-review-finman-boq-commercial')
-        @include('cmt-opportunity.boq.add.modal-item-detail')
+        @include('cmt-opportunity.boq.add.modal-item-detail', array('boq_type' => $dataReviewBoq['dataCompanyItem'][0]->boq_type))
 
         <script>
 
@@ -667,6 +703,7 @@
 
             function updateTotalSum() {
                 let totalSum = 0;
+                let totalMarkup = 0;
 
                 $('.MultipleItem input[name="content[][total_price]"]').each(function() {
                     let totalPriceValue = $(this).val();
@@ -678,6 +715,20 @@
                 const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
 
                 $('#total_item_price').text(totalPriceWithCommas);
+
+                @if ($dataReviewBoq['dataCompanyItem'][0]->boq_type == "perangkat")
+                $('.MultipleItem input[name="content[][markup_price]"]').each(function() {
+                    let totalPriceValue = $(this).val();
+
+                    if (totalPriceValue !== "") {
+                        totalMarkup += parseInt(totalPriceValue);
+                    }
+                });
+
+                const totalMarkupWithCommas = new Intl.NumberFormat("id").format(totalMarkup);
+
+                $('#total_markup_price').text(totalMarkupWithCommas);
+                @endif
 
             }
 
@@ -699,6 +750,7 @@
                     let total_price = ($(this).data('total_price'));
                     let purchase_delivery_charge = $(this).data('purchase_delivery_charge');
                     let purchase_price = ($(this).data('purchase_price'));
+                    let markup_price = ($(this).data('markup_price'));
                     let purchase_reference = $(this).data('purchase_reference');
                     let item_detail = ($(this).data('item_detail'));
                     let delivery_route = ($(this).data('delivery_route'));
@@ -729,6 +781,7 @@
                     $('#purchase_reference_item_detail').val(purchase_reference);
                     $('#purchase_price_item_detail').val(purchase_price);
                     $('#purchase_delivery_charge_item_detail').val(purchase_delivery_charge);
+                    $('#markup_item_detail').val(markup_price);
                     // $('#total_price_item_detail').val(total_price);
 
                     $('#item_detail_item_detail').val(item_detail);
