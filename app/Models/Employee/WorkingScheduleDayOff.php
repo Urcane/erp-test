@@ -13,11 +13,6 @@ class WorkingScheduleDayOff extends Model
 
     protected $guarded = [];
 
-    public function day(): BelongsTo
-    {
-        return $this->belongsTo(Day::class);
-    }
-
     public function workingSchedule(): BelongsTo
     {
         return $this->belongsTo(WorkingSchedule::class);

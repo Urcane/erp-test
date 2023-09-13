@@ -137,7 +137,7 @@ class AttendanceController extends RequestController
                 throw new InvariantError("Tidak dapat request absen pada hari libur ($globalDayOff->name)");
             }
 
-            $workingDayOff = $userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('name')->toArray();
+            $workingDayOff = $userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
 
             if (in_array($now->dayName, $workingDayOff)) {
                 throw new InvariantError("Tidak dapat request absen pada hari libur (Working Schedule)");

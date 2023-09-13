@@ -62,7 +62,7 @@ class TimeOffController extends RequestController
             $endDate = Carbon::parse($request->end_date);
 
             $taken = 0;
-            $workingDayOff = Auth::user()->userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('name')->toArray();
+            $workingDayOff = Auth::user()->userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
 
             $holidayDates = $this->_getGlobalDayOff($startDate, $endDate);
 

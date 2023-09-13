@@ -25,8 +25,8 @@ class WorkingSchedule extends Model
         return $this->hasMany(WorkingScheduleShift::class);
     }
 
-    public function dayOffs(): BelongsToMany
+    public function dayOffs(): HasMany
     {
-        return $this->belongsToMany(Day::class, 'working_schedule_day_offs');
+        return $this->hasMany(WorkingScheduleDayOff::class);
     }
 }

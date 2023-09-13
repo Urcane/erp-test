@@ -81,14 +81,6 @@ class HCDataSeeder extends Seeder
         });
 
         collect([
-            "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"
-        ])->map(function ($data) {
-            Day::create([
-                "name" => $data,
-            ]);
-        });
-
-        collect([
             [1, "-1.249637", "116.877503", 30],
             [2, "-1.249637", "116.877503", 30],
             [3, "-1.249637", "116.877503", 30],
@@ -185,11 +177,11 @@ class HCDataSeeder extends Seeder
         });
 
         collect([
-            [1, 6], [1, 7]
+            [1, $this->constants->day[5]], [1, $this->constants->day[6]]
         ])->map(function ($data) {
             WorkingScheduleDayOff::create([
                 "working_schedule_id" => $data[0],
-                "day_id" => $data[1]
+                "day" => $data[1]
             ]);
         });
 

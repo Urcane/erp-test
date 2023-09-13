@@ -212,7 +212,7 @@ class TimeOffController extends RequestController
                         ->workingScheduleShift
                         ->workingSchedule
                         ->dayOffs
-                        ->pluck('name')->toArray();
+                        ->pluck('day')->toArray();
 
                     $leaveCategoryName = $leaveRequest->leaveRequestCategory->name;
                     $leaveCategoryCode = $leaveRequest->leaveRequestCategory->code;
@@ -301,7 +301,7 @@ class TimeOffController extends RequestController
                     ->workingScheduleShift
                     ->workingSchedule
                     ->dayOffs
-                    ->pluck('name')->toArray();
+                    ->pluck('day')->toArray();
 
                 $leaveCategoryName = $leaveRequest->leaveRequestCategory->name;
                 $leaveCategoryCode = $leaveRequest->leaveRequestCategory->code;

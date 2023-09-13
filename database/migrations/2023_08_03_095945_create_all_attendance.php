@@ -64,7 +64,7 @@ class CreateAllAttendance extends Migration
         Schema::create('user_leave_category_quotas', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreign("leave_request_category_id")->constrained("leave_request_categories");
+            $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
             $table->smallInteger("quotas");
             $table->smallInteger("carry_quotas");
             $table->date("expire_date");
