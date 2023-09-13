@@ -8,16 +8,19 @@ use Illuminate\Http\Request;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
 use Illuminate\Http\JsonResponse;
+use App\Models\User;
 
 class QuotationRepository
 {
     protected $model;
     protected $boqData;
     protected $item;
+    protected $user;
 
-    function __construct(ItemableQuotationPart $model, ItemableBillOfQuantity $boqData) {
+    function __construct(ItemableQuotationPart $model, ItemableBillOfQuantity $boqData, User $user) {
         $this->model = $model;
         $this->boqData = $boqData;
+        $this->user = $user;
     }
 
 
@@ -43,10 +46,19 @@ class QuotationRepository
         $boqId = $request->query('boq_id');
         $boqData = $this->boqData->where('id', $boqId)->first();
         $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
-        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')->where("prospect_id",$boqData->prospect_id)->get();        
+        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')->where("prospect_id",$boqData->prospect_id)->get();  
+        
+        
+        $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first();
+        $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->first();
+        $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->first();
         return [
             'boqFinalData' => $boqFinalData,
             'inventoryGoodInet' => $inventoryGoodInet,
+            
+            'dataSalesSelected' => $dataSalesSelected,
+            'dataProcurementSelected' => $dataProcurementSelected,
+            'dataTechnicianSelected' => $dataTechnicianSelected,
         ];
     }
 

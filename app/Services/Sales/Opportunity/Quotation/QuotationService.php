@@ -139,6 +139,7 @@ class QuotationService
 
     function createQuotation(Request $request)  {
         $dataBoq = $this->quotationRepository->createQuotation($request);
+        dd($dataBoq);
         $quotation = $request->query('quotation');
         if ($quotation === 'internet') { 
             return view('cmt-opportunity.quotation.pages.create-internet-quotation', compact('dataBoq'));
