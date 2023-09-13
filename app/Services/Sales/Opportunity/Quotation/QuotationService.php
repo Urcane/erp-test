@@ -151,12 +151,12 @@ class QuotationService
 
     function updateQuotation(Request $request)  {
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
-        $quotation = $request->query('quotation');
-        //page update belum ada
+        $dataUnit = InventoryUnitMaster::get();
+        $quotation = $request->query('quotation'); 
         if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation'));
+            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation', 'dataUnit'));
         } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation'));
+            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation', 'dataUnit'));
         } 
     }
 

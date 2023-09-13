@@ -17,22 +17,24 @@ class QuotationRepository
     protected $item;
     protected $user;
 
-    function __construct(ItemableQuotationPart $model, ItemableBillOfQuantity $boqData, User $user) {
+    function __construct(ItemableQuotationPart $model, ItemableBillOfQuantity $boqData, User $user)
+    {
         $this->model = $model;
         $this->boqData = $boqData;
         $this->user = $user;
     }
 
 
-    function getAll(Request $request) {
+    function getAll(Request $request)
+    {
         $dataQuotation = $this->model->with('itemableBillOfQuantity.customerProspect.customer.customerContact', 'itemableBillOfQuantity.customerProspect.customer.customerContact');
 
         if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'true') {
-            $dataQuotation->where('is_done',1);
+            $dataQuotation->where('is_done', 1);
         }
 
         if (isset($request->filters['is_done']) && $request->filters['is_done'] == 'false') {
-            $dataQuotation->where('is_done',0);
+            $dataQuotation->where('is_done', 0);
         }
 
         if (isset($request->filters['is_progress']) && $request->filters['is_progress'] == 'true') {
@@ -42,12 +44,13 @@ class QuotationRepository
         return ($dataQuotation);
     }
 
-    function createQuotation(Request $request) {
+    function createQuotation(Request $request)
+    {
         $boqId = $request->query('boq_id');
         $boqData = $this->boqData->where('id', $boqId)->first();
 
-        $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
-        
+        $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1, 2])->get();
+
         $dataCompanyItem = $this->boqData->with([
             'itemable' => function ($query) {
                 $query->whereHas('inventoryGood', function ($subQuery) {
@@ -57,8 +60,8 @@ class QuotationRepository
             'customerProspect.customer.customerContact',
             'customerProspect.customer.bussinesType',
             'surveyRequest'
-        ])->where("prospect_id", $boqData->prospect_id)->get(); 
-        
+        ])->where("prospect_id", $boqData->prospect_id)->get();
+
         $quotationItem = Item::where('itemable_id', $boqId)
             ->whereHas('inventoryGood', function ($query) {
                 $query->where('good_category_id', 3);
@@ -69,35 +72,45 @@ class QuotationRepository
         $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->first();
         return [
             'dataCompanyItem' => $dataCompanyItem,
-            
+
             'quotationItem' => $quotationItem,
             'inventoryGoodInet' => $inventoryGoodInet,
-            
+
             'dataSalesSelected' => $dataSalesSelected,
             'dataProcurementSelected' => $dataProcurementSelected,
             'dataTechnicianSelected' => $dataTechnicianSelected,
         ];
     }
 
-    function updateQuotation(Request $request) {
+    function updateQuotation(Request $request)
+    {
         $quotationId = $request->query('quotation_id');
         $quotationData = $this->model->where('id', $quotationId)->first();
         $quotationItem = Item::where('itemable_id', $quotationId)
-        ->whereHas('inventoryGood', function($query){
-            $query->where('good_category_id', 3);
-       })->get();
-        $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1,2])->get();
+            ->whereHas('inventoryGood', function ($query) {
+                $query->where('good_category_id', 3);
+            })->get();
+        $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1, 2])->get();
         $boqData = $this->boqData->where('id', $quotationData->boq_id)->first();
-        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')->where("prospect_id",$boqData->prospect_id)->get();         
+        $boqFinalData = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')->where("prospect_id", $boqData->prospect_id)->get();
+
+        $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first();
+        $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->first();
+        $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->first();
         return [
             'quotationData' => $quotationData,
             'boqFinalData' => $boqFinalData,
             'quotationItem' => $quotationItem,
             'inventoryGoodInet' => $inventoryGoodInet,
+
+            'dataSalesSelected' => $dataSalesSelected,
+            'dataProcurementSelected' => $dataProcurementSelected,
+            'dataTechnicianSelected' => $dataTechnicianSelected,
         ];
     }
 
-    function saveAndStoreQuotation(Request $request)  {
+    function saveAndStoreQuotation(Request $request)
+    {
         $quotationData = $this->model->updateOrCreate(
             [
                 'id' => $request->input('quotation.boq_id') //jika quotation sudah ada, maka update, jika belum ada, maka create
@@ -105,32 +118,29 @@ class QuotationRepository
             [
                 'boq_id' => $request->input('quotation.boq_id'), //ini wajib selalu di isi
                 'no_quotation' => $request->input('quotation.no_quotation'),
-                'description' => $request->input('quotation.description'), 
+                'description' => $request->input('quotation.description'),
                 'total_price' => $request->input('quotation.total_price'),
                 'remark' => $request->input('quotation.remark', null),
                 'is_done' => $request->input('quotation.is_done', null), //kondisi jika quotation di cancel, request is_done = 0
             ]
-        );        
+        );
         // $quotationData->referenced_quotation_id = $quotationData->id;
-
-        if (isset($quotationData->id)) {
-            $itemIds = Item::where('itemable_id', $quotationData->id)
-                            ->whereHas('inventoryGood', function ($query) {
-                                $query->where('good_category_id', 3);
-                            })
-                            ->pluck('id')
-                            ->toArray();
-                            
-            Item::whereIn('id', $itemIds)->delete();
-        }
 
         $bundles = $request->input('bundle');
 
-        if (!empty($bundles)) {
+        if (isset($quotationData->id) && !empty($bundles)) {
+            $itemIds = Item::where('itemable_id', $quotationData->id)
+                ->whereHas('inventoryGood', function ($query) {
+                    $query->where('good_category_id', 3);
+                })
+                ->pluck('id')
+                ->toArray();
+
+            Item::whereIn('id', $itemIds)->delete();
             foreach ($bundles as $bundle) {
                 $data = [
                     'itemable_id' => $quotationData->id,
-                    'itemable_type' => $quotationData->itemable_type, 
+                    'itemable_type' => $quotationData->itemable_type,
                     'inventory_good_id' => $bundle['id'],
                     'quantity' => $bundle['quantity'],
                     'unit' => $bundle['unit'],
@@ -139,28 +149,30 @@ class QuotationRepository
                 ];
                 $quotationData->itemableQuotation()->create($data);
             }
-        }
+        } 
         $quotationData->save();
         return $quotationData;
     }
 
-    function storePurchaseOrder(Request $request){ 
+    function storePurchaseOrder(Request $request)
+    {
         $quotationId = $request->input('quotation_id');
         $quotationData = $this->model->where('id', $quotationId)->first();
-        
+
         if (!$quotationData) {
             return response()->json(['message' => 'Quotation not found'], 404);
         }
         return $quotationData;
     }
-    
-    function revisionQuotation(Request $request){
+
+    function revisionQuotation(Request $request)
+    {
         //dipanggil pada tombol revision quotation
         $revisionQuotation = $this->model->findOrFail($request->input('quotation.id'));
         $revisionQuotation->remark = $request->input('quotation.remark');
         $revisionQuotation->is_done = 0;
         $revisionQuotation->save();
-    
+
         $newBoq = $this->model->create([
             'boq_id' => $request()->input('quotation.boq_id'),
             'no_quotation' => $request()->input('quotation.no_quotation'),
@@ -173,24 +185,25 @@ class QuotationRepository
         $newBoq->save();
     }
 
-    function exportQuotationResult($isQuotation, $id) {
+    function exportQuotationResult($isQuotation, $id)
+    {
         $dataQuotation = $this->model->where('id', $id)->with('itemableQuotation.inventoryGood')->first();
-    
+
         if (!$dataQuotation) {
             return response()->json(['message' => 'Sayang Sekali :( Quotation tidak ditemukan'], 404);
         }
-    
+
         $data = $this->boqData->where('id', $dataQuotation->boq_id)->first();
-    
+
         if (!$data) {
             return response()->json(['message' => 'Sayang Sekali :( BoQ tidak ditemukan'], 404);
         }
-    
+
         $dataBoq = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')
             ->where('prospect_id', $data->prospect_id)
             ->get();
 
-            
+
         $index = 1;
         $finalPrice = 0;
 
@@ -205,9 +218,10 @@ class QuotationRepository
         return view($view, compact(
             ...$compact
         ));
-    }    
+    }
 
-    function cancelQuotation(Request $request)  { 
+    function cancelQuotation(Request $request)
+    {
         $quotationId = $request->quo_id;
         $quotationData = $this->model->where('id', $quotationId)->first();
         $quotationData->is_done = 0;

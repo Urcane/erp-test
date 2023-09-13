@@ -148,15 +148,15 @@
                                                         selected disabled>
                                                         {{ $updateDraftBoqData['dataSalesSelected']->name ?? 'Pilih Sales' }}
                                                     </option>
-                                                @endif 
+                                                @endif
                                             </select>
                                         </div>
 
                                         <div class="col-lg-3 col-md-3 col-sm-3 col-8">
                                             <label class="form-label required">Technician</label>
                                             <select class="form-select-solid form-select form-select-solid"
-                                                    data-control="select2" name="technician_id" id="technician_id">
-                                                    {{-- <option
+                                                data-control="select2" name="technician_id" id="technician_id">
+                                                {{-- <option
                                                         value="{{ $updateDraftBoqData['dataTechnicianSelected']->id ?? null }}"
                                                         selected disabled>
                                                         {{ $updateDraftBoqData['dataTechnicianSelected']->name ?? 'Pilih Technician' }}
@@ -169,27 +169,29 @@
                                                         @endforeach
                                                     @endif --}}
 
-                                                    @if (isset($updateDraftBoqData['dataTechnician']))
-                                                        @foreach ($updateDraftBoqData['dataTechnician'] as $Technician)
-                                                            @if ($updateDraftBoqData['dataTechnicianSelected'] && $updateDraftBoqData['dataTechnicianSelected']->id == $Technician->id)
-                                                                <option value="{{ $Technician->id }}" selected>
-                                                                    {{ $Technician->name }} </option>
-                                                            @else
-                                                                <option value="{{ $Technician->id }}">
-                                                                    {{ $Technician->name }} </option>
-                                                            @endif
-                                                        @endforeach
-                                                    @else
-                                                        @if ($updateDraftBoqData['dataTechnicianSelected']) 
-                                                            <option
-                                                                value="{{ $updateDraftBoqData['dataTechnicianSelected']->id ?? null }}"
-                                                                selected disabled>
-                                                                {{ $updateDraftBoqData['dataTechnicianSelected']->name ?? 'Pilih Technician' }}
-                                                            </option> 
+                                                @if (isset($updateDraftBoqData['dataTechnician']))
+                                                    @foreach ($updateDraftBoqData['dataTechnician'] as $Technician)
+                                                        @if (
+                                                            $updateDraftBoqData['dataTechnicianSelected'] &&
+                                                                $updateDraftBoqData['dataTechnicianSelected']->id == $Technician->id)
+                                                            <option value="{{ $Technician->id }}" selected>
+                                                                {{ $Technician->name }} </option>
                                                         @else
-                                                            <option value="">Technician Tidak Ada</option>
+                                                            <option value="{{ $Technician->id }}">
+                                                                {{ $Technician->name }} </option>
                                                         @endif
-                                                    @endif 
+                                                    @endforeach
+                                                @else
+                                                    @if ($updateDraftBoqData['dataTechnicianSelected'])
+                                                        <option
+                                                            value="{{ $updateDraftBoqData['dataTechnicianSelected']->id ?? null }}"
+                                                            selected disabled>
+                                                            {{ $updateDraftBoqData['dataTechnicianSelected']->name ?? 'Pilih Technician' }}
+                                                        </option>
+                                                    @else
+                                                        <option value="">Technician Tidak Ada</option>
+                                                    @endif
+                                                @endif
                                             </select>
                                         </div>
 
@@ -210,22 +212,24 @@
                                                     @endforeach
                                                 @endif --}}
                                                 @if (isset($updateDraftBoqData['dataProcurement']))
-                                                        @foreach ($updateDraftBoqData['dataProcurement'] as $procurement)
-                                                            @if ($updateDraftBoqData['dataProcurementSelected'] &&  $updateDraftBoqData['dataProcurementSelected']->id == $procurement->id)
-                                                                <option value="{{ $procurement->id }}" selected>
-                                                                    {{ $procurement->name }} </option>
-                                                            @else
-                                                                <option value="{{ $procurement->id }}">
-                                                                    {{ $procurement->name }} </option>
-                                                            @endif
-                                                        @endforeach
-                                                    @else
-                                                        <option
-                                                            value="{{ $updateDraftBoqData['dataProcurementSelected']->id ?? null }}"
-                                                            selected disabled>
-                                                            {{ $updateDraftBoqData['dataProcurementSelected']->name ?? 'Pilih Technician' }}
-                                                        </option>
-                                                    @endif 
+                                                    @foreach ($updateDraftBoqData['dataProcurement'] as $procurement)
+                                                        @if (
+                                                            $updateDraftBoqData['dataProcurementSelected'] &&
+                                                                $updateDraftBoqData['dataProcurementSelected']->id == $procurement->id)
+                                                            <option value="{{ $procurement->id }}" selected>
+                                                                {{ $procurement->name }} </option>
+                                                        @else
+                                                            <option value="{{ $procurement->id }}">
+                                                                {{ $procurement->name }} </option>
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                    <option
+                                                        value="{{ $updateDraftBoqData['dataProcurementSelected']->id ?? null }}"
+                                                        selected disabled>
+                                                        {{ $updateDraftBoqData['dataProcurementSelected']->name ?? 'Pilih Technician' }}
+                                                    </option>
+                                                @endif
 
                                             </select>
                                         </div>

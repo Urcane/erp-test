@@ -397,13 +397,7 @@
                                                     <span class="fw-bold">Total Amount : Rp<span
                                                             id="total_item_price"></span></span>
                                                 </div>
-                                            </div>
-                                            {{-- <div class="d-flex justify-content-start mx-20 mb-5">
-                                                <a href="#kt_modal_tambah_boq" data-bs-toggle="modal"
-                                                    class="btn btn-light-info btn-sm mx-3 btn_tambah_boq">
-                                                    <i class="fa-solid fa-plus"></i>Item Baru</a>
-                                                <div id="error-item"></div>
-                                            </div> --}}
+                                            </div> 
                                         @endrole
 
                                     </div>
@@ -591,20 +585,7 @@
                                                         id="total_bundle_price"></span></span>
                                             </div>
                                         </div>
-
-                                        {{-- <div class="d-flex justify-content-start mx-20 mb-5">
-                                            <div class="w-20 me-10">
-                                                <button class="btn btn-light-info btn-sm me-3 btn_bundle" id="btn-bundle">
-                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Internet
-                                                </button>
-                                            </div>
-                                            <div class="w-20 me-10">
-                                                <a href="#kt_modal_tambah_bundle_internet" data-bs-toggle="modal"
-                                                    id="btn-bundle-internet"
-                                                    class="btn btn-light-info btn-sm btn_bundle_internet">
-                                                    <i class="fa-solid fa-plus"></i>Tambah Bundle Baru</a>
-                                            </div>
-                                        </div> --}}
+ 
 
 
                                     </div>
