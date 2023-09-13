@@ -331,7 +331,7 @@ class BoQRepository
             'customerProspect.customer.customerContact',
             'customerProspect.customer.bussinesType',
             'surveyRequest'
-        ])->where("prospect_id", $boqData->prospect_id)->get(); 
+        ])->where("prospect_id", $boqData->prospect_id)->where('id', $boqId)->get(); 
          
         $dataForm = $this->inventoryService->getDataForm(); 
 
