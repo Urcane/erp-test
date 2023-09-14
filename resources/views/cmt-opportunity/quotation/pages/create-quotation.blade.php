@@ -56,7 +56,7 @@
                                             <input type="hidden" id="boq_id" name="boq_id"
                                                 value="{{ $dataBoq['dataCompanyItem'][0]->id }}">
 
-                                            <div class="col-lg-5 col-md-5 col-sm-5 col-8 ">
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-8 ">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
@@ -68,7 +68,7 @@
                                                 <div id="error-prospect"></div>
                                             </div>
 
-                                            <div class="col-lg-5 col-md-5 col-sm-5 col-8 ">
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-8 ">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
@@ -79,6 +79,18 @@
                                                     name="survey_request_id" id="survey_request_id"
                                                     value="{{ $dataBoq['dataCompanyItem'][0]->survey_request_id }}">
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+
+                                            <div class="col-lg-2 col-8 col-sm-2 col-md-2 ">
+                                                <label for="boq_type" class="d-flex align-items-center fs-6 form-label mb-2 required" >
+                                                    <span class="fw-bold">Tipe BOQ</span>
+                                                </label>
+                                                <input type="text" class="form-control form-control-solid" disabled
+                                                    placeholder="{{ $dataBoq['dataCompanyItem'][0]->boq_type }}">
+                                                <input type="hidden" class="form-control form-control-solid" disabled
+                                                    name="boq_type" id="boq_type"
+                                                    value="{{ $dataBoq['dataCompanyItem'][0]->boq_type }}">
+                                                <div id="error-prospect"></div> 
                                             </div>
                                         </div>
 
@@ -312,7 +324,7 @@
                                                             <div class="col-12 col-lg-3 col-md-6">
                                                                 <div
                                                                     class="row justify-content-between align-items-center">
-                                                                    <div class="col-lg-10 col-md-10 col-10 col-sm-10">
+                                                                    <div class="@if($dataBoq['dataCompanyItem'][0]->boq_type == "perangkat") col-lg-5 col-md-5 col-5 col-sm-5 @else col-lg-10 col-md-10 col-10 col-sm-10 @endif">
                                                                         <label class="form-label">Total
                                                                             Price</label>
                                                                         <div class="position-relative">
@@ -323,6 +335,18 @@
                                                                                 value="{{ $relatedItem->total_price ?? null }}" />
                                                                         </div>
                                                                     </div>
+                                                                    @if($dataBoq['dataCompanyItem'][0]->boq_type == "perangkat")
+                                                                    <div class="col-lg-5 col-md-5 col-5 col-sm-5">
+                                                                        <label class="form-label">Markup Price</label>
+                                                                        <div class="position-relative">
+                                                                            <div class="position-absolute top-0"></div>
+                                                                            <input type="number"
+                                                                                class="form-control form-control-solid" disabled
+                                                                                name="content[][markup_price]"
+                                                                                value="{{ $relatedItem->markup_price ?? 0 }}" />
+                                                                        </div>
+                                                                    </div>
+                                                                    @endif
                                                                     <div class="col-lg-2 col-md-2 col-2 col-sm-2">
                                                                         <div class="h-25px"></div>
                                                                         <button type="button"
@@ -398,6 +422,14 @@
                                                             id="total_item_price"></span></span>
                                                 </div>
                                             </div> 
+                                            @if ($dataBoq['dataCompanyItem'][0]->boq_type == "perangkat")
+                                            <div class="d-flex justify-content-end mt-5">
+                                                <div class="w-20 me-10">
+                                                    <span class="fw-bold">Total Markup : Rp<span
+                                                            id="total_markup_price"></span></span>
+                                                </div>
+                                            </div>
+                                            @endif
                                         @endrole
 
                                     </div>
@@ -437,6 +469,7 @@
                                         </div>
                                     </div>
 
+                                    @if ($dataBoq['dataCompanyItem'][0]->boq_type == "internet")
                                     {{--  divv BUNDLE INTERNET --}}
                                     <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
@@ -589,6 +622,7 @@
 
 
                                     </div>
+                                    @endif
 
                                     {{-- SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
                                     <div>
@@ -625,7 +659,7 @@
     </div>
 
     @role('administrator')
-        @include('cmt-opportunity.boq.add.modal-item-detail')
+        @include('cmt-opportunity.boq.add.modal-item-detail', array('boq_type' => $dataBoq['dataCompanyItem'][0]->boq_type))
     @endrole
 
     <script>
@@ -634,7 +668,7 @@
         function updateTotalSumBundle() {
             let totalSumBundle = 0;
 
-            $('.BundleItem input[name^="total_price"]').each(function() {
+            $('.BundleItem input[name^="total_price_"]').each(function() {
                 let totalPriceBundleValue = $(this).val();
 
                 if (totalPriceBundleValue !== "") {
@@ -650,6 +684,7 @@
 
         function updateTotalSum() {
             let totalSum = 0;
+            let totalMarkup = 0;
 
             $('.MultipleItem input[name="content[][total_price]"]').each(function() {
                 let totalPriceValue = $(this).val();
@@ -661,6 +696,22 @@
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
 
             $('#total_item_price').text(totalPriceWithCommas);
+
+            @if ($dataBoq['dataCompanyItem'][0]->boq_type == "perangkat")
+            $('.MultipleItem input[name="content[][markup_price]"]').each(function() {
+                let totalPriceValue = $(this).val();
+
+                if (totalPriceValue !== "") {
+                    totalMarkup += parseInt(totalPriceValue);
+                }
+            });
+
+            const totalMarkupWithCommas = new Intl.NumberFormat("id").format(totalMarkup);
+
+            $('#total_markup_price').text(totalMarkupWithCommas);
+            $('#total_price_bundle').val(totalMarkup);
+            console.log(totalMarkup);
+            @endif
 
         }
 
@@ -752,6 +803,62 @@
 
                     console.log(quotation);
 
+                    @if($dataBoq['dataCompanyItem'][0]->boq_type == "perangkat")
+                    $('.MultipleItem [class^="file-soft-boq-item"]').each(function(index, item) {
+                        // Extract data for the specific item
+                        let id = $(item).find(
+                            'input[name="content[][id]"]').val();
+                        let item_inventory_id = $(item).find(
+                            'input[name="content[][item_inventory_id]"]').val();
+                        let item_detail = $(item).find(
+                            'input[name="content[][item_detail]"]').val();
+                        let quantity = $(item).find('input[name="content[][quantity]"]').val();
+                        let unit = $(item).find('input[name="content[][unit]"]').val();
+                        let purchase_price = $(item).find(
+                            'input[name="content[][purchase_price]"]').val();
+                        let purchase_delivery = $(item).find(
+                            'input[name="content[][purchase_delivery]"]').val();
+                        let purchase_reference = $(item).find(
+                            'input[name="content[][purchase_reference]"]').val();
+                        let delivery_route = $(item).find(
+                            'input[name="content[][delivery_route]"]').val();
+                        let delivery_type = $(item).find(
+                            'input[name="content[][delivery_type]"]').val();
+                        let purchase_from = $(item).find(
+                            'input[name="content[][purchase_from]"]').val();
+                        let payment_type = $(item).find(
+                            'input[name="content[][payment_type]"]').val();
+                        let purchase_validity = $(item).find(
+                            'input[name="content[][purchase_validity]"]').val();
+                        let total_price = $(item).find(
+                            'input[name="content[][total_price]"]').val();
+                        let markup_price = $(item).find(
+                            'input[name="content[][markup_price]"]').val();
+
+                        // Create an object to store the data for the specific item
+                        let itemData = {
+                            id: item_inventory_id,
+                            item_detail: item_detail,
+                            quantity: quantity,
+                            unit: unit,
+                            purchase_price: purchase_price,
+                            purchase_delivery: purchase_delivery,
+                            purchase_reference: purchase_reference,
+                            delivery_route: delivery_route,
+                            delivery_type: delivery_type,
+                            purchase_from: purchase_from,
+                            payment_type: payment_type,
+                            purchase_validity: purchase_validity,
+                            total_price: total_price,
+                            markup_price: markup_price,
+                        };
+                        // Push the itemData object to the items array
+                        bundle.push(itemData);
+                        console.log(bundle);
+                    });
+                    @endif
+
+
                     // Loop through each .file-soft-boq-item div to get the data for each item
                     $('.BundleItem [class^="file-soft-quotation-bundle"]').each(function(index, item) {
                         // Extract data for the specific item
@@ -789,10 +896,10 @@
                             // Handle the response from the server, e.g., show a success message
                             toastr.success(response.message);
                             console.log(response);
-                            // setTimeout(() => {
-                            //     window.location.href =
-                            //         `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
-                            // }, 800);
+                            setTimeout(() => {
+                                window.location.href =
+                                    `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
+                            }, 800);
                         },
                         error: function(error) {
                             // Handle errors if the request fails
@@ -806,7 +913,9 @@
 
             //  Calculate and update total sum on page load
             updateTotalSum();
+            @if ($dataBoq['dataCompanyItem'][0]->boq_type == "internet")
             updateTotalSumBundle();
+            @endif
         });
     </script>
 @endsection

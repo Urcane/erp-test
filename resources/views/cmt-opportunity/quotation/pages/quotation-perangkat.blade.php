@@ -173,8 +173,8 @@
             elementName: "#kt_table_boq_done",
             ajaxLink: "{{ route('com.boq.render.datatable') }}",
             filters: {
-                is_quotation: false,
-                calledFrom: "Perangkat",
+                is_done: true,
+                called_from: "Perangkat",
             },
             columnData: [{
                     data: 'DT_RowIndex'

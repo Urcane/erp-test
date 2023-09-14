@@ -41,17 +41,17 @@
                                 <span class="lh-xxl fw-bolder text-dark d-md-lh-l">Done Internet
                                     Quotation</span>
                             </h3>
-                            <div class="card-toolbar col-12 col-lg-2 col-md-3 col-sm-12 ">
-                                <a href="#kt_modal_cancel_quotation"
-                                    class="btn_cancel_quotation btn btn-md btn-danger w-lg-180px col-12"
-                                    data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal"><i
-                                        class="fa-solid fa-xmark me-3"></i>Cancel Quotation</a>
-                            </div>
-                            <div class="card-toolbar col-12 col-lg-3 col-md-3 col-sm-12 ">
-                                <a href="#kt_modal_see_purchase_order"
-                                    class="btn_see_purchase_order btn btn-md btn-info w-lg-180px col-12"
-                                    data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal"><i
-                                        class="fa-solid fa-file me-3"></i>Lihat Purchase Order</a>
+                            <div class="card-toolbar col-lg-6 col-md-9 col-sm-12">
+                                <div class="row gap-4 w-100 justify-content-end">
+                                    <a href="#kt_modal_see_purchase_order"
+                                        class="btn_see_purchase_order btn btn-sm btn-info col-3" data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal">
+                                        <i class="fa-solid fa-file me-3"></i>Lihat PO
+                                    </a>
+                                    <a href="#kt_modal_cancel_quotation"
+                                        class="btn_cancel_quotation btn btn-sm btn-light-danger col-3" data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal">
+                                        <i class="fa-solid fa-xmark me-3"></i>Cancel Quot
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -62,7 +62,7 @@
                                     <div class="mb-5 mt-3 border-dashed border-gray-100 hover-scroll-x col-lg-12">
                                         {{-- baris prospect company --}}
                                         <div class="d-flex justify-content-around col-12 flex-wrap">
-                                            <div class="col-lg-5 col-8 col-md-5 mb-3">
+                                            <div class="col-lg-4 col-8 col-md-5 mb-3">
                                                 <label for="judul"
                                                     class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
@@ -77,7 +77,7 @@
                                             </div>
 
                                             <!-- Tambahkan atribut "data-url" pada select jenis item -->
-                                            <div class="col-lg-5 col-8 col-md-5 mb-3">
+                                            <div class="col-lg-4 col-8 col-md-5 mb-3">
                                                 <label for="survey_request_id"
                                                     class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
@@ -87,6 +87,18 @@
                                                     value="{{ $dataQuotation['boqFinalData'][0]->survey_request_id }}"
                                                     {{ $dataQuotation['boqFinalData'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+
+                                            <div class="col-lg-2 col-8 col-sm-2 col-md-2 ">
+                                                <label for="boq_type" class="d-flex align-items-center fs-6 form-label mb-2 required" >
+                                                    <span class="fw-bold">Tipe BOQ</span>
+                                                </label>
+                                                <input type="text" class="form-control form-control-solid" disabled
+                                                    placeholder="{{ $dataQuotation['boqFinalData'][0]->boq_type }}">
+                                                <input type="hidden" class="form-control form-control-solid" disabled
+                                                    name="boq_type" id="boq_type"
+                                                    value="{{ $dataQuotation['boqFinalData'][0]->boq_type }}">
+                                                <div id="error-prospect"></div> 
                                             </div>
                                         </div>
 
@@ -251,7 +263,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
+                                                        <div class="col-lg-3 col-8 col-md-5 col-sm-5 mb-3">
                                                             <label for="price_{{ $random_string }}"
                                                                 class="form-label">Price</label>
                                                             <div class="position-relative">
@@ -278,17 +290,33 @@
                                                             </div>
                                                         </div>
 
-                                                        <div class="col-lg-2 col-8 col-md-5 col-sm-5 mb-3">
-                                                            <label for="total_price_{{ $random_string }}"
-                                                                class="form-label">Total
-                                                                Price</label>
-                                                            <div class="position-relative">
-                                                                <div class="position-absolute top-0"></div>
-                                                                <input type="number"
-                                                                    class="total-price form-control form-control-solid"
-                                                                    disabled name="content[][total_price]"
-                                                                    id="total_price_{{ $random_string }}"
-                                                                    value="{{ $relatedItem->total_price ?? null }}" />
+                                                        <div class="col-lg-3 col-8 col-md-5 col-sm-5 mb-3">
+                                                            <div class="row">
+                                                                <div class="@if($dataQuotation['boqFinalData'][0]->boq_type == "perangkat") col-lg-6 col-md-6 col-6 col-sm-6 @else col-lg-12 col-md-12 col-12 col-sm-12 @endif">
+                                                                    <label for="total_price_{{ $random_string }}"
+                                                                        class="form-label">Total
+                                                                        Price</label>
+                                                                    <div class="position-relative">
+                                                                        <div class="position-absolute top-0"></div>
+                                                                        <input type="number"
+                                                                            class="total-price form-control form-control-solid"
+                                                                            disabled name="content[][total_price]"
+                                                                            id="total_price_{{ $random_string }}"
+                                                                            value="{{ $relatedItem->total_price ?? null }}" />
+                                                                    </div>
+                                                                </div>
+                                                                @if($dataQuotation['boqFinalData'][0]->boq_type == "perangkat")
+                                                                <div class="col-lg-6 col-md-6 col-6 col-sm-6">
+                                                                    <label class="form-label">Markup Price</label>
+                                                                    <div class="position-relative">
+                                                                        <div class="position-absolute top-0"></div>
+                                                                        <input type="number"
+                                                                            class="form-control form-control-solid" disabled
+                                                                            name="content[][markup_price]"
+                                                                            value="{{ $relatedItem->markup_price ?? 0 }}" />
+                                                                    </div>
+                                                                </div>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -316,10 +344,18 @@
                                                         id="totalsum"></span></span>
                                             </div>
                                         </div>
+                                        @if ($dataQuotation['boqFinalData'][0]->boq_type == "perangkat")
+                                        <div class="d-flex justify-content-end mx-20 mt-3 mb-5">
+                                            <div class="w-20 me-10">
+                                                <span class="fw-bold">Total Markup : Rp<span
+                                                        id="total_markup_price"></span></span>
+                                            </div>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
 
-
+                                @if ($dataQuotation['boqFinalData'][0]->boq_type == "internet")
                                 {{--  BUNDLE INTERNET --}}
                                 <div class="mb-6 hover-scroll-x border-dashed border-gray-100">
 
@@ -406,15 +442,18 @@
                                     </div>
 
                                 </div>
+                                @endif
 
                                 {{-- TAMBAH, SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
                                 <div>
+                                    @if ($dataQuotation['boqFinalData'][0]->boq_type == "internet")
                                     <div class="d-flex justify-content-end mx-20 mb-5">
                                         <div class="w-20 me-10">
                                             <span class="fw-bold">Total Price Bundle : Rp<span
                                                     id="totalsumbundle"></span></span>
                                         </div>
                                     </div>
+                                    @endif
                                     <div class="d-flex justify-content-center mt-6">
                                         <div class=" me-5">
                                             <a href="" class="btn btn-light-info">Discard</a>
@@ -433,15 +472,16 @@
             </div>
         </div>
     </div>
+    <div id="printerDiv" style="display: none;"></div>
     </div>
 
-    <div id="printerDiv" style="display: hidden;"></div>
     
-    @include('cmt-opportunity.quotation.add.modal-see-purchase-order')
+    @include('cmt-opportunity.quotation.add.modal-see-purchase-order', array('file_po' => $dataQuotation['quotationData']->load('latestPoFile')->latestPoFile))
     @include('cmt-opportunity.quotation.add.modal-cancel-quotation')
     <script>
         function updateTotalSum() {
             var totalSum = 0;
+            let totalMarkup = 0;
 
             // Loop through each item's total price input field and sum up the values
             $('.MultipleItem input[name^="content[][total_price]"]').each(function() {
@@ -454,6 +494,20 @@
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSum);
             // Update the total sum element with the calculated value
             $('#totalsum').text(totalPriceWithCommas);
+
+            @if ($dataQuotation['boqFinalData'][0]->boq_type == "perangkat")
+            $('.MultipleItem input[name="content[][markup_price]"]').each(function() {
+                let totalPriceValue = $(this).val();
+                
+                if (totalPriceValue !== "") {
+                    totalMarkup += parseInt(totalPriceValue);
+                }
+            });
+            
+            const totalMarkupWithCommas = new Intl.NumberFormat("id").format(totalMarkup);
+            
+            $('#total_markup_price').text(totalMarkupWithCommas);
+            @endif
         }
 
         function updateTotalSumBundle() {
@@ -470,7 +524,9 @@
                 }
             });
 
-            if (gpmVal <= totalSumBundle) {
+            const modal = $('input[name="modal"]').val();
+
+            if (gpmVal <= modal) {
                 return document.getElementById("totalsumbundle").textContent = "   MELEBIHI LIMIT GPM";
             }
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
@@ -521,7 +577,7 @@
                         remark: {
                             required: "<span class='fw-semibold fs-8 text-danger'>REMARK Wajib diisi</span>",
                         },
-                    }
+                    },
                     successCallback: function(response) {
                         // Redirect ke halaman yang sesuai setelah operasi berhasil
                         window.location.href =
@@ -533,8 +589,21 @@
 
             $('.print-form').click(function() {
                 const div = document.getElementById("printerDiv");
+
+                @if($dataQuotation['boqFinalData'][0]->boq_type == "perangkat")
+                @php
+                $isQuotation = 'perangkat';
+                @endphp
+                @endif
+
+                @if($dataQuotation['boqFinalData'][0]->boq_type == "internet")
+                @php
+                $isQuotation = 'internet';
+                @endphp
+                @endif
+
                 div.innerHTML =
-                    `<iframe src="{{ route('com.quotation.result.export', ['isQuotation' => 'internet', 'id' => $dataQuotation['quotationData']->id]) }}" onload="this.contentWindow.print();"></iframe>`;
+                    `<iframe src="{{ route('com.quotation.result.export', ['isQuotation' => $isQuotation, 'id' => $dataQuotation['quotationData']->id]) }}" onload="this.contentWindow.print();"></iframe>`;
             });
 
             updateTotalSum();

@@ -142,32 +142,24 @@ class QuotationService
         $dataBoq = $this->quotationRepository->createQuotation($request);  
         $dataUnit = InventoryUnitMaster::get();
         $quotation = $request->query('quotation');
-        if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.create-internet-quotation', compact('dataBoq', 'dataUnit'));
-        } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.create-perangkat-quotation', compact('dataBoq', 'dataUnit'));
-        } 
+        
+        return view('cmt-opportunity.quotation.pages.create-quotation', compact('dataBoq', 'dataUnit'));
+        
     }
 
     function updateQuotation(Request $request)  {
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
         $dataUnit = InventoryUnitMaster::get();
         $quotation = $request->query('quotation'); 
-        if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.update-internet-quotation', compact('dataQuotation', 'dataUnit'));
-        } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.update-perangkat-quotation', compact('dataQuotation', 'dataUnit'));
-        } 
+
+        return view('cmt-opportunity.quotation.pages.update-quotation', compact('dataQuotation', 'dataUnit'));
     }
 
     function reviewDoneQuotation(Request $request) {
         $dataQuotation = $this->quotationRepository->updateQuotation($request);
         $quotation = $request->query('quotation');
-        if ($quotation === 'internet') { 
-            return view('cmt-opportunity.quotation.pages.done-internet-quotation', compact('dataQuotation'));
-        } elseif ($quotation === 'perangkat') { 
-            return view('cmt-opportunity.quotation.pages.done-perangkat-quotation', compact('dataQuotation'));
-        } 
+        return view('cmt-opportunity.quotation.pages.done-quotation', compact('dataQuotation'));
+        
     }
 
     function saveAndStoreQuotation(Request $request) : JsonResponse {

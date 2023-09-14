@@ -26,12 +26,12 @@
                                     <td></td>
                                     <td>{{ $relatedItem->inventoryGood->merk ?? null }}</td>
                                     <td>{{ $relatedItem->quantity ?? null }}</td>
-                                    <td></td>
-                                    <td>{{ $relatedItem->purchase_price ?? null }}</td>
-                                    <td>{{ $relatedItem->total_price ?? null }}</td>
+                                    <td>{{ $relatedItem->unitRelation->name ?? null }}</td>
+                                    <td>{{ $relatedItem->markup_price / $relatedItem->quantity ?? null }}</td>
+                                    <td>{{ $relatedItem->markup_price ?? null }}</td>
                                 </tr>
                                 @php
-                                    $finalPrice += $relatedItem->total_price ?? 0; // Add the item's total price to the total
+                                    $finalPrice += $relatedItem->markup_price ?? 0; // Add the item's total price to the total
                                 @endphp
                             @endforeach
                         @endif

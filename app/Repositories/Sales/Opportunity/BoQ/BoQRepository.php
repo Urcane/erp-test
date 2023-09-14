@@ -73,8 +73,12 @@ class BoQRepository
             $dataBoq = $dataBoq->where('is_done', 0);
         }
 
-        if (isset($request->filters['is_quotation']) && $request->filters['is_quotation'] == 'false') {
-            $dataBoq->where('is_done', 1)->doesntHave('itemableQuotationPart');
+        if (isset($request->filters['called_from']) && $request->filters['called_from'] == 'Internet') {
+            $dataBoq = $dataBoq->where('boq_type', 'internet');
+        }
+
+        if (isset($request->filters['called_from']) && $request->filters['called_from'] == 'Perangkat') {
+            $dataBoq = $dataBoq->where('boq_type', 'perangkat');
         }
         return $dataBoq->with('sales', 'prospect.customer.customerContact', 'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog');
     }
@@ -383,7 +387,7 @@ class BoQRepository
             'customerProspect.customer.customerContact',
             'customerProspect.customer.bussinesType',
             'surveyRequest'
-        ])->where("prospect_id", $boqData->prospect_id)->get(); 
+        ])->where("id", $boqData->id)->get(); 
             
         
         $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1, 2])->get();

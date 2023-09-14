@@ -77,7 +77,7 @@
                                         data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
                                         data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
                                         class="btn btn-md btn-info w-lg-150px btn_review_finman_boq_commercial"
-                                        data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Finman</a>
+                                        data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Admin</a>
                                 @endif
                             </div>
 

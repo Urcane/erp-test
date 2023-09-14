@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Inventory\InventoryGood;
+use App\Models\Inventory\InventoryUnitMaster;
 
 class Item extends Model
 {
@@ -20,6 +21,10 @@ class Item extends Model
 
     public function inventoryGood(): BelongsTo {
         return $this->belongsTo(InventoryGood::class);
+    }
+
+    function unitRelation() : BelongsTo {
+        return $this->belongsTo(InventoryUnitMaster::class, 'unit', 'code');
     }
 
     // function itemable() : MorphTo {
