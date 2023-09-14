@@ -98,7 +98,7 @@
                                         <div class="col-lg-6 mb-3">
                                             <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                    <span class="required fw-bold">Balance</span>
+                                                    <span class="required fw-bold">Balance (Days)</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid"
                                                     placeholder="12" required name="balance">

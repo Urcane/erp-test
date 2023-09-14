@@ -194,16 +194,16 @@ class HCDataSeeder extends Seeder
             ]);
         });
 
-        collect([
-            ["Sakit", "SK"],
-            ["Izin", "IZ"]
-        ])->map(function ($data) {
-            LeaveRequestCategory::create([
-                "name" => $data[0],
-                "code" => $data[1],
-                "effective_date" => "2021-09-09"
-            ]);
-        });
+        // collect([
+        //     ["Sakit", "SK"],
+        //     ["Izin", "IZ"]
+        // ])->map(function ($data) {
+        //     LeaveRequestCategory::create([
+        //         "name" => $data[0],
+        //         "code" => $data[1],
+        //         "effective_date" => "2021-09-09"
+        //     ]);
+        // });
 
         collect([
             [

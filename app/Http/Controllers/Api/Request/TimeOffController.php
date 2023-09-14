@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 use App\Exceptions\NotFoundError;
 
 use App\Models\Attendance\GlobalDayOff;
-use App\Models\Attendance\UserLeaveRequest;
-use App\Models\Attendance\LeaveRequestCategory;
+use App\Models\Leave\UserLeaveRequest;
+use App\Models\Leave\LeaveRequestCategory;
 
 use DateTime;
 use DateInterval;
