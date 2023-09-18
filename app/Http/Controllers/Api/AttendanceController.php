@@ -333,7 +333,7 @@ class AttendanceController extends Controller
 
             // save the file
             $file = $request->file('file');
-            $filename = time() . $file->getClientOriginalName();
+            $filename = time() . "_" . $user->name;
             $file->storeAs('attendance/checkin', $filename, 'public');
 
             if (!$attendanceToday) {
@@ -502,7 +502,7 @@ class AttendanceController extends Controller
 
             // save the file
             $file = $request->file('file');
-            $filename = time() . $file->getClientOriginalName();
+            $filename = time() . "_" . $user->name;
             $file->storeAs('attendance/checkout', $filename, 'public');
 
             if (!$attendanceToday) {

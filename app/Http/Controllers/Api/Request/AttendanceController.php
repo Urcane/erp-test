@@ -146,7 +146,7 @@ class AttendanceController extends RequestController
             // save the file
             if ($request->file) {
                 $file = $request->file('file');
-                $filename = time() . $file->getClientOriginalName();
+                $filename = time() . "_" . $request->user()->name;
                 $file->storeAs('request/attendance/', $filename, 'public');
             }
 

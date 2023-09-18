@@ -21,6 +21,15 @@ class CreateAllTimeoff extends Migration
 
     public function up()
     {
+        Schema::create('leave_quota', function (Blueprint $table) {
+            $table->id();
+            $table->tinyInteger("quotas");
+            $table->tinyInteger("min_works");
+            $table->tinyInteger("carry_amount");
+            $table->tinyInteger("expired"); // Months
+            $table->timestamps();
+        });
+
         Schema::create('leave_request_categories', function (Blueprint $table) {
             $table->id();
             $table->string("name", 100)->unique();
@@ -56,7 +65,7 @@ class CreateAllTimeoff extends Migration
             $table->foreignId("user_id")->constrained("users");
             $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
             $table->smallInteger("quotas");
-            $table->date("expire_date")->nullable();
+            $table->date("expire_date")->nullable()->index();
             $table->smallInteger("carry_quotas")->nullable();
             $table->date("carry_expired")->nullable();
             $table->softDeletes()->index();
@@ -66,8 +75,9 @@ class CreateAllTimeoff extends Migration
         Schema::create('user_leave_quotas', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->tinyInteger("quota");
-            $table->date("expire_date");
+            $table->tinyInteger("quotas");
+            $table->date("expire_date")->index();
+            $table->date("received_at"); // because the created_at dynamic
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -100,6 +110,7 @@ class CreateAllTimeoff extends Migration
             $table->tinyInteger("taken")->nullable();
 
             // use time
+            $table->date("date")->nullable();
             $table->time("working_start")->nullable();
             $table->time("working_end")->nullable();
 
