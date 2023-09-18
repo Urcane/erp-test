@@ -12,12 +12,12 @@ use Yajra\DataTables\Facades\DataTables;
 
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
-use App\Models\Attendance\UserLeaveRequest;
+use App\Models\Leave\UserLeaveRequest;
+use App\Models\Leave\UserLeaveHistory;
 
 use App\Exceptions\AuthorizationError;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
-use App\Models\Attendance\UserLeaveHistory;
 
 use DateTime;
 use DateInterval;

@@ -26,17 +26,26 @@
                         <div class="row rounded border border-2 border-secondary p-3" id="checkin-section">
                             <div class="col-lg-6">
                                 <div id="map-in" style="height: 200px;"></div>
-                                <div id="no-map-in">
-                                    <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-                                        <img class="img-fluid" style="height: 50px"
-                                            src="{{ asset('sense/media/images/no-location.png') }}">
-                                    </div>
+                                <div id="no-map-in" class="text-center">
+                                    <img class="img-fluid" style="max-height: 200px"
+                                    src="{{ asset('sense/media/images/NoLocation.png') }}">
+                                    <p>No Location Recorded</p>
                                 </div>
                             </div>
 
-                            <div class="col-lg-6 d-flex justify-content-center">
-                                <img class="img-fluid" style="max-height: 200px" id="img-in"
-                                    src="">
+                            <div class="col-lg-6">
+                                <div class="col-lg-12 d-flex justify-content-center" id="img-in">
+                                    <img class="img-fluid" style="max-height: 200px"
+                                        src="">
+                                </div>
+
+                                <div class="col-lg-12" id="no-img-in">
+                                    <div class="text-center">
+                                        <img class="img-fluid" style="max-height: 200px"
+                                        src="{{ asset('sense/media/images/NoImage.png') }}">
+                                        <p>No Image Recorded</p>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-lg-12 mb-6"></div>
@@ -93,17 +102,26 @@
                         <div class="row rounded border border-2 border-secondary p-3" id="checkout-section">
                             <div class="col-lg-6">
                                 <div id="map-out" style="height: 200px;"></div>
-                                <div id="no-map-out">
-                                    <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-                                        <img class="img-fluid" style="height: 50px"
-                                            src="{{ asset('sense/media/images/no-location.png') }}">
-                                    </div>
+                                <div id="no-map-out" class="text-center">
+                                    <img class="img-fluid" style="max-height: 200px"
+                                    src="{{ asset('sense/media/images/NoLocation.png') }}">
+                                    <p>No Location Recorded</p>
                                 </div>
                             </div>
 
-                            <div class="col-lg-6 d-flex justify-content-center">
-                                <img class="img-fluid" style="max-height: 200px;" id="img-out"
-                                src="">
+                            <div class="col-lg-6">
+                                <div class="col-lg-12 d-flex justify-content-center" id="img-out">
+                                    <img class="img-fluid" style="max-height: 200px"
+                                        src="">
+                                </div>
+
+                                <div class="col-lg-12" id="no-img-out">
+                                    <div class="text-center">
+                                        <img class="img-fluid" style="max-height: 200px"
+                                        src="{{ asset('sense/media/images/NoImage.png') }}">
+                                        <p>No Image Recorded</p>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-lg-12 mb-6"></div>
@@ -190,13 +208,11 @@
         return newMarker;
     }
 
-    const brokenImage = "{{ asset('sense/media/images/image-slash.png') }}";
-
     const initializeMap = ({
         checkIn,
         checkOut
     }) => {
-        if (checkIn.lattitude) {
+        if (checkIn.lattitude && checkIn.longitude) {
             $('#no-map-in').hide();
             $('#map-in').show();
             changeMarker(markerIn, mapIn, checkIn);
@@ -205,7 +221,7 @@
             $('#map-in').hide();
         }
 
-        if (checkOut.lattitude) {
+        if (checkOut.lattitude && checkOut.longitude) {
             $('#no-map-out').hide();
             $('#map-out').show();
             changeMarker(markerOut, mapOut, checkOut);
@@ -217,15 +233,23 @@
 
     const setImage = ({ checkIn, checkOut }) => {
         if (checkIn.file != "#") {
-            $('#img-in').attr("src", checkIn.file);
+            $('#img-in').show();
+            $('#no-img-in').hide();
+            $('#img-in img').attr("src", checkIn.file);
         } else {
-            $('#img-in').attr("src", brokenImage);
+            $('#img-in').hide();
+            $('#no-img-in').show();
+            $('#img-in img').attr("src", "");
         }
 
         if (checkOut.file != "#") {
-            $('#img-out').attr("src", checkOut.file);
+            $('#img-out').show();
+            $('#no-img-out').hide();
+            $('#img-out img').attr("src", checkOut.file);
         } else {
-            $('#img-out').attr("src", brokenImage);
+            $('#img-out').hide();
+            $('#no-img-out').show();
+            $('#img-out img').attr("src", "");
         }
     };
 
@@ -292,7 +316,10 @@
     };
 
     $(document).ready(function () {
-        mapIn = L.map('map-in').setView([51.505, -0.09], 16);
+        mapIn = L.map('map-in', {
+            dragging: false,
+            scrollWheelZoom: false
+        }).setView([51.505, -0.09], 16);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -300,7 +327,10 @@
 
         markerIn = L.marker([51.5, -0.09]).addTo(mapIn);
 
-        mapOut = L.map('map-out').setView([51.505, -0.09], 16);
+        mapOut = L.map('map-out', {
+            dragging: false,
+            scrollWheelZoom: false
+        }).setView([51.505, -0.09], 16);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -98,7 +98,7 @@
                                         <div class="col-lg-6 mb-3">
                                             <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                    <span class="required fw-bold">Balance</span>
+                                                    <span class="required fw-bold">Balance (Days)</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid"
                                                     placeholder="12" required name="balance">
@@ -268,7 +268,7 @@
                 $('[name="duration"]').val("");
 
                 $('#minus_amount').prop("disabled", true);
-                $('#minus_amount').prop('checked', false);
+                $('#minus_amount').prop('checked', false).trigger('change');
                 $('[name="minus_amount"]').prop("disabled", true);
                 $('[name="minus_amount"]').val("");
             } else {
@@ -307,20 +307,24 @@
                 $('[name="minus_amount"]').prop("disabled", !$(this).is(':checked'));
                 $('[name="minus_amount"]').val("");
             });
-            $('#minus_amount').trigger('change');
 
             $('#max_request').on('change', function() {
                 $('[name="max_request"]').prop("disabled", !$(this).is(':checked'));
                 $('[name="max_request"]').val("");
             });
-            $('#max_request').trigger('change');
 
             $('#duration').on('change', function() {
                 $('[name="duration"]').prop("disabled", !$(this).is(':checked'));
                 $('[name="duration"]').val("");
             });
 
-            $('#duration').trigger('change');
+            $('#use_quota').on('change', function() {
+                if (!$('[name="use_quota"]').is(':checked') && $('#minus_amount').is(':checked')) {
+                    $('[name="minus_amount"]').prop("disabled", !$(this).is(':checked'));
+                    $('[name="minus_amount"]').val("");
+                    $('#minus_amount').prop('checked', false);
+                }
+            });
 
             $('#time_off_form').on('submit', function(event) {
                 event.preventDefault();
@@ -342,12 +346,16 @@
                 });
             });
 
-            $('#unlimited_balance').prop('checked', true).trigger('change')
+            $('#unlimited_balance').prop('checked', true).trigger('change');
 
             onUnlimitedBalanceChange();
             onExpireChange();
             onHalfDayChange();
-        })
+
+            $('#max_request').trigger('change');
+            $('#minus_amount').trigger('change');
+            $('#duration').trigger('change');
+        });
     </script>
 
 @endsection
