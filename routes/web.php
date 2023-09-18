@@ -258,6 +258,7 @@ Route::middleware(['auth'])->group(function () {
                         Route::get('/table/schedule', 'getTableSchedule')->name('hc.setting.getTableSchedule');
                         Route::post('/create/update/schedule', 'createUpdateSchedule')->name('hc.setting.schedule.createUpdate');
                         Route::post('/delete/schedule', 'deleteSchedule')->name('hc.setting.schedule.delete');
+                        Route::post('/delete/schedule/shift', 'deleteShiftFromSchedule')->name('hc.setting.schedule.delete.shift');
                         Route::post('/get/shift', 'getShift')->name('hc.setting.schedule.get.shift');
 
                         Route::get('/table/shift', 'getTableShift')->name('hc.setting.getTableShift');
