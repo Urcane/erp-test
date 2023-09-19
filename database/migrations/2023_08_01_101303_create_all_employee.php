@@ -72,7 +72,6 @@ class CreateAllEmployee extends Migration
             $table->boolean('override_national_holiday')->default(false);
             $table->boolean('override_company_holiday')->default(false);
             $table->boolean('override_special_holiday')->default(false);
-            $table->boolean('flexible')->default(false);
             $table->softDeletes()->index();
             $table->timestamps();
         });

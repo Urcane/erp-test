@@ -172,7 +172,6 @@ class HCDataSeeder extends Seeder
                 'override_national_holiday' => 0,
                 'override_company_holiday' => 0,
                 'override_special_holiday' => 0,
-                'flexible' => 0,
             ]);
         });
 
