@@ -12,7 +12,7 @@ use Illuminate\Http\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 
 use App\Constants;
-use App\Models\Attendance\LeaveRequestCategory;
+use App\Models\Leave\LeaveRequestCategory;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Division;

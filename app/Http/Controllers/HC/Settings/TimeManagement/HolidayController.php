@@ -18,8 +18,13 @@ class HolidayController extends TimeManagementController
             $query = new GlobalDayOff;
 
             if ($request->range_date) {
-                $range_date = collect(explode('-', $request->range_date))->map(function ($item) {
-                    return Carbon::parse($item)->toDateString();
+                $range_date = collect(explode('-', $request->range_date))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    if ($key === 0) {
+                        return $date->startOfDay()->toDateTimeString();
+                    } else {
+                        return $date->endOfDay()->toDateTimeString();
+                    }
                 })->toArray();
 
                 $query = $query->whereBetween('start_date', $range_date)->orderBy('start_date', 'asc');

@@ -15,12 +15,10 @@
                 <thead class="">
                     <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                         <th class="text-center w-50px">#</th>
-                        <th class="w-150px">Create Date</th>
-                        <th class="w-150px">Start Date</th>
-                        <th class="w-150px">End Date</th>
-                        <th class="w-150px">Taken</th>
-                        <th class="w-50px">Request Code</th>
-                        <th class="w-150px">Approval Line</th>
+                        <th class="w-150px">Created Date</th>
+                        <th class="w-150px">Request</th>
+                        <th class="w-100px">Code</th>
+                        <th class="w-200px">Approval Line</th>
                         <th class="w-150px">Status</th>
                         <th class="w-100px">#</th>
                     </tr>
@@ -151,13 +149,7 @@
                         data: 'created_at'
                     },
                     {
-                        data: 'start_date'
-                    },
-                    {
-                        data: 'end_date'
-                    },
-                    {
-                        data: 'taken'
+                        data: 'name'
                     },
                     {
                         data: 'code'
@@ -175,7 +167,7 @@
 
                 columnDefs: [
                     {
-                        targets: 0,
+                        targets: "_all",
                         searchable : false,
                         className: 'text-center',
                     },
@@ -196,6 +188,8 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
+                    $('#time_off_request_modal').modal('hide');
+                    $("#time_off_request_modal").trigger("reset");
                     timeOffTable.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },

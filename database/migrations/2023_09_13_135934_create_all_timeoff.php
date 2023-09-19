@@ -39,10 +39,11 @@ class CreateAllTimeoff extends Migration
             $table->boolean("show_in_request")->default(0);
             $table->tinyInteger("max_request")->nullable();
             $table->boolean("use_quota")->default(0);
+            $table->tinyInteger("min_notice")->default(0); // Minimal tanggal pengajuan cuti
 
             // use balance
             $table->boolean("unlimited_balance")->default(1);
-            $table->tinyInteger("min_works")->default(12);
+            $table->tinyInteger("min_works")->default(0);
             $table->smallInteger("balance")->nullable();
             $table->enum("balance_type", $this->constants->balance_type)->default($this->constants->balance_type[0]);
             $table->boolean("expired")->default(0);

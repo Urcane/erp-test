@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\HC\Settings\TimeManagement;
 
 use Illuminate\Http\Request;
-use App\Models\Attendance\LeaveRequestCategory;
+use App\Models\Leave\LeaveRequestCategory;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
@@ -30,24 +30,20 @@ class TimeOffController extends TimeManagementController
 
                     return $formattedDate;
                 })
-                ->addColumn('expired_date', function ($query) {
-                    $expiredDate = $query->expired_date;
-
-                    if (!$expiredDate) {
-                        return "Permanent";
+                ->addColumn('show_in_request', function ($query) {
+                    if ($query->show_in_request) {
+                        return '<div class="d-inline-flex justify-content-center align-items-center bg-success rounded-circle"
+                        style="width: 20px; height: 20px;">
+                        <i class="fas fa-check text-white"></i>
+                    </div>';
                     }
-
-                    $date = Carbon::createFromFormat('Y-m-d', $expiredDate);
-                    $formattedDate = $date->format('d-m-Y');
-
-                    return $formattedDate;
+                    return '<div class="d-inline-flex justify-content-center align-items-center bg-danger rounded-circle"
+                    style="width: 20px; height: 20px;">
+                    <i class="fas fa-times text-white"></i>
+                </div>';
                 })
-                // ->addColumn('assigned_to', function($data) {
-                //     $count = $data->users->count();
-                //     return $count;
-                // })
                 ->addIndexColumn()
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'show_in_request'])
                 ->make(true);
         }
     }
@@ -72,7 +68,7 @@ class TimeOffController extends TimeManagementController
                 'show_in_request' => 'nullable',
                 'max_request' => 'integer|nullable|min:0|max:255',
                 'use_quota' => 'nullable',
-                'unlimited_balance' => 'boolean',
+                'unlimited_balance' => 'nullable',
 
                 // use balance
                 'min_works' => 'nullable',
@@ -97,11 +93,11 @@ class TimeOffController extends TimeManagementController
                 'name' => $request->name,
                 'code' => $request->code,
                 'effective_date' => $request->effective_date,
-                'attachment' => $request->input('attachment', 0),
-                'show_in_request' => $request->input('show_in_request', 0),
+                'attachment' => (int) $request->attachment,
+                'show_in_request' => (int) $request->show_in_request,
                 'max_request' => $request->max_request,
-                'use_quota' => $request->input('use_quota', 0),
-                'unlimited_balance' => $request->input('unlimited_balance', 0),
+                'use_quota' => (int) $request->use_quota,
+                'unlimited_balance' => (int) $request->unlimited_balance,
             ];
 
             if (!$request->unlimited_balance) {
@@ -109,7 +105,7 @@ class TimeOffController extends TimeManagementController
                     'min_works' => $request->min_works,
                     'balance' => $request->balance,
                     'balance_type' => $request->balance_type,
-                    'expired' => $request->input('expired', 0),
+                    'expired' => (int) $request->expire,
                 ];
             }
 

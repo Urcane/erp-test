@@ -8,16 +8,18 @@
             onclick='onDetailButtonClick({
         checkIn: {
             time: "{{ $checkIn }}",
-            lattitude: "{{ $userAttendances->check_in_latitude ?? "-" }}",
-            longitude: "{{ $userAttendances->check_in_longitude ?? "-" }}",
+            lattitude: "{{ $userAttendances->check_in_latitude ?? "" }}",
+            longitude: "{{ $userAttendances->check_in_longitude ?? "" }}",
             file: "{{ $userAttendances->check_in_file ? asset("storage/attendance/checkin/$userAttendances->check_in_file") : "#" }}"
         },
         checkOut: {
             time: "{{ $checkOut }}",
-            lattitude: "{{ $userAttendances->check_out_latitude ?? "-" }}",
-            longitude: "{{ $userAttendances->check_out_longitude ?? "-" }}",
+            lattitude: "{{ $userAttendances->check_out_latitude ?? "" }}",
+            longitude: "{{ $userAttendances->check_out_longitude ?? "" }}",
             file: "{{ $userAttendances->check_out_file ? asset("storage/attendance/checkout/$userAttendances->check_out_file") : "#" }}"
         },
+        shift: "{{ $userAttendances->shift_name ?? "-" }}",
+        attendanceCode: "{{ $attendanceCode }}"
     })'>
             <a href="#detail_attendance" class="dropdown-item py-2" data-bs-toggle="modal">
                 <i class="fa-solid fa-eye me-3"></i>

@@ -60,15 +60,23 @@
                                                 <span class="fw-bold">Use Quota (This Time Off Will take leave quota)</span>
                                             </label>
                                         </div>
+                                        <div class="fs-7 fw-semibold text-danger ms-1" id="use_quota_warn">
+                                            <i class="fa-solid fa-triangle-exclamation text-warning me-1"></i>
+                                            Kategori ini akan memakai kuota cuti pegawai
+                                        </div>
                                     </div>
 
                                     <div class="col-lg-12 mb-3">
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input checkbox-real"
-                                                name="unlimited_balance" id="unlimited_balance">
+                                            <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
+                                                name="unlimited_balance" id="unlimited_balance" checked>
                                             <label class="fs-7 form-check-label mb-2" for="unlimited_balance">
                                                 <span class="fw-bold">This time off has unlimited balance</span>
                                             </label>
+                                        </div>
+                                        <div class="fs-7 fw-semibold text-danger ms-1" id="unlimited_balance_warn">
+                                            <i class="fa-solid fa-triangle-exclamation text-warning me-1"></i>
+                                            Kategori ini akan memiliki kuota pemakaian
                                         </div>
                                     </div>
 
@@ -133,7 +141,21 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-12 mb-3">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
+                                                name="show_in_request" id="show_in_request" checked>
+                                            <label class="fs-7 form-check-label mb-2" for="show_in_request">
+                                                <span class="fw-bold">Show in request</span>
+                                            </label>
+                                        </div>
+                                        <div class="fs-7 fw-semibold text-danger ms-1" id="show_in_request_warn">
+                                            <i class="fa-solid fa-triangle-exclamation text-warning me-1"></i>
+                                            Kategori ini tidak akan ditampilkan kepada pegawai!
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6">
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
                                                 name="half_day" id="half_day">
@@ -142,16 +164,8 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
-                                                name="show_in_request" id="show_in_request">
-                                            <label class="fs-7 form-check-label mb-2" for="show_in_request">
-                                                <span class="fw-bold">Show in request</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
+
+                                    <div class="col-lg-6">
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
                                                 name="attachment" id="attachment">
@@ -163,7 +177,7 @@
 
                                     <div class="col-lg-12 mb-3"></div>
 
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <div class="form-check mb-2">
                                             <input type="checkbox" class="form-check-input checkbox-real"
                                                 id="max_request">
@@ -175,7 +189,21 @@
                                             name="max_request">
                                     </div>
 
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" class="form-check-input checkbox-real"
+                                                id="min_notice">
+                                            <label class="fs-7 form-check-label mb-2" for="min_notice">
+                                                <span class="fw-bold">Minimum Notice (Days)</span>
+                                            </label>
+                                        </div>
+                                        <input type="number" class="form-control form-control-solid" placeholder="0"
+                                            name="min_notice">
+                                    </div>
+
+                                    <div class="col-lg-12 mb-3"></div>
+
+                                    <div class="col-lg-6">
                                         <div class="form-check mb-2">
                                             <input type="checkbox" class="form-check-input checkbox-real" id="duration">
                                             <label class="fs-7 form-check-label mb-2" for="duration">
@@ -186,7 +214,7 @@
                                             placeholder="0 ( In days )" name="duration">
                                     </div>
 
-                                    <div class="col-lg-4">
+                                    <div class="col-lg-6">
                                         <div class="form-check mb-2">
                                             <input type="checkbox" class="form-check-input checkbox-real"
                                                 id="minus_amount">
@@ -224,6 +252,7 @@
         const onUnlimitedBalanceChange = () => {
             if ($('#unlimited_balance').is(':checked')) {
                 $('#use_balance_section').hide();
+                $('#unlimited_balance_warn').hide();
                 $('#expire').prop('checked', false).trigger('change');
 
                 $('[name="balance_type"]').prop('required', false);
@@ -235,6 +264,7 @@
                 $('[name="balance"]').val("");
             } else {
                 $('#use_balance_section').show();
+                $('#unlimited_balance_warn').fadeIn();
 
                 $('[name="balance_type"]').prop('required', true);
                 $('[name="min_works"]').prop('required', true);
@@ -318,11 +348,30 @@
                 $('[name="duration"]').val("");
             });
 
+            $('#min_notice').on('change', function() {
+                $('[name="min_notice"]').prop("disabled", !$(this).is(':checked'));
+                $('[name="min_notice"]').val("");
+            });
+
             $('#use_quota').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#use_quota_warn').fadeIn();
+                } else {
+                    $('#use_quota_warn').hide();
+                }
+
                 if (!$('[name="use_quota"]').is(':checked') && $('#minus_amount').is(':checked')) {
                     $('[name="minus_amount"]').prop("disabled", !$(this).is(':checked'));
                     $('[name="minus_amount"]').val("");
                     $('#minus_amount').prop('checked', false);
+                }
+            });
+
+            $('#show_in_request').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#show_in_request_warn').hide();
+                } else {
+                    $('#show_in_request_warn').fadeIn();
                 }
             });
 
@@ -338,6 +387,9 @@
                     data: formData,
                     success: function(data) {
                         toastr.success(data.message, 'Selamat 🚀 !');
+                        setTimeout(function() {
+                            window.location.href = "{{ route("hc.setting.timeoff.index") }}";
+                        }, 2500);
                     },
                     error: function(xhr, status, error) {
                         const data = xhr.responseJSON;
@@ -346,8 +398,6 @@
                 });
             });
 
-            $('#unlimited_balance').prop('checked', true).trigger('change');
-
             onUnlimitedBalanceChange();
             onExpireChange();
             onHalfDayChange();
@@ -355,6 +405,10 @@
             $('#max_request').trigger('change');
             $('#minus_amount').trigger('change');
             $('#duration').trigger('change');
+            $('#use_quota').trigger('change');
+            $('#min_notice').trigger('change');
+            $('#show_in_request').trigger('change');
+            $('#unlimited_balance').trigger('change');
         });
     </script>
 

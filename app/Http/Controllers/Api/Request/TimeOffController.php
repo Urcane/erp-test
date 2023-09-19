@@ -132,7 +132,7 @@ class TimeOffController extends RequestController
 
             if ($request->file) {
                 $file = $request->file('file');
-                $filename = time() . "_" . $request->user()->name;
+                $filename = time() . "_" . $request->user()->name . "." . $file->getClientOriginalExtension();
                 $file->storeAs('request/timeoff/', $filename, 'public');
             }
 

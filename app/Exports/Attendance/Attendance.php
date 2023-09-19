@@ -31,8 +31,13 @@ class Attendance
     {
         $userAttendances = null;
 
-        $range_date = collect(explode('-', $this->rangeDate))->map(function ($item) {
-            return Carbon::parse($item)->toDateString();
+        $range_date = collect(explode('-', $this->rangeDate))->map(function ($item, $key) {
+            $date = Carbon::parse($item);
+            if ($key === 0) {
+                return $date->startOfDay()->toDateTimeString();
+            } else {
+                return $date->endOfDay()->toDateTimeString();
+            }
         })->toArray();
 
         if ($this->userId) {

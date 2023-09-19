@@ -32,7 +32,7 @@
                             <div class="col-lg-6 mt-3 mb-3">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input checkbox-real" id="check_in_box">
-                                    <label class="fs-6 form-check-label mb-2" for="permanent">
+                                    <label class="fs-6 form-check-label mb-2" for="check_in_box">
                                         <span class="fw-bold">Check In</span>
                                     </label>
                                 </div>
@@ -42,7 +42,7 @@
                             <div class="col-lg-6 mt-3 mb-3">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input checkbox-real" id="check_out_box">
-                                    <label class="fs-6 form-check-label mb-2" for="permanent">
+                                    <label class="fs-6 form-check-label mb-2" for="check_out_box">
                                         <span class="fw-bold">Check Out</span>
                                     </label>
                                 </div>

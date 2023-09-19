@@ -187,9 +187,14 @@ class ShiftController extends RequestController
                 });
             }
 
-            $range_date = $request->filters['filterDate'] ? collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
-                return Carbon::parse($item)->toDateString();
-            })->toArray() : [Carbon::now()->format('Y-m-d'), Carbon::now()->format('Y-m-d')];
+            $range_date = $request->filters['filterDate']
+                ? collect(explode('-', $request->filters['filterDate']))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    return $key === 0
+                        ? $date->startOfDay()->toDateTimeString()
+                        : $date->endOfDay()->toDateTimeString();
+                })->toArray()
+                : [Carbon::now()->startOfDay()->toDateTimeString(), Carbon::now()->endOfDay()->toDateTimeString()];
 
             $allSummaries = $query->select('status', DB::raw('count(*) as total'))
                 ->groupBy('status')
@@ -213,7 +218,9 @@ class ShiftController extends RequestController
 
             $allSummaries = formatter($allSummaries);
             $viewDate = formatter($viewDate);
-            $viewDate["rangeDate"] = $range_date;
+            $viewDate["rangeDate"] = array_map(function ($date) {
+                return Carbon::parse($date)->format('d/m/Y');
+            }, $range_date);
 
             return response()->json([
                 "status" => "success",
@@ -280,13 +287,18 @@ class ShiftController extends RequestController
             };
 
             if ($request->filters['filterDate']) {
-                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
-                    return Carbon::parse($item)->toDateString();
+                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    if ($key === 0) {
+                        return $date->startOfDay()->toDateTimeString();
+                    } else {
+                        return $date->endOfDay()->toDateTimeString();
+                    }
                 })->toArray();
 
-                $query = $query->whereBetween('created_at', $range_date)->orderBy('date', 'desc');
+                $query = $query->whereBetween('created_at', $range_date)->orderBy('created_at', 'desc');
             } else {
-                $query = $query->orderBy('date', 'desc');
+                $query = $query->orderBy('created_at', 'desc');
             }
 
             $filterDivisi = $request->filters['filterDivisi'];
@@ -324,8 +336,13 @@ class ShiftController extends RequestController
                 ->addColumn('nip', function ($query) {
                     return $query->user->userEmployment->employee_id;
                 })
-                ->addColumn('date', function ($query) {
-                    return $query->date;
+                ->addColumn('created_at', function ($query) {
+                    $date = explode(" ", explode("T", $query->created_at)[0])[0];
+
+                    $date = Carbon::createFromFormat('Y-m-d', $date);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
                 })
                 ->addColumn('branch', function ($query) {
                     return $query->user->userEmployment->subBranch->name;

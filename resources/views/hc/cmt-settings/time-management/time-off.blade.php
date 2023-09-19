@@ -39,9 +39,9 @@
                                             <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                 <th class="text-center w-50px">#</th>
                                                 <th class="w-150px">Name</th>
-                                                <th class="w-150px">Code</th>
+                                                <th class="w-100px">Code</th>
                                                 <th class="w-150px">Effective Date</th>
-                                                <th class="w-150px">Expire Date</th>
+                                                <th class="w-150px">Show Request</th>
                                                 {{-- <th class="w-150px">Expired Date</th>
                                                 <th class="w-150px">Assigned To</th> --}}
                                                 <th class="w-100px">#</th>
@@ -126,18 +126,16 @@
                         data: 'effective_date'
                     },
                     {
-                        data: 'expired_date'
+                        data: 'show_in_request'
                     },
-                    // { data: 'effective_date'},
-                    // { data: 'expired_date'},
-                    // { data: 'assigned_to'},
                     {
                         data: 'action'
                     },
                 ],
 
                 columnDefs: [{
-                    targets: 0,
+                    targets: [0, 3, 4, 5],
+                    searchable : false,
                     className: 'text-center',
                 }],
             });

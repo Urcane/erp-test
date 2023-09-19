@@ -234,8 +234,13 @@ class AttendanceController extends Controller
             $userAttendances = UserAttendance::has('user.userEmployment')->with('user.userEmployment');
 
             if ($request->filters['filterDate']) {
-                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
-                    return Carbon::parse($item)->toDateString();
+                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    if ($key === 0) {
+                        return $date->startOfDay()->toDateTimeString();
+                    } else {
+                        return $date->endOfDay()->toDateTimeString();
+                    }
                 })->toArray();
 
                 $userAttendances = $userAttendances->whereBetween('date', $range_date);
@@ -289,8 +294,13 @@ class AttendanceController extends Controller
             $userAttendances = UserAttendance::has('user.userEmployment')->with('user.userEmployment');
 
             if ($request->filters['filterDate']) {
-                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
-                    return Carbon::parse($item)->toDateString();
+                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    if ($key === 0) {
+                        return $date->startOfDay()->toDateTimeString();
+                    } else {
+                        return $date->endOfDay()->toDateTimeString();
+                    }
                 })->toArray();
 
                 $userAttendances = $userAttendances->whereBetween('date', $range_date);
@@ -460,8 +470,13 @@ class AttendanceController extends Controller
                 ->has('user.userEmployment')->with('user.userEmployment');
 
             if ($request->dateFilter) {
-                $range_date = collect(explode('-', $request->dateFilter))->map(function ($item) {
-                    return Carbon::parse($item)->toDateString();
+                $range_date = collect(explode('-', $request->dateFilter))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    if ($key === 0) {
+                        return $date->startOfDay()->toDateTimeString();
+                    } else {
+                        return $date->endOfDay()->toDateTimeString();
+                    }
                 })->toArray();
 
                 $userAttendances = $userAttendances->whereBetween('date', $range_date);
@@ -490,8 +505,13 @@ class AttendanceController extends Controller
             $userAttendances = UserAttendance::has('user.userEmployment')->with('user.userEmployment');
 
             if ($request->filters['filterDate']) {
-                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item) {
-                    return Carbon::parse($item)->toDateString();
+                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    if ($key === 0) {
+                        return $date->startOfDay()->toDateTimeString();
+                    } else {
+                        return $date->endOfDay()->toDateTimeString();
+                    }
                 })->toArray();
 
                 $userAttendances = $userAttendances->whereBetween('date', $range_date)->orderBy('date', 'desc');
@@ -672,8 +692,13 @@ class AttendanceController extends Controller
                 ->has('user.userEmployment')->with('user.userEmployment');;
 
             if ($range_date = $request->dateFilter) {
-                $range_date = collect(explode('-', $request->dateFilter))->map(function ($item) {
-                    return Carbon::parse($item)->toDateString();
+                $range_date = collect(explode('-', $request->dateFilter))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    if ($key === 0) {
+                        return $date->startOfDay()->toDateTimeString();
+                    } else {
+                        return $date->endOfDay()->toDateTimeString();
+                    }
                 })->toArray();
 
                 $userAttendances = $userAttendances->whereBetween('date', $range_date)->orderBy('date', 'desc');
@@ -797,8 +822,11 @@ class AttendanceController extends Controller
                 ->addColumn('action', function ($userAttendances) {
                     $checkIn = $userAttendances->check_in ? date('H:i', strtotime($userAttendances->check_in)) : null;
                     $checkOut = $userAttendances->check_out ? date('H:i', strtotime($userAttendances->check_out)) : null;
+                    $attendanceCode = $this->constants->attendanceCodeTranslator($userAttendances->attendance_code) ?? null;
 
-                    return view('hc.cmt-attendance.components.detail-menu', compact(['checkIn', 'checkOut', 'userAttendances']));
+                    return view('hc.cmt-attendance.components.detail-menu', compact([
+                        'checkIn', 'checkOut', 'userAttendances', 'attendanceCode'
+                    ]));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])

@@ -146,6 +146,10 @@
     </div>
 </div>
 
+<script>
+    const attendanceCodeEnum = @json($constants->attendance_code_view);
+</script>
+
 @can('HC:edit-delete-attendance')
     @include('hc.cmt-attendance.modal.edit-attendance')
     @include('hc.cmt-attendance.modal.delete-attendance')
@@ -155,8 +159,6 @@
 @include('hc.cmt-attendance.modal.export-attendance')
 
 <script>
-    const attendanceCodeEnum = @json($constants->attendance_code_view);
-
     const getTime = (timeStr, format) => moment(timeStr, format);
 
     const checkTimeIsAfter = (time1, time2) => {

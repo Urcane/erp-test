@@ -16,6 +16,7 @@ use App\Models\Leave\LeaveRequestCategory;
 use App\Models\Leave\UserLeaveCategoryQuota;
 use App\Models\Leave\UserLeaveQuota;
 use App\Models\Leave\UserLeaveRequest;
+use App\Models\User;
 use Carbon\Carbon;
 
 use DateTime;
@@ -75,234 +76,125 @@ class TimeOffController extends RequestController
         return $taken;
     }
 
-    private function _validateAndMakeQuery()
+    // this also updating the UserLeaveCategoryQuota
+    private function _validateAndMakeQuery(User $user, Request $request)
     {
+        $today = Carbon::now()->format('Y-m-d');
 
-    }
+        $leaveCategory = LeaveRequestCategory::whereId($request->leave_request_category_id)->first();
 
-    public function makeRequest(Request $request)
-    {
-        try {
-            // $request->validate([
-            //     "start_date" => "required|date",
-            //     "end_date" => "required|date|after:start_date",
-            //     "leave_request_category_id" => "required",
-            //     "file" => "required",
-            //     "notes" => "nullable|string"
-            // ]);
+        if (!$leaveCategory) {
+            throw new NotFoundError("Kategori Request Tidak ditemukan");
+        }
 
-            $user = Auth::user();
-            $today = Carbon::now()->format('Y-m-d');
+        if ($leaveCategory->attachment && !$request->file) {
+            throw new InvariantError("Attachment Required!");
+        }
 
-            $query = [
-                "user_leave_category_quotas" => null,
-                "user_leave_quotas" => null,
-                "user_leave_requests" => null
-            ];
+        if (!$user->userEmployment) {
+            throw new InvariantError("Anda tidak memiliki data pegawai");
+        }
 
-            $leaveCategory = LeaveRequestCategory::whereId($request->leave_request_category_id)->first();
+        $requestDuration = 1;
+        $balanceTaken = 1;
 
-            if (!$leaveCategory) {
-                throw new NotFoundError("Kategori Request Tidak ditemukan");
+        if (!$leaveCategory->half_day) {
+            $requestDuration = Carbon::parse($request->start_date)->diffInDays(Carbon::parse($request->end_date)) + 1;
+
+            $balanceTaken = $leaveCategory->duration
+                ? ($leaveCategory->minus_amount ?? $leaveCategory->duration)
+                : $this->_getTakenDays($request->start_date, $request->end_date);
+        }
+
+        if ($leaveCategory->min_notice) {
+            if (Carbon::parse($request->start_date)->gt(Carbon::now()->addDays($leaveCategory->min_notice))) {
+                throw new InvariantError("Request anda dibawah minimal pengajuan, Cobalah kontak admin!");
             }
+        }
 
-            if ($leaveCategory->attachment && !$request->file) {
-                throw new InvariantError("Attachment Required!");
+        if ($leaveCategory->max_request) {
+            // TO DO : Get History Request
+            if ($leaveCategory->duration && $leaveCategory->duration * $leaveCategory->max_request > $requestDuration) {
+                throw new InvariantError("Request $leaveCategory->name melebihi batas $leaveCategory->max_request");
             }
-
-            if (!$user->userEmployment) {
-                throw new InvariantError("Anda tidak memiliki data pegawai");
+            if ($requestDuration > $leaveCategory->max_request) {
+                throw new InvariantError("Request $leaveCategory->name melebihi batas $leaveCategory->max_request");
             }
+        }
 
-            $requestDuration = 1;
-            $balanceTaken = 1;
+        if (!$leaveCategory->unlimited_balance) {
+            $adjustmentMonth = $leaveCategory->balance_type == $this->constants->balance_type[0] ? 12 : 1;
 
-            if (!$leaveCategory->half_day) {
-                $requestDuration = Carbon::parse($request->start_date)->diffInDays(Carbon::parse($request->end_date)) + 1;
+            if ($leaveCategory->expire_date) {
+                $userCategoryQuota = UserLeaveCategoryQuota::where("leave_request_category_id", $leaveCategory->id)
+                    ->where("user_id", $user->id)
+                    ->orderBy("expire_date", "desc")
+                    ->first();
 
-                $balanceTaken = $leaveCategory->duration
-                    ? ($leaveCategory->minus_amount ?? $leaveCategory->duration)
-                    : $this->_getTakenDays($request->start_date, $request->end_date);
-            }
+                if ($userCategoryQuota) {
+                    if ($userCategoryQuota->expire_date > $today) {
+                        if ($leaveCategory->balance_type == $this->constants->balance_type[0]) {
+                            $expireDate = Carbon::parse($userCategoryQuota->expire_date)->addMonths(12);
+                        } else {
+                            $expireDate = Carbon::parse($userCategoryQuota->expire_date)->addMonth();
+                        }
 
-            if ($leaveCategory->max_request) {
-                // TO DO : Get History Request
-                if ($leaveCategory->duration && $leaveCategory->duration * $leaveCategory->max_request > $requestDuration) {
-                    throw new InvariantError("Request $leaveCategory->name melebihi batas $leaveCategory->max_request");
-                }
-                if ($requestDuration > $leaveCategory->max_request) {
-                    throw new InvariantError("Request $leaveCategory->name melebihi batas $leaveCategory->max_request");
-                }
-            }
+                        if ($leaveCategory->carry_amount && $userCategoryQuota->quotas > 0) {
+                            if ($expireDate->lt($today)) {
+                                $carryExpireDate = $expireDate;
 
-            if (!$leaveCategory->unlimited_balance) {
-                $adjustmentMonth = $leaveCategory->balance_type == $this->constants->balance_type[0] ? 12 : 1;
+                                while ($expireDate->lt($today)) {
+                                    $carryExpireDate = $expireDate;
+                                    $expireDate = $expireDate->addMonths($adjustmentMonth);
+                                }
 
-                if ($leaveCategory->expire_date) {
-                    $userCategoryQuota = UserLeaveCategoryQuota::where("leave_request_category_id", $leaveCategory->id)
-                        ->where("user_id", $user->id)
-                        ->orderBy("expire_date", "desc")
-                        ->first();
-
-                    if ($userCategoryQuota) {
-                        if ($userCategoryQuota->expire_date > $today) {
-                            if ($leaveCategory->balance_type == $this->constants->balance_type[0]) {
-                                $expireDate = Carbon::parse($userCategoryQuota->expire_date)->addMonths(12);
+                                $carryAmount = $leaveCategory->carry_amount;
+                                $carryExpireDate = $carryExpireDate->addMonth($leaveCategory->carry_expired);
                             } else {
-                                $expireDate = Carbon::parse($userCategoryQuota->expire_date)->addMonth();
+                                $carryExpireDate = Carbon::parse($userCategoryQuota->expire_date)->addMonth($leaveCategory->carry_expired);
+                                $carryAmount = min($userCategoryQuota->quotas, $leaveCategory->carry_amount);
+
+                                $userCategoryQuota->update([
+                                    "quotas" => $userCategoryQuota->quotas - $carryAmount
+                                ]);
                             }
 
-                            if ($leaveCategory->carry_amount && $userCategoryQuota->quotas > 0) {
-                                if ($expireDate->lt($today)) {
-                                    $carryExpireDate = $expireDate;
+                            UserLeaveCategoryQuota::create([
+                                "user_id" => $user->id,
+                                "leave_request_category_id" => $leaveCategory->id,
+                                "quotas" => $leaveCategory->balance,
+                                "expired_date" => $expireDate,
+                                "carry_quotas" => $carryAmount,
+                                "carry_expired" => $carryExpireDate
+                            ]);
 
-                                    while ($expireDate->lt($today)) {
-                                        $carryExpireDate = $expireDate;
-                                        $expireDate = $expireDate->addMonths($adjustmentMonth);
-                                    }
-
-                                    $carryAmount = $leaveCategory->carry_amount;
-                                    $carryExpireDate = $carryExpireDate->addMonth($leaveCategory->carry_expired);
-                                } else {
-                                    $carryExpireDate = Carbon::parse($userCategoryQuota->expire_date)->addMonth($leaveCategory->carry_expired);
-                                    $carryAmount = min($userCategoryQuota->quotas, $leaveCategory->carry_amount);
-
-                                    $userCategoryQuota->update([
-                                        "quotas" => $userCategoryQuota->quotas - $carryAmount
-                                    ]);
-                                }
-
-                                $newUserLeaveCategoryQuota = UserLeaveCategoryQuota::create([
-                                    "user_id" => $user->id,
-                                    "leave_request_category_id" => $leaveCategory->id,
-                                    "quotas" => $leaveCategory->balance,
-                                    "expired_date" => $expireDate,
-                                    "carry_quotas" => $carryAmount,
-                                    "carry_expired" => $carryExpireDate
-                                ]);
-
-                                if ($leaveCategory->balance + $carryAmount < $balanceTaken) {
-                                    throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
-                                }
-
-                                if ($carryAmount > $balanceTaken) {
-                                    $query["user_leave_category_quotas"] = [
-                                        "id" => $newUserLeaveCategoryQuota->id,
-                                        "carry_quotas" => $carryAmount - $balanceTaken
-                                    ];
-                                } else if ($carryAmount = $balanceTaken) {
-                                    $query["user_leave_category_quotas"] = [
-                                        "id" => $newUserLeaveCategoryQuota->id,
-                                        "carry_quotas" => 0
-                                    ];
-                                } else {
-                                    $query["user_leave_category_quotas"] = [
-                                        "id" => $newUserLeaveCategoryQuota->id,
-                                        "quotas" => $leaveCategory->balance - ($balanceTaken - $carryAmount),
-                                        "carry_quotas" => 0
-                                    ];
-                                }
-                            } else {
-                                $newUserLeaveCategoryQuota = UserLeaveCategoryQuota::create([
-                                    "user_id" => $user->id,
-                                    "leave_request_category_id" => $leaveCategory->id,
-                                    "quotas" => $leaveCategory->balance,
-                                    "expired_date" => $expireDate,
-                                ]);
-
-                                if ($leaveCategory->balance < $balanceTaken) {
-                                    throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
-                                }
-
-                                $query["user_leave_category_quotas"] = [
-                                    "id" => $newUserLeaveCategoryQuota->id,
-                                    "quotas" => $leaveCategory->balance - $balanceTaken,
-                                ];
+                            if ($leaveCategory->balance + $carryAmount < $balanceTaken) {
+                                throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
                             }
                         } else {
-                            if ($userCategoryQuota->carry_quotas
-                                && $userCategoryQuota->carry_quotas > 0
-                                && $userCategoryQuota->carry_expired < $today
-                            ) {
-                                if ($userCategoryQuota->quotas + $userCategoryQuota->carry_quotas < $balanceTaken) {
-                                    throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
-                                }
+                            UserLeaveCategoryQuota::create([
+                                "user_id" => $user->id,
+                                "leave_request_category_id" => $leaveCategory->id,
+                                "quotas" => $leaveCategory->balance,
+                                "expired_date" => $expireDate,
+                            ]);
 
-                                if ($userCategoryQuota->carry_quotas > $balanceTaken) {
-                                    $query["user_leave_category_quotas"] = [
-                                        "id" => $userCategoryQuota->id,
-                                        "carry_quotas" => $userCategoryQuota->carry_quotas - $balanceTaken
-                                    ];
-                                } else if ($carryAmount = $balanceTaken) {
-                                    $query["user_leave_category_quotas"] = [
-                                        "id" => $userCategoryQuota->id,
-                                        "carry_quotas" => 0
-                                    ];
-                                } else {
-                                    $query["user_leave_category_quotas"] = [
-                                        "id" => $userCategoryQuota->id,
-                                        "quotas" => $leaveCategory->balance - ($balanceTaken - $carryAmount),
-                                        "carry_quotas" => 0
-                                    ];
-                                }
-                            } else {
-                                if ($userCategoryQuota->quotas < $balanceTaken) {
-                                    throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
-                                }
-
-                                // TO DO
+                            if ($leaveCategory->balance < $balanceTaken) {
+                                throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
                             }
                         }
                     } else {
-                        if (
-                            Carbon::parse($user->userEmployment->join_date)
-                                ->addMonths($leaveCategory->min_works)
-                                ->gt($today)
+                        if ($userCategoryQuota->carry_quotas
+                            && $userCategoryQuota->carry_quotas > 0
+                            && $userCategoryQuota->carry_expired < $today
                         ) {
-                            throw new InvariantError("Anda tidak memiliki kuota $leaveCategory->name!");
-                        }
-
-                        $expireDate = Carbon::parse($user->userEmployment->join_date)->addMonths($leaveCategory->min_works);
-                        $carryAmount = 0;
-                        $carryExpireDate = $expireDate;
-
-                        if ($expireDate->lt($today)) {
-                            $carryAmount = $leaveCategory->carry_amount;
-                            while ($expireDate->lt($today)) {
-                                $carryExpireDate = $expireDate;
-                                $expireDate = $expireDate->addMonths($adjustmentMonth);
+                            if ($userCategoryQuota->quotas + $userCategoryQuota->carry_quotas < $balanceTaken) {
+                                throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
                             }
-                        }
-
-                        $newUserLeaveCategoryQuota = UserLeaveCategoryQuota::create([
-                            "user_id" => $user->id,
-                            "leave_request_category_id" => $leaveCategory->id,
-                            "quotas" => $leaveCategory->balance,
-                            "expired_date" => $expireDate,
-                            "carry_quotas" => $carryAmount,
-                            "carry_expired" => $carryExpireDate
-                        ]);
-
-                        if ($carryAmount + $leaveCategory->balance < $balanceTaken) {
-                            throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
-                        }
-
-                        if ($carryAmount > $balanceTaken) {
-                            $query["user_leave_category_quotas"] = [
-                                "id" => $newUserLeaveCategoryQuota->id,
-                                "carry_quotas" => $carryAmount - $balanceTaken
-                            ];
-                        } else if ($carryAmount = $balanceTaken) {
-                            $query["user_leave_category_quotas"] = [
-                                "id" => $newUserLeaveCategoryQuota->id,
-                                "carry_quotas" => 0
-                            ];
                         } else {
-                            $query["user_leave_category_quotas"] = [
-                                "id" => $newUserLeaveCategoryQuota->id,
-                                "quotas" => $leaveCategory->balance - ($balanceTaken - $carryAmount),
-                                "carry_quotas" => 0
-                            ];
+                            if ($userCategoryQuota->quotas < $balanceTaken) {
+                                throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                            }
                         }
                     }
                 } else {
@@ -314,103 +206,123 @@ class TimeOffController extends RequestController
                         throw new InvariantError("Anda tidak memiliki kuota $leaveCategory->name!");
                     }
 
-                    $newQuota = $leaveCategory->balance;
                     $expireDate = Carbon::parse($user->userEmployment->join_date)->addMonths($leaveCategory->min_works);
+                    $carryAmount = 0;
+                    $carryExpireDate = $expireDate;
 
                     if ($expireDate->lt($today)) {
+                        $carryAmount = $leaveCategory->carry_amount;
                         while ($expireDate->lt($today)) {
-                            $newQuota += $leaveCategory->balance;
+                            $carryExpireDate = $expireDate;
                             $expireDate = $expireDate->addMonths($adjustmentMonth);
                         }
                     }
 
-                    $newUserLeaveCategoryQuota = UserLeaveCategoryQuota::create([
+                    UserLeaveCategoryQuota::create([
                         "user_id" => $user->id,
                         "leave_request_category_id" => $leaveCategory->id,
-                        "quotas" => $newQuota,
+                        "quotas" => $leaveCategory->balance,
                         "expired_date" => $expireDate,
+                        "carry_quotas" => $carryAmount,
+                        "carry_expired" => $carryExpireDate
                     ]);
 
-                    if ($newQuota < $balanceTaken) {
+                    if ($carryAmount + $leaveCategory->balance < $balanceTaken) {
                         throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
                     }
-
-                    $query["user_leave_category_quotas"] = [
-                        "id" => $newUserLeaveCategoryQuota->id,
-                        "quotas" => $newQuota - $balanceTaken,
-                    ];
                 }
-            }
-
-            if ($leaveCategory->use_quota) {
-                $userLeaveQuotas = UserLeaveQuota::where("user_id", $user->id)
-                    ->whereNot("quotas", 0)
-                    ->whereDate("expire_date", ">=", $today)
-                    ->orderBy("expired_date", "asc")
-                    ->get();
-
-                if (!$userLeaveQuotas) {
-                    throw new InvariantError("Kuota Cuti habis/tidak ditemukan, Cobalah perbaharui di profile anda!");
-                }
-
-                if ($userLeaveQuotas->sum("quotas") < $balanceTaken) {
-                    throw new InvariantError("Kuota cuti anda tidak mencukupi, membutuhkan ($balanceTaken) hari");
-                }
-
-                $leaveQuotaTaken = $balanceTaken;
-
-                $query["user_leave_quotas"] = [];
-
-                foreach ($userLeaveQuotas as $userLeaveQuota) {
-                    if ($leaveQuotaTaken <= 0) {
-                        break;
-                    }
-
-                    if ($userLeaveQuota->quotas >= $leaveQuotaTaken) {
-                        $query["user_leave_quotas"][] = [
-                            "id" => $userLeaveQuota->id,
-                            "quotas" => $userLeaveQuota->quotas - $leaveQuotaTaken
-                        ];
-                        $leaveQuotaTaken = 0;
-                    } else {
-                        $query["user_leave_quotas"][] = [
-                            "id" => $userLeaveQuota->id,
-                            "quotas" => 0
-                        ];
-                        $leaveQuotaTaken -= $userLeaveQuota->quotas;
-                    }
-                }
-            }
-
-            if ($leaveCategory->half_day) {
-                $query["user_leave_requests"] = [
-                    "start_date" => $request->start_date,
-                    "end_date" => $request->end_date,
-                    "taken" => $balanceTaken,
-                ];
             } else {
-                $query["user_leave_requests"] = [
-                    "date" => $request->date,
-                    "working_start" => $request->working_start,
-                    "working_end" => $request->working_end,
-                ];
+                if (
+                    Carbon::parse($user->userEmployment->join_date)
+                        ->addMonths($leaveCategory->min_works)
+                        ->gt($today)
+                ) {
+                    throw new InvariantError("Anda tidak memiliki kuota $leaveCategory->name!");
+                }
+
+                $newQuota = $leaveCategory->balance;
+                $expireDate = Carbon::parse($user->userEmployment->join_date)->addMonths($leaveCategory->min_works);
+
+                if ($expireDate->lt($today)) {
+                    while ($expireDate->lt($today)) {
+                        $newQuota += $leaveCategory->balance;
+                        $expireDate = $expireDate->addMonths($adjustmentMonth);
+                    }
+                }
+
+                UserLeaveCategoryQuota::create([
+                    "user_id" => $user->id,
+                    "leave_request_category_id" => $leaveCategory->id,
+                    "quotas" => $newQuota,
+                    "expired_date" => $expireDate,
+                ]);
+
+                if ($newQuota < $balanceTaken) {
+                    throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                }
             }
+        }
+
+        if ($leaveCategory->use_quota) {
+            $userLeaveQuotas = UserLeaveQuota::where("user_id", $user->id)
+                ->whereNot("quotas", 0)
+                ->whereDate("expire_date", ">=", $today)
+                ->orderBy("expired_date", "asc")
+                ->get();
+
+            if (!$userLeaveQuotas) {
+                throw new InvariantError("Kuota Cuti habis/tidak ditemukan, Cobalah perbaharui di profile anda!");
+            }
+
+            if ($userLeaveQuotas->sum("quotas") < $balanceTaken) {
+                throw new InvariantError("Kuota cuti anda tidak mencukupi, membutuhkan ($balanceTaken) hari");
+            }
+        }
+
+        if ($leaveCategory->half_day) {
+            return [
+                "start_date" => $request->start_date,
+                "end_date" => $request->end_date,
+                "taken" => $balanceTaken,
+            ];
+        } else {
+            return [
+                "date" => $request->date,
+                "working_start" => $request->working_start,
+                "working_end" => $request->working_end,
+            ];
+        }
+    }
+
+    public function makeRequest(Request $request)
+    {
+        try {
+            $request->validate([
+                "leave_request_category_id" => "required",
+                "file" => "required",
+                "notes" => "nullable|string",
+                "start_date" => "nullable|date",
+                "end_date" => "nullable|date|after_or_equal:start_date",
+                "working_start" => "nullable|date_format:H:i:s",
+                "working_end" => "nullable|date_format:H:i:s",
+            ]);
+
+            $user = Auth::user();
+
+            $query = $this->_validateAndMakeQuery($user, $request);
 
             if ($request->file) {
                 $file = $request->file('file');
-                $filename = time() . "_" . $user->name;
+                $filename = time() . "_" . $user->name . "." . $file->getClientOriginalExtension();
                 $file->storeAs('request/timeoff/', $filename, 'public');
             }
 
-            // UserLeaveRequest::create([
-            //     "user_id" => Auth::user()->id,
-            //     "leave_request_category_id" => $request->leave_request_category_id,
-            //     "file" => $filename ?? null,
-            //     "start_date" => $request->start_date,
-            //     "end_date" => $request->end_date,
-            //     "taken" => $taken,
-            //     "notes" => $request->notes,
-            // ]);
+            UserLeaveRequest::create([
+                "user_id" => Auth::user()->id,
+                "leave_request_category_id" => $request->leave_request_category_id,
+                "file" => $filename ?? null,
+                "notes" => $request->notes,
+            ] + $query);
 
             return response()->json([
                 "status" => "success",
@@ -493,8 +405,8 @@ class TimeOffController extends RequestController
 
                     return $leaveRequest->user->userEmployment->approvalLine->name ?? "-";
                 })
-                ->addColumn('taken', function ($leaveRequest) {
-                    return "$leaveRequest->taken Day(s)";
+                ->addColumn('name', function ($leaveRequest) {
+                    return $leaveRequest->leaveRequestCategory->name;
                 })
                 ->addColumn('code', function ($leaveRequest) {
                     return $leaveRequest->leaveRequestCategory->code;
