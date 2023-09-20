@@ -52,7 +52,7 @@ class ProfileController extends Controller
     }
 
     public function profile($id) {
-        /** @var App\Models\User $auth */
+        /** @var \App\Models\User $auth */
         $auth = Auth::user();
         if (!($auth->hasPermissionTo("HC:view-employee") || $id == $auth->id)) {
             abort(403);
