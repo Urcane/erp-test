@@ -177,7 +177,9 @@
 
         $('#modal_create_time_off_request').submit(function(event) {
             event.preventDefault();
+            const disabled = $(this).find('input:disabled').prop('disabled', false);
             var formData = new FormData($(this)[0]);
+            disabled.prop('disabled', true);
             $.ajax({
                 url: "{{ route('req.time-off.create') }}",
                 type: 'POST',
@@ -189,7 +191,8 @@
                 },
                 success: function(data) {
                     $('#time_off_request_modal').modal('hide');
-                    $("#time_off_request_modal").trigger("reset");
+                    $("#modal_create_time_off_request")[0].reset();
+                    $('select[name="leave_request_category_id"]').trigger('change');
                     timeOffTable.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },

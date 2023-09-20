@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             HolidaySeeder::class,
             HCDataSeeder::class,
+            LeaveSeeder::class
         ]);
     }
 }

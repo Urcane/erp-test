@@ -8,6 +8,16 @@
         return dateTime === "-" ? "-" : dateTime.replace(" ", " at ");
     }
 
+    const calculateDateDifference = (startDateStr, endDateStr) => {
+        const startDate = new Date(startDateStr);
+        const endDate = new Date(endDateStr);
+
+        const timeDifference = endDate.getTime() - startDate.getTime();
+        const daysDifference = Math.floor(timeDifference / (1000 * 3600 * 24)) + 1;
+
+        return daysDifference;
+    }
+
     const approveStatusEnum = @json($approveStatus);
 </script>
 

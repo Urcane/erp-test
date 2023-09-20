@@ -172,6 +172,17 @@
                 $('[name="date"]').prop('required', true);
                 $('[name="start_date"]').prop('required', false);
                 $('[name="end_date"]').prop('required', false);
+
+                if (min_notice) {
+                    $('[name="date"]').attr('min', moment().add(min_notice, 'days').format('YYYY-MM-DD'));
+                    $('#min_notice_warn').fadeIn();
+                    $('#min_notice_amount').text(min_notice);
+                } else {
+                    $('#min_notice_warn').hide();
+                    $('[name="date"]').removeAttr('min');
+                }
+
+                $('#duration_warn').hide();
             } else {
                 $('#half_day_section').hide();
                 $('#date_section').show();

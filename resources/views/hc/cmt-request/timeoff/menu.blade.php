@@ -9,15 +9,24 @@
         level: '{{$query->user->getRoleNames()[0]}}',
         taken: '{{$query->taken}}',
         file: '{{$query->file}}',
-        type: '{{$query->leaveRequestCategory->name}} ({{$query->leaveRequestCategory->code}})',
         created: '{{$query->created_at}}',
         notes: '{{$query->notes ?? '-'}}',
         status: '{{$query->status}}',
         startDate: '{{$query->start_date}}',
         endDate: '{{$query->end_date}}',
+        date: '{{$query->date}}',
         fileName: '{{$fileName}}',
         fileLink: '{{$fileLink}}',
-        comment: '{{$query->comment}}'
+        comment: '{{$query->comment}}',
+        leaveRequestCategory: {
+            name: '{{$query->leaveRequestCategory->name}}',
+            halfday: '{{$query->leaveRequestCategory->half_day}}',
+            code: '{{$query->leaveRequestCategory->code}}',
+            working: {
+                start: '{{$query->working_start ?? '-'}}',
+                end: '{{$query->working_end ?? '-'}}',
+            }
+        }
     })">
     <i class="fas fa-eye mr-1"></i> Details
 </a>

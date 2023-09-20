@@ -22,6 +22,7 @@ use Carbon\Carbon;
 use DateTime;
 use DateInterval;
 use DatePeriod;
+use Illuminate\Validation\Rule;
 
 class TimeOffController extends RequestController
 {
@@ -281,15 +282,15 @@ class TimeOffController extends RequestController
 
         if ($leaveCategory->half_day) {
             return [
-                "start_date" => $request->start_date,
-                "end_date" => $request->end_date,
-                "taken" => $balanceTaken,
-            ];
-        } else {
-            return [
                 "date" => $request->date,
                 "working_start" => $request->working_start,
                 "working_end" => $request->working_end,
+            ];
+        } else {
+            return [
+                "start_date" => $request->start_date,
+                "end_date" => $request->end_date,
+                "taken" => $balanceTaken,
             ];
         }
     }
@@ -299,12 +300,38 @@ class TimeOffController extends RequestController
         try {
             $request->validate([
                 "leave_request_category_id" => "required",
-                "file" => "required",
+                "file" => "nullable",
                 "notes" => "nullable|string",
-                "start_date" => "nullable|date",
-                "end_date" => "nullable|date|after_or_equal:start_date",
-                "working_start" => "nullable|date_format:H:i:s",
-                "working_end" => "nullable|date_format:H:i:s",
+                "start_date" => [
+                    "nullable",
+                    "date",
+                    "before_or_equal:end_date",
+                    "required_if:date,!=,null"
+                ],
+                "end_date" => [
+                    "nullable",
+                    "date",
+                    "after_or_equal:start_date",
+                    "required_if:date,!=,null"
+                ],
+                "date" => [
+                    "nullable",
+                    "date",
+                    "required_if:start_date,=,null",
+                    "required_if:end_date,=,null"
+                ],
+                'working_start' => [
+                    'nullable',
+                    Rule::requiredIf(function () use ($request) {
+                        return !empty($request->date) && empty($request->working_end);
+                    }),
+                ],
+                'working_end' => [
+                    'nullable',
+                    Rule::requiredIf(function () use ($request) {
+                        return !empty($request->date) && empty($request->working_start);
+                    }),
+                ],
             ]);
 
             $user = Auth::user();
@@ -317,12 +344,14 @@ class TimeOffController extends RequestController
                 $file->storeAs('request/timeoff/', $filename, 'public');
             }
 
-            UserLeaveRequest::create([
+            $query += [
                 "user_id" => Auth::user()->id,
                 "leave_request_category_id" => $request->leave_request_category_id,
                 "file" => $filename ?? null,
                 "notes" => $request->notes,
-            ] + $query);
+            ];
+
+            UserLeaveRequest::create($query);
 
             return response()->json([
                 "status" => "success",
