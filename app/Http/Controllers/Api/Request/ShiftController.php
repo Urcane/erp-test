@@ -27,6 +27,24 @@ class ShiftController extends RequestController
                 ->with(['workingShift', 'approvalLine'])
                 ->paginate($itemCount, ['*'], 'page', $page);
 
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "currentPage" => $userShiftRequest->currentPage(),
+                    "itemCount" => $itemCount,
+                    "userShiftRequest" => $userShiftRequest->items(),
+                ],
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getCurrentShift(Request $request)
+    {
+        try {
             $currentShift = null;
 
             $userAttendance = UserAttendance::where('user_id', $request->user()->id)
@@ -68,12 +86,7 @@ class ShiftController extends RequestController
 
             return response()->json([
                 "status" => "success",
-                "data" => [
-                    "currentPage" => $userShiftRequest->currentPage(),
-                    "itemCount" => $itemCount,
-                    "userShiftRequest" => $userShiftRequest->items(),
-                    "currentShift" => $currentShift,
-                ],
+                "data" => $currentShift,
             ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);

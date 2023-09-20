@@ -118,6 +118,7 @@ Route::middleware('auth:sanctum')->group(function () {
                 Route::controller(Request\ShiftController::class)->group(function () {
                     Route::post('/get', 'getRequest');
                     Route::post('/get/detail', 'getRequestById');
+                    Route::get('/get/current/shift', 'getCurrentShift');
 
                     Route::post('/make', 'makeRequest');
                     Route::post('/cancle', 'cancelRequest');
