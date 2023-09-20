@@ -31,17 +31,6 @@ class CreateAllAttendance extends Migration
             $table->timestamps();
         });
 
-        Schema::create('leave_request_categories', function (Blueprint $table) {
-            $table->id();
-            $table->string("name", 60);
-            $table->string("code", 8);
-            $table->date("effective_date");
-            $table->date("expired_date")->nullable();
-            $table->tinyInteger("leave_quota_reduction")->default(0);
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
         Schema::create('user_attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
@@ -85,41 +74,6 @@ class CreateAllAttendance extends Migration
             $table->text("file")->nullable();
             $table->timestamp("check_in")->nullable();
             $table->timestamp("check_out")->nullable();
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
-        Schema::create('user_leave_quotas', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("user_id")->constrained("users");
-            $table->tinyInteger("leave_quota");
-            $table->timestamps();
-        });
-
-        Schema::create('user_leave_requests', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("approval_line")->nullable()->constrained("users"); // approval_line as history (who change the status)
-            $table->enum("status", $this->constants->approve_status)->default($this->constants->approve_status[0]);
-            $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
-            $table->date("start_date");
-            $table->date("end_date");
-            $table->tinyInteger("taken");
-            $table->text("notes")->nullable();
-            $table->text("comment")->nullable();
-            $table->text("file")->nullable();
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
-        Schema::create('user_leave_histories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("user_id")->constrained("users");
-            $table->string("leave_category", 60);
-            $table->string("code", 10);
-            $table->string("approval_line", 100);
-            $table->date("date")->index();
-            $table->boolean("quota_taken")->default(0);
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -177,12 +131,8 @@ class CreateAllAttendance extends Migration
     public function down()
     {
         Schema::dropIfExists('global_day_offs');
-        Schema::dropIfExists('leave_request_categories');
 
         Schema::dropIfExists('user_attendances');
-        Schema::dropIfExists('user_leave_quotas');
-        Schema::dropIfExists('user_leave_requests');
-        Schema::dropIfExists('user_leave_quota_histories');
         Schema::dropIfExists('user_overtime_requests');
         Schema::dropIfExists('user_shift_requests');
         Schema::dropIfExists('user_attendance_requests');

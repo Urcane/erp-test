@@ -27,7 +27,7 @@
                                     <td>{{ $relatedItem->inventoryGood->good_name ?? null }}</td>
                                     <td></td>
                                     <td>{{ $relatedItem->quantity ?? null }}</td>
-                                    <td>{{ $relatedItem->inventoryGood->merk ?? null }}</td>
+                                    <td>{{ $relatedItem->unitRelation->name ?? null }}</td>
                                     <td>{{ $relatedItem->purchase_price ?? null }}</td>
                                     <td>{{ $relatedItem->total_price ?? null }}</td>
                                 </tr>

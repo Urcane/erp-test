@@ -11,8 +11,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->tower_available_status == "1") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="tower_available_status" value="1">
-                        <label class="fs-6 form-check-label" for="tower_available_status">
+                        type="radio" id="tower_available_status_1" class="form-check-input" placeholder="" name="tower_available_status" value="1">
+                        <label class="fs-6 form-check-label" for="tower_available_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
@@ -20,8 +20,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->tower_available_status == "0") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="tower_available_status" value="0">
-                        <label class="fs-6 form-check-label" for="tower_available_status">
+                        type="radio" id="tower_available_status_0" class="form-check-input" placeholder="" name="tower_available_status" value="0">
+                        <label class="fs-6 form-check-label" for="tower_available_status_0">
                             <span class="fw-bold">Belum ada</span>
                         </label>
                     </div>
@@ -62,8 +62,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->closest_tower_status == "1") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="closest_tower_status" value="1">
-                        <label class="fs-6 form-check-label" for="closest_tower_status">
+                        type="radio" id="closest_tower_status_1" class="form-check-input" placeholder="" name="closest_tower_status" value="1">
+                        <label class="fs-6 form-check-label" for="closest_tower_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
@@ -71,8 +71,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->closest_tower_status == "0") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="closest_tower_status" value="0">
-                        <label class="fs-6 form-check-label" for="closest_tower_status">
+                        type="radio" id="closest_tower_status_0" class="form-check-input" placeholder="" name="closest_tower_status" value="0">
+                        <label class="fs-6 form-check-label" for="closest_tower_status_0">
                             <span class="fw-bold">Belum ada</span>
                         </label>
                     </div>
@@ -95,16 +95,16 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->thunder_protector_status == "1") checked="checked" @endif @endif type="radio" class="form-check-input" placeholder="" name="thunder_protector_status" value="1">
-                        <label class="fs-6 form-check-label" for="thunder_protector_status">
+                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->thunder_protector_status == "1") checked="checked" @endif @endif type="radio" id="thunder_protector_status_1" class="form-check-input" placeholder="" name="thunder_protector_status" value="1">
+                        <label class="fs-6 form-check-label" for="thunder_protector_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->thunder_protector_status == "0") checked="checked" @endif @endif type="radio" class="form-check-input" placeholder="" name="thunder_protector_status" value="0">
-                        <label class="fs-6 form-check-label" for="thunder_protector_status">
+                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->thunder_protector_status == "0") checked="checked" @endif @endif type="radio" id="thunder_protector_status_0" class="form-check-input" placeholder="" name="thunder_protector_status" value="0">
+                        <label class="fs-6 form-check-label" for="thunder_protector_status_0">
                             <span class="fw-bold">Belum ada</span>
                         </label>
                     </div>
@@ -127,16 +127,16 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->grounding_status == "1") checked="checked" @endif @endif type="radio" class="form-check-input" placeholder="" name="grounding_status" value="1">
-                        <label class="fs-6 form-check-label" for="grounding_status">
+                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->grounding_status == "1") checked="checked" @endif @endif type="radio" id="grounding_status_1" class="form-check-input" placeholder="" name="grounding_status" value="1">
+                        <label class="fs-6 form-check-label" for="grounding_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->grounding_status == "0") checked="checked" @endif @endif type="radio" class="form-check-input" placeholder="" name="grounding_status" value="0">
-                        <label class="fs-6 form-check-label" for="grounding_status">
+                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->grounding_status == "0") checked="checked" @endif @endif type="radio" id="grounding_status_0" class="form-check-input" placeholder="" name="grounding_status" value="0">
+                        <label class="fs-6 form-check-label" for="grounding_status_0">
                             <span class="fw-bold">Belum ada</span>
                         </label>
                     </div>
@@ -159,16 +159,16 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->cable_tray_status == "1") checked="checked" @endif @endif type="radio" class="form-check-input" placeholder="" name="cable_tray_status" value="1">
-                        <label class="fs-6 form-check-label" for="cable_tray_status">
+                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->cable_tray_status == "1") checked="checked" @endif @endif type="radio" id="cable_tray_status_1" class="form-check-input" placeholder="" name="cable_tray_status" value="1">
+                        <label class="fs-6 form-check-label" for="cable_tray_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->cable_tray_status == "0") checked="checked" @endif @endif type="radio" class="form-check-input" placeholder="" name="cable_tray_status" value="0">
-                        <label class="fs-6 form-check-label" for="cable_tray_status">
+                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->cable_tray_status == "0") checked="checked" @endif @endif type="radio" id="cable_tray_status_0" class="form-check-input" placeholder="" name="cable_tray_status" value="0">
+                        <label class="fs-6 form-check-label" for="cable_tray_status_0">
                             <span class="fw-bold">Belum ada</span>
                         </label>
                     </div>
@@ -191,16 +191,16 @@
             <div class="row mt-3 h-min-50px">
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->cable_tray_status == "1") checked="checked" @endif @endif type="radio" class="form-check-input" placeholder="" name="pondation_status" value="1">
-                        <label class="fs-6 form-check-label" for="pondation_status">
+                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->cable_tray_status == "1") checked="checked" @endif @endif type="radio" id="pondation_status_1" class="form-check-input" placeholder="" name="pondation_status" value="1">
+                        <label class="fs-6 form-check-label" for="pondation_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
                 </div>
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
-                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->cable_tray_status == "0") checked="checked" @endif @endif type="radio" class="form-check-input" placeholder="" name="pondation_status" value="0">
-                        <label class="fs-6 form-check-label" for="pondation_status">
+                        <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOutdoorArea->cable_tray_status == "0") checked="checked" @endif @endif type="radio" id="pondation_status_0" class="form-check-input" placeholder="" name="pondation_status" value="0">
+                        <label class="fs-6 form-check-label" for="pondation_status_0">
                             <span class="fw-bold">Belum ada</span>
                         </label>
                     </div>

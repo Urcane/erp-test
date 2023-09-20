@@ -59,7 +59,7 @@
 
                                             <input type="hidden" id="boq_id" name="boq_id"  value="{{$updateDraftBoqData['dataCompanyItem'][0]->id}}">
                                             
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-4">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="fw-bold">Judul Prospect</span>
                                                 </label>
@@ -71,7 +71,7 @@
                                                 <div id="error-prospect"></div>
                                             </div>
 
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-4">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class=" fw-bold">Survey ID</span>
                                                 </label>
@@ -80,6 +80,18 @@
                                                     value="{{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id }}"
                                                     {{ $updateDraftBoqData['dataCompanyItem'][0]->survey_request_id ?? 'Survey Tidak ada' }}>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+
+                                            <div class="col-lg-4">
+                                                <label for="boq_type" class="d-flex align-items-center fs-6 form-label mb-2 required" >
+                                                    <span class="fw-bold">Tipe BOQ</span>
+                                                </label>
+                                                <input type="text" class="form-control form-control-solid" disabled
+                                                    placeholder="{{ $updateDraftBoqData['dataCompanyItem'][0]->boq_type }} - {{ $updateDraftBoqData['dataCompanyItem'][0]->boq_type }}">
+                                                <input type="hidden" class="form-control form-control-solid" disabled
+                                                    name="boq_type" id="boq_type"
+                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->boq_type }}">
+                                                <div id="error-prospect"></div> 
                                             </div>
                                         </div>
 

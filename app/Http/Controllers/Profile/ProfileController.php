@@ -12,7 +12,7 @@ use Illuminate\Http\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 
 use App\Constants;
-use App\Models\Attendance\LeaveRequestCategory;
+use App\Models\Leave\LeaveRequestCategory;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Division;
@@ -81,11 +81,9 @@ class ProfileController extends Controller
         $dataProrateSetting = ProrateSetting::all();
         $dataCategory = UserFileCategory::all();
 
-        $leaveRequestCategory = LeaveRequestCategory::whereDate('effective_date', "<=", now())
-            ->where(function ($query) {
-                $query->whereDate('expired_date', '>=', now())
-                    ->orWhereNull('expired_date');
-            })->get();
+        $leaveRequestCategory = LeaveRequestCategory::where("show_in_request", true)
+            ->whereDate('effective_date', "<=", now())
+            ->get();
 
         return view('profile.index', compact(
             'user',

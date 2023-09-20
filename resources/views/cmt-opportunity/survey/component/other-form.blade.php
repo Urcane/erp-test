@@ -12,8 +12,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                     <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOtherArea->outdoor_cable_type_id == $outdoorCableType->id) checked="checked" @endif @endif 
-                    type="radio" class="form-check-input " placeholder="" name="outdoor_cable_type_id" value="{{$outdoorCableType->id}}">
-                    <label class="fs-6 form-check-label" for="outdoor_cable_type_id">
+                    type="radio" id="outdoor_cable_type_id_{{$outdoorCableType->id}}" class="form-check-input " placeholder="" name="outdoor_cable_type_id" value="{{$outdoorCableType->id}}">
+                    <label class="fs-6 form-check-label" for="outdoor_cable_type_id_{{$outdoorCableType->id}}">
                         <span class="fw-bold">{{$outdoorCableType->name}}</span>
                     </label>
                     </div>
@@ -33,8 +33,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                     <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOtherArea->cable_power_type == "INDOOR") checked="checked" @endif @endif 
-                    type="radio" class="form-check-input" placeholder="" name="cable_power_type" value="INDOOR">
-                    <label class="fs-6 form-check-label" for="cable_power_type">
+                    type="radio" id="cable_power_type_indoor" class="form-check-input" placeholder="" name="cable_power_type" value="INDOOR">
+                    <label class="fs-6 form-check-label" for="cable_power_type_indoor">
                         <span class="fw-bold">Indoor</span>
                     </label>
                     </div>
@@ -42,8 +42,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                     <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOtherArea->cable_power_type == "OUTDOOR") checked="checked" @endif @endif 
-                    type="radio" class="form-check-input" placeholder="" name="cable_power_type" value="OUTDOOR">
-                    <label class="fs-6 form-check-label" for="cable_power_type">
+                    type="radio" id="cable_power_type_outdoor" class="form-check-input" placeholder="" name="cable_power_type" value="OUTDOOR">
+                    <label class="fs-6 form-check-label" for="cable_power_type_outdoor">
                         <span class="fw-bold">Outdoor</span>
                     </label>
                     </div>
@@ -62,8 +62,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                     <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOtherArea->grounding_cable_type == "SERABUT") checked="checked" @endif @endif 
-                    type="radio" class="form-check-input" placeholder="" name="grounding_cable_type" value="SERABUT">
-                    <label class="fs-6 form-check-label" for="grounding_cable_type">
+                    type="radio" id="grounding_cable_type_serabut" class="form-check-input" placeholder="" name="grounding_cable_type" value="SERABUT">
+                    <label class="fs-6 form-check-label" for="grounding_cable_type_serabut">
                         <span class="fw-bold">Serabut</span>
                     </label>
                     </div>
@@ -71,8 +71,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                     <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOtherArea->grounding_cable_type == "TUNGGAL") checked="checked" @endif @endif 
-                    type="radio" class="form-check-input" placeholder="" name="grounding_cable_type" value="TUNGGAL">
-                    <label class="fs-6 form-check-label" for="grounding_cable_type">
+                    type="radio" id="grounding_cable_type_tunggal" class="form-check-input" placeholder="" name="grounding_cable_type" value="TUNGGAL">
+                    <label class="fs-6 form-check-label" for="grounding_cable_type_tunggal">
                         <span class="fw-bold">Tunggal</span>
                     </label>
                     </div>
@@ -91,8 +91,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                     <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOtherArea->connection_configuration_status == "1") checked="checked" @endif @endif 
-                    type="radio" class="form-check-input" placeholder="" name="connection_configuration_status" value="1">
-                    <label class="fs-6 form-check-label" for="connection_configuration_status">
+                    type="radio" id="connection_configuration_status_1" class="form-check-input" placeholder="" name="connection_configuration_status" value="1">
+                    <label class="fs-6 form-check-label" for="connection_configuration_status_1">
                         <span class="fw-bold">Ada</span>
                     </label>
                     </div>
@@ -100,8 +100,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                     <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOtherArea->connection_configuration_status == "0") checked="checked" @endif @endif 
-                    type="radio" class="form-check-input" placeholder="" name="connection_configuration_status" value="0">
-                    <label class="fs-6 form-check-label" for="connection_configuration_status">
+                    type="radio" id="connection_configuration_status_0" class="form-check-input" placeholder="" name="connection_configuration_status" value="0">
+                    <label class="fs-6 form-check-label" for="connection_configuration_status_0">
                         <span class="fw-bold">Belum ada</span>
                     </label>
                     </div>
@@ -121,8 +121,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                     <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOtherArea->transportation_access_id == $transportationAccess->id) checked="checked" @endif @endif 
-                    type="radio" class="form-check-input" placeholder="" name="transportation_access_id" value="{{$transportationAccess->id}}">
-                    <label class="fs-6 form-check-label" for="transportation_access_id">
+                    type="radio" id="transportation_access_id_{{$transportationAccess->id}}" class="form-check-input" placeholder="" name="transportation_access_id" value="{{$transportationAccess->id}}">
+                    <label class="fs-6 form-check-label" for="transportation_access_id_{{$transportationAccess->id}}">
                         <span class="fw-bold">{{$transportationAccess->name}}</span>
                     </label>
                     </div>
@@ -143,8 +143,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                     <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyOtherArea->building_type_id == $buildingType->id) checked="checked" @endif @endif 
-                    type="radio" class="form-check-input" placeholder="" name="building_type_id" value="{{$buildingType->id}}">
-                    <label class="fs-6 form-check-label" for="building_type_id">
+                    type="radio" id="building_type_id_{{$buildingType->id}}" class="form-check-input" placeholder="" name="building_type_id" value="{{$buildingType->id}}">
+                    <label class="fs-6 form-check-label" for="building_type_id_{{$buildingType->id}}">
                         <span class="fw-bold">{{$buildingType->name}}</span>
                     </label>
                     </div>

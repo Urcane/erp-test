@@ -21,7 +21,7 @@ class Constants
     public $blood_type = ["A", "B", "AB", "O"];
     public $religion = ["Islam", "Kristen", "Buddha", "Hindu", "Konghucu", "Katolik", "Lainnya"];
     public $payment_type = ["Monthly", "Weekly"];
-    public $day = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+    public $day = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]; //change the $locale if u wanna change the day language
     public $month = [
         "Januari", "Febuari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
     ];
@@ -31,6 +31,7 @@ class Constants
     public $jaminan_pensiun_cost = ["Not paid", "By company", "By Employee"];
     public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
     public $approve_status = ["Waiting", "Approved", "Rejected", "Canceled"]; // [0] as default // used manually on hc/request/* -> summaries and script
+    public $balance_type = ["Anniversary", "Monthly"];
 
     // system and view
     public $filter_status_attendance = [

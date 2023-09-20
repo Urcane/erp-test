@@ -6,6 +6,7 @@ use App\Constants;
 use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Division;
+use App\Models\Leave\LeaveRequestCategory;
 use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
 
@@ -21,9 +22,12 @@ class IndexController extends Controller
     public function index()
     {
         $approveStatus = array_slice($this->constants->approve_status, 0, 3);
+        $leaveRequestCategory = LeaveRequestCategory::all();
         $dataDivision = Division::all();
         $dataDepartment = Department::all();
 
-        return view('hc.cmt-request.index', compact(['approveStatus', 'dataDivision', 'dataDepartment']));
+        return view('hc.cmt-request.index', compact([
+            'approveStatus', 'dataDivision', 'dataDepartment', 'leaveRequestCategory'
+        ]));
     }
 }

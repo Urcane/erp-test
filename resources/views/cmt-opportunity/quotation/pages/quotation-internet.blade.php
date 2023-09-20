@@ -174,8 +174,8 @@
             elementName: "#kt_table_boq_done",
             ajaxLink: "{{ route('com.boq.render.datatable') }}",
             filters: {
-                is_quotation: false,
-                calledFrom: "Internet",
+                is_done: true,
+                called_from: "Internet",
             },
             columnData: [{
                     data: 'DT_RowIndex'

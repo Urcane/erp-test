@@ -81,14 +81,6 @@ class HCDataSeeder extends Seeder
         });
 
         collect([
-            "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"
-        ])->map(function ($data) {
-            Day::create([
-                "name" => $data,
-            ]);
-        });
-
-        collect([
             [1, "-1.249637", "116.877503", 30],
             [2, "-1.249637", "116.877503", 30],
             [3, "-1.249637", "116.877503", 30],
@@ -180,16 +172,15 @@ class HCDataSeeder extends Seeder
                 'override_national_holiday' => 0,
                 'override_company_holiday' => 0,
                 'override_special_holiday' => 0,
-                'flexible' => 0,
             ]);
         });
 
         collect([
-            [1, 6], [1, 7]
+            [1, $this->constants->day[5]], [1, $this->constants->day[6]]
         ])->map(function ($data) {
             WorkingScheduleDayOff::create([
                 "working_schedule_id" => $data[0],
-                "day_id" => $data[1]
+                "day" => $data[1]
             ]);
         });
 
@@ -202,16 +193,16 @@ class HCDataSeeder extends Seeder
             ]);
         });
 
-        collect([
-            ["Sakit", "SK"],
-            ["Izin", "IZ"]
-        ])->map(function ($data) {
-            LeaveRequestCategory::create([
-                "name" => $data[0],
-                "code" => $data[1],
-                "effective_date" => "2021-09-09"
-            ]);
-        });
+        // collect([
+        //     ["Sakit", "SK"],
+        //     ["Izin", "IZ"]
+        // ])->map(function ($data) {
+        //     LeaveRequestCategory::create([
+        //         "name" => $data[0],
+        //         "code" => $data[1],
+        //         "effective_date" => "2021-09-09"
+        //     ]);
+        // });
 
         collect([
             [

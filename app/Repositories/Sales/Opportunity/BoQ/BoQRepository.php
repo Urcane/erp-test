@@ -73,8 +73,12 @@ class BoQRepository
             $dataBoq = $dataBoq->where('is_done', 0);
         }
 
-        if (isset($request->filters['is_quotation']) && $request->filters['is_quotation'] == 'false') {
-            $dataBoq->where('is_done', 1)->doesntHave('itemableQuotationPart');
+        if (isset($request->filters['called_from']) && $request->filters['called_from'] == 'Internet') {
+            $dataBoq = $dataBoq->where('boq_type', 'internet');
+        }
+
+        if (isset($request->filters['called_from']) && $request->filters['called_from'] == 'Perangkat') {
+            $dataBoq = $dataBoq->where('boq_type', 'perangkat');
         }
         return $dataBoq->with('sales', 'prospect.customer.customerContact', 'prospect.customer.bussinesType', 'prospect.latestCustomerProspectLog');
     }
@@ -101,6 +105,7 @@ class BoQRepository
             $boq_id = $request->input('boq.boq_id');
             $prospect_id = $request->input('boq.prospect_id');
             $survey_request_id = $request->input('boq.survey_request_id');
+            $boq_type = $request->input('boq.boq_type');
             $is_draft = $request->input('boq.is_draft', 1);
             $sales_id = $request->input('boq.sales_id');
             $technician_id = $request->input('boq.technician_id');
@@ -109,7 +114,7 @@ class BoQRepository
             $modal = $request->input('boq.modal', 0);
             $npm = $request->input('boq.npm', 0);
             $percentage = $request->input('boq.percentage', 0);
-            $manpower = $request->input('boq.manpower', 0);
+            // $manpower = $request->input('boq.manpower', 0);
             $is_final = $request->input('boq.is_final', 0);
 
             $itemableBoqIsDraft = ItemableBillOfQuantity::where([
@@ -130,6 +135,7 @@ class BoQRepository
                 [
                     'prospect_id' => $prospect_id,
                     'survey_request_id' => $survey_request_id,
+                    'boq_type' => $boq_type,
                     'sales_id' => $sales_id,
                     'technician_id' => $technician_id,
                     'procurement_id' => $procurement_id,
@@ -137,7 +143,7 @@ class BoQRepository
                     'modal' => $modal,
                     'npm' => $npm,
                     'percentage' => $percentage,
-                    'manpower' => $manpower,
+                    // 'manpower' => $manpower,
                     'is_final' => $is_final,
                     // 'reference_boq_id' => $boq_id,
                     'is_draft' => $is_draft ?? 1,
@@ -171,6 +177,7 @@ class BoQRepository
                         'unit' => $itemData['unit'],
                         'purchase_price' => $itemData['purchase_price'] ?? 0,
                         'total_price' => (($itemData['purchase_price'] ?? 0) * $itemData['quantity']) + ($itemData['purchase_delivery'] ?? 0),
+                        'markup_price' => $itemData['markup_price'] ?? 0,
                         'purchase_delivery_charge' => $itemData['purchase_delivery'] ?? 0,
                         'purchase_reference' => $itemData['purchase_reference'] ?? null,
                         'delivery_route' => $itemData['delivery_route'] ?? null,
@@ -331,7 +338,7 @@ class BoQRepository
             'customerProspect.customer.customerContact',
             'customerProspect.customer.bussinesType',
             'surveyRequest'
-        ])->where("prospect_id", $boqData->prospect_id)->get(); 
+        ])->where("prospect_id", $boqData->prospect_id)->where('id', $boqId)->get(); 
          
         $dataForm = $this->inventoryService->getDataForm(); 
 
@@ -370,15 +377,37 @@ class BoQRepository
     {
         $boqId = $request->query('boq_id');
         $boqData = $this->model->where('id', $boqId)->first();
+  
+        $dataCompanyItem = $this->model->with([
+            'itemable' => function ($query) {
+                $query->whereHas('inventoryGood', function ($subQuery) {
+                    $subQuery->where('good_category_id', '!=', 3);
+                });
+            },
+            'customerProspect.customer.customerContact',
+            'customerProspect.customer.bussinesType',
+            'surveyRequest'
+        ])->where("id", $boqData->id)->get(); 
+            
+        
+        $inventoryGoodInet = InventoryGood::whereNotIn('good_category_id', [1, 2])->get();
 
+        $quotationItem = Item::where('itemable_id', $boqId)
+            ->whereHas('inventoryGood', function ($query) {
+                $query->where('good_category_id', 3);
+            })->get();
 
-        $dataCompanyItem = $this->model->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'customerProspect.customer.bussinesType')->where("prospect_id", $boqData->prospect_id)->get();
+        
         $dataSalesSelected = $this->user->where('id', $boqData->sales_id)->first();
         $dataProcurementSelected = $this->user->where('id', $boqData->procurement_id)->first();
         $dataTechnicianSelected = $this->user->where('id', $boqData->technician_id)->first();
 
         return [
+            'inventoryGoodInet' => $inventoryGoodInet,
+            'quotationItem' => $quotationItem,
+
             'dataCompanyItem' => $dataCompanyItem,
+            
             'dataSalesSelected' => $dataSalesSelected,
             'dataProcurementSelected' => $dataProcurementSelected,
             'dataTechnicianSelected' => $dataTechnicianSelected,

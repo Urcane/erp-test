@@ -2,6 +2,7 @@
 
 namespace App\Models\Opportunity\Quotation;
 
+use App\Models\Master\File;
 use App\Traits\HasFile;
 use App\Models\Opportunity\BoQ\Item;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class ItemableQuotationPart extends Model
 {
@@ -30,5 +32,9 @@ class ItemableQuotationPart extends Model
 
     function childrenItemableQuotationPart() : HasOne{
         return $this->hasOne(this::class, 'referenced_quotation_id', 'id');
+    }
+
+    function latestPoFile() : MorphOne {
+        return $this->morphOne(File::class, 'fileable')->latest();
     }
 }

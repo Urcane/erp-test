@@ -49,9 +49,13 @@
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Time Off Type</span>
                             <p class="fs-7 fw-normal" id="tmoff-type-modal">-</p>
                         </div>
-                        <div class="col-lg-6 mb-1">
-                            <span class="fs-8 text-gray-600 fw-semibold mb-1">Day Taken</span>
+                        <div class="col-lg-3 mb-1">
+                            <span class="fs-8 text-gray-600 fw-semibold mb-1">Quota Taken</span>
                             <p class="fs-7 fw-normal" id="tmoff-taken-modal">-</p>
+                        </div>
+                        <div class="col-lg-3 mb-1">
+                            <span class="fs-8 text-gray-600 fw-semibold mb-1">Duration</span>
+                            <p class="fs-7 fw-normal" id="tmoff-duration-modal">-</p>
                         </div>
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Request Created</span>
@@ -61,10 +65,20 @@
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Request for Date</span>
                             <p class="fs-7 fw-normal" id="tmoff-date-modal">-</p>
                         </div>
+
+                        <div class="col-lg-6 mb-1 halfdaysection">
+                            <span class="fs-8 text-gray-600 fw-semibold mb-1">Working Start</span>
+                            <p class="fs-7 fw-normal" id="tmoff-workingin-modal">-</p>
+                        </div>
+                        <div class="col-lg-6 mb-1 halfdaysection">
+                            <span class="fs-8 text-gray-600 fw-semibold mb-1">Working End</span>
+                            <p class="fs-7 fw-normal" id="tmoff-workingend-modal">-</p>
+                        </div>
+
                         <div class="col-lg-12 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">File</span>
                             <div>
-                                <a href="" class="fs-7 fw-normal btn btn-link" id="tmoff-file-modal" target="_blank">-</a>
+                                <a href="" class="fs-7 fw-normal btn btn-link p-0 m-0 text-decoration-underline" id="tmoff-file-modal" target="_blank">-</a>
                             </div>
                         </div>
                         <div class="col-lg-12 mb-1">

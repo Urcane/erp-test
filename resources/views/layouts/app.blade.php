@@ -321,6 +321,59 @@ input[type="number"]::-webkit-outer-spin-button {
         hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
     }
 
+    // function updateTotalSumBundle() {
+    //     let totalSumBundle = 0;
+    //     const modalVal = parseInt(document.querySelector(`[name='modal']`).value);
+
+    //     $('.BundleItem input[name^="total_price"]').each(function() {
+    //         let totalPriceBundleValue = $(this).val();
+
+    //         if (totalPriceBundleValue !== "") {
+    //             totalSumBundle += parseInt(totalPriceBundleValue);
+    //         }
+    //     });
+
+    //     if (modalVal >= totalSumBundle) {
+    //         return document.getElementById("total_bundle_price").textContent = "   KURANG MODAL";
+    //     }
+
+    //     const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
+
+    //     $('#total_bundle_price').text(totalPriceWithCommas);
+    //     $('#gpm').val(totalSumBundle);
+
+    //     // const hiddenTotalInput = document.querySelector(`[name='total_price_bundle']`);
+    //     // hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string 
+
+
+    //     // Ambil nilai gpm dan modal
+    //     let gpm = parseFloat($('#gpm').val()); // gunakan parseFloat untuk memastikan nilai numerik
+    //     let modal = parseFloat($('#modal').val()); // gunakan parseFloat untuk memastikan nilai numerik
+
+    //     if (!isNaN(gpm) && !isNaN(modal)) {
+    //         let npm = gpm - modal;
+    //         let percentage = (npm / gpm) * 100;
+
+    //         $('#npm').val(npm);
+    //         $('#percentage').val(percentage.toFixed(2));
+    //     }
+    // }
+
+    // function calculateTotalBundle(uniq_id) {
+    //     const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${uniq_id}']`)
+    //         .value);
+    //     const quantity = parseInt(document.querySelector(`[name='quantity_${uniq_id}']`).value);
+
+    //     if (isNaN(purchasePrice) || isNaN(quantity)) {
+    //         return document.getElementById("total_price_" + uniq_id).value = "null";
+    //     }
+
+    //     let totalAmount = purchasePrice * quantity;
+
+    //     document.getElementById("total_price_" + uniq_id).value = totalAmount;
+    //     updateTotalSumBundle()
+    // }
+
 </script>
 </body>
 </html>

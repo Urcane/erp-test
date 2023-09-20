@@ -70,7 +70,7 @@ class ItemableBillOfQuantity extends Model
     }
 
     function scopePublish() {
-        return $this->where('is_draft', 0)->where('is_final', 0)->has('priceRequests');
+        return $this->where('is_draft', 0)->where('is_final', 0)->whereNotNull('is_done')->has('priceRequests');
     }
     
     function scopeOnReview() {

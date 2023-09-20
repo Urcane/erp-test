@@ -21,4 +21,5 @@ abstract class RequestController extends Controller
     abstract public function getRequest(Request $request);
     abstract public function getRequestById(Request $request);
     abstract public function makeRequest(Request $request);
+    abstract public function cancelRequest(Request $request);
 }

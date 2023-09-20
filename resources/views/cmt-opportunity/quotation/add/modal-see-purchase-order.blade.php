@@ -36,8 +36,8 @@
                                     placeholder="" required accept="image/*" name="file_purchase_order_internet"
                                     id="file_purchase_order_internet">
                                 <div class="fv-plugins-message-container invalid-feedback"></div>
-                                <img id="containerImage" class="img-fluid m-5" src="#" alt="File Image"
-                                    hidden="hidden" />
+                                <img id="containerImage" class="img-fluid m-5" src="{{asset('filestorage') . '/' . $file_po->path}}" alt="Purchase Order Image"/>
+                                
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <div id="containerSoftSurveyItems">
@@ -48,12 +48,17 @@
                         </div>
                     </div>
                     <div class="text-center mt-9">
-                        <button type="reset" id="kt_modal_see_purchase_order_cancel"
-                            class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="kt_modal_see_purchase_order_submit"
-                            class="btn btn-sm btn-info w-lg-200px">
-                            <span class="indicator-label">Simpan</span>
-                        </button>
+                        <div class="row">
+                            <button type="reset" id="kt_modal_see_purchase_order_cancel"
+                                class="btn btn-sm btn-light me-3 col-3" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" id="kt_modal_see_purchase_order_submit"
+                                class="btn btn-sm btn-info me-3 col-5">
+                                <span class="indicator-label">Simpan</span>
+                            </button>
+                            <a href="{{asset('filestorage') . '/' . $file_po->path}}" target="_blank" class="btn btn-sm btn-light-info col-3">
+                                <i class="fa-solid fa-file me-3"></i>Download
+                            </a>
+                        </div>
                     </div>
                 </form>
             </div>

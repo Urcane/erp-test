@@ -255,6 +255,17 @@ Route::middleware(['auth'])->group(function () {
                 });
             });
 
+            Route::prefix('users')->group(function () {
+                Route::controller(Settings\Users\PermissionController::class)->group(function () {
+                    Route::prefix('permission')->group(function () {
+                        Route::get('/', 'index')->name('hc.setting.permission.index');
+                        Route::get('/table/permission', 'getTableSchedule')->name('hc.setting.permission.getTable');
+                        Route::get('/detail/user/{user}', 'detailUserPermission')->name('hc.setting.permission.detailUser');
+                        Route::post('/assign/user/{user}', 'assignPermission')->name('hc.setting.permission.assignPermission');
+                    });
+                });
+            });
+
             Route::prefix('time-management')->group(function () {
                 Route::controller(Settings\TimeManagement\AttendanceController::class)->group(function () {
                     Route::prefix('attendance')->group(function () {
@@ -262,6 +273,7 @@ Route::middleware(['auth'])->group(function () {
                         Route::get('/table/schedule', 'getTableSchedule')->name('hc.setting.getTableSchedule');
                         Route::post('/create/update/schedule', 'createUpdateSchedule')->name('hc.setting.schedule.createUpdate');
                         Route::post('/delete/schedule', 'deleteSchedule')->name('hc.setting.schedule.delete');
+                        Route::post('/delete/schedule/shift', 'deleteShiftFromSchedule')->name('hc.setting.schedule.delete.shift');
                         Route::post('/get/shift', 'getShift')->name('hc.setting.schedule.get.shift');
 
                         Route::get('/table/shift', 'getTableShift')->name('hc.setting.getTableShift');
@@ -271,12 +283,26 @@ Route::middleware(['auth'])->group(function () {
                     });
                 });
 
+                Route::controller(Settings\TimeManagement\LiveLocationController::class)->group(function () {
+                    Route::prefix('live-location')->group(function () {
+                        Route::get('/', 'index')->name('hc.setting.live-location.index');
+                        Route::get('/table', 'getTable')->name('hc.setting.live-location.getTable');
+                        Route::get('/detail/branch/location/{branch}', 'detailBranchLocation')->name('hc.setting.live-location.detailBranchLocation');
+                        Route::get('/table/location/{branchId}', 'getTableLocation')->name('hc.setting.live-location.getTableLocation');
+
+                        Route::post('/create/update/{branchId}', 'createUpdate')->name('hc.setting.live-location.createUpdate');
+                        Route::post('/delete', 'destroy')->name('hc.setting.live-location.delete');
+                    });
+                });
+
                 Route::controller(Settings\TimeManagement\TimeOffController::class)->group(function () {
                     Route::prefix('time-off')->group(function () {
                         Route::get('/', 'index')->name('hc.setting.timeoff.index');
                         Route::get('/table', 'getTable')->name('hc.setting.timeoff-get-table');
-                        Route::post('/create/update', 'createUpdate')->name('hc.setting.timeoff.createUpdate');
                         Route::post('/delete', 'destroy')->name('hc.setting.timeoff.delete');
+
+                        Route::get('/create', 'create')->name('hc.setting.timeoff.create');
+                        Route::post('/store', 'store')->name('hc.setting.timeoff.store');
                     });
                 });
 

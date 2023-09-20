@@ -58,12 +58,12 @@ class BoqService
             ->addColumn('action_quotation', function ($query) use($request)  {
                 $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">'; 
-                if (isset($request->filters['calledFrom'])) {
-                    if ($request->filters['calledFrom'] == 'Internet') {
+                if (isset($request->filters['called_from'])) {
+                    if ($request->filters['called_from'] == 'Internet') {
                         $actions .= '<li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create Quotation Internet</a></li>';
                     }
-                    elseif ($request->filters['calledFrom'] == 'Perangkat') {
+                    elseif ($request->filters['called_from'] == 'Perangkat') {
                         $actions .= '<li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create Quotation Perangkat</a></li>';
                     }
@@ -206,12 +206,15 @@ class BoqService
     
     function onReviewBoq(Request $request){
         $dataReviewBoq = $this->BoQRepository->reviewBoq($request); 
-        return view('cmt-opportunity.boq.pages.on-review-boq', compact('dataReviewBoq')); 
+        $dataUnit = InventoryUnitMaster::get();
+        
+        return view('cmt-opportunity.boq.pages.on-review-boq', compact('dataReviewBoq', 'dataUnit')); 
     }
 
     function reviewDoneBoq(Request $request) {
         $dataReviewBoq = $this->BoQRepository->reviewBoq($request); 
-        return view('cmt-opportunity.boq.pages.review-done-boq', compact('dataReviewBoq')); 
+        $dataUnit = InventoryUnitMaster::get();
+        return view('cmt-opportunity.boq.pages.review-done-boq', compact('dataReviewBoq', 'dataUnit')); 
     }
 
     function storeApprovalBoq(Request $request) : JsonResponse {

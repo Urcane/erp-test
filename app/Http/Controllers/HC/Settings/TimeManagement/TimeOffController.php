@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\HC\Settings\TimeManagement;
 
 use Illuminate\Http\Request;
-use App\Models\Attendance\LeaveRequestCategory;
+use App\Models\Leave\LeaveRequestCategory;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Validation\Rule;
 
 class TimeOffController extends TimeManagementController
 {
@@ -29,48 +30,108 @@ class TimeOffController extends TimeManagementController
 
                     return $formattedDate;
                 })
-                ->addColumn('expired_date', function ($query) {
-                    $expiredDate = $query->expired_date;
-
-                    if (!$expiredDate) {
-                        return "Permanent";
+                ->addColumn('show_in_request', function ($query) {
+                    if ($query->show_in_request) {
+                        return '<div class="d-inline-flex justify-content-center align-items-center bg-success rounded-circle"
+                        style="width: 20px; height: 20px;">
+                        <i class="fas fa-check text-white"></i>
+                    </div>';
                     }
-
-                    $date = Carbon::createFromFormat('Y-m-d', $expiredDate);
-                    $formattedDate = $date->format('d-m-Y');
-
-                    return $formattedDate;
+                    return '<div class="d-inline-flex justify-content-center align-items-center bg-danger rounded-circle"
+                    style="width: 20px; height: 20px;">
+                    <i class="fas fa-times text-white"></i>
+                </div>';
                 })
-                // ->addColumn('assigned_to', function($data) {
-                //     $count = $data->users->count();
-                //     return $count;
-                // })
                 ->addIndexColumn()
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'show_in_request'])
                 ->make(true);
         }
     }
 
-    public function createUpdate(Request $request)
+    public function create(Request $request)
+    {
+        $balanceTypes = $this->constants->balance_type;
+
+        return view("hc.cmt-settings.time-management.add-time-off", compact([
+            'balanceTypes'
+        ]));
+    }
+
+    public function store(Request $request)
     {
         try {
             $request->validate([
-                "name" => "required",
-                "code" => "required",
-                "effective_date" => "required",
-                "expired_date" => "nullable"
+                'name' => 'required|string|max:100|unique:leave_request_categories,name',
+                'code' => 'required|string|max:8|unique:leave_request_categories,code',
+                'effective_date' => 'required|date',
+                'attachment' => 'nullable',
+                'show_in_request' => 'nullable',
+                'max_request' => 'integer|nullable|min:0|max:255',
+                'use_quota' => 'nullable',
+                'unlimited_balance' => 'nullable',
+
+                // use balance
+                'min_works' => 'nullable',
+                'balance' => 'nullable',
+                'balance_type' => [
+                    'nullable',
+                    Rule::in($this->constants->balance_type),
+                    'required_if:unlimited_balance,false',
+                ],
+                'expired' => 'nullable',
+                'carry_amount' => 'integer|nullable|min:0|max:255|required_if:expired,true',
+                'carry_expired' => 'integer|nullable|min:0|max:255|required_if:expired,true',
+
+                // use half day
+                'half_day' => 'nullable',
+
+                'minus_amount' => 'integer|nullable|min:0|max:255',
+                'duration' => 'integer|nullable|min:0|max:255',
             ]);
 
-            LeaveRequestCategory::create([
-                "name" => $request->name,
-                "code" => $request->code,
-                "effective_date" => $request->effective_date,
-                "expired_date" => $request->expired_date
-            ]);
+            $data = [
+                'name' => $request->name,
+                'code' => $request->code,
+                'effective_date' => $request->effective_date,
+                'attachment' => (int) $request->attachment,
+                'show_in_request' => (int) $request->show_in_request,
+                'max_request' => $request->max_request,
+                'use_quota' => (int) $request->use_quota,
+                'unlimited_balance' => (int) $request->unlimited_balance,
+            ];
+
+            if (!$request->unlimited_balance) {
+                $data += [
+                    'min_works' => $request->min_works,
+                    'balance' => $request->balance,
+                    'balance_type' => $request->balance_type,
+                    'expired' => (int) $request->expire,
+                ];
+            }
+
+            if ($request->expired) {
+                $data += [
+                    'carry_amount' => $request->carry_amount,
+                    'carry_expired' => $request->carry_expired,
+                ];
+            }
+
+            if ($request->half_day) {
+                $data += [
+                    'half_day' => $request->half_day,
+                ];
+            } else {
+                $data += [
+                    'minus_amount' => $request->minus_amount,
+                    'duration' => $request->duration,
+                ];
+            }
+
+            LeaveRequestCategory::create($data);
 
             return response()->json([
                 "status" => "success",
-                "message" => "Berhasil menambah kategori time off"
+                "message" => "Berhasil menambahkan Kategori Time Off"
             ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);

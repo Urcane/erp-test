@@ -62,7 +62,7 @@ class SurveyRequestService
                     }
                 }
 
-                if ($request->filters['calledFrom'] == 'BOQ') {
+                if (isset($request->filters['calledFrom']) && $request->filters['calledFrom'] == 'BOQ') {
                     return '
                     <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                     <ul class="dropdown-menu">

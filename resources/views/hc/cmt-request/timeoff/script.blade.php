@@ -9,19 +9,18 @@
         level = "-",
         taken = "-",
         file = "-",
-        type = "-",
         created = "-",
         notes = "-",
         startDate = "-",
         endDate = "-",
+        date = "-",
         status,
         fileLink = "-",
         fileName = "-",
-        comment = "-"
+        comment = "-",
+        leaveRequestCategory
     }) => {
         const createdFormated = formatDateTime(created);
-        const startDateFormated = formatDate(startDate);
-        const endDateFormated = formatDate(endDate);
 
         switch (status) {
             case approveStatusEnum[0]:
@@ -50,16 +49,30 @@
                 break;
         }
 
+        if (parseInt(leaveRequestCategory.halfday)) {
+            $('#tmoff-taken-modal').text("1 Day(s)");
+            $('#tmoff-duration-modal').text("1 Day(s)");
+            $('#tmoff-date-modal').text(`${date}`);
+            $('.halfdaysection').show();
+
+            $('#tmoff-workingin-modal').text(leaveRequestCategory.working.start);
+            $('#tmoff-workingend-modal').text(leaveRequestCategory.working.end);
+        } else {
+            $('#tmoff-taken-modal').text(`${taken} Day(s)`);
+            $('#tmoff-duration-modal').text(`${calculateDateDifference(startDate, endDate)} Day(s)`);
+            $('#tmoff-date-modal').text(`${formatDate(startDate)} - ${formatDate(endDate)}`);
+            $('.halfdaysection').hide();
+        }
+
         $('#tmoff-name-modal').text(name);
         $('#tmoff-nip-modal').text(nip);
         $('#tmoff-branch-modal').text(branch);
         $('#tmoff-org-modal').text(org);
         $('#tmoff-position-modal').text(position);
         $('#tmoff-level-modal').text(level);
-        $('#tmoff-type-modal').text(type);
+        $('#tmoff-type-modal').text(`${leaveRequestCategory.name} (${leaveRequestCategory.code})`);
         $('#tmoff-file-modal').text(file);
-        $('#tmoff-taken-modal').text(`${taken} Day(s)`);
-        $('#tmoff-date-modal').text(`${startDateFormated} - ${endDateFormated}`);
+
         $('#tmoff-created-modal').text(createdFormated);
         $('#tmoff-notes-modal').text(notes);
         $('#timeoff-request-id').val(id)
@@ -112,7 +125,7 @@
                     $('#all-approved-tmoff').text(allSummaries.approved);
                     $('#all-reject-tmoff').text(allSummaries.rejected);
                     $('#view-date-timeoff').text(
-                        `View Date : ${formatDate(viewDate.rangeDate[0])} - ${formatDate(viewDate.rangeDate[1])}`
+                        `View Date : ${viewDate.rangeDate.join(' - ')}`
                     );
                 },
                 error: function(xhr, status, error) {
@@ -202,7 +215,7 @@
                         searchable: false
                     },
                     {
-                        data: 'date',
+                        data: 'created_at',
                         orderable: false,
                         searchable: false
                     },

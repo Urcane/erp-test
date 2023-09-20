@@ -41,7 +41,7 @@ class WorkOrderRepository
     }
 
     function getAllSurveyWO(Request $request) : EloquentBuilder {
-        return $this->model->where('type_of_wo', 'SR')->whereHas('surveyRequest', function($surveyRequest) use ($request){
+        return $this->model->where('type_of_wo', 'SR')->where('status', '!=', 'DN')->whereHas('surveyRequest', function($surveyRequest) use ($request){
             $surveyRequest->where('service_type_id', $request->filters['service_type_id']);
         });
     }
