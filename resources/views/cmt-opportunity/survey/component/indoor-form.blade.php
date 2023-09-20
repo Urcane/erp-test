@@ -11,8 +11,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->room_status == "1") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="room_status" value="1">
-                        <label class="fs-6 form-check-label" for="room_status">
+                        type="radio" id="room_status_1" class="form-check-input" placeholder="" name="room_status" value="1">
+                        <label class="fs-6 form-check-label" for="room_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
@@ -20,8 +20,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->room_status == "0") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="room_status" value="0">
-                        <label class="fs-6 form-check-label" for="room_status">
+                        type="radio" id="room_status_0" class="form-check-input" placeholder="" name="room_status" value="0">
+                        <label class="fs-6 form-check-label" for="room_status_0">
                             <span class="fw-bold">Belum ada</span>
                         </label>
                     </div>
@@ -45,8 +45,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->air_conditioning_status == "1") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="air_conditioning_status" value="1">
-                        <label class="fs-6 form-check-label" for="air_conditioning_status">
+                        type="radio" id="air_conditioning_status_1" class="form-check-input" placeholder="" name="air_conditioning_status" value="1">
+                        <label class="fs-6 form-check-label" for="air_conditioning_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
@@ -54,8 +54,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->air_conditioning_status == "0") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="air_conditioning_status" value="0">
-                        <label class="fs-6 form-check-label" for="air_conditioning_status">
+                        type="radio" id="air_conditioning_status_0" class="form-check-input" placeholder="" name="air_conditioning_status" value="0">
+                        <label class="fs-6 form-check-label" for="air_conditioning_status_0">
                             <span class="fw-bold">Belum ada</span>
                         </label>
                     </div>
@@ -80,8 +80,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->power_source_id == $powerSource->id) checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="power_source_id" value="{{$powerSource->id}}">
-                        <label class="fs-6 form-check-label" for="power_source_id">
+                        type="radio" id="power_source_id_{{$powerSource->id}}" class="form-check-input" placeholder="" name="power_source_id" value="{{$powerSource->id}}">
+                        <label class="fs-6 form-check-label" for="power_source_id_{{$powerSource->id}}">
                             <span class="fw-bold">{{$powerSource->name}}</span>
                         </label>
                     </div>
@@ -106,8 +106,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->mcb_status == "1") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="mcb_status" value="1">
-                        <label class="fs-6 form-check-label" for="mcb_status">
+                        type="radio" id="mcb_status_1" class="form-check-input" placeholder="" name="mcb_status" value="1">
+                        <label class="fs-6 form-check-label" for="mcb_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
@@ -115,8 +115,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->mcb_status == "0") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="mcb_status" value="0">
-                        <label class="fs-6 form-check-label" for="mcb_status">
+                        type="radio" id="mcb_status_0" class="form-check-input" placeholder="" name="mcb_status" value="0">
+                        <label class="fs-6 form-check-label" for="mcb_status_0">
                             <span class="fw-bold">Belum ada</span>
                         </label>
                     </div>
@@ -140,8 +140,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->mcb_type == "AC") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="mcb_type" value="AC">
-                        <label class="fs-6 form-check-label" for="mcb_type">
+                        type="radio" id="mcb_type_ac" class="form-check-input" placeholder="" name="mcb_type" value="AC">
+                        <label class="fs-6 form-check-label" for="mcb_type_ac">
                             <span class="fw-bold">AC</span>
                         </label>
                     </div>
@@ -149,8 +149,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->mcb_type == "DC") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="mcb_type" value="DC">
-                        <label class="fs-6 form-check-label" for="mcb_type">
+                        type="radio" id="mcb_type_dc" class="form-check-input" placeholder="" name="mcb_type" value="DC">
+                        <label class="fs-6 form-check-label" for="mcb_type_ac">
                             <span class="fw-bold">DC</span>
                         </label>
                     </div>
@@ -209,8 +209,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->ups_regulator_status == "1") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="ups_regulator_status" value="1">
-                        <label class="fs-6 form-check-label" for="ups_regulator_status">
+                        type="radio" id="ups_regulator_status_1" class="form-check-input" placeholder="" name="ups_regulator_status" value="1">
+                        <label class="fs-6 form-check-label" for="ups_regulator_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
@@ -218,8 +218,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->ups_regulator_status == "0") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="ups_regulator_status" value="0">
-                        <label class="fs-6 form-check-label" for="ups_regulator_status">
+                        type="radio" id="ups_regulator_status_0" class="form-check-input" placeholder="" name="ups_regulator_status" value="0">
+                        <label class="fs-6 form-check-label" for="ups_regulator_status_0">
                             <span class="fw-bold">Tidak Ada</span>
                         </label>
                     </div>
@@ -243,8 +243,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->table_status == "1") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="table_status" value="1">
-                        <label class="fs-6 form-check-label" for="table_status">
+                        type="radio" id="table_status_1" class="form-check-input" placeholder="" name="table_status" value="1">
+                        <label class="fs-6 form-check-label" for="table_status_1">
                             <span class="fw-bold">Ada</span>
                         </label>
                     </div>
@@ -252,8 +252,8 @@
                 <div class="col-lg-2 mb-3 d-flex align-items-center">
                     <div class="my-auto">
                         <input @if (isset($surveyResult)) disabled="disabled" @if ($surveyResult->siteSurveyIndoorArea->table_status == "0") checked="checked" @endif @endif 
-                        type="radio" class="form-check-input" placeholder="" name="table_status" value="0">
-                        <label class="fs-6 form-check-label" for="table_status">
+                        type="radio" id="table_status_0" class="form-check-input" placeholder="" name="table_status" value="0">
+                        <label class="fs-6 form-check-label" for="table_status_0">
                             <span class="fw-bold">Tidak Ada</span>
                         </label>
                     </div>

@@ -451,6 +451,10 @@
                 imageReadURL(this);
             });
 
+            form_edit.trigger('reset');
+            form_edit.undelegate('.btn_add_more_soft_survey_item', 'click');
+            form_edit.find('#containerSoftSurveyItems').html('');
+            $('#countable_soft_survey_items').html(1);
             form_edit.on('click', '.btn_add_more_soft_survey_item', function () {
                 form_edit.find('#containerSoftSurveyItems').append(
                     `

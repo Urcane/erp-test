@@ -39,5 +39,4 @@
     }
 
     const approveStatusEnum = @json($constants->approve_status);
-    console.log(approveStatusEnum)
 </script>

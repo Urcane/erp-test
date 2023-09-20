@@ -112,7 +112,9 @@ class TimeOffController extends RequestController
             $itemCount = $request->itemCount ?? 10;
 
             if ($user->hasPermissionTo('HC:view-all-request')) {
-                $userRequests = new UserLeaveRequest;
+                $userRequests = UserLeaveRequest::whereIn('status', array_slice($this->constants->approve_status, 0, 3))
+                    ->with(['user.division', 'user.department'])
+                    ->paginate($itemCount, ['*'], 'page', $page);
             } else if ($user->hasPermissionTo('Approval:view-request')) {
                 $userRequests = UserLeaveRequest::where(function ($query) use ($user) {
                     $query->where(function ($query) use ($user) {
@@ -210,7 +212,7 @@ class TimeOffController extends RequestController
                         ->workingScheduleShift
                         ->workingSchedule
                         ->dayOffs
-                        ->pluck('name')->toArray();
+                        ->pluck('day')->toArray();
 
                     $leaveCategoryName = $leaveRequest->leaveRequestCategory->name;
                     $leaveCategoryCode = $leaveRequest->leaveRequestCategory->code;
@@ -299,7 +301,7 @@ class TimeOffController extends RequestController
                     ->workingScheduleShift
                     ->workingSchedule
                     ->dayOffs
-                    ->pluck('name')->toArray();
+                    ->pluck('day')->toArray();
 
                 $leaveCategoryName = $leaveRequest->leaveRequestCategory->name;
                 $leaveCategoryCode = $leaveRequest->leaveRequestCategory->code;

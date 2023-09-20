@@ -111,7 +111,7 @@
                     $('#all-approved-att').text(allSummaries.approved);
                     $('#all-reject-att').text(allSummaries.rejected);
                     $('#view-date-attendance').text(
-                        `View Date : ${formatDate(viewDate.rangeDate[0])} - ${formatDate(viewDate.rangeDate[1])}`
+                        `View Date : ${viewDate.rangeDate.join(' - ')}`
                     );
                 },
                 error: function(xhr, status, error) {
@@ -201,7 +201,7 @@
                         searchable: false
                     },
                     {
-                        data: 'date',
+                        data: 'created_at',
                         orderable: false,
                         searchable: false
                     },

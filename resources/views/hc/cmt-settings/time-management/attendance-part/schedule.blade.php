@@ -52,12 +52,23 @@
                                 <span class="fw-bold">Override Special Holiday</span>
                             </label>
                         </div>
-                        <div class="col-lg-12 mb-3">
-                            <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="flexible" id="flexible">
-                            <label class="fs-6 form-check-label mb-2" for="flexible">
-                                <span class="fw-bold">Flexible</span>
-                            </label>
-                        </div>
+
+                        <div class="col-lg-12">
+							<label class="d-flex align-items-center fs-6 form-label mb-2">
+								<span class="fw-bold">Day Off</span>
+							</label>
+						</div>
+
+                        @foreach ($dataDays as $day)
+
+                            <div class="col-lg-3 col-md-4 mb-3">
+                                <input type="checkbox" class="form-check-input" placeholder="" name="day_off[]" value="{{$day}}" id="{{$day}}">
+                                <label class="fs-6 form-check-label mb-2" for="{{$day}}">
+                                    <span class="fw-bold">{{$day}}</span>
+                                </label>
+                            </div>
+                        @endforeach
+
                         <div class="col-lg-12 mt-6 mb-3">
                             <h4>Set Shift</h4>
                             <span class="fs-7 fw-semibold text-gray-500">Set your shift combination for this schedule.</span>
@@ -149,7 +160,7 @@
 <script>
     let dataTableSchedule
     $(".btn_create_schdule").on( "click", function() {
-        $("input").val("")
+        $("input:not(:checkbox)").val("")
         addShiftComponent()
         var parentElement = $("#table-shift");
         var lastChild = parentElement.children().last();
@@ -160,11 +171,10 @@
         $("[name=\'override_national_holiday\']").val("0");
         $("[name=\'override_company_holiday\']").val("0");
         $("[name=\'override_special_holiday\']").val("0");
-        $("[name=\'flexible\']").val("0");
         $("[name=\'override_national_holiday\']").prop("checked", false);
         $("[name=\'override_company_holiday\']").prop("checked", false);
         $("[name=\'override_special_holiday\']").prop("checked", false);
-        $("[name=\'flexible\']").prop("checked", false);
+        $("[name=\'day_off[]\']").prop("checked", false);
     })
 
     function addShiftComponent () {
@@ -193,32 +203,57 @@
     }
 
     function removeShiftComponent(element) {
-        if ($(element).parent().children().length > 1) {
+        let sid = $(element + ' td:last-child').data("id") ?? null;
+        let wid = $(element + ' td:last-child').data("working-schedule") ?? null;
+
+        console.log(sid)
+
+        let child = $(element);
+        let parent = $(element).parent();
+
+        if (sid) {
+            $.ajax({
+                url: "{{ route('hc.setting.schedule.delete.shift') }}",
+                headers: {
+                    'X-CSRF-TOKEN': "{{csrf_token()}}"
+                },
+                type: 'POST',
+                data: { shift_id : sid, working_schedule_id : wid},
+                success: function(data) {
+                    dataTableSchedule.ajax.reload();
+                    toastr.success(data.message,'Selamat 🚀 !');
+                    $(element).remove()
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
+        }
+
+        if ($(element).parent().children().length > 1 && !sid) {
             $(element).remove()
         }
     }
 
-    function fillInput(
+    function fillInputSchedule(
         id,
         name,
         effective_date,
         override_national_holiday,
         override_company_holiday,
         override_special_holiday,
-        flexible,
+        day_off,
         shift_id) {
-
         $("[name=\'id\']").val(id);
         $("[name=\'name\']").val(name);
         $("[name=\'effective_date\']").val(effective_date);
         $("[name=\'override_national_holiday\']").val("0");
         $("[name=\'override_company_holiday\']").val("0");
         $("[name=\'override_special_holiday\']").val("0");
-        $("[name=\'flexible\']").val("0");
         $("[name=\'override_national_holiday\']").prop("checked", false);
         $("[name=\'override_company_holiday\']").prop("checked", false);
         $("[name=\'override_special_holiday\']").prop("checked", false);
-        $("[name=\'flexible\']").prop("checked", false);
 
         if (override_national_holiday != "0") {
             $("[name=\'override_national_holiday\']").val("1")
@@ -232,10 +267,12 @@
             $("[name=\'override_special_holiday\']").val("1")
             $("[name=\'override_special_holiday\']").prop("checked", true);
         }
-        if (flexible != "0") {
-            $("[name=\'flexible\']").val("1")
-            $("[name=\'flexible\']").prop("checked", true);
-        }
+
+        $("[name='day_off[]']").map(function() {
+            if (day_off.includes($(this).val()) ) {
+                $(this).prop("checked", true);
+            }
+        });
 
         const optionElement = $(".select-shift").last().children();
         $("#table-shift").children().remove();
@@ -254,10 +291,10 @@
                                 <td id="break_${data.id}">${data.break_start.substring(0, data.break_start.length - 3) +"-"+ data.break_end.substring(0, data.break_end.length - 3)}</td>
                                 <td id="ot_before_${data.id}">${ot_before.substring(0, ot_before.length - 3)}</td>
                                 <td id="ot_after_${data.id}">${ot_after.substring(0, ot_after.length - 3)}</td>
-                                <td onclick="removeShiftComponent('#shift-${data.id}')"><i class="fa-solid fa-circle-minus"></i></td>
+                                <td onclick="removeShiftComponent('#shift-${data.id}')" data-id="${data.id}" data-working-schedule="${id}"><i class="fa-solid fa-circle-minus"></i></td>
                             </tr>`);
             $("#table-shift").prepend(content);
-            $(`[data-id="${data.id}"]`).append(option)
+            $(`select[data-id="${data.id}"]`).append(option)
 
             $(`[data-id="${data.id}"] option`).each(function() {
                 if (data.id == parseInt($(this).val())) {
@@ -380,7 +417,9 @@
 
         var dataShift = [];
 
-        // console.log($("#table-shift").children())
+        var dataDayOff = $("[name='day_off[]']:checked").map(function() {
+            return $(this).val();
+        }).get();
 
         $("#table-shift").children().each(function(index, child) {
             const id = $(child).attr("id").split("-")[1]
@@ -401,10 +440,10 @@
                     override_national_holiday : $("[name='override_national_holiday']").val(),
                     override_company_holiday : $("[name='override_company_holiday']").val(),
                     override_special_holiday : $("[name='override_special_holiday']").val(),
-                    flexible : $("[name='flexible']").val(),
                     late_check_in : $("[name='late_check_in']").val(),
                     late_check_out : $("[name='late_check_out']").val(),
-                    shift_id : dataShift
+                    shift_id : dataShift,
+                    day_off : dataDayOff,
                 },
                 headers: {
                     'X-CSRF-TOKEN': "{{csrf_token()}}"

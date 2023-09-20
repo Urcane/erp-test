@@ -440,17 +440,17 @@
                 city_id: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
                 },
-                customer_contact_name: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Nama wajib diisi</span>",
-                },
-                customer_contact_job: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Jabatan wajib diisi</span>",
-                },
+                // customer_contact_name: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Nama wajib diisi</span>",
+                // },
+                // customer_contact_job: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Jabatan wajib diisi</span>",
+                // },
                 customer_contact_email: {
                     email: "<span class='fw-semibold fs-8 text-danger'>Email user belum sesusai format</span>",
                 },
                 customer_contact_phone: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
+                    // required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
                     minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
                     maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
                 

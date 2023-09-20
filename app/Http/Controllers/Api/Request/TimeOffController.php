@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 use App\Exceptions\NotFoundError;
 
 use App\Models\Attendance\GlobalDayOff;
-use App\Models\Attendance\UserLeaveRequest;
-use App\Models\Attendance\LeaveRequestCategory;
+use App\Models\Leave\UserLeaveRequest;
+use App\Models\Leave\LeaveRequestCategory;
 
 use DateTime;
 use DateInterval;
@@ -115,7 +115,7 @@ class TimeOffController extends RequestController
             $endDate = Carbon::parse($request->end_date);
 
             $taken = 0;
-            $workingDayOff = $request->user()->userEmployment->workingScheduleShift->workingSchedule->dayOffs()->pluck('name')->toArray();
+            $workingDayOff = $request->user()->userEmployment->workingScheduleShift->workingSchedule->dayOffs()->pluck('day')->toArray();
 
             $holidayDates = $this->_getGlobalDayOff($startDate, $endDate);
 
@@ -132,7 +132,7 @@ class TimeOffController extends RequestController
 
             if ($request->file) {
                 $file = $request->file('file');
-                $filename = time() . $file->getClientOriginalName();
+                $filename = time() . "_" . $request->user()->name . "." . $file->getClientOriginalExtension();
                 $file->storeAs('request/timeoff/', $filename, 'public');
             }
 

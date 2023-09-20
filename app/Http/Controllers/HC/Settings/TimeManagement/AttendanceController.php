@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\HC\Settings\TimeManagement;
 
 use App\Constants;
+use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Utils\ErrorHandler;
 
 use App\Models\Employee\WorkingSchedule;
+use App\Models\Employee\WorkingScheduleDayOff;
 use App\Models\Employee\WorkingShift;
 use App\Models\Employee\WorkingScheduleShift;
 
@@ -28,8 +30,9 @@ class AttendanceController extends Controller
 
     public function index() {
         $dataWorkingShift = WorkingShift::all();
+        $dataDays = $this->constants->day;
 
-        return view("hc.cmt-settings.time-management.attendance", compact(["dataWorkingShift"]));
+        return view("hc.cmt-settings.time-management.attendance", compact(["dataWorkingShift", "dataDays"]));
     }
 
     public function getTableSchedule(Request $request) {
@@ -40,17 +43,18 @@ class AttendanceController extends Controller
             return DataTables::of($query)
             ->addColumn('action', function ($action) {
                 $shift = $action->workingShifts;
+                $day_off = $action->dayOffs->pluck("day");
 
                 $edit = '
                 <li>
-                    <div class="btn-edit" onclick=\'fillInput(
+                    <div class="btn-edit" onclick=\'fillInputSchedule(
                             "'. $action->id .'",
                             "'. $action->name .'",
                             "'. $action->effective_date .'",
                             "'. $action->override_national_holiday .'",
                             "'. $action->override_company_holiday .'",
                             "'. $action->override_special_holiday .'",
-                            "'. $action->flexible .'",
+                            '. $day_off .',
                             '. $shift .',
                         )\'>
                         <a href="#modal_create_schedule" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
@@ -94,14 +98,13 @@ class AttendanceController extends Controller
     }
 
     public function createUpdateSchedule(Request $request) {
-
         $request->validate([
             "name" => "required",
             "effective_date" => "required",
             "shift_id" => "required",
         ]);
 
-        // DB::transaction(function () use ($request) {
+        DB::transaction(function () use ($request) {
             $workingSchedule = WorkingSchedule::updateOrCreate([
                 "id" => $request->id,
             ], [
@@ -110,25 +113,60 @@ class AttendanceController extends Controller
                 "override_national_holiday" => $request->override_national_holiday,
                 "override_company_holiday" => $request->override_company_holiday,
                 "override_special_holiday" => $request->override_special_holiday,
-                "flexible" => $request->flexible,
             ]);
 
-            foreach ($workingSchedule->workingScheduleShifts as $data) {
+            foreach ($workingSchedule->dayOffs as $data) {
                 $data->delete();
             }
 
-            foreach ($request->shift_id as $shift) {
-                WorkingScheduleShift::create([
-                    'working_schedule_id' => $workingSchedule->id,
-                    'working_shift_id' => $shift["shift_id"],
-                ]);
+            if ($request->shift_id && $request->id == null) {
+                foreach ($request->shift_id as $shift) {
+                    WorkingScheduleShift::create([
+                        'working_schedule_id' => $workingSchedule->id,
+                        'working_shift_id' => $shift["shift_id"],
+                    ]);
+                }
+            }
+
+            if ($request->day_off) {
+                foreach ($request->day_off as $day_off) {
+                    WorkingScheduleDayOff::create([
+                        'day' => $day_off,
+                        'working_schedule_id' => $workingSchedule->id,
+                    ]);
+                }
             }
 
             return response()->json([
-                'status' => "succes",
+                'status' => "success",
                 'message' => "Data berhasil disimpan",
             ], 200);
-        // });
+        });
+    }
+
+    public function deleteShiftFromSchedule(Request $request) {
+        try {
+            $workingScheduleShift = WorkingScheduleShift::where("working_shift_id", $request->shift_id)->where("working_schedule_id", $request->working_schedule_id)->first();
+
+            if (!$workingScheduleShift) {
+                throw new NotFoundError("working schedule tidak ditemukan");
+            }
+
+            if ($workingScheduleShift->userEmployments->count() > 0) {
+                throw new InvariantError("Masih ada user yang menggunakan shift");
+            }
+
+            $workingScheduleShift->delete();
+
+            return response()->json([
+                'status' => "success",
+                'message' => "Working schedule berhasil dihapus",
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function deleteSchedule(Request $request) {

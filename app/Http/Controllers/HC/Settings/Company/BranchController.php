@@ -125,7 +125,7 @@ class BranchController extends Controller
 
             if ($request->logo) {
                 $file = $request->file('logo');
-                $filename = time() . '_' . $file->getClientOriginalName();
+                $filename = time() . '_' . $request->name;
                 if ($subBranch->logo) {
                     $filename = $subBranch->logo;
                 }
@@ -138,7 +138,7 @@ class BranchController extends Controller
             }
             if ($request->signature) {
                 $file = $request->file('signature');
-                $filename = time() . '_' . $file->getClientOriginalName();
+                $filename = time() . '_' . $request->name;
                 if ($subBranch->logo) {
                     $filename = $subBranch->logo;
                 }

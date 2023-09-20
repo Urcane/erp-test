@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Attendance;
+namespace App\Models\Leave;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

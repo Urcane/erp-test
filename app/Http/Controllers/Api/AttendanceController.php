@@ -278,7 +278,7 @@ class AttendanceController extends Controller
                 throw new InvariantError("User belum memiliki data karyawan");
             }
 
-            $workingDayOff = $employmentData->workingScheduleShift->workingSchedule->dayOffs->pluck('name')->toArray();
+            $workingDayOff = $employmentData->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
 
             if (in_array($now->dayName, $workingDayOff)) {
                 throw new InvariantError("Tidak dapat absen pada hari libur (Working Schedule)");
@@ -333,7 +333,7 @@ class AttendanceController extends Controller
 
             // save the file
             $file = $request->file('file');
-            $filename = time() . $file->getClientOriginalName();
+            $filename = time() . "_" . $user->name . "." . $file->getClientOriginalExtension();
             $file->storeAs('attendance/checkin', $filename, 'public');
 
             if (!$attendanceToday) {
@@ -447,7 +447,7 @@ class AttendanceController extends Controller
                 throw new InvariantError("User belum memiliki data karyawan");
             }
 
-            $workingDayOff = $employmentData->workingScheduleShift->workingSchedule->dayOffs->pluck('name')->toArray();
+            $workingDayOff = $employmentData->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
 
             if (in_array($now->dayName, $workingDayOff)) {
                 throw new InvariantError("Tidak dapat absen pada hari libur (Working Schedule)");
@@ -502,7 +502,7 @@ class AttendanceController extends Controller
 
             // save the file
             $file = $request->file('file');
-            $filename = time() . $file->getClientOriginalName();
+            $filename = time() . "_" . $user->name . "." . $file->getClientOriginalExtension();
             $file->storeAs('attendance/checkout', $filename, 'public');
 
             if (!$attendanceToday) {

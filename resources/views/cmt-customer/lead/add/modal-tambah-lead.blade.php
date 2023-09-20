@@ -86,16 +86,16 @@
 						</div>
 						<div class="col-lg-8 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
-								<span class="required fw-bold">Nama Kontak</span>
+								<span class="fw-bold">Nama Kontak</span>
 							</label>
-							<input type="text" class="form-control form-control-solid" placeholder="" required name="customer_contact_name">
+							<input type="text" class="form-control form-control-solid" placeholder="" name="customer_contact_name">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
 						<div class="col-lg-4 col-4 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
-								<span class="required fw-bold">Jabatan</span>
+								<span class="fw-bold">Jabatan</span>
 							</label>
-							<input type="text" class="form-control form-control-solid" placeholder="" required name="customer_contact_job">
+							<input type="text" class="form-control form-control-solid" placeholder="" name="customer_contact_job">
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>
 						<div class="col-lg-6 col-4 mb-3">
@@ -107,11 +107,11 @@
 						</div>
 						<div class="col-lg-6 col-4 mb-3">
 							<label class="d-flex align-items-center fs-6 form-label mb-2">
-								<span class="required fw-bold text-dark">Telepon</span>
+								<span class="fw-bold text-dark">Telepon</span>
 							</label>
 							<div class="input-group">
 								<span class="input-group-text border-0">+62</span>
-								<input type="number" class="form-control form-control-solid" required minlength="9" maxlength="13" name="customer_contact_phone"/>
+								<input type="number" class="form-control form-control-solid" minlength="9" maxlength="13" name="customer_contact_phone"/>
 							</div>
 							<div class="fv-plugins-message-container invalid-feedback"></div>
 						</div>

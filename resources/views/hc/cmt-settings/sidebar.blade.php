@@ -38,7 +38,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{route("hc.setting.schedule.index")}}">Attendance</a></li>
-                            <li><a class="dropdown-item" href="#">Live Attendance</a></li>
+                            <li><a class="dropdown-item" href="{{route("hc.setting.live-location.index")}}">Live Location</a></li>
                             <li><a class="dropdown-item" href="#">Portal</a></li>
                             <li><a class="dropdown-item" href="{{route("hc.setting.timeoff.index")}}">Time Off</a></li>
                             <li><a class="dropdown-item" href="#">Overtime</a></li>
@@ -104,9 +104,7 @@
                             </span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Action two</a></li>
-                            <li><a class="dropdown-item" href="#">Action three</a></li>
+                            <li><a class="dropdown-item" href="{{route('hc.setting.permission.index')}}">Permission</a></li>
                         </ul>
                     </div>
                 </div>

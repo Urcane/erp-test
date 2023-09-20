@@ -15,12 +15,10 @@
                 <thead class="">
                     <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                         <th class="text-center w-50px">#</th>
-                        <th class="w-150px">Create Date</th>
-                        <th class="w-150px">Start Date</th>
-                        <th class="w-150px">End Date</th>
-                        <th class="w-150px">Taken</th>
-                        <th class="w-50px">Request Code</th>
-                        <th class="w-150px">Approval Line</th>
+                        <th class="w-150px">Created Date</th>
+                        <th class="w-150px">Request</th>
+                        <th class="w-100px">Code</th>
+                        <th class="w-200px">Approval Line</th>
                         <th class="w-150px">Status</th>
                         <th class="w-100px">#</th>
                     </tr>
@@ -151,13 +149,7 @@
                         data: 'created_at'
                     },
                     {
-                        data: 'start_date'
-                    },
-                    {
-                        data: 'end_date'
-                    },
-                    {
-                        data: 'taken'
+                        data: 'name'
                     },
                     {
                         data: 'code'
@@ -175,7 +167,7 @@
 
                 columnDefs: [
                     {
-                        targets: 0,
+                        targets: "_all",
                         searchable : false,
                         className: 'text-center',
                     },
@@ -185,7 +177,9 @@
 
         $('#modal_create_time_off_request').submit(function(event) {
             event.preventDefault();
+            const disabled = $(this).find('input:disabled').prop('disabled', false);
             var formData = new FormData($(this)[0]);
+            disabled.prop('disabled', true);
             $.ajax({
                 url: "{{ route('req.time-off.create') }}",
                 type: 'POST',
@@ -196,6 +190,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
+                    $('#time_off_request_modal').modal('hide');
+                    $("#modal_create_time_off_request")[0].reset();
+                    $('select[name="leave_request_category_id"]').trigger('change');
                     timeOffTable.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },
