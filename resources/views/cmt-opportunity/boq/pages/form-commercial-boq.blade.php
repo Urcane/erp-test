@@ -39,7 +39,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark d-md-lh-sm">Commercial Bill of Quantity</span>
+                                <span class="lh-xxl fw-bolder text-dark d-md-lh-sm">Commercial Bill of Quantity: <b>{{$updateDraftBoqData['dataCompanyItem'][0]->id}}</b></span>
                             </h3>
                         </div>
                         <div class="card-body">
@@ -206,7 +206,7 @@
                                         </div>
 
                                         <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
-                                            <label class="form-label required">GPM</label>
+                                            <label class="form-label required">Markup</label>
                                             <div class="position-relative">
                                                 <div class="position-absolute top-0"></div>
                                                 <input type="number" disabled
@@ -217,7 +217,7 @@
                                         </div>
 
                                         <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
-                                            <label class="form-label required">NPM</label>
+                                            <label class="form-label required">Profit</label>
                                             <div class="position-relative">
                                                 <div class="position-absolute top-0"></div>
                                                 <input type="number" disabled
@@ -231,10 +231,13 @@
                                             <label class="form-label required">Percentage</label>
                                             <div class="position-relative">
                                                 <div class="position-absolute top-0"></div>
-                                                <input type="number" disabled
-                                                    class="form-control form-control-solid required" id="percentage"
-                                                    name="percentage"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                <div class="input-group">
+                                                    <input type="number" disabled
+                                                        class="form-control form-control-solid required" id="percentage"
+                                                        name="percentage"
+                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                    <span class="input-group-text border-0">%</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -9,6 +9,7 @@ use App\Models\Inventory\InventoryUnitMaster;
 use App\Services\Master\Item\ItemService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Repositories\Sales\Opportunity\BoQ\BoQRepository;
+use Carbon\Carbon;
 
 /**
  * Class BoQDraftService
@@ -136,8 +137,31 @@ class BoqService
                 </div>
                 ';
             })
+            ->addColumn('aging', function($query) {
+                $lastReview = collect([
+                    $query->approval_manager_sales_date,
+                    $query->approval_manager_operation_date,
+                    $query->approval_director_date,
+                    $query->approval_finman_date,
+                ])->max();
+                
+                $startDate = Carbon::parse( $query->created_at);
+                $endDate = Carbon::parse( $lastReview);
+
+                $text = isset($query->is_done) ? $startDate->diffInDays($endDate) : $startDate->diffInDays(Carbon::now());
+
+                return '<span class="badge px-3 py-2 badge-light-warning"><i class="fa-solid text-warning fa-clock me-3"></i>'.$text.' Days</span>';
+            })
+            ->editColumn('created_at', function($data){ 
+                $formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at); 
+                return $formatedDate . ' +08 WITA'; 
+            })
+            ->editColumn('updated_at', function($data){ 
+                $formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $data->updated_at); 
+                return $formatedDate . ' +08 WITA'; 
+            })
             ->addIndexColumn()
-            ->rawColumns(['DT_RowChecklist', 'action','action_approval', 'action_done', 'action_cancel','action_quotation', 'next_action_pretified', 'progress_pretified'])
+            ->rawColumns(['DT_RowChecklist', 'action', 'aging','action_approval', 'action_done', 'action_cancel','action_quotation', 'next_action_pretified', 'progress_pretified'])
             ->make(true);
     }
 

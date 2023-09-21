@@ -34,6 +34,7 @@ class CustomerController extends Controller
     public function storeLead(Request $request)
     {
         try {
+            DB::beginTransaction();
             $company = Customer::create([
                 'user_id' => Auth::user()->id,
                 'customer_name' => $request->customer_name,
@@ -44,19 +45,24 @@ class CustomerController extends Controller
                 'lat' => $request->lat,
                 'lng' => $request->lng,
             ]);
+
+            Log::info($request->all());
+
             $contact = CustomerContact::create([
                 'customer_id' => $company->id,
-                'customer_contact_name' => $request->customer_contact_name,
-                'customer_contact_job' => $request->customer_contact_job,
-                'customer_contact_email' => $request->customer_contact_email,
-                'customer_contact_phone' => $request->customer_contact_phone,
+                'customer_contact_name' => $request->input('customer_contact_name', '-') ?? '-',
+                'customer_contact_job' => $request->input('customer_contact_job', '-') ?? '-',
+                'customer_contact_email' => $request->input('customer_contact_email'),
+                'customer_contact_phone' => $request->input('customer_contact_phone', '00000000000') ?? '00000000000',
             ]);
-            
+
+            DB::commit();
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
         } 
         catch (\Throwable $th) {
+            DB::rollBack();
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
@@ -191,7 +197,7 @@ class CustomerController extends Controller
     public function getEditLead($id)
     {
         $lead = DB::table('customers')
-        ->join('customer_contacts','customer_contacts.id','customers.id')
+        ->join('customer_contacts','customer_contacts.customer_id','customers.id')
         ->select('customers.*','customer_contacts.customer_contact_name','customer_contacts.customer_contact_job','customer_contacts.customer_contact_phone','customer_contacts.customer_contact_email')
         ->where('customers.id',$id)
         ->first();
@@ -254,7 +260,7 @@ class CustomerController extends Controller
                     $badge = 'warning';
                     $icon = 'fa-building-circle-check';
                     $text = 'Prospek'; 
-                }elseif($status->prospect_status != 0 && $status->status == 2){
+                }elseif($status->status == 2){
                     $badge = 'success';
                     $icon = 'fa-check';
                     $text = 'Goal'; 
@@ -327,7 +333,7 @@ class CustomerController extends Controller
                     $text = 'Lead'; 
                 }elseif($lead_status->prospect_status != 0 && $lead_status->status == 1){
                     $text = 'Prospek'; 
-                }elseif($lead_status->prospect_status != 0 && $lead_status->status == 2){
+                }elseif($lead_status->status == 2){
                     $text = 'Goal'; 
                 }else{
                     $text = 'Batal'; 

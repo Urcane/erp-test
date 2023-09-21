@@ -37,7 +37,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Bill of Quantity</span>
+                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Bill of Quantity: <b>{{$updateDraftBoqData['dataCompanyItem'][0]->id}}</b></span>
                             </h3> 
                         </div> 
                         <div class="card-body"> 
