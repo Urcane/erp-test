@@ -198,7 +198,7 @@ class QuotationRepository
             return response()->json(['message' => 'Sayang Sekali :( BoQ tidak ditemukan'], 404);
         }
 
-        $dataBoq = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact')
+        $dataBoq = $this->boqData->with('itemable.inventoryGood', 'customerProspect.customer.customerContact', 'sales')
             ->where('id', $data->id)
             ->get();
 
