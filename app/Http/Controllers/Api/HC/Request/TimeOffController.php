@@ -190,8 +190,6 @@ class TimeOffController extends RequestController
                 $this->constants->attendance_code[3],
             );
         });
-
-        return count($schedule["takenDates"]);
     }
 
     //quota management section
@@ -573,6 +571,8 @@ class TimeOffController extends RequestController
         }
     }
 
+    // public function section
+
     public function updateRequestStatusById(Request $request)
     {
         try {
@@ -596,26 +596,23 @@ class TimeOffController extends RequestController
             if ($user->hasPermissionTo('HC:change-all-status-request')) {
                 if ($request->status == $this->constants->approve_status[1]) {
                     $query = $this->_validateAndMakeQuery($leaveRequest);
-                    $leaveDuration = $this->_updateSchedule($leaveRequest, $user);
+                    $this->_updateSchedule($leaveRequest, $user);
                     $this->_updateQuota($query["query"]);
 
                     $leaveRequestCategory = LeaveRequestCategory::whereId($leaveRequest->leave_request_category_id)->first();
 
+                    $date = $leaveRequestCategory->half_day ?
+                        Carbon::createFromFormat('Y-m-d', $leaveRequest->date)->format('d/m/Y')
+                        : Carbon::createFromFormat('Y-m-d', $leaveRequest->start_date)->format('d/m/Y')
+                            . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
+
                     UserLeaveHistory::create([
+                        "type" => $this->constants->leave_quota_history_type[0],
                         "user_id" => $leaveRequest->user->id,
-                        "leave_request_category_id" => $leaveRequestCategory->id,
-                        "category_name" => $leaveRequestCategory->name,
-                        "category_code" => $leaveRequestCategory->code,
-                        "approval_id" => $user->id,
+                        "name" => "$leaveRequestCategory->name ($leaveRequestCategory->code)",
                         "approval_name" => $user->name,
-                        "file" => $leaveRequest->file,
-                        "start_date" => $leaveRequest->start_date,
-                        "end_date" => $leaveRequest->end_date,
-                        "duration" => $leaveDuration,
-                        "date" => $leaveRequest->date,
-                        "working_start" => $leaveRequest->working_start,
-                        "working_end" => $leaveRequest->working_end,
-                        "quota_taken" => $query["quota_taken"],
+                        "date" => $date,
+                        "quota_change" => $query["quota_taken"]
                     ]);
                 }
 
@@ -649,26 +646,23 @@ class TimeOffController extends RequestController
 
             if ($request->status == $this->constants->approve_status[1]) {
                 $query = $this->_validateAndMakeQuery($leaveRequest);
-                $leaveDuration = $this->_updateSchedule($leaveRequest, $user);
+                $this->_updateSchedule($leaveRequest, $user);
                 $this->_updateQuota($query["query"]);
 
                 $leaveRequestCategory = LeaveRequestCategory::whereId($leaveRequest->leave_request_category_id)->first();
 
+                $date = $leaveRequestCategory->half_day ?
+                    Carbon::createFromFormat('Y-m-d', $leaveRequest->date)->format('d/m/Y')
+                    : Carbon::createFromFormat('Y-m-d', $leaveRequest->start_date)->format('d/m/Y')
+                        . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
+
                 UserLeaveHistory::create([
+                    "type" => $this->constants->leave_quota_history_type[0],
                     "user_id" => $leaveRequest->user->id,
-                    "leave_request_category_id" => $leaveRequestCategory->id,
-                    "category_name" => $leaveRequestCategory->name,
-                    "category_code" => $leaveRequestCategory->code,
-                    "approval_id" => $user->id,
+                    "name" => "$leaveRequestCategory->name ($leaveRequestCategory->code)",
                     "approval_name" => $user->name,
-                    "file" => $leaveRequest->file,
-                    "start_date" => $leaveRequest->start_date,
-                    "end_date" => $leaveRequest->end_date,
-                    "duration" => $leaveDuration,
-                    "date" => $leaveRequest->date,
-                    "working_start" => $leaveRequest->working_start,
-                    "working_end" => $leaveRequest->working_end,
-                    "quota_taken" => $query["quota_taken"],
+                    "date" => $date,
+                    "quota_change" => $query["quota_taken"]
                 ]);
             }
 

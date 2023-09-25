@@ -85,25 +85,11 @@ class CreateAllTimeoff extends Migration
         Schema::create('user_leave_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("leave_request_category_id")->constrained("leave_request_categories");
-            $table->string("category_name", 100);
-            $table->string("category_code", 10);
-            $table->foreignId("approval_id")->constrained("users");
+            $table->enum("type", $this->constants->leave_quota_history_type);
+            $table->string("name", 100);
             $table->string("approval_name", 100);
-            $table->text("file")->nullable();
-            $table->tinyInteger("duration")->nullable();
-
-            // date
-            $table->date("start_date")->nullable();
-            $table->date("end_date")->nullable();
-            $table->tinyInteger("taken")->nullable();
-
-            // half day
-            $table->date("date")->nullable();
-            $table->time("working_start")->nullable();
-            $table->time("working_end")->nullable();
-
-            $table->tinyInteger("quota_taken")->default(0);
+            $table->string("date");
+            $table->tinyInteger("quota_change")->default(0);
             $table->softDeletes()->index();
             $table->timestamps();
         });

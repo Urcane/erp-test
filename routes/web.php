@@ -6,9 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\Profile\ProfileController;
-use App\Http\Controllers\Profile\PersonalController;
-use App\Http\Controllers\Profile\FileController;
+use App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Request;
 
@@ -123,7 +121,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(ProfileController::class)->group(function () {
+    Route::controller(Profile\ProfileController::class)->group(function () {
         Route::prefix('cmt-employee-profile')->group(function () {
             Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
 
@@ -137,7 +135,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(PersonalController::class)->group(function () {
+    Route::controller(Profile\PersonalController::class)->group(function () {
         Route::prefix('cmt-employee-personal')->group(function () {
             // family
             Route::get('/get-data/table/family', 'getTableFamily')->name('hc.emp.get-table-family');
@@ -169,7 +167,14 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(FileController::class)->group(function () {
+    Route::controller(Profile\LeaveController::class)->group(function () {
+        Route::prefix('cmt-employee-personal')->group(function () {
+            Route::get('/get-data/quotas', 'getUserLeaveQuotas')->name('hc.emp.get-user-leave-quotas');
+            Route::get('/get-data/table/leave/history', 'getTableLeaveHistory')->name('hc.emp.get-table-leave-history');
+        });
+    });
+
+    Route::controller(Profile\FileController::class)->group(function () {
         Route::prefix('cmt-employee-file')->group(function () {
             //  user file
             Route::get('/get-data/table/user-file', 'getTableUserFile')->name('hc.emp.get-table-user-file');
