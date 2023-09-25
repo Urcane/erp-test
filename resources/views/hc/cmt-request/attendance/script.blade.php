@@ -65,9 +65,14 @@
 
         if (fileName !== "-") {
             $('#att-file-modal').attr('href', fileLink);
+            $('#att-file-modal').text(fileName);
+            $('#att-file-modal').show();
+            $('#att-nofile-modal').hide();
+        } else {
+            $('#att-file-modal').attr('href', "#");
+            $('#att-file-modal').hide();
+            $('#att-nofile-modal').show();
         }
-
-        $('#att-file-modal').text(fileName);
     };
 
     const attendanceInit = () => {

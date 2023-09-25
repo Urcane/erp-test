@@ -54,14 +54,21 @@
             $('#tmoff-duration-modal').text("1 Day(s)");
             $('#tmoff-date-modal').text(`${date}`);
             $('.halfdaysection').show();
+            $('#tmoff-daytaken-modal').text("1 Day(s)");
 
             $('#tmoff-workingin-modal').text(leaveRequestCategory.working.start);
             $('#tmoff-workingend-modal').text(leaveRequestCategory.working.end);
         } else {
-            $('#tmoff-taken-modal').text(`${taken} Day(s)`);
             $('#tmoff-duration-modal').text(`${calculateDateDifference(startDate, endDate)} Day(s)`);
             $('#tmoff-date-modal').text(`${formatDate(startDate)} - ${formatDate(endDate)}`);
             $('.halfdaysection').hide();
+            $('#tmoff-daytaken-modal').text(`${taken} Day(s)`);
+        }
+
+        if (parseInt(leaveRequestCategory.useQuota)) {
+            $('#tmoff-quotataken-modal').text(`${taken} Day(s)`);
+        } else {
+            $('#tmoff-quotataken-modal').text(`0 Day(s)`);
         }
 
         $('#tmoff-name-modal').text(name);
@@ -71,17 +78,21 @@
         $('#tmoff-position-modal').text(position);
         $('#tmoff-level-modal').text(level);
         $('#tmoff-type-modal').text(`${leaveRequestCategory.name} (${leaveRequestCategory.code})`);
-        $('#tmoff-file-modal').text(file);
 
         $('#tmoff-created-modal').text(createdFormated);
         $('#tmoff-notes-modal').text(notes);
-        $('#timeoff-request-id').val(id)
+        $('#timeoff-request-id').val(id);
 
         if (fileName !== "-") {
             $('#tmoff-file-modal').attr('href', fileLink);
+            $('#tmoff-file-modal').text(fileName);
+            $('#tmoff-file-modal').show();
+            $('#tmoff-nofile-modal').hide();
+        } else {
+            $('#tmoff-file-modal').attr('href', "#");
+            $('#tmoff-file-modal').hide();
+            $('#tmoff-nofile-modal').show();
         }
-
-        $('#tmoff-file-modal').text(fileName);
     };
 
     const timeOffInit = () => {

@@ -90,7 +90,7 @@ class AttendanceController extends RequestController
                 throw new NotFoundError("Attendance Request tidak ditemukan");
             }
 
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             if ($user->hasPermissionTo('HC:change-all-status-request')) {
@@ -158,7 +158,7 @@ class AttendanceController extends RequestController
     public function getSummaries(Request $request)
     {
         try {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             $query = null;
 
@@ -254,7 +254,7 @@ class AttendanceController extends RequestController
     public function getTable(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             $query = null;
 

@@ -32,6 +32,7 @@ class Constants
     public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
     public $approve_status = ["Waiting", "Approved", "Rejected", "Canceled"]; // [0] as default // used manually on hc/request/* -> summaries and script
     public $balance_type = ["Anniversary", "Monthly"];
+    public $leave_quota_history_type = ["minus", "plus"];
 
     // system and view
     public $filter_status_attendance = [

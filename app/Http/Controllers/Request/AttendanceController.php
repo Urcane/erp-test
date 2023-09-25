@@ -115,7 +115,7 @@ class AttendanceController extends RequestController
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
                 throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
