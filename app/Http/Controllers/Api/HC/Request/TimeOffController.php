@@ -498,7 +498,7 @@ class TimeOffController extends RequestController
 
         if ($leaveCategory->use_quota) {
             $userLeaveQuotas = UserLeaveQuota::where("user_id", $user->id)
-                ->whereNot("quotas", 0)
+                ->where('quotas', '>', 0)
                 ->whereDate("expired_date", ">=", $today)
                 ->orderBy("expired_date", "asc")
                 ->get();

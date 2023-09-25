@@ -292,7 +292,7 @@ class TimeOffController extends RequestController
 
         if ($leaveCategory->use_quota) {
             $userLeaveQuotas = UserLeaveQuota::where("user_id", $user->id)
-                ->whereNot("quotas", 0)
+                ->where('quotas', '>', 0)
                 ->whereDate("expired_date", ">=", $today)
                 ->orderBy("expired_date", "asc")
                 ->get();
@@ -427,7 +427,7 @@ class TimeOffController extends RequestController
         if (request()->ajax()) {
             /** @var \App\Models\User $user */
             $user = Auth::user();
-            if (!($user->id == $request->user_id|| $user->hasPermissionTo('HC:view-attendance'))) {
+            if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
                 abort(403);
             }
 

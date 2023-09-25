@@ -243,7 +243,7 @@
                 }],
             });
 
-            timeOffTable = $('#tb_time_off_history_content').DataTable({
+            timeOffHistoryTable = $('#tb_time_off_history_content').DataTable({
                 processing: true,
                 serverSide: true,
                 retrieve: true,
