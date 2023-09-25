@@ -64,9 +64,9 @@
                         </div>
                     </div>
                     <div class="text-center mt-9">
-                        <button type="reset" id="modal_create_family_cancel"
+                        <button type="reset"
                             class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="modal_create_family_submit" class="btn btn-sm btn-info w-lg-200px"
+                        <button type="submit" class="btn btn-sm btn-info w-lg-200px"
                             data-bs-dismiss="modal">
                             <span class="indicator-label">Simpan</span>
                         </button>
