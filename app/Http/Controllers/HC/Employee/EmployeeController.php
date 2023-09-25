@@ -220,8 +220,10 @@ class EmployeeController extends Controller
                     'jaminan_pensiun_date' => $request->jaminan_pensiun_date,
                 ]);
 
-                foreach ($request->permissions as $permission) {
-                    $user->givePermissionTo($permission);
+                if ($request->permissions) {
+                    foreach ($request->permissions as $permission) {
+                        $user->givePermissionTo($permission);
+                    }
                 }
 
                 return response()->json([
