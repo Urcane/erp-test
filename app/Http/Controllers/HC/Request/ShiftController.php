@@ -77,7 +77,7 @@ class ShiftController extends RequestController
                 throw new NotFoundError("Shift Request tidak ditemukan");
             }
 
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             if ($user->hasPermissionTo('HC:change-all-status-request')) {
@@ -143,7 +143,7 @@ class ShiftController extends RequestController
     public function getSummaries(Request $request)
     {
         try {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             $query = null;
 
@@ -239,7 +239,7 @@ class ShiftController extends RequestController
     public function getTable(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             $query = null;
 

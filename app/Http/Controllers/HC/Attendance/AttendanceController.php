@@ -128,7 +128,7 @@ class AttendanceController extends Controller
 
     public function show(string $id)
     {
-        /** @var App\Models\User $authUser */
+        /** @var \App\Models\User $authUser */
         $authUser = Auth::user();
 
         if (!($authUser->id == $id || $authUser->hasPermissionTo('HC:view-attendance'))) {
@@ -459,7 +459,7 @@ class AttendanceController extends Controller
     public function getAttendanceSummariesById(Request $request)
     {
         try {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             if (!($user->id == $request->userId || $user->hasPermissionTo('HC:view-attendance'))) {
@@ -681,7 +681,7 @@ class AttendanceController extends Controller
     public function getTableAttendanceDetail(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
@@ -852,7 +852,7 @@ class AttendanceController extends Controller
     public function exportPersonalAttendance(Request $request)
     {
         try {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             if (!($user->id == $request->userId || $user->hasPermissionTo('HC:view-attendance'))) {

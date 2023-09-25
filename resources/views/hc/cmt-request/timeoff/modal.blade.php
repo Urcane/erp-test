@@ -45,17 +45,21 @@
 
                     <p class="fw-bold mt-4">Request Detail</p>
                     <div class="row p-2 m-1 rounded border border-2 border-secondary">
-                        <div class="col-lg-6 mb-1">
+                        <div class="col-lg-12 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Time Off Type</span>
                             <p class="fs-7 fw-normal" id="tmoff-type-modal">-</p>
                         </div>
-                        <div class="col-lg-3 mb-1">
-                            <span class="fs-8 text-gray-600 fw-semibold mb-1">Quota Taken</span>
-                            <p class="fs-7 fw-normal" id="tmoff-taken-modal">-</p>
+                        <div class="col-lg-4 mb-1">
+                            <span class="fs-8 text-gray-600 fw-semibold mb-1">Taken</span>
+                            <p class="fs-7 fw-normal" id="tmoff-daytaken-modal">-</p>
                         </div>
-                        <div class="col-lg-3 mb-1">
+                        <div class="col-lg-4 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Duration</span>
                             <p class="fs-7 fw-normal" id="tmoff-duration-modal">-</p>
+                        </div>
+                        <div class="col-lg-4 mb-1">
+                            <span class="fs-8 text-gray-600 fw-semibold mb-1">Quota Taken</span>
+                            <p class="fs-7 fw-normal" id="tmoff-quotataken-modal">-</p>
                         </div>
                         <div class="col-lg-6 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Request Created</span>
@@ -78,9 +82,11 @@
                         <div class="col-lg-12 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">File</span>
                             <div>
-                                <a href="" class="fs-7 fw-normal btn btn-link p-0 m-0 text-decoration-underline" id="tmoff-file-modal" target="_blank">-</a>
+                                <p class="fs-7 fw-normal" id="tmoff-nofile-modal">No File Attached</p>
+                                <a href="" class="fs-7 fw-normal btn btn-link m-0 p-0" id="tmoff-file-modal" target="_blank">-</a>
                             </div>
                         </div>
+
                         <div class="col-lg-12 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">Notes</span>
                             <p class="fs-7 fw-normal" id="tmoff-notes-modal">-</p>

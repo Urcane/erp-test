@@ -84,7 +84,7 @@ class ShiftController extends RequestController
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             if (!($user->id == $request->user_id|| $user->hasPermissionTo('HC:view-attendance'))) {
                 abort(403);

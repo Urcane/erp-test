@@ -139,21 +139,6 @@ class User extends Authenticatable
         return $this->hasMany(Attendance\UserAttendanceRequest::class);
     }
 
-    public function userLeaveQuotas(): HasMany
-    {
-        return $this->hasMany(Attendance\UserLeaveQuota::class);
-    }
-
-    public function userLeaveHistories(): HasMany
-    {
-        return $this->hasMany(Attendance\UserLeaveHistory::class);
-    }
-
-    public function userLeaveRequests(): HasMany
-    {
-        return $this->hasMany(Attendance\UserLeaveRequest::class);
-    }
-
     public function userOvertimeRequests(): HasMany
     {
         return $this->hasMany(Attendance\UserOvertimeRequest::class);
@@ -167,5 +152,25 @@ class User extends Authenticatable
     public function attendanceChangeLog(): HasMany
     {
         return $this->hasMany(Attendance\AttendanceChangeLog::class);
+    }
+
+    public function userLeaveHistories(): HasMany
+    {
+        return $this->hasMany(Leave\UserLeaveHistory::class);
+    }
+
+    public function userLeaveRequests(): HasMany
+    {
+        return $this->hasMany(Leave\UserLeaveRequest::class);
+    }
+
+    public function userLeaveCategoryQuotas(): HasMany
+    {
+        return $this->hasMany(Leave\UserLeaveCategoryQuota::class);
+    }
+
+    public function userLeaveQuotas(): HasMany
+    {
+        return $this->hasMany(Leave\UserLeaveQuota::class);
     }
 }
