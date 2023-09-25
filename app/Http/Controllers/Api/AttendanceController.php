@@ -264,7 +264,7 @@ class AttendanceController extends Controller
 
             // user handler
             $user = $request->user()->load([
-                'userEmployment.workingScheduleShift.workingSchedule.dayOffs',
+                'userEmployment.workingSchedule.workingScheduleShifts',
                 'userEmployment.subBranch.branchLocations'
             ]);
 
@@ -278,14 +278,13 @@ class AttendanceController extends Controller
                 throw new InvariantError("User belum memiliki data karyawan");
             }
 
-            $workingDayOff = $employmentData->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
+            $workingShift = $user->userCurrentShift->workingScheduleShift->workingShift;
 
-            if (in_array($now->dayName, $workingDayOff)) {
+            if (!$workingShift->is_working) {
                 throw new InvariantError("Tidak dapat absen pada hari libur (Working Schedule)");
             }
 
-            // data user checking
-            $workingShift = $employmentData->workingScheduleShift->workingShift;
+            // get attendance today
             $attendanceToday = $user->userAttendances->where('date', $today)->first();
 
             // attendance validation
@@ -433,7 +432,7 @@ class AttendanceController extends Controller
 
             // user handler
             $user = $request->user()->load([
-                'userEmployment.workingScheduleShift.workingSchedule.dayOffs',
+                'userEmployment.workingSchedule.workingScheduleShifts',
                 'userEmployment.subBranch.branchLocations'
             ]);
 
@@ -447,14 +446,13 @@ class AttendanceController extends Controller
                 throw new InvariantError("User belum memiliki data karyawan");
             }
 
-            $workingDayOff = $employmentData->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
+            $workingShift = $user->userCurrentShift->workingScheduleShift->workingShift;
 
-            if (in_array($now->dayName, $workingDayOff)) {
+            if (!$workingShift->is_working) {
                 throw new InvariantError("Tidak dapat absen pada hari libur (Working Schedule)");
             }
 
             // data user checking
-            $workingShift = $employmentData->workingScheduleShift->workingShift;
             $attendanceToday = $user->userAttendances->where('date', $today)->first();
 
             // attendance validation

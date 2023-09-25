@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(EmployeeController::class)->group(function () {
             Route::prefix('cmt-employee')->group(function () {
                 Route::post('/store/employee', 'store')->name('hc.emp.store');
+                Route::post('/get/schedule/shift', 'getScheduleShift')->name('hc.emp.get.schedule.shift');
             });
         });
     });
@@ -259,6 +260,7 @@ Route::middleware(['auth'])->group(function () {
                         Route::post('/create/update/schedule', 'createUpdateSchedule')->name('hc.setting.schedule.createUpdate');
                         Route::post('/delete/schedule', 'deleteSchedule')->name('hc.setting.schedule.delete');
                         Route::post('/delete/schedule/shift', 'deleteShiftFromSchedule')->name('hc.setting.schedule.delete.shift');
+                        Route::post('/update/schedule/shift', 'updateShiftFromSchedule')->name('hc.setting.schedule.update.shift');
                         Route::post('/get/shift', 'getShift')->name('hc.setting.schedule.get.shift');
 
                         Route::get('/table/shift', 'getTableShift')->name('hc.setting.getTableShift');

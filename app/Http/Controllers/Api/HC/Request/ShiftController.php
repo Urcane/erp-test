@@ -11,7 +11,9 @@ use App\Exceptions\NotFoundError;
 
 use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserShiftRequest;
+use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\UserEmployment;
+use Illuminate\Support\Carbon;
 
 class ShiftController extends RequestController
 {
@@ -20,7 +22,16 @@ class ShiftController extends RequestController
         $userAttendance = UserAttendance::where('user_id', $userId)->where('date', $date)->first();
 
         if (!$userAttendance) {
-            $primaryShift = UserEmployment::where('user_id', $userId)->first()->workingScheduleShift->workingShift;
+            $workingScheduleShift = UserCurrentShift::where('user_id', $userId)->first()->workingScheduleShift;
+
+            Carbon::setLocale($this->constants->locale);
+            $now = Carbon::now();
+            $diff = $now->diffInDays(Carbon::parse('2023-09-20'));
+
+            $primaryShift = $workingScheduleShift->workingShift;
+            for ($i=0; $i < $diff; $i++) {
+                $primaryShift = $workingScheduleShift->beforeSchedule->workingShift;
+            }
 
             UserAttendance::create([
                 'user_id' => $userId,
@@ -106,7 +117,7 @@ class ShiftController extends RequestController
                     'user.division',
                     'user.department',
                     'workingShift',
-                    'user.userEmployment.workingScheduleShift.workingShift'
+                    'user.userEmployment.workingSchedule.workingShifts'
                 ])
                 ->first();
 

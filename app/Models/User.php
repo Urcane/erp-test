@@ -84,6 +84,11 @@ class User extends Authenticatable
         return $this->hasOne(Employee\UserPersonalData::class);
     }
 
+    public function userCurrentShift(): HasOne
+    {
+        return $this->hasOne(Employee\UserCurrentShift::class);
+    }
+
     public function userSalary(): HasOne
     {
         return $this->hasOne(Employee\UserSalary::class);

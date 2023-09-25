@@ -83,7 +83,7 @@ class UserController extends Controller
         try {
             return response()->json([
                 "status" => "success",
-                "data" => $request->user()->userEmployment->load(['user.team', 'user.roles', 'user.division', 'user.department', 'approvalLine', 'subBranch', 'workingScheduleShift','employmentStatus','workingScheduleShift.workingSchedule','workingScheduleShift.workingShift']),
+                "data" => $request->user()->userEmployment->load(['user.team', 'user.roles', 'user.division', 'user.department', 'approvalLine', 'subBranch', 'workingSchedule','employmentStatus','workingSchedule.workingShift']),
             ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);

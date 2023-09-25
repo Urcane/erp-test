@@ -73,7 +73,8 @@ class ProfileController extends Controller
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataSubBranch = SubBranch::all();
         $dataTaxStatus = TaxStatus::all();
-        $dataWorkingScheduleShift = WorkingScheduleShift::all();
+        $dataWorkingScheduleShifts = $user->userEmployment->workingSchedule->workingScheduleShifts;
+        $dataWorkingSchedule = WorkingSchedule::all();
         $dataShift = WorkingShift::where('show_in_request', true)->get();
 
         $dataNonFormalEducationCategory = NonFormalEducationCategory::all();
@@ -88,6 +89,7 @@ class ProfileController extends Controller
         return view('profile.index', compact(
             'user',
             'users',
+            'dataWorkingScheduleShifts',
             'dataNonFormalEducationCategory',
             'dataRole',
             'dataTeam',
@@ -97,7 +99,7 @@ class ProfileController extends Controller
             'constants',
             'dataEmploymentStatus',
             'dataSubBranch',
-            'dataWorkingScheduleShift',
+            'dataWorkingSchedule',
             'dataPaymentSchedule',
             'dataProrateSetting',
             'dataShift',

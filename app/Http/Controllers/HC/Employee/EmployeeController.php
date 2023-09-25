@@ -25,6 +25,7 @@ use App\Models\Employee\UserTax;
 // use App\Models\Employee\TaxStatus;
 
 use App\Constants;
+use App\Models\Employee\WorkingScheduleShift;
 use App\Utils\ErrorHandler;
 
 class EmployeeController extends Controller
@@ -36,6 +37,14 @@ class EmployeeController extends Controller
     {
         $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
+    }
+
+    public function getScheduleShift(Request $request) {
+        $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $request->working_schedule_id)->get();
+        return response()->json([
+            "status" => "success",
+            "workingScheduleShift" => $workingScheduleShift->load("workingShift"),
+        ]);
     }
 
     public function store(Request $request) {
@@ -73,7 +82,8 @@ class EmployeeController extends Controller
                 'join_date' => 'required|date',
                 'end_date' => 'nullable|date',
                 'sub_branch_id' => 'nullable|exists:sub_branches,id',
-                'working_schedule_shift_id' => 'required|exists:working_schedules,id',
+                'working_schedule_id' => 'required|exists:working_schedules,id',
+                'start_shift' => 'required|exists:working_shifts,id',
                 'approval_line' => 'nullable|exists:users,id',
                 'barcode' => 'nullable|string|max:255',
 
@@ -159,7 +169,8 @@ class EmployeeController extends Controller
                     'join_date' => $request->join_date,
                     'end_date' => $request->end_date,
                     'sub_branch_id' => $request->sub_branch_id,
-                    'working_schedule_shift_id' => $request->working_schedule_shift_id,
+                    'working_schedule_id' => $request->working_schedule_id,
+                    'start_shift' => $request->start_shift,
                     'approval_line' => $request->approval_line,
                     'barcode' => $request->barcode,
                 ]);

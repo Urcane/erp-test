@@ -12,7 +12,9 @@ use App\Exceptions\NotFoundError;
 use App\Models\Attendance\AttendanceChangeLog;
 use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserAttendanceRequest;
+use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\UserEmployment;
+use Illuminate\Support\Carbon;
 
 class AttendanceController extends RequestController
 {
@@ -21,7 +23,16 @@ class AttendanceController extends RequestController
         $userAttendance = UserAttendance::where('user_id', $userId)->where('date', $date)->first();
 
         if (!$userAttendance) {
-            $workingShift = UserEmployment::where('user_id', $userId)->first()->workingScheduleShift->workingShift;
+            $workingScheduleShift = UserCurrentShift::where('user_id', $userId)->first()->workingScheduleShift;
+
+            Carbon::setLocale($this->constants->locale);
+            $now = Carbon::now();
+            $diff = $now->diffInDays(Carbon::parse('2023-09-20'));
+
+            $workingShift = $workingScheduleShift->workingShift;
+            for ($i=0; $i < $diff; $i++) {
+                $workingShift = $workingScheduleShift->beforeSchedule->workingShift;
+            }
 
             $attendance = UserAttendance::create([
                 'user_id' => $userId,
@@ -123,7 +134,7 @@ class AttendanceController extends RequestController
             $userRequest = UserAttendanceRequest::whereId($request->id)
                 ->with([
                     'approvalLine',
-                    'user.userEmployment.workingScheduleShift.workingShift'
+                    'user.userEmployment.workingSchedule.workingShifts'
                 ])
                 ->first();
 
