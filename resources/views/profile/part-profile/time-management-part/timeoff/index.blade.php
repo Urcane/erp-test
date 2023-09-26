@@ -1,6 +1,24 @@
+<style>
+    .hover-effect:hover .fas,
+    .hover-effect:hover {
+        color: #7239ea;
+    }
+
+    .hover-effect .fas {
+        transition: color 0.3s ease;
+    }
+
+    .hover-effect {
+        transition: color 0.3s ease;
+        display: inline-block;
+        color: gray;
+        cursor: pointer;
+    }
+</style>
+
 <div class="tab-pane fade" id="time_off_content" role="tabpanel">
     <div class="row p-4">
-        <div class="col-lg-6 mb-9">
+        <div class="col-lg-6 mb-2">
             <h4>Time Off</h4>
             <span class="fs-7 fw-semibold text-gray-500">Your time off information</span>
         </div>
@@ -11,34 +29,15 @@
             </div>
         </div>
 
-
-        <div class="row border rounded p-4 mb-4 justify-content-center">
-            <div class="col-12">
-                <p class="fw-bold fs-6 mb-2" id="view-date-attendance">Cuti Tahunan</p>
-                <div class="ms-1 row">
-                    <div class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="on-time">
-                        <div class="fw-semibold fs-7 text-gray-600 m-0 p-0">Sisa Cuti</div>
-                        <div class="m-0 p-0 d-flex align-items-center">
-                            <p class="text-info fw-bolder me-1" style="font-size: 31px;">13</p>
-                            <p class="text-gray-800 " style="font-size: 13px;">Hari</p>
-                        </div>
-                    </div>
-                    <div class="col summaries" href="#summaries_modal" data-bs-toggle="modal"
-                        data-param="late-clock-in">
-                        <div class="fw-semibold fs-7 text-gray-600 m-0 p-0">Terpakai</div>
-                        <div class="m-0 p-0 d-flex align-items-center">
-                            <p class="fw-bolder me-1" style="font-size: 31px; color: rgb(249 115 22);">13</p>
-                            <p class="text-gray-800 " style="font-size: 13px;">Hari</p>
-                        </div>
-                    </div>
-                    <div class="col summaries" href="#summaries_modal" data-bs-toggle="modal"
-                        data-param="early-clock-out">
-                        <div class="fw-semibold fs-7 text-gray-600 m-0 p-0">Berlaku Hingga</div>
-                        <div class="text-gray-500 fw-bolder m-0 p-0">
-                            <p style="font-size: 22px;">13 Maret 2022</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="col-12 mb-4">
+            <div class="m-0 p-0 d-flex align-items-center">
+                <div class="fw-semibold fs-6 text-gray-600 my-auto me-3 p-0">Sisa Cuti :</div>
+                <p class="text-info fw-bolder me-2 my-auto" style="font-size: 31px;" id="available_quota">-</p>
+                <p class="text-gray-800 my-auto" style="font-size: 13px;">Hari</p>
+                <a class="hover-effect" href="#view_quota_modal" data-bs-toggle="modal">
+                    <i class="fas fa-eye fa-lg hover-effect ms-3"></i>
+                    View
+                </a>
             </div>
         </div>
 
@@ -100,6 +99,7 @@
 
 @include('profile.part-profile.time-management-part.timeoff.add-modal')
 @include('profile.part-profile.time-management-part.timeoff.info-modal')
+@include('profile.part-profile.time-management-part.timeoff.view-quota-modal')
 
 <script>
     const quotaChangeType = @json($constants->leave_quota_history_type);
@@ -179,9 +179,23 @@
 
     let timeOffTable;
     let timeOffHistoryTable;
+    let tableQuota;
 
     $(document).ready(function() {
         $("#time_off").on("click", function() {
+            $.ajax({
+                url: '{{ route('hc.emp.get-user-leave-quotas') }}',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $("#available_quota").text(data.data);
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
+
             timeOffTable = $('#tb_time_off_content').DataTable({
                 processing: true,
                 serverSide: true,
@@ -203,7 +217,7 @@
                 buttons: [],
                 dom: "<'row mb-2'" +
                     "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
-                    "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+                    "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start '>" +
                     ">" +
 
                     "<'table-responsive'tr>" +
@@ -264,7 +278,7 @@
                 buttons: [],
                 dom: "<'row mb-2'" +
                     "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
-                    "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+                    "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start '>" +
                     ">" +
 
                     "<'table-responsive'tr>" +
@@ -308,6 +322,55 @@
                         quotaChangeCell.text("+" + data.quota_change + " Day(s)");
                     }
                 }
+            });
+
+            tableQuota = $(kt_table_quota).DataTable({
+                processing: true,
+                serverSide: true,
+                retrieve: true,
+                deferRender: true,
+                responsive: false,
+                aaSorting: [],
+                ajax: {
+                    url: "{{ route('hc.emp.get-table-quota-history') }}",
+                    data: function(data) {
+                        data.user_id = {{ $user->id }}
+                    }
+                },
+                language: {
+                    "lengthMenu": "Show _MENU_",
+                    "emptyTable": "Tidak ada data terbaru 📁",
+                    "zeroRecords": "Data tidak ditemukan 😞",
+                },
+                buttons: [],
+                dom: "<'row mb-2'" +
+                    "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
+                    "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start '>" +
+                    ">" +
+
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+                    "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+                    ">",
+
+                columns: [{
+                        data: 'quotas'
+                    },
+                    {
+                        data: 'received_at'
+                    },
+                    {
+                        data: 'expired_date'
+                    }
+                ],
+
+                columnDefs: [{
+                    targets: [0, 1, 2],
+                    searchable: false,
+                    className: 'text-center',
+                }],
             });
         });
 
