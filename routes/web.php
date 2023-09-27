@@ -294,6 +294,9 @@ Route::middleware(['auth'])->group(function () {
 
                         Route::get('/create', 'create')->name('hc.setting.timeoff.create');
                         Route::post('/store', 'store')->name('hc.setting.timeoff.store');
+
+                        Route::get('/edit/{id}', 'edit')->name('hc.setting.timeoff.edit');
+                        Route::post('/update', 'update')->name('hc.setting.timeoff.update');
                     });
                 });
 
