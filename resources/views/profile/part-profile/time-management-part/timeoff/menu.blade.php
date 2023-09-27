@@ -7,14 +7,25 @@
                     id: '{{$query->id}}',
                     taken: '{{$query->taken}}',
                     file: '{{$query->file}}',
-                    type: '{{$query->leaveRequestCategory->name}} ({{$query->leaveRequestCategory->code}})',
                     created: '{{$query->created_at}}',
                     notes: '{{$query->notes ?? '-'}}',
                     status: '{{$query->status}}',
                     startDate: '{{$query->start_date}}',
                     endDate: '{{$query->end_date}}',
-                    fileName: '{{$fileName}}',
-                    fileLink: '{{$fileLink}}'
+                    date: '{{$query->date}}',
+                    fileName: '{{$fileName ?? '-'}}',
+                    fileLink: '{{$fileLink}}',
+                    comment: '{{$query->comment}}',
+                    leaveRequestCategory: {
+                        name: '{{$query->leaveRequestCategory->name}}',
+                        useQuota: '{{$query->leaveRequestCategory->use_quota}}',
+                        halfday: '{{$query->leaveRequestCategory->half_day}}',
+                        code: '{{$query->leaveRequestCategory->code}}',
+                        working: {
+                            start: '{{$query->working_start ?? '-'}}',
+                            end: '{{$query->working_end ?? '-'}}',
+                        }
+                    }
                 })">
             <i class="fa-solid fa-eye me-3"></i>
             View
