@@ -17,12 +17,6 @@ use App\Models\Employee\UserIdentity;
 use App\Models\Employee\UserPersonalData;
 use App\Models\Employee\UserSalary;
 use App\Models\Employee\UserTax;
-// use App\Models\Employee\EmploymentStatus;
-// use App\Models\Employee\Branch;
-// use App\Models\Employee\WorkingScheduleShift;
-// use App\Models\Employee\PaymentSchedule;
-// use App\Models\Employee\ProrateSetting;
-// use App\Models\Employee\TaxStatus;
 
 use App\Constants;
 use App\Models\Employee\WorkingScheduleShift;
