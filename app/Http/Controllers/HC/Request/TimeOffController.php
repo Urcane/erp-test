@@ -158,12 +158,6 @@ class TimeOffController extends RequestController
             $leaveRequest->end_date
         );
 
-        if ($leaveRequest->taken != count($schedule["takenDates"])) {
-            $leaveRequest->update([
-                "taken" => count($schedule["takenDates"]),
-            ]);
-        }
-
         $leaveCategoryCode = $leaveRequest->leaveRequestCategory->code;
 
         collect($schedule["takenDates"])->map(function ($data) use (
@@ -617,6 +611,20 @@ class TimeOffController extends RequestController
                         "date" => $date,
                         "quota_change" => $query["quota_taken"]
                     ]);
+
+                    $leaveRequest->update([
+                        "approval_line" => $user->id,
+                        "status" => $request->status,
+                        "comment" => $request->comment,
+                        "taken" => $query["quota_taken"]
+                    ]);
+
+                    DB::commit();
+
+                    return response()->json([
+                        "status" => "success",
+                        "message" => "berhasil melakukan approve request time off"
+                    ]);
                 }
 
                 $leaveRequest->update([
@@ -629,7 +637,7 @@ class TimeOffController extends RequestController
 
                 return response()->json([
                     "status" => "success",
-                    "message" => "berhasil melakukan update status request time off"
+                    "message" => "berhasil melakukan reject request time off"
                 ]);
             }
 
@@ -655,9 +663,9 @@ class TimeOffController extends RequestController
                 $leaveRequestCategory = LeaveRequestCategory::whereId($leaveRequest->leave_request_category_id)->first();
 
                 $date = $leaveRequestCategory->half_day ?
-                        Carbon::createFromFormat('Y-m-d', $leaveRequest->date)->format('d/m/Y')
-                        : Carbon::createFromFormat('Y-m-d', $leaveRequest->start_date)->format('d/m/Y')
-                            . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
+                    Carbon::createFromFormat('Y-m-d', $leaveRequest->date)->format('d/m/Y')
+                    : Carbon::createFromFormat('Y-m-d', $leaveRequest->start_date)->format('d/m/Y')
+                        . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
 
                 UserLeaveHistory::create([
                     "type" => $this->constants->leave_quota_history_type[0],
@@ -666,6 +674,20 @@ class TimeOffController extends RequestController
                     "approval_name" => $user->name,
                     "date" => $date,
                     "quota_change" => $query["quota_taken"]
+                ]);
+
+                $leaveRequest->update([
+                    "approval_line" => $user->id,
+                    "status" => $request->status,
+                    "comment" => $request->comment,
+                    "taken" => $query["quota_taken"]
+                ]);
+
+                DB::commit();
+
+                return response()->json([
+                    "status" => "success",
+                    "message" => "berhasil melakukan approve request time off"
                 ]);
             }
 
@@ -679,7 +701,7 @@ class TimeOffController extends RequestController
 
             return response()->json([
                 "status" => "success",
-                "message" => "berhasil melakukan update status request time off"
+                "message" => "berhasil melakukan reject request time off"
             ]);
         } catch (\Throwable $th) {
             DB::rollback();

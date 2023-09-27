@@ -437,12 +437,11 @@ class TimeOffController extends RequestController
 
             return DataTables::of($leaveRequest)
                 ->addColumn('action', function ($query) {
-                    $constants = $this->constants;
-
                     $fileName = $query->file;
                     $fileLink = asset("/storage/request/timeoff/$fileName");
+
                     return view('profile.part-profile.time-management-part.timeoff.menu', compact([
-                        'query', 'constants', 'fileName', 'fileLink'
+                        'query', 'fileName', 'fileLink'
                     ]));
                 })
                 ->addColumn('created_at', function ($leaveRequest) {

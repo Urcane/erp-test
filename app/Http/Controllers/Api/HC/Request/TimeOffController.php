@@ -614,6 +614,20 @@ class TimeOffController extends RequestController
                         "date" => $date,
                         "quota_change" => $query["quota_taken"]
                     ]);
+
+                    $leaveRequest->update([
+                        "approval_line" => $user->id,
+                        "status" => $request->status,
+                        "comment" => $request->comment,
+                        "taken" => $query["quota_taken"]
+                    ]);
+
+                    DB::commit();
+
+                    return response()->json([
+                        "status" => "success",
+                        "message" => "berhasil melakukan approve request time off"
+                    ]);
                 }
 
                 $leaveRequest->update([
@@ -626,7 +640,7 @@ class TimeOffController extends RequestController
 
                 return response()->json([
                     "status" => "success",
-                    "message" => "berhasil melakukan update status request time off"
+                    "message" => "berhasil melakukan reject request time off"
                 ]);
             }
 
@@ -664,6 +678,20 @@ class TimeOffController extends RequestController
                     "date" => $date,
                     "quota_change" => $query["quota_taken"]
                 ]);
+
+                $leaveRequest->update([
+                    "approval_line" => $user->id,
+                    "status" => $request->status,
+                    "comment" => $request->comment,
+                    "taken" => $query["quota_taken"]
+                ]);
+
+                DB::commit();
+
+                return response()->json([
+                    "status" => "success",
+                    "message" => "berhasil melakukan approve request time off"
+                ]);
             }
 
             $leaveRequest->update([
@@ -676,7 +704,7 @@ class TimeOffController extends RequestController
 
             return response()->json([
                 "status" => "success",
-                "message" => "berhasil melakukan update status request time off"
+                "message" => "berhasil melakukan reject request time off"
             ]);
         } catch (\Throwable $th) {
             DB::rollback();

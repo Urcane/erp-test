@@ -172,6 +172,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('cmt-employee-personal')->group(function () {
             Route::get('/get-data/quotas', 'getUserLeaveQuotas')->name('hc.emp.get-user-leave-quotas');
             Route::get('/get-data/table/leave/history', 'getTableLeaveHistory')->name('hc.emp.get-table-leave-history');
+            Route::get('/get-data/table/quota/history', 'getTableQuotaLeaveHistory')->name('hc.emp.get-table-quota-history');
         });
     });
 
