@@ -15,6 +15,8 @@ use App\Http\Controllers\HC\Employee\EmployeeController;
 use App\Http\Controllers\HC\Settings;
 use App\Http\Controllers\HC\Request as HCRequest;
 
+use App\Http\Controllers\Operation;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -375,6 +377,14 @@ Route::middleware(['auth'])->group(function () {
                     Route::put('/cancel', 'cancelRequest')->name('req.time-off.cancel');
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.time-off.get-table-me');
                 });
+            });
+        });
+    });
+
+    Route::prefix('operation')->group(function () {
+        Route::controller(Operation\Assignment\AssignmentController::class)->group(function () {
+            Route::prefix('assignment')->group(function () {
+                Route::get('/pdf', 'exportPdf')->name('opt.asign.export-pdf');
             });
         });
     });

@@ -13,6 +13,7 @@ class Constants
         "leave",         // Leaves including personal, sick, etc.
         "off_schedule", // Day not on working schedule
         "holiday",      // Public or company-recognized holiday
+        "assigned",     // Assigned by supervisor
     ]; // [0] as default, [1] always be for personal, sick, etc
 
     // database related
@@ -133,6 +134,7 @@ class Constants
         "Izin/Cuti", // Leaves including personal, sick, etc.
         "Libur Kerja", // Day not on working schedule
         "Hari Libur", // Public or company-recognized holiday
+        "Dinas", // Assigned by supervisor
     ];
 
     public function attendanceCodeTranslator($code)
