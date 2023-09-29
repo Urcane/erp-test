@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class WorkingScheduleShift extends Model
 {
@@ -23,8 +24,19 @@ class WorkingScheduleShift extends Model
         return $this->belongsTo(WorkingShift::class);
     }
 
-    public function userEmployments(): HasMany
+    public function nextSchedule(): BelongsTo
     {
-        return $this->hasMany(UserEmployment::class, 'working_schedule_shift_id');
+        return $this->belongsTo(WorkingScheduleShift::class, 'next');
     }
+
+    public function beforeSchedule(): HasOne
+    {
+        return $this->hasOne(WorkingScheduleShift::class, 'next');
+    }
+
+    public function userCurrentShifts(): HasMany
+    {
+        return $this->hasMany(UserCurrentShift::class);
+    }
+
 }

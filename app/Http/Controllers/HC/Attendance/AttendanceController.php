@@ -158,6 +158,8 @@ class AttendanceController extends Controller
             $checkIn = $request->check_in ? Carbon::parse($request->check_in) : null;
             $checkOut = $request->check_out ? Carbon::parse($request->check_out) : null;
 
+            DB::beginTransaction();
+
             $userAttendance = UserAttendance::whereId($request->id)->first();
 
             AttendanceChangeLog::create([

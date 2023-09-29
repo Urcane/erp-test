@@ -79,17 +79,18 @@ class CreateAllEmployee extends Migration
         Schema::create('working_shifts', function (Blueprint $table) {
             $table->id();
             $table->string("name", 40);
-            $table->time("working_start");
-            $table->time("working_end");
-            $table->time("break_start");
-            $table->time("break_end");
-            $table->smallInteger("late_check_in")->default(0); // in minute
-            $table->smallInteger("late_check_out")->default(0); // in minute
+            $table->time("working_start")->nullable();
+            $table->time("working_end")->nullable();
+            $table->time("break_start")->nullable();
+            $table->time("break_end")->nullable();
+            $table->smallInteger("late_check_in")->nullable(); // in minute
+            $table->smallInteger("late_check_out")->nullable(); // in minute
             $table->smallInteger("start_attend")->nullable(); // in minute
             $table->smallInteger("end_attend")->nullable(); // in minute
             $table->time("overtime_before")->nullable();
             $table->time("overtime_after")->nullable();
             $table->boolean("show_in_request")->default(0);
+            $table->boolean("is_working")->default(1);
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -97,14 +98,8 @@ class CreateAllEmployee extends Migration
         Schema::create('working_schedule_shifts', function (Blueprint $table) {
             $table->id();
             $table->foreignId("working_schedule_id")->constrained("working_schedules");
-            $table->foreignId("working_shift_id")->constrained("working_shifts");
-            $table->timestamps();
-        });
-
-        Schema::create('working_schedule_day_offs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("working_schedule_id")->constrained("working_schedules");
-            $table->enum("day", $this->constants->day);
+            $table->foreignId("working_shift_id")->constrained("working_shifts")->onUpdate('cascade');
+            $table->integer("next")->index();
             $table->timestamps();
         });
 
@@ -204,10 +199,18 @@ class CreateAllEmployee extends Migration
             $table->date("end_date")->nullable()->default(null);
             $table->date("resign_date")->nullable()->default(null);
             $table->foreignId("sub_branch_id")->nullable()->constrained("sub_branches")->nullOnDelete();;
-            $table->foreignId("working_schedule_shift_id")->constrained("working_schedule_shifts");
+            $table->foreignId("working_schedule_id")->constrained("working_schedules");
+            $table->string("start_shift");
             $table->foreignId("approval_line")->nullable()->constrained("users");
             $table->string("barcode")->nullable();
             $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('user_current_shifts', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("user_id")->constrained("users");
+            $table->foreignId("working_schedule_shift_id")->constrained("working_schedule_shifts");
             $table->timestamps();
         });
 
