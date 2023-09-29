@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\HC\Settings\TimeManagement;
 
+use App\Exceptions\NotFoundError;
 use Illuminate\Http\Request;
 use App\Models\Leave\LeaveRequestCategory;
 use Carbon\Carbon;
@@ -22,7 +23,13 @@ class TimeOffController extends TimeManagementController
 
             return DataTables::of($query)
                 ->addColumn('action', function ($action) {
-                    return "-";
+                    $mnue = '<li><a href="' . route('hc.setting.timeoff.edit', ['id' => $action->id]) . '" class="dropdown-item py-2"><i class="fa-solid fa-pencil me-3"></i>Edit</a></li>';
+                    return '
+                        <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        <ul class="dropdown-menu">
+                        ' . $mnue . '
+                        </ul>
+                    ';
                 })
                 ->addColumn('effective_date', function ($query) {
                     $date = Carbon::createFromFormat('Y-m-d', $query->effective_date);
@@ -132,6 +139,106 @@ class TimeOffController extends TimeManagementController
             return response()->json([
                 "status" => "success",
                 "message" => "Berhasil menambahkan Kategori Time Off"
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function edit(String $id)
+    {
+        $category = LeaveRequestCategory::findOrFail($id);
+        $balanceTypes = $this->constants->balance_type;
+
+        return view('hc.cmt-settings.time-management.edit-time-off', compact([
+            'category', 'balanceTypes'
+        ]));
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required',
+                'name' => 'required|string|max:100',
+                'code' => 'required|string|max:8',
+                'effective_date' => 'required|date',
+                'attachment' => 'nullable',
+                'show_in_request' => 'nullable',
+                'max_request' => 'integer|nullable|min:0|max:255',
+                'use_quota' => 'nullable',
+                'unlimited_balance' => 'nullable',
+
+                // use balance
+                'min_works' => 'nullable',
+                'balance' => 'nullable',
+                'balance_type' => [
+                    'nullable',
+                    Rule::in($this->constants->balance_type),
+                    'required_if:unlimited_balance,false',
+                ],
+                'expired' => 'nullable',
+                'carry_amount' => 'integer|nullable|min:0|max:255|required_if:expired,true',
+                'carry_expired' => 'integer|nullable|min:0|max:255|required_if:expired,true',
+
+                // use half day
+                'half_day' => 'nullable',
+
+                'minus_amount' => 'integer|nullable|min:0|max:255',
+                'duration' => 'integer|nullable|min:0|max:255',
+            ]);
+
+            $leaveCategory = LeaveRequestCategory::whereId($request->id)->first();
+
+            if (!$leaveCategory) {
+                throw new NotFoundError("Kategori Time Off tidak ditemukan");
+            }
+
+            $data = [
+                'name' => $request->name,
+                'code' => $request->code,
+                'effective_date' => $request->effective_date,
+                'attachment' => (int) $request->attachment,
+                'show_in_request' => (int) $request->show_in_request,
+                'max_request' => $request->max_request,
+                'use_quota' => (int) $request->use_quota,
+                'unlimited_balance' => (int) $request->unlimited_balance,
+            ];
+
+            if (!$request->unlimited_balance) {
+                $data += [
+                    'min_works' => $request->min_works,
+                    'balance' => $request->balance,
+                    'balance_type' => $request->balance_type,
+                    'expired' => (int) $request->expire,
+                ];
+            }
+
+            if ($request->expired) {
+                $data += [
+                    'carry_amount' => $request->carry_amount,
+                    'carry_expired' => $request->carry_expired,
+                ];
+            }
+
+            if ($request->half_day) {
+                $data += [
+                    'half_day' => $request->half_day,
+                ];
+            } else {
+                $data += [
+                    'minus_amount' => $request->minus_amount,
+                    'duration' => $request->duration,
+                ];
+            }
+
+            $leaveCategory->update($data);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil melakukan update Kategori $leaveCategory->name Time Off"
             ]);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);
