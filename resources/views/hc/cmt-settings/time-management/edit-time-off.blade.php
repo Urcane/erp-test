@@ -21,31 +21,32 @@
                     <div class="card">
                         <div class="card-body row">
                             <div class="col-lg-12 mb-9 text-center">
-                                <h4>Add Time Off</h4>
+                                <h4>Edit Time Off</h4>
                             </div>
 
                             <div class="col-lg-12 p-6 m-1 rounded border border-2 border-secondary">
                                 <form class="form row" enctype="multipart/form-data" id="time_off_form">
+                                    <input type="text" name="id" value="{{ $category->id }}" hidden>
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Time Off Name</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid" placeholder="Name"
-                                            required name="name">
+                                            required name="name" value="{{ $category->name }}">
                                     </div>
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Time Off Code</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid" placeholder="Code"
-                                            required name="code">
+                                            required name="code" value="{{ $category->code }}">
                                     </div>
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Effective Date</span>
                                         </label>
                                         <input type="date" class="form-control form-control-solid" required
-                                            name="effective_date">
+                                            name="effective_date" value="{{ $category->effective_date }}">
                                     </div>
 
                                     <hr class="mb-5 mt-4">
@@ -55,7 +56,7 @@
                                     <div class="col-lg-12 mb-3">
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input checkbox-real"
-                                                name="use_quota" id="use_quota">
+                                                name="use_quota" id="use_quota" @if($category->use_quota) checked @endif>
                                             <label class="fs-7 form-check-label mb-2" for="use_quota">
                                                 <span class="fw-bold">Use Quota (This Time Off Will take leave quota)</span>
                                             </label>
@@ -69,7 +70,7 @@
                                     <div class="col-lg-12 mb-3">
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
-                                                name="unlimited_balance" id="unlimited_balance" checked>
+                                                name="unlimited_balance" id="unlimited_balance" @if($category->unlimited_balance) checked @endif>
                                             <label class="fs-7 form-check-label mb-2" for="unlimited_balance">
                                                 <span class="fw-bold">This time off has unlimited balance</span>
                                             </label>
@@ -88,6 +89,10 @@
                                             <select class="drop-data form-select form-select-solid"
                                                 data-control="balance_type" name="balance_type" required>
                                                 @foreach ($balanceTypes as $balanceType)
+                                                    @if ($category->balance_type == $balanceType)
+                                                        <option value="{{ $balanceType }}" selected>{{ $balanceType }}</option>
+                                                        @continue
+                                                    @endif
                                                     <option value="{{ $balanceType }}">{{ $balanceType }}</option>
                                                 @endforeach
                                             </select>
@@ -99,7 +104,7 @@
                                                     <span class="required fw-bold">Minimum Works (Month)</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid"
-                                                    placeholder="12" required name="min_works">
+                                                    placeholder="12" required name="min_works" value="{{ $category->min_works }}">
                                             </div>
                                         </div>
 
@@ -109,14 +114,14 @@
                                                     <span class="required fw-bold">Balance (Days)</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid"
-                                                    placeholder="12" required name="balance">
+                                                    placeholder="12" required name="balance" value="{{ $category->balance }}">
                                             </div>
                                         </div>
 
                                         <div class="col-lg-12 mb-3">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
-                                                    name="expire" id="expire">
+                                                    name="expire" id="expire" @if($category->expire) checked @endif>
                                                 <label class="fs-7 form-check-label mb-2" for="expire">
                                                     <span class="fw-bold">Balance Has Expire</span>
                                                 </label>
@@ -129,14 +134,14 @@
                                                     <span class="required fw-bold">Carry Amount</span>
                                                 </label>
                                                 <input type="text" class="form-control form-control-solid" required
-                                                    name="carry_amount">
+                                                    name="carry_amount" value="{{ $category->carry_amount }}">
                                             </div>
                                             <div class="col-lg-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                     <span class="required fw-bold">Carry Expire (In Month)</span>
                                                 </label>
                                                 <input type="number" class="form-control form-control-solid" required
-                                                    name="carry_expired">
+                                                    name="carry_expired" value="{{ $category->carry_expired }}">
                                             </div>
                                         </div>
                                     </div>
@@ -144,7 +149,7 @@
                                     <div class="col-lg-12 mb-3">
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
-                                                name="show_in_request" id="show_in_request" checked>
+                                                name="show_in_request" id="show_in_request" @if($category->show_in_request) checked @endif>
                                             <label class="fs-7 form-check-label mb-2" for="show_in_request">
                                                 <span class="fw-bold">Show in request</span>
                                             </label>
@@ -158,7 +163,7 @@
                                     <div class="col-lg-6">
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
-                                                name="half_day" id="half_day">
+                                                name="half_day" id="half_day" @if($category->half_day) checked @endif>
                                             <label class="fs-7 form-check-label mb-2" for="half_day">
                                                 <span class="fw-bold">Set Half Day Schedule</span>
                                             </label>
@@ -168,7 +173,7 @@
                                     <div class="col-lg-6">
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
-                                                name="attachment" id="attachment">
+                                                name="attachment" id="attachment" @if($category->attachment) checked @endif>
                                             <label class="fs-7 form-check-label mb-2" for="attachment">
                                                 <span class="fw-bold">Required Attachment</span>
                                             </label>
@@ -180,50 +185,51 @@
                                     <div class="col-lg-6">
                                         <div class="form-check mb-2">
                                             <input type="checkbox" class="form-check-input checkbox-real"
-                                                id="max_request">
+                                                id="max_request" @if($category->max_request) checked @endif>
                                             <label class="fs-7 form-check-label mb-2" for="max_request">
                                                 <span class="fw-bold">Max Request (in a row)</span>
                                             </label>
                                         </div>
                                         <input type="number" class="form-control form-control-solid" placeholder="0"
-                                            name="max_request">
+                                            name="max_request" value="{{ $category->max_request }}">
                                     </div>
 
                                     <div class="col-lg-6">
                                         <div class="form-check mb-2">
                                             <input type="checkbox" class="form-check-input checkbox-real"
-                                                id="min_notice">
+                                                id="min_notice" @if($category->min_notice) checked @endif>
                                             <label class="fs-7 form-check-label mb-2" for="min_notice">
                                                 <span class="fw-bold">Minimum Notice (Days)</span>
                                             </label>
                                         </div>
                                         <input type="number" class="form-control form-control-solid" placeholder="0"
-                                            name="min_notice">
+                                            name="min_notice" value="{{ $category->min_notice }}">
                                     </div>
 
                                     <div class="col-lg-12 mb-3"></div>
 
                                     <div class="col-lg-6">
                                         <div class="form-check mb-2">
-                                            <input type="checkbox" class="form-check-input checkbox-real" id="duration">
+                                            <input type="checkbox" class="form-check-input checkbox-real" id="duration"
+                                                @if($category->duration) checked @endif>
                                             <label class="fs-7 form-check-label mb-2" for="duration">
                                                 <span class="fw-bold">Duration</span>
                                             </label>
                                         </div>
                                         <input type="number" class="form-control form-control-solid"
-                                            placeholder="0 ( In days )" name="duration">
+                                            placeholder="0 ( In days )" name="duration" value="{{ $category->duration }}">
                                     </div>
 
                                     <div class="col-lg-6">
                                         <div class="form-check mb-2">
                                             <input type="checkbox" class="form-check-input checkbox-real"
-                                                id="minus_amount">
+                                                id="minus_amount" @if($category->minus_amount) checked @endif>
                                             <label class="fs-7 form-check-label mb-2" for="minus_amount">
                                                 <span class="fw-bold">Minus Amount</span>
                                             </label>
                                         </div>
                                         <input type="number" class="form-control form-control-solid" placeholder="0"
-                                            name="minus_amount">
+                                            name="minus_amount" value="{{ $category->minus_amount }}">
                                     </div>
 
 
@@ -379,7 +385,7 @@
                 event.preventDefault();
                 const formData = $(this).serialize();
                 $.ajax({
-                    url: "{{ route('hc.setting.timeoff.store') }}",
+                    url: "{{ route('hc.setting.timeoff.update') }}",
                     headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },

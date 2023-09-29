@@ -28,7 +28,7 @@ class LeaveController extends Controller
     public function getUserLeaveQuotas()
     {
         try {
-            $userQuotas = UserLeaveQuota::where('user_id', Auth::user()->id)->where('expired_date', '>=', Carbon::now())->get();
+            $userQuotas = UserLeaveQuota::where('user_id', Auth::user()->id)->where('expired_date', '>=', Carbon::now())->sum("quotas");
 
             return response()->json([
                 "status" => "success",
@@ -55,6 +55,39 @@ class LeaveController extends Controller
 
             return DataTables::of($query)
                 ->addIndexColumn()
+                ->make(true);
+        }
+    }
+
+    public function getTableQuotaLeaveHistory(Request $request)
+    {
+        if (request()->ajax()) {
+            /** @var \App\Models\User $user */
+            // $user = Auth::user();
+
+            // if (!($user->id == $request->user_id|| $user->hasPermissionTo('HC:view-attendance'))) {
+            //     abort(403);
+            // }
+
+            $query = UserLeaveQuota::where('user_id', $request->user_id)->orderBy('expired_date', 'desc');
+
+            return DataTables::of($query)
+                ->addColumn('expired_date', function ($query) {
+                    $date = explode(" ", explode("T", $query->expired_date)[0])[0];
+
+                    $date = Carbon::createFromFormat('Y-m-d', $date);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
+                })
+                ->addColumn('received_at', function ($query) {
+                    $date = explode(" ", explode("T", $query->received_at)[0])[0];
+
+                    $date = Carbon::createFromFormat('Y-m-d', $date);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
+                })
                 ->make(true);
         }
     }

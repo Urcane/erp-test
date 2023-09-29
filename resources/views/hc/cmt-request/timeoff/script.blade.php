@@ -62,7 +62,6 @@
             $('#tmoff-duration-modal').text(`${calculateDateDifference(startDate, endDate)} Day(s)`);
             $('#tmoff-date-modal').text(`${formatDate(startDate)} - ${formatDate(endDate)}`);
             $('.halfdaysection').hide();
-            $('#tmoff-daytaken-modal').text(`${taken} Day(s)`);
         }
 
         if (parseInt(leaveRequestCategory.useQuota)) {

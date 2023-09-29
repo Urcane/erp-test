@@ -51,26 +51,23 @@ class TimeOffController extends RequestController
         return $holidayDates->unique()->toArray();
     }
 
-    private function _getTakenDays($startDate, $endDate)
+    private function _getTakenDays($startDate, $endDate, User $user)
     {
         Carbon::setLocale($this->constants->locale);
 
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
 
+        $workingScheduleShift = $this->_getWorkingScheduleShift($user->id, $startDate);
         $taken = 0;
-        $workingDayOff = Auth::user()->userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
-
         $holidayDates = $this->_getGlobalDayOff($startDate, $endDate);
-
         while ($startDate <= $endDate) {
             $currentDate = $startDate->copy();
-            $dayName = $currentDate->translatedFormat('l');
 
-            if (!in_array($currentDate->toDateString(), $holidayDates) && !in_array($dayName, $workingDayOff)) {
+            if (!in_array($currentDate->toDateString(), $holidayDates) && !$workingScheduleShift->is_working) {
                 $taken += 1;
             }
-
+            $workingScheduleShift = $workingScheduleShift->nextSchedule;
             $startDate->addDay();
         }
 
@@ -104,7 +101,7 @@ class TimeOffController extends RequestController
 
             $balanceTaken = $leaveCategory->duration
                 ? ($leaveCategory->minus_amount ?? $leaveCategory->duration)
-                : $this->_getTakenDays($request->start_date, $request->end_date);
+                : $this->_getTakenDays($request->start_date, $request->end_date, $user);
         }
 
         if ($leaveCategory->min_notice) {
@@ -292,7 +289,7 @@ class TimeOffController extends RequestController
 
         if ($leaveCategory->use_quota) {
             $userLeaveQuotas = UserLeaveQuota::where("user_id", $user->id)
-                ->whereNot("quotas", 0)
+                ->where('quotas', '>', 0)
                 ->whereDate("expired_date", ">=", $today)
                 ->orderBy("expired_date", "asc")
                 ->get();
@@ -427,7 +424,7 @@ class TimeOffController extends RequestController
         if (request()->ajax()) {
             /** @var \App\Models\User $user */
             $user = Auth::user();
-            if (!($user->id == $request->user_id|| $user->hasPermissionTo('HC:view-attendance'))) {
+            if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
                 abort(403);
             }
 
@@ -437,12 +434,11 @@ class TimeOffController extends RequestController
 
             return DataTables::of($leaveRequest)
                 ->addColumn('action', function ($query) {
-                    $constants = $this->constants;
-
                     $fileName = $query->file;
                     $fileLink = asset("/storage/request/timeoff/$fileName");
+
                     return view('profile.part-profile.time-management-part.timeoff.menu', compact([
-                        'query', 'constants', 'fileName', 'fileLink'
+                        'query', 'fileName', 'fileLink'
                     ]));
                 })
                 ->addColumn('created_at', function ($leaveRequest) {

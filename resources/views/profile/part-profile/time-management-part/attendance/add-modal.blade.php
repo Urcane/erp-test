@@ -21,14 +21,14 @@
                                 <input type="date" class="form-control form-control-solid" placeholder="Select Date"
                                     required name="date">
                             </div>
-                            <div class="col-lg-12 mb-3">
+                            {{-- <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Shift</span>
                                 </label>
                                 <input type="text" class="form-control form-control-solid"
                                     value="{{ $user->userEmployment->workingScheduleShift->workingShift->name ?? "-"}}"
                                     disabled>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-6 mt-3 mb-3">
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input checkbox-real" id="check_in_box">

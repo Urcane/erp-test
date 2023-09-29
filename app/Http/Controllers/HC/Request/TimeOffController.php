@@ -18,7 +18,9 @@ use App\Models\Leave\UserLeaveHistory;
 use App\Exceptions\AuthorizationError;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
+use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\UserEmployment;
+use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Leave\LeaveRequestCategory;
 use App\Models\Leave\UserLeaveCategoryQuota;
 use App\Models\Leave\UserLeaveQuota;
@@ -29,6 +31,32 @@ use DatePeriod;
 
 class TimeOffController extends RequestController
 {
+    // get user shift after cycle with date
+    private function _getWorkingScheduleShift($userId, $startDate) {
+        $userCurrentShift = UserCurrentShift::where('user_id', $userId)->with("workingScheduleShift")->first();
+        $workingScheduleShifts = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
+
+        Carbon::setLocale($this->constants->locale);
+        $requestDate = Carbon::parse($startDate);
+        $now = Carbon::now();
+        $diff = $now->diffInDays($requestDate);
+        $countOfSchedule = $workingScheduleShifts->count();
+        $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+        $workingScheduleShift = $workingScheduleShifts->find($userCurrentShift->working_schedule_shift_id);
+        for ($i=0; $i < $distance; $i++) {
+            if ($requestDate > $now) {
+                $workingScheduleShift = $workingScheduleShifts->find($workingScheduleShift->next);
+            } else {
+                $workingScheduleShift = $workingScheduleShifts->filter(function ($scheduleShift) use ($workingScheduleShift){
+                    return $scheduleShift->next == $workingScheduleShift->id;
+                })->first();
+            }
+        }
+
+        return $workingScheduleShift;
+    }
+
     //update schedule section
     private function _getGlobalDayOff($startDate, $endDate)
     {
@@ -66,7 +94,7 @@ class TimeOffController extends RequestController
         ]);
     }
 
-    private function _getSchedule($workingDayOff, $start_date, $end_date)
+    private function _getSchedule($workingScheduleShift, $start_date, $end_date)
     {
         Carbon::setLocale($this->constants->locale);
 
@@ -80,20 +108,21 @@ class TimeOffController extends RequestController
 
         while ($startDate <= $endDate) {
             $currentDate = $startDate->copy();
-            $dayName = $currentDate->translatedFormat('l');
 
             if (!in_array($currentDate->toDateString(), $holidayDates)) {
-                if (in_array($dayName, $workingDayOff)) {
+                if (!$workingScheduleShift->is_working) {
                     array_push($dayOffDates, $currentDate->format('Y-m-d'));
                 } else {
                     array_push($takenDates, $currentDate->format('Y-m-d'));
                 }
             }
 
+            $workingScheduleShift = $workingScheduleShift->nextSchedule;
             $startDate->addDay();
         }
 
         return [
+            "workingScheduleShift" => $workingScheduleShift,
             "takenDates" => $takenDates,
             "dayOffDates" => $dayOffDates,
             "holidayDates" => $holidayDates
@@ -123,7 +152,8 @@ class TimeOffController extends RequestController
                 $userAttendance = UserAttendance::where('user_id', $userId)->where('date', $leaveRequest->date)->first();
 
                 if (!$userAttendance) {
-                    $workingShift = UserEmployment::where('user_id', $userId)->first()->workingScheduleShift->workingShift;
+                    // $workingShift = UserEmployment::where('user_id', $userId)->first()->workingScheduleShift->workingShift;
+                    $workingShift = $schedule['workingScheduleShift']->workingShift;
 
                     UserAttendance::create([
                         'user_id' => $userId,
@@ -158,12 +188,6 @@ class TimeOffController extends RequestController
             $leaveRequest->end_date
         );
 
-        if ($leaveRequest->taken != count($schedule["takenDates"])) {
-            $leaveRequest->update([
-                "taken" => count($schedule["takenDates"]),
-            ]);
-        }
-
         $leaveCategoryCode = $leaveRequest->leaveRequestCategory->code;
 
         collect($schedule["takenDates"])->map(function ($data) use (
@@ -196,7 +220,6 @@ class TimeOffController extends RequestController
     }
 
     //quota management section
-
     private function _getTakenDays($startDate, $endDate, User $user)
     {
         Carbon::setLocale($this->constants->locale);
@@ -204,19 +227,16 @@ class TimeOffController extends RequestController
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
 
+        $workingScheduleShift = $this->_getWorkingScheduleShift($user->id, $startDate);
         $taken = 0;
-        $workingDayOff = $user->userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
-
         $holidayDates = $this->_getGlobalDayOff($startDate, $endDate);
-
         while ($startDate <= $endDate) {
             $currentDate = $startDate->copy();
-            $dayName = $currentDate->translatedFormat('l');
 
-            if (!in_array($currentDate->toDateString(), $holidayDates) && !in_array($dayName, $workingDayOff)) {
+            if (!in_array($currentDate->toDateString(), $holidayDates) && !$workingScheduleShift->is_working) {
                 $taken += 1;
             }
-
+            $workingScheduleShift = $workingScheduleShift->nextSchedule;
             $startDate->addDay();
         }
 
@@ -501,7 +521,7 @@ class TimeOffController extends RequestController
 
         if ($leaveCategory->use_quota) {
             $userLeaveQuotas = UserLeaveQuota::where("user_id", $user->id)
-                ->whereNot("quotas", 0)
+                ->where('quotas', '>', 0)
                 ->whereDate("expired_date", ">=", $today)
                 ->orderBy("expired_date", "asc")
                 ->get();
@@ -617,6 +637,20 @@ class TimeOffController extends RequestController
                         "date" => $date,
                         "quota_change" => $query["quota_taken"]
                     ]);
+
+                    $leaveRequest->update([
+                        "approval_line" => $user->id,
+                        "status" => $request->status,
+                        "comment" => $request->comment,
+                        "taken" => $query["quota_taken"]
+                    ]);
+
+                    DB::commit();
+
+                    return response()->json([
+                        "status" => "success",
+                        "message" => "berhasil melakukan approve request time off"
+                    ]);
                 }
 
                 $leaveRequest->update([
@@ -629,7 +663,7 @@ class TimeOffController extends RequestController
 
                 return response()->json([
                     "status" => "success",
-                    "message" => "berhasil melakukan update status request time off"
+                    "message" => "berhasil melakukan reject request time off"
                 ]);
             }
 
@@ -655,9 +689,9 @@ class TimeOffController extends RequestController
                 $leaveRequestCategory = LeaveRequestCategory::whereId($leaveRequest->leave_request_category_id)->first();
 
                 $date = $leaveRequestCategory->half_day ?
-                        Carbon::createFromFormat('Y-m-d', $leaveRequest->date)->format('d/m/Y')
-                        : Carbon::createFromFormat('Y-m-d', $leaveRequest->start_date)->format('d/m/Y')
-                            . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
+                    Carbon::createFromFormat('Y-m-d', $leaveRequest->date)->format('d/m/Y')
+                    : Carbon::createFromFormat('Y-m-d', $leaveRequest->start_date)->format('d/m/Y')
+                        . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
 
                 UserLeaveHistory::create([
                     "type" => $this->constants->leave_quota_history_type[0],
@@ -666,6 +700,20 @@ class TimeOffController extends RequestController
                     "approval_name" => $user->name,
                     "date" => $date,
                     "quota_change" => $query["quota_taken"]
+                ]);
+
+                $leaveRequest->update([
+                    "approval_line" => $user->id,
+                    "status" => $request->status,
+                    "comment" => $request->comment,
+                    "taken" => $query["quota_taken"]
+                ]);
+
+                DB::commit();
+
+                return response()->json([
+                    "status" => "success",
+                    "message" => "berhasil melakukan approve request time off"
                 ]);
             }
 
@@ -679,7 +727,7 @@ class TimeOffController extends RequestController
 
             return response()->json([
                 "status" => "success",
-                "message" => "berhasil melakukan update status request time off"
+                "message" => "berhasil melakukan reject request time off"
             ]);
         } catch (\Throwable $th) {
             DB::rollback();
