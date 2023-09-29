@@ -22,7 +22,6 @@ class SoftSurveyRepository
         [
             'survey_request_id' => $data['survey_request_id'],
             'description' => $data['description'],
-            'attachment_url' => $data['file_soft_survey_internet'],
         ]);
     }
 

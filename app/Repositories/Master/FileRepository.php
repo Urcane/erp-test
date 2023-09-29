@@ -19,7 +19,7 @@ class FileRepository
             'name' => $data['fileName'],
             'additional' => $data['additional'] ?? NULL,
             'path' => $data['fullPath'],
-            'user_id' => auth()->user()->id,
+            'user_id' => auth()->user()->id ?? 1,
         ]));
 
         return $result;

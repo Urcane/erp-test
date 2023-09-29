@@ -44,6 +44,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    function sales() : HasOne{
+        return $this->hasOne(Sales::class);
+    }
+
+    function technician() : HasOne{
+        return $this->hasOne(Technician::class);
+    }
+
+    function procurement() : HasOne{
+        return $this->hasOne(Procurement::class);
+    }
+    
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);

@@ -39,7 +39,7 @@
                                     <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
                                     <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
                                 </div>
-                                @role('administrator')
+                                {{-- @role('administrator') --}}
                                 <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
                                     <div class="menu menu-sub menu-sub-dropdown w-300px text-start pb-3" id="action_lead" data-kt-menu="true" style="">
@@ -74,7 +74,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endrole
+                                {{-- @endrole --}}
                                 {{-- <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-info btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-filter me-2"></i>Filter</button>
                                     <div class="menu menu-sub menu-sub-dropdown w-300px text-start" id="filter_pegawai" data-kt-menu="true" style="">
@@ -111,11 +111,11 @@
                                         </div>
                                     </div>
                                 </div> --}}
-                                @role('administrator')
+                                {{-- @role('administrator') --}}
                                 <div class="tab_all_menu_lead">
                                     <a href="#kt_modal_tambah_lead" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Lead Baru</a>
                                 </div>
-                                @endrole
+                                {{-- @endrole --}}
                             </div>
                         </div>
                         <div class="row">
@@ -204,13 +204,13 @@
     </div>
 </div>
 
-@role('administrator')
+{{-- @role('administrator') --}}
 @include('cmt-customer.lead.add.modal-tambah-lead')
 @include('cmt-customer.lead.add.modal-edit-lead')
 @include('cmt-customer.lead.add.modal-tindak-lanjut-lead')
 @include('cmt-customer.lead.add.modal-update-prospect')
 @include('cmt-customer.lead.add.modal-batal-prospect')
-@endrole
+{{-- @endrole --}}
 
 <script>
     $(document ).ready(function() {
@@ -440,18 +440,20 @@
                 city_id: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
                 },
-                customer_contact_name: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Nama wajib diisi</span>",
-                },
-                customer_contact_job: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Jabatan wajib diisi</span>",
-                },
+                // customer_contact_name: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Nama wajib diisi</span>",
+                // },
+                // customer_contact_job: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Jabatan wajib diisi</span>",
+                // },
                 customer_contact_email: {
                     email: "<span class='fw-semibold fs-8 text-danger'>Email user belum sesusai format</span>",
                 },
                 customer_contact_phone: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    // required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
+                
                 },
             },
             submitHandler: function(form) {
@@ -528,7 +530,8 @@
                 },
                 customer_contact_phone: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
                 },
             },
             submitHandler: function(form) {
@@ -586,6 +589,13 @@
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                        if(lead_ids.length === 0){
+                            $('#kt_modal_tindak_lanjut_lead_cancel').click();
+                             toastr.error('Tidak Ada Data Lead Yang Dipilih', 'Opps!');
+                        return;
+                        }
+
                         $('#kt_modal_tindak_lanjut_lead_cancel').click();
                         toastr.success(data.status,'Selamat 🚀 !');
                         location.reload();
@@ -676,6 +686,13 @@
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                        if(prospect_ids.length === 0){
+                            $('#kt_modal_batal_prospect_cancel').click();
+                             toastr.error('Tidak Ada Prospect Yang Dipilih', 'Opps!');
+                        return;
+                        }
+
                         $('#kt_modal_batal_prospect_cancel').click();
                         toastr.success(data.status,'Selamat 🚀 !');
                         location.reload();

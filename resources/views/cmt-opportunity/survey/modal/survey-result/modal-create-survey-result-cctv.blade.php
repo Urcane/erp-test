@@ -70,9 +70,7 @@
                                                     </label>
                                                     <select class="drop-data form-select form-select-solid" data-control="select2" required name="trans_media_id" data-dropdown-parent="#kt_modal_create_survey_result_cctv">
                                                         <option value="" selected hidden disabled>Pilih Dulu</option>
-                                                        @foreach ($transMedias as $transMedia)
-                                                        <option value="{{$transMedia->id}}">{{$transMedia->name}}</option>									
-                                                        @endforeach
+                                                        
                                                     </select>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
@@ -82,8 +80,8 @@
                                                     </label>
                                                     <select class="drop-data form-select form-select-solid" data-control="select2" required name="internet_service_type_id" data-dropdown-parent="#kt_modal_create_survey_result_cctv">
                                                         <option value="" selected hidden disabled>Pilih Dulu</option>
-                                                        @foreach ($internetServiceTypes as $internetServiceType)
-                                                        <option value="{{$internetServiceType->id}}">{{$internetServiceType->name}}</option>									
+                                                        @foreach ($siteSurveyServiceTypes as $siteSurveyServiceType)
+                                                        <option value="{{$siteSurveyServiceType->id}}">{{$siteSurveyServiceType->name}}</option>									
                                                         @endforeach
                                                     </select>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -173,9 +171,7 @@
                                                     </label>
                                                     <select class="drop-data form-select form-select-solid" data-control="select2" required name="camera_type_id" data-dropdown-parent="#kt_modal_create_survey_result_cctv">
                                                         <option value="" selected hidden disabled>Pilih Dulu</option>
-                                                        @foreach ($cameraTypes as $cameraType)
-                                                        <option value="{{$cameraType->id}}">{{$cameraType->name}}</option>									
-                                                        @endforeach
+                                                        
                                                     </select>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>

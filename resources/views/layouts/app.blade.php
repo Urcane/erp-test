@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" />
 	<link href="{{asset('sense')}}/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 
-	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
+	<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
 	<link href="{{asset('sense')}}/plugins/custom/signaturejs/css/jquery.signature.css" rel="stylesheet" type="text/css" />
 	
 	@stack('css')
@@ -27,7 +27,7 @@
 	<link href="{{asset('sense')}}/css/style.bundle.css" rel="stylesheet" type="text/css" />
 	
 	<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 	
 	<script type="text/javascript" src="{{asset('sense')}}/plugins/custom/touchjs/jquery.ui.touch-punch.min.js"></script>
@@ -45,6 +45,16 @@ class="app-default page-loading-enabled page-loading">
 		height: 260px; 
 		border-radius:.475rem;
 	}
+    
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+ }
+
+ input[type="number"] {
+   -moz-appearance: textfield; /* Firefox */
+ }
 </style>
 
 <script>
@@ -90,9 +100,9 @@ class="app-default page-loading-enabled page-loading">
 	</div>
 </div>
 
-<div id="kt_scrolltop" class="scrolltop bg-info" data-kt-scrolltop="true">
-	<i class="fa-solid fa-arrow-up text-white"></i>
-</div>
+{{-- <div id="kt_scrolltop" class="scrolltop bg-info" data-kt-scrolltop="true">
+    <i class="fa-solid fa-arrow-up text-white"></i>
+</div> --}}
 
 <script>
 	var hostUrl = "{{asset('sense')}}/";
@@ -154,7 +164,7 @@ class="app-default page-loading-enabled page-loading">
         });
     }
 
-	function submitModal({modalName, tableName, ajaxLink, anotherTableName = null,validationMessages = {}}) {
+	function submitModal({modalName, tableName = null, ajaxLink, anotherTableName = null , validationMessages = {}, successCallback = () => {}, customData = {}}) {
         $(`#${modalName}_form`).validate({
             messages: validationMessages,
             submitHandler: function(form) {
@@ -177,6 +187,8 @@ class="app-default page-loading-enabled page-loading">
                         }
 
                         toastr.success(data.status,'Selamat 🚀 !');
+
+                        successCallback(data);
                     },
                     error: function (xhr, status, errorThrown) {
                         $(`#${modalName}_submit`).removeAttr('disabled','disabled');
@@ -246,6 +258,121 @@ class="app-default page-loading-enabled page-loading">
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    function validateAndFormatNumber(input) {
+        // Mengambil nilai input tanpa karakter non-digit
+        let inputValue = input.value.replace(/\D/g, '');
+
+        // Pastikan nilai input tidak kosong
+        if (inputValue.length > 0) {
+            // Pastikan nilai input tidak diawali dengan angka 0
+            if (inputValue[0] === '0') {
+                // Jika nilai input diawali dengan angka 0, hapus angka 0 di awal
+                inputValue = inputValue.slice(1);
+            }
+        }
+
+        // Mengatur nilai input kembali dengan angka yang telah diformat
+        input.value = inputValue;
+    };
+
+    //  function kalkulasi total di Modal
+    function calculateTotalAmount(totalElementId, modal) {
+        // Mengambil nilai dari masing-masing input menggunakan querySelector
+        const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${modal}']`).value);
+        const quantity = parseInt(document.querySelector(`[name='quantity_${modal}']`).value);
+        const purchaseDelivery = parseFloat(document.querySelector(`[name='purchase_delivery_${modal}']`).value);
+
+
+        // Cek jika nilai purchasePrice dan quantity adalah angka
+        if (isNaN(purchasePrice) || isNaN(quantity)) {
+            // Jika ada input yang belum diisi atau bukan angka, tampilkan hasil kosong dan return
+            document.getElementById(totalElementId).textContent = "";
+            const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
+            hiddenTotalInput.value = ""; // Set the hidden input value to empty string
+            return;
+        }
+
+        // Melakukan perhitungan total
+        let totalAmount = purchasePrice * quantity;
+
+        // Tambahkan purchaseDelivery ke totalAmount jika nilai purchaseDelivery adalah angka
+        if (!isNaN(purchaseDelivery)) {
+            totalAmount += purchaseDelivery;
+        }
+
+        // Cek jika totalAmount melebihi 12 karakter
+        // 9,007,199,254,740,991 maksimal karakter number
+        if (totalAmount.toString().length > 15) {
+            document.getElementById(totalElementId).textContent = "Melewati limit angka";
+            const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
+            hiddenTotalInput.value = ""; // Set the hidden input value to empty string
+            return;
+        }
+
+        // Menampilkan total dalam format dengan tanda titik setiap 3 digit dari kanan
+        const totalAmountWithCommas = new Intl.NumberFormat("id").format(totalAmount);
+
+        // Mengatur nilai total pada elemen dengan id 'totalDisplay'
+        document.getElementById(totalElementId).textContent = totalAmountWithCommas;
+
+        // Mengatur nilai total pada elemen dengan class 'total' (hidden input)
+        const hiddenTotalInput = document.querySelector(`[name='${totalElementId}']`);
+        hiddenTotalInput.value = totalAmount; // Store the numerical value for passing to the main page.
+    }
+
+    // function updateTotalSumBundle() {
+    //     let totalSumBundle = 0;
+    //     const modalVal = parseInt(document.querySelector(`[name='modal']`).value);
+
+    //     $('.BundleItem input[name^="total_price"]').each(function() {
+    //         let totalPriceBundleValue = $(this).val();
+
+    //         if (totalPriceBundleValue !== "") {
+    //             totalSumBundle += parseInt(totalPriceBundleValue);
+    //         }
+    //     });
+
+    //     if (modalVal >= totalSumBundle) {
+    //         return document.getElementById("total_bundle_price").textContent = "   KURANG MODAL";
+    //     }
+
+    //     const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
+
+    //     $('#total_bundle_price').text(totalPriceWithCommas);
+    //     $('#gpm').val(totalSumBundle);
+
+    //     // const hiddenTotalInput = document.querySelector(`[name='total_price_bundle']`);
+    //     // hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string 
+
+
+    //     // Ambil nilai gpm dan modal
+    //     let gpm = parseFloat($('#gpm').val()); // gunakan parseFloat untuk memastikan nilai numerik
+    //     let modal = parseFloat($('#modal').val()); // gunakan parseFloat untuk memastikan nilai numerik
+
+    //     if (!isNaN(gpm) && !isNaN(modal)) {
+    //         let npm = gpm - modal;
+    //         let percentage = (npm / gpm) * 100;
+
+    //         $('#npm').val(npm);
+    //         $('#percentage').val(percentage.toFixed(2));
+    //     }
+    // }
+
+    // function calculateTotalBundle(uniq_id) {
+    //     const purchasePrice = parseFloat(document.querySelector(`[name='purchase_price_${uniq_id}']`)
+    //         .value);
+    //     const quantity = parseInt(document.querySelector(`[name='quantity_${uniq_id}']`).value);
+
+    //     if (isNaN(purchasePrice) || isNaN(quantity)) {
+    //         return document.getElementById("total_price_" + uniq_id).value = "null";
+    //     }
+
+    //     let totalAmount = purchasePrice * quantity;
+
+    //     document.getElementById("total_price_" + uniq_id).value = totalAmount;
+    //     updateTotalSumBundle()
+    // }
 
 </script>
 </body>

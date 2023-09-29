@@ -538,6 +538,662 @@ class HCDataSeeder extends Seeder
                     now(),
                 )
             ],
+            [
+                "user_id" => [
+                    "user_id" => 5,
+                ],
+                "user_personal_data" => $this->makePersonalData(
+                    "1999-08-01",
+                    "Balikpapan",
+                    0,
+                    0,
+                    0,
+                    0,
+                ),
+                "user_identity" => $this->makeIdentity(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_employment" => $this->makeEmployment(
+                    1234567,
+                    1,
+                    "2021-09-09",
+                    null,
+                    null,
+                    1,
+                    "AAA",
+                    "AAA",
+                    1,
+                    1,
+                    null
+                ),
+                "user_salary" => $this->makeSalary(
+                    5000000,
+                    0,
+                    1,
+                    1,
+                    0,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bank" => $this->makeBank(
+                    0,
+                    1274517631,
+                    "Agus Pramudia Perwitasari"
+                ),
+                "user_tax" => $this->makeTax(
+                    "1234567890123456",
+                    "Wajib Pajak Kawin",
+                    0,
+                    0,
+                    null,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bpjs" => $this->makeBpjs(
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_attendance" => $this->makeAttendance(
+                    "2021-01-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                ),
+                "user_shift_request" => $this->makeShiftRequest(
+                    "2021-01-01",
+                    now(),
+                )
+            ],
+            [
+                "user_id" => [
+                    "user_id" => 6,
+                ],
+                "user_personal_data" => $this->makePersonalData(
+                    "1999-08-01",
+                    "Balikpapan",
+                    0,
+                    0,
+                    0,
+                    0,
+                ),
+                "user_identity" => $this->makeIdentity(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_employment" => $this->makeEmployment(
+                    1234567,
+                    1,
+                    "2021-09-09",
+                    null,
+                    null,
+                    1,
+                    "AAA",
+                    "AAA",
+                    1,
+                    1,
+                    null
+                ),
+                "user_salary" => $this->makeSalary(
+                    5000000,
+                    0,
+                    1,
+                    1,
+                    0,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bank" => $this->makeBank(
+                    0,
+                    1274517631,
+                    "Agus Pramudia Perwitasari"
+                ),
+                "user_tax" => $this->makeTax(
+                    "1234567890123456",
+                    "Wajib Pajak Kawin",
+                    0,
+                    0,
+                    null,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bpjs" => $this->makeBpjs(
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_attendance" => $this->makeAttendance(
+                    "2021-01-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                ),
+                "user_shift_request" => $this->makeShiftRequest(
+                    "2021-01-01",
+                    now(),
+                )
+            ],
+            [
+                "user_id" => [
+                    "user_id" => 7,
+                ],
+                "user_personal_data" => $this->makePersonalData(
+                    "1999-08-01",
+                    "Balikpapan",
+                    0,
+                    0,
+                    0,
+                    0,
+                ),
+                "user_identity" => $this->makeIdentity(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_employment" => $this->makeEmployment(
+                    1234567,
+                    1,
+                    "2021-09-09",
+                    null,
+                    null,
+                    1,
+                    "AAA",
+                    "AAA",
+                    1,
+                    1,
+                    null
+                ),
+                "user_salary" => $this->makeSalary(
+                    5000000,
+                    0,
+                    1,
+                    1,
+                    0,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bank" => $this->makeBank(
+                    0,
+                    1274517631,
+                    "Agus Pramudia Perwitasari"
+                ),
+                "user_tax" => $this->makeTax(
+                    "1234567890123456",
+                    "Wajib Pajak Kawin",
+                    0,
+                    0,
+                    null,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bpjs" => $this->makeBpjs(
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_attendance" => $this->makeAttendance(
+                    "2021-01-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                ),
+                "user_shift_request" => $this->makeShiftRequest(
+                    "2021-01-01",
+                    now(),
+                )
+            ],
+            [
+                "user_id" => [
+                    "user_id" => 8,
+                ],
+                "user_personal_data" => $this->makePersonalData(
+                    "1999-08-01",
+                    "Balikpapan",
+                    0,
+                    0,
+                    0,
+                    0,
+                ),
+                "user_identity" => $this->makeIdentity(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_employment" => $this->makeEmployment(
+                    1234567,
+                    1,
+                    "2021-09-09",
+                    null,
+                    null,
+                    1,
+                    "AAA",
+                    "AAA",
+                    1,
+                    1,
+                    null
+                ),
+                "user_salary" => $this->makeSalary(
+                    5000000,
+                    0,
+                    1,
+                    1,
+                    0,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bank" => $this->makeBank(
+                    0,
+                    1274517631,
+                    "Agus Pramudia Perwitasari"
+                ),
+                "user_tax" => $this->makeTax(
+                    "1234567890123456",
+                    "Wajib Pajak Kawin",
+                    0,
+                    0,
+                    null,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bpjs" => $this->makeBpjs(
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_attendance" => $this->makeAttendance(
+                    "2021-01-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                ),
+                "user_shift_request" => $this->makeShiftRequest(
+                    "2021-01-01",
+                    now(),
+                )
+            ],
+            [
+                "user_id" => [
+                    "user_id" => 9,
+                ],
+                "user_personal_data" => $this->makePersonalData(
+                    "1999-08-01",
+                    "Balikpapan",
+                    0,
+                    0,
+                    0,
+                    0,
+                ),
+                "user_identity" => $this->makeIdentity(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_employment" => $this->makeEmployment(
+                    1234567,
+                    1,
+                    "2021-09-09",
+                    null,
+                    null,
+                    1,
+                    "AAA",
+                    "AAA",
+                    1,
+                    1,
+                    null
+                ),
+                "user_salary" => $this->makeSalary(
+                    5000000,
+                    0,
+                    1,
+                    1,
+                    0,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bank" => $this->makeBank(
+                    0,
+                    1274517631,
+                    "Agus Pramudia Perwitasari"
+                ),
+                "user_tax" => $this->makeTax(
+                    "1234567890123456",
+                    "Wajib Pajak Kawin",
+                    0,
+                    0,
+                    null,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bpjs" => $this->makeBpjs(
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_attendance" => $this->makeAttendance(
+                    "2021-01-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                ),
+                "user_shift_request" => $this->makeShiftRequest(
+                    "2021-01-01",
+                    now(),
+                )
+            ],
+            [
+                "user_id" => [
+                    "user_id" => 10,
+                ],
+                "user_personal_data" => $this->makePersonalData(
+                    "1999-08-01",
+                    "Balikpapan",
+                    0,
+                    0,
+                    0,
+                    0,
+                ),
+                "user_identity" => $this->makeIdentity(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_employment" => $this->makeEmployment(
+                    1234567,
+                    1,
+                    "2021-09-09",
+                    null,
+                    null,
+                    1,
+                    "AAA",
+                    "AAA",
+                    1,
+                    1,
+                    null
+                ),
+                "user_salary" => $this->makeSalary(
+                    5000000,
+                    0,
+                    1,
+                    1,
+                    0,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bank" => $this->makeBank(
+                    0,
+                    1274517631,
+                    "Agus Pramudia Perwitasari"
+                ),
+                "user_tax" => $this->makeTax(
+                    "1234567890123456",
+                    "Wajib Pajak Kawin",
+                    0,
+                    0,
+                    null,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bpjs" => $this->makeBpjs(
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_attendance" => $this->makeAttendance(
+                    "2021-01-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                ),
+                "user_shift_request" => $this->makeShiftRequest(
+                    "2021-01-01",
+                    now(),
+                )
+            ],
+            [
+                "user_id" => [
+                    "user_id" => 11,
+                ],
+                "user_personal_data" => $this->makePersonalData(
+                    "1999-08-01",
+                    "Balikpapan",
+                    0,
+                    0,
+                    0,
+                    0,
+                ),
+                "user_identity" => $this->makeIdentity(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_employment" => $this->makeEmployment(
+                    1234567,
+                    1,
+                    "2021-09-09",
+                    null,
+                    null,
+                    1,
+                    "AAA",
+                    "AAA",
+                    1,
+                    1,
+                    null
+                ),
+                "user_salary" => $this->makeSalary(
+                    5000000,
+                    0,
+                    1,
+                    1,
+                    0,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bank" => $this->makeBank(
+                    0,
+                    1274517631,
+                    "Agus Pramudia Perwitasari"
+                ),
+                "user_tax" => $this->makeTax(
+                    "1234567890123456",
+                    "Wajib Pajak Kawin",
+                    0,
+                    0,
+                    null,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bpjs" => $this->makeBpjs(
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_attendance" => $this->makeAttendance(
+                    "2021-01-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                ),
+                "user_shift_request" => $this->makeShiftRequest(
+                    "2021-01-01",
+                    now(),
+                )
+            ],
+            [
+                "user_id" => [
+                    "user_id" => 12,
+                ],
+                "user_personal_data" => $this->makePersonalData(
+                    "1999-08-01",
+                    "Balikpapan",
+                    0,
+                    0,
+                    0,
+                    0,
+                ),
+                "user_identity" => $this->makeIdentity(
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_employment" => $this->makeEmployment(
+                    1234567,
+                    1,
+                    "2021-09-09",
+                    null,
+                    null,
+                    1,
+                    "AAA",
+                    "AAA",
+                    1,
+                    1,
+                    null
+                ),
+                "user_salary" => $this->makeSalary(
+                    5000000,
+                    0,
+                    1,
+                    1,
+                    0,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bank" => $this->makeBank(
+                    0,
+                    1274517631,
+                    "Agus Pramudia Perwitasari"
+                ),
+                "user_tax" => $this->makeTax(
+                    "1234567890123456",
+                    "Wajib Pajak Kawin",
+                    0,
+                    0,
+                    null,
+                    null,
+                    null,
+                    null
+                ),
+                "user_bpjs" => $this->makeBpjs(
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                ),
+                "user_attendance" => $this->makeAttendance(
+                    "2021-01-01",
+                    now(),
+                    "08:00:00",
+                    "17:00:00"
+                ),
+                "user_shift_request" => $this->makeShiftRequest(
+                    "2021-01-01",
+                    now(),
+                )
+            ],
         ])->map(function ($data) {
             UserBank::create($data["user_bank"] + $data["user_id"]);
             UserBpjs::create($data["user_bpjs"] + $data["user_id"]);
