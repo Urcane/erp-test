@@ -11,6 +11,7 @@ use App\Models\User;
 class UserCurrentShift extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 
     public function user(): BelongsTo
     {

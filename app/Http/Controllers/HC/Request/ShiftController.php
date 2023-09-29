@@ -70,6 +70,9 @@ class ShiftController extends RequestController
             ]);
         } else {
             $userAttendance->update([
+                'primary_shift_name' => $userAttendance->shift_name,
+                'primary_working_start' => $userAttendance->working_start,
+                'primary_working_end' => $userAttendance->working_end,
                 'shift_changed' => true,
                 'shift_name' => $workingShift->name,
                 'working_start' => $workingShift->working_start,

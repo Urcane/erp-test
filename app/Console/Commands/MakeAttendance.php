@@ -9,8 +9,12 @@ use App\Constants;
 
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
+use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\UserEmployment;
 use App\Models\Employee\WorkingSchedule;
+use App\Models\Employee\WorkingScheduleShift;
+use App\Models\Employee\WorkingShift;
+use Illuminate\Support\Facades\DB;
 
 class MakeAttendance extends Command
 {
@@ -51,13 +55,15 @@ class MakeAttendance extends Command
      */
     public function handle()
     {
-        if ($this->isGlobalDayOff()) {
-            $this->processGlobalDayOff();
-            return 0;
-        }
+        DB::transaction(function () {
+            if ($this->isGlobalDayOff()) {
+                $this->processGlobalDayOff();
+                return 0;
+            }
 
-        $this->processWorkingSchedules();
-        return 0;
+            $this->processWorkingSchedules();
+            return 0;
+        });
     }
 
     protected function isGlobalDayOff()
@@ -68,7 +74,7 @@ class MakeAttendance extends Command
 
     protected function processGlobalDayOff()
     {
-        $allUserIds = UserEmployment::has('user')->has('workingScheduleShift')
+        $allUserIds = UserEmployment::has('user')
             ->pluck('user_id')
             ->toArray();
 
@@ -95,24 +101,30 @@ class MakeAttendance extends Command
 
     protected function processWorkingSchedules()
     {
-        $workingSchedules = WorkingSchedule::with('workingScheduleShifts.workingShift', 'dayOffs')->get();
+        $userEmployments = UserEmployment::whereDate('join_date', '<=', Carbon::now()->format("Y-m-d"))
+            ->with('workingSchedule')
+            ->get();
         $userIdsWithAttendance = UserAttendance::whereDate('date', $this->today)->pluck('user_id')->toArray();
 
-        foreach ($workingSchedules as $workingSchedule) {
-            $dayOffs = $workingSchedule->dayOffs->pluck('day')->toArray();
-            $isDayOff = in_array(Carbon::now()->dayName, $dayOffs);
+        foreach ($userEmployments as $userEmployment) {
+            $userCurrentShift = UserCurrentShift::where("user_id", $userEmployment->user_id)->first();
+            if ($userCurrentShift) {
+                $userCurrentShift = $userCurrentShift->load("workingScheduleShift.nextSchedule.workingShift");
 
-            $code = $isDayOff ? $this->constants->attendance_code[2] : $this->constants->attendance_code[0];
+                if (!Carbon::now()->isSameDay($userCurrentShift->updated_at)) {
+                    $workingScheduleShift = $userCurrentShift->workingScheduleShift->nextSchedule;
+                    $userCurrentShift->update([
+                        "working_schedule_shift_id" => $workingScheduleShift->id,
+                    ]);
+                } else {
+                    $workingScheduleShift =  $userCurrentShift->workingScheduleShift;
+                }
 
-            $userEmployments = UserEmployment::whereHas('workingScheduleShift', function ($query) use ($workingSchedule) {
-                $query->where('working_schedule_id', $workingSchedule->id);
-            })
-                ->with('workingScheduleShift.workingShift', 'user')
-                ->get();
 
-            foreach ($userEmployments as $userEmployment) {
-                $userId = $userEmployment->user->id;
+                $isDayOff = !$workingScheduleShift->workingShift->is_working;
+                $code = $isDayOff ? $this->constants->attendance_code[2] : $this->constants->attendance_code[0];
 
+                $userId = $userCurrentShift->user_id;
                 if (in_array($userId, $userIdsWithAttendance)) {
                     if (!$isDayOff) {
                         continue;
@@ -126,7 +138,47 @@ class MakeAttendance extends Command
                     ];
 
                     if (!$isDayOff) {
-                        $workingShift = $userEmployment->workingScheduleShift->workingShift;
+                        $workingShift = $workingScheduleShift->workingShift;
+                        $data = array_merge($data, [
+                            'shift_name' => $workingShift->name,
+                            'working_start' => $workingShift->working_start,
+                            'working_end' => $workingShift->working_end,
+                            'overtime_before' => $workingShift->overtime_before,
+                            'overtime_after' => $workingShift->overtime_after,
+                            'late_check_in' => $workingShift->late_check_in,
+                            'late_check_out' => $workingShift->late_check_out,
+                            'start_attend' => $workingShift->start_attend,
+                            'end_attend' => $workingShift->end_attend,
+                        ]);
+                    }
+
+                    UserAttendance::create($data);
+                }
+            } else {
+                $workingScheduleShift = WorkingScheduleShift::whereId($userEmployment->start_shift)->with("workingShift")->first();
+                $userCurrentShift = UserCurrentShift::create([
+                    "user_id" => $userEmployment->user_id,
+                    "working_schedule_shift_id" => $workingScheduleShift->id,
+                ]);
+
+                $isDayOff = !$workingScheduleShift->workingShift->is_working;
+                $code = $isDayOff ? $this->constants->attendance_code[2] : $this->constants->attendance_code[0];
+
+                $userId = $userCurrentShift->user_id;
+                if (in_array($userId, $userIdsWithAttendance)) {
+                    if (!$isDayOff) {
+                        continue;
+                    }
+                    $this->updateAttendance($userId, $code);
+                } else {
+                    $data = [
+                        'user_id' => $userId,
+                        'date' => $this->today,
+                        'attendance_code' => $code
+                    ];
+
+                    if (!$isDayOff) {
+                        $workingShift = $workingScheduleShift->workingShift;
                         $data = array_merge($data, [
                             'shift_name' => $workingShift->name,
                             'working_start' => $workingShift->working_start,
