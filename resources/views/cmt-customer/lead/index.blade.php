@@ -40,6 +40,7 @@
                                     <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
                                 </div>
                                 {{-- @role('administrator') --}}
+                                @can('Leap:manage-prospect')
                                 <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
                                     <div class="menu menu-sub menu-sub-dropdown w-300px text-start pb-3" id="action_lead" data-kt-menu="true" style="">
@@ -74,6 +75,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endcan
                                 {{-- @endrole --}}
                                 {{-- <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-info btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-filter me-2"></i>Filter</button>
@@ -112,9 +114,11 @@
                                     </div>
                                 </div> --}}
                                 {{-- @role('administrator') --}}
+                                @can('Leap:manage-lead')
                                 <div class="tab_all_menu_lead">
                                     <a href="#kt_modal_tambah_lead" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Lead Baru</a>
                                 </div>
+                                @endcan
                                 {{-- @endrole --}}
                             </div>
                         </div>
@@ -123,16 +127,21 @@
                                 <div class="mb-6 hover-scroll-x">
                                     <div class="d-grid">
                                         <ul class="nav nav-tabs flex-nowrap text-nowrap">
+                                            @can('Leap:manage-lead')
                                             <li class="nav-item">
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0 active" data-bs-toggle="tab" id="tab_all" href="#tab_all_content">Lead</a>
                                             </li>
+                                            @endcan
+                                            @can('Leap:manage-prospect')
                                             <li class="nav-item">
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="tab_prospect" href="#tab_prospect_content">Prospected</a>
                                             </li>
+                                            @endcan
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="tab-content" id="myTabContent">
+                                    @can('Leap:manage-lead')
                                     <div class="tab-pane fade show active" id="tab_all_content" role="tabpanel">
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -172,6 +181,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endcan
+                                    @can('Leap:manage-prospect')
                                     <div class="tab-pane fade" id="tab_prospect_content" role="tabpanel">
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -194,6 +205,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endcan
                                 </div>
                             </div>
                         </div>

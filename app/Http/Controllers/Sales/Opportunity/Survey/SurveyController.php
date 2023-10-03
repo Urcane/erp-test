@@ -415,8 +415,8 @@ class SurveyController extends Controller
      * 
      * @return Illuminate\Contracts\View\View Returning JSON Response Data
      */
-    function detailSoftSurvey(Request $request, SurveyRequest $surveyRequest) : View {
-        $surveyRequest = $surveyRequest->with('softSurveys.attachment')->first();
+    function detailSoftSurvey(Request $request, int $surveyRequest) : View {
+        $surveyRequest = SurveyRequest::with('softSurveys.attachment')->where('id', $surveyRequest)->first();
         $siteSurveyServiceTypes = SiteSurveyServiceType::get();
         
         return view('cmt-opportunity.survey.pages.soft-survey-detail', compact(

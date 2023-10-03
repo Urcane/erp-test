@@ -50,9 +50,13 @@ class SurveyRequestService
 
                 if ($request->filters['status'] == 'ST') {
                     if ($query->type_of_survey_id == 2) {
-                        $additionalMenu .= "<li><a href=\"#kt_modal_create_wo_survey\" class=\"dropdown-item py-2 btn_create_wo_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Terbit WO Survey</a></li>";
+                        if ($request->user()->hasPermissionTo('Survey:create-work-order')) {
+                            $additionalMenu .= "<li><a href=\"#kt_modal_create_wo_survey\" class=\"dropdown-item py-2 btn_create_wo_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Terbit WO Survey</a></li>";
+                        }
                     } else {
-                        $additionalMenu .= "<li><a href=\"#kt_modal_create_soft_survey\" class=\"dropdown-item py-2 btn_create_soft_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Buat Soft Survey</a></li>";
+                        if ($request->user()->hasPermissionTo('Survey:manage-soft-survey')) {
+                            $additionalMenu .= "<li><a href=\"#kt_modal_create_soft_survey\" class=\"dropdown-item py-2 btn_create_soft_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Buat Soft Survey</a></li>";
+                        }
                     }
                 } else {
                     if ($query->type_of_survey_id == 2) {
@@ -63,19 +67,23 @@ class SurveyRequestService
                 }
 
                 if (isset($request->filters['calledFrom']) && $request->filters['calledFrom'] == 'BOQ') {
-                    return '
-                    <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                    <ul class="dropdown-menu">
-                        <li><a href="' . url("cmt-boq/create-draft-boq?prospect_id=". $query->customerProspect->id."&survey_id=".$query->id) . '" class="dropdown-item py-2"><i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
-                    </ul>
-                    ';
+                    if ($request->user()->hasPermissionTo('Boq:create-draft-boq')) {
+                        return '
+                        <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="' . url("cmt-boq/create-draft-boq?prospect_id=". $query->customerProspect->id."&survey_id=".$query->id) . '" class="dropdown-item py-2"><i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
+                        </ul>
+                        ';
+                    }
                 }
+
+                $editMenu = $request->user()->hasPermissionTo('Survey:manage-survey-request') ? "<li><a href=\"#kt_modal_request_survey\" class=\"dropdown-item py-2 btn_edit_request_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>" : " ";
 
                 return "
                 <button type=\"button\" class=\"btn btn-secondary btn-icon btn-sm\" data-kt-menu-placement=\"bottom-end\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"fa-solid fa-ellipsis-vertical\"></i></button>
                 <ul class=\"dropdown-menu\">
                     $additionalMenu
-                    <li><a href=\"#kt_modal_request_survey\" class=\"dropdown-item py-2 btn_edit_request_survey\" data-bs-toggle=\"modal\" data-id=\"$query->id\"><i class=\"fa-solid fa-list-check me-3\"></i>Edit</a></li>
+                    $editMenu
                 </ul>
                 ";
             })

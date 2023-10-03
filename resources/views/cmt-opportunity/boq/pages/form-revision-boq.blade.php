@@ -1081,6 +1081,9 @@
                                                 <a class="dropdown-item py-2">
                                                 <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
                                             </li>
+                                            `
+                                            @can('Boq:manage-price-request-boq')
+                                            +`
                                             <li type="button" class="btn-update-price-modal" 
                                                 data-random-string="${random_string}" 
                                                 data-item-id="${formData.get('good_name')}"
@@ -1095,7 +1098,9 @@
                                                 
                                                 <a class="dropdown-item py-2">
                                                 <i class="fa-solid fa-edit me-3"></i>Edit Harga Item</a>                                       
-                                            </li>
+                                            </li>`
+                                            @endcan
+                                            +`
                                             <li type="button" class="clear-soft-survey-item-${random_string}"
                                                 data-random-string="${random_string}">
                                                 <a class="dropdown-item py-2">

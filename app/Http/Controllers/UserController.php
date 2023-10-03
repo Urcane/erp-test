@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\File\File;
 use Yajra\DataTables\Facades\DataTables;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class UserController extends Controller
 {

@@ -47,10 +47,12 @@
                                         class="btn_see_purchase_order btn btn-sm btn-info col-3" data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal">
                                         <i class="fa-solid fa-file me-3"></i>Lihat PO
                                     </a>
+                                    @can('Quot:manage-quot')
                                     <a href="#kt_modal_cancel_quotation"
                                         class="btn_cancel_quotation btn btn-sm btn-light-danger col-3" data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal">
                                         <i class="fa-solid fa-xmark me-3"></i>Cancel Quot
                                     </a>
+                                    @endcan
                                 </div>
                             </div>
                         </div>
@@ -459,9 +461,11 @@
                                             <a href="" class="btn btn-light-info">Discard</a>
                                         </div>
                                         <div class="me-5">
-                                            <button type="button" class="btn btn-md btn-danger me-3 print-form">
+                                            @can('Quot:print-quot')
+                                            <button type="button" class="btn btn-md btn-info me-3 print-form">
                                                 <i class="fa-solid fa-print fs-6"></i>Print
                                             </button>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>

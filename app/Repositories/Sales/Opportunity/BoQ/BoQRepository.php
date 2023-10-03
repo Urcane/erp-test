@@ -113,7 +113,7 @@ class BoQRepository
             $gpm = $request->input('boq.gpm', 0);
             $modal = $request->input('boq.modal', 0);
             $npm = $request->input('boq.npm', 0);
-            $percentage = $request->input('boq.percentage', 0);
+            $percentage = $request->input('boq.percentage', 0) ?? 0;
             // $manpower = $request->input('boq.manpower', 0);
             $is_final = $request->input('boq.is_final', 0);
 
@@ -275,7 +275,7 @@ class BoQRepository
                 'gpm' => $request->input('boq.gpm'),
                 'modal' => $request->input('boq.modal'),
                 'npm' => $request->input('boq.npm'),
-                'percentage' => $request->input('boq.percentage'),
+                'percentage' => $request->input('boq.percentage') ?? 0,
                 'manpower' => $request->input('boq.manpower'),
                 'approval_manager_sales' => null,
                 'approval_manager_sales_date' => null,

@@ -526,13 +526,13 @@ class CustomerController extends Controller
                             <ul class="dropdown-menu">
                             ';
 
-                if ($request->filters['calledFrom'] == 'SURVEY') {
+                if ($request->filters['calledFrom'] == 'SURVEY' && $request->user()->hasPermissionTo('Survey:manage-survey-request')) {
                     $actions .= '
                     <li><a href="#kt_modal_request_survey" class="dropdown-item py-2 btn_request_survey" data-bs-toggle="modal" data-id="'.$query->id.'"><i class="fa-solid fa-list-check me-3"></i>Request Survey</a></li>
                     ';
                 }
 
-                if ($request->filters['calledFrom'] == 'BOQ') {
+                if ($request->filters['calledFrom'] == 'BOQ' && $request->user()->hasPermissionTo('Boq:create-draft-boq')) {
                     $actions .= '<li><a href="' . url("cmt-boq/create-draft-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
                             <i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
                             ';
