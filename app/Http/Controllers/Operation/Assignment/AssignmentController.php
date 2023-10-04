@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
 use App\Constants;
+use App\Exceptions\AuthorizationError;
+use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
 use App\Models\Assignment\Assignment;
 use App\Utils\ErrorHandler;
@@ -45,17 +47,6 @@ class AssignmentController extends Controller
         ]));
     }
 
-    public function show(string $id)
-    {
-        $assignment = Assignment::whereId($id);
-
-        if (!$assignment) {
-            return abort(404);
-        }
-
-        return view('operation.assignment.detail.index', compact(['assignment']));
-    }
-
     public function create()
     {
         $users = User::where('department_id', Auth::user()->department_id)
@@ -64,7 +55,7 @@ class AssignmentController extends Controller
             ->with(['userEmployment', 'division'])
             ->get();
 
-        return view('operation.assignment.create.index', compact(['users']));
+        return view('operation.assignment.create', compact(['users']));
     }
 
     public function store(Request $request)
@@ -74,14 +65,14 @@ class AssignmentController extends Controller
                 'number' => 'required|string|max:255|unique:assignments',
                 'signed_by' => 'required|exists:users,id',
                 'start_date' => 'required|date',
-                'end_date' => 'required|date',
+                'end_date' => 'required|date|after:start_date',
                 'override_holiday' => 'nullable',
                 'name' => 'required|string|max:255',
                 'location' => 'required|string|max:255',
                 'latitude' => 'required|string|max:50',
                 'longitude' => 'required|string|max:50',
                 'working_start' => 'required|date_format:H:i',
-                'working_end' => 'required|date_format:H:i',
+                'working_end' => 'required|date_format:H:i|after:working_start',
                 'radius' => 'integer',
                 'purpose' => 'required|string',
                 'cmt_id' => ['nullable', Rule::requiredIf(function () use ($request) {
@@ -144,6 +135,140 @@ class AssignmentController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function show(string $id)
+    {
+        $assignment = Assignment::whereId($id)->first();
+        $statusEnum = $this->constants->assignment_status;
+
+        if (!$assignment) {
+            return abort(404);
+        }
+
+        return view('operation.assignment.detail', compact([
+            'assignment', 'statusEnum'
+        ]));
+    }
+
+    public function edit(string $id)
+    {
+        $assignment = Assignment::whereId($id)->first();
+
+        if (!$assignment) {
+            return abort(404);
+        }
+
+        if ($assignment->status != $this->constants->assignment_status[0]) {
+            return abort(404);
+        }
+
+        $users = User::where('department_id', Auth::user()->department_id)
+            ->where('id', '!=', Auth::user()->id)
+            ->has('userEmployment')->has('division')
+            ->with(['userEmployment', 'division'])
+            ->get();
+
+        return view('operation.assignment.edit', compact([
+            'assignment', 'users'
+        ]));
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            $assignment = Assignment::whereId($request->id)->first();
+
+            if (!$assignment) {
+                throw new NotFoundError("Penugasan tidak ditemukan");
+            }
+
+            if ($assignment->user_id != Auth::user()->id) {
+                throw new AuthorizationError("Anda tidak berhak mengubah penugasan ini");
+            }
+
+            if ($assignment->status != $this->constants->assignment_status[0]) {
+                throw new InvariantError("Tidak dapat mengubah penugasan, Penugasan sudah $assignment->status");
+            }
+
+            $request->validate([
+                'number' => ['required', 'string', 'max:255', Rule::unique('assignments')->ignore($assignment->id)],
+                'signed_by' => 'required|exists:users,id',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after:start_date',
+                'override_holiday' => 'nullable',
+                'name' => 'required|string|max:255',
+                'location' => 'required|string|max:255',
+                'latitude' => 'required|string|max:50',
+                'longitude' => 'required|string|max:50',
+                'working_start' => 'required|date_format:H:i',
+                'working_end' => 'required|date_format:H:i|after:working_start',
+                'radius' => 'integer',
+                'purpose' => 'required|string',
+                'cmt_id' => ['nullable', Rule::requiredIf(function () use ($request) {
+                    return empty($request->input('people-name'));
+                })],
+                'people_name' => ['nullable', Rule::requiredIf(function () use ($request) {
+                    return empty($request->input('cmt-id'));
+                })],
+                'people_nik' => 'array',
+                'people_position' => 'array',
+            ]);
+
+            DB::beginTransaction();
+
+            $assignment->update([
+                "number" => $request->number,
+                "signed_by" => $request->signed_by,
+                "start_date" => $request->start_date,
+                "end_date" => $request->end_date,
+                "override_holiday" => (bool) $request->override_holiday,
+                "name" => $request->name,
+                "location" => $request->location,
+                "latitude" => $request->latitude,
+                "longitude" => $request->longitude,
+                "working_start" => $request->working_start,
+                "working_end" => $request->working_end,
+                "radius" => $request->radius,
+                "purpose" => $request->purpose,
+            ]);
+
+            $assignment->userAssignments()->delete();
+
+            if ($request->cmt_id) {
+                foreach($request->cmt_id as $cmt_id) {
+                    $assignment->userAssignments()->create([
+                        "user_id" => $cmt_id,
+                        "name" => null,
+                        "position" => null,
+                        "nik" => null,
+                    ]);
+                }
+            }
+
+            if ($request->people_name) {
+                foreach($request->people_name as $key => $people_name) {
+                    $assignment->userAssignments()->create([
+                        "user_id" => null,
+                        "name" => $people_name,
+                        "position" => $request->people_position[$key],
+                        "nik" => $request->people_nik[$key],
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil mengubah penugasan",
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
             $data = $this->errorHandler->handle($th);
 
             return response()->json($data["data"], $data["code"]);
@@ -229,9 +354,9 @@ class AssignmentController extends Controller
                     return $query->userAssignments->count() . " Employee(s)";
                 })
                 ->addColumn('action', function ($query) {
-                    $id = $query->id;
+                    $statusEnum = $this->constants->assignment_status;
 
-                    return view('operation.assignment.components.menu', compact(['id']));
+                    return view('operation.assignment.components.menu', compact(['query', 'statusEnum']));
                 })
                 ->addColumn('status', function ($query) {
                     $statusEnum = $this->constants->assignment_status;
@@ -244,6 +369,38 @@ class AssignmentController extends Controller
                 ->addIndexColumn()
                 ->rawColumns(['action', 'status'])
                 ->make(true);
+        }
+    }
+
+    public function cancel(Request $request)
+    {
+        try {
+            $assignment = Assignment::whereId($request->id)->first();
+
+            if (!$assignment) {
+                throw new NotFoundError("Penugasan tidak ditemukan");
+            }
+
+            if ($assignment->user_id != Auth::user()->id) {
+                throw new AuthorizationError("Anda tidak berhak membatalkan penugasan ini");
+            }
+
+            if ($assignment->status != $this->constants->assignment_status[0]) {
+                throw new InvariantError("Tidak dapat membatalkan penugasan, Penugasan sudah $assignment->status");
+            }
+
+            $assignment->update([
+                "status" => $this->constants->assignment_status[3],
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil membatalkan penugasan",
+            ], 200);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
         }
     }
 
@@ -262,7 +419,7 @@ class AssignmentController extends Controller
             }
 
             if ($assignment->status != $this->constants->assignment_status[0]) {
-                throw new NotFoundError("Tidak dapat melakukan update status, Penugasan sudah $assignment->status");
+                throw new InvariantError("Tidak dapat melakukan update status, Penugasan sudah $assignment->status");
             }
 
             if ($request->status == $this->constants->assignment_status[1]) {
@@ -284,20 +441,15 @@ class AssignmentController extends Controller
         }
     }
 
-    public function exportPdf(Request $request)
+    public function exportPdf(string $assignment, string $user)
     {
-        $request->validate([
-            'assignment_id' => 'required',
-            'user_assignment_id' => 'required',
-        ]);
-
-        $assignment = Assignment::whereId($request->assignment_id)->first();
+        $assignment = Assignment::whereId($assignment)->first();
 
         if (!$assignment) {
             return abort(404);
         }
 
-        $userAssignment = $assignment->userAssignments()->whereId($request->user_assignment_id)->first();
+        $userAssignment = $assignment->userAssignments()->whereId($user)->first();
 
         if (!$userAssignment) {
             return abort(404);

@@ -402,13 +402,16 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(Operation\Assignment\AssignmentController::class)->group(function () {
             Route::prefix('assignment')->group(function () {
                 Route::get('/', 'index')->name('opt.asign.index');
-                Route::get('/detail/{id}', 'index')->name('opt.asign.detail');
                 Route::get('/create', 'create')->name('opt.asign.create');
                 Route::post('/create', 'store')->name('opt.asign.store');
+                Route::get('/detail/{id}', 'show')->name('opt.asign.detail');
+                Route::get('/edit/{id}', 'edit')->name('opt.asign.edit');
+                Route::post('/update', 'update')->name('opt.asign.update');
+                Route::post('/cancel', 'cancel')->name('opt.asign.cancel');
 
                 Route::get('/get-data/table/data-result', 'getTableAssignment')->name('opt.asign.get-table-assignment');
 
-                Route::get('/pdf', 'exportPdf')->name('opt.asign.export-pdf');
+                Route::get('/pdf/{assignment}/{user}', 'exportPdf')->name('opt.asign.export-pdf');
             });
         });
     });

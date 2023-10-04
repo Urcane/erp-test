@@ -203,6 +203,27 @@
         };
     };
 
+    const cancelRequest = (id) => {
+        $.ajax({
+            url: "{{ route('opt.asign.cancel') }}",
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            type: 'POST',
+            data: {
+                id
+            },
+            success: function(data) {
+                toastr.success(data.message, 'Selamat 🚀 !');
+                tableAssignment.draw();
+            },
+            error: function(xhr, status, error) {
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    }
+
     let tableAssignment;
 
     $(document).ready(function () {

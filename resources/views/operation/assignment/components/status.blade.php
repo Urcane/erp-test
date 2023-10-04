@@ -18,9 +18,9 @@
     @break
 
     @case($statusEnum[3])
-        <div class="d-inline-flex justify-content-center align-items-center bg-primary rounded-circle"
+        <div class="d-inline-flex justify-content-center align-items-center bg-warning rounded-circle"
             style="width: 20px; height: 20px;">
-            <i class="fas fa-ban text-danger"></i>
+            <i class="fas fa-ban text-white"></i>
         </div>
     @break
 @endswitch

@@ -82,15 +82,15 @@
                 <p>Yang bertanda tangan dibawah ini :</p>
                 <div>
                     <span class="mr-12">Nama</span>
-                    : {{ $signed['name'] }}
+                    : {{ $assignment->signedBy->name }}
                 </div>
                 <div>
                     <span class="mr-[35px]">Jabatan</span>
-                    : {{ $signed['position'] }}
+                    : {{ $assignment->signedBy->division->divisi_name }}
                 </div>
                 <div>
                     <span class="mr-[68px]">NIK</span>
-                    : {{ $signed['nik'] }}
+                    : {{ $assignment->signedBy->userEmployment->employee_id }}
                 </div>
             </div>
 
@@ -132,10 +132,13 @@
                         <p>Balikpapan, {{ $assignment->created_at->format('d M Y') }}</p>
                         <p class="font-bold">PT. COMTELINDO</p>
                         <img class="h-[120px]"
-                            src="{{ asset('sense/media/sign_pegawai/1DWvxMPiicE5VFWY8nlzKyvTguVS18qTtXvWf3Mg.png') }}"
+                            @php
+                                $signed = $assignment->signedBy->sign_file
+                            @endphp
+                            src='{{ asset("sense/media/sign_pegawai/$signed") }}'
                             alt="ttd" />
-                        <p class="uppercase">{{ $signed['name'] }}</p>
-                        <p class="font-bold uppercase">{{ $user['position'] }}</p>
+                        <p class="uppercase">{{ $assignment->signedBy->name }}</p>
+                        <p class="font-bold uppercase">{{ $assignment->signedBy->division->divisi_name }}</p>
                     </div>
 
                 </div>

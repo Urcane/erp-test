@@ -13,14 +13,6 @@
 @endsection
 
 @section('content')
-    <style>
-        input.error {}
-
-        label.error {
-            color: red !important
-        }
-    </style>
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 
     <div class="row justify-content-center mt-n20">
@@ -182,7 +174,7 @@
         </div>
     </div>
 
-    @include('operation.assignment.create.modal')
+    @include('operation.assignment.components.modal')
 
     <script src="{{ asset('sense/plugins/custom/leaflet/leaflet.bundle.js') }}"></script>
     <script>
@@ -282,7 +274,7 @@
                     success: function(data) {
                         toastr.success(data.message, 'Selamat 🚀 !');
                         setTimeout(function() {
-                            window.location.href = '{{ route('opt.asign.index') }}';
+                            window.location.href = "{{ route('opt.asign.index') }}";
                         }, 2500);
                     },
                     error: function(xhr, status, error) {
