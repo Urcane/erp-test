@@ -231,7 +231,7 @@ class TimeOffController extends RequestController
         while ($startDate <= $endDate) {
             $currentDate = $startDate->copy();
 
-            if (!in_array($currentDate->toDateString(), $holidayDates) && !$workingScheduleShift->is_working) {
+            if (!in_array($currentDate->toDateString(), $holidayDates) && $workingScheduleShift->workingShift->is_working) {
                 $taken += 1;
             }
             $workingScheduleShift = $workingScheduleShift->nextSchedule;
