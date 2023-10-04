@@ -117,7 +117,7 @@ class ShiftController extends RequestController
                 ->orderBy('created_at', 'desc')
                 ->with(['user.userEmployment', 'workingShift', 'approvalLine']);
 
-            $userCurrentShift = UserCurrentShift::where('user_id', $shiftRequests->user_id)->with("workingScheduleShift")->first();
+            $userCurrentShift = UserCurrentShift::where('user_id', $request->user_id)->with("workingScheduleShift")->first();
             $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
 
             return DataTables::of($shiftRequests)
