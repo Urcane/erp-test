@@ -63,12 +63,12 @@
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="fw-bold required">Coordinate</span>
                                         </label>
-                                        <div id="map" style="height: 350px"></div>
+                                        <div id="map" style="height: 370px"></div>
                                         <input type="text" id="latitude" name="latitude" readonly hidden required>
                                         <input type="text" id="longitude" name="longitude" readonly hidden required>
                                     </div>
 
-                                    <div class="col-lg-6 mb-3">
+                                    <div class="col-lg-6 row mb-3">
                                         <div class="col-lg-12 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="required fw-bold">Lokasi</span>
@@ -90,12 +90,31 @@
                                                 <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
                                                     name="override_holiday" id="override_holiday">
                                                 <label class="fs-7 form-check-label mb-2" for="override_holiday">
-                                                    <span class="fw-bold">Kerja di hari libur</span>
+                                                    <span class="fw-bold">Kerja di hari libur Nasional</span>
                                                 </label>
                                             </div>
                                         </div>
 
                                         <div class="col-lg-12 mb-3">
+                                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <span class="required fw-bold">Hari Penugasan</span>
+                                            </label>
+                                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                                                @foreach ($days as $day)
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input"
+                                                            name="work_schedule[]" value="{{ $day }}"
+                                                            @if (!($day == 'Sabtu' || $day == 'Minggu')) checked @endif>
+                                                        <label class="fs-7 form-check-label mb-2"
+                                                            for="work_schedule[]">
+                                                            <span class="fw-bold">{{ $day }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working Start</span>
                                             </label>
@@ -103,7 +122,7 @@
                                                 name="working_start">
                                         </div>
 
-                                        <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-6 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working End</span>
                                             </label>
@@ -118,7 +137,7 @@
                                         </label>
                                         <select class="form-select form-select-solid" data-control="select2" required
                                             id="signed_by" name="signed_by">
-                                                <option value="{{ Auth::user()->id }}">{{ Auth::user()->name }}</option>
+                                            <option value="{{ Auth::user()->id }}">{{ Auth::user()->name }}</option>
                                             @foreach ($users as $user)
                                                 <option value="{{ $user->id }}" data-name="{{ $user->name }}"
                                                     data-nik="{{ $user->userEmployment->employee_id }}"
@@ -260,7 +279,10 @@
 
                 $(this).find(':disabled').each(function() {
                     if ($(this).attr('name')) {
-                        formData.push({ name: this.name, value: this.value });
+                        formData.push({
+                            name: this.name,
+                            value: this.value
+                        });
                     }
                 });
 

@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Constants;
 use App\Models\Assignment\Assignment;
+use App\Models\Assignment\AssignmentWorkSchedule;
 use App\Models\Assignment\UserAssignment;
 use Illuminate\Database\Seeder;
 
@@ -13,16 +15,24 @@ class AssignmentSeeder extends Seeder
      *
      * @return void
      */
+    private $constants;
+
+    public function __construct()
+    {
+        $this->constants = new Constants();
+    }
+
     public function run()
     {
         collect([
-            [1, '2023-10-01', '2023-10-05', false, 'Projek Pinjem Seratus', 'Comtelindo Balikpapan', 0.0, 0.0, 'Agar Silahturami Tidak terputus', '10:00', '19:00'],
-            [2, '2023-10-08', '2023-10-12', true, 'Projek Kembalikan Pinjaman', 'Comtelindo Jakarta', 0.0, 0.0, 'Menyelesaikan tugas', '08:00', '17:00'],
-            [3, '2023-10-15', '2023-10-19', false, 'Projek Pengembangan Sistem', 'Comtelindo Surabaya', 0.0, 0.0, 'Meningkatkan efisiensi sistem', '09:00', '18:00'],
+            [1, '2023-10-01', '2023-10-05', false, 'Projek Pinjem Seratus', 'Comtelindo Balikpapan', -1.249637, 116.877503, 'Agar Silahturami Tidak terputus', '10:00', '19:00'],
+            [2, '2023-10-08', '2023-10-12', true, 'Projek Kembalikan Pinjaman', 'Comtelindo Jakarta', -1.249637, 116.877503, 'Menyelesaikan tugas', '08:00', '17:00'],
+            [3, '2023-10-15', '2023-10-19', false, 'Projek Pengembangan Sistem', 'Comtelindo Surabaya', -1.249637, 116.877503, 'Meningkatkan efisiensi sistem', '09:00', '18:00'],
         ])->map(function ($data) {
             Assignment::create([
                 "number" => uniqid() . "/CMT-WO/OPS/VIII/2023",
                 "user_id" => $data[0],
+                "signed_by" => $data[0],
                 "start_date" => $data[1],
                 "end_date" => $data[2],
                 "override_holiday" => $data[3],
@@ -46,6 +56,8 @@ class AssignmentSeeder extends Seeder
             [3, 1, null, null, null],
             [3, null, 'Budi', 'BoD', '0987654321'],
             [3, 3, null, null, null],
+            [1, 4, null, null, null],
+            [1, null, 'Budiss', 'BoD', '0987654321'],
         ])->map(function ($data) {
             UserAssignment::create([
                 "assignment_id" => $data[0],
@@ -55,5 +67,32 @@ class AssignmentSeeder extends Seeder
                 "nik" => $data[4],
             ]);
         });
+
+        collect([
+            [1, $this->constants->day[0]],
+            [1, $this->constants->day[1]],
+            [1, $this->constants->day[2]],
+            [1, $this->constants->day[3]],
+            [1, $this->constants->day[4]],
+            [1, $this->constants->day[5]],
+            [2, $this->constants->day[1]],
+            [2, $this->constants->day[2]],
+            [2, $this->constants->day[3]],
+            [2, $this->constants->day[4]],
+            [2, $this->constants->day[5]],
+            [2, $this->constants->day[6]],
+            [3, $this->constants->day[1]],
+            [3, $this->constants->day[2]],
+            [3, $this->constants->day[3]],
+            [3, $this->constants->day[4]],
+            [3, $this->constants->day[5]],
+            [3, $this->constants->day[6]],
+        ])->map(function ($data) {
+            AssignmentWorkSchedule::create([
+                "assignment_id" => $data[0],
+                "day" => $data[1],
+            ]);
+        });
+
     }
 }

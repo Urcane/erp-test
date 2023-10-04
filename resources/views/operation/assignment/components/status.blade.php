@@ -23,4 +23,10 @@
             <i class="fas fa-ban text-white"></i>
         </div>
     @break
+
+    @case($statusEnum[4])
+        <div class="d-inline-flex justify-content-center align-items-center bg-black rounded-circle"
+            style="width: 20px; height: 20px;">
+            <i class="fa-solid fa-hourglass-start text-white"></i>
+        </div>
 @endswitch

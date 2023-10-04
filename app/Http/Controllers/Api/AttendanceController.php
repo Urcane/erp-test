@@ -254,6 +254,42 @@ class AttendanceController extends Controller
             $now = Carbon::now();
             $today = $now->toDateString();
 
+            $attendanceToday = UserAttendance::where('date', $today)->where('user_id', $request->user()->id)->first();
+
+            if ($attendanceToday && $attendanceToday->status == $this->constants->attendance_code[4]) {
+                $userInLocation = $request->user()->userAssignments->whereBetween('start_date', [$today, $today])
+                    ->whereBetween('end_date', [$today, $today])
+                    ->where('status', $this->constants->assignment_status[1])
+                    ->selectRaw("user_assignments.*,
+                        (6371000 * acos(cos(radians(?))
+                        * cos(radians(latitude))
+                        * cos(radians(longitude) - radians(?))
+                        + sin(radians(?))
+                        * sin(radians(latitude)))) AS distance",
+                        [$request->latitude, $request->longitude, $request->latitude]
+                    )->orderBy('distance')->first();
+
+                if ($userInLocation->distance > $userInLocation->radius) {
+                    throw new InvariantError("Anda diluar radius wilayah dinas ($userInLocation->distance meter)");
+                }
+
+                $file = $request->file('file');
+                $filename = time() . "_" . $request->user()->name . "." . $file->getClientOriginalExtension();
+                $file->storeAs('attendance/checkin', $filename, 'public');
+
+                $attendanceToday->update([
+                    'check_in' => $timestamp,
+                    'check_in_latitude' => $request->latitude,
+                    'check_in_longitude' => $request->longitude,
+                    'check_in_file' => $filename,
+                ]);
+
+                return response()->json([
+                    "status" => "success",
+                    "message" => "Berhasil Melakukan Check in ($now)"
+                ], 201);
+            }
+
             // global checkup
             $globalDayOff = GlobalDayOff::where('start_date', '<=', $today)
                 ->where('end_date', '>=', $today)->first();
@@ -421,6 +457,42 @@ class AttendanceController extends Controller
             $timestamp = now();
             $now = Carbon::now();
             $today = $now->toDateString();
+
+            $attendanceToday = UserAttendance::where('date', $today)->where('user_id', $request->user()->id)->first();
+
+            if ($attendanceToday && $attendanceToday->status == $this->constants->attendance_code[4]) {
+                $userInLocation = $request->user()->userAssignments->whereBetween('start_date', [$today, $today])
+                    ->whereBetween('end_date', [$today, $today])
+                    ->where('status', $this->constants->assignment_status[1])
+                    ->selectRaw("user_assignments.*,
+                        (6371000 * acos(cos(radians(?))
+                        * cos(radians(latitude))
+                        * cos(radians(longitude) - radians(?))
+                        + sin(radians(?))
+                        * sin(radians(latitude)))) AS distance",
+                        [$request->latitude, $request->longitude, $request->latitude]
+                    )->orderBy('distance')->first();
+
+                if ($userInLocation->distance > $userInLocation->radius) {
+                    throw new InvariantError("Anda diluar radius wilayah dinas ($userInLocation->distance meter)");
+                }
+
+                $file = $request->file('file');
+                $filename = time() . "_" . $request->user()->name . "." . $file->getClientOriginalExtension();
+                $file->storeAs('attendance/checkin', $filename, 'public');
+
+                $attendanceToday->update([
+                    'check_out' => $timestamp,
+                    'check_out_latitude' => $request->latitude,
+                    'check_out_longitude' => $request->longitude,
+                    'check_out_file' => $filename,
+                ]);
+
+                return response()->json([
+                    "status" => "success",
+                    "message" => "Berhasil Melakukan Check Out ($now)"
+                ], 201);
+            }
 
             // global checkup
             $globalDayOff = GlobalDayOff::where('start_date', '<=', $today)

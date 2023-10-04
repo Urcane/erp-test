@@ -42,6 +42,14 @@ class CreateAllAssignment extends Migration
             $table->timestamps();
         });
 
+        Schema::create('assignment_work_schedules', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("assignment_id")->constrained("assignments");
+            $table->enum("day", $this->constants->day);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
         // Schema::create('assignment_file', function (Blueprint $table) {
         //     $table->id();
         //     $table->foreignId("assignment_id")->constrained("assignment");

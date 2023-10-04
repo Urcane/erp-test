@@ -29,4 +29,9 @@ class Assignment extends Model
     {
         return $this->hasMany(UserAssignment::class);
     }
+
+    public function assignmentWorkSchedules(): HasMany
+    {
+        return $this->hasMany(AssignmentWorkSchedule::class);
+    }
 }

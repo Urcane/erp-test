@@ -74,7 +74,7 @@
                                         <div id="map" style="height: 350px"></div>
                                     </div>
 
-                                    <div class="col-lg-6 mb-3">
+                                    <div class="col-lg-6 row mb-3">
                                         <div class="col-lg-12 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Lokasi</span>
@@ -103,17 +103,37 @@
 
                                         <div class="col-lg-12 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <span class="fw-bold">Hari Penugasan</span>
+                                            </label>
+                                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                                                @php
+                                                    $workingDays = $assignment->assignmentWorkSchedules->pluck('day')->toArray();
+                                                @endphp
+                                                @foreach ($days as $day)
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" disabled
+                                                            @if (in_array($day, $workingDays)) checked @endif>
+                                                        <label class="fs-7 form-check-label mb-2" for="work_schedule[]">
+                                                            <span class="fw-bold">{{ $day }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-6 mb-3">
+                                            <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working Start</span>
                                             </label>
                                             <input type="time" class="form-control form-control-solid" disabled
                                                 value="{{ date('H:i', strtotime($assignment->working_start)) }}">
                                         </div>
 
-                                        <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-6 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working End</span>
                                             </label>
-                                            <input type="text" class="form-control form-control-solid" disabled
+                                            <input type="time" class="form-control form-control-solid" disabled
                                                 value="{{ date('H:i', strtotime($assignment->working_end)) }}">
                                         </div>
                                     </div>
@@ -225,15 +245,13 @@
                                                 @endif
 
                                                 @if (true)
-                                                    <button type="reset" id="timeoff_reject"
-                                                        class="btn btn-outline btn-outline-danger btn-sm me-3"
-                                                        data-bs-dismiss="modal">
+                                                    <button id="assignment_reject"
+                                                        class="btn btn-outline btn-outline-danger btn-sm me-3">
                                                         <i class="fas fa-times text-danger"></i>
                                                         Reject
                                                     </button>
-                                                    <button type="reset" id="timeoff_approve"
-                                                        class="btn btn-outline btn-outline-success btn-sm me-3"
-                                                        data-bs-dismiss="modal">
+                                                    <button id="assignment_approve"
+                                                        class="btn btn-outline btn-outline-success btn-sm me-3">
                                                         <i class="fas fa-check text-success"></i>
                                                         Approve
                                                     </button>
@@ -291,4 +309,61 @@
             L.marker([latitude, longitude]).addTo(map)
         });
     </script>
+
+    @if ($assignment->status == $statusEnum[0] && true)
+        <script>
+            $(document).ready(function() {
+                $('#assignment_reject').on('click', function() {
+                    $.ajax({
+                        url: "{{ route('opt.asign.update-status') }}",
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        type: 'POST',
+                        data: {
+                            assignment_id: "{{ $assignment->id }}",
+                            status: "{{ $statusEnum[2] }}",
+                        },
+                        success: function(data) {
+                            toastr.success(data.message, 'Selamat 🚀 !');
+                            setTimeout(function() {
+                                window.location.href = "{{ route('opt.asign.index') }}";
+                            }, 1000);
+                        },
+                        error: function(xhr, status, error) {
+                            const data = xhr.responseJSON;
+                            toastr.error(data.message, 'Opps!');
+                        }
+                    });
+                })
+
+                $('#assignment_approve').on('click', function() {
+                    $.ajax({
+                        url: "{{ route('opt.asign.update-status') }}",
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        type: 'POST',
+                        data: {
+                            assignment_id: "{{ $assignment->id }}",
+                            status: "{{ $statusEnum[1] }}",
+                        },
+                        success: function(data) {
+                            toastr.success(data.message, 'Selamat 🚀 !');
+                            setTimeout(function() {
+                                window.location.href = "{{ route('opt.asign.index') }}";
+                            }, 1000);
+                        },
+                        error: function(xhr, status, error) {
+                            const data = xhr.responseJSON;
+                            toastr.error(data.message, 'Opps!');
+                            setTimeout(function() {
+                                window.location.href = "{{ route('opt.asign.index') }}";
+                            }, 2000);
+                        }
+                    });
+                })
+            });
+        </script>
+    @endif
 @endsection

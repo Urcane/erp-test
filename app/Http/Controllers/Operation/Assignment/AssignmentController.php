@@ -14,9 +14,13 @@ use App\Exceptions\NotFoundError;
 use App\Models\Assignment\Assignment;
 use App\Utils\ErrorHandler;
 use App\Http\Controllers\Controller;
+use App\Models\Attendance\GlobalDayOff;
+use App\Models\Attendance\UserAttendance;
 use App\Models\Department;
-use App\Models\Division;
 use App\Models\User;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -32,9 +36,136 @@ class AssignmentController extends Controller
         $this->constants = new Constants();
     }
 
-    private function _updateAttendance()
+    private function _getGlobalDayOff($startDate, $endDate)
     {
-        // $this->info('Updating attendance...');
+        $globalDayOffs = GlobalDayOff::where('start_date', '<=', $endDate)
+            ->where('end_date', '>=', $startDate)->get();
+
+        $holidayDates = collect();
+
+        foreach ($globalDayOffs as $globalDayOff) {
+            $currentStartDate = max($globalDayOff->start_date, $startDate);
+            $currentEndDate = min($globalDayOff->end_date, $endDate);
+
+            $period = new DatePeriod(
+                new DateTime($currentStartDate),
+                new DateInterval('P1D'),
+                (new DateTime($currentEndDate))->modify('+1 day')  // To include the end_date
+            );
+
+            foreach ($period as $date) {
+                $holidayDates->push($date->format('Y-m-d'));
+            }
+        }
+
+        return $holidayDates->unique()->toArray();
+    }
+
+    private function _updateAttendance(mixed $assignment)
+    {
+        $workSchedules = $assignment->assignmentWorkSchedules->pluck('day')->toArray();
+        $startDate = Carbon::parse($assignment->start_date);
+        $endDate = Carbon::parse($assignment->end_date);
+
+        $holidayDates = $assignment->override_holiday ? $this->_getGlobalDayOff($startDate, $endDate) : [];
+
+        $dayNames = [
+            'Minggu',
+            'Senin',
+            'Selasa',
+            'Rabu',
+            'Kamis',
+            'Jumat',
+            'Sabtu',
+        ];
+
+        $assignment->userAssignments->map(function ($userAssignment) use (
+            $assignment,
+            $startDate,
+            $endDate,
+            $workSchedules,
+            $holidayDates,
+            $dayNames
+        ) {
+            if ($userAssignment->user_id) {
+                $startDateCopy = $startDate->copy();
+
+                while ($startDateCopy->lte($endDate)) {
+                    if (in_array($startDateCopy, $holidayDates)) {
+                        UserAttendance::updateOrCreate([
+                            'user_id' => $userAssignment->user_id,
+                            'date' => $startDateCopy,
+                        ], [
+                            'attendance_code' => $this->constants->attendance_code[3],
+                            'shift_name' => null,
+                            'working_start' => null,
+                            'working_end' => null,
+                            'overtime_before' => 0,
+                            'overtime_after' => 0,
+                            'late_check_in' => 0,
+                            'late_check_out' => 0,
+                            'start_attend' => null,
+                            'end_attend' => null,
+                            'check_in' => null,
+                            'check_out' => null,
+                            'check_in_latitude' => null,
+                            'check_in_longitude' => null,
+                            'check_out_latitude' => null,
+                            'check_out_longitude' => null,
+                            'overtime' => 0,
+                        ]);
+                    } else if (in_array($dayNames[$startDateCopy->dayOfWeek], $workSchedules)) {
+                        UserAttendance::updateOrCreate([
+                            'user_id' => $userAssignment->user_id,
+                            'date' => $startDateCopy,
+                        ], [
+                            'attendance_code' => $this->constants->attendance_code[4],
+                            'shift_name' => "Dinas Luar",
+                            'working_start' => $assignment->working_start,
+                            'working_end' => $assignment->working_end,
+                            'overtime_before' => 0,
+                            'overtime_after' => 0,
+                            'late_check_in' => 0,
+                            'late_check_out' => 0,
+                            'start_attend' => null,
+                            'end_attend' => null,
+                            'check_in' => null,
+                            'check_out' => null,
+                            'check_in_latitude' => null,
+                            'check_in_longitude' => null,
+                            'check_out_latitude' => null,
+                            'check_out_longitude' => null,
+                            'overtime' => 0,
+                        ]);
+                    } else {
+                        UserAttendance::updateOrCreate([
+                            'user_id' => $userAssignment->user_id,
+                            'date' => $startDateCopy,
+                        ], [
+                            'attendance_code' => $this->constants->attendance_code[2],
+                            'shift_name' => null,
+                            'working_start' => null,
+                            'working_end' => null,
+                            'overtime_before' => 0,
+                            'overtime_after' => 0,
+                            'late_check_in' => 0,
+                            'late_check_out' => 0,
+                            'start_attend' => null,
+                            'end_attend' => null,
+                            'check_in' => null,
+                            'check_out' => null,
+                            'check_in_latitude' => null,
+                            'check_in_longitude' => null,
+                            'check_out_latitude' => null,
+                            'check_out_longitude' => null,
+                            'overtime' => 0,
+                        ]);
+                    }
+
+                    $startDateCopy->addDay();
+                }
+            }
+        });
     }
 
     public function index()
@@ -49,13 +180,17 @@ class AssignmentController extends Controller
 
     public function create()
     {
+        $days = $this->constants->day;
+
         $users = User::where('department_id', Auth::user()->department_id)
             ->where('id', '!=', Auth::user()->id)
             ->has('userEmployment')->has('division')
             ->with(['userEmployment', 'division'])
             ->get();
 
-        return view('operation.assignment.create', compact(['users']));
+        return view('operation.assignment.create', compact([
+            'users', 'days'
+        ]));
     }
 
     public function store(Request $request)
@@ -64,7 +199,7 @@ class AssignmentController extends Controller
             $request->validate([
                 'number' => 'required|string|max:255|unique:assignments',
                 'signed_by' => 'required|exists:users,id',
-                'start_date' => 'required|date',
+                'start_date' => 'required|date|after_or_equal:today',
                 'end_date' => 'required|date|after:start_date',
                 'override_holiday' => 'nullable',
                 'name' => 'required|string|max:255',
@@ -76,13 +211,14 @@ class AssignmentController extends Controller
                 'radius' => 'integer',
                 'purpose' => 'required|string',
                 'cmt_id' => ['nullable', Rule::requiredIf(function () use ($request) {
-                    return empty($request->input('people-name'));
+                    return empty($request->input('people_name'));
                 })],
                 'people_name' => ['nullable', Rule::requiredIf(function () use ($request) {
-                    return empty($request->input('cmt-id'));
+                    return empty($request->input('cmt_id'));
                 })],
                 'people_nik' => 'array',
                 'people_position' => 'array',
+                'work_schedule' => 'array',
             ]);
 
             DB::beginTransaction();
@@ -105,7 +241,7 @@ class AssignmentController extends Controller
             ]);
 
             if ($request->cmt_id) {
-                foreach($request->cmt_id as $cmt_id) {
+                foreach ($request->cmt_id as $cmt_id) {
                     $assignment->userAssignments()->create([
                         "user_id" => $cmt_id,
                         "name" => null,
@@ -116,12 +252,20 @@ class AssignmentController extends Controller
             }
 
             if ($request->people_name) {
-                foreach($request->people_name as $key => $people_name) {
+                foreach ($request->people_name as $key => $people_name) {
                     $assignment->userAssignments()->create([
                         "user_id" => null,
                         "name" => $people_name,
                         "position" => $request->people_position[$key],
                         "nik" => $request->people_nik[$key],
+                    ]);
+                }
+            }
+
+            if ($request->work_schedule) {
+                foreach ($request->work_schedule as $day) {
+                    $assignment->assignmentWorkSchedules()->create([
+                        "day" => $day,
                     ]);
                 }
             }
@@ -145,13 +289,14 @@ class AssignmentController extends Controller
     {
         $assignment = Assignment::whereId($id)->first();
         $statusEnum = $this->constants->assignment_status;
+        $days = $this->constants->day;
 
         if (!$assignment) {
             return abort(404);
         }
 
         return view('operation.assignment.detail', compact([
-            'assignment', 'statusEnum'
+            'assignment', 'statusEnum', 'days'
         ]));
     }
 
@@ -198,7 +343,7 @@ class AssignmentController extends Controller
             $request->validate([
                 'number' => ['required', 'string', 'max:255', Rule::unique('assignments')->ignore($assignment->id)],
                 'signed_by' => 'required|exists:users,id',
-                'start_date' => 'required|date',
+                'start_date' => 'required|date|after_or_equal:today',
                 'end_date' => 'required|date|after:start_date',
                 'override_holiday' => 'nullable',
                 'name' => 'required|string|max:255',
@@ -210,13 +355,14 @@ class AssignmentController extends Controller
                 'radius' => 'integer',
                 'purpose' => 'required|string',
                 'cmt_id' => ['nullable', Rule::requiredIf(function () use ($request) {
-                    return empty($request->input('people-name'));
+                    return empty($request->input('people_name'));
                 })],
                 'people_name' => ['nullable', Rule::requiredIf(function () use ($request) {
-                    return empty($request->input('cmt-id'));
+                    return empty($request->input('cmt_id'));
                 })],
                 'people_nik' => 'array',
                 'people_position' => 'array',
+                'work_schedule' => 'array',
             ]);
 
             DB::beginTransaction();
@@ -240,7 +386,7 @@ class AssignmentController extends Controller
             $assignment->userAssignments()->delete();
 
             if ($request->cmt_id) {
-                foreach($request->cmt_id as $cmt_id) {
+                foreach ($request->cmt_id as $cmt_id) {
                     $assignment->userAssignments()->create([
                         "user_id" => $cmt_id,
                         "name" => null,
@@ -251,12 +397,22 @@ class AssignmentController extends Controller
             }
 
             if ($request->people_name) {
-                foreach($request->people_name as $key => $people_name) {
+                foreach ($request->people_name as $key => $people_name) {
                     $assignment->userAssignments()->create([
                         "user_id" => null,
                         "name" => $people_name,
                         "position" => $request->people_position[$key],
                         "nik" => $request->people_nik[$key],
+                    ]);
+                }
+            }
+
+            $assignment->assignmentWorkSchedules()->delete();
+
+            if ($request->work_schedule) {
+                foreach ($request->work_schedule as $day) {
+                    $assignment->assignmentWorkSchedules()->create([
+                        "day" => $day,
                     ]);
                 }
             }
@@ -422,19 +578,32 @@ class AssignmentController extends Controller
                 throw new InvariantError("Tidak dapat melakukan update status, Penugasan sudah $assignment->status");
             }
 
+            DB::beginTransaction();
+
             if ($request->status == $this->constants->assignment_status[1]) {
-                $this->_updateAttendance();
+                if (Carbon::parse($assignment->start_date)->lt(Carbon::now())) {
+                    $assignment->update([
+                        "status" => $this->constants->assignment_status[4],
+                    ]);
+
+                    DB::commit();
+                    throw new InvariantError("Tidak dapat melakukan menyetujui, Penugasan sudah expired");
+                }
+                $this->_updateAttendance($assignment);
             }
 
             $assignment->update([
                 "status" => $request->status,
             ]);
 
+            DB::commit();
+
             return response()->json([
                 "status" => "success",
                 "message" => "Berhasil mengubah status penugasan",
             ], 200);
         } catch (\Throwable $th) {
+            DB::rollBack();
             $data = $this->errorHandler->handle($th);
 
             return response()->json($data["data"], $data["code"]);
@@ -446,6 +615,10 @@ class AssignmentController extends Controller
         $assignment = Assignment::whereId($assignment)->first();
 
         if (!$assignment) {
+            return abort(404);
+        }
+
+        if ($assignment->status != $this->constants->assignment_status[1]) {
             return abort(404);
         }
 

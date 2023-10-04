@@ -316,6 +316,10 @@
 
                 const $row = $(row);
 
+                if (attendanceCode === attendanceCodeEnum[4]) {
+                    return $row.css('background-color', 'rgba(253, 224, 71, 0.7)');
+                }
+
                 if (attendanceCode !== attendanceCodeEnum[0]) {
                     return $row.css('background-color', 'rgba(192, 192, 192, 0.4)');
                 }

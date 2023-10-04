@@ -409,6 +409,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/update', 'update')->name('opt.asign.update');
                 Route::post('/cancel', 'cancel')->name('opt.asign.cancel');
 
+                Route::post('/update-status', 'updateStatus')->name('opt.asign.update-status');
+
                 Route::get('/get-data/table/data-result', 'getTableAssignment')->name('opt.asign.get-table-assignment');
 
                 Route::get('/pdf/{assignment}/{user}', 'exportPdf')->name('opt.asign.export-pdf');

@@ -193,8 +193,8 @@ class User extends Authenticatable
         return $this->hasMany(Assignment::class);
     }
 
-    public function userAssignments(): HasMany
+    public function userAssignments(): BelongsToMany
     {
-        return $this->hasMany(UserAssignment::class);
+        return $this->belongsToMany(Assignment::class, UserAssignment::class);
     }
 }
