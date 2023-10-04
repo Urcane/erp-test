@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Exceptions\NotFoundError;
 
 use App\Models\Attendance\GlobalDayOff;
+use App\Models\Employee\UserCurrentShift;
+use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Leave\UserLeaveRequest;
 use App\Models\Leave\LeaveRequestCategory;
 use App\Models\Leave\UserLeaveCategoryQuota;
@@ -48,6 +50,31 @@ class TimeOffController extends RequestController
         return $holidayDates->unique()->toArray();
     }
 
+    private function _getWorkingScheduleShift($userId, $startDate) {
+        $userCurrentShift = UserCurrentShift::where('user_id', $userId)->with("workingScheduleShift")->first();
+        $workingScheduleShifts = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
+
+        Carbon::setLocale($this->constants->locale);
+        $requestDate = Carbon::parse($startDate);
+        $now = Carbon::now();
+        $diff = $now->diffInDays($requestDate);
+        $countOfSchedule = $workingScheduleShifts->count();
+        $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+        $workingScheduleShift = $workingScheduleShifts->find($userCurrentShift->working_schedule_shift_id);
+        for ($i=0; $i < $distance; $i++) {
+            if ($requestDate > $now) {
+                $workingScheduleShift = $workingScheduleShifts->find($workingScheduleShift->next);
+            } else {
+                $workingScheduleShift = $workingScheduleShifts->filter(function ($scheduleShift) use ($workingScheduleShift){
+                    return $scheduleShift->next == $workingScheduleShift->id;
+                })->first();
+            }
+        }
+
+        return $workingScheduleShift;
+    }
+
     private function _getTakenDays($startDate, $endDate, User $user)
     {
         Carbon::setLocale($this->constants->locale);
@@ -61,7 +88,7 @@ class TimeOffController extends RequestController
         while ($startDate <= $endDate) {
             $currentDate = $startDate->copy();
 
-            if (!in_array($currentDate->toDateString(), $holidayDates) && !$workingScheduleShift->is_working) {
+            if (!in_array($currentDate->toDateString(), $holidayDates) && $workingScheduleShift->workingShift->is_working) {
                 $taken += 1;
             }
             $workingScheduleShift = $workingScheduleShift->nextSchedule;

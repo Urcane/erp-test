@@ -133,17 +133,11 @@ class TimeOffController extends RequestController
     {
         $userId = $leaveRequest->user->id;
 
-        $workingDayOff = $leaveRequest
-            ->user
-            ->userEmployment
-            ->workingScheduleShift
-            ->workingSchedule
-            ->dayOffs
-            ->pluck('day')->toArray();
+        $workingScheduleShift = UserCurrentShift::where("user_id", $userId)->with("workingScheduleShift")->first()->workingScheduleShift;
 
         if ($leaveRequest->leaveRequestCategory->half_day) {
             $schedule = $this->_getSchedule(
-                $workingDayOff,
+                $workingScheduleShift,
                 $leaveRequest->date,
                 $leaveRequest->date
             );
@@ -183,7 +177,7 @@ class TimeOffController extends RequestController
         }
 
         $schedule = $this->_getSchedule(
-            $workingDayOff,
+            $workingScheduleShift,
             $leaveRequest->start_date,
             $leaveRequest->end_date
         );
@@ -233,7 +227,7 @@ class TimeOffController extends RequestController
         while ($startDate <= $endDate) {
             $currentDate = $startDate->copy();
 
-            if (!in_array($currentDate->toDateString(), $holidayDates) && !$workingScheduleShift->is_working) {
+            if (!in_array($currentDate->toDateString(), $holidayDates) && $workingScheduleShift->workingShift->is_working) {
                 $taken += 1;
             }
             $workingScheduleShift = $workingScheduleShift->nextSchedule;
