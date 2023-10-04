@@ -100,11 +100,11 @@ class TimeOffController extends TimeManagementController
                 'name' => $request->name,
                 'code' => $request->code,
                 'effective_date' => $request->effective_date,
-                'attachment' => (int) $request->attachment,
-                'show_in_request' => (int) $request->show_in_request,
+                'attachment' => (bool) $request->attachment,
+                'show_in_request' => (bool) $request->show_in_request,
                 'max_request' => $request->max_request,
-                'use_quota' => (int) $request->use_quota,
-                'unlimited_balance' => (int) $request->unlimited_balance,
+                'use_quota' => (bool) $request->use_quota,
+                'unlimited_balance' => (bool) $request->unlimited_balance,
             ];
 
             if (!$request->unlimited_balance) {
@@ -112,7 +112,7 @@ class TimeOffController extends TimeManagementController
                     'min_works' => $request->min_works,
                     'balance' => $request->balance,
                     'balance_type' => $request->balance_type,
-                    'expired' => (int) $request->expire,
+                    'expired' => (bool) $request->expire,
                 ];
             }
 
@@ -200,11 +200,11 @@ class TimeOffController extends TimeManagementController
                 'name' => $request->name,
                 'code' => $request->code,
                 'effective_date' => $request->effective_date,
-                'attachment' => (int) $request->attachment,
-                'show_in_request' => (int) $request->show_in_request,
+                'attachment' => (bool) $request->attachment,
+                'show_in_request' => (bool) $request->show_in_request,
                 'max_request' => $request->max_request,
-                'use_quota' => (int) $request->use_quota,
-                'unlimited_balance' => (int) $request->unlimited_balance,
+                'use_quota' => (bool) $request->use_quota,
+                'unlimited_balance' => (bool) $request->unlimited_balance,
             ];
 
             if (!$request->unlimited_balance) {
@@ -212,7 +212,7 @@ class TimeOffController extends TimeManagementController
                     'min_works' => $request->min_works,
                     'balance' => $request->balance,
                     'balance_type' => $request->balance_type,
-                    'expired' => (int) $request->expire,
+                    'expired' => (bool) $request->expire,
                 ];
             }
 

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title-apps','CMT-Attendance')
+@section('title-apps','Attendance')
 @section('sub-title-apps','HC & Legal')
 @section('desc-apps','Catatan Daftar Hadir Karyawan')
 @section('icon-apps','fa-solid fa-calendar-days')

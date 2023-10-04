@@ -290,10 +290,12 @@
             $('#filter_status_shift').val("*").trigger("change")
         });
 
-        $('#search_shift').on('input', function() {
-            tableShift.draw();
-            deleteShiftSummaries();
-            getShiftSummaries();
+        $('#search_shift').on('keyup', function(e) {
+            if (e.keyCode === 13) {
+                tableShift.draw();
+                deleteShiftSummaries();
+                getShiftSummaries();
+            }
         });
 
         const onShiftModalClose = () => {

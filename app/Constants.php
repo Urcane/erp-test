@@ -34,6 +34,7 @@ class Constants
     public $approve_status = ["Waiting", "Approved", "Rejected", "Canceled"]; // [0] as default // used manually on hc/request/* -> summaries and script
     public $balance_type = ["Anniversary", "Monthly"];
     public $leave_quota_history_type = ["minus", "plus"];
+    public $assignment_status = ["Waiting", "Approved", "Rejected", "Canceled", "Expired"]; // [0] as default
 
     // system and view
     public $filter_status_attendance = [

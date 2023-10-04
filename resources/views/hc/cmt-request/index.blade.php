@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title-apps', 'CMT-Request')
+@section('title-apps', 'Request')
 @section('sub-title-apps', 'HC & Legal')
 @section('desc-apps', 'Catatan Daftar Request Karyawan')
 @section('icon-apps', 'fa-solid fa-handshake')

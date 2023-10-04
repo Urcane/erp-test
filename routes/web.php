@@ -401,6 +401,13 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('operation')->group(function () {
         Route::controller(Operation\Assignment\AssignmentController::class)->group(function () {
             Route::prefix('assignment')->group(function () {
+                Route::get('/', 'index')->name('opt.asign.index');
+                Route::get('/detail/{id}', 'index')->name('opt.asign.detail');
+                Route::get('/create', 'create')->name('opt.asign.create');
+                Route::post('/create', 'store')->name('opt.asign.store');
+
+                Route::get('/get-data/table/data-result', 'getTableAssignment')->name('opt.asign.get-table-assignment');
+
                 Route::get('/pdf', 'exportPdf')->name('opt.asign.export-pdf');
             });
         });
