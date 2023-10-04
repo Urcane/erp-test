@@ -25,6 +25,7 @@ class CreateAllAssignment extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->foreignId("signed_by")->constrained("users");
+            $table->foreignId("approval_line")->nullable()->constrainted("users");
             $table->string("number", 255)->unique();
             $table->date("start_date");
             $table->date("end_date");

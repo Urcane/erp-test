@@ -89,14 +89,16 @@
                                 </div>
                             </div> --}}
 
-                            <div class="d-flex justify-content-end mb-5">
-                                <div>
-                                    <a href="{{ route('opt.asign.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai">
-                                        <i class="fa-solid fa-plus"></i>
-                                        Assignment Baru
-                                    </a>
+                            @can('OPR:create-department-assignment')
+                                <div class="d-flex justify-content-end mb-5">
+                                    <div>
+                                        <a href="{{ route('opt.asign.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai">
+                                            <i class="fa-solid fa-plus"></i>
+                                            Assignment Baru
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            @endcan
 
                             <div class="d-flex justify-content-end mb-2">
                                 <div class="input-group w-150px w-md-250px mx-4">
@@ -170,6 +172,7 @@
                                                 <th class="text-center w-50px">#</th>
                                                 <th class="w-100px">Created At</th>
                                                 <th class="w-150px">Project Name</th>
+                                                <th class="w-150px">Created By</th>
                                                 <th class="w-150px">Signed By</th>
                                                 <th class="w-150px">Assignment Date</th>
                                                 <th class="w-150px">Location</th>
@@ -303,6 +306,11 @@
                 },
                 {
                     data: 'name',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'created_by',
                     orderable: false,
                     searchable: false
                 },

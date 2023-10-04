@@ -244,7 +244,7 @@
                                                     </a>
                                                 @endif
 
-                                                @if (true)
+                                                @can('OPR:change-department-status-assignment')
                                                     <button id="assignment_reject"
                                                         class="btn btn-outline btn-outline-danger btn-sm me-3">
                                                         <i class="fas fa-times text-danger"></i>
@@ -255,7 +255,7 @@
                                                         <i class="fas fa-check text-success"></i>
                                                         Approve
                                                     </button>
-                                                @endif
+                                                @endcan
                                             @break
 
                                             @case($statusEnum[1])
@@ -309,61 +309,62 @@
             L.marker([latitude, longitude]).addTo(map)
         });
     </script>
+    @can('OPR:change-department-status-assignment')
+        @if ($assignment->status == $statusEnum[0] && true)
+            <script>
+                $(document).ready(function() {
+                    $('#assignment_reject').on('click', function() {
+                        $.ajax({
+                            url: "{{ route('opt.asign.update-status') }}",
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                            },
+                            type: 'POST',
+                            data: {
+                                assignment_id: "{{ $assignment->id }}",
+                                status: "{{ $statusEnum[2] }}",
+                            },
+                            success: function(data) {
+                                toastr.success(data.message, 'Selamat 🚀 !');
+                                setTimeout(function() {
+                                    window.location.href = "{{ route('opt.asign.index') }}";
+                                }, 1000);
+                            },
+                            error: function(xhr, status, error) {
+                                const data = xhr.responseJSON;
+                                toastr.error(data.message, 'Opps!');
+                            }
+                        });
+                    })
 
-    @if ($assignment->status == $statusEnum[0] && true)
-        <script>
-            $(document).ready(function() {
-                $('#assignment_reject').on('click', function() {
-                    $.ajax({
-                        url: "{{ route('opt.asign.update-status') }}",
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                        },
-                        type: 'POST',
-                        data: {
-                            assignment_id: "{{ $assignment->id }}",
-                            status: "{{ $statusEnum[2] }}",
-                        },
-                        success: function(data) {
-                            toastr.success(data.message, 'Selamat 🚀 !');
-                            setTimeout(function() {
-                                window.location.href = "{{ route('opt.asign.index') }}";
-                            }, 1000);
-                        },
-                        error: function(xhr, status, error) {
-                            const data = xhr.responseJSON;
-                            toastr.error(data.message, 'Opps!');
-                        }
-                    });
-                })
-
-                $('#assignment_approve').on('click', function() {
-                    $.ajax({
-                        url: "{{ route('opt.asign.update-status') }}",
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                        },
-                        type: 'POST',
-                        data: {
-                            assignment_id: "{{ $assignment->id }}",
-                            status: "{{ $statusEnum[1] }}",
-                        },
-                        success: function(data) {
-                            toastr.success(data.message, 'Selamat 🚀 !');
-                            setTimeout(function() {
-                                window.location.href = "{{ route('opt.asign.index') }}";
-                            }, 1000);
-                        },
-                        error: function(xhr, status, error) {
-                            const data = xhr.responseJSON;
-                            toastr.error(data.message, 'Opps!');
-                            setTimeout(function() {
-                                window.location.href = "{{ route('opt.asign.index') }}";
-                            }, 2000);
-                        }
-                    });
-                })
-            });
-        </script>
-    @endif
+                    $('#assignment_approve').on('click', function() {
+                        $.ajax({
+                            url: "{{ route('opt.asign.update-status') }}",
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                            },
+                            type: 'POST',
+                            data: {
+                                assignment_id: "{{ $assignment->id }}",
+                                status: "{{ $statusEnum[1] }}",
+                            },
+                            success: function(data) {
+                                toastr.success(data.message, 'Selamat 🚀 !');
+                                setTimeout(function() {
+                                    window.location.href = "{{ route('opt.asign.index') }}";
+                                }, 1000);
+                            },
+                            error: function(xhr, status, error) {
+                                const data = xhr.responseJSON;
+                                toastr.error(data.message, 'Opps!');
+                                setTimeout(function() {
+                                    window.location.href = "{{ route('opt.asign.index') }}";
+                                }, 2000);
+                            }
+                        });
+                    })
+                });
+            </script>
+        @endif
+    @endcan
 @endsection

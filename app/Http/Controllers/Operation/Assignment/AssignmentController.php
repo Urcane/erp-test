@@ -170,6 +170,13 @@ class AssignmentController extends Controller
 
     public function index()
     {
+        /** @var \App\Models\User $authUser */
+        $authUser = Auth::user();
+
+        if (!$authUser->hasPermissionTo('OPR:view-department-assignment')) {
+            abort(403);
+        }
+
         $assignmentStatus = $this->constants->assignment_status;
         $dataDepartment = Department::all();
 
@@ -180,6 +187,13 @@ class AssignmentController extends Controller
 
     public function create()
     {
+        /** @var \App\Models\User $authUser */
+        $authUser = Auth::user();
+
+        if (!$authUser->hasPermissionTo('OPR:create-department-assignment')) {
+            abort(403);
+        }
+
         $days = $this->constants->day;
 
         $users = User::where('department_id', Auth::user()->department_id)
@@ -196,6 +210,13 @@ class AssignmentController extends Controller
     public function store(Request $request)
     {
         try {
+            /** @var \App\Models\User $authUser */
+            $authUser = Auth::user();
+
+            if (!$authUser->hasPermissionTo('OPR:create-department-assignment')) {
+                throw new AuthorizationError("Anda tidak berhak membuat penugasan");
+            }
+
             $request->validate([
                 'number' => 'required|string|max:255|unique:assignments',
                 'signed_by' => 'required|exists:users,id',
@@ -295,6 +316,16 @@ class AssignmentController extends Controller
             return abort(404);
         }
 
+        /** @var \App\Models\User $authUser */
+        $authUser = Auth::user();
+
+        if (
+            !$authUser->hasPermissionTo('OPR:view-department-assignment')
+            && $assignment->user->department_id != $authUser->department_id
+        ) {
+            abort(403);
+        }
+
         return view('operation.assignment.detail', compact([
             'assignment', 'statusEnum', 'days'
         ]));
@@ -310,6 +341,10 @@ class AssignmentController extends Controller
 
         if ($assignment->status != $this->constants->assignment_status[0]) {
             return abort(404);
+        }
+
+        if ($assignment->user_id != Auth::user()->id) {
+            return abort(403);
         }
 
         $users = User::where('department_id', Auth::user()->department_id)
@@ -434,6 +469,13 @@ class AssignmentController extends Controller
     public function getTableAssignment(Request $request)
     {
         if (request()->ajax()) {
+            /** @var \App\Models\User $authUser */
+            $authUser = Auth::user();
+
+            if (!$authUser->hasPermissionTo('OPR:view-department-assignment')) {
+                throw new AuthorizationError("Anda tidak berhak melihat penugasan");
+            }
+
             $assignments = Assignment::query();
 
             if ($request->filters['filterDate']) {
@@ -486,6 +528,12 @@ class AssignmentController extends Controller
                 case $this->constants->assignment_status[3]:
                     $assignments = $assignments->where('status', $this->constants->assignment_status[3]);
                     break;
+                case $this->constants->assignment_status[4]:
+                    $assignments = $assignments->where('status', $this->constants->assignment_status[4]);
+                    break;
+                default:
+                    $assignments = $assignments->orderByRaw("FIELD(status, ?, ?, ?, ?, ?)", $this->constants->assignment_status);
+                    break;
             }
 
             return DataTables::of($assignments)
@@ -521,6 +569,9 @@ class AssignmentController extends Controller
                     return view('operation.assignment.components.status', compact([
                         'status', 'statusEnum'
                     ]));
+                })
+                ->addColumn('created_by', function ($query) {
+                    return $query->user->name;
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'status'])
@@ -563,6 +614,13 @@ class AssignmentController extends Controller
     public function updateStatus(Request $request)
     {
         try {
+            /** @var \App\Models\User $authUser */
+            $authUser = Auth::user();
+
+            if (!$authUser->hasPermissionTo('OPR:change-department-status-assignment')) {
+                throw new AuthorizationError("Anda tidak berhak mengubah status penugasan");
+            }
+
             $request->validate([
                 'assignment_id' => 'required',
                 'status' => ['required', Rule::in($this->constants->assignment_status)],
@@ -584,6 +642,7 @@ class AssignmentController extends Controller
                 if (Carbon::parse($assignment->start_date)->lt(Carbon::now())) {
                     $assignment->update([
                         "status" => $this->constants->assignment_status[4],
+                        "approval_line" => Auth::user()->id,
                     ]);
 
                     DB::commit();
@@ -594,6 +653,7 @@ class AssignmentController extends Controller
 
             $assignment->update([
                 "status" => $request->status,
+                "approval_line" => Auth::user()->id,
             ]);
 
             DB::commit();
@@ -622,10 +682,20 @@ class AssignmentController extends Controller
             return abort(404);
         }
 
-        $userAssignment = $assignment->userAssignments()->whereId($user)->first();
+        $userAssignment = $assignment->userAssignments()->where("user_id", $user)->first();
 
         if (!$userAssignment) {
             return abort(404);
+        }
+
+        /** @var \App\Models\User $authUser */
+        $authUser = Auth::user();
+
+        if (
+            !$authUser->hasPermissionTo('OPR:view-department-assignment')
+            || $authUser->id == $userAssignment->user_id
+        ) {
+            abort(403);
         }
 
         if ($userAssignment->user_id) {
