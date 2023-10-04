@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Sales\Opportunity\Quotation\QuotationController;
 use App\Http\Controllers\Sales\Customer\CustomerController;
 use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
+use App\Http\Controllers\Sales\Opportunity\Procurement\ProcurementController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\Profile;
@@ -424,6 +425,16 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/get-merk-type', 'getMerkType')->name('get.merk.type');
             Route::get('/get-survey-company-item-inventory', 'getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory');
+        });
+    });
+
+    Route::controller(ProcurementController::class)->group(function () {
+        Route::prefix('cmt-procurement')->group(function () {
+            Route::get('/', 'index')->name('com.procurement.index');
+            Route::get('/get/table', 'getTableProcurement')->name('com.procurement.getTable');
+            Route::get('/detail/{id}', 'detailProcurement')->name('com.procurement.detail');
+            Route::get('/detail/{id}/table/item', 'getTableItem')->name('com.procurement.getTableItem');
+            Route::post('/item/status', 'getStatusItem')->name('com.procurement.getStatusItem');
         });
     });
 

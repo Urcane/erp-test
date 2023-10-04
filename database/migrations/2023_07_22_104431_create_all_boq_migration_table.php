@@ -1,11 +1,19 @@
 <?php
 
+use App\Constants;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateAllBoqMigrationTable extends Migration
 {
+    private $constants;
+
+    public function __construct()
+    {
+        $this->constants = new Constants();
+    }
+
     /**
      * Run the migrations.
      *
@@ -77,6 +85,23 @@ class CreateAllBoqMigrationTable extends Migration
             $table->timestamps();
         });
 
+        Schema::create('item_status', function(Blueprint $table){
+            $table->id();
+            $table->foreignId('item_id')->constrained('items');
+            $table->enum("status", $this->constants->item_status)->default($this->constants->item_status[0]);
+            $table->string("description")->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('item_payment', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('item_id')->constrained('items');
+            $table->enum("categoty", ["Advance Payment", "Full Payment"]);
+            $table->integer("nominal");
+            $table->string("file");
+            $table->timestamps();
+        });
+
         Schema::create('itemable_price_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('work_list_id')->nullable()->constrained('work_lists');
@@ -88,7 +113,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->foreignId('reference_price_request_id')->nullable()->constrained('itemable_price_requests');
             $table->timestamps();
         });
-        
+
 
         Schema::create('itemable_quotation_parts', function (Blueprint $table) {
             $table->id();

@@ -17,23 +17,29 @@ class Constants
     ]; // [0] as default, [1] always be for personal, sick, etc
 
     // database related
-    public $marital_status = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
-    public $gender = ["Laki-laki", "Perempuan"];
-    public $blood_type = ["A", "B", "AB", "O"];
-    public $religion = ["Islam", "Kristen", "Buddha", "Hindu", "Konghucu", "Katolik", "Lainnya"];
-    public $payment_type = ["Monthly", "Weekly"];
-    public $day = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]; //change the $locale if u wanna change the day language
-    public $month = [
-        "Januari", "Febuari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-    public $salary_type = ["Weekly", "Monthly"];
-    public $tax_method = ["Gross", "Gross up", "Netto"];
-    public $tax_salary = ["Taxable", "Non-taxable"];
-    public $jaminan_pensiun_cost = ["Not paid", "By company", "By Employee"];
-    public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
-    public $approve_status = ["Waiting", "Approved", "Rejected", "Canceled"]; // [0] as default // used manually on hc/request/* -> summaries and script
-    public $balance_type = ["Anniversary", "Monthly"];
-    public $leave_quota_history_type = ["minus", "plus"];
+    // item {
+        public $item_status = ["Making an order", "Waiting Vendor", "Checking Item", "Return", "Received", "Payment"];
+    // }
+
+    // employee {
+        public $marital_status = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
+        public $gender = ["Laki-laki", "Perempuan"];
+        public $blood_type = ["A", "B", "AB", "O"];
+        public $religion = ["Islam", "Kristen", "Buddha", "Hindu", "Konghucu", "Katolik", "Lainnya"];
+        public $payment_type = ["Monthly", "Weekly"];
+        public $day = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]; //change the $locale if u wanna change the day language
+        public $month = [
+            "Januari", "Febuari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        public $salary_type = ["Weekly", "Monthly"];
+        public $tax_method = ["Gross", "Gross up", "Netto"];
+        public $tax_salary = ["Taxable", "Non-taxable"];
+        public $jaminan_pensiun_cost = ["Not paid", "By company", "By Employee"];
+        public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
+        public $approve_status = ["Waiting", "Approved", "Rejected", "Canceled"]; // [0] as default // used manually on hc/request/* -> summaries and script
+        public $balance_type = ["Anniversary", "Monthly"];
+        public $leave_quota_history_type = ["minus", "plus"];
+    // }
 
     // system and view
     public $filter_status_attendance = [

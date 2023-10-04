@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Inventory\InventoryGood;
 use App\Models\Inventory\InventoryUnitMaster;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
@@ -41,5 +42,13 @@ class Item extends Model
 
     function childItem() : HasOne {
         return $this->hasOne(this::class, 'itemable_id', 'id');
+    }
+
+    function itemStatus() : HasMany {
+        return $this->hasMany(ItemStatus::class);
+    }
+
+    function itemPayment() : HasMany {
+        return $this->hasMany(ItemPayment::class);
     }
 }
