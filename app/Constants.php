@@ -56,7 +56,9 @@ class Constants
         "No Check In",
         "No Check Out",
         "Day Off",
-        "Time Off"
+        "Time Off",
+        "Dinas (Masuk)",
+        "Dinas (Tidak Absen)"
     ];
 
     public $summaries_attendance_information = [
@@ -67,7 +69,9 @@ class Constants
         "Tidak check-in",
         "Tidak check-out",
         "Hari libur kerja/nasional",
-        "Izin dan cuti"
+        "Izin dan cuti",
+        "Memiliki jadwal dinas dan melakukan absen",
+        "Memiliki jadwal dinas dan tidak melakukan absen"
     ];
 
     // only view

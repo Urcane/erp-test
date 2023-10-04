@@ -461,6 +461,22 @@ class AttendanceController extends Controller
                 case "time-off":
                     $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[1]);
                     break;
+
+                case "dinas-in":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[4])
+                        ->whereDate('date', '<=', $now)
+                        ->where(function ($query) {
+                            $query->whereNotNull('check_in')
+                                ->orWhereNotNull('check_out');
+                        });
+                    break;
+
+                case "dinas-out":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[4])
+                        ->whereDate('date', '<', $now)
+                        ->whereNull('check_in')
+                        ->whereNull('check_out');
+                    break;
             }
 
             return DataTables::of($userAttendances)
