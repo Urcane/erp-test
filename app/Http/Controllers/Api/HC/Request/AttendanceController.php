@@ -12,7 +12,9 @@ use App\Exceptions\NotFoundError;
 use App\Models\Attendance\AttendanceChangeLog;
 use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserAttendanceRequest;
-use App\Models\Employee\UserEmployment;
+use App\Models\Employee\UserCurrentShift;
+use App\Models\Employee\WorkingScheduleShift;
+use Illuminate\Support\Carbon;
 
 class AttendanceController extends RequestController
 {
@@ -21,7 +23,28 @@ class AttendanceController extends RequestController
         $userAttendance = UserAttendance::where('user_id', $userId)->where('date', $date)->first();
 
         if (!$userAttendance) {
-            $workingShift = UserEmployment::where('user_id', $userId)->first()->workingScheduleShift->workingShift;
+            $userCurrentShift = UserCurrentShift::where('user_id', $userId)->with("workingScheduleShift")->first();
+            $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
+
+            Carbon::setLocale($this->constants->locale);
+            $requestDate = Carbon::parse($date);
+            $now = Carbon::now();
+            $diff = $now->diffInDays($requestDate);
+            $countOfSchedule = $workingScheduleShift->count();
+            $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+            $primaryScheduleShift = $workingScheduleShift->find($userCurrentShift->working_schedule_shift_id);
+            for ($i=0; $i < $distance; $i++) {
+                if ($requestDate > $now) {
+                    $primaryScheduleShift = $workingScheduleShift->find($primaryScheduleShift->next);
+                } else {
+                    $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift){
+                        return $scheduleShift->next == $primaryScheduleShift->id;
+                    })->first();
+                }
+            }
+
+            $workingShift = $primaryScheduleShift->workingShift;
 
             $attendance = UserAttendance::create([
                 'user_id' => $userId,
@@ -123,7 +146,7 @@ class AttendanceController extends RequestController
             $userRequest = UserAttendanceRequest::whereId($request->id)
                 ->with([
                     'approvalLine',
-                    'user.userEmployment.workingScheduleShift.workingShift'
+                    'user.userEmployment.workingSchedule.workingShifts'
                 ])
                 ->first();
 

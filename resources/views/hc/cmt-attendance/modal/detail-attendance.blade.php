@@ -28,21 +28,20 @@
                                 <div id="map-in" style="height: 200px;"></div>
                                 <div id="no-map-in" class="text-center">
                                     <img class="img-fluid" style="max-height: 200px"
-                                    src="{{ asset('sense/media/images/NoLocation.png') }}">
+                                        src="{{ asset('sense/media/images/NoLocation.png') }}">
                                     <p>No Location Recorded</p>
                                 </div>
                             </div>
 
                             <div class="col-lg-6">
                                 <div class="col-lg-12 d-flex justify-content-center" id="img-in">
-                                    <img class="img-fluid" style="max-height: 200px"
-                                        src="">
+                                    <img class="img-fluid" style="max-height: 200px" src="">
                                 </div>
 
                                 <div class="col-lg-12" id="no-img-in">
                                     <div class="text-center">
                                         <img class="img-fluid" style="max-height: 200px"
-                                        src="{{ asset('sense/media/images/NoImage.png') }}">
+                                            src="{{ asset('sense/media/images/NoImage.png') }}">
                                         <p>No Image Recorded</p>
                                     </div>
                                 </div>
@@ -56,7 +55,8 @@
                                     Location
                                 </div>
                                 <div class="col-lg-12">
-                                    <a href="#" class="fw-bold text-info" id="loc-in" target="_blank">Lihat Lokasi</a>
+                                    <a href="#" class="fw-bold text-info" id="loc-in" target="_blank">Lihat
+                                        Lokasi</a>
                                 </div>
                             </div>
 
@@ -104,21 +104,20 @@
                                 <div id="map-out" style="height: 200px;"></div>
                                 <div id="no-map-out" class="text-center">
                                     <img class="img-fluid" style="max-height: 200px"
-                                    src="{{ asset('sense/media/images/NoLocation.png') }}">
+                                        src="{{ asset('sense/media/images/NoLocation.png') }}">
                                     <p>No Location Recorded</p>
                                 </div>
                             </div>
 
                             <div class="col-lg-6">
                                 <div class="col-lg-12 d-flex justify-content-center" id="img-out">
-                                    <img class="img-fluid" style="max-height: 200px"
-                                        src="">
+                                    <img class="img-fluid" style="max-height: 200px" src="">
                                 </div>
 
                                 <div class="col-lg-12" id="no-img-out">
                                     <div class="text-center">
                                         <img class="img-fluid" style="max-height: 200px"
-                                        src="{{ asset('sense/media/images/NoImage.png') }}">
+                                            src="{{ asset('sense/media/images/NoImage.png') }}">
                                         <p>No Image Recorded</p>
                                     </div>
                                 </div>
@@ -132,7 +131,8 @@
                                     Location
                                 </div>
                                 <div class="col-lg-12">
-                                    <a href="#" class="fw-bold text-info" id="loc-out" target="_blank">Lihat Lokasi</a>
+                                    <a href="#" class="fw-bold text-info" id="loc-out" target="_blank">Lihat
+                                        Lokasi</a>
                                 </div>
                             </div>
 
@@ -231,7 +231,10 @@
         }
     };
 
-    const setImage = ({ checkIn, checkOut }) => {
+    const setImage = ({
+        checkIn,
+        checkOut
+    }) => {
         if (checkIn.file != "#") {
             $('#img-in').show();
             $('#no-img-in').hide();
@@ -253,11 +256,18 @@
         }
     };
 
-    const mapsLink = ({ lattitude, longitude }) => {
+    const mapsLink = ({
+        lattitude,
+        longitude
+    }) => {
         return `https://www.google.com/maps?q=${lattitude},${longitude}`;
     };
 
-    const setData = ({ checkIn, checkOut, shift }) => {
+    const setData = ({
+        checkIn,
+        checkOut,
+        shift
+    }) => {
         if (checkIn.lattitude) {
             $('#loc-in').attr("href", mapsLink(checkIn));
             $('#loc-in').text("Show Location");
@@ -281,7 +291,10 @@
     };
 
     const detailInit = (data) => {
-        if (data.attendanceCode !== attendanceCodeEnum[0]) {
+        if (
+            data.attendanceCode !== attendanceCodeEnum[0] &&
+            data.attendanceCode !== attendanceCodeEnum[4]
+        ) {
             $('#checkin').hide();
             $('#checkout').hide();
             $('#colmb').hide();
@@ -315,7 +328,7 @@
         setImage(data);
     };
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         mapIn = L.map('map-in', {
             dragging: false,
             scrollWheelZoom: false

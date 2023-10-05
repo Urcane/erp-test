@@ -53,7 +53,7 @@
                                                                     <i class="fa-solid fa-paper-plane text-info fs-3"></i>
                                                                 </span>
                                                                 <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-LEAP</span>
+                                                                    <span class="fs-6 fw-bold text-dark">Leap</span>
                                                                     <span class="fs-7 fw-semibold text-gray-500">Lead Dulu Prospek Kemudian</span>
                                                                 </span>
                                                             </a>
@@ -80,7 +80,7 @@
                                                                     <i class="fa-solid fa-hand-holding-dollar text-info fs-3"></i>
                                                                 </span>
                                                                 <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-OPPOR</span>
+                                                                    <span class="fs-6 fw-bold text-dark">Opportunity</span>
                                                                     <span class="fs-7 fw-semibold text-gray-500">Opportunity</span>
                                                                 </span>
                                                                 <span class="menu-title"></span>
@@ -153,6 +153,27 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane w-lg-600px" id="kt_app_header_app_operation">
+                                        <div class="row">
+                                            <div class="col-lg-12 mb-6 mb-lg-0">
+                                                <div class="row">
+                                                    {{-- @can('') --}}
+                                                        <div class="col-lg-6">
+                                                            <div class="menu-item p-0 m-0">
+                                                                <a href="{{route('opt.asign.index')}}" class="menu-link">
+                                                                    <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                        <i class="fa-solid fa-file-alt text-warning fs-3"></i>
+                                                                    </span>
+                                                                    <span class="d-flex flex-column">
+                                                                        <span class="fs-6 fw-bold text-dark">Assignment</span>
+                                                                        <span class="fs-7 fw-semibold text-gray-500">Bikin surat dulu, Jalan kemudian</span>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    {{-- @endcan --}}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane w-lg-600px" id="kt_app_header_app_finance">
                                     </div>
@@ -170,7 +191,7 @@
                                                                         <i class="fa-solid fa-users text-primary fs-3"></i>
                                                                     </span>
                                                                     <span class="d-flex flex-column">
-                                                                        <span class="fs-6 fw-bold text-dark">CMT-EMP</span>
+                                                                        <span class="fs-6 fw-bold text-dark">Employee</span>
                                                                         <span class="fs-7 fw-semibold text-gray-500">Database Pegawai Comtelindo</span>
                                                                     </span>
                                                                 </a>
@@ -185,13 +206,14 @@
                                                                         <i class="fa-solid fa-calendar-days text-primary fs-3"></i>
                                                                     </span>
                                                                     <span class="d-flex flex-column">
-                                                                        <span class="fs-6 fw-bold text-dark">CMT-Attendance</span>
+                                                                        <span class="fs-6 fw-bold text-dark">Attendance</span>
                                                                         <span class="fs-7 fw-semibold text-gray-500">Catatan Daftar Hadir Karyawan</span>
                                                                     </span>
                                                                 </a>
                                                             </div>
                                                         </div>
                                                     @endcan
+                                                    @canany(['HC:view-all-request', 'Approval:view-request'])
                                                     <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('hc.request.index')}}" class="menu-link">
@@ -199,12 +221,13 @@
                                                                     <i class="fa-solid fa-handshake text-primary fs-3"></i>
                                                                 </span>
                                                                 <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-Request</span>
+                                                                    <span class="fs-6 fw-bold text-dark">Request</span>
                                                                     <span class="fs-7 fw-semibold text-gray-500">Catatan Daftar Request Karyawan</span>
                                                                 </span>
                                                             </a>
                                                         </div>
                                                     </div>
+                                                    @endcanany
                                                     @can('HC:setting')
                                                         <div class="col-lg-6">
                                                             <div class="menu-item p-0 m-0">
@@ -213,7 +236,7 @@
                                                                         <i class="fa-solid fa-gear text-primary fs-3"></i>
                                                                     </span>
                                                                     <span class="d-flex flex-column">
-                                                                        <span class="fs-6 fw-bold text-dark">CMT-Settings</span>
+                                                                        <span class="fs-6 fw-bold text-dark">Settings</span>
                                                                         <span class="fs-7 fw-semibold text-gray-500">Setting jadwal sampai payroll</span>
                                                                     </span>
                                                                 </a>

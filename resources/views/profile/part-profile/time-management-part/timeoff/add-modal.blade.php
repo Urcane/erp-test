@@ -227,7 +227,7 @@
                 }
             }
 
-            $('input').val('');
+            $('#modal_create_time_off_request input').val('');
         });
 
         $('select[name="leave_request_category_id"]').trigger('change');

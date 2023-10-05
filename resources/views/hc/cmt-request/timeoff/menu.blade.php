@@ -15,11 +15,12 @@
         startDate: '{{$query->start_date}}',
         endDate: '{{$query->end_date}}',
         date: '{{$query->date}}',
-        fileName: '{{$fileName}}',
+        fileName: '{{$fileName ?? '-'}}',
         fileLink: '{{$fileLink}}',
         comment: '{{$query->comment}}',
         leaveRequestCategory: {
             name: '{{$query->leaveRequestCategory->name}}',
+            useQuota: '{{$query->leaveRequestCategory->use_quota}}',
             halfday: '{{$query->leaveRequestCategory->half_day}}',
             code: '{{$query->leaveRequestCategory->code}}',
             working: {

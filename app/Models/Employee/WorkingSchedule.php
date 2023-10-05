@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WorkingSchedule extends Model
@@ -25,8 +26,7 @@ class WorkingSchedule extends Model
         return $this->hasMany(WorkingScheduleShift::class);
     }
 
-    public function dayOffs(): HasMany
-    {
-        return $this->hasMany(WorkingScheduleDayOff::class);
+    public function userEmployments(): HasMany {
+        return $this->hasMany(UserEmployment::class);
     }
 }

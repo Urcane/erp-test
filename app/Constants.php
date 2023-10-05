@@ -13,6 +13,7 @@ class Constants
         "leave",         // Leaves including personal, sick, etc.
         "off_schedule", // Day not on working schedule
         "holiday",      // Public or company-recognized holiday
+        "assigned",     // Assigned by supervisor
     ]; // [0] as default, [1] always be for personal, sick, etc
 
     // database related
@@ -32,6 +33,8 @@ class Constants
     public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
     public $approve_status = ["Waiting", "Approved", "Rejected", "Canceled"]; // [0] as default // used manually on hc/request/* -> summaries and script
     public $balance_type = ["Anniversary", "Monthly"];
+    public $leave_quota_history_type = ["minus", "plus"];
+    public $assignment_status = ["Waiting", "Approved", "Rejected", "Canceled", "Expired"]; // [0] as default
 
     // system and view
     public $filter_status_attendance = [
@@ -53,7 +56,9 @@ class Constants
         "No Check In",
         "No Check Out",
         "Day Off",
-        "Time Off"
+        "Time Off",
+        "Dinas (Masuk)",
+        "Dinas (Tidak Absen)"
     ];
 
     public $summaries_attendance_information = [
@@ -64,7 +69,9 @@ class Constants
         "Tidak check-in",
         "Tidak check-out",
         "Hari libur kerja/nasional",
-        "Izin dan cuti"
+        "Izin dan cuti",
+        "Memiliki jadwal dinas dan melakukan absen",
+        "Memiliki jadwal dinas dan tidak melakukan absen"
     ];
 
     // only view
@@ -132,6 +139,7 @@ class Constants
         "Izin/Cuti", // Leaves including personal, sick, etc.
         "Libur Kerja", // Day not on working schedule
         "Hari Libur", // Public or company-recognized holiday
+        "Dinas", // Assigned by supervisor
     ];
 
     public function attendanceCodeTranslator($code)

@@ -8,9 +8,7 @@ use App\Http\Controllers\Sales\Customer\CustomerController;
 use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
-use App\Http\Controllers\Profile\ProfileController;
-use App\Http\Controllers\Profile\PersonalController;
-use App\Http\Controllers\Profile\FileController;
+use App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Request;
 
@@ -18,6 +16,8 @@ use App\Http\Controllers\HC\Attendance;
 use App\Http\Controllers\HC\Employee\EmployeeController;
 use App\Http\Controllers\HC\Settings;
 use App\Http\Controllers\HC\Request as HCRequest;
+
+use App\Http\Controllers\Operation;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(EmployeeController::class)->group(function () {
             Route::prefix('cmt-employee')->group(function () {
                 Route::post('/store/employee', 'store')->name('hc.emp.store');
+                Route::post('/get/schedule/shift', 'getScheduleShift')->name('hc.emp.get.schedule.shift');
             });
         });
     });
@@ -105,40 +106,40 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/detail/files', 'files')->name('com.promag.detail.files');
             Route::get('/detail/task-lists', 'taskLists')->name('com.promag.detail.task-lists');
 
-            Route::post('/work-order/approve','approveWorkOrder')->name('com.work-order.approve');
-            Route::post('/work-order/store','createWorkOrderSurvey')->name('com.work-order-survey.store');
-            Route::get('/work-order/detail/{id}','getWorkOrderById')->name('com.work-order.detail');
-            Route::get('/get-data/table/work-order','getDatatableWorkOrder')->name('com.work-order.datatable');
-            Route::get('/get-data/table/work-order-survey','getDataTableWorkOrderSurvey')->name('com.work-order-survey.datatable');
+            Route::post('/work-order/approve', 'approveWorkOrder')->name('com.work-order.approve');
+            Route::post('/work-order/store', 'createWorkOrderSurvey')->name('com.work-order-survey.store');
+            Route::get('/work-order/detail/{id}', 'getWorkOrderById')->name('com.work-order.detail');
+            Route::get('/get-data/table/work-order', 'getDatatableWorkOrder')->name('com.work-order.datatable');
+            Route::get('/get-data/table/work-order-survey', 'getDataTableWorkOrderSurvey')->name('com.work-order-survey.datatable');
         });
     });
 
     Route::controller(SurveyController::class)->group(function () {
         Route::prefix('cmt-survey')->group(function () {
-            Route::get('/','index')->name('com.survey.index');
-            Route::get('/survey-request/detail/{id}','getSurveyRequestById')->name('com.survey-request.detail');
-            Route::post('/survey-request','storeSurveyRequest')->name('com.survey-request.store');
+            Route::get('/', 'index')->name('com.survey.index');
+            Route::get('/survey-request/detail/{id}', 'getSurveyRequestById')->name('com.survey-request.detail');
+            Route::post('/survey-request', 'storeSurveyRequest')->name('com.survey-request.store');
 
-            Route::get('/soft-survey','indexSoftSurvey')->name('com.soft-survey.index');
-            Route::get('/soft-survey/{surveyRequest}','detailSoftSurvey')->name('com.soft-survey.detail');
-            Route::post('/soft-survey','storeSoftSurvey')->name('com.soft-survey.store');
+            Route::get('/soft-survey', 'indexSoftSurvey')->name('com.soft-survey.index');
+            Route::get('/soft-survey/{surveyRequest}', 'detailSoftSurvey')->name('com.soft-survey.detail');
+            Route::post('/soft-survey', 'storeSoftSurvey')->name('com.soft-survey.store');
 
-            Route::get('/survey-result-internet','indexSurveyResultInternet')->name('com.site-survey.internet.index');
-            Route::get('/survey-result-cctv','indexSurveyResultCctv')->name('com.site-survey.cctv.index');
-            Route::get('/survey-result-gb','indexSurveyResultGb')->name('com.site-survey.gb.index');
-            Route::get('/survey-result-store/{workOrder}','createSurveyResult')->name('com.survey-result.create');
+            Route::get('/survey-result-internet', 'indexSurveyResultInternet')->name('com.site-survey.internet.index');
+            Route::get('/survey-result-cctv', 'indexSurveyResultCctv')->name('com.site-survey.cctv.index');
+            Route::get('/survey-result-gb', 'indexSurveyResultGb')->name('com.site-survey.gb.index');
+            Route::get('/survey-result-store/{workOrder}', 'createSurveyResult')->name('com.survey-result.create');
             Route::get('/detail/{serviceType}/{id}', 'detail')->name('com.survey.detail');
-            Route::post('/survey-result-draft','draftSurveyResult')->name('com.survey-result.draft');
-            Route::post('/survey-result-store','storeSurveyResult')->name('com.survey-result.store');
+            Route::post('/survey-result-draft', 'draftSurveyResult')->name('com.survey-result.draft');
+            Route::post('/survey-result-store', 'storeSurveyResult')->name('com.survey-result.store');
 
-            Route::get('/survey-result-export/{serviceType}/{id}','exportSurveyResult')->name('com.survey-result.export');
-            
-            Route::get('/get-data/table/survey-request','getDatatableSurveyRequest')->name('com.survey-request.datatable');
-            Route::get('/get-data/table/survey-result','getDatatableSurveyResult')->name('com.survey-result.datatable');
+            Route::get('/survey-result-export/{serviceType}/{id}', 'exportSurveyResult')->name('com.survey-result.export');
+
+            Route::get('/get-data/table/survey-request', 'getDatatableSurveyRequest')->name('com.survey-request.datatable');
+            Route::get('/get-data/table/survey-result', 'getDatatableSurveyResult')->name('com.survey-result.datatable');
         });
     });
 
-    Route::controller(ProfileController::class)->group(function () {
+    Route::controller(Profile\ProfileController::class)->group(function () {
         Route::prefix('cmt-employee-profile')->group(function () {
             Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
 
@@ -152,7 +153,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(PersonalController::class)->group(function () {
+    Route::controller(Profile\PersonalController::class)->group(function () {
         Route::prefix('cmt-employee-personal')->group(function () {
             // family
             Route::get('/get-data/table/family', 'getTableFamily')->name('hc.emp.get-table-family');
@@ -184,7 +185,15 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(FileController::class)->group(function () {
+    Route::controller(Profile\LeaveController::class)->group(function () {
+        Route::prefix('cmt-employee-personal')->group(function () {
+            Route::get('/get-data/quotas', 'getUserLeaveQuotas')->name('hc.emp.get-user-leave-quotas');
+            Route::get('/get-data/table/leave/history', 'getTableLeaveHistory')->name('hc.emp.get-table-leave-history');
+            Route::get('/get-data/table/quota/history', 'getTableQuotaLeaveHistory')->name('hc.emp.get-table-quota-history');
+        });
+    });
+
+    Route::controller(Profile\FileController::class)->group(function () {
         Route::prefix('cmt-employee-file')->group(function () {
             //  user file
             Route::get('/get-data/table/user-file', 'getTableUserFile')->name('hc.emp.get-table-user-file');
@@ -274,6 +283,7 @@ Route::middleware(['auth'])->group(function () {
                         Route::post('/create/update/schedule', 'createUpdateSchedule')->name('hc.setting.schedule.createUpdate');
                         Route::post('/delete/schedule', 'deleteSchedule')->name('hc.setting.schedule.delete');
                         Route::post('/delete/schedule/shift', 'deleteShiftFromSchedule')->name('hc.setting.schedule.delete.shift');
+                        Route::post('/update/schedule/shift', 'updateShiftFromSchedule')->name('hc.setting.schedule.update.shift');
                         Route::post('/get/shift', 'getShift')->name('hc.setting.schedule.get.shift');
 
                         Route::get('/table/shift', 'getTableShift')->name('hc.setting.getTableShift');
@@ -303,6 +313,9 @@ Route::middleware(['auth'])->group(function () {
 
                         Route::get('/create', 'create')->name('hc.setting.timeoff.create');
                         Route::post('/store', 'store')->name('hc.setting.timeoff.store');
+
+                        Route::get('/edit/{id}', 'edit')->name('hc.setting.timeoff.edit');
+                        Route::post('/update', 'update')->name('hc.setting.timeoff.update');
                     });
                 });
 
@@ -385,47 +398,67 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(BoQController::class)->group(function () {
-        Route::prefix('cmt-boq')->group(function (){
-            Route::get('/','index')->name('com.boq.index');
-            Route::get('/get-data/table/data-result','getDatatable')->name('com.boq.render.datatable');
-            
-            Route::post('/batal-boq','batalBoQ')->name('com.boq.batal-boq');
-            Route::get('/create-draft-boq','createDraftBoq')->name('com.boq.create-draft-boq');
-            Route::get('/update-draft-boq','updateDraftBoq')->name('com.boq.update-draft-boq');
-            Route::post('/create-revision-boq','createRevisionBoq')->name('com.boq.revision.boq');
-            Route::get('/get-revision-boq','getApprovalBoq')->name('com.boq.get.revision.boq');
-            Route::post('/store-data-boq','saveAndStoreBoq')->name('com.boq.store.boq');
-            Route::post('/store-approval-boq','storeApprovalBoq')->name('com.boq.store.approval.boq');
-            
-            Route::get('/on-review-boq','onReviewBoq')->name('com.boq.on.review.boq');
-            Route::get('/review-done-boq','reviewDoneBoq')->name('com.boq.review.done.boq');
+    Route::prefix('operation')->group(function () {
+        Route::controller(Operation\Assignment\AssignmentController::class)->group(function () {
+            Route::prefix('assignment')->group(function () {
+                Route::get('/', 'index')->name('opt.asign.index');
+                Route::get('/create', 'create')->name('opt.asign.create');
+                Route::post('/create', 'store')->name('opt.asign.store');
+                Route::get('/detail/{id}', 'show')->name('opt.asign.detail');
+                Route::get('/edit/{id}', 'edit')->name('opt.asign.edit');
+                Route::post('/update', 'update')->name('opt.asign.update');
+                Route::post('/cancel', 'cancel')->name('opt.asign.cancel');
 
-            Route::get('/get-merk-type','getMerkType')->name('get.merk.type');
-            Route::get('/get-survey-company-item-inventory','getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory'); 
+                Route::post('/update-status', 'updateStatus')->name('opt.asign.update-status');
+
+                Route::get('/get-data/table/data-result', 'getTableAssignment')->name('opt.asign.get-table-assignment');
+
+                Route::get('/pdf/{assignment}/{user}', 'exportPdf')->name('opt.asign.export-pdf');
+            });
         });
     });
 
-    Route::controller(QuotationController::class)->group(function(){
-        Route::prefix('cmt-quotation')->group(function(){
+    Route::controller(BoQController::class)->group(function () {
+        Route::prefix('cmt-boq')->group(function () {
+            Route::get('/', 'index')->name('com.boq.index');
+            Route::get('/get-data/table/data-result', 'getDatatable')->name('com.boq.render.datatable');
+
+            Route::post('/batal-boq', 'batalBoQ')->name('com.boq.batal-boq');
+            Route::get('/create-draft-boq', 'createDraftBoq')->name('com.boq.create-draft-boq');
+            Route::get('/update-draft-boq', 'updateDraftBoq')->name('com.boq.update-draft-boq');
+            Route::post('/create-revision-boq', 'createRevisionBoq')->name('com.boq.revision.boq');
+            Route::get('/get-revision-boq', 'getApprovalBoq')->name('com.boq.get.revision.boq');
+            Route::post('/store-data-boq', 'saveAndStoreBoq')->name('com.boq.store.boq');
+            Route::post('/store-approval-boq', 'storeApprovalBoq')->name('com.boq.store.approval.boq');
+
+            Route::get('/on-review-boq', 'onReviewBoq')->name('com.boq.on.review.boq');
+            Route::get('/review-done-boq', 'reviewDoneBoq')->name('com.boq.review.done.boq');
+
+            Route::get('/get-merk-type', 'getMerkType')->name('get.merk.type');
+            Route::get('/get-survey-company-item-inventory', 'getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory');
+        });
+    });
+
+    Route::controller(QuotationController::class)->group(function () {
+        Route::prefix('cmt-quotation')->group(function () {
             Route::get('/', 'index')->name('com.quotation.index'); // quotation internet
             Route::get('/quotation-perangkat', 'perangkat')->name('com.quotation.perangkat.index'); // quotation perangkat
 
-           Route::get('/get-data/table/data-result','getDatatable')->name('com.quotation.render.datatable');
+            Route::get('/get-data/table/data-result', 'getDatatable')->name('com.quotation.render.datatable');
 
-           Route::get('/quotation-result-export/{isQuotation}/{id}','exportQuotationResult')->name('com.quotation.result.export');
+            Route::get('/quotation-result-export/{isQuotation}/{id}', 'exportQuotationResult')->name('com.quotation.result.export');
 
-           Route::get('/create-quotation','createQuotation')->name('com.quotation.create.quotation');
-           Route::get('/update-quotation','updateQuotation')->name('com.quotation.update.quotation');
-           Route::get('/review-done-quotation','reviewDoneQuotation')->name('com.quotation.review.done.quotation');
+            Route::get('/create-quotation', 'createQuotation')->name('com.quotation.create.quotation');
+            Route::get('/update-quotation', 'updateQuotation')->name('com.quotation.update.quotation');
+            Route::get('/review-done-quotation', 'reviewDoneQuotation')->name('com.quotation.review.done.quotation');
 
-           Route::post('/store-po-quotation','storePurchaseOrder')->name('com.quotation.store.po');
-           Route::post('/store-data-quotation','saveAndStoreQuotation')->name('com.quotation.store.quotation');
+            Route::post('/store-po-quotation', 'storePurchaseOrder')->name('com.quotation.store.po');
+            Route::post('/store-data-quotation', 'saveAndStoreQuotation')->name('com.quotation.store.quotation');
 
-           Route::post('/cancel-quotation','cancelQuotation')->name('com.quotation.cancel.quotation');
+            Route::post('/cancel-quotation', 'cancelQuotation')->name('com.quotation.cancel.quotation');
 
-           Route::get('/get-internet-bundling', 'getInternetBundling')->name('com.quotation.get.internet.bundling');
-           Route::post('/update-internet-bundling', 'updateInternetBundling')->name('com.quotation.update.internet.bundling');
+            Route::get('/get-internet-bundling', 'getInternetBundling')->name('com.quotation.get.internet.bundling');
+            Route::post('/update-internet-bundling', 'updateInternetBundling')->name('com.quotation.update.internet.bundling');
         });
     });
 });

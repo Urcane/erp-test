@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title-apps','CMT-EMP')
+@section('title-apps','Employee')
 @section('sub-title-apps','HC & Legal')
 @section('desc-apps','Database Pegawai Comtelindo')
 @section('icon-apps','fa-solid fa-users')
@@ -362,8 +362,8 @@
         });
 
         $('body').on('click', '#btn_nonaktif_pegawai', function () {
-        
-  
+
+
             $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
             $('#containerUserNonAktif').html('');
             const form_edit = $('#kt_modal_nonaktif_pegawai_form');
@@ -391,7 +391,7 @@
                 .val(rowId)
                 );
             });
-                
+
                 $.ajax({
                 data: formData,
                 processData: false,
