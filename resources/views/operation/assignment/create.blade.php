@@ -81,8 +81,8 @@
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="required fw-bold">Radius (meter)</span>
                                             </label>
-                                            <input type="number" class="form-control form-control-solid" value="10000"
-                                                placeholder="1000" required name="radius">
+                                            <input type="number" class="form-control form-control-solid"
+                                                placeholder="100000" required name="radius">
                                         </div>
 
                                         <div class="col-lg-12 mb-3">

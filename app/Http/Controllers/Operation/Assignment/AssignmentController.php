@@ -197,7 +197,6 @@ class AssignmentController extends Controller
         $days = $this->constants->day;
 
         $users = User::where('department_id', Auth::user()->department_id)
-            ->where('id', '!=', Auth::user()->id)
             ->has('userEmployment')->has('division')
             ->with(['userEmployment', 'division'])
             ->get();
@@ -639,10 +638,10 @@ class AssignmentController extends Controller
             DB::beginTransaction();
 
             if ($request->status == $this->constants->assignment_status[1]) {
-                if (Carbon::parse($assignment->start_date)->lt(Carbon::now())) {
+                if (Carbon::parse($assignment->start_date)->addDay()->lt(Carbon::now())) {
                     $assignment->update([
                         "status" => $this->constants->assignment_status[4],
-                        "approval_line" => Auth::user()->id,
+                        "approval_line" => null,
                     ]);
 
                     DB::commit();
@@ -692,8 +691,8 @@ class AssignmentController extends Controller
         $authUser = Auth::user();
 
         if (
-            !$authUser->hasPermissionTo('OPR:view-department-assignment')
-            || $authUser->id == $userAssignment->user_id
+            !($authUser->hasPermissionTo('OPR:view-department-assignment')
+            || $authUser->id == $userAssignment->user_id)
         ) {
             abort(403);
         }

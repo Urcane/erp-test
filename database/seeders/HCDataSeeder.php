@@ -144,11 +144,13 @@ class HCDataSeeder extends Seeder
         });
 
         collect([
-            ["Shift1", "08:00:00", "17:00:00", "12:00:00", "13:00:00", 5, 5, "60"],
-            ["Shift2", "09:00:00", "18:00:00", "12:00:00", "13:00:00", 5, 5, "60"],
-            ["Shift3", "10:00:00", "19:00:00", "12:00:00", "13:00:00", 5, 5, "60"],
-            ["Shift4", "11:00:00", "20:00:00", "12:00:00", "13:00:00", 5, 5, "60"],
-            ["Day Off", null, null, null, null, null, null, null],
+            ["Shift1", "08:00:00", "17:00:00", "12:00:00", "13:00:00", 5, 5, "60", 1],
+            ["Shift2", "09:00:00", "18:00:00", "12:00:00", "13:00:00", 5, 5, "60", 1],
+            ["Shift3", "10:00:00", "19:00:00", "12:00:00", "13:00:00", 5, 5, "60", 1],
+            ["Shift4", "11:00:00", "20:00:00", "12:00:00", "13:00:00", 5, 5, "60", 1],
+            ["Shift5", "11:00:00", "20:00:00", "12:00:00", "13:00:00", 5, 5, "60", 1],
+            ["Off Schedule", null, null, null, null, null, null, null, 0],
+            ["Off Schedule", null, null, null, null, null, null, null, 0],
         ])->map(function ($data) {
             WorkingShift::create([
                 "name" => $data[0],
@@ -161,6 +163,7 @@ class HCDataSeeder extends Seeder
                 "show_in_request" => true,
                 "start_attend" => $data[7],
                 "end_attend" => $data[7],
+                "is_working" => $data[8],
             ]);
         });
 
@@ -179,7 +182,7 @@ class HCDataSeeder extends Seeder
         $index = 1;
 
         collect([
-            [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]
+            [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7]
         ])->map(function ($data) {
             $wks = WorkingScheduleShift::create([
                 "working_schedule_id" => $data[0],
@@ -187,7 +190,7 @@ class HCDataSeeder extends Seeder
                 "next" => 1,
             ]);
             $index = $wks->id + 1;
-            if ($index > 5) {
+            if ($index > 7) {
                 $index = 1;
             }
             $wks->update([
