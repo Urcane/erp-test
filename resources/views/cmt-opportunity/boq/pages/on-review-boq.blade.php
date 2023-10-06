@@ -40,47 +40,47 @@
                             <h3 class="card-title">
                                 <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Review Bill of Quantity: <b>{{$dataReviewBoq['dataCompanyItem'][0]->id}}</b></span>
                             </h3>
+                            <div class="card-toolbar">
+                                <div class="p-3">
+                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_director) && (auth()->user()->division_id == 1 || auth()->user()->division_id == 2))
+                                        <a href="#kt_modal_review_director_boq_commercial"
+                                            data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
+                                            data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
+                                            class="btn btn-md btn-info w-lg-150px btn_review_director_boq_commercial"
+                                            data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Director</a>
+                                    @endif
+                                </div>
 
-                            <div class="card-toolbar p-3">
-                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_director))
-                                    <a href="#kt_modal_review_director_boq_commercial"
-                                        data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
-                                        data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
-                                        class="btn btn-md btn-info w-lg-150px btn_review_director_boq_commercial"
-                                        data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Director</a>
-                                @endif
+                                <div class="p-3">
+                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_sales) && (auth()->user()->division_id == 5))
+                                        <a href="#kt_modal_review_manager_sales_boq_commercial"
+                                            data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
+                                            data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
+                                            class="btn btn-md btn-info w-lg-150px btn_review_manager_sales_boq_commercial"
+                                            data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Sales</a>
+                                    @endif
+                                </div>
+
+                                <div class="p-3">
+                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_operation) && (auth()->user()->division_id == 16))
+                                        <a href="#kt_modal_review_manager_operation_boq_commercial"
+                                            data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
+                                            data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
+                                            class="btn btn-md btn-info w-lg-150px btn_review_manager_operation_boq_commercial"
+                                            data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Operation</a>
+                                    @endif
+                                </div>
+
+                                <div class="p-3">
+                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_finman) && (auth()->user()->division_id == 9))
+                                        <a href="#kt_modal_review_finman_boq_commercial"
+                                            data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
+                                            data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
+                                            class="btn btn-md btn-info w-lg-150px btn_review_finman_boq_commercial"
+                                            data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Admin</a>
+                                    @endif
+                                </div>
                             </div>
-
-                            <div class="card-toolbar p-3">
-                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_sales))
-                                    <a href="#kt_modal_review_manager_sales_boq_commercial"
-                                        data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
-                                        data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
-                                        class="btn btn-md btn-info w-lg-150px btn_review_manager_sales_boq_commercial"
-                                        data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Sales</a>
-                                @endif
-                            </div>
-
-                            <div class="card-toolbar p-3">
-                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_operation))
-                                    <a href="#kt_modal_review_manager_operation_boq_commercial"
-                                        data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
-                                        data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
-                                        class="btn btn-md btn-info w-lg-150px btn_review_manager_operation_boq_commercial"
-                                        data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Operation</a>
-                                @endif
-                            </div>
-
-                            <div class="card-toolbar p-3">
-                                @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_finman))
-                                    <a href="#kt_modal_review_finman_boq_commercial"
-                                        data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
-                                        data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
-                                        class="btn btn-md btn-info w-lg-150px btn_review_finman_boq_commercial"
-                                        data-bs-toggle="modal"><i class="fa-solid fa-edit"></i>Review Manager Admin</a>
-                                @endif
-                            </div>
-
                         </div>
                         <div class="card-body">
                             {{-- header company --}}

@@ -42,10 +42,13 @@
                                     Quotation</span>
                             </h3>
                             <div class="card-toolbar p-3">
+                                @can('Quot:upload-attachment-quot') 
                                 <a href="#kt_modal_create_purchase_order"
                                     class="btn_create_purchase_order p- btn btn-md btn-info w-lg-180px"
                                     data-id="{{ $dataQuotation['quotationData']->id }}" data-bs-toggle="modal"><i
                                         class="fa-solid fa-file me-3"></i>Purchase Order</a>
+                                @endcan
+                                
 
 
                                 {{-- <button class="btn btn-md btn-info w-lg-150px purchase_order_file"
@@ -422,7 +425,7 @@
                                             @endif
                                         </div>
 
-                                        @role('administrator')
+                                        {{-- @role('administrator') --}}
                                             <div class="d-flex justify-content-end mt-5">
                                                 <div class="w-20 me-10">
                                                     <span class="fw-bold">Total Amount : Rp<span
@@ -437,7 +440,7 @@
                                                 </div>
                                             </div>
                                             @endif
-                                        @endrole
+                                        {{-- @endrole --}}
 
                                     </div>
                                 </div>
@@ -456,7 +459,7 @@
                                                     <span class="fw-bold required">NO Quotation</span> </label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
-                                                    <input type="text" class="form-control form-control-solid required"
+                                                    <input type="text" class="form-control form-control-solid required" @can('Quot:manage-quot') required @elsecan('Quot:view-only-quot') disabled="disabled" @endcan
                                                         required id="no_quotation" name="no_quotation"
                                                         value="{{ $dataQuotation['quotationData']->no_quotation }}"
                                                         placeholder="No Quotation Wajib Di isi" />
@@ -469,8 +472,8 @@
                                                     <span class="fw-bold required">Description</span></label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
-                                                    <textarea class="form-control form-control-solid required"
-                                                        placeholder="{{ $dataQuotation['quotationData']->description ?? 'Description Wajib Di isi' }}" required
+                                                    <textarea class="form-control form-control-solid required" @can('Quot:manage-quot') required @elsecan('Quot:view-only-quot') disabled="disabled" @endcan
+                                                        placeholder="{{ $dataQuotation['quotationData']->description ?? 'Description Wajib Di isi' }}"
                                                         name="description" id="description" cols="" rows="2">{{ $dataQuotation['quotationData']->description }}</textarea>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
@@ -636,6 +639,7 @@
                                     {{-- SUBMIT DAN TOTAL AMOUNT INTERNET BUNDLE --}}
                                     <div>
                                         <div class="d-flex justify-content-center mt-6">
+                                            @can('Quot:manage-quot')
                                             <div class=" me-5">
                                                 <button type="reset" id="kt_modal_tambah_boq_cancel"
                                                     class="btn btn-sm btn-light-info me-3 w-lg-200px"
@@ -647,6 +651,7 @@
                                                     <span class="indicator-label">Submit</span>
                                                 </button>
                                             </div>
+                                            @endcan
                                         </div>
                                     </div>
 

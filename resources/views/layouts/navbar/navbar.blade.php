@@ -46,6 +46,7 @@
                                             <div class="col-lg-12 mb-6 mb-lg-0">
                                                 <div class="row">
                                                     <div class="col-lg-6">
+                                                        @canany(['Leap:manage-lead', 'Leap:manage-prospect'])                                                            
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('com.lead.index-lead')}}" class="menu-link">
                                                                 <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
@@ -57,6 +58,7 @@
                                                                 </span>
                                                             </a>
                                                         </div>
+                                                        @endcanany
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start" data-kt-menu-offset="10px, 10px">
@@ -73,8 +75,14 @@
                                                                     <i class="fa-solid fa-chevron-down text-gray-600"></i>
                                                                 </span>
                                                             </a>
-
                                                             <div class="menu-sub menu-sub-dropdown p-3 w-200px">
+                                                                @canany([
+                                                                    'Approval:survey-work-order',
+                                                                    'Survey:manage-survey-request',
+                                                                    'Survey:create-work-order',
+                                                                    'Survey:manage-soft-survey',
+                                                                    'Survey:manage-site-survey'
+                                                                ])
                                                                 <div class="menu-item">
                                                                     <a href="{{route('com.survey.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
@@ -85,7 +93,17 @@
                                                                         </span>
                                                                     </a>
                                                                 </div>
-
+                                                                @endcanany
+                                                                @canany([
+                                                                    'Approval:view-boq-review',
+                                                                    'Approval:update-boq-review',
+                                                                    'Boq:create-draft-boq',
+                                                                    'Boq:view-draft-boq',
+                                                                    'Boq:manage-price-request-boq',
+                                                                    'Boq:view-only-price-request-boq',
+                                                                    'Boq:publish-finalize-boq',
+                                                                    'Boq:markup-price-boq'
+                                                                ])
                                                                 <div class="menu-item">
                                                                     <a href="{{route('com.boq.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
@@ -96,7 +114,13 @@
                                                                         </span>
                                                                     </a>
                                                                 </div>
-
+                                                                @endcanany
+                                                                @canany([
+                                                                    'Quot:manage-quot',
+                                                                    'Quot:view-only-quot',
+                                                                    'Quot:upload-attachment-quot',
+                                                                    'Quot:print-quot'
+                                                                ])
                                                                 <div class="menu-item">
                                                                     <a href="{{route('com.quotation.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
@@ -107,6 +131,7 @@
                                                                         </span>
                                                                     </a>
                                                                 </div>
+                                                                @endcanany
                                                             </div>
                                                         </div>
                                                     </div>

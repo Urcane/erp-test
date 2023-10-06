@@ -146,9 +146,6 @@
         </div>
     </div>
 
-    @role('administrator')
-    @endrole
-
     <script>
         $(document).ready(function() {
 

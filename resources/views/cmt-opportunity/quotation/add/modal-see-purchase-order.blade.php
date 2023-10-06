@@ -49,12 +49,14 @@
                     </div>
                     <div class="text-center mt-9">
                         <div class="row">
+                            @can('Quot:upload-attachment-quot')
                             <button type="reset" id="kt_modal_see_purchase_order_cancel"
                                 class="btn btn-sm btn-light me-3 col-3" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" id="kt_modal_see_purchase_order_submit"
                                 class="btn btn-sm btn-info me-3 col-5">
                                 <span class="indicator-label">Simpan</span>
                             </button>
+                            @endcan
                             <a href="{{asset('filestorage') . '/' . $file_po->path}}" target="_blank" class="btn btn-sm btn-light-info col-3">
                                 <i class="fa-solid fa-file me-3"></i>Download
                             </a>

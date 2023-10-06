@@ -7,7 +7,7 @@ use App\Models\Feature;
 use App\Models\User;
 use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
 class PermissionController extends Controller

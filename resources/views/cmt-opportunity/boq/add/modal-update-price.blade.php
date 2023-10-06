@@ -139,12 +139,14 @@
                                     </div>
                                     @if(isset($boq_type) && $boq_type == "perangkat")
                                     <div class="col-12">
+                                        @can('Boq:markup-price-boq')
                                         <label class="form-label">Markup Price</label>
                                         <div class="position-relative">
                                             <div class="position-absolute top-0"></div>
                                             <input type="number" class="form-control form-control-solid" oninput="validateAndFormatNumber(this);"
                                             name="markup_update_price" id="markup_update_price">
                                         </div>
+                                        @endcan
                                     </div>
                                     @endif
                                     <div class="col-lg-12 mb-3">

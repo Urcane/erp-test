@@ -44,6 +44,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @can('Boq:create-draft-boq')
                                 <div class="col-lg-6 d-flex justify-content-end">
                                     <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
                                         <div class="">
@@ -54,6 +55,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endcan
                             </div>
                             <div class="row mb-6 align-items-center">
 
@@ -73,11 +75,13 @@
                                                         data-bs-toggle="tab" id="tab_survey"
                                                         href="#tab_survey_content">Survey</a>
                                                 </li>
+                                                @can('Boq:view-draft-boq')
                                                 <li class="nav-item">
                                                     <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0"
                                                         data-bs-toggle="tab" id="tab_draft" href="#tab_draft_content">Draft
                                                         BoQ</a>
                                                 </li>
+                                                @endcan
                                                 <li class="nav-item">
                                                     <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0"
                                                         data-bs-toggle="tab" id="tab_commercial"
@@ -158,6 +162,7 @@
                                             </div>
                                         </div>
                                         {{-- TAB DRAFT  --}}
+                                        @can('Boq:view-draft-boq')
                                         <div class="tab-pane fade" id="tab_draft_content" role="tabpanel">
                                             <div class="row">
                                                 <div class="col-lg-12">
@@ -186,6 +191,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        @endcan
                                         {{-- TAB COMMERCIAL  --}}
                                         <div class="tab-pane fade" id="tab_commercial_content" role="tabpanel">
                                             <div class="row">
@@ -459,7 +465,7 @@
             });
         });
 
-
+        @can('Boq:view-draft-boq')
         $('#tab_draft').click(function() {
             generateDatatable({
                 tableName: "tableDraftBoq",
@@ -503,6 +509,7 @@
                 ]
             });
         });
+        @endcan
 
         $('#tab_commercial').click(function() {
             generateDatatable({

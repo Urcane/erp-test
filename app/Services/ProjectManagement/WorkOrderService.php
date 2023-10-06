@@ -93,10 +93,10 @@ class WorkOrderService
                 }
                 return 'On Review...';
             })
-            ->addColumn('action', function ($query) {
+            ->addColumn('action', function ($query) use ($request) {
                 $additionalMenu = "";
 
-                if ($query->approved_status == 1) {
+                if ($query->approved_status == 1 && $request->user()->hasPermissionTo('Survey:manage-site-survey')) {
                     if ($query->surveyRequest->service_type_id == 1) {
                         // $additionalMenu .= "<li><a href=\"#kt_modal_create_survey_result_internet\" class=\"dropdown-item py-2 btn_create_survey_result_internet\" data-bs-toggle=\"modal\" data-id=\"$query->id\" data-surveyid=\"$query->survey_request_id\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result Internet</a></li>";
                         $additionalMenu .= "<li><a href=\"". route('com.survey-result.create', ['workOrder' => $query->id, 'surveyRequestId' => $query->survey_request_id]) ."\" class=\"dropdown-item py-2\"><i class=\"fa-solid fa-list-check me-3\"></i>Create Survey Result Internet</a></li>";
