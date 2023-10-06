@@ -23,6 +23,16 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
+                                <div class="col-lg-6 mb-9">
+                                    <h4>Procurement List</h4>
+                                    <span class="fs-7 fw-semibold text-gray-500">All procurement that has been submited</span>
+                                </div>
+                                <div class="col-lg-6 d-flex justify-content-end">
+                                    <div>
+                                        <a href="{{route("com.procurement.create")}}" class="btn btn-info btn-sm me-3 fs-8"><i
+                                                class="fa-solid fa-plus"></i>Create Procurement</a>
+                                    </div>
+                                </div>
                                 <div class="col-lg-12">
                                     <div class="table-responsive">
                                         <table class="table align-top table-striped border table-rounded gy-5"
@@ -31,9 +41,10 @@
                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                     <th class="w-50px text-center">#</th>
                                                     <th class="">Customer Name</th>
-                                                    <th class="">Customer Address</th>
-                                                    <th class="">Total Items</th>
-                                                    <th class="w-200px">Project Title</th>
+                                                    <th class="">Request Date</th>
+                                                    <th class="">No. PR</th>
+                                                    <th class="">Type</th>
+                                                    <th class="">Status</th>
                                                     <th class="w-50px text-center">#</th>
                                                 </tr>
                                             </thead>
@@ -50,7 +61,7 @@
         </div>
     </div>
     <script>
-         $(document).ready(function() {
+        $(document).ready(function() {
             generateDatatable({
                 tableName: "tableDoneBoq",
                 elementName: "#kt_table_procurement",
@@ -63,16 +74,19 @@
                         data: 'id'
                     },
                     {
-                        data: 'customer_name'
+                        data: 'customer'
                     },
                     {
-                        data: 'customer_address'
+                        data: 'request_date'
                     },
                     {
-                        data: 'total_items'
+                        data: 'no_pr'
                     },
                     {
-                        data: 'prospect_title'
+                        data: 'type'
+                    },
+                    {
+                        data: 'status'
                     },
                     {
                         data: 'action'

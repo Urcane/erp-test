@@ -18,7 +18,18 @@ class Constants
 
     // database related
     // item {
-        public $item_status = ["Making an order", "Waiting Vendor", "Checking Item", "Return", "Received", "Payment"];
+        public $item_status = [
+            "Making an order",
+            "Shipping",
+            "Arrived",
+            "Return",
+            "Received",
+            "Payment",
+            "Start Freeze",
+            "End Freeze",
+            "Done",
+            "Other",
+        ];
     // }
 
     // employee {

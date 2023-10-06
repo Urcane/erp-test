@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Sales\Opportunity\Quotation\QuotationController;
 use App\Http\Controllers\Sales\Customer\CustomerController;
 use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
-use App\Http\Controllers\Sales\Opportunity\Procurement\ProcurementController;
+use App\Http\Controllers\Sales\Procurement\ProcurementController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\Profile;
@@ -433,8 +433,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', 'index')->name('com.procurement.index');
             Route::get('/get/table', 'getTableProcurement')->name('com.procurement.getTable');
             Route::get('/detail/{id}', 'detailProcurement')->name('com.procurement.detail');
-            Route::get('/detail/{id}/table/item', 'getTableItem')->name('com.procurement.getTableItem');
+            Route::get('/table/item/quotation', 'getTableItemFromQuotation')->name('com.procurement.getTableItemFromQuotation');
             Route::post('/item/status', 'getStatusItem')->name('com.procurement.getStatusItem');
+            Route::get('/create', 'create')->name('com.procurement.create');
+
+            Route::post('/get/detail/item/quitation', 'getDetailItem')->name('com.procurement.getDetailItem');
+            Route::post('/store', 'storeProcurement')->name('com.procurement.storeProcurement');
         });
     });
 

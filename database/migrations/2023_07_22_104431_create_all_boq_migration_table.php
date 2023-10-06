@@ -7,12 +7,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateAllBoqMigrationTable extends Migration
 {
-    private $constants;
-
-    public function __construct()
-    {
-        $this->constants = new Constants();
-    }
 
     /**
      * Run the migrations.
@@ -82,23 +76,6 @@ class CreateAllBoqMigrationTable extends Migration
             $table->boolean('approval_finman')->nullable();
             $table->dateTime('approval_finman_date')->nullable();
             $table->foreignId('reference_boq_id')->nullable()->constrained('itemable_bill_of_quantities');
-            $table->timestamps();
-        });
-
-        Schema::create('item_status', function(Blueprint $table){
-            $table->id();
-            $table->foreignId('item_id')->constrained('items');
-            $table->enum("status", $this->constants->item_status)->default($this->constants->item_status[0]);
-            $table->string("description")->nullable();
-            $table->timestamps();
-        });
-
-        Schema::create('item_payment', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('item_id')->constrained('items');
-            $table->enum("categoty", ["Advance Payment", "Full Payment"]);
-            $table->integer("nominal");
-            $table->string("file");
             $table->timestamps();
         });
 
