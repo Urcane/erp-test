@@ -178,10 +178,10 @@ class AssignmentController extends Controller
         }
 
         $assignmentStatus = $this->constants->assignment_status;
-        $dataDepartment = Department::all();
+        // $dataDepartment = Department::all();
 
         return view('operation.assignment.index', compact([
-            'assignmentStatus', 'dataDepartment'
+            'assignmentStatus'
         ]));
     }
 
@@ -475,7 +475,31 @@ class AssignmentController extends Controller
                 throw new AuthorizationError("Anda tidak berhak melihat penugasan");
             }
 
-            $assignments = Assignment::query();
+            $assignments = Assignment::whereHas('user', function ($query) use ($authUser) {
+                $query->where('department_id', $authUser->department->id);
+            })
+                ->with(['user', 'signedBy', 'userAssignments']);
+
+            switch ($request->filters['filterStatus']) {
+                case $this->constants->assignment_status[0]:
+                    $assignments = $assignments->where('status', $this->constants->assignment_status[0]);
+                    break;
+                case $this->constants->assignment_status[1]:
+                    $assignments = $assignments->where('status', $this->constants->assignment_status[1]);
+                    break;
+                case $this->constants->assignment_status[2]:
+                    $assignments = $assignments->where('status', $this->constants->assignment_status[2]);
+                    break;
+                case $this->constants->assignment_status[3]:
+                    $assignments = $assignments->where('status', $this->constants->assignment_status[3]);
+                    break;
+                case $this->constants->assignment_status[4]:
+                    $assignments = $assignments->where('status', $this->constants->assignment_status[4]);
+                    break;
+                default:
+                    $assignments = $assignments->orderByRaw("FIELD(status, ?, ?, ?, ?, ?)", $this->constants->assignment_status);
+                    break;
+            }
 
             if ($request->filters['filterDate']) {
                 $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item, $key) {
@@ -507,33 +531,12 @@ class AssignmentController extends Controller
                 });
             }
 
-            $filterDepartment = $request->filters['filterDepartment'];
-            if (!empty($filterDepartment) && $filterDepartment !== '*') {
-                $assignments = $assignments->whereHas('user', function ($query) use ($filterDepartment) {
-                    $query->where('department_id', $filterDepartment);
-                });
-            }
-
-            switch ($request->filters['filterStatus']) {
-                case $this->constants->assignment_status[0]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[0]);
-                    break;
-                case $this->constants->assignment_status[1]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[1]);
-                    break;
-                case $this->constants->assignment_status[2]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[2]);
-                    break;
-                case $this->constants->assignment_status[3]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[3]);
-                    break;
-                case $this->constants->assignment_status[4]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[4]);
-                    break;
-                default:
-                    $assignments = $assignments->orderByRaw("FIELD(status, ?, ?, ?, ?, ?)", $this->constants->assignment_status);
-                    break;
-            }
+            // $filterDepartment = $request->filters['filterDepartment'];
+            // if (!empty($filterDepartment) && $filterDepartment !== '*') {
+            //     $assignments = $assignments->whereHas('user', function ($query) use ($filterDepartment) {
+            //         $query->where('department_id', $filterDepartment);
+            //     });
+            // }
 
             return DataTables::of($assignments)
                 ->addColumn('name', function ($query) {
@@ -551,7 +554,7 @@ class AssignmentController extends Controller
                     return $formattedDate;
                 })
                 ->addColumn('signed_by', function ($query) {
-                    return $query->signedBy ? $query->signedBy->name : $query->user->name;
+                    return $query->signedBy->name;
                 })
                 ->addColumn('assigned', function ($query) {
                     return $query->userAssignments->count() . " Employee(s)";
