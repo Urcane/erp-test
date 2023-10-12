@@ -444,6 +444,7 @@ Route::middleware(['auth'])->group(function () {
             // halaman detail
             Route::get('/detail/{id}', 'detailProcurement')->name('com.procurement.detail');
             Route::get('/table/item/procurement', 'getTableItemProcurement')->name('com.procurement.getTableItemProcurement');
+            Route::post('/update/item/procurement/{id}', 'updateItemProcurement')->name('com.procurement.updateItemProcurement');
 
             // halaman detail item procurement
             Route::get('/detail/item/{id}', 'detailItemProcurement')->name('com.procurement.detail.item');

@@ -21,7 +21,6 @@ class Constants
         public $item_status = [
             "Create Procurement",
             "Making an order",
-            "Shipping",
             "Arrived",
             "Return",
             "Received",

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sales\Procurement;
 
+use App\Constants;
 use App\Http\Controllers\Controller;
 use App\Models\Opportunity\BoQ\Item;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
@@ -11,6 +12,7 @@ use App\Models\Procurement\Procurement;
 use App\Models\Procurement\ProcurementItem;
 use App\Models\Procurement\ProcurementItemStatus;
 use App\Models\User;
+use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +20,15 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ProcurementController extends Controller
 {
+    private $constants;
+    private $errorHandler;
+
+    public function __construct()
+    {
+        $this->errorHandler = new ErrorHandler();
+        $this->constants = new Constants();
+    }
+
     public function index() {
         return view("cmt-opportunity.procurement.index");
     }
@@ -127,6 +138,7 @@ class ProcurementController extends Controller
 
     public function getDetailItem(Request $request) {
         $item = Item::whereId($request->id)->with('inventoryGood.inventoryGoodCategory')->first();
+
         return response()->json([
             "status" => "success",
             "data" => $item
@@ -138,6 +150,7 @@ class ProcurementController extends Controller
             $procurement = Procurement::create([
                 "itemable_bill_of_quantity_id" => $request->itemable_bill_of_quantity_id,
                 "type" => $request->type ?? "Customer",
+                "need" => $request->need ?? "Pengadaan Gudang",
                 "delivery_location" => $request->delivery_location,
                 "no_pr" => $request->no_pr,
                 "ref_po_spk_pks" => $request->ref_po_spk_pks,
@@ -185,7 +198,50 @@ class ProcurementController extends Controller
 
     public function detailItemProcurement($id) {
         $procurementItem = ProcurementItem::whereId($id)->with("procurementItemStatus", "inventoryGood", "procurementItemPayment")->first();
+        // $inventory =
+        $status = $procurementItem->procurementItemStatus->first()->status;
+        array_shift($this->constants->item_status);
+        $dataStatus = $this->constants->item_status;
+        return view("cmt-opportunity.procurement.detail-item-procurement", compact("procurementItem", "status", "dataStatus"));
+    }
 
-        return view("cmt-opportunity.procurement.detail-item-procurement", compact("procurementItem"));
+    public function updateItemProcurement(Request $request) {
+        try{
+            $procurementItem = ProcurementItem::whereId($request->id)->first();
+
+            DB::transaction(function() use ($request, $procurementItem) {
+                if ($request->status == $this->constants->item_status[1]) {
+                    $procurementItem->update([
+                        "need" => $request->need,
+                        "purchase_number" => $request->purchase_number,
+                        "no_po_nota" => $request->no_po_nota,
+                        "receipt_number" => $request->receipt_number,
+                        "price" => $request->price,
+                        "quantity" => $request->quantity,
+                        "vendor" => $request->vendor,
+                        "vendor_location" => $request->vendor_location,
+                        "expedition" => $request->expedition,
+                        "shipping_price" => $request->shipping_price,
+                        "payment_method" => $request->payment_method,
+                    ]);
+                }
+
+                ProcurementItemStatus::create([
+                    "procurement_item_id" => $procurementItem->id,
+                    "status" => $request->status,
+                    "description" => $request->description,
+                ]);
+            });
+
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Status berhasil diubah"
+            ], 201);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 }

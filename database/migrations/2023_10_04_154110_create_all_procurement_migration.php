@@ -38,7 +38,6 @@ class CreateAllProcurementMigration extends Migration
 
         Schema::create('procurement_items', function (Blueprint $table) {
             $table->id();
-            $table->string("allocation")->nullable();
             $table->foreignId('procurement_id')->constrained('procurements');
             $table->foreignId('inventory_good_id')->constrained('inventory_goods');
             $table->foreignId('item_id')->constrained('items');
@@ -58,7 +57,6 @@ class CreateAllProcurementMigration extends Migration
             $table->string('expedition')->nullable();
             $table->string('receipt_number')->nullable();
             $table->date('estimate_arrived')->nullable();
-            $table->string('information')->nullable();
             $table->integer('aging')->nullable();
             $table->timestamps();
         });

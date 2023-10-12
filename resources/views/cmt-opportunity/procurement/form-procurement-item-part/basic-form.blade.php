@@ -269,14 +269,6 @@
             <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
         <div class="col-lg-4 mb-3">
-            <label class="d-flex align-items-center fs-6 form-label mb-2" for="need">
-                <span class="required fw-bold">Peruntukan</span>
-            </label>
-            <input type="text" id="need" class="form-control form-control-solid"
-                placeholder="Peruntukan" required value="{{$procurement->need ?? old("need")}}" @if(($procurement->need ?? old("need"))) disabled @endif name="need">
-            <div class="fv-plugins-message-container invalid-feedback"></div>
-        </div>
-        <div class="col-lg-4 mb-3">
             <label class="d-flex align-items-center fs-6 form-label mb-2"
                 for="request_date">
                 <span class="required fw-bold">Tanggal Request</span>

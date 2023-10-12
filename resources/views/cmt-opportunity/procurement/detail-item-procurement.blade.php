@@ -22,22 +22,37 @@
                     </div>
                 </div>
                 <div class="modal-body mx-5 mx-lg-15 mb-7">
-                    <form id="update_status_form" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
-                        <input type="hidden" name="id" value="">
+                    <form action="{{ route('com.procurement.updateItemProcurement', ['id' => $procurementItem->id]) }}" method="POST" class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data">
+                        @csrf
                         <div class="scroll-y me-n10 pe-10" id="update_status_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#update_status_header" data-kt-scroll-wrappers="#update_status_scroll" data-kt-scroll-offset="300px">
-                        <div class="row mb-9">
-                            <div class="col-lg-12 text-center mb-9">
-                                <span class="fs-1 fw-bolder text-dark d-block mb-1">Category File</span>
-                                {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Nama</span>
-                                </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Name" required name="name">
+                            <div class="row mb-9">
+                                <div class="col-lg-12 text-center mb-9">
+                                    <span class="fs-1 fw-bolder text-dark d-block mb-1">Update Procurement</span>
+                                    {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
+                                </div>
+                                <div class="col-lg-12 mb-3">
+                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                        <span class="required fw-bold">Status</span>
+                                    </label>
+                                    <select class="drop-data form-select form-select-solid"
+                                        name="status" id="status" required>
+                                        <option value="" selected hidden disabled>Pilih status terbaru</option>
+                                        @foreach ($dataStatus as $data)
+                                            <option value="{{ $data }}">{{ $data }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-lg-12 mb-3" id="main_form">
+                                </div>
+                                <div class="col-lg-12 mb-3">
+                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                        for="description">
+                                        <span class=" fw-bold">Description</span>
+                                    </label>
+                                    <textarea name="description" id="description" cols="30" rows="10" class="form-control form-control-solid" placeholder="Masukkan deskripsi"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
                         <div class="text-center mt-9">
                             <button type="reset" id="update_status_cancel" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" id="update_status_submit" class="btn btn-sm btn-info w-lg-200px">
@@ -56,7 +71,6 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="">
                                 <div class="col-lg-12 mb-9 row">
                                     <div class="col-lg-2">
                                         <a href="{{ route('com.procurement.detail', ["id" => $procurementItem->procurement_id]) }}" class="fw-bold"><i
@@ -74,166 +88,59 @@
                                     <div class="col-lg-4">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2"
                                             for="good_name">
-                                            <span class="required fw-bold">Nama Item</span>
+                                            <span class="fw-bold">Nama Item</span>
                                         </label>
                                         <input type="text" id="good_name" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->inventoryGood->good_name ?? old('good_name') }}" disabled>
+                                            value="{{ $procurementItem->inventoryGood->good_name }}" disabled>
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="quantity">
-                                            <span class="required fw-bold">Quantity</span>
+                                            for="merk">
+                                            <span class="fw-bold">Merk</span>
                                         </label>
-                                        <input type="text" id="quantity" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->quantity ?? old('quantity') }}" disabled name="quantity">
+                                        <input type="text" id="merk" class="form-control form-control-solid"
+                                            value="{{ $procurementItem->inventoryGood->merk }}" disabled>
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="no_po_nota">
-                                            <span class="required fw-bold">No. PO/Nota</span>
+                                            for="description">
+                                            <span class="fw-bold">Desciption Item</span>
                                         </label>
-                                        <input type="text" id="no_po_nota" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->no_po_nota ?? old('no_po_nota') }}" disabled name="no_po_nota">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="purchase_number">
-                                            <span class="required fw-bold">Nomor Pembelian</span>
-                                        </label>
-                                        <input type="text" id="purchase_number" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->purchase_number ?? old('purchase_number') }}" disabled name="purchase_number">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="need">
-                                            <span class="required fw-bold">Kebutuhan</span>
-                                        </label>
-                                        <input type="text" id="need" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->need ?? old('need') }}" disabled name="need">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="price">
-                                            <span class="required fw-bold">Price</span>
-                                        </label>
-                                        <input type="text" id="price" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->price ?? old('price') }}" disabled name="price">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                        <input type="text" id="description" class="form-control form-control-solid"
+                                            value="{{ $procurementItem->inventoryGood->description }}" disabled>
                                     </div>
                                 </div>
-                                <div class="col-lg-12 row mt-10">
-                                    <h4>Order Information</h4>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="receipt_number">
-                                            <span class="required fw-bold">Nomor Resi</span>
-                                        </label>
-                                        <input type="text" id="receipt_number" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->receipt_number ?? old('receipt_number') }}" disabled>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="quantity">
-                                            <span class="required fw-bold">Quantity</span>
-                                        </label>
-                                        <input type="text" id="quantity" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->quantity ?? old('quantity') }}" disabled name="quantity">
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="vendor">
-                                            <span class="required fw-bold">Vendor</span>
-                                        </label>
-                                        <input type="text" id="vendor" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->vendor ?? old('vendor') }}" disabled name="vendor">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="vendor_location">
-                                            <span class="required fw-bold">Vendor Location</span>
-                                        </label>
-                                        <input type="text" id="vendor_location" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->vendor_location ?? old('vendor_location') }}" disabled name="vendor_location">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="shipping_price">
-                                            <span class="required fw-bold">Shipping Price</span>
-                                        </label>
-                                        <input type="text" id="shipping_price" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->shipping_price ?? old('shipping_price') }}" disabled name="shipping_price">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="payment_method">
-                                            <span class="required fw-bold">Payment Method</span>
-                                        </label>
-                                        <input type="text" id="payment_method" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->payment_method ?? old('payment_method') }}" disabled name="payment_method">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="payment_method">
-                                            <span class="required fw-bold">Payment Method</span>
-                                        </label>
-                                        <input type="text" id="payment_method" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->payment_method ?? old('payment_method') }}" disabled name="payment_method">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="expedition">
-                                            <span class="required fw-bold">Expedition</span>
-                                        </label>
-                                        <input type="text" id="expedition" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->expedition ?? old('expedition') }}" disabled name="expedition">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="receipt_number">
-                                            <span class="required fw-bold">Receipt Number</span>
-                                        </label>
-                                        <input type="text" id="receipt_number" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->receipt_number ?? old('receipt_number') }}" disabled name="receipt_number">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                            for="information">
-                                            <span class="required fw-bold">Information</span>
-                                        </label>
-                                        <input type="text" id="information" class="form-control form-control-solid"
-                                            value="{{ $procurementItem->information ?? old('information') }}" disabled name="information">
-                                        <div class="fv-plugins-message-container invalid-feedback"></div>
-                                    </div>
-                                </div>
+                                <h4 class="mt-10">Order Information</h4>
+                                @include("cmt-opportunity.procurement.form-procurement-item-part.purchase-form", ["disabled" => true])
                                 <hr class="my-10">
                                 <div class="col-lg-12 row">
                                     <h4>Status</h4>
-                                    <div class="col-lg-12 d-flex flex-row mt-5 ms-5">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fa-regular fa-circle-check fs-1"></i>
+                                    @foreach ($procurementItem->procurementItemStatus as $itemStatus)
+                                        <div class="col-lg-12 d-flex flex-row mt-5 ms-5 @if($loop->iteration == 1) text-success @endif">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa-regular fa-circle-check fs-1 @if($loop->iteration == 1) text-success @endif"></i>
+                                            </div>
+                                            <div class="ms-5">
+                                                <h4 class="@if($loop->iteration == 1) text-success @endif">{{$itemStatus->status}}</h4>
+                                                <span>{{$itemStatus->created_at}}</span><br>
+                                                <span>{{$itemStatus->description}}</span>
+                                            </div>
                                         </div>
-                                        <div class="ms-5">
-                                            <h4>asfsdf</h4>
-                                            <span>date</span><br>
-                                            <span>asldkfjslkfa sdfalskdfjasdf</span>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        $('#status').change(function () {
+            $("#main_form").html(``);
+            if ($(this).val() == "Making an order") {
+                $("#main_form").html(`@include("cmt-opportunity.procurement.form-procurement-item-part.purchase-form", ["disabled" => false])`);
+            }
+        })
+    </script>
 @endsection

@@ -46,7 +46,7 @@
                                             <div class="col-lg-12 mb-6 mb-lg-0">
                                                 <div class="row">
                                                     <div class="col-lg-6">
-                                                        @canany(['Leap:manage-lead', 'Leap:manage-prospect'])                                                            
+                                                        @canany(['Leap:manage-lead', 'Leap:manage-prospect'])
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('com.lead.index-lead')}}" class="menu-link">
                                                                 <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
@@ -229,6 +229,27 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                        {{-- <span class="menu-link">
+                            <span class="menu-title">Help</span>
+                            <span class="menu-arrow d-lg-none"></span>
+                        </span>
+                        <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown px-lg-2 py-lg-4 w-lg-200px">
+                            <div class="menu-item px-3">
+                                <span class="menu-link">
+                                    <span class="menu-icon"><i class="fa-solid fa-book fs-5"></i></span>
+                                    <span class="menu-title">Documentation</span>
+                                </span>
+                            </div>
+                            <div class="menu-item px-3">
+                                <span class="menu-link">
+                                    <span class="menu-icon"><i class="fa-solid fa-code fs-5"></i></span>
+                                    <span class="menu-title">Changelog</span>
+                                </span>
+                            </div>
+                        </div> --}}
+                        <a href="{{route("com.promag.index")}}">Promag</a>
                     </div>
                     <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                         <span class="menu-link">
