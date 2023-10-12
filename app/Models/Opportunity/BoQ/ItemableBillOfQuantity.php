@@ -14,11 +14,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
 use App\Models\Opportunity\Survey\SurveyRequest;
+use App\Models\Procurement\Procurement;
 
 class ItemableBillOfQuantity extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    function items() : HasMany{
+        return $this->hasMany(Item::class, 'itemable_id');
+    }
 
     function itemable(): MorphMany
     {
@@ -28,7 +33,7 @@ class ItemableBillOfQuantity extends Model
     function itemableQuotationPart() : BelongsTo {
         return $this->belongsTo(ItemableQuotationPart::class, 'id', 'boq_id');
     }
-    
+
     function customerProspect() : BelongsTo {
         return $this->belongsTo(CustomerProspect::class, 'prospect_id', 'id');
     }
@@ -49,8 +54,8 @@ class ItemableBillOfQuantity extends Model
         return $this->belongsTo(User::class, 'technician_id');
     }
 
-    function procurement() : BelongsTo {
-        return $this->belongsTo(User::class, 'procurement_id');
+    function procurement() : HasMany {
+        return $this->hasMany(Procurement::class, 'itemable_bill_of_quantity_id');
     }
 
     function parentItemableBillOfQuantity() : BelongsTo{
@@ -72,7 +77,7 @@ class ItemableBillOfQuantity extends Model
     function scopePublish() {
         return $this->where('is_draft', 0)->where('is_final', 0)->whereNull('is_done')->has('priceRequests');
     }
-    
+
     function scopeOnReview() {
         return $this->where('is_draft', 0)->where('is_final', 1)->whereNull('is_done')->has('priceRequests');
     }

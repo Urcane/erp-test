@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             PermissionSeeder::class,
             UserSeeder::class,
-            
+
             ProjectSeeder::class,
             OpportunitySeeder::class,
             InventorySeeder::class,

@@ -430,15 +430,23 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(ProcurementController::class)->group(function () {
         Route::prefix('cmt-procurement')->group(function () {
+            // halaman utama
             Route::get('/', 'index')->name('com.procurement.index');
             Route::get('/get/table', 'getTableProcurement')->name('com.procurement.getTable');
-            Route::get('/detail/{id}', 'detailProcurement')->name('com.procurement.detail');
-            Route::get('/table/item/quotation', 'getTableItemFromQuotation')->name('com.procurement.getTableItemFromQuotation');
-            Route::post('/item/status', 'getStatusItem')->name('com.procurement.getStatusItem');
-            Route::get('/create', 'create')->name('com.procurement.create');
 
-            Route::post('/get/detail/item/quitation', 'getDetailItem')->name('com.procurement.getDetailItem');
+            // halaman create
+            Route::get('/create', 'create')->name('com.procurement.create');
+            Route::post('/item/status', 'getStatusItem')->name('com.procurement.getStatusItem');
+            Route::get('/table/item/boq', 'getTableItemFromBOQ')->name('com.procurement.getTableItemFromBOQ');
             Route::post('/store', 'storeProcurement')->name('com.procurement.storeProcurement');
+            Route::post('/get/detail/item/boq', 'getDetailItem')->name('com.procurement.getDetailItem');
+
+            // halaman detail
+            Route::get('/detail/{id}', 'detailProcurement')->name('com.procurement.detail');
+            Route::get('/table/item/procurement', 'getTableItemProcurement')->name('com.procurement.getTableItemProcurement');
+
+            // halaman detail item procurement
+            Route::get('/detail/item/{id}', 'detailItemProcurement')->name('com.procurement.detail.item');
         });
     });
 

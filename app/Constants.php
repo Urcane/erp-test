@@ -19,6 +19,7 @@ class Constants
     // database related
     // item {
         public $item_status = [
+            "Create Procurement",
             "Making an order",
             "Shipping",
             "Arrived",

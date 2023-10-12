@@ -2,6 +2,8 @@
 
 namespace App\Models\Procurement;
 
+use App\Models\Inventory\InventoryGood;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,5 +24,13 @@ class ProcurementItem extends Model
 
     public function procurement() : BelongsTo {
         return $this->belongsTo(Procurement::class);
+    }
+
+    public function item() : BelongsTo {
+        return $this->belongsTo(Procurement::class);
+    }
+
+    public function inventoryGood() : BelongsTo {
+        return $this->belongsTo(InventoryGood::class);
     }
 }

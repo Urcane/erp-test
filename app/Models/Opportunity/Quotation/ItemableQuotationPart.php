@@ -39,8 +39,4 @@ class ItemableQuotationPart extends Model
     function latestPoFile() : MorphOne {
         return $this->morphOne(File::class, 'fileable')->latest();
     }
-
-    function procurement() : HasMany{
-        return $this->hasMany(Procurement::class);
-    }
 }

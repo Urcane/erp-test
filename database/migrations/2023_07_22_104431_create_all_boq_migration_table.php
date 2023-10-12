@@ -23,6 +23,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->bigInteger('quantity');
             $table->char('unit', 10)
                 ->comment('unit with char(10)');
+            $table->bigInteger("fulfilled")->default(0);
             $table->foreign('unit')->references('code')->on('inventory_unit_masters');
             $table->string('delivery_route')->nullable()->comment('price request only');
             $table->string('delivery_type')->nullable()->comment('price request only');

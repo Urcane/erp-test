@@ -1,14 +1,9 @@
 @extends('layouts.app')
 @section('title-apps', 'Detail Procurement')
 @section('sub-title-apps', 'Procurement')
-@section('desc-apps', 'Pengadaan yang peru diadakan')
-@section('icon-apps', 'fa-solid fa-box-open')
 
 @section('navbar')
     @include('layouts.navbar.navbar')
-@endsection
-
-@section('summary-page')
 @endsection
 
 @section('toolbar')
@@ -61,115 +56,23 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-12 p-10">
-
-                                    <div class="row mb-5">
-                                        <div class="col-lg-12">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Judul Prospect</span><br>
-                                                {{ $boq->customerProspect->prospect_title }}
-                                            </label>
-                                        </div>
-                                        @if ($boq->survey_request_id)
-                                            <div class="col-lg-4">
-                                                <label class="fs-6 form-label mb-2">
-                                                    <span class="fw-bold">Survei ID</span><br>
-                                                    {{ $boq->no_survey }}
-                                                </label>
-                                            </div>
-                                        @endif
-                                        <div class="col-lg-6 mb-5">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Tipe BOQ</span><br>
-                                                {{ $boq->boq_type }}
-                                            </label>
-                                        </div>
-
-                                        <div class="col-lg-12">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Nama Perusahaan</span><br>
-                                                {{ $boq->customerProspect->customer->customer_name }}
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Nama Kontak Customer</span><br>
-                                                {{ $boq->customerProspect->customer->customerContact->customer_contact_name }}
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">No Kontak Customer</span><br>
-                                                {{ $boq->customerProspect->customer->customerContact->customer_contact_phone }}
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Jenis Project</span><br>
-                                                {{ $boq->customerProspect->customer->bussinesType->type_name }}
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-5">
-                                        <div class="col-lg-4">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Sales</span><br>
-                                                {{ $boq->sales->name }}
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Technician</span><br>
-                                                {{ $boq->technician->name }}
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Procurement</span><br>
-                                                {{ $boq->procurement->name }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-10">
-                                        <div class="col-lg-3">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Modal</span><br>
-                                                {{ $boq->modal }}
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Markup</span><br>
-                                                {{ $boq->gpm }}
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Profit</span><br>
-                                                {{ $boq->npm }}
-                                            </label>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label class="fs-6 form-label mb-2">
-                                                <span class="fw-bold">Percentage</span><br>
-                                                {{ $boq->percentage }}
-                                            </label>
-                                        </div>
-                                    </div>
-
+                                @include("cmt-opportunity.procurement.form-procurement-item-part.basic-form")
+                                <div class="col-lg-6 mb-9">
+                                    <h4>Item From BOQ</h4>
+                                </div>
+                                <div class="col-lg-12">
                                     <div class="table-responsive mt-10">
                                         <table class="table align-top table-striped border table-rounded gy-5"
                                             id="kt_table_item">
                                             <thead class="">
                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                     <th class="w-50px text-center">#</th>
-                                                    <th class="w-200px">Item</th>
+                                                    <th class="w-200px">Name</th>
+                                                    <th class="w-200px">Spesification</th>
                                                     <th class="w-200px">Quantity</th>
                                                     <th class="">Price</th>
                                                     <th class="">Jasa Antar</th>
                                                     <th class="">Total Price</th>
-                                                    <th class="">Markup Price</th>
                                                     <th class="w-50px text-center">#</th>
                                                 </tr>
                                             </thead>
@@ -185,63 +88,43 @@
             </div>
         </div>
     </div>
-    <script>
-        function getStatus(id) {
-            console.log("ASdfsf")
-            var dataId = $(this).data("id");
 
-            // $.ajax({
-            //     url: "{{ route('com.procurement.getStatusItem')}}",
-            //     headers: {
-            //         'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            //     },
-            //     type: 'POST',
-            //     data: {
-            //         id: dataId,
-            //     },
-            //     success: function(data) {
-            //         toastr.success(data.message, 'Selamat 🚀 !');
-            //         $(element).remove()
-            //     },
-            //     error: function(xhr, status, error) {
-            //         const data = xhr.responseJSON;
-            //         toastr.error(data.message, 'Opps!');
-            //     }
-            // });
-        }
-        $(document).ready(function() {
+    <script>
+        $(document).ready(function () {
             generateDatatable({
                 elementName: "#kt_table_item",
-                ajaxLink: "{{ route('com.procurement.getTableItem', ['id' => $boq->id]) }}",
+                ajaxLink: "{{ route('com.procurement.getTableItemProcurement') }}",
                 filters: {
-                    is_done: true,
+                    id: {{ $procurement->id }},
                 },
-                columnData: [{
-                        data: 'id'
+                columnData: [
+                    {
+                        data: 'DT_RowIndex'
                     },
                     {
-                        data: 'item_detail'
+                        data: 'good_name'
+                    },
+
+                    {
+                        data: 'spesification'
                     },
                     {
                         data: 'quantity'
                     },
                     {
-                        data: 'purchase_price'
+                        data: 'price'
                     },
                     {
-                        data: 'purchase_delivery_charge'
+                        data: 'shipping_price'
                     },
                     {
                         data: 'total_price'
-                    },
-                    {
-                        data: 'markup_price'
                     },
                     {
                         data: 'action'
                     },
                 ]
             });
-        });
+        })
     </script>
 @endsection

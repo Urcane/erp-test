@@ -8,9 +8,6 @@
     @include('layouts.navbar.navbar')
 @endsection
 
-@section('summary-page')
-@endsection
-
 @section('toolbar')
     @include('layouts.navbar.toolbar')
 @endsection

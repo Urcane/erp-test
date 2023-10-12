@@ -23,7 +23,7 @@ class CreateAllProcurementMigration extends Migration
     {
         Schema::create('procurements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('itemable_quotation_part_id')->constrained('itemable_quotation_parts');
+            $table->foreignId('itemable_bill_of_quantity_id')->constrained('itemable_bill_of_quantities');
             $table->enum("type", ["Customer", "Internal"]);
             $table->string('delivery_location');
             $table->string("no_pr");
@@ -39,7 +39,9 @@ class CreateAllProcurementMigration extends Migration
         Schema::create('procurement_items', function (Blueprint $table) {
             $table->id();
             $table->string("allocation")->nullable();
+            $table->foreignId('procurement_id')->constrained('procurements');
             $table->foreignId('inventory_good_id')->constrained('inventory_goods');
+            $table->foreignId('item_id')->constrained('items');
             $table->string("need")->nullable();
             $table->integer("quantity");
             $table->char('unit', 10)
@@ -61,9 +63,9 @@ class CreateAllProcurementMigration extends Migration
             $table->timestamps();
         });
 
-        Schema::create('procurement_item_status', function(Blueprint $table){
+        Schema::create('procurement_item_statuses', function(Blueprint $table){
             $table->id();
-            $table->foreignId('item_id')->constrained('items');
+            $table->foreignId('procurement_item_id')->constrained('procurement_items');
             $table->enum("status", $this->constants->item_status)->default($this->constants->item_status[0]);
             $table->string("description")->nullable();
             $table->timestamps();
@@ -71,7 +73,7 @@ class CreateAllProcurementMigration extends Migration
 
         Schema::create('procurement_item_payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->constrained('items');
+            $table->foreignId('procurement_item_id')->constrained('procurement_items');
             $table->enum("categoty", ["Advance Payment", "Full Payment"]);
             $table->integer("nominal");
             $table->string("file");
