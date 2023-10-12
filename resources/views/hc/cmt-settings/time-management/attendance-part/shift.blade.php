@@ -204,6 +204,10 @@
 
     function toggleHidden(id) {
         $(id).toggleClass("d-none");
+        $(id + " input").map(function(){
+            console.log($(this).val(""))
+
+        });
     }
 
     $(document).ready(function () {

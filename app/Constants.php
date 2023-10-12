@@ -35,6 +35,21 @@ class Constants
     public $balance_type = ["Anniversary", "Monthly"];
     public $leave_quota_history_type = ["minus", "plus"];
     public $assignment_status = ["Waiting", "Approved", "Rejected", "Canceled", "Expired"]; // [0] as default
+    // item {
+    public $item_status = [
+        "Create Procurement",
+        "Making an order",
+        "Shipping",
+        "Arrived",
+        "Return",
+        "Received",
+        "Payment",
+        "Start Freeze",
+        "End Freeze",
+        "Done",
+        "Other",
+    ];
+    // }
 
     // system and view
     public $filter_status_attendance = [

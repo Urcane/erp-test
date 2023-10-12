@@ -60,19 +60,6 @@
                                                         </div>
                                                         @endcanany
                                                     </div>
-                                                    {{-- <div class="col-lg-6">
-                                                        <div class="menu-item p-0 m-0">
-                                                            <a href="{{route('com.promag.index')}}" class="menu-link">
-                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
-                                                                    <i class="fa-solid fa-briefcase text-info fs-3"></i>
-                                                                </span>
-                                                                <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-PROMAG</span>
-                                                                    <span class="fs-7 fw-semibold text-gray-500">Project Management</span>
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div> --}}
                                                     <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start" data-kt-menu-offset="10px, 10px">
                                                             <a class="menu-link">
@@ -146,6 +133,19 @@
                                                                 </div>
                                                                 @endcanany
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0">
+                                                            <a href="{{route('com.procurement.index')}}" class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-solid fa-box-open text-info fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">Procurement</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Pengadaan dulu kerja kemudian</span>
+                                                                </span>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>

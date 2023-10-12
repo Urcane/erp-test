@@ -1,11 +1,13 @@
 <?php
 
+use App\Constants;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateAllBoqMigrationTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -21,6 +23,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->bigInteger('quantity');
             $table->char('unit', 10)
                 ->comment('unit with char(10)');
+            $table->bigInteger("fulfilled")->default(0);
             $table->foreign('unit')->references('code')->on('inventory_unit_masters');
             $table->string('delivery_route')->nullable()->comment('price request only');
             $table->string('delivery_type')->nullable()->comment('price request only');
@@ -88,7 +91,7 @@ class CreateAllBoqMigrationTable extends Migration
             $table->foreignId('reference_price_request_id')->nullable()->constrained('itemable_price_requests');
             $table->timestamps();
         });
-        
+
 
         Schema::create('itemable_quotation_parts', function (Blueprint $table) {
             $table->id();
