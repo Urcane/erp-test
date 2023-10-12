@@ -125,7 +125,7 @@
                                         </div>
                                         <div class="separator mb-6"></div>
                                         <div class="row px-8 pb-6">
-                                            <div class="col-lg-12 mb-3">
+                                            {{-- <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 mb-2">
                                                     <span class="fw-bold textd-dark">Department</span>
                                                 </label>
@@ -138,7 +138,7 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 mb-2">
@@ -201,7 +201,7 @@
         return {
             'filterDate': $('#range_date').val(),
             'search': $('#search').val(),
-            'filterDepartment': $('#filter_department').val(),
+            // 'filterDepartment': $('#filter_department').val(),
             'filterStatus': $('#filter_status').val(),
         };
     };
@@ -361,16 +361,16 @@
             tableAssignment.draw();
         });
 
-        $('#filter_department').on('change', function() {
-            tableAssignment.draw();
-        });
+        // $('#filter_department').on('change', function() {
+        //     tableAssignment.draw();
+        // });
 
         $('#filter_status').on('change', function() {
             tableAssignment.draw();
         });
 
         $('#btn_reset_filter').on('click', function () {
-            $('#filter_department').val("*").trigger('change');
+            // $('#filter_department').val("*").trigger('change');
             $('#filter_status').val("*").trigger('change');
         });
     });
