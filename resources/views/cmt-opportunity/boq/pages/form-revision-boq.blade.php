@@ -40,7 +40,7 @@
                             @csrf
                             <div class="mb-6 d-flex justify-content-between">
                                 <div class="col-lg-6 gap-3 d-flex align-items-center">
-                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Commercial Bill of Quantity</span>
+                                    <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Commercial Bill of Quantity: <b>{{$updateDraftBoqData['dataCompanyItem'][0]->id}}</b></span>
                                 </div>
                                 <div class="form-check form-check-custom form-check-success form-check-solid">
                                     <input class="form-check-input" type="hidden" value="0" id="is_final"
@@ -198,7 +198,7 @@
                                         <div class="d-flex justify-content-around flex-wrap mx-20 my-8">
 
                                             <div class="col-lg-2">
-                                                <label class="form-label required">GPM</label>
+                                                <label class="form-label required">Markup</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid required"
@@ -220,7 +220,7 @@
                                             </div>
 
                                             <div class="col-lg-2">
-                                                <label class="form-label required">NPM</label>
+                                                <label class="form-label required">Profit</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" class="form-control form-control-solid required"
@@ -230,7 +230,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-2">
+                                            {{-- <div class="col-lg-2">
                                                 <label class="form-label required">Manpower</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
@@ -239,16 +239,20 @@
                                                         name="manpower"
                                                         value="{{ $updateDraftBoqData['dataCompanyItem'][0]->manpower ?? null }}" />
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             <div class="col-lg-2">
                                                 <label class="form-label required">Percentage</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
-                                                    <input type="number" class="form-control form-control-solid required"
-                                                        oninput="validateAndFormatNumber(this);" id="percentage"
-                                                        name="percentage"
-                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                    <div class="input-group">
+                                                        <input type="number" class="form-control form-control-solid required"
+                                                            oninput="validateAndFormatNumber(this);" id="percentage"
+                                                            name="percentage"
+                                                            value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                        <span class="input-group-text border-0">%</span>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -1077,6 +1081,9 @@
                                                 <a class="dropdown-item py-2">
                                                 <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
                                             </li>
+                                            `
+                                            @can('Boq:manage-price-request-boq')
+                                            +`
                                             <li type="button" class="btn-update-price-modal" 
                                                 data-random-string="${random_string}" 
                                                 data-item-id="${formData.get('good_name')}"
@@ -1091,7 +1098,9 @@
                                                 
                                                 <a class="dropdown-item py-2">
                                                 <i class="fa-solid fa-edit me-3"></i>Edit Harga Item</a>                                       
-                                            </li>
+                                            </li>`
+                                            @endcan
+                                            +`
                                             <li type="button" class="clear-soft-survey-item-${random_string}"
                                                 data-random-string="${random_string}">
                                                 <a class="dropdown-item py-2">

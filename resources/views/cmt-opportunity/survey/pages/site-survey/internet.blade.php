@@ -19,6 +19,7 @@
                             <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Mass Action Options</span>
                         </div>
                         <div class="separator mb-6"></div>
+                        @can('Approval:survey-work-order')
                         <div class="menu-item px-3">
                             <a href="#kt_modal_approve_work_order" data-bs-toggle="modal" class="menu-link" id="btn_approve_work_order">
                                 <span class="menu-icon">
@@ -27,6 +28,7 @@
                                 <span class="menu-title text-dark">Approval Work Order</span>
                             </a>
                         </div>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -130,12 +132,15 @@
     </div>
 </div>
 
-@role('administrator')
+{{-- @role('administrator') --}}
 @include('cmt-opportunity.survey.modal.modal-request-survey')
 @include('cmt-opportunity.survey.modal.modal-create-wo-survey')
 @include('cmt-opportunity.survey.modal.modal-create-soft-survey')
+                        
+@can('Approval:survey-work-order')
 @include('cmt-promag.modal.modal-approve-work-order')
-@endrole
+@endcan
+{{-- @endrole --}}
 
 <script>
     let prospectIds = [];

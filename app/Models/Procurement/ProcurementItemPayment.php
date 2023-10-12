@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Models\Employee;
+namespace App\Models\Procurement;
 
-use App\Models\Day;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class WorkingScheduleDayOff extends Model
+class ProcurementItemPayment extends Model
 {
     use HasFactory;
-
     protected $guarded = [];
 
-    public function workingSchedule(): BelongsTo
-    {
-        return $this->belongsTo(WorkingSchedule::class);
+    public function procurementItem() : BelongsTo {
+        return $this->belongsTo(ProcurementItem::class);
     }
 }

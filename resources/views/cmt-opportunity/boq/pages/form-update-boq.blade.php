@@ -37,7 +37,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Bill of Quantity</span>
+                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Update Bill of Quantity: <b>{{$updateDraftBoqData['dataCompanyItem'][0]->id}}</b></span>
                             </h3> 
                         </div> 
                         <div class="card-body"> 
@@ -138,15 +138,15 @@
                                                         $random_string = \Illuminate\Support\Str::random(4);
                                                     @endphp
                                                     <div class="file-soft-boq-item-{{ $random_string }} mb-5 mt-10 col-12">
-                                                        <div class="row d-flex justify-content-between ">
-                                                            <div class="col-12 col-lg-3">
+                                                        <div class="row d-flex justify-content-between">
+                                                            <div class="col-12 @canany(['Boq:manage-price-request-boq', 'Boq:view-only-price-request-boq']) col-lg-3 @else col-lg-7 @endcanany">
                                                                 <label class="form-label">Item</label>
                                                                 <input type="text" class="form-control form-control-solid"
                                                                     disabled name="content[][good_name]"
                                                                     value="{{ $relatedItem->inventoryGood->good_name ?? null }} - {{ $relatedItem->inventoryGood->merk ?? null }}" />
                                                             </div>
     
-                                                            <div class="col-12 col-md-6 col-lg-2">
+                                                            <div class="col-12 col-md-6 @canany(['Boq:manage-price-request-boq', 'Boq:view-only-price-request-boq']) col-lg-2 @else col-lg-4 @endcanany">
                                                                 <div class="row justify-content-between">
                                                                     <div class="col-7">
                                                                         <label class="form-label">Qty</label>
@@ -170,7 +170,8 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-    
+                                                            
+                                                            @canany(['Boq:manage-price-request-boq', 'Boq:view-only-price-request-boq'])
                                                             <div class="col-12 col-lg-2 col-md-6">
                                                                 <label class="form-label">Price</label>
                                                                 <div class="position-relative">
@@ -193,9 +194,11 @@
                                                                         value="{{ $relatedItem->purchase_delivery_charge ?? null }}" />
                                                                 </div>
                                                             </div>
+                                                            @endcanany
     
-                                                            <div class="col-12 col-lg-3 col-md-6">
+                                                            <div class="col-12 col-md-6 @canany(['Boq:manage-price-request-boq', 'Boq:view-only-price-request-boq']) col-lg-3 @else col-lg-1 @endcanany">
                                                                 <div class="row justify-content-between align-items-center">
+                                                                    @canany(['Boq:manage-price-request-boq', 'Boq:view-only-price-request-boq'])                                                                        
                                                                     <div class="col-lg-10 col-md-10 col-10 col-sm-10">
                                                                         <label class="form-label">Total
                                                                             Price</label>
@@ -207,6 +210,7 @@
                                                                                 value="{{ $relatedItem->total_price ?? null }}" />
                                                                         </div>
                                                                     </div>
+                                                                    @endcanany
                                                                     <div class="col-lg-2 col-md-2 col-2 col-sm-2">
                                                                         <div class="h-25px"></div>
                                                                         <button type="button"
@@ -230,6 +234,7 @@
                                                                                     <i class="fa-solid fa-edit me-3"></i>Edit
                                                                                     Item</a>
                                                                             </li>
+                                                                            @can('Boq:manage-price-request-boq')
                                                                             <li type="button" class="btn-update-price-modal"
                                                                                 data-random-string="{{ $random_string }}"
                                                                                 data-item-id="{{ $relatedItem->inventory_good_id }}"
@@ -250,6 +255,7 @@
                                                                                     Harga
                                                                                     Item</a>
                                                                             </li>
+                                                                            @endcan
                                                                             <li type="button" class="clear-soft-survey-item"
                                                                                 data-random-string="{{ $random_string }}">
                                                                                 <a class="dropdown-item py-2">
@@ -319,10 +325,11 @@
                                             <div class="me-5">
                                                 <a id="submit-all-items" class="btn btn-light-info">Update</a>
                                             </div>
+                                            @can('Boq:publish-finalize-boq')
                                             <div class="me-5">
                                                 <a id="publish-all-items" class="btn btn-info">Publish</a>
                                             </div>
-                                            
+                                            @endcan
                                         </div>
                                     </div>
 
@@ -998,7 +1005,9 @@
                                                     <a class="dropdown-item py-2">
                                                     <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
                                                 </li>
-                                                <li type="button" class="btn-update-price-modal" 
+                                                `
+                                                @can('Boq:manage-price-request-boq')
+                                                +`<li type="button" class="btn-update-price-modal" 
                                                     data-random-string="${random_string}" 
                                                     data-item-id="${formData.get('good_name')}"
 
@@ -1012,7 +1021,9 @@
                                                     
                                                     <a class="dropdown-item py-2">
                                                     <i class="fa-solid fa-edit me-3"></i>Edit Harga Item</a>                                       
-                                                </li>
+                                                </li>`
+                                                @endcan
+                                                +`
                                                 <li type="button" class="clear-soft-survey-item-${random_string}"
                                                     data-random-string="${random_string}">
                                                     <a class="dropdown-item py-2">

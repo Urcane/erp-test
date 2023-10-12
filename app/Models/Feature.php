@@ -4,14 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Permission;
+use Yajra\DataTables\Html\Editor\Fields\BelongsTo;
 
 class Feature extends Model
 {
     use HasFactory;
-    protected $guraded = [];
+    protected $guarded = [];
 
-    public function permissions() {
-        return $this->hasMany(Permission::class, "feature_id");
+    public function permissions() : BelongsToMany {
+        return $this->belongsToMany(Permission::class, "feature_has_permissions");
     }
 }

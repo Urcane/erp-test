@@ -39,7 +39,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark d-md-lh-sm">Commercial Bill of Quantity</span>
+                                <span class="lh-xxl fw-bolder text-dark d-md-lh-sm">Commercial Bill of Quantity: <b>{{$updateDraftBoqData['dataCompanyItem'][0]->id}}</b></span>
                             </h3>
                         </div>
                         <div class="card-body">
@@ -206,7 +206,7 @@
                                         </div>
 
                                         <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
-                                            <label class="form-label required">GPM</label>
+                                            <label class="form-label required">Markup</label>
                                             <div class="position-relative">
                                                 <div class="position-absolute top-0"></div>
                                                 <input type="number" disabled
@@ -217,7 +217,7 @@
                                         </div>
 
                                         <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
-                                            <label class="form-label required">NPM</label>
+                                            <label class="form-label required">Profit</label>
                                             <div class="position-relative">
                                                 <div class="position-absolute top-0"></div>
                                                 <input type="number" disabled
@@ -231,10 +231,13 @@
                                             <label class="form-label required">Percentage</label>
                                             <div class="position-relative">
                                                 <div class="position-absolute top-0"></div>
-                                                <input type="number" disabled
-                                                    class="form-control form-control-solid required" id="percentage"
-                                                    name="percentage"
-                                                    value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                <div class="input-group">
+                                                    <input type="number" disabled
+                                                        class="form-control form-control-solid required" id="percentage"
+                                                        name="percentage"
+                                                        value="{{ $updateDraftBoqData['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                    <span class="input-group-text border-0">%</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -309,7 +312,7 @@
 
                                                         <div class="col-12 col-lg-3 col-md-6">
                                                             <div class="row justify-content-between align-items-center">
-                                                                <div class="@if($updateDraftBoqData['dataCompanyItem'][0]->boq_type == "perangkat") col-lg-5 col-md-5 col-5 col-sm-5 @else col-lg-10 col-md-10 col-10 col-sm-10 @endif">
+                                                                <div class="@if($updateDraftBoqData['dataCompanyItem'][0]->boq_type == "perangkat") @can('Boq:markup-price-boq') col-lg-5 col-md-5 col-5 col-sm-5 @else col-lg-10 col-md-10 col-10 col-sm-10 @endcan @else col-lg-10 col-md-10 col-10 col-sm-10 @endif">
                                                                     <label class="form-label">Total
                                                                         Price</label>
                                                                     <div class="position-relative">
@@ -321,7 +324,8 @@
                                                                     </div>
                                                                 </div>
                                                                 @if($updateDraftBoqData['dataCompanyItem'][0]->boq_type == "perangkat")
-                                                                <div class="col-lg-5 col-md-5 col-5 col-sm-5">
+                                                                
+                                                                <div class="col-lg-5 col-md-5 col-5 col-sm-5" @cannot('Boq:markup-price-boq') style="display: none;" @endcannot>
                                                                     <label class="form-label">Markup Price</label>
                                                                     <div class="position-relative">
                                                                         <div class="position-absolute top-0"></div>
@@ -355,6 +359,7 @@
                                                                                 <i class="fa-solid fa-edit me-3"></i>Edit
                                                                                 Item</a>
                                                                         </li>
+                                                                        @can('Boq:manage-price-request-boq')
                                                                         <li type="button" class="btn-update-price-modal"
                                                                             data-random-string="{{ $random_string }}"
                                                                             data-item-id="{{ $relatedItem->inventory_good_id }}"
@@ -376,6 +381,7 @@
                                                                                 Harga
                                                                                 Item</a>
                                                                         </li>
+                                                                        @endcan
                                                                         <li type="button" class="clear-soft-survey-item"
                                                                             data-random-string="{{ $random_string }}">
                                                                             <a class="dropdown-item py-2">
@@ -622,10 +628,12 @@
                                             <button id="submit-all-items" type="button"
                                                 class="btn btn-light-info">Update</button>
                                         </div>
+                                        @can('Boq:publish-finalize-boq')
                                         <div class="me-5">
                                             <button id="finalize-all-items" type="button"
                                                 class="btn btn-info">Final</button>
                                         </div>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>
@@ -660,7 +668,7 @@
             });
 
             if (modalVal >= totalSumBundle) {
-                return document.getElementById("total_bundle_price").textContent = "   KURANG MODAL";
+                return $("#total_bundle_price").text("   KURANG MODAL");
             }
 
             const totalPriceWithCommas = new Intl.NumberFormat("id").format(totalSumBundle);
@@ -676,8 +684,7 @@
             let gpm = parseFloat($('#gpm').val()); // gunakan parseFloat untuk memastikan nilai numerik
             let modal = parseFloat($('#modal').val()); // gunakan parseFloat untuk memastikan nilai numerik
 
-            console.log(!isNaN(gpm) && !isNaN(modal));
-
+            
             if (!isNaN(gpm) && !isNaN(modal)) {
                 let npm = gpm - modal;
                 let percentage = (npm / gpm) * 100;
@@ -776,7 +783,7 @@
                 let modal = $('#modal').val();
                 let gpm = $('#gpm').val();
                 let npm = $('#npm').val();
-                let percentage = $('#percentage').val();
+                let percentage = $('#percentage').val() ?? 0;
 
                 let is_final = $('#is_final').val();
 
@@ -1397,6 +1404,9 @@
                                                     <a class="dropdown-item py-2">
                                                     <i class="fa-solid fa-edit me-3"></i>Edit Item</a>                                       
                                                 </li>
+                                                `
+                                                @can('Boq:manage-price-request-boq')
+                                                +`
                                                 <li type="button" class="btn-update-price-modal" 
                                                     data-random-string="${random_string}" 
                                                     data-item-id="${formData.get('good_name')}"
@@ -1410,8 +1420,10 @@
                                                     data-item_detail="${formData.get('item_detail')}"">                                            
                                                     
                                                     <a class="dropdown-item py-2">
-                                                    <i class="fa-solid fa-edit me-3"></i>Edit Harga Item</a>                                       
-                                                </li>
+                                                    <i class="fa-solid fa-edit me-3"></i>Edit Harga Item</a>       
+                                                </li>`
+                                                @endcan
+                                                +`
                                                 <li type="button" class="clear-soft-survey-item-${random_string}"
                                                     data-random-string="${random_string}">
                                                     <a class="dropdown-item py-2">

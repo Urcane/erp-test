@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title-apps', 'Settings')
-@section('sub-title-apps', 'Time Of')
+@section('sub-title-apps', 'Time Off')
 
 @section('navbar')
     @include('layouts.navbar.navbar')
@@ -239,7 +239,6 @@
 
                                 </form>
                             </div>
-
 
                         </div>
                     </div>

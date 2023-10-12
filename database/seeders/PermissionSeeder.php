@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Feature;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
@@ -21,18 +21,56 @@ class PermissionSeeder extends Seeder
                 // Request (Approval)
                 'Approval:view-request',
                 'Approval:change-status-request',
+
                 // Request
                 'HC:view-all-request',
                 'HC:change-all-status-request',
+
                 // attendance
                 'HC:view-attendance',
                 'HC:edit-delete-attendance',
+
                 // employee
                 'HC:view-employee',
                 'HC:update-profile',
+
                 // setting
-                'HC:setting'
+                'HC:setting',
             ],
+            [
+                'Leap',
+                'Leap:manage-lead',
+                'Leap:manage-prospect',
+            ],
+            [
+                'Opportunity',
+                'Approval:survey-work-order',
+                'Approval:view-boq-review',
+                'Approval:update-boq-review',
+                'Survey:manage-survey-request',
+                'Survey:create-work-order',
+                'Survey:manage-soft-survey',
+                'Survey:manage-site-survey',
+                'Boq:create-draft-boq',
+                'Boq:view-draft-boq',
+                'Boq:manage-price-request-boq',
+                'Boq:view-only-price-request-boq',
+                'Boq:publish-finalize-boq',
+                'Boq:markup-price-boq',
+                'Quot:manage-quot',
+                'Quot:view-only-quot',
+                'Quot:upload-attachment-quot',
+                'Quot:print-quot'
+            ],
+            [
+                'OPR',
+                // operation
+                'OPR:view-department-assignment',
+                // 'OPR:view-all-assignment',
+                'OPR:create-department-assignment',
+                'OPR:change-department-status-assignment',
+                // 'OPR:change-all-status-assignment',
+            ]
         ];
 
         collect($feature)->map(function ($data) {
@@ -41,10 +79,11 @@ class PermissionSeeder extends Seeder
             ]);
             collect($data)->map(function ($permission) use ($data, $feature) {
                 if ($permission != $data[0]) {
-                    Permission::create([
+                    $permission = Permission::create([
                         "name" => $permission,
-                        "feature_id" => $feature->id,
                     ]);
+
+                    $permission->features()->attach([$feature->id]);
                 }
             });
         });

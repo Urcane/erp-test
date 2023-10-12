@@ -65,9 +65,14 @@
 
         if (fileName !== "-") {
             $('#att-file-modal').attr('href', fileLink);
+            $('#att-file-modal').text(fileName);
+            $('#att-file-modal').show();
+            $('#att-nofile-modal').hide();
+        } else {
+            $('#att-file-modal').attr('href', "#");
+            $('#att-file-modal').hide();
+            $('#att-nofile-modal').show();
         }
-
-        $('#att-file-modal').text(fileName);
     };
 
     const attendanceInit = () => {
@@ -270,10 +275,12 @@
             $('#filter_status_attendance').val("*").trigger("change")
         });
 
-        $('#search_attendance').on('input', function() {
-            tableAttendance.draw();
-            deleteAttendanceSummaries();
-            getAttendanceSummaries();
+        $('#search_attendance').on('keyup', function(e) {
+            if (e.keyCode === 13) {
+                tableAttendance.draw();
+                deleteAttendanceSummaries();
+                getAttendanceSummaries();
+            }
         });
 
         const onAttendanceModalClose = () => {

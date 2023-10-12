@@ -13,7 +13,6 @@ use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
-use App\Models\Employee\WorkingScheduleShift;
 
 use App\Constants;
 
@@ -25,7 +24,7 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\File\File;
 use Yajra\DataTables\Facades\DataTables;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class UserController extends Controller
 {
@@ -51,7 +50,7 @@ class UserController extends Controller
         $dataRole = Role::all();
         $constants = new Constants();
         $dataSubBranch = SubBranch::all();
-        $dataWorkingScheduleShift = WorkingScheduleShift::all();
+        $dataWorkingSchedule = WorkingSchedule::all();
         $dataTaxStatus = TaxStatus::all();
 
         $dataPaymentSchedule = PaymentSchedule::all();
@@ -68,7 +67,7 @@ class UserController extends Controller
             'constants',
             "dataEmploymentStatus",
             "dataSubBranch",
-            "dataWorkingScheduleShift",
+            "dataWorkingSchedule",
             "dataPaymentSchedule",
             "dataProrateSetting",
             'dataPermissions'

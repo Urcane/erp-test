@@ -38,7 +38,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Review Done Bill of Quantity</span>
+                                <span class="lh-xxl fw-bolder text-dark d-none d-md-block">Review Done Bill of Quantity: <b>{{$dataReviewBoq['dataCompanyItem'][0]->id}}</b></span>
                             </h3>
 
                             {{-- <div class="card-toolbar p-3">
@@ -258,7 +258,7 @@
                                             </div>
 
                                             <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
-                                                <label class="form-label ">GPM</label>
+                                                <label class="form-label ">Markup</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" disabled
@@ -269,7 +269,7 @@
                                             </div>
 
                                             <div class="col-lg-2 col-md-5 col-sm-5 col-8 mt-2 mb-3">
-                                                <label class="form-label ">NPM</label>
+                                                <label class="form-label ">Profit</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
                                                     <input type="number" disabled
@@ -283,10 +283,14 @@
                                                 <label class="form-label ">Percentage</label>
                                                 <div class="position-relative">
                                                     <div class="position-absolute top-0"></div>
-                                                    <input type="number" disabled
-                                                        class="form-control form-control-solid " id="percentage"
-                                                        name="percentage"
-                                                        value="{{ $dataReviewBoq['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                    <div class="input-group">
+                                                        <input type="number" disabled
+                                                            class="form-control form-control-solid " id="percentage"
+                                                            name="percentage"
+                                                            value="{{ $dataReviewBoq['dataCompanyItem'][0]->percentage ?? null }}" />
+                                                        <span class="input-group-text border-0">%</span>
+                                                        
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

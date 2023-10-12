@@ -415,7 +415,7 @@
                                             @endif
                                         </div>
 
-                                        @role('administrator')
+                                        {{-- @role('administrator') --}}
                                             <div class="d-flex justify-content-end mt-5">
                                                 <div class="w-20 me-10">
                                                     <span class="fw-bold">Total Amount : Rp<span
@@ -430,7 +430,7 @@
                                                 </div>
                                             </div>
                                             @endif
-                                        @endrole
+                                        {{-- @endrole --}}
 
                                     </div>
 
@@ -644,7 +644,7 @@
                                     {{-- input hidden --}}
                                     <input type="hidden" name="id" id="id"
                                         value="{{ $dataBoq['dataCompanyItem'][0]->id }}">
-                                    <input type="text" name="total_price_bundle" id="total_price_bundle">
+                                    <input type="hidden" name="total_price_bundle" id="total_price_bundle">
 
                                 </form>
 
@@ -658,9 +658,9 @@
     </div>
     </div>
 
-    @role('administrator')
-        @include('cmt-opportunity.boq.add.modal-item-detail', array('boq_type' => $dataBoq['dataCompanyItem'][0]->boq_type))
-    @endrole
+    {{-- @role('administrator') --}}
+    @include('cmt-opportunity.boq.add.modal-item-detail', array('boq_type' => $dataBoq['dataCompanyItem'][0]->boq_type))
+    {{-- @endrole --}}
 
     <script>
         let dataUnit = @json($dataUnit);

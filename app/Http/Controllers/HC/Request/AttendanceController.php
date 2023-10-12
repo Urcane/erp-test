@@ -15,7 +15,9 @@ use App\Exceptions\NotFoundError;
 use App\Models\Attendance\AttendanceChangeLog;
 use App\Models\Attendance\UserAttendanceRequest;
 use App\Models\Attendance\UserAttendance;
+use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\UserEmployment;
+use App\Models\Employee\WorkingScheduleShift;
 use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends RequestController
@@ -25,7 +27,28 @@ class AttendanceController extends RequestController
         $userAttendance = UserAttendance::where('user_id', $userId)->where('date', $date)->first();
 
         if (!$userAttendance) {
-            $workingShift = UserEmployment::where('user_id', $userId)->first()->workingScheduleShift->workingShift;
+            $userCurrentShift = UserCurrentShift::where('user_id', $userId)->with("workingScheduleShift")->first();
+            $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
+
+            Carbon::setLocale($this->constants->locale);
+            $requestDate = Carbon::parse($date);
+            $now = Carbon::now();
+            $diff = $now->diffInDays($requestDate);
+            $countOfSchedule = $workingScheduleShift->count();
+            $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+            $primaryScheduleShift = $workingScheduleShift->find($userCurrentShift->working_schedule_shift_id);
+            for ($i=0; $i < $distance; $i++) {
+                if ($requestDate > $now) {
+                    $primaryScheduleShift = $workingScheduleShift->find($primaryScheduleShift->next);
+                } else {
+                    $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift){
+                        return $scheduleShift->next == $primaryScheduleShift->id;
+                    })->first();
+                }
+            }
+
+            $workingShift = $primaryScheduleShift->workingShift;
 
             $attendance = UserAttendance::create([
                 'user_id' => $userId,
@@ -90,7 +113,7 @@ class AttendanceController extends RequestController
                 throw new NotFoundError("Attendance Request tidak ditemukan");
             }
 
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             if ($user->hasPermissionTo('HC:change-all-status-request')) {
@@ -158,7 +181,7 @@ class AttendanceController extends RequestController
     public function getSummaries(Request $request)
     {
         try {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             $query = null;
 
@@ -254,7 +277,7 @@ class AttendanceController extends RequestController
     public function getTable(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             $query = null;
 
@@ -331,6 +354,8 @@ class AttendanceController extends RequestController
                     });
                 });
             }
+            $userCurrentShift = UserCurrentShift::where('user_id', $user->id)->with("workingScheduleShift")->first();
+            $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
 
             return DataTables::of($query)
                 ->addColumn('DT_RowChecklist', function ($check) {
@@ -368,7 +393,7 @@ class AttendanceController extends RequestController
 
                     return view('hc.cmt-request.components.status', compact(['statusEnum', 'status']));
                 })
-                ->addColumn('action', function ($query) {
+                ->addColumn('action', function ($query) use ($workingScheduleShift, $userCurrentShift) {
                     $params = "#attendances_modal";
                     $shift = "-";
                     $workHour = "-";
@@ -377,7 +402,25 @@ class AttendanceController extends RequestController
                         ->whereDate('date', $query->date)->first();
 
                     if (!$userAttendance) {
-                        $workingShift = $query->user->userEmployment->workingScheduleShift->workingShift;
+                        Carbon::setLocale($this->constants->locale);
+                        $requestDate = Carbon::parse($query->date);
+                        $now = Carbon::now();
+                        $diff = $now->diffInDays($requestDate);
+                        $countOfSchedule = $workingScheduleShift->count();
+                        $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+                        $primaryScheduleShift = $workingScheduleShift->find($userCurrentShift->working_schedule_shift_id);
+                        for ($i=0; $i < $distance; $i++) {
+                            if ($requestDate > $now) {
+                                $primaryScheduleShift = $workingScheduleShift->find($primaryScheduleShift->next);
+                            } else {
+                                $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift){
+                                    return $scheduleShift->next == $primaryScheduleShift->id;
+                                })->first();
+                            }
+                        }
+
+                        $workingShift = $primaryScheduleShift->workingShift;
                         $shift = $workingShift->name;
                         $workHour = "$workingShift->working_start - $workingShift->working_end";
                     } else {

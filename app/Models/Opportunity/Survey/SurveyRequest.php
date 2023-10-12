@@ -20,7 +20,7 @@ class SurveyRequest extends Model
 
     protected $guarded = [];
 
-    function softSurveys() : HasMany {
+    function softSurveys() {
         return $this->hasMany(SoftSurvey::class);
     }
 

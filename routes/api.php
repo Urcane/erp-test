@@ -133,7 +133,7 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::post('/get/detail', 'getRequestById');
 
                     Route::post('/make', 'makeRequest');
-                    Route::post('/cancle', 'cancelRequest');
+                    Route::post('/cancel', 'cancelRequest');
                 });
             });
 
@@ -144,7 +144,7 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::get('/get/current/shift', 'getCurrentShift');
 
                     Route::post('/make', 'makeRequest');
-                    Route::post('/cancle', 'cancelRequest');
+                    Route::post('/cancel', 'cancelRequest');
                 });
             });
 
@@ -154,7 +154,7 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::post('/get/detail', 'getRequestById');
 
                     Route::post('/make', 'makeRequest');
-                    Route::post('/cancle', 'cancelRequest');
+                    Route::post('/cancel', 'cancelRequest');
                 });
             });
         });

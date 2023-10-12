@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\DB;
 use App\Utils\ErrorHandler;
 
 use App\Models\Employee\WorkingSchedule;
-use App\Models\Employee\WorkingScheduleDayOff;
 use App\Models\Employee\WorkingShift;
 use App\Models\Employee\WorkingScheduleShift;
 
@@ -42,8 +41,8 @@ class AttendanceController extends Controller
             // dd($query);
             return DataTables::of($query)
             ->addColumn('action', function ($action) {
-                $shift = $action->workingShifts;
-                $day_off = $action->dayOffs->pluck("day");
+                $workingScheduleShifts = $action->workingScheduleShifts->load("workingShift");
+                // dd($shift);
 
                 $edit = '
                 <li>
@@ -54,8 +53,7 @@ class AttendanceController extends Controller
                             "'. $action->override_national_holiday .'",
                             "'. $action->override_company_holiday .'",
                             "'. $action->override_special_holiday .'",
-                            '. $day_off .',
-                            '. $shift .',
+                            '. $workingScheduleShifts .',
                         )\'>
                         <a href="#modal_create_schedule" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
                     </div>
@@ -79,11 +77,7 @@ class AttendanceController extends Controller
                 return $data->workingShifts->count();
             })
             ->addColumn('assigned_to', function($data) {
-                $count = 0;
-                foreach ($data->workingScheduleShifts as $scheduleShift) {
-                    $count += $scheduleShift->userEmployments->count();
-                }
-                return $count;
+                return $data->userEmployments->count() . " User";
             })
             ->addIndexColumn()
             ->rawColumns(['action','DT_RowChecklist'])
@@ -115,25 +109,42 @@ class AttendanceController extends Controller
                 "override_special_holiday" => $request->override_special_holiday,
             ]);
 
-            foreach ($workingSchedule->dayOffs as $data) {
-                $data->delete();
-            }
+
+            $count = WorkingScheduleShift::orderBy('id','desc')->first()->id;
+            $next = $count + 2;
 
             if ($request->shift_id && $request->id == null) {
+
                 foreach ($request->shift_id as $shift) {
                     WorkingScheduleShift::create([
                         'working_schedule_id' => $workingSchedule->id,
                         'working_shift_id' => $shift["shift_id"],
+                        "next" => $next,
                     ]);
+
+                    $next++;
+                    if($next > $count + count($request->shift_id)) $next = $count+1;
                 }
             }
 
-            if ($request->day_off) {
-                foreach ($request->day_off as $day_off) {
-                    WorkingScheduleDayOff::create([
-                        'day' => $day_off,
+            $workingScheduleShifts = $workingSchedule->workingScheduleShifts;
+            $workingScheduleShiftCount = $workingScheduleShifts->count();
+            if (count($request->shift_id) > $workingScheduleShiftCount) {
+                $workingScheduleShifts->last()->update([
+                    "next" => $next - 1
+                ]);
+
+                $newShift = array_slice($request->shift_id, $workingScheduleShiftCount);
+                foreach ($newShift as $shift) {
+                    if($next > $count + count($newShift)) $next = $workingScheduleShifts->first()->id;
+
+                    WorkingScheduleShift::create([
                         'working_schedule_id' => $workingSchedule->id,
+                        'working_shift_id' => $shift["shift_id"],
+                        "next" => $next,
                     ]);
+
+                    $next++;
                 }
             }
 
@@ -144,6 +155,34 @@ class AttendanceController extends Controller
         });
     }
 
+    public function updateShiftFromSchedule(Request $request) {
+        try {
+            $workingScheduleShift = WorkingScheduleShift::where("id", $request->id)->first();
+
+            if (!$workingScheduleShift) {
+                throw new NotFoundError("Shift tidak ditemukan");
+            }
+
+            if ($workingScheduleShift->userCurrentShifts->count() > 0) {
+                throw new InvariantError("Masih ada user yang menggunakan shift");
+            }
+
+            $workingScheduleShift->update([
+                'working_shift_id' => $request->working_shift_id,
+            ]);
+
+            return response()->json([
+                'status' => "success",
+                'shift' => $workingScheduleShift->workingShift,
+                'message' => "Working schedule berhasil diperharui",
+            ]);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function deleteShiftFromSchedule(Request $request) {
         try {
             $workingScheduleShift = WorkingScheduleShift::where("working_shift_id", $request->shift_id)->where("working_schedule_id", $request->working_schedule_id)->first();
@@ -152,7 +191,7 @@ class AttendanceController extends Controller
                 throw new NotFoundError("working schedule tidak ditemukan");
             }
 
-            if ($workingScheduleShift->userEmployments->count() > 0) {
+            if ($workingScheduleShift->userCurrentShifts->count() > 0) {
                 throw new InvariantError("Masih ada user yang menggunakan shift");
             }
 
@@ -250,11 +289,7 @@ class AttendanceController extends Controller
                 </div>';
             })
             ->addColumn('assigned_to', function($data) {
-                $count = 0;
-                foreach ($data->workingScheduleShifts as $scheduleShift) {
-                    $count += $scheduleShift->userEmployments->count();
-                }
-                return $count;
+                return $data->workingScheduleShifts->count() . " Schedule";
             })
             ->addIndexColumn()
             ->rawColumns(['action','working_hour','break_hour','show_in_request'])
@@ -316,12 +351,26 @@ class AttendanceController extends Controller
     }
 
     public function deleteShift(Request $request) {
+        try {
+            $workingShift = WorkingShift::whereId($request->id)->first();
 
-        WorkingShift::whereId($request->id)->delete();
+            if (!$workingShift) {
+                throw new NotFoundError("working schedule tidak ditemukan");
+            }
 
-        return response()->json([
-            'status' => "succes",
-            'message' => "Data berhasil dihapus",
-        ], 200);
+            if ($workingShift->workingScheduleShifts->count() > 0) {
+                throw new InvariantError("Masih ada schedule yang menggunakan shift");
+            }
+            $workingShift->delete();
+
+            return response()->json([
+                'status' => "succes",
+                'message' => "Data berhasil dihapus",
+            ], 200);
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 }

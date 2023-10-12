@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
 use App\Models\Attendance\GlobalDayOff;
+use App\Models\Employee\UserCurrentShift;
+use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Leave\LeaveQuota;
 use App\Models\Leave\LeaveRequestCategory;
 use App\Models\Leave\UserLeaveCategoryQuota;
@@ -51,26 +53,48 @@ class TimeOffController extends RequestController
         return $holidayDates->unique()->toArray();
     }
 
-    private function _getTakenDays($startDate, $endDate)
+    private function _getWorkingScheduleShift($userId, $startDate) {
+        $userCurrentShift = UserCurrentShift::where('user_id', $userId)->with("workingScheduleShift")->first();
+        $workingScheduleShifts = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
+
+        Carbon::setLocale($this->constants->locale);
+        $requestDate = Carbon::parse($startDate);
+        $now = Carbon::now();
+        $diff = $now->diffInDays($requestDate);
+        $countOfSchedule = $workingScheduleShifts->count();
+        $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+        $workingScheduleShift = $workingScheduleShifts->find($userCurrentShift->working_schedule_shift_id);
+        for ($i=0; $i < $distance; $i++) {
+            if ($requestDate > $now) {
+                $workingScheduleShift = $workingScheduleShifts->find($workingScheduleShift->next);
+            } else {
+                $workingScheduleShift = $workingScheduleShifts->filter(function ($scheduleShift) use ($workingScheduleShift){
+                    return $scheduleShift->next == $workingScheduleShift->id;
+                })->first();
+            }
+        }
+
+        return $workingScheduleShift;
+    }
+
+    private function _getTakenDays($startDate, $endDate, User $user)
     {
         Carbon::setLocale($this->constants->locale);
 
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
 
+        $workingScheduleShift = $this->_getWorkingScheduleShift($user->id, $startDate);
         $taken = 0;
-        $workingDayOff = Auth::user()->userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
-
         $holidayDates = $this->_getGlobalDayOff($startDate, $endDate);
-
         while ($startDate <= $endDate) {
             $currentDate = $startDate->copy();
-            $dayName = $currentDate->translatedFormat('l');
 
-            if (!in_array($currentDate->toDateString(), $holidayDates) && !in_array($dayName, $workingDayOff)) {
+            if (!in_array($currentDate->toDateString(), $holidayDates) && $workingScheduleShift->workingShift->is_working) {
                 $taken += 1;
             }
-
+            $workingScheduleShift = $workingScheduleShift->nextSchedule;
             $startDate->addDay();
         }
 
@@ -104,7 +128,7 @@ class TimeOffController extends RequestController
 
             $balanceTaken = $leaveCategory->duration
                 ? ($leaveCategory->minus_amount ?? $leaveCategory->duration)
-                : $this->_getTakenDays($request->start_date, $request->end_date);
+                : $this->_getTakenDays($request->start_date, $request->end_date, $user);
         }
 
         if ($leaveCategory->min_notice) {
@@ -126,18 +150,18 @@ class TimeOffController extends RequestController
         if (!$leaveCategory->unlimited_balance) {
             $adjustmentMonth = $leaveCategory->balance_type == $this->constants->balance_type[0] ? 12 : 1;
 
-            if ($leaveCategory->expire_date) {
-                $userCategoryQuota = UserLeaveCategoryQuota::where("leave_request_category_id", $leaveCategory->id)
+            $userCategoryQuota = UserLeaveCategoryQuota::where("leave_request_category_id", $leaveCategory->id)
                     ->where("user_id", $user->id)
-                    ->orderBy("expire_date", "desc")
+                    ->orderBy("expired_date", "desc")
                     ->first();
 
+            if ($leaveCategory->expired) {
                 if ($userCategoryQuota) {
-                    if ($userCategoryQuota->expire_date > $today) {
+                    if ($userCategoryQuota->expired_date < $today) {
                         if ($leaveCategory->balance_type == $this->constants->balance_type[0]) {
-                            $expireDate = Carbon::parse($userCategoryQuota->expire_date)->addMonths(12);
+                            $expireDate = Carbon::parse($userCategoryQuota->expired_date)->addMonths(12);
                         } else {
-                            $expireDate = Carbon::parse($userCategoryQuota->expire_date)->addMonth();
+                            $expireDate = Carbon::parse($userCategoryQuota->expired_date)->addMonth();
                         }
 
                         if ($leaveCategory->carry_amount && $userCategoryQuota->quotas > 0) {
@@ -152,7 +176,7 @@ class TimeOffController extends RequestController
                                 $carryAmount = $leaveCategory->carry_amount;
                                 $carryExpireDate = $carryExpireDate->addMonth($leaveCategory->carry_expired);
                             } else {
-                                $carryExpireDate = Carbon::parse($userCategoryQuota->expire_date)->addMonth($leaveCategory->carry_expired);
+                                $carryExpireDate = Carbon::parse($userCategoryQuota->expired_date)->addMonth($leaveCategory->carry_expired);
                                 $carryAmount = min($userCategoryQuota->quotas, $leaveCategory->carry_amount);
 
                                 $userCategoryQuota->update([
@@ -241,33 +265,59 @@ class TimeOffController extends RequestController
                     throw new InvariantError("Anda tidak memiliki kuota $leaveCategory->name!");
                 }
 
-                $newQuota = $leaveCategory->balance;
-                $expireDate = Carbon::parse($user->userEmployment->join_date)->addMonths($leaveCategory->min_works);
+                if ($userCategoryQuota) {
+                    if ($userCategoryQuota->expired_date < $today) {
+                        $newQuota = $leaveCategory->balance;
+                        $expireDate = Carbon::parse($userCategoryQuota->expired_date)->addMonths($adjustmentMonth);
 
-                if ($expireDate->lt($today)) {
-                    while ($expireDate->lt($today)) {
-                        $newQuota += $leaveCategory->balance;
-                        $expireDate = $expireDate->addMonths($adjustmentMonth);
+                        UserLeaveCategoryQuota::create([
+                            "user_id" => $user->id,
+                            "leave_request_category_id" => $leaveCategory->id,
+                            "quotas" => $newQuota + $userCategoryQuota->quotas,
+                            "expired_date" => $expireDate,
+                        ]);
+
+                        $userCategoryQuota->update([
+                            "quotas" => 0,
+                        ]);
+
+                        if ($newQuota + $userCategoryQuota->quotas < $balanceTaken) {
+                            throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                        }
+                    } else {
+                        if ($userCategoryQuota->quotas < $balanceTaken) {
+                            throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                        }
                     }
-                }
+                } else {
+                    $newQuota = $leaveCategory->balance;
+                    $expireDate = Carbon::parse($user->userEmployment->join_date)->addMonths($leaveCategory->min_works);
 
-                UserLeaveCategoryQuota::create([
-                    "user_id" => $user->id,
-                    "leave_request_category_id" => $leaveCategory->id,
-                    "quotas" => $newQuota,
-                    "expired_date" => $expireDate,
-                ]);
+                    if ($expireDate->lt($today)) {
+                        while ($expireDate->lt($today)) {
+                            $newQuota += $leaveCategory->balance;
+                            $expireDate = $expireDate->addMonths($adjustmentMonth);
+                        }
+                    }
 
-                if ($newQuota < $balanceTaken) {
-                    throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                    UserLeaveCategoryQuota::create([
+                        "user_id" => $user->id,
+                        "leave_request_category_id" => $leaveCategory->id,
+                        "quotas" => $newQuota,
+                        "expired_date" => $expireDate,
+                    ]);
+
+                    if ($newQuota < $balanceTaken) {
+                        throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                    }
                 }
             }
         }
 
         if ($leaveCategory->use_quota) {
             $userLeaveQuotas = UserLeaveQuota::where("user_id", $user->id)
-                ->whereNot("quotas", 0)
-                ->whereDate("expire_date", ">=", $today)
+                ->where('quotas', '>', 0)
+                ->whereDate("expired_date", ">=", $today)
                 ->orderBy("expired_date", "asc")
                 ->get();
 
@@ -345,7 +395,7 @@ class TimeOffController extends RequestController
             }
 
             $query += [
-                "user_id" => Auth::user()->id,
+                "user_id" => $user->id,
                 "leave_request_category_id" => $request->leave_request_category_id,
                 "file" => $filename ?? null,
                 "notes" => $request->notes,
@@ -399,9 +449,9 @@ class TimeOffController extends RequestController
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
-            if (!($user->id == $request->user_id|| $user->hasPermissionTo('HC:view-attendance'))) {
+            if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
                 abort(403);
             }
 
@@ -411,12 +461,11 @@ class TimeOffController extends RequestController
 
             return DataTables::of($leaveRequest)
                 ->addColumn('action', function ($query) {
-                    $constants = $this->constants;
-
                     $fileName = $query->file;
                     $fileLink = asset("/storage/request/timeoff/$fileName");
+
                     return view('profile.part-profile.time-management-part.timeoff.menu', compact([
-                        'query', 'constants', 'fileName', 'fileLink'
+                        'query', 'fileName', 'fileLink'
                     ]));
                 })
                 ->addColumn('created_at', function ($leaveRequest) {

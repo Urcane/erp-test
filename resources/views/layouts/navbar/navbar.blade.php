@@ -46,31 +46,20 @@
                                             <div class="col-lg-12 mb-6 mb-lg-0">
                                                 <div class="row">
                                                     <div class="col-lg-6">
+                                                        @canany(['Leap:manage-lead', 'Leap:manage-prospect'])                                                            
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('com.lead.index-lead')}}" class="menu-link">
                                                                 <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
                                                                     <i class="fa-solid fa-paper-plane text-info fs-3"></i>
                                                                 </span>
                                                                 <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-LEAP</span>
+                                                                    <span class="fs-6 fw-bold text-dark">Leap</span>
                                                                     <span class="fs-7 fw-semibold text-gray-500">Lead Dulu Prospek Kemudian</span>
                                                                 </span>
                                                             </a>
                                                         </div>
+                                                        @endcanany
                                                     </div>
-                                                    {{-- <div class="col-lg-6">
-                                                        <div class="menu-item p-0 m-0">
-                                                            <a href="{{route('com.promag.index')}}" class="menu-link">
-                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
-                                                                    <i class="fa-solid fa-briefcase text-info fs-3"></i>
-                                                                </span>
-                                                                <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-PROMAG</span>
-                                                                    <span class="fs-7 fw-semibold text-gray-500">Project Management</span>
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div> --}}
                                                     <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start" data-kt-menu-offset="10px, 10px">
                                                             <a class="menu-link">
@@ -78,7 +67,7 @@
                                                                     <i class="fa-solid fa-hand-holding-dollar text-info fs-3"></i>
                                                                 </span>
                                                                 <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-OPPOR</span>
+                                                                    <span class="fs-6 fw-bold text-dark">Opportunity</span>
                                                                     <span class="fs-7 fw-semibold text-gray-500">Opportunity</span>
                                                                 </span>
                                                                 <span class="menu-title"></span>
@@ -86,8 +75,14 @@
                                                                     <i class="fa-solid fa-chevron-down text-gray-600"></i>
                                                                 </span>
                                                             </a>
-
                                                             <div class="menu-sub menu-sub-dropdown p-3 w-200px">
+                                                                @canany([
+                                                                    'Approval:survey-work-order',
+                                                                    'Survey:manage-survey-request',
+                                                                    'Survey:create-work-order',
+                                                                    'Survey:manage-soft-survey',
+                                                                    'Survey:manage-site-survey'
+                                                                ])
                                                                 <div class="menu-item">
                                                                     <a href="{{route('com.survey.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
@@ -98,7 +93,17 @@
                                                                         </span>
                                                                     </a>
                                                                 </div>
-
+                                                                @endcanany
+                                                                @canany([
+                                                                    'Approval:view-boq-review',
+                                                                    'Approval:update-boq-review',
+                                                                    'Boq:create-draft-boq',
+                                                                    'Boq:view-draft-boq',
+                                                                    'Boq:manage-price-request-boq',
+                                                                    'Boq:view-only-price-request-boq',
+                                                                    'Boq:publish-finalize-boq',
+                                                                    'Boq:markup-price-boq'
+                                                                ])
                                                                 <div class="menu-item">
                                                                     <a href="{{route('com.boq.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
@@ -109,7 +114,13 @@
                                                                         </span>
                                                                     </a>
                                                                 </div>
-
+                                                                @endcanany
+                                                                @canany([
+                                                                    'Quot:manage-quot',
+                                                                    'Quot:view-only-quot',
+                                                                    'Quot:upload-attachment-quot',
+                                                                    'Quot:print-quot'
+                                                                ])
                                                                 <div class="menu-item">
                                                                     <a href="{{route('com.quotation.index')}}" class="menu-link" >
                                                                         <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-20px h-20px me-4 bg-light">
@@ -120,7 +131,21 @@
                                                                         </span>
                                                                     </a>
                                                                 </div>
+                                                                @endcanany
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0">
+                                                            <a href="{{route('com.procurement.index')}}" class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-solid fa-box-open text-info fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">Procurement</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Pengadaan dulu kerja kemudian</span>
+                                                                </span>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -128,6 +153,27 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane w-lg-600px" id="kt_app_header_app_operation">
+                                        <div class="row">
+                                            <div class="col-lg-12 mb-6 mb-lg-0">
+                                                <div class="row">
+                                                    {{-- @can('') --}}
+                                                        <div class="col-lg-6">
+                                                            <div class="menu-item p-0 m-0">
+                                                                <a href="{{route('opt.asign.index')}}" class="menu-link">
+                                                                    <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                        <i class="fa-solid fa-file-alt text-warning fs-3"></i>
+                                                                    </span>
+                                                                    <span class="d-flex flex-column">
+                                                                        <span class="fs-6 fw-bold text-dark">Assignment</span>
+                                                                        <span class="fs-7 fw-semibold text-gray-500">Bikin surat dulu, Jalan kemudian</span>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    {{-- @endcan --}}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane w-lg-600px" id="kt_app_header_app_finance">
                                     </div>
@@ -145,7 +191,7 @@
                                                                         <i class="fa-solid fa-users text-primary fs-3"></i>
                                                                     </span>
                                                                     <span class="d-flex flex-column">
-                                                                        <span class="fs-6 fw-bold text-dark">CMT-EMP</span>
+                                                                        <span class="fs-6 fw-bold text-dark">Employee</span>
                                                                         <span class="fs-7 fw-semibold text-gray-500">Database Pegawai Comtelindo</span>
                                                                     </span>
                                                                 </a>
@@ -160,13 +206,14 @@
                                                                         <i class="fa-solid fa-calendar-days text-primary fs-3"></i>
                                                                     </span>
                                                                     <span class="d-flex flex-column">
-                                                                        <span class="fs-6 fw-bold text-dark">CMT-Attendance</span>
+                                                                        <span class="fs-6 fw-bold text-dark">Attendance</span>
                                                                         <span class="fs-7 fw-semibold text-gray-500">Catatan Daftar Hadir Karyawan</span>
                                                                     </span>
                                                                 </a>
                                                             </div>
                                                         </div>
                                                     @endcan
+                                                    @canany(['HC:view-all-request', 'Approval:view-request'])
                                                     <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('hc.request.index')}}" class="menu-link">
@@ -174,12 +221,13 @@
                                                                     <i class="fa-solid fa-handshake text-primary fs-3"></i>
                                                                 </span>
                                                                 <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-Request</span>
+                                                                    <span class="fs-6 fw-bold text-dark">Request</span>
                                                                     <span class="fs-7 fw-semibold text-gray-500">Catatan Daftar Request Karyawan</span>
                                                                 </span>
                                                             </a>
                                                         </div>
                                                     </div>
+                                                    @endcanany
                                                     @can('HC:setting')
                                                         <div class="col-lg-6">
                                                             <div class="menu-item p-0 m-0">
@@ -188,7 +236,7 @@
                                                                         <i class="fa-solid fa-gear text-primary fs-3"></i>
                                                                     </span>
                                                                     <span class="d-flex flex-column">
-                                                                        <span class="fs-6 fw-bold text-dark">CMT-Settings</span>
+                                                                        <span class="fs-6 fw-bold text-dark">Settings</span>
                                                                         <span class="fs-7 fw-semibold text-gray-500">Setting jadwal sampai payroll</span>
                                                                     </span>
                                                                 </a>

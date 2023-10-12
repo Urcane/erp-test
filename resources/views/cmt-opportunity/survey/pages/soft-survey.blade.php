@@ -102,13 +102,13 @@
     </div>
 </div>
 
-@role('administrator')
+{{-- @role('administrator') --}}
 @include('cmt-opportunity.survey.modal.modal-request-survey')
 @include('cmt-opportunity.survey.modal.modal-create-wo-survey')
 @include('cmt-opportunity.survey.modal.modal-create-soft-survey')
 @include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-internet')
 @include('cmt-opportunity.survey.modal.survey-result.modal-create-survey-result-cctv')
-@endrole
+{{-- @endrole --}}
 
 <script>
     let prospectIds = [];

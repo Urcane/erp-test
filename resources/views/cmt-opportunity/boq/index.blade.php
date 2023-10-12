@@ -44,6 +44,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @can('Boq:create-draft-boq')
                                 <div class="col-lg-6 d-flex justify-content-end">
                                     <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
                                         <div class="">
@@ -54,6 +55,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endcan
                             </div>
                             <div class="row mb-6 align-items-center">
 
@@ -73,11 +75,13 @@
                                                         data-bs-toggle="tab" id="tab_survey"
                                                         href="#tab_survey_content">Survey</a>
                                                 </li>
+                                                @can('Boq:view-draft-boq')
                                                 <li class="nav-item">
                                                     <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0"
                                                         data-bs-toggle="tab" id="tab_draft" href="#tab_draft_content">Draft
                                                         BoQ</a>
                                                 </li>
+                                                @endcan
                                                 <li class="nav-item">
                                                     <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0"
                                                         data-bs-toggle="tab" id="tab_commercial"
@@ -158,6 +162,7 @@
                                             </div>
                                         </div>
                                         {{-- TAB DRAFT  --}}
+                                        @can('Boq:view-draft-boq')
                                         <div class="tab-pane fade" id="tab_draft_content" role="tabpanel">
                                             <div class="row">
                                                 <div class="col-lg-12">
@@ -168,11 +173,44 @@
                                                             <thead class="">
                                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                                     <th class="text-center w-75px">#</th>
+                                                                    <th class="text-center w-25px">ID. BOQ</th>
                                                                     <th class="">Company Name</th>
                                                                     <th class="w-300px">Company Address</th>
                                                                     <th class="w-300px">Prospect Title</th>
                                                                     <th class="w-300px">Next Action</th>
                                                                     <th class="w-300px">Prospect Update</th>
+                                                                    <th class="w-300px">Created At</th>
+                                                                    <th class="w-300px">Last Updated At</th>
+                                                                    <th class="w-50px text-center">#</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="fs-7">
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endcan
+                                        {{-- TAB COMMERCIAL  --}}
+                                        <div class="tab-pane fade" id="tab_commercial_content" role="tabpanel">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="table-responsive">
+                                                        <table
+                                                            class="table align-top table-striped border table-rounded gy-5"
+                                                            id="kt_table_commercial">
+                                                            <thead class="">
+                                                                <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
+                                                                    <th class="text-center w-75px">#</th>
+                                                                    <th class="text-center w-25px">ID. BOQ</th>
+                                                                    <th class="w-25px">Company Name</th>
+                                                                    <th class="">Project Name</th>
+                                                                    <th class="w-200px">No. Project</th>
+                                                                    <th class="w-200px">Progress</th>
+                                                                    <th class="w-300px">Next Action</th>
+                                                                    <th class="w-300px">Created At</th>
+                                                                    <th class="w-300px">Last Updated At</th>
                                                                     <th class="w-50px text-center">#</th>
                                                                 </tr>
                                                             </thead>
@@ -184,32 +222,6 @@
                                             </div>
                                         </div>
                                         {{-- TAB ON REVIEW  --}}
-                                        <div class="tab-pane fade" id="tab_commercial_content" role="tabpanel">
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="table-responsive">
-                                                        <table
-                                                            class="table align-top table-striped border table-rounded gy-5"
-                                                            id="kt_table_commercial">
-                                                            <thead class="">
-                                                                <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                                                    <th class="text-center w-75px">#</th>
-                                                                    <th class="w-25px">#</th>
-                                                                    <th class="">Project Name</th>
-                                                                    <th class="w-200px">No. Project</th>
-                                                                    <th class="w-200px">Progress</th>
-                                                                    <th class="w-300px">Next Action</th>
-                                                                    <th class="w-50px text-center">#</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="fs-7">
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {{-- TAB COMMERCIAL  --}}
                                         <div class="tab-pane fade" id="tab_on_review_content" role="tabpanel">
                                             <div class="row">
                                                 <div class="col-lg-12">
@@ -220,11 +232,15 @@
                                                             <thead class="">
                                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                                     <th class="text-center w-75px">#</th>
-                                                                    <th class="w-25px">#</th>
+                                                                    <th class="text-center w-25px">ID. BOQ</th>
+                                                                    <th class="w-25px">Company Name</th>
                                                                     <th class="">Project Name</th>
                                                                     <th class="w-200px">No. Project</th>
                                                                     <th class="w-200px">Progress</th>
-                                                                    <th class="w-300px">Next Action</th>
+                                                                    <th class="w-200px">Next Action</th>
+                                                                    <th class="w-100px">Aging</th>
+                                                                    <th class="w-300px">Created At</th>
+                                                                    <th class="w-300px">Last Updated At</th>
                                                                     <th class="w-50px text-center">#</th>
                                                                 </tr>
                                                             </thead>
@@ -246,11 +262,14 @@
                                                             <thead class="">
                                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                                     <th class="w-50px">#</th>
+                                                                    <th class="text-center w-25px">ID. BOQ</th>
                                                                     <th class="">Company Name</th>
                                                                     <th class="">Company Contact</th>
                                                                     <th class="w-200px">No. Project</th>
                                                                     <th class="w-200px">Progress</th>
                                                                     <th class="w-300px">Next Action</th>
+                                                                    <th class="w-300px">Created At</th>
+                                                                    <th class="w-300px">Last Updated At</th>
                                                                     <th class="w-50px text-center">#</th>
                                                                 </tr>
                                                             </thead>
@@ -272,11 +291,14 @@
                                                             <thead class="">
                                                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                                                     <th class="text-center w-25px">#</th>
-                                                                    <th class="w-25px">#</th>
+                                                                    <th class="text-center w-25px">ID. BOQ</th>
+                                                                    <th class="w-25px">Company Name</th>
                                                                     <th class="">Project Name</th>
                                                                     <th class="w-200px">No. Project</th>
                                                                     <th class="w-200px">Progress</th>
                                                                     <th class="w-300px">Next Action</th>
+                                                                    <th class="w-300px">Created At</th>
+                                                                    <th class="w-300px">Last Updated At</th>
                                                                     <th class="w-50px text-center">#</th>
                                                                 </tr>
                                                             </thead>
@@ -375,7 +397,7 @@
                     data: 'DT_RowIndex'
                 },
                 {
-                    data: 'customer.customer_contact.customer_contact_name'
+                    data: 'customer.customer_name'
                 },
                 {
                     data: 'customer.customer_contact.customer_contact_phone',
@@ -443,7 +465,7 @@
             });
         });
 
-
+        @can('Boq:view-draft-boq')
         $('#tab_draft').click(function() {
             generateDatatable({
                 tableName: "tableDraftBoq",
@@ -456,6 +478,9 @@
                     // { data: 'DT_RowChecklist'},
                     {
                         data: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'id'
                     },
                     {
                         data: 'prospect.customer.customer_name'
@@ -473,11 +498,18 @@
                         data: 'next_action_pretified'
                     },
                     {
+                        data: 'created_at'
+                    },
+                    {
+                        data: 'updated_at'
+                    },
+                    {
                         data: 'action'
                     },
                 ]
             });
         });
+        @endcan
 
         $('#tab_commercial').click(function() {
             generateDatatable({
@@ -493,6 +525,9 @@
                         data: 'DT_RowIndex'
                     },
                     {
+                        data: 'id'
+                    },
+                    {
                         data: 'prospect.customer.customer_name'
                     },
                     {
@@ -506,6 +541,12 @@
                     },
                     {
                         data: 'next_action_pretified'
+                    },
+                    {
+                        data: 'created_at'
+                    },
+                    {
+                        data: 'updated_at'
                     },
                     {
                         data: 'action'
@@ -524,6 +565,9 @@
                 },
                 columnData: [{
                         data: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'id'
                     },
                     {
                         data: 'prospect.customer.customer_name'
@@ -550,6 +594,12 @@
                         data: 'next_action_pretified'
                     },
                     {
+                        data: 'created_at'
+                    },
+                    {
+                        data: 'updated_at'
+                    },
+                    {
                         data: 'action_done'
                     },
                 ]
@@ -570,6 +620,9 @@
                         data: 'DT_RowIndex'
                     },
                     {
+                        data: 'id'
+                    },
+                    {
                         data: 'prospect.customer.customer_name'
                     },
                     {
@@ -583,6 +636,12 @@
                     },
                     {
                         data: 'next_action_pretified'
+                    },
+                    {
+                        data: 'created_at'
+                    },
+                    {
+                        data: 'updated_at'
                     },
                     {
                         data: 'action_cancel'
@@ -605,6 +664,9 @@
                         data: 'DT_RowIndex'
                     },
                     {
+                        data: 'id'
+                    },
+                    {
                         data: 'prospect.customer.customer_name'
                     },
                     {
@@ -618,6 +680,15 @@
                     },
                     {
                         data: 'next_action_pretified'
+                    },
+                    {
+                        data: 'aging'
+                    },
+                    {
+                        data: 'created_at'
+                    },
+                    {
+                        data: 'updated_at'
                     },
                     {
                         data: 'action_approval'

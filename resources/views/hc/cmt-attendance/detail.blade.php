@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title-apps','CMT-Attendance')
+@section('title-apps','Attendance')
 @section('sub-title-apps','HC & Legal')
 @section('desc-apps','Catatan Daftar Hadir Karyawan')
 @section('icon-apps','fa-solid fa-calendar-days')
@@ -315,6 +315,10 @@
                 } = data;
 
                 const $row = $(row);
+
+                if (attendanceCode === attendanceCodeEnum[4]) {
+                    return $row.css('background-color', 'rgba(253, 224, 71, 0.7)');
+                }
 
                 if (attendanceCode !== attendanceCodeEnum[0]) {
                     return $row.css('background-color', 'rgba(192, 192, 192, 0.4)');
