@@ -32,7 +32,7 @@ class AttendanceController extends Controller
         $this->constants = new Constants();
     }
 
-    private function _summariesQuery($query1, $query2, $query3, $query4, $query5, $query6, $query7, $query8)
+    private function _summariesQuery($query1, $query2, $query3, $query4, $query5, $query6, $query7, $query8, $query9, $query10)
     {
         $now = now();
 
@@ -114,11 +114,32 @@ class AttendanceController extends Controller
 
             "timeOffCount" => $query8->where('attendance_code', '=', $this->constants->attendance_code[1])
                 ->count(),
+
+            "dinasInCount" => $query9->where('attendance_code', '=', $this->constants->attendance_code[4])
+                ->whereDate('date', '<=', $now)
+                ->where(function ($query) {
+                    $query->whereNotNull('check_in')
+                        ->orWhereNotNull('check_out');
+                })
+                ->count(),
+
+            "dinasOutCount" => $query10->where('attendance_code', '=', $this->constants->attendance_code[4])
+                ->whereDate('date', '<', $now)
+                ->whereNull('check_in')
+                ->whereNull('check_out')
+                ->count(),
         ]);
     }
 
     public function index()
     {
+        /** @var \App\Models\User $authUser */
+        $authUser = Auth::user();
+
+        if (!$authUser->hasPermissionTo('HC:view-attendance')) {
+            abort(403);
+        }
+
         $constants = $this->constants;
         $dataDivision = Division::all();
         $dataDepartment = Department::all();
@@ -128,7 +149,7 @@ class AttendanceController extends Controller
 
     public function show(string $id)
     {
-        /** @var App\Models\User $authUser */
+        /** @var \App\Models\User $authUser */
         $authUser = Auth::user();
 
         if (!($authUser->id == $id || $authUser->hasPermissionTo('HC:view-attendance'))) {
@@ -157,6 +178,8 @@ class AttendanceController extends Controller
 
             $checkIn = $request->check_in ? Carbon::parse($request->check_in) : null;
             $checkOut = $request->check_out ? Carbon::parse($request->check_out) : null;
+
+            DB::beginTransaction();
 
             $userAttendance = UserAttendance::whereId($request->id)->first();
 
@@ -272,6 +295,8 @@ class AttendanceController extends Controller
             }
 
             return $this->_summariesQuery(
+                clone $userAttendances,
+                clone $userAttendances,
                 clone $userAttendances,
                 clone $userAttendances,
                 clone $userAttendances,
@@ -436,6 +461,22 @@ class AttendanceController extends Controller
                 case "time-off":
                     $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[1]);
                     break;
+
+                case "dinas-in":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[4])
+                        ->whereDate('date', '<=', $now)
+                        ->where(function ($query) {
+                            $query->whereNotNull('check_in')
+                                ->orWhereNotNull('check_out');
+                        });
+                    break;
+
+                case "dinas-out":
+                    $userAttendances->where('attendance_code', '=', $this->constants->attendance_code[4])
+                        ->whereDate('date', '<', $now)
+                        ->whereNull('check_in')
+                        ->whereNull('check_out');
+                    break;
             }
 
             return DataTables::of($userAttendances)
@@ -459,7 +500,7 @@ class AttendanceController extends Controller
     public function getAttendanceSummariesById(Request $request)
     {
         try {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             if (!($user->id == $request->userId || $user->hasPermissionTo('HC:view-attendance'))) {
@@ -483,6 +524,8 @@ class AttendanceController extends Controller
             }
 
             return $this->_summariesQuery(
+                clone $userAttendances,
+                clone $userAttendances,
                 clone $userAttendances,
                 clone $userAttendances,
                 clone $userAttendances,
@@ -681,7 +724,7 @@ class AttendanceController extends Controller
     public function getTableAttendanceDetail(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
@@ -852,7 +895,7 @@ class AttendanceController extends Controller
     public function exportPersonalAttendance(Request $request)
     {
         try {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             if (!($user->id == $request->userId || $user->hasPermissionTo('HC:view-attendance'))) {

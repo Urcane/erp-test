@@ -12,6 +12,8 @@ use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
 use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserShiftRequest;
+use App\Models\Employee\UserCurrentShift;
+use App\Models\Employee\WorkingScheduleShift;
 use Carbon\Carbon;
 
 class ShiftController extends RequestController
@@ -25,7 +27,28 @@ class ShiftController extends RequestController
                 "notes" => "nullable|string"
             ]);
 
-            $userShiftId = Auth::user()->userEmployment->workingScheduleShift->workingShift->id;
+            $userCurrentShift = UserCurrentShift::where('user_id', $request->user()->id)->with("workingScheduleShift")->first();
+            $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
+
+            Carbon::setLocale($this->constants->locale);
+            $requestDate = Carbon::parse($request->date);
+            $now = Carbon::now();
+            $diff = $now->diffInDays($requestDate);
+            $countOfSchedule = $workingScheduleShift->count();
+            $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+            $primaryScheduleShift = $workingScheduleShift->find($userCurrentShift->working_schedule_shift_id);
+            for ($i=0; $i < $distance; $i++) {
+                if ($requestDate > $now) {
+                    $primaryScheduleShift = $workingScheduleShift->find($primaryScheduleShift->next);
+                } else {
+                    $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift){
+                        return $scheduleShift->next == $primaryScheduleShift->id;
+                    })->first();
+                }
+            }
+
+            $userShiftId = $primaryScheduleShift->workingShift->id;
 
             if ($userShiftId == $request->working_shift_id) {
                 throw new InvariantError("Tidak dapat melakukan request shift terhadap shift yang sama");
@@ -84,7 +107,7 @@ class ShiftController extends RequestController
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             if (!($user->id == $request->user_id|| $user->hasPermissionTo('HC:view-attendance'))) {
                 abort(403);
@@ -94,8 +117,11 @@ class ShiftController extends RequestController
                 ->orderBy('created_at', 'desc')
                 ->with(['user.userEmployment', 'workingShift', 'approvalLine']);
 
+            $userCurrentShift = UserCurrentShift::where('user_id', $request->user_id)->with("workingScheduleShift")->first();
+            $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
+
             return DataTables::of($shiftRequests)
-                ->addColumn('action', function ($query) {
+                ->addColumn('action', function ($query) use ($workingScheduleShift, $userCurrentShift) {
                     $constants = $this->constants;
 
                     $shiftChanged = false;
@@ -108,7 +134,26 @@ class ShiftController extends RequestController
                         ->whereDate('date', $query->date)->first();
 
                     if (!$userAttendance) {
-                        $workingShift = $query->user->userEmployment->workingScheduleShift->workingShift;
+                        Carbon::setLocale($this->constants->locale);
+                        $requestDate = Carbon::parse($query->date);
+                        $now = Carbon::now();
+                        $diff = $now->diffInDays($requestDate);
+                        $countOfSchedule = $workingScheduleShift->count();
+                        $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+                        $primaryScheduleShift = $workingScheduleShift->find($userCurrentShift->working_schedule_shift_id);
+                        for ($i=0; $i < $distance; $i++) {
+                            if ($requestDate > $now) {
+                                $primaryScheduleShift = $workingScheduleShift->find($primaryScheduleShift->next);
+                            } else {
+                                $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift){
+                                    return $scheduleShift->next == $primaryScheduleShift->id;
+                                })->first();
+                            }
+                        }
+
+                        $workingShift = $primaryScheduleShift->workingShift;
+
                         $shift = $workingShift->name;
                         $workHour = "{$workingShift->working_start} - {$workingShift->working_end}";
                     } else {

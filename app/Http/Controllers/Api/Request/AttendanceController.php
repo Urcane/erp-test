@@ -8,6 +8,8 @@ use App\Exceptions\NotFoundError;
 use App\Models\Attendance\GlobalDayOff;
 use Illuminate\Http\Request;
 use App\Models\Attendance\UserAttendanceRequest;
+use App\Models\Employee\UserCurrentShift;
+use App\Models\Employee\WorkingScheduleShift;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -77,7 +79,28 @@ class AttendanceController extends RequestController
                     "overtime_after" => $userAttendance->overtime_after,
                 ];
             } else {
-                $workingShift = $request->user()->userEmployment->workingScheduleShift->workingShift;
+                $userCurrentShift = UserCurrentShift::where('user_id', $request->user()->id)->with("workingScheduleShift")->first();
+                $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
+
+                Carbon::setLocale($this->constants->locale);
+                $requestDate = Carbon::parse($userAttendanceRequest->date);
+                $now = Carbon::now();
+                $diff = $now->diffInDays($requestDate);
+                $countOfSchedule = $workingScheduleShift->count();
+                $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+                $primaryScheduleShift = $workingScheduleShift->find($userCurrentShift->working_schedule_shift_id);
+                for ($i=0; $i < $distance; $i++) {
+                    if ($requestDate > $now) {
+                        $primaryScheduleShift = $workingScheduleShift->find($primaryScheduleShift->next);
+                    } else {
+                        $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift){
+                            return $scheduleShift->next == $primaryScheduleShift->id;
+                        })->first();
+                    }
+                }
+
+                $workingShift = $primaryScheduleShift->workingSchedule;
 
                 $shift = [
                     "name" => $workingShift->name,
@@ -118,10 +141,7 @@ class AttendanceController extends RequestController
                 "check_out" => "nullable|date_format:H:i|required_without_all:check_in",
             ]);
 
-            $userEmployment = $request->user()->userEmployment->load([
-                'workingScheduleShift.workingSchedule.dayOffs',
-                'subBranch.branchLocations'
-            ]);
+            $userEmployment = $request->user()->userEmployment;
 
             if (!$userEmployment) {
                 throw new InvariantError("User belum memiliki data karyawan");
@@ -135,12 +155,6 @@ class AttendanceController extends RequestController
 
             if ($globalDayOff) {
                 throw new InvariantError("Tidak dapat request absen pada hari libur ($globalDayOff->name)");
-            }
-
-            $workingDayOff = $userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
-
-            if (in_array($now->dayName, $workingDayOff)) {
-                throw new InvariantError("Tidak dapat request absen pada hari libur (Working Schedule)");
             }
 
             // save the file

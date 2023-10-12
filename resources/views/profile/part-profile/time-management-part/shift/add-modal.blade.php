@@ -28,7 +28,7 @@
                                         <span class="required fw-bold">Shift Saat ini</span>
                                     </label>
                                     <input type="text" class="form-control form-control-solid"
-                                        value="{{ $user->userEmployment->workingScheduleShift->workingShift->name ?? ""}}"
+                                        value="{{ $user->userCurrentShift->workingScheduleShift->workingShift->name ?? ""}}"
                                         name="dweadawd" disabled>
                                 </div>
                                 <div class="col-lg-12 mb-3">

@@ -73,12 +73,20 @@ class AllAttendance extends Attendance implements FromView, WithEvents
                 $event->sheet->getColumnDimension('K')->setWidth(10);
 
                 $data = $this->_getAttendances();
-                $rowIndex = 21;
+                $rowIndex = 23;
 
                 foreach ($data as $row) {
                     $attendanceCodeEnum = $this->constants->attendance_code;
 
                     if ($row->attendance_code != $attendanceCodeEnum[0]) {
+                        $bgColor = 'FFFF00'; // Yellow
+
+                        $event->sheet->getStyle('A' . $rowIndex . ':K' . $rowIndex)
+                            ->getFill()
+                            ->setFillType(Fill::FILL_SOLID)
+                            ->getStartColor()
+                            ->setRGB($bgColor);
+                    } else if ($row->attendance_code != $attendanceCodeEnum[0]) {
                         $bgColor = 'C0C0C0'; // Light gray
 
                         $event->sheet->getStyle('A' . $rowIndex . ':K' . $rowIndex)

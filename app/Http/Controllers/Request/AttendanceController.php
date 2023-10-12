@@ -13,6 +13,8 @@ use App\Exceptions\NotFoundError;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserAttendanceRequest;
+use App\Models\Employee\UserCurrentShift;
+use App\Models\Employee\WorkingScheduleShift;
 use Carbon\Carbon;
 
 class AttendanceController extends RequestController
@@ -28,10 +30,7 @@ class AttendanceController extends RequestController
                 "check_out" => "nullable|date_format:H:i|required_without_all:check_in",
             ]);
 
-            $userEmployment = Auth::user()->userEmployment->load([
-                'workingScheduleShift.workingSchedule.dayOffs',
-                'subBranch.branchLocations'
-            ]);
+            $userEmployment = Auth::user()->userEmployment;
 
             if (!$userEmployment) {
                 throw new InvariantError("User belum memiliki data karyawan");
@@ -45,12 +44,6 @@ class AttendanceController extends RequestController
 
             if ($globalDayOff) {
                 throw new InvariantError("Tidak dapat request absen pada hari libur ($globalDayOff->name)");
-            }
-
-            $workingDayOff = $userEmployment->workingScheduleShift->workingSchedule->dayOffs->pluck('day')->toArray();
-
-            if (in_array($now->dayName, $workingDayOff)) {
-                throw new InvariantError("Tidak dapat request absen pada hari libur (Working Schedule)");
             }
 
             // save the file
@@ -115,7 +108,7 @@ class AttendanceController extends RequestController
     public function showRequestTableById(Request $request)
     {
         if (request()->ajax()) {
-            /** @var App\Models\User $user */
+            /** @var \App\Models\User $user */
             $user = Auth::user();
             if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
                 throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
@@ -125,8 +118,11 @@ class AttendanceController extends RequestController
                 ->orderBy('created_at', 'desc')
                 ->with(['user.userEmployment', 'approvalLine']);
 
+            $userCurrentShift = UserCurrentShift::where('user_id', $request->user_id)->with("workingScheduleShift")->first();
+            $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
+
             return DataTables::of($attendanceRequests)
-                ->addColumn('action', function ($query) {
+                ->addColumn('action', function ($query) use ($workingScheduleShift, $userCurrentShift) {
                     $constants = $this->constants;
 
                     $shift = "-";
@@ -136,7 +132,26 @@ class AttendanceController extends RequestController
                         ->whereDate('date', $query->date)->first();
 
                     if (!$userAttendance) {
-                        $workingShift = $query->user->userEmployment->workingScheduleShift->workingShift;
+                        Carbon::setLocale($this->constants->locale);
+                        $requestDate = Carbon::parse($query->date);
+                        $now = Carbon::now();
+                        $diff = $now->diffInDays($requestDate);
+                        $countOfSchedule = $workingScheduleShift->count();
+                        $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+
+                        $primaryScheduleShift = $workingScheduleShift->find($userCurrentShift->working_schedule_shift_id);
+                        for ($i=0; $i < $distance; $i++) {
+                            if ($requestDate > $now) {
+                                $primaryScheduleShift = $workingScheduleShift->find($primaryScheduleShift->next);
+                            } else {
+                                $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift){
+                                    return $scheduleShift->next == $primaryScheduleShift->id;
+                                })->first();
+                            }
+                        }
+
+                        $workingShift = $primaryScheduleShift->workingShift;
+
                         $shift = $workingShift->name;
                         $workHour = "$workingShift->working_start - $workingShift->working_end";
                     } else {

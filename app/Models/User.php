@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Assignment\Assignment;
+use App\Models\Assignment\UserAssignment;
 use App\Traits\HasProject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,7 +57,7 @@ class User extends Authenticatable
     function procurement() : HasOne{
         return $this->hasOne(Procurement::class);
     }
-    
+
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
@@ -94,6 +96,11 @@ class User extends Authenticatable
     public function userPersonalData(): HasOne
     {
         return $this->hasOne(Employee\UserPersonalData::class);
+    }
+
+    public function userCurrentShift(): HasOne
+    {
+        return $this->hasOne(Employee\UserCurrentShift::class);
     }
 
     public function userSalary(): HasOne
@@ -146,21 +153,6 @@ class User extends Authenticatable
         return $this->hasMany(Attendance\UserAttendanceRequest::class);
     }
 
-    public function userLeaveQuotas(): HasMany
-    {
-        return $this->hasMany(Attendance\UserLeaveQuota::class);
-    }
-
-    public function userLeaveHistories(): HasMany
-    {
-        return $this->hasMany(Attendance\UserLeaveHistory::class);
-    }
-
-    public function userLeaveRequests(): HasMany
-    {
-        return $this->hasMany(Attendance\UserLeaveRequest::class);
-    }
-
     public function userOvertimeRequests(): HasMany
     {
         return $this->hasMany(Attendance\UserOvertimeRequest::class);
@@ -174,5 +166,35 @@ class User extends Authenticatable
     public function attendanceChangeLog(): HasMany
     {
         return $this->hasMany(Attendance\AttendanceChangeLog::class);
+    }
+
+    public function userLeaveHistories(): HasMany
+    {
+        return $this->hasMany(Leave\UserLeaveHistory::class);
+    }
+
+    public function userLeaveRequests(): HasMany
+    {
+        return $this->hasMany(Leave\UserLeaveRequest::class);
+    }
+
+    public function userLeaveCategoryQuotas(): HasMany
+    {
+        return $this->hasMany(Leave\UserLeaveCategoryQuota::class);
+    }
+
+    public function userLeaveQuotas(): HasMany
+    {
+        return $this->hasMany(Leave\UserLeaveQuota::class);
+    }
+
+    public function assignment(): HasMany
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
+    public function userAssignments(): BelongsToMany
+    {
+        return $this->belongsToMany(Assignment::class, UserAssignment::class);
     }
 }

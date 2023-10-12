@@ -5,11 +5,7 @@ namespace App\Http\Controllers\Profile;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
-use Illuminate\Http\UploadedFile;
-use Symfony\Component\HttpFoundation\File\File;
 
 use App\Constants;
 use App\Models\Leave\LeaveRequestCategory;
@@ -20,13 +16,10 @@ use App\Models\Team\Team;
 use App\Models\Employee\UserBank;
 use App\Models\Employee\UserBpjs;
 use App\Models\Employee\UserEmployment;
-use App\Models\Employee\UserIdentity;
-use App\Models\Employee\UserPersonalData;
 use App\Models\Employee\UserSalary;
 use App\Models\Employee\UserTax;
 use App\Models\Employee\EmploymentStatus;
 use App\Models\Employee\SubBranch;
-use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Employee\PaymentSchedule;
 use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
@@ -36,8 +29,6 @@ use App\Models\PersonalInfo\UserFileCategory;
 use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\WorkingShift;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Yajra\DataTables\Facades\DataTables;
 use App\Utils\ErrorHandler;
 
 class ProfileController extends Controller
@@ -52,7 +43,7 @@ class ProfileController extends Controller
     }
 
     public function profile($id) {
-        /** @var App\Models\User $auth */
+        /** @var \App\Models\User $auth */
         $auth = Auth::user();
         if (!($auth->hasPermissionTo("HC:view-employee") || $id == $auth->id)) {
             abort(403);
@@ -73,7 +64,8 @@ class ProfileController extends Controller
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataSubBranch = SubBranch::all();
         $dataTaxStatus = TaxStatus::all();
-        $dataWorkingScheduleShift = WorkingScheduleShift::all();
+        $dataWorkingScheduleShifts = $user->userEmployment->workingSchedule->workingScheduleShifts;
+        $dataWorkingSchedule = WorkingSchedule::all();
         $dataShift = WorkingShift::where('show_in_request', true)->get();
 
         $dataNonFormalEducationCategory = NonFormalEducationCategory::all();
@@ -88,6 +80,7 @@ class ProfileController extends Controller
         return view('profile.index', compact(
             'user',
             'users',
+            'dataWorkingScheduleShifts',
             'dataNonFormalEducationCategory',
             'dataRole',
             'dataTeam',
@@ -97,7 +90,7 @@ class ProfileController extends Controller
             'constants',
             'dataEmploymentStatus',
             'dataSubBranch',
-            'dataWorkingScheduleShift',
+            'dataWorkingSchedule',
             'dataPaymentSchedule',
             'dataProrateSetting',
             'dataShift',

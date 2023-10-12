@@ -21,15 +21,19 @@ class PermissionSeeder extends Seeder
                 // Request (Approval)
                 'Approval:view-request',
                 'Approval:change-status-request',
+
                 // Request
                 'HC:view-all-request',
                 'HC:change-all-status-request',
+
                 // attendance
                 'HC:view-attendance',
                 'HC:edit-delete-attendance',
+
                 // employee
                 'HC:view-employee',
                 'HC:update-profile',
+
                 // setting
                 'HC:setting',
             ],
@@ -58,6 +62,15 @@ class PermissionSeeder extends Seeder
                 'Quot:upload-attachment-quot',
                 'Quot:print-quot'
             ],
+            [
+                'OPR',
+                // operation
+                'OPR:view-department-assignment',
+                // 'OPR:view-all-assignment',
+                'OPR:create-department-assignment',
+                'OPR:change-department-status-assignment',
+                // 'OPR:change-all-status-assignment',
+            ]
         ];
 
         collect($feature)->map(function ($data) {

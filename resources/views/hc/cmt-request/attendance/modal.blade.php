@@ -68,7 +68,8 @@
                         <div class="col-lg-12 mb-1">
                             <span class="fs-8 text-gray-600 fw-semibold mb-1">File</span>
                             <div>
-                                <a href="" class="fs-7 fw-normal btn btn-link" id="att-file-modal" target="_blank">-</a>
+                                <p class="fs-7 fw-normal" id="att-nofile-modal">No File Attached</p>
+                                <a href="" class="fs-7 fw-normal btn btn-link m-0 p-0" id="att-file-modal" target="_blank">-</a>
                             </div>
                         </div>
                         <div class="col-lg-12 mb-1">

@@ -7,6 +7,20 @@
         @endif
         @endcan
         @include("hc.cmt-employee.part-form.form-employment-data")
+        <div class="col-lg-12 row mb-3 ps-6" id="scheduleShift">
+            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                <span class="fw-bold">Jadwal Shift</span>
+            </label>
+            @foreach ($dataWorkingScheduleShifts as $workingScheduleShift)
+            <div class="form-check mb-3">
+                <label class="@if ($workingScheduleShift->id == $user->userCurrentShift->working_schedule_shift_id)
+                    text-success
+                @endif" for="flexRadioDefault1">
+                {{$workingScheduleShift->workingShift->name}}, {{$workingScheduleShift->workingShift->working_start}} - {{$workingScheduleShift->workingShift->working_end}}
+                </label>
+            </div>
+            @endforeach
+        </div>
         @can("HC:update-profile")
         <div class="col-lg-12 mt-9 text-end">
             <button type="submit" id="kt_employment_content_submit" class="btn btn-info btn-sm w-md-200px w-100">Simpan</button>
