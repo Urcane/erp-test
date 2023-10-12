@@ -1,0 +1,5 @@
+<script>
+    const warehouseInit = () => {
+
+    }
+</script>

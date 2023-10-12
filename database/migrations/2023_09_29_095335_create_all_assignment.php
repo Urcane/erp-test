@@ -81,6 +81,7 @@ class CreateAllAssignment extends Migration
     public function down()
     {
         Schema::dropIfExists('assignments');
+        Schema::dropIfExists('assignment_work_schedules');
         Schema::dropIfExists('user_assignments');
     }
 }

@@ -19,6 +19,7 @@ use App\Http\Controllers\HC\Settings;
 use App\Http\Controllers\HC\Request as HCRequest;
 
 use App\Http\Controllers\Operation;
+use App\Http\Controllers\Finance;
 
 /*
 |--------------------------------------------------------------------------
@@ -415,6 +416,21 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/get-data/table/data-result', 'getTableAssignment')->name('opt.asign.get-table-assignment');
 
                 Route::get('/pdf/{assignment}/{user}', 'exportPdf')->name('opt.asign.export-pdf');
+            });
+        });
+    });
+
+    Route::prefix('finance')->group(function () {
+        Route::controller(Finance\Inventory\InventoryController::class)->group(function () {
+            Route::prefix('inventory')->group(function () {
+                Route::get('/dashboard', 'viewDashboard')->name('fin.inv.dashboard');
+
+                Route::get('/inventory', 'viewInventory')->name('fin.inv.inventory');
+                Route::get('/inventory/create', 'viewAddItem')->name('fin.inv.inventory-create');
+                Route::post('/inventory/create', 'storeItem')->name('fin.inv.inventory-store');
+                Route::get('/inventory/get-data/table/data-result', 'getTableInventory')->name('fin.inv.inventory-get-table-inventory');
+
+                Route::get('/master-data', 'viewMasterData')->name('fin.inv.master-data');
             });
         });
     });

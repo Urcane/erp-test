@@ -1,0 +1,5 @@
+<script>
+    const statusInit = () => {
+
+    }
+</script>
