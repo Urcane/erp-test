@@ -46,7 +46,7 @@
                                             <div class="col-lg-12 mb-6 mb-lg-0">
                                                 <div class="row">
                                                     <div class="col-lg-6">
-                                                        @canany(['Leap:manage-lead', 'Leap:manage-prospect'])                                                            
+                                                        @canany(['Leap:manage-lead', 'Leap:manage-prospect'])
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('com.lead.index-lead')}}" class="menu-link">
                                                                 <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
@@ -60,19 +60,6 @@
                                                         </div>
                                                         @endcanany
                                                     </div>
-                                                    {{-- <div class="col-lg-6">
-                                                        <div class="menu-item p-0 m-0">
-                                                            <a href="{{route('com.promag.index')}}" class="menu-link">
-                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
-                                                                    <i class="fa-solid fa-briefcase text-info fs-3"></i>
-                                                                </span>
-                                                                <span class="d-flex flex-column">
-                                                                    <span class="fs-6 fw-bold text-dark">CMT-PROMAG</span>
-                                                                    <span class="fs-7 fw-semibold text-gray-500">Project Management</span>
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div> --}}
                                                     <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start" data-kt-menu-offset="10px, 10px">
                                                             <a class="menu-link">
@@ -146,6 +133,19 @@
                                                                 </div>
                                                                 @endcanany
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0">
+                                                            <a href="{{route('com.procurement.index')}}" class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-solid fa-box-open text-info fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">Procurement</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Pengadaan dulu kerja kemudian</span>
+                                                                </span>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -252,6 +252,27 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                        {{-- <span class="menu-link">
+                            <span class="menu-title">Help</span>
+                            <span class="menu-arrow d-lg-none"></span>
+                        </span>
+                        <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown px-lg-2 py-lg-4 w-lg-200px">
+                            <div class="menu-item px-3">
+                                <span class="menu-link">
+                                    <span class="menu-icon"><i class="fa-solid fa-book fs-5"></i></span>
+                                    <span class="menu-title">Documentation</span>
+                                </span>
+                            </div>
+                            <div class="menu-item px-3">
+                                <span class="menu-link">
+                                    <span class="menu-icon"><i class="fa-solid fa-code fs-5"></i></span>
+                                    <span class="menu-title">Changelog</span>
+                                </span>
+                            </div>
+                        </div> --}}
+                        <a href="{{route("com.promag.index")}}">Promag</a>
                     </div>
                     <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                         <span class="menu-link">

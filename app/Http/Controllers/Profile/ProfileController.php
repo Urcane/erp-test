@@ -64,7 +64,11 @@ class ProfileController extends Controller
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataSubBranch = SubBranch::all();
         $dataTaxStatus = TaxStatus::all();
-        $dataWorkingScheduleShifts = $user->userEmployment->workingSchedule->workingScheduleShifts;
+        if ($user->userEmployment) {
+            $dataWorkingScheduleShifts = $user->userEmployment->workingSchedule->workingScheduleShifts;
+        } else {
+            $dataWorkingScheduleShifts = [];
+        }
         $dataWorkingSchedule = WorkingSchedule::all();
         $dataShift = WorkingShift::where('show_in_request', true)->get();
 
