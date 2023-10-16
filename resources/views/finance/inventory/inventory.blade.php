@@ -15,8 +15,8 @@
                         <select class="form-select form-select-sm form-select-solid" data-control="select2" required
                             name="filterWarehouse" id="filter_warehouse">
                             <option value="*">Semua Warehouse</option>
-                            @foreach ([1, 2, 3, 4, 5, 6] as $a)
-                                <option value="{{ $a }}">{{ $a }}</option>
+                            @foreach ($warehouses as $warehouse)
+                                <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -41,10 +41,10 @@
                             <thead class="">
                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
                                     <th class="text-center w-50px">#</th>
-                                    <th class="w-300px">Item Name</th>
-                                    <th class="w-150px">Item Code</th>
-                                    <th class="w-300px">Warehouse</th>
+                                    <th class="w-200px">SN/PN/MAC</th>
+                                    <th class="w-200px">Item Name</th>
                                     <th class="w-150px">Category</th>
+                                    <th class="w-150px">Stock</th>
                                     <th class="w-50px">#</th>
                                 </tr>
                             </thead>
@@ -67,29 +67,28 @@
                     deferRender: true,
                     responsive: false,
                     aaSorting: [],
-                    drawCallback: function() {
-                        $('body').on('click', 'input[name=\'pegawai_ids\']', function() {
-                            if ($(this).is(":checked")) {
-                                pegawai_ids.push($(this).val());
-                            } else {
-                                removeFrom(pegawai_ids, $(this).val());
-                            }
-                        });
-                    },
                     ajax: {
-                        url: "{{ route('hc.att.get-table-attendance') }}",
+                        url: "{{ route('fin.inv.inventory-get-table-inventory') }}",
                         data: function(data) {
-                            data.filters = getFilter()
-                        },
+                            data.search = $('#search').val();
+                            data.filterWarehouse = $('#filter_warehouse').val();
+                        }
                     },
                     language: {
                         "lengthMenu": "Show _MENU_",
                         "emptyTable": "Tidak ada data terbaru 📁",
                         "zeroRecords": "Data tidak ditemukan 😞",
                     },
-                    buttons: [],
+                    buttons: [{
+                        extend: 'excel',
+                        className: 'btn btn-light-success btn-sm ms-3',
+                        title: 'Data Absen Pegawai Comtelindo',
+                        exportOptions: {
+                            columns: [1]
+                        }
+                    }, ],
                     dom: "<'row mb-2'" +
-                        "<'col-12 col-lg-6 d-flex align-items-center justify-content-start' B>" +
+                        "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'>" +
                         "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start '>" +
                         ">" +
 
@@ -101,38 +100,38 @@
                         ">",
 
                     columns: [{
-                            data: 'DT_RowChecklist',
+                            data: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'serial_number',
                             orderable: false,
                             searchable: false
                         },
                         {
                             data: 'name',
-                            name: 'name',
-                        },
-                        {
-                            data: 'nip',
-                            name: 'nip',
-                        },
-                        {
-                            data: 'shift',
-                            name: 'shift',
-                        },
-                        {
-                            data: 'date',
-                            name: 'date',
-                        },
-                        {
-                            data: 'action',
-                            name: 'action',
                             orderable: false,
                             searchable: false
                         },
+                        {
+                            data: 'category',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'stock',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
                     ],
-                    search: {
-                        "regex": true
-                    },
                     columnDefs: [{
-                        targets: [0],
+                        targets: [0, 5],
                         className: 'text-center',
                     }, ],
                 });
