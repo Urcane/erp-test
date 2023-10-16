@@ -103,6 +103,10 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ProjectManagementController::class)->group(function () {
         Route::prefix('cmt-promag')->group(function () {
             Route::get('/', 'index')->name('com.promag.index');
+            Route::get('/table', 'index')->name('com.promag.datatable');
+
+            Route::get('/create', 'create')->name('com.promag.create');
+            Route::post('/store', 'store')->name('com.promag.store');
             Route::get('/detail', 'detail')->name('com.promag.detail');
             Route::get('/detail/files', 'files')->name('com.promag.detail.files');
             Route::get('/detail/task-lists', 'taskLists')->name('com.promag.detail.task-lists');
