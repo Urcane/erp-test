@@ -222,6 +222,50 @@
                 toastr.error(data.message, 'Opps!');
             }
         });
-
     });
+
+    $(document).ready(function() {
+        console.log($("#employment_status_id").find(':selected').data('end'));
+        $("#end_date").prop('required', $("#employment_status_id").find(':selected').data('end') == 1);
+        $("#employment_status_id").find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
+
+
+        const working_schedule_id = $("#working_schedule_id").val()
+        $.ajax({
+            url: "{{ route('hc.emp.get.schedule.shift') }}",
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            type: 'POST',
+            data: {
+                working_schedule_id: working_schedule_id
+            },
+            success: function(data) {
+                console.log(data);
+                $("#scheduleShift").empty();
+                $("#scheduleShift").append(`
+                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                    <span class="required fw-bold">Start Shift</span>
+                </label>
+                `);
+                const workingScheduleShift = data.workingScheduleShift.map(function(data) {
+                    const shift = data.working_shift;
+                    const checked = {{$user->userEmployment->start_shift}} == data.id ? "checked" : ""
+                    $("#scheduleShift").append(`
+                        <div class="form-check col-lg-3 col-md-4 mb-3">
+                            <input class="form-check-input" type="radio" name="start_shift" value="${data.id}" required ${checked}>
+                            <label class="form-check-label" for="flexRadioDefault1">
+                            ${shift.name}, ${(shift.working_start ?? "").split(":").slice(0, 2).join(":")} - ${(shift.working_end ?? "").split(":").slice(0, 2).join(":")}
+                            </label>
+                        </div>
+                    `)
+                })
+
+            },
+            error: function(xhr, status, error) {
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    })
 </script>
