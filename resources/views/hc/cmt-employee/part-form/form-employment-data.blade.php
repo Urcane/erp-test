@@ -155,7 +155,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="approval_line">
             <span class="required fw-bold">Approval Line</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="approval_line" required
+        <select class="drop-data form-select form-select-solid" data-control="approval_line"
             name="approval_line" id="approval_line" @cannot('HC:update-profile') disabled @endcannot>
             @if (($user->userEmployment->approval_line ?? old('approval_line')) == null)
                 <option value="" selected hidden disabled>Select Approval Line</option>
