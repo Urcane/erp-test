@@ -45,12 +45,13 @@
                                 <span class="fs-1 fw-bolder text-dark d-block mb-1">Job Level</span>
                                 {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
                             </div>
-                            <div class="col-lg-12 mb-3">
+                            <div class="col-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">File</span>
                                 </label>
                                 <input type="file" class="form-control form-control-solid" required name="file">
                             </div>
+                            <a href="{{asset("sense/media/contoh-format-import-excel.xlsx")}}"><i class="fa-solid fa-file-arrow-down fs-3 p-3"></i> Contoh Format</a>
                         </div>
                     </div>
                     <div class="text-center mt-9">

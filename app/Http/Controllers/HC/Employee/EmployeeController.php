@@ -237,22 +237,13 @@ class EmployeeController extends Controller
     }
 
     public function import(Request $request) {
-        try {
-            $request->validate([
-                'file' => 'required|mimes:xls,xlsx',
-            ]);
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx',
+        ]);
 
-            $file = $request->file('file');
-            Excel::import(new UsersImport, $file);
+        $file = $request->file('file');
+        Excel::import(new UsersImport, $file);
 
-            return response()->json([
-                "status" => "success",
-                "message" => "Data berhasil diimport"
-            ], 201);
-        } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
-
-            return response()->json($data["data"], $data["code"]);
-        }
+        return back()->with('success', 'Data berhasil diimport');
     }
 }
