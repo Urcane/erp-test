@@ -39,7 +39,12 @@ class UserSeeder extends Seeder
             'HC:update-profile',
 
             // setting
-            'HC:setting'
+            'HC:setting',
+
+            'OPR:view-department-assignment',
+            // 'OPR:view-all-assignment',
+            'OPR:create-department-assignment',
+            'OPR:change-department-status-assignment',
         ]);
 
         $sofyan = User::create([
