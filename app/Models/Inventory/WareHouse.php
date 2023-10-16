@@ -5,15 +5,16 @@ namespace App\Models\Inventory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class InventoryGoodCategory extends Model
+class Warehouse extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
-    public function inventoryGood(): HasMany
+    public function warehouseGood(): HasMany
     {
-        return $this->hasMany(InventoryGood::class, 'good_category_id', 'id');
+        return $this->hasMany(WarehouseGood::class);
     }
 }

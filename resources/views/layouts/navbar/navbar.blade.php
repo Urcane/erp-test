@@ -45,8 +45,8 @@
                                         <div class="row">
                                             <div class="col-lg-12 mb-6 mb-lg-0">
                                                 <div class="row">
+                                                    @canany(['Leap:manage-lead', 'Leap:manage-prospect'])
                                                     <div class="col-lg-6">
-                                                        @canany(['Leap:manage-lead', 'Leap:manage-prospect'])
                                                         <div class="menu-item p-0 m-0">
                                                             <a href="{{route('com.lead.index-lead')}}" class="menu-link">
                                                                 <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
@@ -58,8 +58,8 @@
                                                                 </span>
                                                             </a>
                                                         </div>
-                                                        @endcanany
                                                     </div>
+                                                    @endcanany
                                                     <div class="col-lg-6">
                                                         <div class="menu-item p-0 m-0" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start" data-kt-menu-offset="10px, 10px">
                                                             <a class="menu-link">
@@ -156,7 +156,7 @@
                                         <div class="row">
                                             <div class="col-lg-12 mb-6 mb-lg-0">
                                                 <div class="row">
-                                                    {{-- @can('') --}}
+                                                    @canany(['OPR:view-department-assignment', 'OPR:create-department-assignment', 'OPR:change-department-status-assignment'])
                                                         <div class="col-lg-6">
                                                             <div class="menu-item p-0 m-0">
                                                                 <a href="{{route('opt.asign.index')}}" class="menu-link">
@@ -170,12 +170,33 @@
                                                                 </a>
                                                             </div>
                                                         </div>
-                                                    {{-- @endcan --}}
+                                                    @endcanany
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="tab-pane w-lg-600px" id="kt_app_header_app_finance">
+                                        <div class="row">
+                                            <div class="col-lg-12 mb-6 mb-lg-0">
+                                                <div class="row">
+                                                    {{-- @canany(['OPR:view-department-assignment', 'OPR:create-department-assignment', 'OPR:change-department-status-assignment']) --}}
+                                                        <div class="col-lg-6">
+                                                            <div class="menu-item p-0 m-0">
+                                                                <a href="{{route('fin.inv.dashboard')}}" class="menu-link">
+                                                                    <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                        <i class="fa-solid fa-warehouse text-success fs-3"></i>
+                                                                    </span>
+                                                                    <span class="d-flex flex-column">
+                                                                        <span class="fs-6 fw-bold text-dark">Inventory</span>
+                                                                        <span class="fs-7 fw-semibold text-gray-500">Gudang Penyimpanan</span>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    {{-- @endcanany --}}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane w-lg-600px" id="kt_app_header_app_commercial">
                                     </div>
