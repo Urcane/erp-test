@@ -19,8 +19,10 @@ use App\Models\Employee\UserSalary;
 use App\Models\Employee\UserTax;
 
 use App\Constants;
+use App\Imports\UsersImport;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Utils\ErrorHandler;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
@@ -227,6 +229,26 @@ class EmployeeController extends Controller
             });
 
             return $transaction;
+        } catch (\Throwable $th) {
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function import(Request $request) {
+        try {
+            $request->validate([
+                'file' => 'required|mimes:xls,xlsx',
+            ]);
+
+            $file = $request->file('file');
+            Excel::import(new UsersImport, $file);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Data berhasil diimport"
+            ], 201);
         } catch (\Throwable $th) {
             $data = $this->errorHandler->handle($th);
 

@@ -55,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(EmployeeController::class)->group(function () {
             Route::prefix('cmt-employee')->group(function () {
                 Route::post('/store/employee', 'store')->name('hc.emp.store');
+                Route::post('/import/employee', 'import')->name('hc.emp.import');
                 Route::post('/get/schedule/shift', 'getScheduleShift')->name('hc.emp.get.schedule.shift');
             });
         });
