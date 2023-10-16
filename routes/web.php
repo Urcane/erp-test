@@ -56,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(EmployeeController::class)->group(function () {
             Route::prefix('cmt-employee')->group(function () {
                 Route::post('/store/employee', 'store')->name('hc.emp.store');
+                Route::post('/import/employee', 'import')->name('hc.emp.import');
                 Route::post('/get/schedule/shift', 'getScheduleShift')->name('hc.emp.get.schedule.shift');
             });
         });
@@ -104,6 +105,10 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ProjectManagementController::class)->group(function () {
         Route::prefix('cmt-promag')->group(function () {
             Route::get('/', 'index')->name('com.promag.index');
+            Route::get('/table', 'index')->name('com.promag.datatable');
+
+            Route::get('/create', 'create')->name('com.promag.create');
+            Route::post('/store', 'store')->name('com.promag.store');
             Route::get('/detail', 'detail')->name('com.promag.detail');
             Route::get('/detail/files', 'files')->name('com.promag.detail.files');
             Route::get('/detail/task-lists', 'taskLists')->name('com.promag.detail.task-lists');
@@ -528,6 +533,7 @@ Route::middleware(['auth'])->group(function () {
             // halaman detail
             Route::get('/detail/{id}', 'detailProcurement')->name('com.procurement.detail');
             Route::get('/table/item/procurement', 'getTableItemProcurement')->name('com.procurement.getTableItemProcurement');
+            Route::post('/update/item/procurement/{id}', 'updateItemProcurement')->name('com.procurement.updateItemProcurement');
 
             // halaman detail item procurement
             Route::get('/detail/item/{id}', 'detailItemProcurement')->name('com.procurement.detail.item');

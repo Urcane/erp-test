@@ -15,7 +15,7 @@ class ProcurementItem extends Model
     protected $guarded = [];
 
     public function procurementItemStatus() : HasMany {
-        return $this->hasMany(ProcurementItemStatus::class);
+        return $this->hasMany(ProcurementItemStatus::class)->orderByDesc("id");
     }
 
     public function procurementItemPayment() : HasMany {

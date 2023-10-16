@@ -17,13 +17,13 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2">
             <span class="required fw-bold">Employment Status</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="employment_status_id" required
+        <select class="drop-data form-select form-select-solid" data-control="employment_status_id" required id="employment_status_id"
             name="employment_status_id" @cannot('HC:update-profile') disabled @endcannot>
             @if (($user->userEmployment->employment_status_id ?? '') == '' && old('employment_status_id') == null)
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif
             @foreach ($dataEmploymentStatus as $option)
-                <option value="{{ $option->id }}" @if (($user->userEmployment->employment_status_id ?? old('employment_status_id')) == $option->id) selected @endif>
+                <option value="{{ $option->id }}" data-end="{{$option->have_end_date}}" @if (($user->userEmployment->employment_status_id ?? old('employment_status_id')) == $option->id) selected @endif>
                     {{ $option->name }}</option>
             @endforeach
         </select>
@@ -41,10 +41,10 @@
     </div>
     <div class="col-lg-6">
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="end_date">
-            <span class="required fw-bold">End Status Date</span>
+            <span class="fw-bold" id="end_date_label">End Status Date</span>
         </label>
         <input type="date" value="{{ $user->userEmployment->end_date ?? old('end_date') }}"
-            class="form-control form-control-solid" required name="end_date" id="end_date"
+            class="form-control form-control-solid" name="end_date" id="end_date"
             @cannot('HC:update-profile') disabled @endcannot>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
@@ -155,7 +155,7 @@
         <label class="d-flex align-items-center fs-6 form-label mb-2" for="approval_line">
             <span class="required fw-bold">Approval Line</span>
         </label>
-        <select class="drop-data form-select form-select-solid" data-control="approval_line" required
+        <select class="drop-data form-select form-select-solid" data-control="approval_line"
             name="approval_line" id="approval_line" @cannot('HC:update-profile') disabled @endcannot>
             @if (($user->userEmployment->approval_line ?? old('approval_line')) == null)
                 <option value="" selected hidden disabled>Select Approval Line</option>
@@ -180,6 +180,12 @@
 </section>
 
 <script>
+    $("#employment_status_id").change(function() {
+        console.log($(this).find(':selected').data('end'));
+        $("#end_date").prop('required', $(this).find(':selected').data('end') == 1);
+        $(this).find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
+    })
+
     $("#working_schedule_id").change(function() {
         const working_schedule_id = $(this).val()
         $.ajax({

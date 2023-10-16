@@ -13,6 +13,7 @@ use Illuminate\Http\Client\Request;
 class WorkList extends Model
 {
     use HasFactory, HasUser;
+    protected $guarded = [];
 
     function workAttachment() : HasMany {
         return $this->hasMany(WorkAttachment::class);
@@ -27,7 +28,7 @@ class WorkList extends Model
     }
 
     function createTask(Request $request) : WorkList {
-        
+
         return $this;
     }
 
