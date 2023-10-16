@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Finance\Inventory;
 
 use App\Constants;
 use App\Http\Controllers\Controller;
+use App\Models\Inventory\Warehouse;
 use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;

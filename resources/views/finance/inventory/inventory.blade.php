@@ -96,7 +96,7 @@
                         "<'table-responsive'tr>" +
 
                         "<'row'" +
-                        "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start' l>" +
+                        "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'l i>" +
                         "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
                         ">",
 

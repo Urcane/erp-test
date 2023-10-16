@@ -4,6 +4,7 @@
 @section('sub-title-apps', 'Finance')
 
 @section('main_content')
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <div class="col-lg-9 mt-md-n14">
         <div class="card">
             <div class="card-body">
@@ -16,6 +17,10 @@
                             <li class="nav-item">
                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0 active"
                                     data-bs-toggle="tab" id="warehousenav" href="#warehouse">Warehouse</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0"
+                                    data-bs-toggle="tab" id="itemnav" href="#item">Item</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0"
@@ -37,8 +42,12 @@
                     </div>
 
                     <div class="tab-content mt-5" id="myTabContent">
-                        <div class="tab-pane fade show active" id="unit" role="tabpanel">
+                        <div class="tab-pane fade show active" id="warehouse" role="tabpanel">
                             @include('finance.inventory.master-data.warehouse.index')
+                        </div>
+
+                        <div class="tab-pane fade" id="item" role="tabpanel">
+                            @include('finance.inventory.master-data.item.index')
                         </div>
 
                         <div class="tab-pane fade" id="category" role="tabpanel">

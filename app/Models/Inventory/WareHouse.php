@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class WareHouse extends Model
+class Warehouse extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
-    public function wareHouseGood(): HasMany
+    public function warehouseGood(): HasMany
     {
-        return $this->hasMany(WareHouseGood::class);
+        return $this->hasMany(WarehouseGood::class);
     }
 }

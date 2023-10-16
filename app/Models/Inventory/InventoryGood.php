@@ -11,10 +11,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class InventoryGood extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
-    function inventoryGoodCategory() : BelongsTo
+    function inventoryGoodCategory(): BelongsTo
     {
         return $this->belongsTo(InventoryGoodCategory::class, 'good_category_id');
+    }
+
+    public function warehouseGoods(): HasMany
+    {
+        return $this->hasMany(WarehouseGood::class);
     }
 }

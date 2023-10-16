@@ -4,25 +4,36 @@ namespace App\Models\Inventory;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class WareHouseGood extends Model
+class WarehouseGood extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
-    public function wareHouse()
+    public function warehouse(): BelongsTo
     {
-        return $this->belongsTo(WareHouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
-    public function inventoryGood()
+    public function inventoryGood(): BelongsTo
     {
         return $this->belongsTo(InventoryGood::class);
     }
 
-    public function inventoryUnitMaster()
+    public function inventoryGoodStatus(): BelongsTo
+    {
+        return $this->belongsTo(InventoryGoodStatus::class);
+    }
+
+    public function inventoryGoodCondition(): BelongsTo
+    {
+        return $this->belongsTo(InventoryGoodCondition::class);
+    }
+
+    public function inventoryUnitMaster(): BelongsTo
     {
         return $this->belongsTo(InventoryUnitMaster::class);
     }

@@ -1,14 +1,26 @@
 <script>
-    const onConditionModalOpen = ({
+    const onItemModalOpen = ({
         id,
-        name
+        good_category_id,
+        good_name,
+        good_type,
+        code_name,
+        spesification,
+        merk,
+        description,
     }) => {
-        $('#modal_edit_condition input[name="id"]').val(id);
-        $('#modal_edit_condition input[name="name"]').val(name);
+        $('#modal_edit_item input[name="id"]').val(id);
+        $('#edit_item_category').val(good_category_id).trigger('change.select2');
+        $('#modal_edit_item input[name="good_name"]').val(good_name);
+        $('#modal_edit_item input[name="good_type"]').val(good_type);
+        $('#modal_edit_item input[name="code_name"]').val(code_name);
+        $('#modal_edit_item input[name="spesification"]').val(spesification);
+        $('#modal_edit_item input[name="merk"]').val(merk);
+        $('#modal_edit_item input[name="description"]').val(description);
     }
 
-    const conditionInit = () => {
-        const conditionTable = $('#kt_table_condition')
+    const itemInit = () => {
+        const itemTable = $('#kt_table_item')
             .DataTable({
                 processing: true,
                 serverSide: true,
@@ -17,9 +29,9 @@
                 responsive: false,
                 aaSorting: [],
                 ajax: {
-                    url: "{{ route('fin.inv.master-data.condition.get-table') }}",
+                    url: "{{ route('fin.inv.master-data.item.get-table') }}",
                     data: function(data) {
-                        data.search = $('#condition_search').val();
+                        data.search = $('#item_search').val();
                     }
                 },
                 language: {
@@ -53,7 +65,22 @@
                         searchable: false
                     },
                     {
-                        data: 'name',
+                        data: 'good_name',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'category',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'merk',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'code_name',
                         orderable: false,
                         searchable: false
                     },
@@ -64,22 +91,53 @@
                     }
                 ],
                 columnDefs: [{
-                    targets: [0, 2],
+                    targets: [0, 5],
                     className: 'text-center',
                 }, ],
             });
 
-        $('#condition_search').on('keyup', function(e) {
+        $('#item_search').on('keyup', function(e) {
             if (e.keyCode === 13) {
-                conditionTable.draw();
+                itemTable.draw();
             }
         });
 
-        $('#modal_add_condition').on('submit', function(e) {
+        $('#add_item_category').select2({
+            placeholder: 'Select Kategori',
+            ajax: {
+                url: "{{ route('fin.inv.master-data.category.data') }}",
+                dataType: 'json',
+                processResults: function({
+                    data
+                }) {
+                    return {
+                        results: data.map(({
+                            id,
+                            name
+                        }) => ({
+                            id,
+                            text: name
+                        }))
+                    };
+                },
+            },
+            minimumInputLength: 0,
+        });
+
+        $.ajax({
+            url: "{{ route('fin.inv.master-data.category.data') }}",
+            dataType: 'json',
+            success: function ({ data }) {
+                const option = data.reduce((result, { id, name }) => '<option value="' + id + '">' + name + '</option>' + result, '');
+                $('#edit_item_category').append(option)
+            }
+        });
+
+        $('#modal_add_item').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
             $.ajax({
-                url: "{{ route('fin.inv.master-data.condition.create') }}",
+                url: "{{ route('fin.inv.master-data.item.create') }}",
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -88,9 +146,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
-                    $('#modal_add_condition').modal('hide');
-                    $('#modal_add_condition')[0].reset();
-                    conditionTable.ajax.reload();
+                    $('#modal_add_item').modal('hide');
+                    $('#modal_add_item')[0].reset();
+                    itemTable.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },
                 error: function(xhr, status, error) {
@@ -100,11 +158,11 @@
             });
         });
 
-        $('#modal_edit_condition').on('submit', function(e) {
+        $('#modal_edit_item').on('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
             $.ajax({
-                url: "{{ route('fin.inv.master-data.condition.update') }}",
+                url: "{{ route('fin.inv.master-data.item.update') }}",
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -113,9 +171,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
-                    $('#modal_edit_condition').modal('hide');
-                    $('#modal_edit_condition')[0].reset();
-                    conditionTable.ajax.reload();
+                    $('#modal_edit_item').modal('hide');
+                    $('#modal_edit_item')[0].reset();
+                    itemTable.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },
                 error: function(xhr, status, error) {

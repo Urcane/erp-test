@@ -1,8 +1,7 @@
-<script>
-
-</script>
+<script src="{{ asset('sense/plugins/custom/leaflet/leaflet.bundle.js') }}"></script>
 
 @include('finance.inventory.master-data.warehouse.script')
+@include('finance.inventory.master-data.item.script')
 @include('finance.inventory.master-data.category.script')
 @include('finance.inventory.master-data.unit.script')
 @include('finance.inventory.master-data.condition.script')
@@ -11,6 +10,10 @@
 <script>
     $(document).ready(function() {
         warehouseInit();
+
+        $('#itemnav').one('click', function() {
+            itemInit();
+        });
 
         $('#categorynav').one('click', function() {
             categoryInit();
