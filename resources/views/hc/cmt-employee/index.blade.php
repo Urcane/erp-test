@@ -33,9 +33,9 @@
                 </div>
             </div>
             <div class="modal-body mx-5 mx-lg-15 mb-7">
-                <form id="modal_import_emp_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
+                <form action="{{route("hc.emp.import")}}" method="POST" id="modal_import_emp_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
                     enctype="multipart/form-data">
-                    <input type="hidden" name="id" value="">
+                    @csrf
                     <div class="scroll-y me-n10 pe-10" id="modal_import_emp_scroll" data-kt-scroll="true"
                         data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
                         data-kt-scroll-dependencies="#modal_import_emp_header"
@@ -45,13 +45,13 @@
                                 <span class="fs-1 fw-bolder text-dark d-block mb-1">Job Level</span>
                                 {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
                             </div>
-                            <div class="col-lg-12 mb-3">
+                            <div class="col-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Nama</span>
+                                    <span class="required fw-bold">File</span>
                                 </label>
-                                <input type="text" class="form-control form-control-solid" placeholder="Name"
-                                    required name="name">
+                                <input type="file" class="form-control form-control-solid" required name="file">
                             </div>
+                            <a href="{{asset("sense/media/contoh-format-import-excel.xlsx")}}"><i class="fa-solid fa-file-arrow-down fs-3 p-3"></i> Contoh Format</a>
                         </div>
                     </div>
                     <div class="text-center mt-9">

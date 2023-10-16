@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Department;
 use App\Models\Division;
+use App\Models\Employee\EmploymentStatus;
 use App\Models\Employee\SubBranch;
 use App\Models\Employee\UserBank;
 use App\Models\Employee\UserBpjs;
@@ -16,94 +17,100 @@ use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Team\Team;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Row;
+use Maatwebsite\Excel\Concerns\OnEachRow;
 
-class UsersImport implements ToModel
+class UsersImport implements OnEachRow
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
-    public function model(array $row)
+
+    public function onRow(Row $row)
     {
-        $department_id = Department::where("name", $row[5])->first()->id;
-        $division_id = Division::where("name", $row[6])->first()->id;
-        $team_id = Team::where("name", $row[7])->first()->id;
+        $row = $row->toArray();
 
-        $user = User::create([
-            "name" => $row[0],
-            "email" => $row[1],
-            "password" => Hash::make("12345678"),
-            "kontak" => $row[2],
-            "nip" => $row[3],
-            "nik" => $row[4],
-            "department_id" => $department_id,
-            "division_id" => $division_id,
-            "team_id" => $team_id,
-        ]);
+        if ($row[0] == "name") {
+            return;
+        }
 
-        UserPersonalData::create([
-            'user_id' => $user->id,
-            'birthdate' => $row[8],
-            'place_of_birth' => $row[7],
-            'marital_status' => $row[9],
-            'gender' => $row[10],
-            'blood_type' => $row[11],
-            'religion' => $row[12],
-        ]);
+        // dd($row);
+        DB::transaction(function () use ($row) {
+            $department_id = Department::where("department_name", $row[5])->first()->id;
+            $division_id = Division::where("divisi_name", $row[6])->first()->id;
+            $team_id = Team::where("team_name", $row[7])->first()->id;
 
-        UserIdentity::create([
-            'user_id' => $user->id,
-            'type' => $row[13],
-            'number' => $row[14],
-            'expire_date' => $row[15],
-            'postal_code' => $row[16],
-            'citizen_id_address' => $row[17],
-            'residential_address' => $row[18],
-        ]);
+            $user = User::create([
+                "name" => $row[0],
+                "email" => $row[1],
+                "password" => Hash::make("12345678"),
+                "kontak" => $row[2],
+                "nip" => $row[3],
+                "nik" => $row[4],
+                "department_id" => $department_id,
+                "division_id" => $division_id,
+                "team_id" => $team_id,
+            ]);
+            $user->assignRole($row[8]);
 
-        $user->assignRole($row[24]);
-        $sub_branch_id = SubBranch::where("name", $row[23])->first()->id;
-        $working_schedule_id = WorkingSchedule::where("name", $row[24])->first()->id;
-        $start_shift = WorkingScheduleShift::where("working_schedule_id", $working_schedule_id)->whereHas("workingShift", function($query) use ($row) {
-            $query->where("name", $row[25]);
-        })->first()->id;
+            UserPersonalData::create([
+                'user_id' => $user->id,
+                'birthdate' => $row[9],
+                'place_of_birth' => $row[10],
+                'marital_status' => $row[11],
+                'gender' => $row[12],
+                'blood_type' => $row[13],
+                'religion' => $row[14],
+            ]);
 
-        UserEmployment::create([
-            'user_id' => $user->id,
-            'employee_id' => $row[19],
-            'employment_status_id' => $row[20],
-            'join_date' => $row[21],
-            'end_date' => $row[22],
-            'sub_branch_id' => $sub_branch_id,
-            'working_schedule_id' => $working_schedule_id,
-            'start_shift' => $start_shift,
-            'approval_line' => $row[26],
-            'barcode' => $row[27],
-        ]);
+            UserIdentity::create([
+                'user_id' => $user->id,
+                'type' => $row[15],
+                'number' => $row[16],
+                'expire_date' => $row[17],
+                'postal_code' => $row[18],
+                'citizen_id_address' => $row[19],
+                'residential_address' => $row[20],
+            ]);
 
-        UserSalary::create([
-            'user_id' => $user->id,
-            'basic_salary' => $row[28],
-        ]);
+            $sub_branch_id = SubBranch::where("name", $row[25])->first()->id;
+            $working_schedule_id = WorkingSchedule::where("name", $row[26])->first()->id;
+            $start_shift = WorkingScheduleShift::where("working_schedule_id", $working_schedule_id)->get()[$row[27]-1]->id;
 
-        UserBank::create([
-            'user_id' => $user->id,
-            'name' => $row[29],
-            'number' => $row[30],
-            'holder_name' => $row[31],
-        ]);
+            $approval_line = User::where("name", $row[28])->first()->id;
+            $employment_status_id = EmploymentStatus::where("name", $row[22])->first()->id;
 
-        UserTax::create([
-            'user_id' => $user->id,
-        ]);
+            UserEmployment::create([
+                'user_id' => $user->id,
+                'employee_id' => $row[21],
+                'employment_status_id' => $employment_status_id,
+                'join_date' => $row[23],
+                'end_date' => $row[24],
+                'sub_branch_id' => $sub_branch_id,
+                'working_schedule_id' => $working_schedule_id,
+                'start_shift' => $start_shift,
+                'approval_line' => $approval_line,
+                'barcode' => $row[29],
+            ]);
 
-        UserBpjs::create([
-            'user_id' => $user->id,
-        ]);
+            UserSalary::create([
+                'user_id' => $user->id,
+                'basic_salary' => $row[30],
+            ]);
 
-        return true;
+            UserBank::create([
+                'user_id' => $user->id,
+                'name' => $row[31],
+                'number' => $row[32],
+                'holder_name' => $row[33],
+            ]);
+
+            UserTax::create([
+                'user_id' => $user->id,
+            ]);
+
+            UserBpjs::create([
+                'user_id' => $user->id,
+            ]);
+        });
     }
 }
