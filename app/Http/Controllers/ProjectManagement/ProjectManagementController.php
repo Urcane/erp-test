@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProjectManagement\WorkOrderApprovalRequest;
 use App\Http\Requests\ProjectManagement\WorkOrderRequest;
 use App\Models\Customer\Customer;
+use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
+use App\Models\ProjectManagement\WorkList;
 use App\Services\ProjectManagement\WorkOrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,12 +21,42 @@ class ProjectManagementController extends Controller
         $this->workOrderService = $workOrderService;
     }
 
-
     public function index()
     {
         return view('cmt-promag.index');
     }
-    
+
+    public function create()
+    {
+        $dataBOQ = ItemableBillOfQuantity::where('is_done', 1)->with("prospect")->get();
+        return view('cmt-promag.create', compact("dataBOQ"));
+    }
+
+    public function store (Request $request) : JsonResponse {
+        try {
+            WorkList::create([
+                "itemable_bill_of_quantity_id" => $request->itemable_bill_of_quantities_id,
+                "no_project" => $request->no_project,
+                "work_name" => $request->work_name,
+                "work_desc" => $request->work_desc,
+                "work_location" => $request->work_location,
+                "no_po_customer" => $request->no_po_customer,
+                "lat" => $request->lat,
+                "lang" => $request->lang,
+                "status" => "PR",
+                "last_progress_category" => "BOQ",
+                "start_date" => date("Y-m-d"),
+            ]);
+
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼"
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json("Oopss, ada yang salah nih!", 500);
+        }
+    }
+
     public function detail(Request $request)
     {
         return view('cmt-promag.pages.overview');
@@ -54,6 +86,7 @@ class ProjectManagementController extends Controller
     }
 
     function getDataTableWorkOrder(Request $request) : JsonResponse {
+        dd("Asdfsf");
         return $this->workOrderService->renderDatatable($request);
     }
 
