@@ -63,9 +63,7 @@
             <span class="fw-bold">Citizen ID Address</span>
         </label>
         <textarea name="citizen_id_address" id="citizen_id_address" class="form-control form-control-solid"
-            placeholder="Citizen ID Address" @cannot('HC:update-profile') disabled @endcannot>
-            {{ $user->userIdentity->citizen_id_address ?? old('citizen_id_address') }}
-        </textarea>
+            placeholder="Citizen ID Address" @cannot('HC:update-profile') disabled @endcannot>{{ $user->userIdentity->citizen_id_address ?? old('citizen_id_address') }}</textarea>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
 
@@ -83,9 +81,7 @@
             <span class="fw-bold">Residential Address</span>
         </label>
         <textarea name="residential_address" id="residential_address" class="form-control form-control-solid"
-            placeholder="Residential Address" @cannot('HC:update-profile') disabled @endcannot>
-            {{ $user->userIdentity->residential_address ?? old('residential_address') }}
-        </textarea>
+            placeholder="Residential Address" @cannot('HC:update-profile') disabled @endcannot>{{ $user->userIdentity->residential_address ?? old('residential_address') }}</textarea>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
 
