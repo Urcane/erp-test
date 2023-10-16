@@ -148,14 +148,14 @@
                                         </div>
 
 
-                                        @role('administrator')
+                                        
                                             <div class="ms-15 w-20 mt-3 mb-3 ">
                                                 <a href="#kt_modal_tambah_boq" data-bs-toggle="modal"
                                                     class="btn btn-light-info btn-sm me-3 btn_tambah_boq">
                                                     <i class="fa-solid fa-plus"></i>Item Baru</a>
                                                 <div id="error-item"></div>
                                             </div>
-                                        @endrole
+                                        
                                     </div>
 
                                     {{-- akhir total amount --}}
@@ -187,10 +187,10 @@
         </div>
     </div>
 
-    @role('administrator')
+    
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
         @include('cmt-opportunity.boq.add.modal-update-boq')
-    @endrole
+    
 
     <script>
         $(document).ready(function() {

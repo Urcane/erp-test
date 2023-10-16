@@ -418,14 +418,14 @@
                                             @endif
                                         </div>
 
-                                        @role('administrator')
+                                        
                                             <div class="mx-20 my-10 col-lg-2">
                                                 <a href="#kt_modal_tambah_boq" data-bs-toggle="modal"
                                                     class="btn btn-light-info btn-sm mx-3 btn_tambah_boq">
                                                     <i class="fa-solid fa-plus"></i>Item Baru</a>
                                                 <div id="error-item"></div>
                                             </div>
-                                        @endrole
+                                        
 
                                     </div>
                                     {{-- layer total dan submit --}}
@@ -455,11 +455,11 @@
             </div>
         </div>
 
-        @role('administrator')
+        
             @include('cmt-opportunity.boq.add.modal-tambah-boq')
             @include('cmt-opportunity.boq.add.modal-update-boq')
             @include('cmt-opportunity.boq.add.modal-update-price')
-        @endrole
+        
 
         <script>
             $(document).ready(function() {

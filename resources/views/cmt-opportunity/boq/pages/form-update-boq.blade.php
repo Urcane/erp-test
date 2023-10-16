@@ -292,7 +292,7 @@
                                             @endif
                                         </div>
     
-                                        @role('administrator')
+                                        
                                             <div class="d-flex justify-content-end mt-5">
                                                 <div class="w-20 me-10">
                                                     <span class="fw-bold">Total Amount : Rp<span
@@ -305,7 +305,7 @@
                                                     <i class="fa-solid fa-plus"></i>Item Baru</a>
                                                 <div id="error-item"></div>
                                             </div>
-                                        @endrole
+                                        
     
                                     </div>
 
@@ -343,11 +343,11 @@
         </div>
     </div>
 
-    @role('administrator')
+    
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
         @include('cmt-opportunity.boq.add.modal-update-boq')
         @include('cmt-opportunity.boq.add.modal-update-price')
-    @endrole
+    
 
     <script>
         $(document).ready(function() {
