@@ -150,8 +150,8 @@
                                                     <span class="fw-bold required">Coordinate</span>
                                                 </label>
                                                 <div id="map"></div>
-                                                <input type="text" id="latitude" name="latitude" readonly hidden required>
-                                                <input type="text" id="longitude" name="longitude" readonly hidden required>
+                                                <input type="text" id="latitude" name="latitude" value="{{ $subBranch->branchLocations ?? old('latitude') }}" readonly hidden required>
+                                                <input type="text" id="longitude" name="longitude" value="{{ $subBranch->branchLocations->first()->longitude ?? old('longitude') }}" readonly hidden required>
                                             </div>
 
                                             <div class="col-lg-12 mb-3">
@@ -159,7 +159,7 @@
                                                     for="email">
                                                     <span class="fw-bold">Office Radius (Meter)</span>
                                                 </label>
-                                                <input type="number" value="{{ $subBranch->coordinate_radius ?? old('coordinate_radius') }}"
+                                                <input type="number" value="{{ $subBranch->branchLocations->first()->radius ?? old('coordinate_radius') }}"
                                                     class="form-control form-control-solid" placeholder="40"
                                                     name="coordinate_radius" id="coordinate_radius"
                                                     @unlessrole('administrator') disabled @endcannot>
@@ -278,7 +278,7 @@
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
 
-                                                <div class="col-lg-6 mb-3">
+                                                {{-- <div class="col-lg-6 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                         for="signature">
                                                         <span class="fw-bold">Signature</span>
@@ -292,7 +292,7 @@
                                                 </div>
                                                 <div class="col-lg-6 mb-3">
                                                     ini priview
-                                                </div>
+                                                </div> --}}
                                             </section>
 
                                             <div class="mt-6 d-flex justify-content-center">
@@ -398,6 +398,10 @@
 
             addMarker(latitude, longitude, false);
         });
+
+        if ("{{ $subBranch->branchLocations->first()->latitude ?? old('latitude') }}") {
+            addMarker("{{ $subBranch->branchLocations->first()->latitude ?? old('latitude') }}", "{{ $subBranch->branchLocations->first()->longitude ?? old('longitude') }}", false);
+        }
     });
 </script>
 
