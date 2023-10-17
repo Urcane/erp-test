@@ -52,6 +52,10 @@ class Constants
         public $leave_quota_history_type = ["minus", "plus"];
     // }
 
+    // assignment {
+        public $assignment_status = ["Waiting", "Approved", "Rejected", "Canceled", "Expired"];
+    // }
+
     // system and view
     public $filter_status_attendance = [
         "On Time",
