@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title-apps','CMT-Attendance')
+@section('title-apps','Attendance')
 @section('sub-title-apps','HC & Legal')
 @section('desc-apps','Catatan Daftar Hadir Karyawan')
 @section('icon-apps','fa-solid fa-calendar-days')
@@ -34,7 +34,7 @@
 
                         @include('hc.cmt-attendance.modal.summaries')
 
-                        <div class="row border rounded p-4 mb-4 justify-content-center">
+                        <div class="row border rounded py-4 mb-4 justify-content-center">
                             <div class="col-3">
                                 <p class="fw-bold fs-6 mb-2">Present</p>
                                 <div class="ms-1 row">
@@ -52,7 +52,6 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-1"></div>
                             <div class="col-4">
                                 <p class="fw-bold fs-6 mb-2">Not Present</p>
                                 <div class="ms-1 row">
@@ -70,20 +69,31 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-1"></div>
                             <div class="col-3">
                                 <p class="fw-bold fs-6 mb-2">Away</p>
                                 <div class="ms-1 row">
-                                    <a class="col-4 summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="day-off">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="day-off">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="day-off">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Day Off</div>
                                     </a>
                                     <div class="col-1"></div>
-                                    <a class="col-4 summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="time-off">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="time-off">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="time-off">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Time Off</div>
                                     </a>
-                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <p class="fw-bold fs-6 mb-2">Assigned</p>
+                                <div class="ms-1 row">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="assign-in">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="assign-in">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">Present</div>
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="assign-out">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="assign-out">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">Absent</div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -260,6 +270,8 @@
             $('#no-clock-out').html("-");
             $('#day-off').html("-");
             $('#time-off').html("-");
+            $('#assign-in').html("-");
+            $('#assign-out').html("-");
         }
 
         function renderSummaries() {
@@ -278,7 +290,9 @@
                         noCheckInCount,
                         noCheckOutCount,
                         dayOffCount,
-                        timeOffCount
+                        timeOffCount,
+                        dinasInCount,
+                        dinasOutCount
                     } = data;
 
                     $('#on-time').html(onTimeCount);
@@ -289,6 +303,8 @@
                     $('#no-clock-out').html(noCheckOutCount);
                     $('#day-off').html(dayOffCount);
                     $('#time-off').html(timeOffCount);
+                    $('#assign-in').html(dinasInCount);
+                    $('#assign-out').html(dinasOutCount);
                 },
                 error: function(xhr, status, error) {
                     deleteSummaries();
@@ -367,6 +383,10 @@
                 } = data;
 
                 const $row = $(row);
+
+                if (attendanceCode === attendanceCodeEnum[4]) {
+                    return $row.css('background-color', 'rgba(253, 224, 71, 0.7)');
+                }
 
                 if (attendanceCode !== attendanceCodeEnum[0]) {
                     return $row.css('background-color', 'rgba(192, 192, 192, 0.4)');
@@ -515,10 +535,12 @@
             tableAttendance.draw();
         });
 
-        $('#search_attendance').on('input', function() {
-            tableAttendance.draw();
-            deleteSummaries();
-            renderSummaries();
+        $('#search_attendance').on('keyup', function(e) {
+            if (e.keyCode === 13) {
+                tableAttendance.draw();
+                deleteSummaries();
+                renderSummaries();
+            }
         });
 
         @can('HC:edit-delete-attendance')

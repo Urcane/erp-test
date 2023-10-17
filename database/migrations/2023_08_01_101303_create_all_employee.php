@@ -90,7 +90,7 @@ class CreateAllEmployee extends Migration
             $table->time("overtime_before")->nullable();
             $table->time("overtime_after")->nullable();
             $table->boolean("show_in_request")->default(0);
-            $table->boolean("is_working")->default(1);
+            $table->boolean("is_working");
             $table->softDeletes()->index();
             $table->timestamps();
         });

@@ -418,7 +418,7 @@
                                         @endif
                                     </div>
 
-                                    @role('administrator')
+                                    
                                         <div class="d-flex justify-content-end mt-5">
                                             <div class="w-20 me-10">
                                                 <span class="fw-bold">Total Amount : Rp<span
@@ -439,7 +439,7 @@
                                                 <i class="fa-solid fa-plus"></i>Item Baru</a>
                                             <div id="error-item"></div>
                                         </div>
-                                    @endrole
+                                    
 
                                 </div>
                                 @if ($updateDraftBoqData['dataCompanyItem'][0]->boq_type == "internet")
@@ -588,7 +588,7 @@
                                             @endforeach
                                         @endif
                                     </div>
-                                    @role('administrator')
+                                    
                                     <div class="d-flex justify-content-end mt-5">
                                         <div class="w-20 me-10">
                                             <span class="fw-bold">Total Amount : Rp<span
@@ -609,7 +609,7 @@
                                                 <i class="fa-solid fa-plus"></i>Tambah Bundle Baru</a>
                                         </div>
                                     </div>
-                                    @endrole
+                                    
 
                                 </div>
                                 @endif
@@ -644,13 +644,13 @@
         </div>
     </div>
 
-    @role('administrator')
+    
         @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
 
         @include('cmt-opportunity.boq.add.modal-tambah-boq')
         @include('cmt-opportunity.boq.add.modal-update-boq')
         @include('cmt-opportunity.boq.add.modal-update-price', array('boq_type' => $updateDraftBoqData['dataCompanyItem'][0]->boq_type))
-    @endrole
+    
 
     <script>
         let dataUnit = @json($dataUnit);

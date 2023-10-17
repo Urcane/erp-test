@@ -46,6 +46,13 @@ class CreateAllPromagMigrationTable extends Migration
         Schema::create('work_lists', function (Blueprint $table) {
             $table->id();
 
+            $table->foreignId('itemable_bill_of_quantity_id')
+                ->constrained();
+
+            $table->foreignId('itemable_quotation_id')
+                ->constrained()
+                ->nullable();
+
             $table->string('no_project', 36)
                 ->nullable()
                 ->unique()

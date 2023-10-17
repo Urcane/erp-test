@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title-apps','CMT-EMP')
+@section('title-apps','Employee')
 @section('sub-title-apps','HC & Legal')
 @section('desc-apps','Database Pegawai Comtelindo')
 @section('icon-apps','fa-solid fa-users')

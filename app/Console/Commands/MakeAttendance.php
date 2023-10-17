@@ -79,6 +79,7 @@ class MakeAttendance extends Command
             ->toArray();
 
         $existingAttendanceUserIds = UserAttendance::whereDate('date', $this->today)
+            ->where('attendance_code', '!=', $this->constants->attendance_code[4])
             ->pluck('user_id')
             ->toArray();
 
@@ -104,7 +105,10 @@ class MakeAttendance extends Command
         $userEmployments = UserEmployment::whereDate('join_date', '<=', Carbon::now()->format("Y-m-d"))
             ->with('workingSchedule')
             ->get();
-        $userIdsWithAttendance = UserAttendance::whereDate('date', $this->today)->pluck('user_id')->toArray();
+
+        $userIdsWithAttendance = UserAttendance::whereDate('date', $this->today)
+            ->where('attendance_code', '!=', $this->constants->attendance_code[4])
+            ->pluck('user_id')->toArray();
 
         foreach ($userEmployments as $userEmployment) {
             $userCurrentShift = UserCurrentShift::where("user_id", $userEmployment->user_id)->first();

@@ -26,7 +26,9 @@ class DatabaseSeeder extends Seeder
             InventorySeeder::class,
             HolidaySeeder::class,
             HCDataSeeder::class,
-            LeaveSeeder::class
+            LeaveSeeder::class,
+
+            AssignmentSeeder::class,
         ]);
     }
 }

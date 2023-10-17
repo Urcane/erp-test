@@ -107,7 +107,7 @@ class TimeOffController extends RequestController
             $currentDate = $startDate->copy();
 
             if (!in_array($currentDate->toDateString(), $holidayDates)) {
-                if (!$workingScheduleShift->is_working) {
+                if (!$workingScheduleShift->workingShift->is_working) {
                     array_push($dayOffDates, $currentDate->format('Y-m-d'));
                 } else {
                     array_push($takenDates, $currentDate->format('Y-m-d'));

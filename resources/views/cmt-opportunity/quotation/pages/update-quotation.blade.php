@@ -652,6 +652,13 @@
                                                 </button>
                                             </div>
                                             @endcan
+                                            @can('Quot:print-quot')
+                                            <div class="me-5">
+                                                <button type="button" class="btn btn-md btn-info me-3 print-form">
+                                                    <i class="fa-solid fa-print fs-6"></i>Print
+                                                </button>
+                                            </div>
+                                            @endcan
                                         </div>
                                     </div>
 
@@ -673,6 +680,8 @@
             </div>
         </div>
     </div>
+    </div>
+    <div id="printerDiv" style="display: none;"></div>
     </div>
 
     @include('cmt-opportunity.quotation.add.modal-tambah-bundle-internet')
@@ -950,6 +959,25 @@
                 })
 
             }); 
+
+            $('.print-form').click(function() {
+                const div = document.getElementById("printerDiv");
+
+                @if($dataQuotation['boqFinalData'][0]->boq_type == "perangkat")
+                @php
+                $isQuotation = 'perangkat';
+                @endphp
+                @endif
+
+                @if($dataQuotation['boqFinalData'][0]->boq_type == "internet")
+                @php
+                $isQuotation = 'internet';
+                @endphp
+                @endif
+
+                div.innerHTML =
+                    `<iframe src="{{ route('com.quotation.result.export', ['isQuotation' => $isQuotation, 'id' => $dataQuotation['quotationData']->id]) }}" onload="this.contentWindow.print();"></iframe>`;
+            });
 
             //  Calculate and update total sum on page load
             updateTotalSum();

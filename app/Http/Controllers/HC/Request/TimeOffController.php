@@ -110,7 +110,7 @@ class TimeOffController extends RequestController
             $currentDate = $startDate->copy();
 
             if (!in_array($currentDate->toDateString(), $holidayDates)) {
-                if (!$workingScheduleShift->is_working) {
+                if (!$workingScheduleShift->workingShift->is_working) {
                     array_push($dayOffDates, $currentDate->format('Y-m-d'));
                 } else {
                     array_push($takenDates, $currentDate->format('Y-m-d'));
@@ -466,7 +466,7 @@ class TimeOffController extends RequestController
                         ]);
 
                         if ($newQuota + $userCategoryQuota->quotas < $balanceTaken) {
-                            throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                            throw new InvariantError("Kuota $leaveCategory->name pegawai tidak mencukupi!");
                         }
 
                         $query["user_leave_category_quotas"] = [
@@ -475,7 +475,7 @@ class TimeOffController extends RequestController
                         ];
                     } else {
                         if ($userCategoryQuota->quotas < $balanceTaken) {
-                            throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                            throw new InvariantError("Kuota $leaveCategory->name pegawai tidak mencukupi!");
                         }
 
                         $query["user_leave_category_quotas"] = [

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Assignment\Assignment;
+use App\Models\Assignment\UserAssignment;
 use App\Traits\HasProject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,7 +57,7 @@ class User extends Authenticatable
     function procurement() : HasOne{
         return $this->hasOne(Procurement::class);
     }
-    
+
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
@@ -184,5 +186,15 @@ class User extends Authenticatable
     public function userLeaveQuotas(): HasMany
     {
         return $this->hasMany(Leave\UserLeaveQuota::class);
+    }
+
+    public function assignment(): HasMany
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
+    public function userAssignments(): BelongsToMany
+    {
+        return $this->belongsToMany(Assignment::class, UserAssignment::class);
     }
 }

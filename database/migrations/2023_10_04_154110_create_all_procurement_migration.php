@@ -86,6 +86,9 @@ class CreateAllProcurementMigration extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('all_procurement_migration');
+        Schema::dropIfExists('procurement_item_payments');
+        Schema::dropIfExists('procurement_item_statuses');
+        Schema::dropIfExists('procurement_items');
+        Schema::dropIfExists('procurements');
     }
 }

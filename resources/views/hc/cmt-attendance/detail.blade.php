@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title-apps','CMT-Attendance')
+@section('title-apps','Attendance')
 @section('sub-title-apps','HC & Legal')
 @section('desc-apps','Catatan Daftar Hadir Karyawan')
 @section('icon-apps','fa-solid fa-calendar-days')
@@ -27,56 +27,66 @@
                             </span>
                         </div>
 
-                        <div class="row border rounded p-4 mb-4 justify-content-center">
+                        <div class="row border rounded py-4 mb-4 justify-content-center">
                             <div class="col-3">
                                 <p class="fw-bold fs-6 mb-2">Present</p>
                                 <div class="ms-1 row">
-                                    <div class="col">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="on-time">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="on-time">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">On Time</div>
-                                    </div>
-                                    <div class="col">
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="late-clock-in">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="late-clock-in">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Late Clock In</div>
-                                    </div>
-                                    <div class="col">
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="early-clock-out">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="early-clock-out">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Early Clock Out</div>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-1"></div>
                             <div class="col-4">
                                 <p class="fw-bold fs-6 mb-2">Not Present</p>
                                 <div class="ms-1 row">
-                                    <div class="col">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="absent">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="absent">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Absent</div>
-                                    </div>
-                                    <div class="col">
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="no-clock-in">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="no-clock-in">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">No Clock In</div>
-                                    </div>
-                                    <div class="col">
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="no-clock-out">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="no-clock-out">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">No Clock Out</div>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
-                            <div class="col-1"></div>
                             <div class="col-3">
                                 <p class="fw-bold fs-6 mb-2">Away</p>
                                 <div class="ms-1 row">
-                                    <div class="col-4">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="day-off">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="day-off">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Day Off</div>
-                                    </div>
+                                    </a>
                                     <div class="col-1"></div>
-                                    <div class="col-4">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="time-off">
                                         <div class="text-info fw-bolder fs-4 mb-3" id="time-off">-</div>
                                         <div class="fw-semibold fs-7 text-gray-600">Time Off</div>
-                                    </div>
-                                    <div class="col-1"></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <p class="fw-bold fs-6 mb-2">Assigned</p>
+                                <div class="ms-1 row">
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="assign-in">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="assign-in">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">Present</div>
+                                    </a>
+                                    <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal" data-param="assign-out">
+                                        <div class="text-info fw-bolder fs-4 mb-3" id="assign-out">-</div>
+                                        <div class="fw-semibold fs-7 text-gray-600">Absent</div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -207,6 +217,8 @@
             $('#no-clock-out').html("-");
             $('#day-off').html("-");
             $('#time-off').html("-");
+            $('#assign-in').html("-");
+            $('#assign-out').html("-");
         }
 
         function renderSummaries() {
@@ -226,7 +238,9 @@
                         noCheckInCount,
                         noCheckOutCount,
                         dayOffCount,
-                        timeOffCount
+                        timeOffCount,
+                        dinasInCount,
+                        dinasOutCount
                     } = data;
 
                     $('#on-time').html(onTimeCount);
@@ -237,6 +251,8 @@
                     $('#no-clock-out').html(noCheckOutCount);
                     $('#day-off').html(dayOffCount);
                     $('#time-off').html(timeOffCount);
+                    $('#assign-in').html(dinasInCount);
+                    $('#assign-out').html(dinasOutCount);
                 },
                 error: function(xhr, status, error) {
                     deleteSummaries();
@@ -315,6 +331,10 @@
                 } = data;
 
                 const $row = $(row);
+
+                if (attendanceCode === attendanceCodeEnum[4]) {
+                    return $row.css('background-color', 'rgba(253, 224, 71, 0.7)');
+                }
 
                 if (attendanceCode !== attendanceCodeEnum[0]) {
                     return $row.css('background-color', 'rgba(192, 192, 192, 0.4)');

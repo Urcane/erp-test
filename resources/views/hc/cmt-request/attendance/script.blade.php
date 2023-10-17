@@ -275,10 +275,12 @@
             $('#filter_status_attendance').val("*").trigger("change")
         });
 
-        $('#search_attendance').on('input', function() {
-            tableAttendance.draw();
-            deleteAttendanceSummaries();
-            getAttendanceSummaries();
+        $('#search_attendance').on('keyup', function(e) {
+            if (e.keyCode === 13) {
+                tableAttendance.draw();
+                deleteAttendanceSummaries();
+                getAttendanceSummaries();
+            }
         });
 
         const onAttendanceModalClose = () => {
