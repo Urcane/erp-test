@@ -57,10 +57,10 @@
                                 </div>
                                 <div class="col-lg-6 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                        <span class="required fw-bold">Alias</span>
+                                        <span class="fw-bold">Alias</span>
                                     </label>
                                     <input type="text" class="form-control form-control-solid" placeholder="Name"
-                                        required name="divisi_alias">
+                                        name="divisi_alias">
                                 </div>
                                 <div class="col-lg-6 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -81,7 +81,7 @@
                                     </label>
                                     <select class="drop-data form-select form-select-solid" data-control="parent_id"
                                         name="parent_id" required>
-                                        @foreach ($dataOrganization as $option)
+                                        @foreach ($dataDivision as $option)
                                             <option value="{{ $option->id }}"
                                                 @if (old('parent_id') == $option->id) selected @endif>{{ $option->divisi_name }}
                                             </option>

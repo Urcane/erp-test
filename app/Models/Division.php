@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Division extends Model
 {
     use HasFactory;
-    protected $guraded = [];
-
+    protected $guarded = [];
 
     public function parent() {
         return $this->belongsTo(Division::class, "parent_id");

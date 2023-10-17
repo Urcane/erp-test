@@ -64,14 +64,14 @@ class JobPositionController extends Controller
                     $edit = '
                 <li>
                     <div class="btn-edit" id="btn-' . $action->id . '">
-                        <a href="#modal_create_job_positon" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
+                        <a href="#modal_create_job_position" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
                     </div>
                 </li>
                 <script>
                     $("#btn-' . $action->id . '").click(function() {
                         $("[name=\'id\']").val("' . $action->id . '")
-                        $("[name=\'divisi_name\']").val("' . $action->department_name . '")
-                        $("[name=\'divisi_alias\']").val("' . $action->department_alias . '")
+                        $("[name=\'divisi_name\']").val("' . $action->divisi_name . '")
+                        $("[name=\'divisi_alias\']").val("' . $action->divisi_alias . '")
                         $("[name=\'parent_id\'] option").each(function() {
                             if ($(this).val() == "' . $action->parent_id . '") {
                                 $(this).prop("selected", true);
@@ -115,7 +115,6 @@ class JobPositionController extends Controller
         try {
             $request->validate([
                 "divisi_name" => "required",
-                "divisi_alias" => "required",
                 "department_id" => "required",
                 "parent_id" => "required",
             ]);
