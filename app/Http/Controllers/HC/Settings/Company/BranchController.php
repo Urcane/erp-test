@@ -84,95 +84,89 @@ class BranchController extends Controller
 
     public function createUpdate(Request $request)
     {
-        try {
-            $request->validate([
-                "name" => "required",
-                "phone_number" => "required",
-                "email" => "required",
-                "address" => "required",
-                "latitude" => "required",
-                "longitude" => "required",
-                "coordinate_radius" => "required",
-                "city" => "required",
-                "province" => "required",
-                "npwp" => "required",
-                "tax_name" => "required",
-                "tax_person_name" => "required",
-                "tax_person_npwp" => "required",
-                "klu" => "required",
+        $request->validate([
+            "name" => "required",
+            "phone_number" => "required",
+            "email" => "required",
+            "address" => "required",
+            "latitude" => "required",
+            "longitude" => "required",
+            "coordinate_radius" => "required",
+            "city" => "required",
+            "province" => "required",
+            "npwp" => "required",
+            "tax_name" => "required",
+            "tax_person_name" => "required",
+            "tax_person_npwp" => "required",
+            "klu" => "required",
+        ]);
+
+        DB::transaction(function () use ($request) {
+            $subBranch = SubBranch::updateOrCreate([
+                "id" => $request->company_id,
+            ], [
+                "name" => $request->name,
+                "phone_number" => $request->phone_number,
+                "email" => $request->email,
+                "address" => $request->address,
+                "city" => $request->city,
+                "province" => $request->province,
+                "npwp" => $request->npwp,
+                "tax_name" => $request->name,
+                "tax_person_name" => $request->tax_person_name,
+                "tax_person_npwp" => $request->tax_person_npwp,
+                "klu" => $request->klu,
+                "umr" => $request->umr,
+                "branch_id" => null,
+                "parent_id" => $request->parent_id,
             ]);
 
-            DB::transaction(function () use ($request) {
-                $subBranch = SubBranch::updateOrCreate([
-                    "id" => $request->company_id,
-                ], [
-                    "name" => $request->name,
-                    "phone_number" => $request->phone_number,
-                    "email" => $request->email,
-                    "address" => $request->address,
-                    "city" => $request->city,
-                    "province" => $request->province,
-                    "npwp" => $request->npwp,
-                    "tax_name" => $request->name,
-                    "tax_person_name" => $request->tax_person_name,
-                    "tax_person_npwp" => $request->tax_person_npwp,
-                    "klu" => $request->klu,
-                    "umr" => $request->umr,
-                    "branch_id" => null,
-                    "parent_id" => $request->parent_id,
+            $branchLocation = BranchLocation::where("sub_branch_id", $subBranch->id)->first();
+            if ($branchLocation) {
+                $branchLocation->update([
+                    "latitude" => $request->latitude,
+                    "longitude" => $request->longitude,
+                    "radius" => $request->coordinate_radius,
                 ]);
+            } else {
+                BranchLocation::create([
+                    "sub_branch_id" => $subBranch->id,
+                    "latitude" => $request->latitude,
+                    "longitude" => $request->longitude,
+                    "radius" => $request->coordinate_radius,
+                ]);
+            }
 
-                $branchLocation = BranchLocation::where("sub_branch_id", $subBranch->id)->first();
-                if ($branchLocation) {
-                    $branchLocation->update([
-                        "latitude" => $request->latitude,
-                        "longitude" => $request->longitude,
-                        "radius" => $request->coordinate_radius,
-                    ]);
-                } else {
-                    BranchLocation::create([
-                        "sub_branch_id" => $subBranch->id,
-                        "latitude" => $request->latitude,
-                        "longitude" => $request->longitude,
-                        "radius" => $request->coordinate_radius,
-                    ]);
+            if ($request->logo) {
+                $file = $request->file('logo');
+                $filename = time() . '_' . $request->name;
+                if ($subBranch->logo) {
+                    $filename = $subBranch->logo;
                 }
+                $file->storeAs('branch-logo', $filename, 'public');
 
-                if ($request->logo) {
-                    $file = $request->file('logo');
-                    $filename = time() . '_' . $request->name;
-                    if ($subBranch->logo) {
-                        $filename = $subBranch->logo;
-                    }
-                    $file->storeAs('branch-logo', $filename, 'public');
-
-                    $subBranch->update([
-                        "logo" => $filename,
-                    ]);
-                    // Storage::disk('local')->putFile('public/branch-logo', $file);
+                $subBranch->update([
+                    "logo" => $filename,
+                ]);
+                // Storage::disk('local')->putFile('public/branch-logo', $file);
+            }
+            if ($request->signature) {
+                $file = $request->file('signature');
+                $filename = time() . '_' . $request->name;
+                if ($subBranch->logo) {
+                    $filename = $subBranch->logo;
                 }
-                if ($request->signature) {
-                    $file = $request->file('signature');
-                    $filename = time() . '_' . $request->name;
-                    if ($subBranch->logo) {
-                        $filename = $subBranch->logo;
-                    }
-                    $file->storeAs('branch-signature', $filename, 'public');
+                $file->storeAs('branch-signature', $filename, 'public');
 
-                    $subBranch->update([
-                        "signature" => $filename,
-                    ]);
-                }
-            });
+                $subBranch->update([
+                    "signature" => $filename,
+                ]);
+            }
+        });
 
 
-            return redirect(route("hc.setting.branch.index"));
-        } catch (\Throwable $th) {
+        return redirect(route("hc.setting.branch.index"));
 
-            $data = $this->errorHandler->handle($th);
-
-            return response()->json($data["data"], $data["code"]);
-        }
     }
 
     public function delete(Request $request)
