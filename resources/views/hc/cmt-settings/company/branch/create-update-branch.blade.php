@@ -78,7 +78,7 @@
                                             <div class="col-lg-6 mb-3 mt-5">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="phone_number">
-                                                    <span class="fw-bold">Branch Phone Number</span>
+                                                    <span class="fw-bold required">Branch Phone Number</span>
                                                 </label>
                                                 <input type="number"
                                                     value="{{ $subBranch->phone_number ?? old('phone_number') }}"
@@ -92,7 +92,7 @@
                                             <div class="col-lg-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="email">
-                                                    <span class="fw-bold">Email</span>
+                                                    <span class="fw-bold required">Email</span>
                                                 </label>
                                                 <input type="email" value="{{ $subBranch->email ?? old('email') }}"
                                                     class="form-control form-control-solid" placeholder="Email cabang"
@@ -103,7 +103,7 @@
                                             <div class="col-lg-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="umr">
-                                                    <span class="fw-bold">UMR</span>
+                                                    <span class="fw-bold required">UMR</span>
                                                 </label>
                                                 <input type="number" value="{{ $subBranch->umr ?? old('umr') }}"
                                                     class="form-control form-control-solid" placeholder="UMR"
@@ -115,7 +115,7 @@
                                             <div class="col-lg-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="name">
-                                                    <span class="fw-bold">Address</span>
+                                                    <span class="fw-bold required">Address</span>
                                                 </label>
                                                 <textarea name="address" class="form-control form-control-solid" placeholder="Alamat lengkap perusahaan" id="address"
                                                     cols="30" rows="5" @cannot('HC:setting') disabled @endcannot required>{{ $subBranch->address ?? old('address') }}</textarea>
@@ -127,7 +127,7 @@
                                                     <div class="col-lg-12 mb-3">
                                                         <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                             for="city">
-                                                            <span class="fw-bold">City</span>
+                                                            <span class="fw-bold required">City</span>
                                                         </label>
                                                         <input type="text"
                                                             value="{{ $subBranch->city ?? old('city') }}"
@@ -140,7 +140,7 @@
                                                     <div class="col-lg-12 mb-3">
                                                         <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                             for="province">
-                                                            <span class="fw-bold">Province</span>
+                                                            <span class="fw-bold required">Province</span>
                                                         </label>
                                                         <input type="text"
                                                             value="{{ $subBranch->province ?? old('province') }}"
@@ -165,7 +165,7 @@
                                             <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="coordinate_radius">
-                                                    <span class="fw-bold">Office Radius (Meter)</span>
+                                                    <span class="fw-bold required">Office Radius (Meter)</span>
                                                 </label>
                                                 <input type="number" value="{{ ($subBranch->branchLocations ?? false) ? $subBranch->branchLocations->first()->radius : old('coordinate_radius') }}"
                                                     class="form-control form-control-solid" placeholder="40"
@@ -177,7 +177,7 @@
                                             <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="parent_id">
-                                                    <span class="fw-bold">Branch Parent</span>
+                                                    <span class="fw-bold required">Branch Parent</span>
                                                 </label>
                                                 <select class="drop-data form-select form-select-solid"
                                                     data-control="parent_id" name="parent_id" id="parent_id"
@@ -200,7 +200,7 @@
                                                             id="npwp_same_parent">
                                                         <label class="fs-6 form-check-label mb-2"
                                                             for="npwp_same_parent">
-                                                            <span class="fw-bold">NPWP same with Parent Branch</span>
+                                                            <span class="fw-bold required">NPWP same with Parent Branch</span>
                                                         </label>
                                                         <div class="fv-plugins-message-container invalid-feedback">
                                                         </div>
@@ -210,7 +210,7 @@
                                                 <div class="col-lg-6 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                         for="npwp">
-                                                        <span class="fw-bold">Branch NPWP</span>
+                                                        <span class="fw-bold required">Branch NPWP</span>
                                                     </label>
                                                     <input type="number"
                                                         value="{{ $subBranch->npwp ?? old('npwp') }}"
@@ -222,7 +222,7 @@
                                                 <div class="col-lg-6 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                         for="tax_name">
-                                                        <span class="fw-bold">Branch Tax Name</span>
+                                                        <span class="fw-bold required">Branch Tax Name</span>
                                                     </label>
                                                     <input type="text"
                                                         value="{{ $subBranch->tax_name ?? old('tax_name') }}"
@@ -234,7 +234,7 @@
                                                 <div class="col-lg-6 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                         for="tax_person_name">
-                                                        <span class="fw-bold">Tax Person</span>
+                                                        <span class="fw-bold required">Tax Person</span>
                                                     </label>
                                                     <input type="text"
                                                         value="{{ $subBranch->tax_person_name ?? old('tax_person_name') }}"
@@ -247,7 +247,7 @@
                                                 <div class="col-lg-6 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                         for="tax_person_npwp">
-                                                        <span class="fw-bold">Tax Person NPWP</span>
+                                                        <span class="fw-bold required">Tax Person NPWP</span>
                                                     </label>
                                                     <input type="number"
                                                         value="{{ $subBranch->tax_person_npwp ?? old('tax_person_npwp') }}"
@@ -264,7 +264,7 @@
                                                 <div class="col-lg-12 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                         for="klu">
-                                                        <span class="fw-bold">Kode KLU (Klasifikasi Lapangan
+                                                        <span class="fw-bold required">Kode KLU (Klasifikasi Lapangan
                                                             Usaha)</span>
                                                     </label>
                                                     <input type="text" value="{{ $subBranch->klu ?? old('klu') }}"
@@ -277,7 +277,7 @@
                                                 {{-- <div class="col-lg-6 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                         for="signature">
-                                                        <span class="fw-bold">Signature</span>
+                                                        <span class="fw-bold required">Signature</span>
                                                     </label>
                                                     <input type="file"
                                                         value="{{ $subBranch->signature ?? old('signature') }}"
