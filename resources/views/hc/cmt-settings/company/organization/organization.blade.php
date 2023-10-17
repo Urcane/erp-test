@@ -273,6 +273,27 @@
                 ],
             });
         })
+
+        $('#modal_create_organization_form').submit(function(event) {
+            event.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: "{{ route('hc.setting.organization.createUpdate') }}",
+                type: 'POST',
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': "{{csrf_token()}}"
+                },
+                success: function(data) {
+                    dataTableOrganization.ajax.reload();
+                    toastr.success(data.message,'Selamat 🚀 !');
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
+        });
     </script>
 
     @include('components.delete-confirmation', ["id" => "Organization", "route" => route('hc.setting.organization.delete')])
