@@ -143,11 +143,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                @role('administrator')
-                                <div>
-                                    <a href="{{ route('hc.emp.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
-                                </div>
-                                @endrole
+                                @can("HC:update-profile")
+                                    <div>
+                                        <a href="{{ route('hc.emp.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
+                                    </div>
+                                @endcan
                             </div>
                         </div>
                         <div class="row">
