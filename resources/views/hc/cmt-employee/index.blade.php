@@ -79,34 +79,34 @@
                                 <span class="fs-7 text-uppercase fw-bolder text-dark d-none d-md-block">List Pegawai</span>
                             </div>
                             <div class="col-lg-6 d-flex justify-content-end">
-                                @role('administrator')
-                                <div>
-                                    <a href="#modal_import_emp" data-bs-toggle="modal" class="btn btn-light-success btn-sm me-3 btn_tambah_job_level"><i class="fa-solid fa-plus"></i>Import Employee</a>
-                                    <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
-                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start pb-3" id="action_pegawai" data-kt-menu="true" style="">
-                                        <div class="d-flex flex-column bgi-no-repeat rounded-top">
-                                            <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Mass Action Options</span>
-                                        </div>
-                                        <div class="separator mb-6"></div>
-                                        <div class="menu-item px-3">
-                                            <a href="#kt_modal_nonaktif_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_nonaktif_pegawai">
-                                                <span class="menu-icon">
-                                                    <i class="fa-solid fa-user-xmark text-danger"></i>
-                                                </span>
-                                                <span class="menu-title text-danger">Non Aktif Pegawai</span>
-                                            </a>
-                                        </div>
-                                        <div class="menu-item px-3">
-                                            <a href="#kt_modal_reset_password_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_reset_password_pegawai">
-                                                <span class="menu-icon">
-                                                    <i class="fa-solid fa-key text-gray-500"></i>
-                                                </span>
-                                                <span class="menu-title text-dark">Reset Password</span>
-                                            </a>
+                                @can("HC:update-profile")
+                                    <div>
+                                        <a href="#modal_import_emp" data-bs-toggle="modal" class="btn btn-light-success btn-sm me-3 btn_tambah_job_level"><i class="fa-solid fa-plus"></i>Import Employee</a>
+                                        <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
+                                        <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start pb-3" id="action_pegawai" data-kt-menu="true" style="">
+                                            <div class="d-flex flex-column bgi-no-repeat rounded-top">
+                                                <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Mass Action Options</span>
+                                            </div>
+                                            <div class="separator mb-6"></div>
+                                            <div class="menu-item px-3">
+                                                <a href="#kt_modal_nonaktif_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_nonaktif_pegawai">
+                                                    <span class="menu-icon">
+                                                        <i class="fa-solid fa-user-xmark text-danger"></i>
+                                                    </span>
+                                                    <span class="menu-title text-danger">Non Aktif Pegawai</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item px-3">
+                                                <a href="#kt_modal_reset_password_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_reset_password_pegawai">
+                                                    <span class="menu-icon">
+                                                        <i class="fa-solid fa-key text-gray-500"></i>
+                                                    </span>
+                                                    <span class="menu-title text-dark">Reset Password</span>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                @endrole
+                                @endcan
                                 <div>
                                     <button type="button" class="btn btn-light-info btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-filter me-2"></i>Filter</button>
                                     <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start" id="filter_pegawai" data-kt-menu="true" style="">
