@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Finance\Inventory;
 
 use App\Constants;
+use App\Exceptions\InvariantError;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\InventoryGood;
 use App\Models\Inventory\InventoryGoodCondition;
@@ -11,7 +12,9 @@ use App\Models\Inventory\InventoryUnitMaster;
 use App\Models\Inventory\Warehouse;
 use App\Models\Inventory\WarehouseGood;
 use App\Utils\ErrorHandler;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class InventoryController extends Controller
@@ -27,14 +30,21 @@ class InventoryController extends Controller
 
     public function viewDashboard()
     {
-        return view('finance.inventory.dashboard');
+        $warehouseCount = Warehouse::count();
+        $stocks = WarehouseGood::select(DB::raw('COUNT(CASE WHEN total_stock >= minimum_stock THEN 1 END) as availableStock, COUNT(CASE WHEN total_stock < minimum_stock AND total_stock > 0 THEN 1 END) as lowStock, COUNT(CASE WHEN total_stock = 0 THEN 1 END) as outOfStock'))
+            ->leftJoin(DB::raw('(SELECT warehouse_good_id, SUM(stock) as total_stock FROM warehouse_good_stocks GROUP BY warehouse_good_id) as stocks'), 'warehouse_goods.id', '=', 'stocks.warehouse_good_id')
+            ->first();
+
+        return view('finance.inventory.dashboard', compact([
+            'warehouseCount', 'stocks'
+        ]));
     }
 
     public function viewInventory()
     {
         $warehouses = Warehouse::all();
 
-        return view('finance.inventory.inventory', compact([
+        return view('finance.inventory.inventory.index', compact([
             'warehouses'
         ]));
     }
@@ -52,7 +62,7 @@ class InventoryController extends Controller
         $conditions = InventoryGoodCondition::all();
         $statuses = InventoryGoodStatus::all();
 
-        return view('finance.inventory.add-item', compact([
+        return view('finance.inventory.add-item.index', compact([
             'warehouses', 'items', 'units', 'conditions', 'statuses'
         ]));
     }
@@ -65,28 +75,57 @@ class InventoryController extends Controller
                 'warehouse_id' => 'required|exists:warehouses,id',
                 'inventory_good_id' => 'required|exists:inventory_goods,id',
                 'inventory_unit_master_id' => 'required|exists:inventory_unit_masters,id',
-                'inventory_good_condition_id' => 'required|exists:inventory_good_conditions,id',
-                'inventory_good_status_id' => 'required|exists:inventory_good_statuses,id',
-                'stock' => 'required|integer',
+                'inventory_good_condition_id' => 'required|array',
+                'inventory_good_status_id' => 'required|array',
+                'stock' => 'required|array',
                 'minimum_stock' => 'required|integer',
+            ], [
+                'stock.required' => 'Tambahkan Item Stock pada gudang!',
+                'inventory_good_condition_id.required' => 'Tambahkan Item Stock pada gudang!',
+                'inventory_good_status_id.required' => 'Tambahkan Item Stock pada gudang!',
             ]);
 
-            WarehouseGood::create([
+            $warehouseGood = WarehouseGood::where('inventory_good_id', $request->inventory_good_id)
+                ->where('warehouse_id', $request->warehouse_id)
+                ->first();
+
+            if ($warehouseGood) {
+                throw new InvariantError('Item sudah ada di gudang ini');
+            }
+
+            DB::beginTransaction();
+
+            $warehouseGood = WarehouseGood::create([
                 'serial_number' => $request->serial_number,
                 'warehouse_id' => $request->warehouse_id,
-                'inventory_good_id' => $request->inventory_good_id,
                 'inventory_unit_master_id' => $request->inventory_unit_master_id,
-                'inventory_good_condition_id' => $request->inventory_good_condition_id,
-                'inventory_good_status_id' => $request->inventory_good_status_id,
-                'stock' => $request->stock,
+                'inventory_good_id' => $request->inventory_good_id,
                 'minimum_stock' => $request->minimum_stock,
             ]);
+
+            foreach ($request->stock as $key => $stock) {
+                $warehouseGood->warehouseGoodStocks()->create([
+                    'inventory_good_condition_id' => $request->inventory_good_condition_id[$key],
+                    'inventory_good_status_id' => $request->inventory_good_status_id[$key],
+                    'stock' => $stock,
+                ]);
+            }
+
+            DB::commit();
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Berhasil menambahkan item',
             ]);
         } catch (\Throwable $th) {
+            DB::rollBack();
+
+            if ($th instanceof QueryException && $th->errorInfo[1] === 1062) {
+                $data = $this->errorHandler->handle(new InvariantError('Dilarang memasukan stock dengan kondisi dan status yang sama lebih dari satu kali'));
+
+                return response()->json($data["data"], $data["code"]);
+            }
+
             $data = $this->errorHandler->handle($th);
 
             return response()->json($data["data"], $data["code"]);
@@ -96,7 +135,12 @@ class InventoryController extends Controller
     public function getTableInventory(Request $request)
     {
         if (request()->ajax()) {
-            $query = WarehouseGood::with(['inventoryGood.inventoryGoodCategory', 'inventoryUnitMaster']);
+            $query = WarehouseGood::with([
+                'inventoryGood.inventoryGoodCategory',
+                'inventoryUnitMaster',
+                'warehouseGoodStocks',
+                'warehouse'
+            ]);
 
             $filterWarehouse = $request->filterWarehouse;
             if ($filterWarehouse !== "*") {
@@ -119,17 +163,25 @@ class InventoryController extends Controller
             }
 
             return DataTables::of($query)
+                ->addColumn('code', function ($query) {
+                    return $query->inventoryGood->code_name;
+                })
                 ->addColumn('category', function ($query) {
                     return $query->inventoryGood->inventoryGoodCategory->name;
                 })
-                ->addColumn('name', function ($query) {
-                    return $query->inventoryGood->good_name . " - " . $query->inventoryGood->code_name;
+                ->addColumn('item_name', function ($query) {
+                    return $query->inventoryGood->good_name;
+                })
+                ->addColumn('warehouse_name', function ($query) {
+                    return $query->warehouse->name;
                 })
                 ->addColumn('stock', function ($query) {
-                    return $query->stock . " " . $query->inventoryUnitMaster->name;
+                    return $query->warehouseGoodStocks->sum('stock') . " " . $query->inventoryUnitMaster->name;
                 })
                 ->addColumn('action', function ($query) {
-                    return "-";
+                    return view('finance.inventory.inventory.menu', compact([
+                        'query'
+                    ]));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action'])

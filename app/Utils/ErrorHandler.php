@@ -14,7 +14,7 @@ class ErrorHandler
             return [
                 "data" => [
                     "status" => "fail",
-                    "message" => $error->getMessage(),
+                    "message" => "Input Error | " . $error->getMessage(),
                 ],
                 "code" => $error->getCode(),
             ];
@@ -30,7 +30,7 @@ class ErrorHandler
             return [
                 "data" => [
                     "status" => "fail",
-                    "message" => 'Validation Error ' . implode(', ', $errorsArray),
+                    "message" => 'Validation Error | ' . $errorsArray[0],
                 ],
                 "code" => 400,
             ];
@@ -41,7 +41,7 @@ class ErrorHandler
         return [
             "data" => [
                 "status" => "error",
-                "message" => "Something Went Wrong",
+                "message" => "Server Error | Something Went Wrong",
             ],
             "code" => 500,
         ];

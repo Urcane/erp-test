@@ -72,10 +72,18 @@ class CreateAllInventoryMigrationTable extends Migration
             $table->foreignId("warehouse_id")->constrained("warehouses");
             $table->foreignId("inventory_good_id")->constrained("inventory_goods");
             $table->foreignId("inventory_unit_master_id")->constrained("inventory_unit_masters");
+            $table->integer("minimum_stock");
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('warehouse_good_stocks', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("warehouse_good_id")->constrained("warehouse_goods");
             $table->foreignId("inventory_good_condition_id")->constrained("inventory_good_conditions");
             $table->foreignId("inventory_good_status_id")->constrained("inventory_good_statuses");
+            $table->unique(['warehouse_good_id', 'inventory_good_condition_id', 'inventory_good_status_id'], 'unique_warehouse_good_stocks');
             $table->integer("stock");
-            $table->integer("minimum_stock");
             $table->softDeletes()->index();
             $table->timestamps();
         });

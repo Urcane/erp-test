@@ -66,7 +66,7 @@
                     </div>
                     <div class="text-center mt-9">
                         <button type="reset" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-sm btn-info w-lg-200px" data-bs-dismiss="modal">
+                        <button type="submit" class="btn btn-sm btn-info w-lg-200px">
                             <span class="indicator-label">Simpan</span>
                         </button>
                     </div>
@@ -145,7 +145,7 @@
                     </div>
                     <div class="text-center mt-9">
                         <button type="reset" class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-sm btn-info w-lg-200px" data-bs-dismiss="modal">
+                        <button type="submit" class="btn btn-sm btn-info w-lg-200px">
                             <span class="indicator-label">Simpan</span>
                         </button>
                     </div>

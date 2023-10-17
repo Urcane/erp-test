@@ -20,32 +20,32 @@
 
 	<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/south-street/jquery-ui.css" rel="stylesheet">
 	<link href="{{asset('sense')}}/plugins/custom/signaturejs/css/jquery.signature.css" rel="stylesheet" type="text/css" />
-	
+
 	@stack('css')
-	
+
 	<link href="{{asset('sense')}}/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
 	<link href="{{asset('sense')}}/css/style.bundle.css" rel="stylesheet" type="text/css" />
-	
+
 	<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 	<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-	
+
 	<script type="text/javascript" src="{{asset('sense')}}/plugins/custom/touchjs/jquery.ui.touch-punch.min.js"></script>
 	<script src="{{asset('sense')}}/plugins/custom/signaturejs/js/jquery.signature.js"></script>
-	
+
 </head>
-<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="@yield('navbar-status','false')" 
-data-kt-app-toolbar-fixed="@yield('toolbar-status','false')" data-kt-app-toolbar-enabled="@yield('toolbar-status','true')" 
-data-kt-app-sidebar-enabled="@yield('sidebar-status','false')" data-kt-app-sidebar-fixed="@yield('sidebar-status','false')" data-kt-app-sidebar-hoverable="@yield('sidebar-status','false')" data-kt-app-sidebar-push-header="@yield('sidebar-push','false')" data-kt-app-sidebar-push-toolbar="@yield('sidebar-push','false')" data-kt-app-sidebar-push-footer="@yield('sidebar-status','false')" 
+<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="@yield('navbar-status','false')"
+data-kt-app-toolbar-fixed="@yield('toolbar-status','false')" data-kt-app-toolbar-enabled="@yield('toolbar-status','true')"
+data-kt-app-sidebar-enabled="@yield('sidebar-status','false')" data-kt-app-sidebar-fixed="@yield('sidebar-status','false')" data-kt-app-sidebar-hoverable="@yield('sidebar-status','false')" data-kt-app-sidebar-push-header="@yield('sidebar-push','false')" data-kt-app-sidebar-push-toolbar="@yield('sidebar-push','false')" data-kt-app-sidebar-push-footer="@yield('sidebar-status','false')"
 class="app-default page-loading-enabled page-loading">
 
 <style>
-	.kbw-signature { 
-		width: 100%; 
-		height: 260px; 
+	.kbw-signature {
+		width: 100%;
+		height: 260px;
 		border-radius:.475rem;
 	}
-    
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
    -webkit-appearance: none;
@@ -58,27 +58,27 @@ input[type="number"]::-webkit-outer-spin-button {
 </style>
 
 <script>
-	var defaultThemeMode = "system"; 
-	var themeMode; 
-	if ( document.documentElement ) { 
-		if ( document.documentElement.hasAttribute("data-theme-mode")) { 
-			themeMode = document.documentElement.getAttribute("data-theme-mode"); 
-		} else { 
-			if ( localStorage.getItem("data-theme") !== null ) { 
-				themeMode = localStorage.getItem("data-theme"); 
-			} else { 
-				themeMode = defaultThemeMode; 
-			} 
-		} if (themeMode === "system") { 
-			themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; 
-		} 
-		document.documentElement.setAttribute("data-theme", themeMode); 
+	var defaultThemeMode = "system";
+	var themeMode;
+	if ( document.documentElement ) {
+		if ( document.documentElement.hasAttribute("data-theme-mode")) {
+			themeMode = document.documentElement.getAttribute("data-theme-mode");
+		} else {
+			if ( localStorage.getItem("data-theme") !== null ) {
+				themeMode = localStorage.getItem("data-theme");
+			} else {
+				themeMode = defaultThemeMode;
+			}
+		} if (themeMode === "system") {
+			themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+		}
+		document.documentElement.setAttribute("data-theme", themeMode);
 	}
 </script>
 
 <div class="page-loader">
 	<span class="spinner-border text-primary" role="status"></span>
-</div>			
+</div>
 
 <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
 	<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
@@ -140,15 +140,15 @@ input[type="number"]::-webkit-outer-spin-button {
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l>" +
             "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
             ">" +
-            
+
             "<'table-responsive'tr>" +
-            
+
             "<'row'" +
             "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
             "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
             ">",
-            
-            columns: columnData,  
+
+            columns: columnData,
             columnDefs: [
             {
                 targets: 0,
@@ -173,7 +173,7 @@ input[type="number"]::-webkit-outer-spin-button {
                 $.ajax({
                     data: formData,
                     processData: false,
-                    contentType: false, 
+                    contentType: false,
                     url: ajaxLink,
                     type: "POST",
                     dataType: 'json',
@@ -194,7 +194,7 @@ input[type="number"]::-webkit-outer-spin-button {
                         $(`#${modalName}_submit`).removeAttr('disabled','disabled');
                         const data = JSON.parse(xhr.responseText);
                         toastr.error(errorThrown ,'Opps!');
-                        
+
                         if (Object.keys(data.errors).length >= 1) {
                             Object.keys(data.errors).forEach(keyError => {
                                 const error = data.errors[keyError];
@@ -220,7 +220,7 @@ input[type="number"]::-webkit-outer-spin-button {
             $(this).attr('value', 1);
         } else {
             $(this).attr('value', 0);
-        }        
+        }
     });
 
     function getFormattedDate(date) {
@@ -233,7 +233,7 @@ input[type="number"]::-webkit-outer-spin-button {
         return [year + "-" + month + "-" + day, hour + ":" +  min];
     }
 
-    
+
     function generateRandomString(length) {
         const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let result = '';
@@ -343,7 +343,7 @@ input[type="number"]::-webkit-outer-spin-button {
     //     $('#gpm').val(totalSumBundle);
 
     //     // const hiddenTotalInput = document.querySelector(`[name='total_price_bundle']`);
-    //     // hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string 
+    //     // hiddenTotalInput.value = totalSumBundle; // Set the hidden input value to empty string
 
 
     //     // Ambil nilai gpm dan modal

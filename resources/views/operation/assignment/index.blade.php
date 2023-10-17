@@ -27,68 +27,6 @@
                                 <span class="fs-4 text-uppercase fw-bolder text-dark d-none d-md-block">List Assignment</span>
                             </div>
 
-                            {{-- <div class="row border rounded p-4 mb-4 justify-content-center">
-                                <div class="col-3">
-                                    <p class="fw-bold fs-6 mb-2">Present</p>
-                                    <div class="ms-1 row">
-                                        <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal"
-                                            data-param="on-time">
-                                            <div class="text-info fw-bolder fs-4 mb-3" id="on-time">-</div>
-                                            <div class="fw-semibold fs-7 text-gray-600">On Time</div>
-                                        </a>
-                                        <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal"
-                                            data-param="late-clock-in">
-                                            <div class="text-info fw-bolder fs-4 mb-3" id="late-clock-in">-</div>
-                                            <div class="fw-semibold fs-7 text-gray-600">Late Clock In</div>
-                                        </a>
-                                        <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal"
-                                            data-param="early-clock-out">
-                                            <div class="text-info fw-bolder fs-4 mb-3" id="early-clock-out">-</div>
-                                            <div class="fw-semibold fs-7 text-gray-600">Early Clock Out</div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-1"></div>
-                                <div class="col-4">
-                                    <p class="fw-bold fs-6 mb-2">Not Present</p>
-                                    <div class="ms-1 row">
-                                        <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal"
-                                            data-param="absent">
-                                            <div class="text-info fw-bolder fs-4 mb-3" id="absent">-</div>
-                                            <div class="fw-semibold fs-7 text-gray-600">Absent</div>
-                                        </a>
-                                        <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal"
-                                            data-param="no-clock-in">
-                                            <div class="text-info fw-bolder fs-4 mb-3" id="no-clock-in">-</div>
-                                            <div class="fw-semibold fs-7 text-gray-600">No Clock In</div>
-                                        </a>
-                                        <a class="col summaries" href="#summaries_modal" data-bs-toggle="modal"
-                                            data-param="no-clock-out">
-                                            <div class="text-info fw-bolder fs-4 mb-3" id="no-clock-out">-</div>
-                                            <div class="fw-semibold fs-7 text-gray-600">No Clock Out</div>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-1"></div>
-                                <div class="col-3">
-                                    <p class="fw-bold fs-6 mb-2">Away</p>
-                                    <div class="ms-1 row">
-                                        <a class="col-4 summaries" href="#summaries_modal" data-bs-toggle="modal"
-                                            data-param="day-off">
-                                            <div class="text-info fw-bolder fs-4 mb-3" id="day-off">-</div>
-                                            <div class="fw-semibold fs-7 text-gray-600">Day Off</div>
-                                        </a>
-                                        <div class="col-1"></div>
-                                        <a class="col-4 summaries" href="#summaries_modal" data-bs-toggle="modal"
-                                            data-param="time-off">
-                                            <div class="text-info fw-bolder fs-4 mb-3" id="time-off">-</div>
-                                            <div class="fw-semibold fs-7 text-gray-600">Time Off</div>
-                                        </a>
-                                        <div class="col-1"></div>
-                                    </div>
-                                </div>
-                            </div> --}}
-
                             @can('OPR:create-department-assignment')
                                 <div class="d-flex justify-content-end mb-5">
                                     <div>
@@ -125,21 +63,6 @@
                                         </div>
                                         <div class="separator mb-6"></div>
                                         <div class="row px-8 pb-6">
-                                            {{-- <div class="col-lg-12 mb-3">
-                                                <label class="d-flex align-items-center fs-6 mb-2">
-                                                    <span class="fw-bold textd-dark">Department</span>
-                                                </label>
-                                                <select class="form-select form-select-sm form-select-solid"
-                                                    data-control="select2" required name="filterDepartment"
-                                                    id="filter_department" data-dropdown-parent="#filter_pegawai">
-                                                    <option value="*">Semua Department</option>
-                                                    @foreach ($dataDepartment as $dp)
-                                                        <option value="{{ $dp->id }}">{{ $dp->department_name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div> --}}
-
                                             <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 mb-2">
                                                     <span class="fw-bold textd-dark">Status</span>

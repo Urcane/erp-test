@@ -17,7 +17,7 @@
                             <img src="{{ asset('sense/media/images/Available.png') }}" class="py-2 me-1 img-fluid"
                                 style="height: 80px">
                             <div class="align-items-center justify-content-center">
-                                <div class="text-info fw-bolder fs-3">0 Item</div>
+                                <div class="text-info fw-bolder fs-3">{{ $stocks->availableStock }} Item</div>
                                 <div class="text-muted">Available Stock</div>
                             </div>
                         </div>
@@ -28,7 +28,7 @@
                             <img src="{{ asset('sense/media/images/Low.png') }}" class="py-2 img-fluid"
                                 style="height: 80px">
                             <div class="align-items-center justify-content-center">
-                                <div class="text-info fw-bolder fs-3">0 Item</div>
+                                <div class="text-info fw-bolder fs-3">{{ $stocks->lowStock }} Item</div>
                                 <div class="text-muted">Low Stock</div>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                             <img src="{{ asset('sense/media/images/Out.png') }}" class="py-2 img-fluid"
                                 style="height: 80px">
                             <div class="align-items-center justify-content-center">
-                                <div class="text-info fw-bolder fs-3">0 Item</div>
+                                <div class="text-info fw-bolder fs-3">{{ $stocks->outOfStock }} Item</div>
                                 <div class="text-muted">Out of Stock</div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                             <img src="{{ asset('sense/media/images/Warehouse.png') }}" class="py-2 img-fluid"
                                 style="height: 80px">
                             <div class="align-items-center justify-content-center">
-                                <div class="text-info fw-bolder fs-3">0</div>
+                                <div class="text-info fw-bolder fs-3">{{ $warehouseCount }}</div>
                                 <div class="text-muted">Warehouse</div>
                             </div>
                         </div>
