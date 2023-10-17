@@ -242,7 +242,7 @@
             },
             success: function(data) {
                 if ("{{$user->userEmployment->start_shift ?? ""}}" != "") {
-                    console.log(data);
+                    // console.log(data);
                     $("#scheduleShift").empty();
                     $("#scheduleShift").append(`
                     <label class="d-flex align-items-center fs-6 form-label mb-2">
