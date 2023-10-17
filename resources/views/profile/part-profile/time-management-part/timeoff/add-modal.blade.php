@@ -78,7 +78,7 @@
                                         <span class="required fw-bold">Tanggal Selesai</span>
                                     </label>
                                     <input type="date" class="form-control form-control-solid" placeholder="Select Date"
-                                        required name="end_date">
+                                        required#date_section  name="end_date">
                                 </div>
                             </section>
 
@@ -171,7 +171,7 @@
                 $('#working_end_box').trigger('change');
                 $('[name="date"]').prop('required', true);
                 $('[name="start_date"]').prop('required', false);
-                $('[name="end_date"]').prop('required', false);
+                $('#date_section [name="end_date"]').prop('required', false);
 
                 if (min_notice) {
                     $('[name="date"]').attr('min', moment().add(min_notice, 'days').format('YYYY-MM-DD'));
@@ -192,7 +192,7 @@
                 $('#working_end_box').trigger('change');
                 $('[name="date"]').prop('required', false);
                 $('[name="start_date"]').prop('required', true);
-                $('[name="end_date"]').prop('required', true);
+                $('#date_section [name="end_date"]').prop('required', true);
 
                 if (minus_amount) {
                     $('.minus_amount').text(minus_amount);
@@ -212,18 +212,18 @@
                 if (duration) {
                     $('#duration_warn').fadeIn();
                     $('#duration_amount').text(duration);
-                    $('[name="end_date"]').attr('disabled', true);
+                    $('#date_section [name="end_date"]').attr('disabled', true);
 
                     $('[name="start_date"]').on("change", function() {
                         let date = moment($(this).val());
                         date = date.add(duration, 'days').format('YYYY-MM-DD');
 
-                        $('[name="end_date"]').val(date);
+                        $('#date_section [name="end_date"]').val(date);
                     });
                 } else {
                     $('#duration_warn').hide();
                     $('[name="start_date"]').off("change");
-                    $('[name="end_date"]').attr('disabled', false);
+                    $('#date_section [name="end_date"]').attr('disabled', false);
                 }
             }
 
