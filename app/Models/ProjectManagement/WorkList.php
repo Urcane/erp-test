@@ -24,7 +24,7 @@ class WorkList extends Model
     }
 
     function projectStatus() : BelongsTo {
-        return $this->belongsTo(WorkStatus::class);
+        return $this->belongsTo(WorkStatus::class, 'status', 'code');
     }
 
     function createTask(Request $request) : WorkList {
