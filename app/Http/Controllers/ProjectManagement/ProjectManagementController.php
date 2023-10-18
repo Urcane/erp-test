@@ -39,7 +39,17 @@ class ProjectManagementController extends Controller
                 return $result;
             })
             ->addColumn('action', function($q) {
-                $result = '<div></div>';
+                $route = route('com.promag.detail');
+
+                $result = '
+                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                <ul class="dropdown-menu w-150px">
+                    <li><a href="'.$route.'" class="btn_edit_karyawan dropdown-item py-2" data-id="'.$q->id.'"><i class="fa-solid fa-pen me-4"></i>Edit</a></li>
+                    <li><a class="dropdown-item py-2 text-success"><i class="fa-solid fa-bars-progress me-4 text-success"></i>Progress</a></li>
+                    <div class="separator my-2"></div>
+                    <li><a class="dropdown-item py-2"><i class="fa-solid fa-file-lines me-4"></i>Terbitkan <b class="text-warning">WO</b></a></li>
+                </ul>
+                ';
 
                 return $result;
             })
