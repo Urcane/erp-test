@@ -13,6 +13,6 @@ trait HasProject
     }
 
     function taskLists() : BelongsToMany {
-        return $this->morphedByMany(TaskList::class, 'userable', 'user_has_models');
+        return $this->morphedByMany(WorkTaskList::class, 'userable', 'user_has_models');
     }
 }

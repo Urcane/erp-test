@@ -15,6 +15,6 @@ class WorkAttachment extends Model
     }
 
     function taskList() : BelongsTo {
-        return $this->belongsTo(TaskList::class);
+        return $this->belongsTo(WorkTaskList::class);
     }
 }

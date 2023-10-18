@@ -59,7 +59,7 @@ class ProjectManagementController extends Controller
                 return $result;
             })
             ->addColumn('action', function($q) {
-                $route = route('com.promag.detail');
+                $route = route('com.promag.detail', ['work_list_id' => $q->id]);
 
                 $result = '
                 <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
@@ -119,7 +119,7 @@ class ProjectManagementController extends Controller
         return view('cmt-promag.create', compact("dataBOQ"));
     }
 
-    public function store (Request $request) : JsonResponse {
+    public function store(Request $request) {
         try {
             $request->validate([
                 "itemable_bill_of_quantities_id" => "required",
@@ -130,6 +130,7 @@ class ProjectManagementController extends Controller
                 "no_po_customer" => "required",
                 "lat" => "required",
                 "lang" => "required",
+                "work_desc" => "required",
             ]);
 
             WorkList::create([
@@ -153,19 +154,14 @@ class ProjectManagementController extends Controller
         }
     }
 
-    public function detail(Request $request)
+    public function detail($work_list_id )
     {
-        return view('cmt-promag.pages.overview');
+        return view('cmt-promag.pages.overview', compact("work_list_id"));
     }
 
     public function files(Request $request)
     {
         return view('cmt-promag.pages.files');
-    }
-
-    public function taskLists(Request $request)
-    {
-        return view('cmt-promag.pages.task-lists');
     }
 
     function createWorkOrderSurvey(WorkOrderRequest $request) : JsonResponse {

@@ -1,0 +1,78 @@
+<?php
+
+namespace App\Http\Controllers\ProjectManagement;
+
+use App\Http\Controllers\Controller;
+use App\Models\ProjectManagement\WorkTaskList;
+use App\Utils\ErrorHandler;
+use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
+
+class TaskListController extends Controller
+{
+    private $errorHandler;
+
+    public function __construct()
+    {
+        $this->errorHandler = new ErrorHandler();
+    }
+
+    public function taskLists($work_list_id)
+    {
+        return view('cmt-promag.pages.task-lists', compact("work_list_id"));
+    }
+
+    public function dataTableTaskList($work_list_id) {
+        $query = WorkTaskList::where("work_list_id", $work_list_id)->with('users');
+
+        return DataTables::of($query)
+            ->addColumn('assigned', function($q) {
+                $users = $q->users->count();
+                $result = "<div>$users</div>";
+
+                return $result;
+            })
+            ->addColumn('action', function($q) {
+                $route = route('com.promag.detail', ['work_list_id' => $q->id]);
+
+                $result = '
+                <a href="'.$route.'" class="btn_edit_karyawan dropdown-item py-2 text-success" data-id="'.$q->id.'"><i class="fa-solid fa-eye me-4"></i>Detail</a>
+                ';
+
+                return $result;
+            })
+            ->addIndexColumn()
+            ->rawColumns(['action', 'progress', 'assigned'])
+            ->make(true);
+    }
+
+    public function store(Request $request, $work_list_id)
+    {
+        try{
+            $request->validate([
+                'task_name' => 'required',
+                'start_date' => 'required',
+                'due_date' => 'required',
+                'task_description' => 'required',
+            ]);
+
+            WorkTaskList::create([
+                "work_list_id" => $work_list_id,
+                "task_name" => $request->task_name,
+                "start_date" => $request->start_date,
+                "due_date" => $request->due_date,
+                "task_description" => $request->task_description,
+                "progress_category" => "PRD",
+                "status" => "PR",
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil disimpan',
+            ]);
+        } catch (\Exception $e) {
+            $data = $this->errorHandler->handle($e);
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+}
