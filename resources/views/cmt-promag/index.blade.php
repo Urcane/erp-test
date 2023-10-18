@@ -58,7 +58,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="fs-7">
-                                        <tr>
+                                        {{-- <tr>
                                             <td class="text-center">1</td>
                                             <td>
                                                 <span class="fw-bold">Pembuatan Aplikasi Internal CMT - PT. COMTELINDO</span>
@@ -67,9 +67,9 @@
                                             <td>C0167-TEL-20221201</td>
                                             <td>
                                                 <div class="symbol-group symbol-hover">
-                                                    {{-- <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
+                                                    <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
                                                         <img src="{{asset('sense')}}/media/avatars/blank.png" alt="">
-                                                    </div> --}}
+                                                    </div>
                                                     <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
                                                         <div class="symbol-label bg-warning">
                                                             <span class="fs-7 text-white">E</span>
@@ -105,14 +105,13 @@
                                             <td class="text-center">
                                                 <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                                                 <ul class="dropdown-menu w-150px">
-                                                    {{-- <li><a href="{{route('gm.promag.detail',['id'=>'1'])}}" class="dropdown-item py-2"><i class="fa-solid fa-eye me-4"></i>Detail</a></li> --}}
                                                     <li><a href="{{route('com.promag.detail')}}" class="btn_edit_karyawan dropdown-item py-2" data-id="'.$action->id.'"><i class="fa-solid fa-pen me-4"></i>Edit</a></li>
                                                     <li><a class="dropdown-item py-2 text-success"><i class="fa-solid fa-bars-progress me-4 text-success"></i>Progress</a></li>
                                                     <div class="separator my-2"></div>
                                                     <li><a class="dropdown-item py-2"><i class="fa-solid fa-file-lines me-4"></i>Terbitkan <b class="text-warning">WO</b></a></li>
                                                 </ul>
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                     </tbody>
                                 </table>
                             </div>
@@ -125,9 +124,8 @@
 </div>
 
 <script>
-    var dataTablePromag;
     $(document).ready(function () {
-        dataTablePromag = $('#kt_table_promag').DataTable({
+        var dataTablePromag = $('#kt_table_promag').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
@@ -158,6 +156,7 @@
 
             columns: [
                 { data: 'DT_RowIndex'},
+                { data: 'work_name'},
                 { data: 'no_project'},
                 { data: 'no_po_customer'},
                 { data: 'assigned'},

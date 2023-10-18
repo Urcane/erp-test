@@ -30,14 +30,14 @@
             <div class="row justify-content-center">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body" id="kt_form_store_promag">
                             <div class="row mb-6 align-items-center">
                                 <div class="col-lg-6 gap-3 d-flex align-items-center">
                                     <span class="fs-7 text-uppercase fw-bolder text-dark d-none d-md-block">Create New
                                         Project</span>
                                 </div>
                             </div>
-                            <form action="{{route("com.promag.store")}}" method="post">
+                            <form class="form fv-plugins-bootstrap5 fv-plugins-framework" enctype="multipart/form-data" id="kt_form_store_promag_form">
                                 @csrf
                                 <div class="row">
                                     <div class="col-lg-6 mb-3">
@@ -108,8 +108,8 @@
                                         <textarea class="form-control form-control-solid" name="work_desc" id="work_desc" cols="10" rows="10"></textarea>
                                     </div>
                                     <div class="col-lg-12 mb-3 text-center">
-                                        <button type="button" class="btn btn-secondary">Cancel</button>
-                                        <button type="submit" class="btn btn-info">Submit</button>
+                                        <button type="button" class="btn btn-secondary" id="kt_form_store_promag_cancel">Cancel</button>
+                                        <button type="submit" class="btn btn-info" id="kt_form_store_promag_submit">Submit</button>
                                     </div>
                                 </div>
                             </form>
@@ -194,6 +194,20 @@
 
                 addMarker(latitude, longitude, false);
             });
+
+
+            submitForm({
+                formId: "kt_form_store_promag",
+                ajaxLink: '{{route("com.promag.store")}}',
+                validationMessages: {
+                    itemable_bill_of_quantities_id: {
+                        required: "Pilih BOQ terlebih dahulu!"
+                    }
+                },
+                successCallback: function(data) {
+                    console.log(data);
+                }
+            })
         });
     </script>
 @endsection

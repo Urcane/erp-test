@@ -211,6 +211,46 @@ input[type="number"]::-webkit-outer-spin-button {
         });
     }
 
+    function submitForm({formId, ajaxLink, validationMessages = {}, successCallback = () => {}, failCallback = () => {}}) {
+        $(`#${formId}_form`).validate({
+            messages: validationMessages,
+            submitHandler: function(form) {
+                var formData = new FormData(form);
+                $(`#${formId}_submit`).attr('disabled', 'disabled');
+                $.ajax({
+                    data: formData,
+                    processData: false,
+                    contentType: false, 
+                    url: ajaxLink,
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                        $(`#${formId}_cancel`).click();
+                        toastr.success(data.status,'Selamat 🚀 !');
+
+                        successCallback(data);
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        $(`#${formId}_submit`).removeAttr('disabled','disabled');
+                        const data = JSON.parse(xhr.responseText);
+                        toastr.error(errorThrown ,'Opps!');
+                        
+                        if (Object.keys(data.errors).length >= 1) {
+                            Object.keys(data.errors).forEach(keyError => {
+                                const error = data.errors[keyError];
+
+                                error.forEach(msg => {
+                                    toastr.error(msg, data.message);
+                                });
+                            });
+                            return
+                        }
+                    }
+                });
+            }
+        });
+    }
+
 	function onlyUnique(value, index, array) {
 		return array.indexOf(value) === index;
 	}

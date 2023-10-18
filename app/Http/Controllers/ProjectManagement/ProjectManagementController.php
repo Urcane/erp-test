@@ -12,6 +12,8 @@ use App\Services\ProjectManagement\WorkOrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Contracts\DataTable;
+use Yajra\DataTables\Facades\DataTables;
 
 class ProjectManagementController extends Controller
 {
@@ -24,6 +26,24 @@ class ProjectManagementController extends Controller
     public function index()
     {
         return view('cmt-promag.index');
+    }
+
+    function getWorkListTable() : JsonResponse {
+        $query = WorkList::with('userable');
+
+        return DataTables::of($query)
+            ->addColumn('assigned', function($q) {
+                $users = $q->userable->slice(0,5);
+
+
+
+                $result = '<div></div>';
+
+            
+            })
+            ->addIndexColumn()
+            ->rawColumns(['action', 'progress', 'assigned'])
+            ->make(true);
     }
 
     public function create()
@@ -86,7 +106,6 @@ class ProjectManagementController extends Controller
     }
 
     function getDataTableWorkOrder(Request $request) : JsonResponse {
-        dd("Asdfsf");
         return $this->workOrderService->renderDatatable($request);
     }
 
