@@ -42,7 +42,7 @@ class="d-flex flex-wrap flex-sm-nowrap mb-6"
                     &amp; size
                 </div>
             </div>
-            <div
+            {{-- <div
                 class="d-flex mb-4"
             >
                 <a
@@ -222,7 +222,7 @@ class="d-flex flex-wrap flex-sm-nowrap mb-6"
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
         <div
             class="d-flex flex-wrap justify-content-start"
