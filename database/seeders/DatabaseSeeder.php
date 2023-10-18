@@ -22,13 +22,13 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
 
             ProjectSeeder::class,
-            OpportunitySeeder::class,
             InventorySeeder::class,
             HolidaySeeder::class,
             HCDataSeeder::class,
             LeaveSeeder::class,
 
             AssignmentSeeder::class,
+            OpportunitySeeder::class,
         ]);
     }
 }

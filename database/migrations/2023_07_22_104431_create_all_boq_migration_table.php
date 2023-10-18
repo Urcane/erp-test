@@ -104,6 +104,17 @@ class CreateAllBoqMigrationTable extends Migration
             $table->foreignId('referenced_quotation_id')->nullable()->constrained('itemable_quotation_parts');
             $table->timestamps();
         });
+
+        Schema::table('work_lists', function (Blueprint $table) {
+            $table->foreignId('itemable_bill_of_quantity_id')
+                ->after('id')
+                ->constrained();
+                
+            $table->foreignId('itemable_quotation_part_id')
+            ->after('itemable_bill_of_quantity_id')
+                ->constrained()
+                ->nullable();
+        });
     }
 
     /**

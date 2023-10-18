@@ -11,6 +11,7 @@
 @endsection
 
 @section('content')
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <div class="row justify-content-center mt-n20">
         <div class="col-lg-12 mt-n20">
             <div class="row justify-content-center mt-md-n20">
@@ -22,86 +23,94 @@
                             </div>
 
                             <div class="col-lg-12 p-6 m-1 rounded border border-2 border-secondary">
-                                <form class="form row" enctype="multipart/form-data" id="time_off_form">
-                                    <div class="col-lg-6 mb-3">
+                                <form class="form row" enctype="multipart/form-data" id="add_item_form">
+                                    <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Time Off Name</span>
+                                            <span class="required fw-bold">Pilih Warehouse</span>
                                         </label>
                                         <select class="form-select form-select-solid" data-control="select2" required
-                                            name="filterWarehouse" id="filter_warehouse">
-                                            <option value="*">Semua Warehouse</option>
-                                            @foreach ([1, 2, 3, 4, 5, 6] as $a)
-                                                <option value="{{ $a }}">{{ $a }}</option>
+                                            name="warehouse_id" id="warehouse_id">
+                                            <option value="" selected>Choose a Warehouse</option>
+                                            @foreach ($warehouses as $warehouse)
+                                                <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
 
-                                    <div class="col-lg-6 mb-3">
+                                    <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Item Name</span>
-                                        </label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Name"
-                                            required name="name">
-                                    </div>
-
-                                    <div class="col-lg-6 mb-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Select Merk</span>
+                                            <span class="required fw-bold">Pilih Item</span>
                                         </label>
                                         <select class="form-select form-select-solid" data-control="select2" required
-                                            name="filterWarehouse" id="filter_warehouse">
-                                            <option value="*">Semua Warehouse</option>
-                                            @foreach ([1, 2, 3, 4, 5, 6] as $a)
-                                                <option value="{{ $a }}">{{ $a }}</option>
+                                            name="inventory_good_id" id="inventory_good_id">
+                                            <option value="" selected>Choose a Item</option>
+                                            @foreach ($items as $item)
+                                                <option value="{{ $item->id }}">{{ $item->good_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
 
-                                    <div class="col-lg-6 mb-3">
+                                    <hr class="mb-5 mt-4">
+
+                                    <p class="fw-bold fs-4">Deskripsi Item</p>
+
+                                    <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Select Item Code</span>
+                                            <span class="fw-bold">Kategori</span>
                                         </label>
-                                        <select class="form-select form-select-solid" data-control="select2" required
-                                            name="filterWarehouse" id="filter_warehouse">
-                                            <option value="*">Semua Warehouse</option>
-                                            @foreach ([1, 2, 3, 4, 5, 6] as $a)
-                                                <option value="{{ $a }}">{{ $a }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" id="item_category" class="form-control form-control-solid"
+                                            disabled>
+                                    </div>
+
+                                    <div class="col-lg-12 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="fw-bold">Nama</span>
+                                        </label>
+                                        <input type="text" id="item_name" class="form-control form-control-solid"
+                                            disabled>
                                     </div>
 
                                     <div class="col-lg-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Select Category</span>
+                                            <span class="fw-bold">Tipe</span>
                                         </label>
-                                        <select class="form-select form-select-solid" data-control="select2" required
-                                            name="filterWarehouse" id="filter_warehouse">
-                                            <option value="*">Semua Warehouse</option>
-                                            @foreach ([1, 2, 3, 4, 5, 6] as $a)
-                                                <option value="{{ $a }}">{{ $a }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" id="item_type" class="form-control form-control-solid"
+                                            disabled>
                                     </div>
 
                                     <div class="col-lg-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Select Satuan Unit</span>
+                                            <span class="fw-bold">Merk</span>
                                         </label>
-                                        <select class="form-select form-select-solid" data-control="select2" required
-                                            name="filterWarehouse" id="filter_warehouse">
-                                            <option value="*">Semua Warehouse</option>
-                                            @foreach ([1, 2, 3, 4, 5, 6] as $a)
-                                                <option value="{{ $a }}">{{ $a }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" id="item_merk" class="form-control form-control-solid"
+                                            disabled>
                                     </div>
 
-                                    <div class="col-lg-6 mb-3">
+                                    <div class="col-lg-12 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="fw-bold">Spesifikasi</span>
+                                        </label>
+                                        <input type="text" id="item_spesification"
+                                            class="form-control form-control-solid" disabled>
+                                    </div>
+
+                                    <div class="col-lg-12 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="fw-bold">Deskripsi</span>
+                                        </label>
+                                        <textarea class="form-control form-control-solid" rows="3" id="item_description" disabled></textarea>
+                                    </div>
+
+                                    <hr class="mb-5 mt-4">
+
+                                    <p class="fw-bold fs-4">Penambahan Gudang</p>
+
+                                    <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">SN/PN/MAC</span>
                                         </label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="Name"
-                                            required name="name">
+                                        <input type="text" class="form-control form-control-solid" placeholder="SN/PN/MAC"
+                                            required name="serial_number">
                                     </div>
 
                                     <div class="col-lg-6 mb-3">
@@ -109,28 +118,54 @@
                                             <span class="required fw-bold">Kondisi Barang</span>
                                         </label>
                                         <select class="form-select form-select-solid" data-control="select2" required
-                                            name="filterWarehouse" id="filter_warehouse">
-                                            <option value="*">Semua Warehouse</option>
-                                            @foreach ([1, 2, 3, 4, 5, 6] as $a)
-                                                <option value="{{ $a }}">{{ $a }}</option>
+                                            name="inventory_good_condition_id" id="inventory_good_condition_id">
+                                            <option value="" selected>Choose a Condition</option>
+                                            @foreach ($conditions as $condition)
+                                                <option value="{{ $condition->id }}">{{ $condition->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
 
                                     <div class="col-lg-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Minimum Stock</span>
+                                            <span class="required fw-bold">Status Barang</span>
                                         </label>
-                                        <input type="number" class="form-control form-control-solid" placeholder="Name"
-                                            required name="name">
+                                        <select class="form-select form-select-solid" data-control="select2" required
+                                            name="inventory_good_status_id" id="inventory_good_status_id">
+                                            <option value="" selected>Choose a Status</option>
+                                            @foreach ($statuses as $status)
+                                                <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
-                                    <div class="col-lg-6 mb-3">
+                                    <div class="col-lg-4 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Stock Awal</span>
                                         </label>
-                                        <input type="number" class="form-control form-control-solid" placeholder="Name"
-                                            required name="name">
+                                        <input type="number" class="form-control form-control-solid" placeholder="10"
+                                            required name="stock">
+                                    </div>
+
+                                    <div class="col-lg-4 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="required fw-bold">Minimum Stock</span>
+                                        </label>
+                                        <input type="number" class="form-control form-control-solid" placeholder="10"
+                                            required name="minimum_stock">
+                                    </div>
+
+                                    <div class="col-lg-4 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="required fw-bold">Satuan Unit</span>
+                                        </label>
+                                        <select class="form-select form-select-solid" data-control="select2" required
+                                            name="inventory_unit_master_id" id="inventory_unit_master_id">
+                                            <option value="" selected>Choose a Unit</option>
+                                            @foreach ($units as $unit)
+                                                <option value="{{ $unit->id }}">{{ $unit->name }} - {{ $unit->code }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
                                     <div class="col-lg-12 mt-8 mb-4 d-flex justify-content-center">
@@ -153,5 +188,45 @@
         </div>
     </div>
 
-    <script></script>
+    <script>
+        const itemData = @json($items);
+
+        $(document).ready(function() {
+            $('#inventory_good_id').on('change', function() {
+                const item = itemData.find(item => item.id == $(this).val());
+                $('#item_category').val(item.inventory_good_category.name + " - " + item
+                    .inventory_good_category.code_name ?? "(No Code)");
+                $('#item_name').val(item.good_name + " - " + item.code_name ?? "(No Code)");
+                $('#item_type').val(item.good_type ?? "-");
+                $('#item_merk').val(item.merk ?? "-");
+                $('#item_spesification').val(item.spesification ?? "-");
+                $('#item_description').val(item.description);
+            });
+
+            $('#add_item_form').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('fin.inv.inventory-store') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                        setTimeout(function() {
+                            window.location.href = "{{ route('fin.inv.inventory') }}";
+                        }, 1000);
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

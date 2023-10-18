@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customer\Customer;
+use App\Models\Customer\CustomerContact;
+use App\Models\Customer\CustomerProspect;
+use App\Models\Customer\CustomerProspectLog;
 use App\Models\Master\BuildingType;
 use App\Models\Master\CctvRecordDuration;
 use App\Models\Master\CctvStorageCapacity;
@@ -17,6 +21,9 @@ use App\Models\Master\TransportationAccess;
 use App\Models\Opportunity\Survey\Master\SiteSurveyInterface;
 use App\Models\Opportunity\Survey\SiteSurveyInternet;
 use App\Models\Opportunity\Survey\TypeOfSurvey;
+use Database\Seeders\Opportunity\BoqSeeder;
+use Database\Seeders\Opportunity\LeapSeeder;
+use Database\Seeders\Opportunity\QuotationSeeder;
 use Illuminate\Database\Seeder;
 
 use function PHPSTORM_META\map;
@@ -251,5 +258,13 @@ class OpportunitySeeder extends Seeder
         // ])->map(function($item) {
         //     CameraType::create($item);
         // });
+
+
+        // Dummy Data for leap and boq
+        $this->call([
+            LeapSeeder::class,
+            BoqSeeder::class,
+            QuotationSeeder::class,
+        ]);
     }
 }
