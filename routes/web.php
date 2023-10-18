@@ -105,7 +105,7 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(ProjectManagementController::class)->group(function () {
         Route::prefix('cmt-promag')->group(function () {
             Route::get('/', 'index')->name('com.promag.index');
-            Route::get('/table', 'datatable')->name('com.promag.datatable');
+            Route::get('/table', 'getWorkListTable')->name('com.promag.datatable');
 
             Route::get('/create', 'create')->name('com.promag.create');
             Route::post('/store', 'store')->name('com.promag.store');

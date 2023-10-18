@@ -105,15 +105,16 @@ class CreateAllBoqMigrationTable extends Migration
             $table->timestamps();
         });
 
+        // work sini
         Schema::table('work_lists', function (Blueprint $table) {
             $table->foreignId('itemable_bill_of_quantity_id')
                 ->after('id')
                 ->constrained();
                 
             $table->foreignId('itemable_quotation_part_id')
-            ->after('itemable_bill_of_quantity_id')
-                ->constrained()
-                ->nullable();
+                ->after('itemable_bill_of_quantity_id')
+                ->nullable()
+                ->constrained();
         });
     }
 

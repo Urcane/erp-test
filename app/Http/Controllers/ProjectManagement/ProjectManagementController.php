@@ -27,41 +27,40 @@ class ProjectManagementController extends Controller
         return view('cmt-promag.index');
     }
 
+    function getWorkListTable() : JsonResponse {
+        $query = WorkList::with('users');
+
+        return DataTables::of($query)
+            ->addColumn('assigned', function($q) {
+                $users = $q->users;
+                $result = '<div></div>';
+
+                return $result;
+            })
+            ->addColumn('action', function($q) {
+                $route = route('com.promag.detail');
+
+                $result = '
+                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                <ul class="dropdown-menu w-150px">
+                    <li><a href="'.$route.'" class="btn_edit_karyawan dropdown-item py-2" data-id="'.$q->id.'"><i class="fa-solid fa-pen me-4"></i>Edit</a></li>
+                    <li><a class="dropdown-item py-2 text-success"><i class="fa-solid fa-bars-progress me-4 text-success"></i>Progress</a></li>
+                    <div class="separator my-2"></div>
+                    <li><a class="dropdown-item py-2"><i class="fa-solid fa-file-lines me-4"></i>Terbitkan <b class="text-warning">WO</b></a></li>
+                </ul>
+                ';
+
+                return $result;
+            })
+            ->addIndexColumn()
+            ->rawColumns(['action', 'progress', 'assigned'])
+            ->make(true);
+    }
+
     public function create()
     {
         $dataBOQ = ItemableBillOfQuantity::where('is_done', 1)->with("prospect")->get();
         return view('cmt-promag.create', compact("dataBOQ"));
-    }
-
-    public function datatable(Request $request)
-    {
-        $query = WorkList::with(["itemable_bill_of_quantity", "users"]);
-
-        return DataTables::of($query)
-            ->addColumn('action', function ($action) {
-                $edit = '
-                <li>
-                    <div class="btn-edit" onclick="fillInput(\'' . $action->id . '\', \'' . $action->user_file_category_id . '\', \'' . $action->description . '\')">
-                        <a href="" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
-                    </div>
-                </li>
-
-                ';
-                $delete = '<li><button onclick="deleteUserFile(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</button></li>';
-                return '
-                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <ul class="dropdown-menu">
-                '.$edit.'
-                '.$delete.'
-                </ul>
-                ';
-            })
-            ->addColumn('assigned', function ($data) {
-                return $data->users->count();
-            })
-            ->addIndexColumn()
-            ->rawColumns(['action','DT_RowChecklist'])
-            ->make(true);
     }
 
     public function store (Request $request) : JsonResponse {
@@ -127,7 +126,6 @@ class ProjectManagementController extends Controller
     }
 
     function getDataTableWorkOrder(Request $request) : JsonResponse {
-        dd("Asdfsf");
         return $this->workOrderService->renderDatatable($request);
     }
 

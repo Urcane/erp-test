@@ -37,7 +37,7 @@
                             <div class="col-lg-6 d-flex justify-content-end">
                                 <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
                                     <div class="d-flex align-items-center">
-                                        <a href="{{ route('com.promag.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
+                                        <a href="{{ route('com.promag.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Project Baru</a>
                                     </div>
                                 </div>
                             </div>
@@ -58,6 +58,60 @@
                                         </tr>
                                     </thead>
                                     <tbody class="fs-7">
+                                        {{-- <tr>
+                                            <td class="text-center">1</td>
+                                            <td>
+                                                <span class="fw-bold">Pembuatan Aplikasi Internal CMT - PT. COMTELINDO</span>
+                                            </td>
+                                            <td>C0167-TEL-20221201</td>
+                                            <td>C0167-TEL-20221201</td>
+                                            <td>
+                                                <div class="symbol-group symbol-hover">
+                                                    <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
+                                                        <img src="{{asset('sense')}}/media/avatars/blank.png" alt="">
+                                                    </div>
+                                                    <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
+                                                        <div class="symbol-label bg-warning">
+                                                            <span class="fs-7 text-white">E</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="symbol symbol-circle symbol-30px">
+                                                        <div class="symbol-label bg-dark">
+                                                            <span class="fs-7 text-inverse-dark">+0</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="symbol symbol-circle symbol-30px">
+                                                        <a href="#!" data-bs-toggle="modal" >
+                                                            <div class="symbol-label bg-light">
+                                                                <span class="fs-7"><i class="fa-solid fa-user-plus"></i></span>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center w-100 mw-125px">
+                                                    <div class="progress h-6px w-100 me-2 bg-light-info">
+                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 44%" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <span class="text-muted fs-8 fw-semibold">
+                                                        44%
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-light-info px-3 py-2">Progress</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                                <ul class="dropdown-menu w-150px">
+                                                    <li><a href="{{route('com.promag.detail')}}" class="btn_edit_karyawan dropdown-item py-2" data-id="'.$action->id.'"><i class="fa-solid fa-pen me-4"></i>Edit</a></li>
+                                                    <li><a class="dropdown-item py-2 text-success"><i class="fa-solid fa-bars-progress me-4 text-success"></i>Progress</a></li>
+                                                    <div class="separator my-2"></div>
+                                                    <li><a class="dropdown-item py-2"><i class="fa-solid fa-file-lines me-4"></i>Terbitkan <b class="text-warning">WO</b></a></li>
+                                                </ul>
+                                            </td>
+                                        </tr> --}}
                                     </tbody>
                                 </table>
                             </div>
@@ -70,9 +124,8 @@
 </div>
 
 <script>
-    var dataTablePromag;
     $(document).ready(function () {
-        dataTablePromag = $('#kt_table_promag').DataTable({
+        var dataTablePromag = $('#kt_table_promag').DataTable({
             processing: true,
             serverSide: true,
             retrieve: true,
