@@ -12,13 +12,45 @@
                         <div class="col-lg-12 text-center mb-9">
                             <span class="fs-1 fw-bolder text-dark d-block mb-1">Tambah Item</span>
                         </div>
+
                         <div class="col-lg-12 mb-3">
+                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="fw-bold">SN/PN/MAC</span>
+                            </label>
+                            <input type="text" class="form-control form-control-solid"
+                                placeholder="SN/PN/MAC" id="serial_number">
+                        </div>
+
+                        <div class="col-lg-4 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Stock</span>
                             </label>
-                            <input type="number" class="form-control form-control-solid" placeholder="0" required
+                            <input type="number" step="any" class="form-control form-control-solid" placeholder="0" required
                                 id="item_stock">
                         </div>
+
+                        <div class="col-lg-4 mb-3">
+                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="required fw-bold">Minimum Stock</span>
+                            </label>
+                            <input type="number" step="any" class="form-control form-control-solid" placeholder="10"
+                                required id="minimum_stock">
+                        </div>
+
+                        <div class="col-lg-4 mb-3">
+                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                <span class="required fw-bold">Satuan Unit</span>
+                            </label>
+                            <select class="form-select form-select-solid" data-control="select2" required
+                                id="inventory_unit_master_id">
+                                <option value="" selected>Choose a Unit</option>
+                                @foreach ($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->name }} -
+                                        {{ $unit->code }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="col-lg-12 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Kondisi Barang</span>

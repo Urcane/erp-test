@@ -11,6 +11,7 @@ use App\Models\Inventory\InventoryGoodStatus;
 use App\Models\Inventory\InventoryUnitMaster;
 use App\Models\Inventory\Warehouse;
 use App\Models\Inventory\WarehouseGood;
+use App\Models\Inventory\WarehouseGoodStock;
 use App\Utils\ErrorHandler;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -31,9 +32,12 @@ class InventoryController extends Controller
     public function viewDashboard()
     {
         $warehouseCount = Warehouse::count();
-        $stocks = WarehouseGood::select(DB::raw('COUNT(CASE WHEN total_stock >= minimum_stock THEN 1 END) as availableStock, COUNT(CASE WHEN total_stock < minimum_stock AND total_stock > 0 THEN 1 END) as lowStock, COUNT(CASE WHEN total_stock = 0 THEN 1 END) as outOfStock'))
-            ->leftJoin(DB::raw('(SELECT warehouse_good_id, SUM(stock) as total_stock FROM warehouse_good_stocks GROUP BY warehouse_good_id) as stocks'), 'warehouse_goods.id', '=', 'stocks.warehouse_good_id')
-            ->first();
+
+        $stocks = WarehouseGoodStock::select(DB::raw('
+            COUNT(CASE WHEN stock >= minimum_stock THEN 1 END) as availableStock,
+            COUNT(CASE WHEN stock < minimum_stock AND stock > 0 THEN 1 END) as lowStock,
+            COUNT(CASE WHEN stock = 0 THEN 1 END) as outOfStock'
+        ))->first();
 
         return view('finance.inventory.dashboard', compact([
             'warehouseCount', 'stocks'
@@ -71,18 +75,20 @@ class InventoryController extends Controller
     {
         try {
             $request->validate([
-                'serial_number' => 'string|nullable',
+                'serial_number' => 'nullable|array',
                 'warehouse_id' => 'required|exists:warehouses,id',
                 'inventory_good_id' => 'required|exists:inventory_goods,id',
-                'inventory_unit_master_id' => 'required|exists:inventory_unit_masters,id',
+                'inventory_unit_master_id' => 'required|array',
                 'inventory_good_condition_id' => 'required|array',
                 'inventory_good_status_id' => 'required|array',
                 'stock' => 'required|array',
-                'minimum_stock' => 'required|integer',
+                'minimum_stock' => 'required|array',
             ], [
                 'stock.required' => 'Tambahkan Item Stock pada gudang!',
                 'inventory_good_condition_id.required' => 'Tambahkan Item Stock pada gudang!',
                 'inventory_good_status_id.required' => 'Tambahkan Item Stock pada gudang!',
+                'inventory_unit_master_id.required' => 'Tambahkan Item Stock pada gudang!',
+                'minimum_stock.required' => 'Tambahkan Item Stock pada gudang!',
             ]);
 
             $warehouseGood = WarehouseGood::where('inventory_good_id', $request->inventory_good_id)
@@ -96,17 +102,17 @@ class InventoryController extends Controller
             DB::beginTransaction();
 
             $warehouseGood = WarehouseGood::create([
-                'serial_number' => $request->serial_number,
                 'warehouse_id' => $request->warehouse_id,
-                'inventory_unit_master_id' => $request->inventory_unit_master_id,
                 'inventory_good_id' => $request->inventory_good_id,
-                'minimum_stock' => $request->minimum_stock,
             ]);
 
             foreach ($request->stock as $key => $stock) {
                 $warehouseGood->warehouseGoodStocks()->create([
+                    'serial_number' => $request->serial_number[$key],
                     'inventory_good_condition_id' => $request->inventory_good_condition_id[$key],
                     'inventory_good_status_id' => $request->inventory_good_status_id[$key],
+                    'inventory_unit_master_id' => $request->inventory_unit_master_id[$key],
+                    'minimum_stock' => $request->minimum_stock[$key],
                     'stock' => $stock,
                 ]);
             }
@@ -121,7 +127,7 @@ class InventoryController extends Controller
             DB::rollBack();
 
             if ($th instanceof QueryException && $th->errorInfo[1] === 1062) {
-                $data = $this->errorHandler->handle(new InvariantError('Dilarang memasukan stock dengan kondisi dan status yang sama lebih dari satu kali'));
+                $data = $this->errorHandler->handle(new InvariantError('Dilarang memasukan stock dengan unit, kondisi dan status yang sama lebih dari satu kali'));
 
                 return response()->json($data["data"], $data["code"]);
             }
@@ -137,8 +143,6 @@ class InventoryController extends Controller
         if (request()->ajax()) {
             $query = WarehouseGood::with([
                 'inventoryGood.inventoryGoodCategory',
-                'inventoryUnitMaster',
-                'warehouseGoodStocks',
                 'warehouse'
             ]);
 
@@ -150,12 +154,10 @@ class InventoryController extends Controller
             $search = $request->search;
             if ($search) {
                 $query = $query->where(function ($query) use ($search) {
-                    $query->where('serial_number', 'LIKE', '%' . $search . '%')
-                        ->orWhere('stock', 'LIKE', '%' . $search . '%')
-                        ->orWhereHas('inventoryGood', function ($query) use ($search) {
-                            $query->where('good_name', 'LIKE', '%' . $search . '%')
-                                ->orWhere('code_name', 'LIKE', '%' . $search . '%');
-                        })
+                    $query->whereHas('inventoryGood', function ($query) use ($search) {
+                        $query->where('good_name', 'LIKE', '%' . $search . '%')
+                            ->orWhere('code_name', 'LIKE', '%' . $search . '%');
+                    })
                         ->orWhereHas('inventoryGood.inventoryGoodCategory', function ($query) use ($search) {
                             $query->where('name', 'LIKE', '%' . $search . '%');
                         });
@@ -174,9 +176,6 @@ class InventoryController extends Controller
                 })
                 ->addColumn('warehouse_name', function ($query) {
                     return $query->warehouse->name;
-                })
-                ->addColumn('stock', function ($query) {
-                    return $query->warehouseGoodStocks->sum('stock') . " " . $query->inventoryUnitMaster->name;
                 })
                 ->addColumn('action', function ($query) {
                     return view('finance.inventory.inventory.menu', compact([

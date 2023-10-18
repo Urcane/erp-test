@@ -41,10 +41,9 @@
                             <thead class="">
                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
                                     <th class="text-center w-50px">#</th>
-                                    <th class="w-350px">Item Name</th>
+                                    <th class="w-300px">Item Name</th>
                                     <th class="w-150px">Item Code</th>
                                     <th class="w-200px">Warehouse</th>
-                                    <th class="w-150px">SN/PN/MAC</th>
                                     <th class="w-150px">Category</th>
                                     <th class="w-100px">#</th>
                                 </tr>
@@ -120,11 +119,6 @@
                             searchable: false
                         },
                         {
-                            data: 'serial_number',
-                            orderable: false,
-                            searchable: false
-                        },
-                        {
                             data: 'category',
                             orderable: false,
                             searchable: false
@@ -136,7 +130,7 @@
                         }
                     ],
                     columnDefs: [{
-                        targets: [0, 6],
+                        targets: [0, 5],
                         className: 'text-center',
                     }, ],
                 });

@@ -18,6 +18,11 @@ class WarehouseGoodStock extends Model
         return $this->belongsTo(WarehouseGood::class);
     }
 
+    public function inventoryUnitMaster(): BelongsTo
+    {
+        return $this->belongsTo(InventoryUnitMaster::class);
+    }
+
     public function warehouseGoodStatus(): BelongsTo
     {
         return $this->belongsTo(WarehouseGoodStatus::class);

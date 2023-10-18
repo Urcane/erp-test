@@ -56,6 +56,10 @@ class Constants
         public $assignment_status = ["Waiting", "Approved", "Rejected", "Canceled", "Expired"];
     // }
 
+    // inventory {
+        public $inventory_status = ["Adjust"];
+    // }
+
     // system and view
     public $filter_status_attendance = [
         "On Time",

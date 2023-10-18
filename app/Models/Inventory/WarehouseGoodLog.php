@@ -5,18 +5,17 @@ namespace App\Models\Inventory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class WarehouseGood extends Model
+class WarehouseGoodLog extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
-    public function warehouse(): BelongsTo
+    public function warehousLog(): BelongsTo
     {
-        return $this->belongsTo(Warehouse::class);
+        return $this->belongsTo(WarehouseLog::class);
     }
 
     public function inventoryGood(): BelongsTo
@@ -24,8 +23,8 @@ class WarehouseGood extends Model
         return $this->belongsTo(InventoryGood::class);
     }
 
-    public function warehouseGoodStocks(): HasMany
+    public function inventoryUnitMaster(): BelongsTo
     {
-        return $this->hasMany(WarehouseGoodStock::class);
+        return $this->belongsTo(InventoryUnitMaster::class);
     }
 }

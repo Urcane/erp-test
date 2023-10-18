@@ -4,22 +4,23 @@ namespace App\Models\Inventory;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Warehouse extends Model
+class WarehouseLog extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
 
-    public function warehouseGood(): HasMany
+    public function warehouseGood(): BelongsTo
     {
-        return $this->hasMany(WarehouseGood::class);
+        return $this->belongsTo(WarehouseGood::class);
     }
 
-    public function warehouseLogs(): HasMany
+    public function warehouseGoodLog(): HasMany
     {
-        return $this->hasMany(WarehouseLog::class);
+        return $this->hasMany(WarehouseGoodLog::class);
     }
 }

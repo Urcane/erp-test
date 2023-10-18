@@ -68,11 +68,8 @@ class CreateAllInventoryMigrationTable extends Migration
 
         Schema::create('warehouse_goods', function (Blueprint $table) {
             $table->id();
-            $table->string("serial_number", 255)->nullable()->index();
             $table->foreignId("warehouse_id")->constrained("warehouses");
             $table->foreignId("inventory_good_id")->constrained("inventory_goods");
-            $table->foreignId("inventory_unit_master_id")->constrained("inventory_unit_masters");
-            $table->integer("minimum_stock");
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -82,8 +79,40 @@ class CreateAllInventoryMigrationTable extends Migration
             $table->foreignId("warehouse_good_id")->constrained("warehouse_goods");
             $table->foreignId("inventory_good_condition_id")->constrained("inventory_good_conditions");
             $table->foreignId("inventory_good_status_id")->constrained("inventory_good_statuses");
-            $table->unique(['warehouse_good_id', 'inventory_good_condition_id', 'inventory_good_status_id'], 'unique_warehouse_good_stocks');
-            $table->integer("stock");
+            $table->foreignId("inventory_unit_master_id")->constrained("inventory_unit_masters");
+            $table->unique([
+                'warehouse_good_id', 'inventory_good_condition_id', 'inventory_good_status_id', 'inventory_unit_master_id'
+            ], 'unique_warehouse_good_stocks');
+            $table->string("serial_number", 255)->nullable()->index();
+            $table->float("minimum_stock");
+            $table->float("stock");
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('warehouse_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("warehouse_id")->constrained("warehouses");
+            $table->string("name", 255);
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('warehouse_good_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("warehouse_log_id")->constrained("warehouse_logs");
+            $table->foreignId("inventory_good_id")->constrained("inventory_goods");
+            $table->softDeletes()->index();
+            $table->timestamps();
+        });
+
+        Schema::create('warehouse_good_stock_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId("warehouse_good_log_id")->constrained("warehouse_good_logs");
+            $table->foreignId("inventory_good_condition_id")->constrained("inventory_good_conditions");
+            $table->foreignId("inventory_good_status_id")->constrained("inventory_good_statuses");
+            $table->foreignId("inventory_unit_master_id")->constrained("inventory_unit_masters");
+            $table->float("stock");
             $table->softDeletes()->index();
             $table->timestamps();
         });
