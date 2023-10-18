@@ -20,14 +20,18 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-3"></div>
-                    <div class="col-6">
+                    <div class="col-1"></div>
+                    <div class="col-8">
                         <div class="d-flex justify-content-end">
-                            <div class="input-group w-150px w-md-250px mx-4">
+                            <div class="input-group w-150px w-md-200px mx-4">
                                 <span class="input-group-text border-0"><i class="fa-solid fa-magnifying-glass"></i></span>
                                 <input class="form-control form-control-solid form-control-sm" autocomplete="off"
                                     id="search">
                             </div>
+                            <a href="{{ route('fin.inv.inventory-transfer') }}" class="btn btn-outline btn-outline-info btn-sm me-3 fs-8">
+                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                Transfer Item
+                            </a>
                             <a href="{{ route('fin.inv.inventory-create') }}" class="btn btn-info btn-sm me-3 fs-8">
                                 <i class="fa-solid fa-plus"></i>
                                 Add Item

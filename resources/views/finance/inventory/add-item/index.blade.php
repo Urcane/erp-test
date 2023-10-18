@@ -110,7 +110,7 @@
                                         <div class="row">
                                             <div class="col-lg-2 mb-1">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                                    <span class="required fw-bold">SN/PN/MAC</span>
+                                                    <span class="fw-bold">SN/PN/MAC</span>
                                                 </label>
                                             </div>
 
@@ -203,7 +203,7 @@
                 e.preventDefault();
                 const formData = new FormData(this);
                 $.ajax({
-                    url: "{{ route('fin.inv.inventory-store') }}",
+                    url: "{{ route('fin.inv.inventory-create') }}",
                     type: 'POST',
                     data: formData,
                     contentType: false,
@@ -241,12 +241,12 @@
 
                     <div class="col-lg-2 mb-3">
                         <input type="number" class="form-control form-control-solid"
-                            required name="stock[]" step="any" value=${stock}>
+                            required name="stock[]" min="0" step="any" value=${stock}>
                     </div>
 
                     <div class="col-lg-2 mb-3">
                         <input type="number" class="form-control form-control-solid"
-                            required name="minimum_stock[]" step="any" value=${minimumStock}>
+                            required name="minimum_stock[]" min="0" step="any" value=${minimumStock}>
                     </div>
 
                     <div class="col-lg-1 mb-3">

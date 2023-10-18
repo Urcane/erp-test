@@ -71,6 +71,15 @@ class InventoryController extends Controller
         ]));
     }
 
+    public function viewTransferItem()
+    {
+        $warehouses = Warehouse::all();
+
+        return view('finance.inventory.transfer-item.index', compact([
+            'warehouses'
+        ]));
+    }
+
     public function storeItem(Request $request)
     {
         try {
@@ -138,6 +147,110 @@ class InventoryController extends Controller
         }
     }
 
+    public function transferItem(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string',
+                'warehouse_id' => 'required|exists:warehouses,id',
+                'transfer_warehouse_id' => 'required|exists:warehouses,id',
+                'warehouse_good_stock_id' => 'required|array',
+                'stock' => 'required|array',
+            ], [
+                'warehouse_good_stock_id.required' => 'Tambahkan Item yang ingin ditransfer!',
+                'stock.required' => 'Tambahkan Item yang ingin ditransfer!',
+            ]);
+
+            if ($request->warehouse_id == $request->transfer_warehouse_id) {
+                throw new InvariantError('Gudang asal dan tujuan tidak boleh sama');
+            }
+
+            DB::beginTransaction();
+
+            $sender = Warehouse::whereId($request->warehouse_id)->first();
+            $receiver = Warehouse::whereId($request->transfer_warehouse_id)->first();
+
+            $senderLog = $sender->warehouseLogs()->create([
+                'name' => $request->name,
+                'status' => $this->constants->inventory_status[1],
+            ]);
+
+            $receiverLog = $receiver->warehouseLogs()->create([
+                'name' => $request->name,
+                'status' => $this->constants->inventory_status[1],
+            ]);
+
+            foreach ($request->warehouse_good_stock_id as $key => $warehouseGoodStockId) {
+                $warehouseGoodStock = WarehouseGoodStock::whereId($warehouseGoodStockId)
+                    ->whereHas('warehouseGood', function ($query) use ($request) {
+                        $query->where('warehouse_id', $request->warehouse_id);
+                    })->with('warehouseGood')->first();
+
+                if ($warehouseGoodStock->stock < $request->stock[$key]) {
+                    throw new InvariantError('Stock tidak mencukupi');
+                }
+
+                $warehouseGoodStock->update([
+                    'stock' => $warehouseGoodStock->stock - $request->stock[$key]
+                ]);
+
+                $warehouseGood = $receiver
+                    ->warehouseGood()
+                    ->where('inventory_good_id', $warehouseGoodStock->warehouseGood->inventory_good_id)->first();
+
+                if (!$warehouseGood) {
+                    $warehouseGood = $receiver->warehouseGood()->create([
+                        'inventory_good_id' => $warehouseGoodStock->warehouseGood->inventory_good_id,
+                    ]);
+                }
+
+                $warehouseGood->warehouseGoodStocks()->updateOrCreate([
+                    'minimum_stock' => 0,
+                    'stock' => $request->stock[$key],
+                ], [
+                    'inventory_good_condition_id' => $warehouseGoodStock->inventory_good_condition_id,
+                    'inventory_good_status_id' => $warehouseGoodStock->inventory_good_status_id,
+                    'inventory_unit_master_id' => $warehouseGoodStock->inventory_unit_master_id,
+                ]);
+
+                $senderGoodLog = $senderLog->warehouseGoodLogs()->create([
+                    'inventory_good_id' => $warehouseGoodStock->warehouseGood->inventory_good_id,
+                ]);
+
+                $senderGoodLog->warehouseGoodStockLogs()->create([
+                    'inventory_good_condition_id' => $warehouseGoodStock->inventory_good_condition_id,
+                    'inventory_good_status_id' => $warehouseGoodStock->inventory_good_status_id,
+                    'inventory_unit_master_id' => $warehouseGoodStock->inventory_unit_master_id,
+                    'stock' => -$request->stock[$key],
+                ]);
+
+                $receiverGoodLog = $receiverLog->warehouseGoodLogs()->create([
+                    'inventory_good_id' => $warehouseGoodStock->warehouseGood->inventory_good_id,
+                ]);
+
+                $receiverGoodLog->warehouseGoodStockLogs()->create([
+                    'inventory_good_condition_id' => $warehouseGoodStock->inventory_good_condition_id,
+                    'inventory_good_status_id' => $warehouseGoodStock->inventory_good_status_id,
+                    'inventory_unit_master_id' => $warehouseGoodStock->inventory_unit_master_id,
+                    'stock' => $request->stock[$key],
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil memindahkan barang',
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            $data = $this->errorHandler->handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function getTableInventory(Request $request)
     {
         if (request()->ajax()) {
@@ -179,6 +292,54 @@ class InventoryController extends Controller
                 })
                 ->addColumn('action', function ($query) {
                     return view('finance.inventory.inventory.menu', compact([
+                        'query'
+                    ]));
+                })
+                ->addIndexColumn()
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    public function getTableTransferItem(Request $request)
+    {
+        if (request()->ajax()) {
+            $query = WarehouseGoodStock::whereHas('warehouseGood', function ($query) use ($request) {
+                $query->where('warehouse_id', $request->warehouse_id);
+            })->with([
+                'warehouseGood.inventoryGood.inventoryGoodCategory',
+                'warehouseGood.warehouse',
+                'inventoryGoodCondition',
+                'inventoryGoodStatus',
+                'inventoryUnitMaster'
+            ]);
+
+            $items = $request->items;
+            if ($items) {
+                $query = $query->whereNotIn('id', $items);
+            }
+
+            return DataTables::of($query)
+                ->addColumn('item_name', function ($query) {
+                    return $query->warehouseGood->inventoryGood->good_name;
+                })
+                ->addColumn('category', function ($query) {
+                    return $query->warehouseGood->inventoryGood->inventoryGoodCategory->name;
+                })
+                ->addColumn('stock', function ($query) {
+                    return $query->stock;
+                })
+                ->addColumn('unit', function ($query) {
+                    return $query->inventoryUnitMaster->name;
+                })
+                ->addColumn('condition', function ($query) {
+                    return $query->inventoryGoodCondition->name;
+                })
+                ->addColumn('status', function ($query) {
+                    return $query->inventoryGoodStatus->name;
+                })
+                ->addColumn('action', function ($query) {
+                    return view('finance.inventory.transfer-item.menu', compact([
                         'query'
                     ]));
                 })
