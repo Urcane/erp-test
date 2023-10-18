@@ -19,7 +19,7 @@ class WarehouseLog extends Model
         return $this->belongsTo(WarehouseGood::class);
     }
 
-    public function warehouseGoodLog(): HasMany
+    public function warehouseGoodLogs(): HasMany
     {
         return $this->hasMany(WarehouseGoodLog::class);
     }

@@ -177,7 +177,11 @@ class InventorySeeder extends Seeder
         ]);
 
         InventoryGoodCondition::create([
-            'name' => 'Rusak'
+            'name' => 'Rusak Ringan'
+        ]);
+
+        InventoryGoodCondition::create([
+            'name' => 'Rusak Berat'
         ]);
 
         InventoryGoodStatus::create([

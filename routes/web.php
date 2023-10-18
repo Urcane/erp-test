@@ -439,66 +439,74 @@ Route::middleware(['auth'])->group(function () {
             Route::controller(Finance\Inventory\InventoryController::class)->group(function () {
                 Route::get('/dashboard', 'viewDashboard')->name('fin.inv.dashboard');
 
-                Route::get('/inventory', 'viewInventory')->name('fin.inv.inventory');
-                Route::get('/inventory/create', 'viewAddItem')->name('fin.inv.inventory-create');
-                Route::post('/inventory/create', 'storeItem')->name('fin.inv.inventory-store');
-                Route::get('/inventory/get-data/table/data-result', 'getTableInventory')->name('fin.inv.inventory-get-table-inventory');
+                Route::prefix('inv')->group(function () {
+                    Route::get('/', 'viewInventory')->name('fin.inv.inventory');
 
-                Route::get('/master-data', 'viewMasterData')->name('fin.inv.master-data');
-            });
+                    Route::get('/create', 'viewAddItem')->name('fin.inv.inventory-create');
+                    Route::post('/create', 'storeItem')->name('fin.inv.inventory-create');
 
-            Route::prefix('master-data')->group(function () {
-                Route::prefix('warehouse')->group(function () {
-                    Route::controller(Finance\Inventory\MasterData\WarehouseController::class)->group(function () {
-                        Route::post('/create', 'create')->name('fin.inv.master-data.warehouse.create');
-                        Route::post('/update', 'update')->name('fin.inv.master-data.warehouse.update');
-                        Route::get('/data', 'getData')->name('fin.inv.master-data.warehouse.data');
-                        Route::get('/get-data/table/warehouse', 'getTable')->name('fin.inv.master-data.warehouse.get-table');
-                    });
+                    Route::get('/transfer', 'viewTransferItem')->name('fin.inv.inventory-transfer');
+                    Route::post('/transfer', 'transferItem')->name('fin.inv.inventory-transfer');
+
+                    Route::get('/get-data/table/data-result', 'getTableInventory')->name('fin.inv.inventory-get-table-inventory');
+                    Route::get('/get-data/table/data-result/transfer', 'getTableTransferItem')->name('fin.inv.inventory-get-table-transfer');
                 });
 
-                Route::prefix('item')->group(function () {
-                    Route::controller(Finance\Inventory\MasterData\ItemController::class)->group(function () {
-                        Route::post('/create', 'create')->name('fin.inv.master-data.item.create');
-                        Route::post('/update', 'update')->name('fin.inv.master-data.item.update');
-                        Route::get('/data', 'getData')->name('fin.inv.master-data.item.data');
-                        Route::get('/get-data/table/item', 'getTable')->name('fin.inv.master-data.item.get-table');
-                    });
-                });
+                Route::prefix('master-data')->group(function () {
+                    Route::get('/', 'viewMasterData')->name('fin.inv.master-data');
 
-                Route::prefix('category')->group(function () {
-                    Route::controller(Finance\Inventory\MasterData\CategoryController::class)->group(function () {
-                        Route::post('/create', 'create')->name('fin.inv.master-data.category.create');
-                        Route::post('/update', 'update')->name('fin.inv.master-data.category.update');
-                        Route::get('/data', 'getData')->name('fin.inv.master-data.category.data');
-                        Route::get('/get-data/table/category', 'getTable')->name('fin.inv.master-data.category.get-table');
+                    Route::prefix('warehouse')->group(function () {
+                        Route::controller(Finance\Inventory\MasterData\WarehouseController::class)->group(function () {
+                            Route::post('/create', 'create')->name('fin.inv.master-data.warehouse.create');
+                            Route::post('/update', 'update')->name('fin.inv.master-data.warehouse.update');
+                            Route::get('/data', 'getData')->name('fin.inv.master-data.warehouse.data');
+                            Route::get('/get-data/table/warehouse', 'getTable')->name('fin.inv.master-data.warehouse.get-table');
+                        });
                     });
-                });
 
-                Route::prefix('unit')->group(function () {
-                    Route::controller(Finance\Inventory\MasterData\UnitController::class)->group(function () {
-                        Route::post('/create', 'create')->name('fin.inv.master-data.unit.create');
-                        Route::post('/update', 'update')->name('fin.inv.master-data.unit.update');
-                        Route::get('/data', 'getData')->name('fin.inv.master-data.unit.data');
-                        Route::get('/get-data/table/unit', 'getTable')->name('fin.inv.master-data.unit.get-table');
+                    Route::prefix('item')->group(function () {
+                        Route::controller(Finance\Inventory\MasterData\ItemController::class)->group(function () {
+                            Route::post('/create', 'create')->name('fin.inv.master-data.item.create');
+                            Route::post('/update', 'update')->name('fin.inv.master-data.item.update');
+                            Route::get('/data', 'getData')->name('fin.inv.master-data.item.data');
+                            Route::get('/get-data/table/item', 'getTable')->name('fin.inv.master-data.item.get-table');
+                        });
                     });
-                });
 
-                Route::prefix('condition')->group(function () {
-                    Route::controller(Finance\Inventory\MasterData\ConditionController::class)->group(function () {
-                        Route::post('/create', 'create')->name('fin.inv.master-data.condition.create');
-                        Route::post('/update', 'update')->name('fin.inv.master-data.condition.update');
-                        Route::get('/data', 'getData')->name('fin.inv.master-data.condition.data');
-                        Route::get('/get-data/table/condition', 'getTable')->name('fin.inv.master-data.condition.get-table');
+                    Route::prefix('category')->group(function () {
+                        Route::controller(Finance\Inventory\MasterData\CategoryController::class)->group(function () {
+                            Route::post('/create', 'create')->name('fin.inv.master-data.category.create');
+                            Route::post('/update', 'update')->name('fin.inv.master-data.category.update');
+                            Route::get('/data', 'getData')->name('fin.inv.master-data.category.data');
+                            Route::get('/get-data/table/category', 'getTable')->name('fin.inv.master-data.category.get-table');
+                        });
                     });
-                });
 
-                Route::prefix('status')->group(function () {
-                    Route::controller(Finance\Inventory\MasterData\StatusController::class)->group(function () {
-                        Route::post('/create', 'create')->name('fin.inv.master-data.status.create');
-                        Route::post('/update', 'update')->name('fin.inv.master-data.status.update');
-                        Route::get('/data', 'getData')->name('fin.inv.master-data.status.data');
-                        Route::get('/get-data/table/status', 'getTable')->name('fin.inv.master-data.status.get-table');
+                    Route::prefix('unit')->group(function () {
+                        Route::controller(Finance\Inventory\MasterData\UnitController::class)->group(function () {
+                            Route::post('/create', 'create')->name('fin.inv.master-data.unit.create');
+                            Route::post('/update', 'update')->name('fin.inv.master-data.unit.update');
+                            Route::get('/data', 'getData')->name('fin.inv.master-data.unit.data');
+                            Route::get('/get-data/table/unit', 'getTable')->name('fin.inv.master-data.unit.get-table');
+                        });
+                    });
+
+                    Route::prefix('condition')->group(function () {
+                        Route::controller(Finance\Inventory\MasterData\ConditionController::class)->group(function () {
+                            Route::post('/create', 'create')->name('fin.inv.master-data.condition.create');
+                            Route::post('/update', 'update')->name('fin.inv.master-data.condition.update');
+                            Route::get('/data', 'getData')->name('fin.inv.master-data.condition.data');
+                            Route::get('/get-data/table/condition', 'getTable')->name('fin.inv.master-data.condition.get-table');
+                        });
+                    });
+
+                    Route::prefix('status')->group(function () {
+                        Route::controller(Finance\Inventory\MasterData\StatusController::class)->group(function () {
+                            Route::post('/create', 'create')->name('fin.inv.master-data.status.create');
+                            Route::post('/update', 'update')->name('fin.inv.master-data.status.update');
+                            Route::get('/data', 'getData')->name('fin.inv.master-data.status.data');
+                            Route::get('/get-data/table/status', 'getTable')->name('fin.inv.master-data.status.get-table');
+                        });
                     });
                 });
             });

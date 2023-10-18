@@ -25,7 +25,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Stock</span>
                             </label>
-                            <input type="number" step="any" class="form-control form-control-solid" placeholder="0" required
+                            <input type="number" step="any" min="0" class="form-control form-control-solid" placeholder="0" required
                                 id="item_stock">
                         </div>
 
@@ -33,7 +33,7 @@
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="required fw-bold">Minimum Stock</span>
                             </label>
-                            <input type="number" step="any" class="form-control form-control-solid" placeholder="10"
+                            <input type="number" step="any" min="0" class="form-control form-control-solid" placeholder="10"
                                 required id="minimum_stock">
                         </div>
 

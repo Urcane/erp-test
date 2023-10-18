@@ -5,6 +5,7 @@ namespace App\Models\Inventory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WarehouseGoodLog extends Model
@@ -26,5 +27,10 @@ class WarehouseGoodLog extends Model
     public function inventoryUnitMaster(): BelongsTo
     {
         return $this->belongsTo(InventoryUnitMaster::class);
+    }
+
+    public function warehouseGoodStockLogs(): HasMany
+    {
+        return $this->hasMany(WarehouseGoodStockLog::class);
     }
 }

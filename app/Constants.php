@@ -57,7 +57,7 @@ class Constants
     // }
 
     // inventory {
-        public $inventory_status = ["Adjust"];
+        public $inventory_status = ["Adjust", "Transfer", "Project", "Other"];
     // }
 
     // system and view
