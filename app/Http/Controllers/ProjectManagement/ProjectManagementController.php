@@ -12,6 +12,7 @@ use App\Services\ProjectManagement\WorkOrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\Facades\DataTables;
 
 class ProjectManagementController extends Controller
 {
@@ -32,8 +33,50 @@ class ProjectManagementController extends Controller
         return view('cmt-promag.create', compact("dataBOQ"));
     }
 
+    public function datatable(Request $request)
+    {
+        $query = WorkList::with(["itemable_bill_of_quantity", "users"]);
+
+        return DataTables::of($query)
+            ->addColumn('action', function ($action) {
+                $edit = '
+                <li>
+                    <div class="btn-edit" onclick="fillInput(\'' . $action->id . '\', \'' . $action->user_file_category_id . '\', \'' . $action->description . '\')">
+                        <a href="" class="dropdown-item py-2"><i class="fa-solid fa-pen me-3"></i>Edit</a>
+                    </div>
+                </li>
+
+                ';
+                $delete = '<li><button onclick="deleteUserFile(\'' . $action->id . '\')" class="dropdown-item py-2"><i class="fa-solid fa-trash me-3"></i>Delete</button></li>';
+                return '
+                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                <ul class="dropdown-menu">
+                '.$edit.'
+                '.$delete.'
+                </ul>
+                ';
+            })
+            ->addColumn('assigned', function ($data) {
+                return $data->users->count();
+            })
+            ->addIndexColumn()
+            ->rawColumns(['action','DT_RowChecklist'])
+            ->make(true);
+    }
+
     public function store (Request $request) : JsonResponse {
         try {
+            $request->validate([
+                "itemable_bill_of_quantities_id" => "required",
+                "work_name" => "required",
+                "no_project" => "required",
+                "work_desc" => "required",
+                "work_location" => "required",
+                "no_po_customer" => "required",
+                "lat" => "required",
+                "lang" => "required",
+            ]);
+
             WorkList::create([
                 "itemable_bill_of_quantity_id" => $request->itemable_bill_of_quantities_id,
                 "no_project" => $request->no_project,
@@ -48,9 +91,7 @@ class ProjectManagementController extends Controller
                 "start_date" => date("Y-m-d"),
             ]);
 
-            return response()->json([
-                "status" => "Yeay Berhasil!! 💼"
-            ], 200);
+            return redirect(route("com.promag.index"));
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);

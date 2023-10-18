@@ -44,6 +44,15 @@
 
                                             {{-- company info --}}
                                             <section class="row mt-10">
+                                                @if ($errors->any())
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
                                                 <div class="col-lg-6 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2" for="name">
                                                         <span class="fw-bold required">Company Name</span>

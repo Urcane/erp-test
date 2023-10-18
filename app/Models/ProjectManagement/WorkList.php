@@ -28,7 +28,6 @@ class WorkList extends Model
     }
 
     function createTask(Request $request) : WorkList {
-
         return $this;
     }
 

@@ -46,12 +46,9 @@ class CreateAllPromagMigrationTable extends Migration
         Schema::create('work_lists', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('itemable_bill_of_quantity_id')
-                ->constrained();
+            $table->unsignedBigInteger('itemable_bill_of_quantity_id')->index();
 
-            $table->foreignId('itemable_quotation_id')
-                ->constrained()
-                ->nullable();
+            $table->unsignedBigInteger('itemable_quotation_id')->index();
 
             $table->string('no_project', 36)
                 ->nullable()
@@ -105,7 +102,7 @@ class CreateAllPromagMigrationTable extends Migration
 
             $table->dateTime('actual_done_date')
                 ->nullable();
-                
+
             $table->softDeletes();
             $table->timestamps();
         });
@@ -114,7 +111,7 @@ class CreateAllPromagMigrationTable extends Migration
             $table->id();
             $table->string('task_name');
             $table->string('task_description');
-            
+
             $table->char('progress_category', 3)
                 ->comment('progress category with char(3), example: CMS = Commisioning, PRC = Pengadaan/Procurement, PRD = Pra-Development, TSB = Testing Bugs, DEV = Development');
             $table->foreign('progress_category')->references('code')->on('work_progress_categories');
@@ -136,7 +133,7 @@ class CreateAllPromagMigrationTable extends Migration
 
             $table->dateTime('actual_done_date')
                 ->nullable();
-            
+
             $table->timestamps();
         });
 
