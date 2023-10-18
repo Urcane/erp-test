@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class TaskList extends Model
+class WorkTaskList extends Model
 {
     use HasFactory, HasUser;
-    
+    protected $guarded = [];
+
     function workAttachment() : HasMany {
         return $this->hasMany(WorkAttachment::class);
     }
@@ -33,7 +34,7 @@ class TaskList extends Model
         return $this->belongsTo(WorkStatus::class);
     }
 
-    function createTask($item) : TaskList {
+    function createTask($item) : WorkTaskList {
         $worklist = $this->create([
             'work_name' => $item->work_name,
             'work_description' => $item->work_description,

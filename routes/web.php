@@ -20,6 +20,7 @@ use App\Http\Controllers\HC\Request as HCRequest;
 
 use App\Http\Controllers\Operation;
 use App\Http\Controllers\Finance;
+use App\Http\Controllers\ProjectManagement\TaskListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,22 +103,29 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(ProjectManagementController::class)->group(function () {
-        Route::prefix('cmt-promag')->group(function () {
+    Route::prefix('cmt-promag')->group(function () {
+        Route::controller(ProjectManagementController::class)->group(function () {
             Route::get('/', 'index')->name('com.promag.index');
             Route::get('/table', 'getWorkListTable')->name('com.promag.datatable');
 
             Route::get('/create', 'create')->name('com.promag.create');
             Route::post('/store', 'store')->name('com.promag.store');
-            Route::get('/detail', 'detail')->name('com.promag.detail');
-            Route::get('/detail/files', 'files')->name('com.promag.detail.files');
-            Route::get('/detail/task-lists', 'taskLists')->name('com.promag.detail.task-lists');
+            Route::get('/detail/{work_list_id}', 'detail')->name('com.promag.detail');
+            Route::get('/detail/{work_list_id}/files', 'files')->name('com.promag.detail.files');
+
 
             Route::post('/work-order/approve', 'approveWorkOrder')->name('com.work-order.approve');
             Route::post('/work-order/store', 'createWorkOrderSurvey')->name('com.work-order-survey.store');
-            Route::get('/work-order/detail/{id}', 'getWorkOrderById')->name('com.work-order.detail');
+            Route::get('/work-order/detail/{work_list_id}', 'getWorkOrderById')->name('com.work-order.detail');
             Route::get('/get-data/table/work-order', 'getDatatableWorkOrder')->name('com.work-order.datatable');
             Route::get('/get-data/table/work-order-survey', 'getDataTableWorkOrderSurvey')->name('com.work-order-survey.datatable');
+        });
+
+        Route::controller(TaskListController::class)->group(function () {
+            Route::get('/{work_list_id}/detail/task-lists', 'taskLists')->name('com.promag.detail.task-lists');
+            Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
+            Route::post('/{work_list_id}/task-lists/store', 'store')->name('com.promag.task-list.store');
+            // Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
         });
     });
 

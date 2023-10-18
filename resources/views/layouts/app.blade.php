@@ -219,11 +219,11 @@ input[type="number"]::-webkit-outer-spin-button {
                 $(`#${formId}_submit`).attr('disabled', 'disabled');
                 $.ajax({
                     data: formData,
-                    processData: false,
-                    contentType: false, 
+                    headers: {
+                        'X-CSRF-TOKEN': "{{csrf_token()}}"
+                    },
                     url: ajaxLink,
                     type: "POST",
-                    dataType: 'json',
                     success: function (data) {
                         $(`#${formId}_cancel`).click();
                         toastr.success(data.status,'Selamat 🚀 !');
@@ -234,7 +234,7 @@ input[type="number"]::-webkit-outer-spin-button {
                         $(`#${formId}_submit`).removeAttr('disabled','disabled');
                         const data = JSON.parse(xhr.responseText);
                         toastr.error(errorThrown ,'Opps!');
-                        
+
                         if (Object.keys(data.errors).length >= 1) {
                             Object.keys(data.errors).forEach(keyError => {
                                 const error = data.errors[keyError];
