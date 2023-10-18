@@ -29,17 +29,19 @@ class ProjectManagementController extends Controller
     }
 
     function getWorkListTable() : JsonResponse {
-        $query = WorkList::with('userable');
+        $query = WorkList::with('users');
 
         return DataTables::of($query)
             ->addColumn('assigned', function($q) {
-                $users = $q->userable->slice(0,5);
-
-
-
+                $users = $q->users;
                 $result = '<div></div>';
 
-            
+                return $result;
+            })
+            ->addColumn('action', function($q) {
+                $result = '<div></div>';
+
+                return $result;
             })
             ->addIndexColumn()
             ->rawColumns(['action', 'progress', 'assigned'])
