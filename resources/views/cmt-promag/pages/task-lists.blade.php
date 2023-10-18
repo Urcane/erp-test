@@ -32,10 +32,10 @@
                             </div>
                             <div class="col-lg-6 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Start Date</span>
+                                    <span class=" fw-bold">Start Date</span>
                                 </label>
                                 <input type="date" class="form-control form-control-solid" placeholder="Start Date"
-                                    required name="start_date">
+                                     name="start_date">
                             </div>
                             <div class="col-lg-6 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -94,7 +94,7 @@
                 <option value="4">Last Year</option>
             </select><span class="select2 select2-container select2-container--bootstrap5" dir="ltr" data-select2-id="select2-data-8-g6s3" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single form-select form-select-sm form-select-solid w-150px" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-status-14-container" aria-controls="select2-status-14-container"><span class="select2-selection__rendered" id="select2-status-14-container" role="textbox" aria-readonly="true" title="Recently Updated">Recently Updated</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
         </div> --}}
-        <a class="btn btn-light btn-active-info btn-sm" data-bs-toggle="modal" href="#modal_task_list" aria-selected="true">
+        <a class="btn btn-info btn-sm" data-bs-toggle="modal" href="#modal_task_list" aria-selected="true">
             <i class="fas fa-plus"></i> Tambah Task List
         </a>
     </div>

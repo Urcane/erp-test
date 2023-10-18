@@ -30,6 +30,10 @@ class WorkTaskList extends Model
         return $this->belongsTo(WorkProgressCategory::class);
     }
 
+    function workList() : BelongsTo {
+        return $this->belongsTo(WorkList::class);
+    }
+
     function projectStatus() : BelongsTo {
         return $this->belongsTo(WorkStatus::class);
     }

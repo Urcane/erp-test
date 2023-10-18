@@ -33,7 +33,7 @@ class TaskListController extends Controller
                 return $result;
             })
             ->addColumn('action', function($q) {
-                $route = route('com.promag.detail', ['work_list_id' => $q->id]);
+                $route = route('com.promag.task-list.detail', ['work_list_id' => $q->work_list_id, 'task_list_id' => $q->id]);
 
                 $result = '
                 <a href="'.$route.'" class="btn_edit_karyawan dropdown-item py-2 text-success" data-id="'.$q->id.'"><i class="fa-solid fa-eye me-4"></i>Detail</a>
@@ -74,5 +74,11 @@ class TaskListController extends Controller
             $data = $this->errorHandler->handle($e);
             return response()->json($data["data"], $data["code"]);
         }
+    }
+
+    public function detailTaskList($work_list_id, $task_list_id)
+    {
+        $workTaskList = WorkTaskList::whereId($task_list_id)->with('workList')->first();
+        return view('cmt-promag.pages.task-lists-detail', compact("work_list_id", "workTaskList"));
     }
 }
