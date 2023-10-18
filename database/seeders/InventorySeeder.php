@@ -5,7 +5,11 @@ namespace Database\Seeders;
 use App\Models\Inventory\InventoryGood;
 use Illuminate\Database\Seeder;
 use App\Models\Inventory\InventoryGoodCategory;
+use App\Models\Inventory\InventoryGoodCondition;
+use App\Models\Inventory\InventoryGoodStatus;
 use App\Models\Inventory\InventoryUnitMaster;
+use App\Models\Inventory\Warehouse;
+use App\Models\Inventory\WarehouseGood;
 
 use function PHPSTORM_META\map;
 
@@ -167,6 +171,39 @@ class InventorySeeder extends Seeder
             'good_type' => 'Baru',
             'description' => 'Internet 40 MB.',
         ]);
-        
+
+        InventoryGoodCondition::create([
+            'name' => 'Baik'
+        ]);
+
+        InventoryGoodCondition::create([
+            'name' => 'Rusak'
+        ]);
+
+        InventoryGoodStatus::create([
+            'name' => 'Baru'
+        ]);
+
+        InventoryGoodStatus::create([
+            'name' => 'Bekas'
+        ]);
+
+        Warehouse::create([
+            'name' => 'Gudang Balikpapan',
+            'latitude' => '-1.265386',
+            'longitude' => '116.831200'
+        ]);
+
+        Warehouse::create([
+            'name' => 'Gudang Samarinda',
+            'latitude' => '-0.502106',
+            'longitude' => '117.153709'
+        ]);
+
+        Warehouse::create([
+            'name' => 'Gudang Bontang',
+            'latitude' => '0.133855',
+            'longitude' => '117.500921'
+        ]);
     }
 }

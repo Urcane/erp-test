@@ -14,7 +14,7 @@
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center mt-md-n20">
             <div class="col-lg-3 mb-6 mb-md-0 mt-md-n14">
-                @include('finance.inventory.components.sidebar')
+                @include('finance.inventory.layout.sidebar')
             </div>
 
             @yield('main_content')

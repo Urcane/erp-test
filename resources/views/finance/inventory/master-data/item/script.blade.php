@@ -146,7 +146,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
-                    $('#modal_add_item').modal('hide');
+                    $('#add_item_modal').modal('hide');
                     $('#modal_add_item')[0].reset();
                     itemTable.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
@@ -171,7 +171,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
-                    $('#modal_edit_item').modal('hide');
+                    $('#edit_item_modal').modal('hide');
                     $('#modal_edit_item')[0].reset();
                     itemTable.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');

@@ -41,11 +41,11 @@
                             <thead class="">
                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
                                     <th class="text-center w-50px">#</th>
-                                    <th class="w-200px">SN/PN/MAC</th>
-                                    <th class="w-200px">Item Name</th>
+                                    <th class="w-300px">Item Name</th>
+                                    <th class="w-150px">Item Code</th>
+                                    <th class="w-200px">Warehouse</th>
                                     <th class="w-150px">Category</th>
-                                    <th class="w-150px">Stock</th>
-                                    <th class="w-50px">#</th>
+                                    <th class="w-100px">#</th>
                                 </tr>
                             </thead>
                             <tbody class="fs-7">
@@ -98,29 +98,28 @@
                         "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'l i>" +
                         "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
                         ">",
-
                     columns: [{
                             data: 'DT_RowIndex',
                             orderable: false,
                             searchable: false
                         },
                         {
-                            data: 'serial_number',
+                            data: 'item_name',
                             orderable: false,
                             searchable: false
                         },
                         {
-                            data: 'name',
+                            data: 'code',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'warehouse_name',
                             orderable: false,
                             searchable: false
                         },
                         {
                             data: 'category',
-                            orderable: false,
-                            searchable: false
-                        },
-                        {
-                            data: 'stock',
                             orderable: false,
                             searchable: false
                         },
@@ -142,6 +141,9 @@
                 }
             });
 
+            $('#filter_warehouse').on('change', function() {
+                table.draw();
+            });
         });
     </script>
 @endsection

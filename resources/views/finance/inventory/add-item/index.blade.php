@@ -11,6 +11,7 @@
 @endsection
 
 @section('content')
+    @include('finance.inventory.add-item.modal')
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <div class="row justify-content-center mt-n20">
         <div class="col-lg-12 mt-n20">
@@ -103,69 +104,61 @@
 
                                     <hr class="mb-5 mt-4">
 
-                                    <p class="fw-bold fs-4">Penambahan Gudang</p>
+                                    <p class="fw-bold fs-4">Penambahan Stock Gudang</p>
+
+                                    <div id="item-list">
+                                        <div class="row">
+                                            <div class="col-lg-2 mb-1">
+                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                    <span class="required fw-bold">SN/PN/MAC</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-lg-2 mb-1">
+                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                    <span class="required fw-bold">Stock</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-lg-2 mb-1">
+                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                    <span class="required fw-bold">Minimum Stock</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-lg-1 mb-1">
+                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                    <span class="required fw-bold">Unit</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-lg-2 mb-1">
+                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                    <span class="required fw-bold">Kondisi Barang</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-lg-2 mb-1">
+                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                    <span class="required fw-bold">Status Barang</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-lg-1 d-flex justify-content-start items-center">
+                                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                    <span class="fw-bold">Hapus</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {{-- Item List --}}
+                                    </div>
 
                                     <div class="col-lg-12 mb-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">SN/PN/MAC</span>
-                                        </label>
-                                        <input type="text" class="form-control form-control-solid" placeholder="SN/PN/MAC"
-                                            required name="serial_number">
-                                    </div>
-
-                                    <div class="col-lg-6 mb-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Kondisi Barang</span>
-                                        </label>
-                                        <select class="form-select form-select-solid" data-control="select2" required
-                                            name="inventory_good_condition_id" id="inventory_good_condition_id">
-                                            <option value="" selected>Choose a Condition</option>
-                                            @foreach ($conditions as $condition)
-                                                <option value="{{ $condition->id }}">{{ $condition->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="col-lg-6 mb-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Status Barang</span>
-                                        </label>
-                                        <select class="form-select form-select-solid" data-control="select2" required
-                                            name="inventory_good_status_id" id="inventory_good_status_id">
-                                            <option value="" selected>Choose a Status</option>
-                                            @foreach ($statuses as $status)
-                                                <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="col-lg-4 mb-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Stock Awal</span>
-                                        </label>
-                                        <input type="number" class="form-control form-control-solid" placeholder="10"
-                                            required name="stock">
-                                    </div>
-
-                                    <div class="col-lg-4 mb-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Minimum Stock</span>
-                                        </label>
-                                        <input type="number" class="form-control form-control-solid" placeholder="10"
-                                            required name="minimum_stock">
-                                    </div>
-
-                                    <div class="col-lg-4 mb-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Satuan Unit</span>
-                                        </label>
-                                        <select class="form-select form-select-solid" data-control="select2" required
-                                            name="inventory_unit_master_id" id="inventory_unit_master_id">
-                                            <option value="" selected>Choose a Unit</option>
-                                            @foreach ($units as $unit)
-                                                <option value="{{ $unit->id }}">{{ $unit->name }} - {{ $unit->code }}</option>
-                                            @endforeach
-                                        </select>
+                                        <a href="#add_item_modal" data-bs-toggle="modal" class="btn btn-light-info me-3">
+                                            <i class="fas fa-plus"></i>
+                                            Add Item
+                                        </a>
                                     </div>
 
                                     <div class="col-lg-12 mt-8 mb-4 d-flex justify-content-center">
@@ -190,6 +183,9 @@
 
     <script>
         const itemData = @json($items);
+        const itemCondition = @json($conditions);
+        const itemStatus = @json($statuses);
+        const itemUnit = @json($units);
 
         $(document).ready(function() {
             $('#inventory_good_id').on('change', function() {
@@ -225,6 +221,77 @@
                         const data = xhr.responseJSON;
                         toastr.error(data.message, 'Opps!');
                     }
+                });
+            });
+
+            $('#add_item_submit').on('click', function() {
+                const randomId = Math.random().toString(36).substring(2, 8);
+                const serialNumber = $('#serial_number').val();
+                const stock = $('#item_stock').val();
+                const minimumStock = $('#minimum_stock').val();
+                const unitId = $('#inventory_unit_master_id').val();
+                const goodConditionId = $('#inventory_good_condition_id').val();
+                const goodStatusId = $('#inventory_good_status_id').val();
+
+                const html = `<div class="row" id="item-${randomId}">
+                    <div class="col-lg-2 mb-3">
+                        <input type="text" class="form-control form-control-solid"
+                            name="serial_number[]" value=${serialNumber}>
+                    </div>
+
+                    <div class="col-lg-2 mb-3">
+                        <input type="number" class="form-control form-control-solid"
+                            required name="stock[]" step="any" value=${stock}>
+                    </div>
+
+                    <div class="col-lg-2 mb-3">
+                        <input type="number" class="form-control form-control-solid"
+                            required name="minimum_stock[]" step="any" value=${minimumStock}>
+                    </div>
+
+                    <div class="col-lg-1 mb-3">
+                        <input type="text" class="form-control form-control-solid"
+                            hidden name="inventory_unit_master_id[]" value=${unitId}>
+                        <input type="text" class="form-control form-control-solid" disabled
+                            value="${((itemUnit.find(({ id }) => id == unitId))).code}">
+                    </div>
+
+                    <div class="col-lg-2 mb-3">
+                        <input type="text" class="form-control form-control-solid"
+                            hidden name="inventory_good_condition_id[]" value=${goodConditionId}>
+                        <input type="text" class="form-control form-control-solid" disabled
+                            value="${(itemCondition.find(({ id }) => id == goodConditionId)).name}">
+                    </div>
+
+                    <div class="col-lg-2 mb-3">
+                        <input type="text" class="form-control form-control-solid"
+                            hidden name="inventory_good_status_id[]" value=${goodStatusId}>
+                        <input type="text" class="form-control form-control-solid" disabled
+                            value="${(itemStatus.find(({ id }) => id == goodStatusId)).name}">
+                    </div>
+
+                    <div class="col-lg-1 d-flex justify-content-start items-center">
+                        <button type="button" class="btn btn-danger btn-sm btn-icon"
+                            id="button-${randomId}">
+                            <i class="fa-solid fa-delete-left"></i>
+                        </button>
+                    </div>
+                </div>`;
+
+                $('#item-list').append(html);
+
+                $(`#button-${randomId}`).on('click', function() {
+                    $(`#item-${randomId}`).remove();
+                });
+
+                $('#add_item_modal input').each(function() {
+                    $(this).val('');
+                    $(this).trigger('change');
+                });
+
+                $('#add_item_modal select').each(function() {
+                    $(this).val('');
+                    $(this).trigger('change');
                 });
             });
         });
