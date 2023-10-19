@@ -16,12 +16,10 @@ use App\Models\Attendance\UserAttendance;
 
 class AttendanceController extends Controller
 {
-    private $errorHandler;
     private $constants;
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
 
@@ -144,7 +142,7 @@ class AttendanceController extends Controller
                 "data" => $attendance
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -167,7 +165,7 @@ class AttendanceController extends Controller
                 ]
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -200,7 +198,7 @@ class AttendanceController extends Controller
                 ]
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -235,7 +233,7 @@ class AttendanceController extends Controller
                 "message" => "Anda berada dalam radius kantor ($userInLocation->distance meter)"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -268,7 +266,8 @@ class AttendanceController extends Controller
                             ->where('end_date', '>=', $today);
                     })
                     ->where('status', $this->constants->assignment_status[1])
-                    ->selectRaw("assignments.radius,
+                    ->selectRaw(
+                        "assignments.radius,
                         (6371000 * acos(cos(radians(?))
                         * cos(radians(latitude))
                         * cos(radians(longitude) - radians(?))
@@ -447,7 +446,7 @@ class AttendanceController extends Controller
                 ], 201);
             }
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -651,7 +650,7 @@ class AttendanceController extends Controller
                 ], 201);
             }
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

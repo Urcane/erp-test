@@ -14,10 +14,8 @@ abstract class RequestController extends Controller
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     abstract public function getRequest(Request $request);
     abstract public function getRequestById(Request $request);
     abstract public function makeRequest(Request $request);

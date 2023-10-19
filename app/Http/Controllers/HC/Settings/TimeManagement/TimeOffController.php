@@ -141,7 +141,7 @@ class TimeOffController extends TimeManagementController
                 "message" => "Berhasil menambahkan Kategori Time Off"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -241,7 +241,7 @@ class TimeOffController extends TimeManagementController
                 "message" => "Berhasil melakukan update Kategori $leaveCategory->name Time Off"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -252,7 +252,7 @@ class TimeOffController extends TimeManagementController
         try {
             //code...
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

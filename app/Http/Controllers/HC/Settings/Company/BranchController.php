@@ -16,12 +16,9 @@ use App\Models\Employee\SubBranch;
 
 class BranchController extends Controller
 {
-    private $errorHandler;
 
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
+
+
 
     public function index()
     {
@@ -152,7 +149,7 @@ class BranchController extends Controller
             return redirect(route("hc.setting.branch.index"));
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -184,7 +181,7 @@ class BranchController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

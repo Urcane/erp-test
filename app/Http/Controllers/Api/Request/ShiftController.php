@@ -38,7 +38,7 @@ class ShiftController extends RequestController
                 ],
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -90,7 +90,7 @@ class ShiftController extends RequestController
                 "data" => $currentShift,
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -117,7 +117,7 @@ class ShiftController extends RequestController
                 "data" => $userShiftRequest
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -171,7 +171,7 @@ class ShiftController extends RequestController
                 "message" => "Berhasil melakukan request shift"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -203,7 +203,7 @@ class ShiftController extends RequestController
                 "message" => "Berhasil cancel request shift"
             ],);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

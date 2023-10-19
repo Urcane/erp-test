@@ -172,7 +172,7 @@ class AttendanceController extends RequestController
                 "message" => "berhasil melakukan update status request attendance"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -268,7 +268,7 @@ class AttendanceController extends RequestController
                 ]
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

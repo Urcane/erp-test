@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class ErrorHandler
 {
-    public function handle($error)
+    public static function handle($error)
     {
         if ($error instanceof ClientError) {
             return [

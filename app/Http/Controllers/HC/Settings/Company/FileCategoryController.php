@@ -13,12 +13,9 @@ use App\Utils\ErrorHandler;
 
 class FileCategoryController extends Controller
 {
-    private $errorHandler;
 
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
+
+
 
     public function index()
     {
@@ -86,7 +83,7 @@ class FileCategoryController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -113,7 +110,7 @@ class FileCategoryController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

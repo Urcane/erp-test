@@ -25,6 +25,15 @@
 
                             <div class="col-lg-12 p-6 m-1 rounded border border-2 border-secondary">
                                 <form class="form row" enctype="multipart/form-data" id="add_item_form">
+                                    <p class="fw-bold fs-4">Deskripsi Kegiatan</p>
+
+                                    <div class="col-lg-12 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="fw-bold required">Nama Kegiatan</span>
+                                        </label>
+                                        <input type="text" name="name" class="form-control form-control-solid">
+                                    </div>
+
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Pilih Warehouse</span>

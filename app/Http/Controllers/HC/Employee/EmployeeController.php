@@ -27,14 +27,12 @@ use Maatwebsite\Excel\Facades\Excel;
 class EmployeeController extends Controller
 {
     private $constants;
-    private $errorHandler;
+
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     public function getScheduleShift(Request $request) {
         $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $request->working_schedule_id)->get();
         return response()->json([
@@ -230,7 +228,7 @@ class EmployeeController extends Controller
 
             return $transaction;
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

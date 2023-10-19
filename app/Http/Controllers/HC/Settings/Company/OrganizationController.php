@@ -13,12 +13,9 @@ use App\Utils\ErrorHandler;
 
 class OrganizationController extends Controller
 {
-    private $errorHandler;
 
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
+
+
 
     private function _loopChild($department) {
         $data = [];
@@ -119,7 +116,7 @@ class OrganizationController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -150,7 +147,7 @@ class OrganizationController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

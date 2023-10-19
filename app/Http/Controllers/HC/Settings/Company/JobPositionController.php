@@ -15,12 +15,9 @@ use App\Utils\ErrorHandler;
 
 class JobPositionController extends Controller
 {
-    private $errorHandler;
 
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
+
+
 
     private function _loopChild($divisi)
     {
@@ -135,7 +132,7 @@ class JobPositionController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -161,7 +158,7 @@ class JobPositionController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

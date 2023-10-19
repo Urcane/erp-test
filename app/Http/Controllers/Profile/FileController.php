@@ -18,12 +18,9 @@ use Carbon\Carbon;
 
 class FileController extends Controller
 {
-    private $errorHandler;
 
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
+
+
 
     public function getTableUserFile(Request $request) {
         if (request()->ajax()) {
@@ -108,7 +105,7 @@ class FileController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -126,7 +123,7 @@ class FileController extends Controller
                 'message' => "Data berhasil dihapus",
             ], 200);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -138,7 +135,7 @@ class FileController extends Controller
 
             return Storage::download('public/personal/file/' . $file);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

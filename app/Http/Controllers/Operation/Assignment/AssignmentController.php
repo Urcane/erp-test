@@ -32,10 +32,8 @@ class AssignmentController extends Controller
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     private function _getGlobalDayOff($startDate, $endDate)
     {
         $globalDayOffs = GlobalDayOff::where('start_date', '<=', $endDate)
@@ -299,7 +297,7 @@ class AssignmentController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -459,7 +457,7 @@ class AssignmentController extends Controller
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -607,7 +605,7 @@ class AssignmentController extends Controller
                 "message" => "Berhasil membatalkan penugasan",
             ], 200);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -666,7 +664,7 @@ class AssignmentController extends Controller
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

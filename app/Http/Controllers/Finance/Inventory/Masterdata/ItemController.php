@@ -37,7 +37,7 @@ class ItemController extends MasterdataController
                 "message" => "Berhasil menambahkan barang baru",
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -77,7 +77,7 @@ class ItemController extends MasterdataController
                 "message" => "Berhasil mengubah barang",
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

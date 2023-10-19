@@ -21,10 +21,8 @@ class LeaveController extends Controller
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     public function getUserLeaveQuotas()
     {
         try {
@@ -35,7 +33,7 @@ class LeaveController extends Controller
                 "data" => $userQuotas
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

@@ -12,6 +12,7 @@ use App\Models\Inventory\InventoryUnitMaster;
 use App\Models\Inventory\Warehouse;
 use App\Models\Inventory\WarehouseGood;
 use App\Models\Inventory\WarehouseGoodStock;
+use App\Models\Inventory\WarehouseGoodStockLog;
 use App\Utils\ErrorHandler;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -20,12 +21,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class InventoryController extends Controller
 {
-    private $errorHandler;
+
     private $constants;
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
 
@@ -39,8 +39,15 @@ class InventoryController extends Controller
             COUNT(CASE WHEN stock = 0 THEN 1 END) as outOfStock'
         ))->first();
 
+        $recentLogs = WarehouseGoodStockLog::with([
+            'warehouseGoodLog.warehouseLog.warehouse',
+            'warehouseGoodLog.inventoryGood.inventoryGoodCategory',
+        ])->orderBy('created_at', 'desc')->limit(10)->get();
+
+        $statuses = $this->constants->inventory_status;
+
         return view('finance.inventory.dashboard', compact([
-            'warehouseCount', 'stocks'
+            'warehouseCount', 'stocks', 'recentLogs', 'statuses'
         ]));
     }
 
@@ -49,6 +56,15 @@ class InventoryController extends Controller
         $warehouses = Warehouse::all();
 
         return view('finance.inventory.inventory.index', compact([
+            'warehouses'
+        ]));
+    }
+
+    public function viewLogs()
+    {
+        $warehouses = Warehouse::all();
+
+        return view('finance.inventory.logs.index', compact([
             'warehouses'
         ]));
     }
@@ -84,6 +100,7 @@ class InventoryController extends Controller
     {
         try {
             $request->validate([
+                'name' => 'required|string',
                 'serial_number' => 'nullable|array',
                 'warehouse_id' => 'required|exists:warehouses,id',
                 'inventory_good_id' => 'required|exists:inventory_goods,id',
@@ -100,8 +117,10 @@ class InventoryController extends Controller
                 'minimum_stock.required' => 'Tambahkan Item Stock pada gudang!',
             ]);
 
-            $warehouseGood = WarehouseGood::where('inventory_good_id', $request->inventory_good_id)
-                ->where('warehouse_id', $request->warehouse_id)
+            $warehouse = Warehouse::whereId($request->warehouse_id)->first();
+
+            $warehouseGood = $warehouse->warehouseGood()
+                ->where('inventory_good_id', $request->inventory_good_id)
                 ->first();
 
             if ($warehouseGood) {
@@ -110,8 +129,16 @@ class InventoryController extends Controller
 
             DB::beginTransaction();
 
-            $warehouseGood = WarehouseGood::create([
-                'warehouse_id' => $request->warehouse_id,
+            $warehouseLog = $warehouse->warehouseLogs()->create([
+                'name' => $request->name,
+                'status' => $this->constants->inventory_status[0],
+            ]);
+
+            $warehouseGoodLog = $warehouseLog->warehouseGoodLogs()->create([
+                'inventory_good_id' => $request->inventory_good_id,
+            ]);
+
+            $warehouseGood = $warehouse->warehouseGood()->create([
                 'inventory_good_id' => $request->inventory_good_id,
             ]);
 
@@ -122,6 +149,13 @@ class InventoryController extends Controller
                     'inventory_good_status_id' => $request->inventory_good_status_id[$key],
                     'inventory_unit_master_id' => $request->inventory_unit_master_id[$key],
                     'minimum_stock' => $request->minimum_stock[$key],
+                    'stock' => $stock,
+                ]);
+
+                $warehouseGoodLog->warehouseGoodStockLogs()->create([
+                    'inventory_good_condition_id' => $request->inventory_good_condition_id[$key],
+                    'inventory_good_status_id' => $request->inventory_good_status_id[$key],
+                    'inventory_unit_master_id' => $request->inventory_unit_master_id[$key],
                     'stock' => $stock,
                 ]);
             }
@@ -136,12 +170,12 @@ class InventoryController extends Controller
             DB::rollBack();
 
             if ($th instanceof QueryException && $th->errorInfo[1] === 1062) {
-                $data = $this->errorHandler->handle(new InvariantError('Dilarang memasukan stock dengan unit, kondisi dan status yang sama lebih dari satu kali'));
+                $data = ErrorHandler::handle(new InvariantError('Dilarang memasukan stock dengan unit, kondisi dan status yang sama lebih dari satu kali'));
 
                 return response()->json($data["data"], $data["code"]);
             }
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -245,7 +279,7 @@ class InventoryController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -299,6 +333,11 @@ class InventoryController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
+    }
+
+    public function getTableLogs(Request $request)
+    {
+        //
     }
 
     public function getTableTransferItem(Request $request)

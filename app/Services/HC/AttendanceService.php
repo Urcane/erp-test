@@ -8,7 +8,7 @@ use App\Exceptions\InvariantError;
 
 class AttendanceService
 {
-    private $errorHandler;
+
 
     public function __construct()
     {

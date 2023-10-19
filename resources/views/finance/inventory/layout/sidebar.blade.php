@@ -32,6 +32,14 @@
                         {{ $currentUrl == route('fin.inv.master-data') ? 'text-info' : '' }}"></i>
                     <span class="fs-7 fw-bold ms-3 text-center">Master Data</span>
                 </a>
+                <a class="mb-3 d-flex p-4 rounded
+                {{ $currentUrl == route('fin.inv.logs') ? 'bg-light-info text-info' : 'text-dark bg-hover-light-info text-hover-info' }}"
+                href="{{ route('fin.inv.logs') }}">
+                <i
+                    class="fa-solid fa-file-contract ms-1 fs-3
+                    {{ $currentUrl == route('fin.inv.logs') ? 'text-info' : '' }}"></i>
+                <span class="fs-7 fw-bold ms-3 text-center">Logs</span>
+            </a>
             </div>
         </div>
     </div>
