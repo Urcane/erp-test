@@ -22,4 +22,5 @@ class AttendanceController extends Controller
     public function __construct()
     {
         $this->constants = new Constants();
-    }}
+    }
+}

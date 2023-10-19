@@ -25,6 +25,7 @@ use App\Models\Leave\LeaveRequestCategory;
 use App\Models\Leave\UserLeaveCategoryQuota;
 use App\Models\Leave\UserLeaveQuota;
 use App\Models\User;
+use App\Utils\ErrorHandler;
 use DateTime;
 use DateInterval;
 use DatePeriod;

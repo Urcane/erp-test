@@ -28,7 +28,13 @@
                                 <input class="form-control form-control-solid form-control-sm" autocomplete="off"
                                     id="search">
                             </div>
+                            <div class="input-group w-150px w-md-250px me-4">
+                                <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
+                                <input class="form-control form-control-solid form-control-sm" autocomplete="off"
+                                    name="range_date" id="range_date">
+                            </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="row">
@@ -37,9 +43,11 @@
                             <thead class="">
                                 <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
                                     <th class="text-center w-50px">#</th>
-                                    <th class="w-300px">Nama</th>
+                                    <th class="w-150px">Tanggal</th>
+                                    <th class="w-300px">Nama Kegiatan</th>
+                                    <th class="w-150px">Status</th>
                                     <th class="w-150px">Warehouse</th>
-                                    <th class="w-200px">Item Affected</th>
+                                    <th class="w-200px">Jumlah Item</th>
                                     <th class="w-100px">#</th>
                                 </tr>
                             </thead>
@@ -54,6 +62,21 @@
 
     <script>
         $(document).ready(function() {
+            $('input[name="range_date"]').daterangepicker({
+                autoUpdateInput: false,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
+                        'month').endOf('month')]
+                }
+            }, (from_date, to_date) => {
+                $('#range_date').val(from_date.format('MM/DD/YYYY') + ' - ' + to_date.format('MM/DD/YYYY'));
+            });
+
             const table = $('#kt_table_inventory')
                 .DataTable({
                     processing: true,
@@ -67,6 +90,7 @@
                         data: function(data) {
                             data.search = $('#search').val();
                             data.filterWarehouse = $('#filter_warehouse').val();
+                            data.date = $('#range_date').val();
                         }
                     },
                     language: {
@@ -99,22 +123,27 @@
                             searchable: false
                         },
                         {
-                            data: 'item_name',
+                            data: 'created_at',
                             orderable: false,
                             searchable: false
                         },
                         {
-                            data: 'code',
+                            data: 'name',
                             orderable: false,
                             searchable: false
                         },
                         {
-                            data: 'warehouse_name',
+                            data: 'status',
                             orderable: false,
                             searchable: false
                         },
                         {
-                            data: 'category',
+                            data: 'warehouse',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'item_count',
                             orderable: false,
                             searchable: false
                         },
@@ -125,7 +154,7 @@
                         }
                     ],
                     columnDefs: [{
-                        targets: [0, 5],
+                        targets: [0, 5, 6],
                         className: 'text-center',
                     }, ],
                 });
@@ -137,6 +166,10 @@
             });
 
             $('#filter_warehouse').on('change', function() {
+                table.draw();
+            });
+
+            $('#range_date').on('apply.daterangepicker', function(ev, picker) {
                 table.draw();
             });
         });

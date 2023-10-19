@@ -458,6 +458,7 @@ Route::middleware(['auth'])->group(function () {
 
                 Route::prefix('logs')->group(function () {
                     Route::get('/', 'viewLogs')->name('fin.inv.logs');
+                    Route::get('/{id}', 'viewDetailLog')->name('fin.inv.logs.detail');
 
                     Route::get('/get-data/table/data-result', 'getTableLogs')->name('fin.inv.logs-get-table-logs');
                 });

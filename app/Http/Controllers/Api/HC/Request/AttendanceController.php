@@ -14,6 +14,7 @@ use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserAttendanceRequest;
 use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\WorkingScheduleShift;
+use App\Utils\ErrorHandler;
 use Illuminate\Support\Carbon;
 
 class AttendanceController extends RequestController

@@ -16,7 +16,6 @@ use App\Utils\ErrorHandler;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
-use App\Models\Department;
 use App\Models\User;
 use DateInterval;
 use DatePeriod;
@@ -27,13 +26,13 @@ use Illuminate\Validation\Rule;
 
 class AssignmentController extends Controller
 {
-    protected $errorHandler;
     protected $constants;
 
     public function __construct()
     {
         $this->constants = new Constants();
     }
+
     private function _getGlobalDayOff($startDate, $endDate)
     {
         $globalDayOffs = GlobalDayOff::where('start_date', '<=', $endDate)

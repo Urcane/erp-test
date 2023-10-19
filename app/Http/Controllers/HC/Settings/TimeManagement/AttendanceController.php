@@ -18,13 +18,13 @@ use App\Models\Employee\WorkingScheduleShift;
 
 class AttendanceController extends Controller
 {
-    protected $errorHandler;
     protected $constants;
 
     public function __construct()
     {
         $this->constants = new Constants();
     }
+
     public function index() {
         $dataWorkingShift = WorkingShift::all();
         $dataDays = $this->constants->day;
