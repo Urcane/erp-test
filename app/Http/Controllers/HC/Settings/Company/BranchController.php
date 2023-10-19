@@ -94,12 +94,22 @@ class BranchController extends Controller
             "coordinate_radius" => "required",
             "city" => "required",
             "province" => "required",
-            "npwp" => "required",
-            "tax_name" => "required",
-            "tax_person_name" => "required",
-            "tax_person_npwp" => "required",
+            // "npwp" => "required",
+            // "tax_name" => "required",
+            // "tax_person_name" => "required",
+            // "tax_person_npwp" => "required",
             "klu" => "required",
         ]);
+
+        if ($request->npwp_same_parent) {
+            $parent = SubBranch::whereId($request->parent_id)->first();
+            $request->merge([
+                "npwp" => $parent->npwp,
+                "tax_name" => $parent->tax_name,
+                "tax_person_name" => $parent->tax_person_name,
+                "tax_person_npwp" => $parent->tax_person_npwp,
+            ]);
+        }
 
         DB::transaction(function () use ($request) {
             $subBranch = SubBranch::updateOrCreate([

@@ -207,56 +207,72 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-lg-6 mb-3">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                        for="npwp">
-                                                        <span class="fw-bold required">Branch NPWP</span>
-                                                    </label>
-                                                    <input type="number"
-                                                        value="{{ $subBranch->npwp ?? old('npwp') }}"
-                                                        class="form-control form-control-solid"
-                                                        placeholder="Company NPWP" name="npwp" id="npwp"
-                                                        @cannot('HC:setting') disabled @endcannot required>
-                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                <div id="tax" class="col-12 row">
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="npwp">
+                                                            <span class="fw-bold required">Branch NPWP</span>
+                                                        </label>
+                                                        <input type="number"
+                                                            value="{{ $subBranch->npwp ?? old('npwp') }}"
+                                                            class="form-control form-control-solid"
+                                                            placeholder="Company NPWP" name="npwp" id="npwp"
+                                                            @cannot('HC:setting') disabled @endcannot required>
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="tax_name">
+                                                            <span class="fw-bold required">Branch Tax Name</span>
+                                                        </label>
+                                                        <input type="text"
+                                                            value="{{ $subBranch->tax_name ?? old('tax_name') }}"
+                                                            class="form-control form-control-solid" name="tax_name"
+                                                            id="tax_name"
+                                                            @cannot('HC:setting') disabled @endcannot required>
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="tax_person_name">
+                                                            <span class="fw-bold required">Tax Person</span>
+                                                        </label>
+                                                        <input type="text"
+                                                            value="{{ $subBranch->tax_person_name ?? old('tax_person_name') }}"
+                                                            class="form-control form-control-solid"
+                                                            placeholder="Nama Perusahaan" name="tax_person_name"
+                                                            id="tax_person_name"
+                                                            @cannot('HC:setting') disabled @endcannot required>
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="tax_person_npwp">
+                                                            <span class="fw-bold required">Tax Person NPWP</span>
+                                                        </label>
+                                                        <input type="number"
+                                                            value="{{ $subBranch->tax_person_npwp ?? old('tax_person_npwp') }}"
+                                                            class="form-control form-control-solid"
+                                                            placeholder="Tax Person NPWP" name="tax_person_npwp"
+                                                            id="tax_person_npwp"
+                                                            @cannot('HC:setting') disabled @endcannot required>
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                        for="tax_name">
-                                                        <span class="fw-bold required">Branch Tax Name</span>
-                                                    </label>
-                                                    <input type="text"
-                                                        value="{{ $subBranch->tax_name ?? old('tax_name') }}"
-                                                        class="form-control form-control-solid" name="tax_name"
-                                                        id="tax_name"
-                                                        @cannot('HC:setting') disabled @endcannot required>
-                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
-                                                </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                        for="tax_person_name">
-                                                        <span class="fw-bold required">Tax Person</span>
-                                                    </label>
-                                                    <input type="text"
-                                                        value="{{ $subBranch->tax_person_name ?? old('tax_person_name') }}"
-                                                        class="form-control form-control-solid"
-                                                        placeholder="Nama Perusahaan" name="tax_person_name"
-                                                        id="tax_person_name"
-                                                        @cannot('HC:setting') disabled @endcannot required>
-                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
-                                                </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                        for="tax_person_npwp">
-                                                        <span class="fw-bold required">Tax Person NPWP</span>
-                                                    </label>
-                                                    <input type="number"
-                                                        value="{{ $subBranch->tax_person_npwp ?? old('tax_person_npwp') }}"
-                                                        class="form-control form-control-solid"
-                                                        placeholder="Tax Person NPWP" name="tax_person_npwp"
-                                                        id="tax_person_npwp"
-                                                        @cannot('HC:setting') disabled @endcannot required>
-                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
-                                                </div>
+                                                <script>
+                                                    $("#npwp_same_parent").on("change", function() {
+                                                        console.log($(this).val())
+                                                        if ($(this).is(':checked')) {
+                                                            $("#tax").hide();
+                                                            $('#tax input').prop('disabled', true)
+                                                            $('#tax input').prop('required', false)
+                                                        } else {
+                                                            $("#tax").show();
+                                                            $('#tax input').prop('disabled', false);
+                                                            $('#tax input').prop('required', true)
+                                                        }
+                                                    });
+                                                </script>
                                             </section>
 
                                             {{-- Other Info --}}
