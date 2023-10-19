@@ -17,10 +17,12 @@ use App\Models\Employee\WorkingSchedule;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Models\Team\Team;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Row;
 use Maatwebsite\Excel\Concerns\OnEachRow;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class UsersImport implements OnEachRow
 {
@@ -35,10 +37,12 @@ class UsersImport implements OnEachRow
 
         // dd($row);
         DB::transaction(function () use ($row) {
-            $department_id = Department::where("department_name", $row[5])->first()->id;
-            $division_id = Division::where("divisi_name", $row[6])->first()->id;
-            $team_id = Team::where("team_name", $row[7])->first()->id;
-
+            $department_id = Department::where("department_name", $row[5])->first()->id ?? null;
+            $division_id = Division::where("divisi_name", $row[6])->first()->id ?? null;
+            $team_id = Team::where("team_name", $row[7])->first()->id ?? null;
+            if (User::where("email", $row[1])->first()) {
+                return;
+            }
             $user = User::create([
                 "name" => $row[0],
                 "email" => $row[1],
@@ -50,11 +54,15 @@ class UsersImport implements OnEachRow
                 "division_id" => $division_id,
                 "team_id" => $team_id,
             ]);
+            // if ($user->id == 73) {
+                # code...
+                // dd($user);
+            // }
             $user->assignRole($row[8]);
 
             UserPersonalData::create([
                 'user_id' => $user->id,
-                'birthdate' => $row[9],
+                'birthdate' => Carbon::parse(Date::excelToDateTimeObject($row[9]))->format('Y-m-d'),
                 'place_of_birth' => $row[10],
                 'marital_status' => $row[11],
                 'gender' => $row[12],
@@ -66,25 +74,25 @@ class UsersImport implements OnEachRow
                 'user_id' => $user->id,
                 'type' => $row[15],
                 'number' => $row[16],
-                'expire_date' => $row[17],
+                'expire_date' => Carbon::parse(Date::excelToDateTimeObject($row[17]))->format('Y-m-d'),
                 'postal_code' => $row[18],
                 'citizen_id_address' => $row[19],
                 'residential_address' => $row[20],
             ]);
 
-            $sub_branch_id = SubBranch::where("name", $row[25])->first()->id;
-            $working_schedule_id = WorkingSchedule::where("name", $row[26])->first()->id;
-            $start_shift = WorkingScheduleShift::where("working_schedule_id", $working_schedule_id)->get()[$row[27]-1]->id;
+            $sub_branch_id = SubBranch::where("name", $row[25])->first()->id ?? null;
+            $working_schedule_id = WorkingSchedule::where("name", $row[26])->first()->id ?? null;
+            $start_shift = WorkingScheduleShift::where("working_schedule_id", $working_schedule_id)->get()[$row[27]-1]->id ?? null;
 
-            $approval_line = User::where("name", $row[28])->first()->id;
-            $employment_status_id = EmploymentStatus::where("name", $row[22])->first()->id;
+            $approval_line = User::where("name", $row[28])->first()->id ?? null;
+            $employment_status_id = EmploymentStatus::where("name", $row[22])->first()->id ?? null;
 
             UserEmployment::create([
                 'user_id' => $user->id,
                 'employee_id' => $row[21],
                 'employment_status_id' => $employment_status_id,
-                'join_date' => $row[23],
-                'end_date' => $row[24],
+                'join_date' => Carbon::parse(Date::excelToDateTimeObject($row[23]))->format('Y-m-d'),
+                'end_date' => Carbon::parse(Date::excelToDateTimeObject($row[24]))->format('Y-m-d'),
                 'sub_branch_id' => $sub_branch_id,
                 'working_schedule_id' => $working_schedule_id,
                 'start_shift' => $start_shift,
