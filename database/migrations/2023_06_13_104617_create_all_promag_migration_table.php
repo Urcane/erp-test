@@ -159,6 +159,7 @@ class CreateAllPromagMigrationTable extends Migration
         Schema::create('work_task_comments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('work_task_list_id')->constrained();
+            $table->foreignId('user_id')->constrained();
             $table->string('comments', 2000);
             $table->timestamps();
         });

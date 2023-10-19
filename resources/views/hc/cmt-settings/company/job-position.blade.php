@@ -132,7 +132,7 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0"
-                                                data-bs-toggle="tab" id="shift" href="#chart">Chart</a>
+                                                data-bs-toggle="tab" id="chart_tab" href="#chart">Chart</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -168,26 +168,38 @@
         </div>
     </div>
 
-    <script src="{{ asset('sense') }}/plugins/custom/OrgChart/js/jquery.orgchart.js"></script>
     <script>
-        'use strict';
+        $(document).ready(() => {
+            const initChart = (datascource) => {
+                orgInit();
+                (($) => {
+                $(function() {
+                    var oc = $('#chart-container').orgchart({
+                        'pan': true,
+                        'data': datascource,
+                        'nodeContent': 'count',
+                        'zoom': true,
+                    });
 
-        (function($) {
-
-            $(function() {
-
-                var datascource = @json($dataTree);
-                console.log(datascource)
-                var oc = $('#chart-container').orgchart({
-                    'pan': true,
-                    'data': datascource,
-                    'nodeContent': 'count',
-                    'zoom': true,
                 });
 
-            });
+                })(jQuery);
+            }
 
-        })(jQuery);
+            $("#chart_tab").one("click", function() {
+                $.ajax({
+                    url: "{{ route('hc.emp.job-position.getGraph') }}",
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+
+                        (() => initChart(data.data))()
+                    }
+                });
+            });
+        })
     </script>
 
     <script>
@@ -301,4 +313,5 @@
         'route' => route('hc.setting.job-position.delete'),
     ])
 
+    @include("hc.cmt-settings.company.script.init-orgchart")
 @endsection

@@ -126,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
             Route::post('/{work_list_id}/task-lists/store', 'store')->name('com.promag.task-list.store');
             Route::get('/{work_list_id}/task-lists/detail/{task_list_id}', 'detailTaskList')->name('com.promag.task-list.detail');
+            Route::post('/task-lists/detail/{task_list_id}/comment', 'comment')->name('com.promag.task-list.comment');
             // Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
         });
     });
@@ -242,6 +243,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::prefix('organization')->group(function () {
                         Route::get('/', 'index')->name('hc.setting.organization.index');
                         Route::get('/table/organization', 'getTableOrganization')->name('hc.emp.getTableOrganization');
+                        Route::get('/graph/organization', 'getGraph')->name('hc.emp.organization.getGraph');
                         Route::post('/create/update', 'createUpdate')->name('hc.setting.organization.createUpdate');
                         Route::post('/delete', 'delete')->name('hc.setting.organization.delete');
                     });
@@ -258,6 +260,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::prefix('job-position')->group(function () {
                         Route::get('/', 'index')->name('hc.setting.job-position.index');
                         Route::get('/table/job-position', 'getTableJobPosition')->name('hc.emp.getTableJobPosition');
+                        Route::get('/graph/organization', 'getGraph')->name('hc.emp.job-position.getGraph');
                         Route::post('/create/update', 'createUpdate')->name('hc.setting.job-position.createUpdate');
                         Route::post('/delete', 'delete')->name('hc.setting.job-position.delete');
                     });
