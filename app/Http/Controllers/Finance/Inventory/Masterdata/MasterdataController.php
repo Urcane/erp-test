@@ -14,10 +14,8 @@ abstract class MasterdataController extends Controller
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     abstract public function create(Request $request);
     abstract public function update(Request $request);
     abstract public function getData();

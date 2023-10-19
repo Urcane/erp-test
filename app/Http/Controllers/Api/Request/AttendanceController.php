@@ -35,7 +35,7 @@ class AttendanceController extends RequestController
                 ],
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -124,7 +124,7 @@ class AttendanceController extends RequestController
                 "data" => $userAttendanceRequest
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -178,7 +178,7 @@ class AttendanceController extends RequestController
                 "message" => "Berhasil melakukan request attendance"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -210,7 +210,7 @@ class AttendanceController extends RequestController
                 "message" => "Berhasil cancel request attendance"
             ],);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

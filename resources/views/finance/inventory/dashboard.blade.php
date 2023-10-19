@@ -81,30 +81,42 @@
                                     <th tabindex="0" rowspan="1" colspan="1" style="width: 200.25px;">
                                         Category
                                     </th>
-                                    <th tabindex="0" rowspan="1" colspan="1" style="width: 197.25px;">
+                                    <th tabindex="0" rowspan="1" colspan="1" style="width: 197.25px;" class="text-center">
                                         Stock
                                     </th>
                                 </tr>
                             </thead>
                             <tbody class="fs-7">
-                                @for ($i = 0; $i < 5; $i++)
-                                    <tr class="odd">
-                                        <td class="text-center">{{$i * 2 + 1}}</td>
-                                        <td>Nama Item</td>
-                                        <td><span class="badge px-3 py-2 badge-light-primary">ADJUST</span></td>
-                                        <td>HO Balikpapan</td>
-                                        <td>Radio</td>
-                                        <td>3</td>
+                                @php
+                                    $i = 0;
+                                @endphp
+
+                                @foreach($recentLogs as $log)
+                                    <tr class="@if ($i % 2 == 0) even @else odd @endif">
+                                        <td class="text-center">{{ $i + 1 }}</td>
+                                        <td>{{ $log->warehouseGoodLog->inventoryGood->good_name }}</td>
+                                        <td>
+                                            @include('finance.inventory.components.badge', [
+                                                'status' => $log->warehouseGoodLog->warehouseLog->status,
+                                                'statusEnum' => $statuses
+                                            ])
+                                        </td>
+                                        <td>{{ $log->warehouseGoodLog->warehouseLog->warehouse->name }}</td>
+                                        <td>{{ $log->warehouseGoodLog->inventoryGood->inventoryGoodCategory->name }}</td>
+                                        @if($log->stock > 0)
+                                            <td class="text-center text-success">
+                                                + {{ $log->stock }}
+                                            </td>
+                                        @else
+                                            <td class="text-center text-danger">
+                                                - {{ $log->stock * -1 }}
+                                            </td>
+                                        @endif
                                     </tr>
-                                    <tr class="even">
-                                        <td class="text-center">{{$i * 2 + 2}}</td>
-                                        <td>Nama Item</td>
-                                        <td><span class="badge px-3 py-2 badge-light-primary">ADJUST</span></td>
-                                        <td>HO Balikpapan</td>
-                                        <td>Radio</td>
-                                        <td>3</td>
-                                    </tr>
-                                @endfor
+                                    @php
+                                        $i++;
+                                    @endphp
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

@@ -14,9 +14,9 @@ class WarehouseLog extends Model
 
     protected $guarded = [];
 
-    public function warehouseGood(): BelongsTo
+    public function warehouse(): BelongsTo
     {
-        return $this->belongsTo(WarehouseGood::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function warehouseGoodLogs(): HasMany

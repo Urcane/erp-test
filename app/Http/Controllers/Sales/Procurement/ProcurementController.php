@@ -21,14 +21,12 @@ use Yajra\DataTables\Facades\DataTables;
 class ProcurementController extends Controller
 {
     private $constants;
-    private $errorHandler;
+
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     public function index() {
         return view("cmt-opportunity.procurement.index");
     }
@@ -239,7 +237,7 @@ class ProcurementController extends Controller
                 "message" => "Status berhasil diubah"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

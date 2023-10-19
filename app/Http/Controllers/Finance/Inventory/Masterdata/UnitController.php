@@ -28,7 +28,7 @@ class UnitController extends MasterdataController
                 "message" => "Berhasil menambahkan satuan baru",
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -58,7 +58,7 @@ class UnitController extends MasterdataController
                 "message" => "Berhasil mengubah satuan",
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

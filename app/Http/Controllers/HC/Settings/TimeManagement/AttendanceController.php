@@ -23,10 +23,8 @@ class AttendanceController extends Controller
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     public function index() {
         $dataWorkingShift = WorkingShift::all();
         $dataDays = $this->constants->day;
@@ -177,7 +175,7 @@ class AttendanceController extends Controller
                 'message' => "Working schedule berhasil diperharui",
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -202,7 +200,7 @@ class AttendanceController extends Controller
                 'message' => "Working schedule berhasil dihapus",
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -223,7 +221,7 @@ class AttendanceController extends Controller
                 'message' => "Working schedule berhasil dihapus",
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -368,7 +366,7 @@ class AttendanceController extends Controller
                 'message' => "Data berhasil dihapus",
             ], 200);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

@@ -17,13 +17,6 @@ use App\Models\Employee\SubBranch;
 
 class BranchController extends Controller
 {
-    private $errorHandler;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
-
     public function index()
     {
         return view("hc.cmt-settings.company.branch.branch");
@@ -100,82 +93,85 @@ class BranchController extends Controller
             // "tax_person_npwp" => "required",
             "klu" => "required",
         ]);
+        try {
+            if ($request->npwp_same_parent) {
+                $parent = SubBranch::whereId($request->parent_id)->first();
+                $request->merge([
+                    "npwp" => $parent->npwp,
+                    "tax_name" => $parent->tax_name,
+                    "tax_person_name" => $parent->tax_person_name,
+                    "tax_person_npwp" => $parent->tax_person_npwp,
+                ]);
+            }
+    
+            DB::transaction(function () use ($request) {
+                $subBranch = SubBranch::updateOrCreate([
+                    "id" => $request->company_id,
+                ], [
+                    "name" => $request->name,
+                    "phone_number" => $request->phone_number,
+                    "email" => $request->email,
+                    "address" => $request->address,
+                    "city" => $request->city,
+                    "province" => $request->province,
+                    "npwp" => $request->npwp,
+                    "tax_name" => $request->name,
+                    "tax_person_name" => $request->tax_person_name,
+                    "tax_person_npwp" => $request->tax_person_npwp,
+                    "klu" => $request->klu,
+                    "umr" => $request->umr,
+                    "branch_id" => null,
+                    "parent_id" => $request->parent_id,
+                ]);
+    
+                $branchLocation = BranchLocation::where("sub_branch_id", $subBranch->id)->first();
+                if ($branchLocation) {
+                    $branchLocation->update([
+                        "latitude" => $request->latitude,
+                        "longitude" => $request->longitude,
+                        "radius" => $request->coordinate_radius,
+                    ]);
+                } else {
+                    BranchLocation::create([
+                        "sub_branch_id" => $subBranch->id,
+                        "latitude" => $request->latitude,
+                        "longitude" => $request->longitude,
+                        "radius" => $request->coordinate_radius,
+                    ]);
+                }
+    
+                if ($request->logo) {
+                    $file = $request->file('logo');
+                    $filename = time() . '_' . $request->name;
+                    if ($subBranch->logo) {
+                        $filename = $subBranch->logo;
+                    }
+                    $file->storeAs('branch-logo', $filename, 'public');
+    
+                    $subBranch->update([
+                        "logo" => $filename,
+                    ]);
+                    // Storage::disk('local')->putFile('public/branch-logo', $file);
+                }
+                if ($request->signature) {
+                    $file = $request->file('signature');
+                    $filename = time() . '_' . $request->name;
+                    if ($subBranch->logo) {
+                        $filename = $subBranch->logo;
+                    }
+                    $file->storeAs('branch-signature', $filename, 'public');
+    
+                    $subBranch->update([
+                        "signature" => $filename,
+                    ]);
+                }
+            });
 
-        if ($request->npwp_same_parent) {
-            $parent = SubBranch::whereId($request->parent_id)->first();
-            $request->merge([
-                "npwp" => $parent->npwp,
-                "tax_name" => $parent->tax_name,
-                "tax_person_name" => $parent->tax_person_name,
-                "tax_person_npwp" => $parent->tax_person_npwp,
-            ]);
+            return redirect(route("hc.setting.branch.index"));        
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data["code"]);
         }
-
-        DB::transaction(function () use ($request) {
-            $subBranch = SubBranch::updateOrCreate([
-                "id" => $request->company_id,
-            ], [
-                "name" => $request->name,
-                "phone_number" => $request->phone_number,
-                "email" => $request->email,
-                "address" => $request->address,
-                "city" => $request->city,
-                "province" => $request->province,
-                "npwp" => $request->npwp,
-                "tax_name" => $request->name,
-                "tax_person_name" => $request->tax_person_name,
-                "tax_person_npwp" => $request->tax_person_npwp,
-                "klu" => $request->klu,
-                "umr" => $request->umr,
-                "branch_id" => null,
-                "parent_id" => $request->parent_id,
-            ]);
-
-            $branchLocation = BranchLocation::where("sub_branch_id", $subBranch->id)->first();
-            if ($branchLocation) {
-                $branchLocation->update([
-                    "latitude" => $request->latitude,
-                    "longitude" => $request->longitude,
-                    "radius" => $request->coordinate_radius,
-                ]);
-            } else {
-                BranchLocation::create([
-                    "sub_branch_id" => $subBranch->id,
-                    "latitude" => $request->latitude,
-                    "longitude" => $request->longitude,
-                    "radius" => $request->coordinate_radius,
-                ]);
-            }
-
-            if ($request->logo) {
-                $file = $request->file('logo');
-                $filename = time() . '_' . $request->name;
-                if ($subBranch->logo) {
-                    $filename = $subBranch->logo;
-                }
-                $file->storeAs('branch-logo', $filename, 'public');
-
-                $subBranch->update([
-                    "logo" => $filename,
-                ]);
-                // Storage::disk('local')->putFile('public/branch-logo', $file);
-            }
-            if ($request->signature) {
-                $file = $request->file('signature');
-                $filename = time() . '_' . $request->name;
-                if ($subBranch->logo) {
-                    $filename = $subBranch->logo;
-                }
-                $file->storeAs('branch-signature', $filename, 'public');
-
-                $subBranch->update([
-                    "signature" => $filename,
-                ]);
-            }
-        });
-
-
-        return redirect(route("hc.setting.branch.index"));
 
     }
 
@@ -205,7 +201,7 @@ class BranchController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

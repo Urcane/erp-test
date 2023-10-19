@@ -13,12 +13,9 @@ use App\Utils\ErrorHandler;
 
 class UserController extends Controller
 {
-    private $errorHandler;
 
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
+
+
 
     public function login(Request $request)
     {
@@ -46,7 +43,7 @@ class UserController extends Controller
             ]);
 
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -59,7 +56,7 @@ class UserController extends Controller
                 "data" => $request->user()->load('userPersonalData'),
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -73,7 +70,7 @@ class UserController extends Controller
                 "data" => $request->user()->load('userEmployment')
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -86,7 +83,7 @@ class UserController extends Controller
                 "data" => $request->user()->userEmployment->load(['user.team', 'user.roles', 'user.division', 'user.department', 'approvalLine', 'subBranch', 'workingSchedule','employmentStatus','workingSchedule.workingShift']),
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -99,7 +96,7 @@ class UserController extends Controller
                 "data" => $request->user()->userSalary->load(['paymentSchedule','prorateSetting']),
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -112,7 +109,7 @@ class UserController extends Controller
                 "data" => $request->user()->userBank,
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -125,7 +122,7 @@ class UserController extends Controller
                 "data" => $request->user()->userTax->load(['taxStatus']),
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -138,7 +135,7 @@ class UserController extends Controller
                 "data" => $request->user()->userBpjs,
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

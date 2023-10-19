@@ -10,7 +10,6 @@ use Carbon\Carbon;
 class Attendance
 {
     protected $constants;
-    protected $errorHandler;
     protected $rangeDate;
 
     protected $userId;
@@ -23,7 +22,6 @@ class Attendance
     public function __construct($rangeDate)
     {
         $this->constants = new Constants();
-        $this->errorHandler = new ErrorHandler();
         $this->rangeDate = $rangeDate;
     }
 
@@ -180,7 +178,7 @@ class Attendance
                 clone $userAttendances
             );
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -193,7 +191,7 @@ class Attendance
 
             return $userAttendances->orderBy('date', 'desc')->get();
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

@@ -11,15 +11,13 @@ use App\Utils\ErrorHandler;
 
 class ShiftController extends Controller
 {
-    private $errorHandler;
+
     private $constants;
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     public function getAllWorkingShift() {
         try {
             return response()->json([
@@ -27,7 +25,7 @@ class ShiftController extends Controller
                 "data" => WorkingShift::all(),
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

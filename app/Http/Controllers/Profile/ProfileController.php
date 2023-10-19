@@ -34,14 +34,12 @@ use App\Utils\ErrorHandler;
 class ProfileController extends Controller
 {
     private $constants;
-    private $errorHandler;
+
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     public function profile($id) {
         /** @var \App\Models\User $auth */
         $auth = Auth::user();
@@ -153,7 +151,7 @@ class ProfileController extends Controller
                 'message' => "Data berhasil disimpan",
             ], 200);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -189,7 +187,7 @@ class ProfileController extends Controller
                 "message" => "Data berhasil disimpan"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -215,7 +213,7 @@ class ProfileController extends Controller
                 "message" => "Data berhasil disimpan"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -251,7 +249,7 @@ class ProfileController extends Controller
                 "message" => "Data berhasil disimpan"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -291,7 +289,7 @@ class ProfileController extends Controller
                 "message" => "Data berhasil disimpan"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

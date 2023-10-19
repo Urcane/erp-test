@@ -444,12 +444,19 @@ Route::middleware(['auth'])->group(function () {
 
                     Route::get('/create', 'viewAddItem')->name('fin.inv.inventory-create');
                     Route::post('/create', 'storeItem')->name('fin.inv.inventory-create');
-
-                    Route::get('/transfer', 'viewTransferItem')->name('fin.inv.inventory-transfer');
-                    Route::post('/transfer', 'transferItem')->name('fin.inv.inventory-transfer');
-
                     Route::get('/get-data/table/data-result', 'getTableInventory')->name('fin.inv.inventory-get-table-inventory');
-                    Route::get('/get-data/table/data-result/transfer', 'getTableTransferItem')->name('fin.inv.inventory-get-table-transfer');
+
+                    Route::prefix('transfer')->group(function () {
+                        Route::get('/', 'viewTransferItem')->name('fin.inv.inventory-transfer');
+                        Route::post('/', 'transferItem')->name('fin.inv.inventory-transfer');
+                        Route::get('/get-data/table/data-result/', 'getTableTransferItem')->name('fin.inv.inventory-get-table-transfer');
+                    });
+                });
+
+                Route::prefix('logs')->group(function () {
+                    Route::get('/', 'viewLogs')->name('fin.inv.logs');
+
+                    Route::get('/get-data/table/data-result', 'getTableLogs')->name('fin.inv.logs-get-table-logs');
                 });
 
                 Route::prefix('master-data')->group(function () {

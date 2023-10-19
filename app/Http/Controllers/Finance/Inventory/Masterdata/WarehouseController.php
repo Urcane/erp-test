@@ -29,7 +29,7 @@ class WarehouseController extends MasterdataController
                 "message" => "Berhasil menambahkan gudang baru",
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -61,7 +61,7 @@ class WarehouseController extends MasterdataController
                 "message" => "Berhasil mengubah data gudang",
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

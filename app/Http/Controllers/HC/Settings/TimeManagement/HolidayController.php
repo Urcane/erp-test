@@ -63,7 +63,7 @@ class HolidayController extends TimeManagementController
                 "message" => "Berhasil menambahkan Hari Libur"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

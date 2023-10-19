@@ -23,15 +23,13 @@ use App\Models\Department;
 
 class AttendanceController extends Controller
 {
-    private $errorHandler;
+
     private $constants;
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     private function _summariesQuery($query1, $query2, $query3, $query4, $query5, $query6, $query7, $query8, $query9, $query10)
     {
         $now = now();
@@ -207,7 +205,7 @@ class AttendanceController extends Controller
                 "message" => "Data Attendance berhasil diupdate"
             ], 200);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -245,7 +243,7 @@ class AttendanceController extends Controller
                 "message" => "Berhasil menghapus attendance"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -307,7 +305,7 @@ class AttendanceController extends Controller
                 clone $userAttendances
             );
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -536,7 +534,7 @@ class AttendanceController extends Controller
                 clone $userAttendances
             );
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -886,7 +884,7 @@ class AttendanceController extends Controller
                 $request->filterDepartment
             ), 'Data Absen Pegawai.xlsx');
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -907,7 +905,7 @@ class AttendanceController extends Controller
                 $request->rangeDate,
             ), 'Data Absen Pegawai.xlsx');
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

@@ -25,7 +25,7 @@ class ConditionController extends MasterdataController
                 "message" => "Berhasil menambahkan kondisi baru",
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -53,7 +53,7 @@ class ConditionController extends MasterdataController
                 "message" => "Berhasil mengubah kondisi",
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

@@ -9,12 +9,9 @@ use App\Models\User;
 
 class EmployeeController extends Controller
 {
-    private $errorHandler;
 
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
+
+
 
     function getAllEmployee(Request $request) {
         // try {
@@ -32,7 +29,7 @@ class EmployeeController extends Controller
                 ]
             ]);
         // } catch (\Throwable $th) {
-        //     $data = $this->errorHandler->handle($th);
+        //     $data = ErrorHandler::handle($th);
 
         //     return response()->json($data["data"], $data["code"]);
         // }
