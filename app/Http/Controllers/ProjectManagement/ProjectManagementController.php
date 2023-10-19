@@ -9,17 +9,22 @@ use App\Models\Customer\Customer;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\ProjectManagement\WorkList;
 use App\Services\ProjectManagement\WorkOrderService;
+use App\Utils\ErrorHandler;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProjectManagementController extends Controller
 {
     protected $workOrderService;
+    protected $errorHandler;
 
-    public function __construct(WorkOrderService $workOrderService) {
+    public function __construct(WorkOrderService $workOrderService, ErrorHandler $errorHandler) {
         $this->workOrderService = $workOrderService;
+        $this->errorHandler = $errorHandler;
     }
 
     public function index()
@@ -149,8 +154,9 @@ class ProjectManagementController extends Controller
 
             return redirect(route("com.promag.index"));
         } catch (\Throwable $th) {
-            Log::error($th);
-            return response()->json("Oopss, ada yang salah nih!", 500);
+            $data = $this->errorHandler->handle($th);
+            // Log::error($th);
+            return response()->json($data['data'], $data['code']);
         }
     }
 
