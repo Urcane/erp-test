@@ -81,6 +81,9 @@
             responsive: false,
             aaSorting : [],
             buttons: [],
+            drawCallback: () => {
+                handleAddUsersToProject({addUserButtonElement: ".add-users"})
+            },
             ajax: {
                 url : "{{route('com.promag.datatable')}}",
             },
@@ -133,6 +136,124 @@
             },
             ],
         });
+
+        
     })
+
+
+    // Handle add user ini terletak ada perbedaan pada pengambilan id untuk worklist nya, silahkan lihat ajax nya
+    const handleAddUsersToProject = ({addUserButtonElement}) => {
+        const processs = function(search) {
+            const timeout = setTimeout(function() {
+                const number = KTUtil.getRandomInt(1, 6);
+
+                // Hide recently viewed
+                suggestionsElement.classList.add("d-none");
+
+                if (number === 3) {
+                    // Hide results
+                    resultsElement.classList.add("d-none");
+                    // Show empty message
+                    emptyElement.classList.remove("d-none");
+                } else {
+                    // Show results
+                    resultsElement.classList.remove("d-none");
+                    // Hide empty message
+                    emptyElement.classList.add("d-none");
+                }
+
+                // Complete search
+                search.complete();
+            }, 1500);
+        }
+
+        const clear = function(search) {
+            // Show recently viewed
+            suggestionsElement.classList.remove("d-none");
+            // Hide results
+            resultsElement.classList.add("d-none");
+            // Hide empty message
+            emptyElement.classList.add("d-none");
+        }
+
+        // Input handler
+        const handleInput = () => {
+            // Select input field
+            const inputField = element.querySelector('[data-kt-search-element="input"]');
+
+            // Handle keyboard press event
+            inputField.addEventListener("keydown", e => {
+                // Only apply action to Enter key press
+                if(e.key === "Enter"){
+                    e.preventDefault(); // Stop form from submitting
+                }
+            });
+        }
+
+        const viewRelatedUser = (user) => {
+            const profile_pic = user.foto_file ? `{{asset('sense')}}/media/foto_pegawai/${user.foto_file}` : "{{asset('sense')}}/media/avatars/blank.png"
+
+            console.log(user);
+            return `
+            <a href="#" class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1">
+                <div class="symbol symbol-35px symbol-circle me-5">
+                    <img alt="Pic" src="${profile_pic}" />
+                </div>
+                <div class="fw-semibold">
+                    <span class="fs-6 text-gray-800 me-2">${user.name}</span>
+                    <span class="badge badge-light">${user.division.divisi_name}</span>
+                </div>
+            </a>
+            `
+        }
+
+        // Elements
+        element = document.querySelector('#kt_modal_users_search_handler');
+
+        wrapperElement = element.querySelector('[data-kt-search-element="wrapper"]');
+        suggestionsElement = element.querySelector('[data-kt-search-element="suggestions"]');
+        resultsElement = element.querySelector('[data-kt-search-element="results"]');
+        emptyElement = element.querySelector('[data-kt-search-element="empty"]');
+
+        // Initialize search handler
+        searchObject = new KTSearch(element);
+
+        // Search handler
+        searchObject.on("kt.search.process", processs);
+
+        // Clear handler
+        searchObject.on("kt.search.clear", clear);
+
+        // Handle select
+        KTUtil.on(element, '[data-kt-search-element="customer"]', "click", function() {
+            // modal.hide();
+        });
+
+        // Handle input enter keypress
+        handleInput();
+
+        $(addUserButtonElement).click(function (e) {
+            $.ajax({
+                url: `{{url('')}}/cmt-promag/detail/${$(this).data('id')}/users`,
+                type: 'GET',
+                success: function(response) {
+                    $('#container-related-users').html("");
+
+                    if (response.data.users.length >= 1) {
+                        response.data.users.forEach(user => {
+                            $('#container-related-users').html(viewRelatedUser(user));
+                        });
+                        return
+                    }
+                    $('#container-related-users').html(`
+                        <div class="text-muted mx-auto text-center">No User has been added yet.</div>
+                    `);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        })
+    }
 </script>
 @endsection
