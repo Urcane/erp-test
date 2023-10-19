@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Constants;
 use App\Models\Department;
 use App\Models\Division;
 use App\Models\Employee\EmploymentStatus;
@@ -27,6 +28,13 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 class UsersImport implements OnEachRow
 {
 
+    private $constants;
+
+    public function __construct()
+    {
+        $this->constants = new Constants();
+    }
+
     public function onRow(Row $row)
     {
         $row = $row->toArray();
@@ -35,14 +43,15 @@ class UsersImport implements OnEachRow
             return;
         }
 
+        if (User::where("email", $row[1])->first()) {
+            return;
+        }
+
         // dd($row);
         DB::transaction(function () use ($row) {
             $department_id = Department::where("department_name", $row[5])->first()->id ?? null;
             $division_id = Division::where("divisi_name", $row[6])->first()->id ?? null;
             $team_id = Team::where("team_name", $row[7])->first()->id ?? null;
-            if (User::where("email", $row[1])->first()) {
-                return;
-            }
             $user = User::create([
                 "name" => $row[0],
                 "email" => $row[1],
@@ -58,7 +67,7 @@ class UsersImport implements OnEachRow
                 # code...
                 // dd($user);
             // }
-            $user->assignRole($row[8]);
+            // $user->assignRole($row[8]);
 
             UserPersonalData::create([
                 'user_id' => $user->id,
@@ -66,7 +75,7 @@ class UsersImport implements OnEachRow
                 'place_of_birth' => $row[10],
                 'marital_status' => $row[11],
                 'gender' => $row[12],
-                'blood_type' => $row[13],
+                'blood_type' => in_array($row[13], $this->constants->blood_type) ? $row[13] : null,
                 'religion' => $row[14],
             ]);
 
