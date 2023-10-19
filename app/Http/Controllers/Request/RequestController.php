@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 
 abstract class RequestController extends Controller
 {
-    protected $errorHandler;
     protected $constants;
 
     public function __construct()

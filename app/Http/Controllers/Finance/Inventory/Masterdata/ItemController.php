@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Finance\Inventory\Masterdata;
 
 use App\Exceptions\NotFoundError;
 use App\Models\Inventory\InventoryGood;
+use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 

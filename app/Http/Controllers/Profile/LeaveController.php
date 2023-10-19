@@ -16,13 +16,13 @@ use Yajra\DataTables\DataTables;
 
 class LeaveController extends Controller
 {
-    protected $errorHandler;
     protected $constants;
 
     public function __construct()
     {
         $this->constants = new Constants();
     }
+
     public function getUserLeaveQuotas()
     {
         try {

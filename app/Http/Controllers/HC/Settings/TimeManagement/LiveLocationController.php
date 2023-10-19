@@ -12,10 +12,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class LiveLocationController extends Controller
 {
-
-
-
-
     function index()
     {
         return view('hc.cmt-settings.time-management.live-location.live-location');
