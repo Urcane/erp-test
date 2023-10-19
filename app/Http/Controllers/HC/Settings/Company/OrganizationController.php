@@ -41,16 +41,26 @@ class OrganizationController extends Controller
     }
 
     public function index() {
-        $dataOrganization = Department::all();
+        $dataOrganization = Department::with("parent", "children", "users")->get();
+
+        return view("hc.cmt-settings.company.organization.organization", compact(["dataOrganization"]));
+    }
+
+    public function getGraph(){
+        $dataOrganization = Department::with("parent", "children", "users")->get();
 
         $dataTree = $this->_loopChild($dataOrganization)[0];
 
-        return view("hc.cmt-settings.company.organization.organization", compact(["dataOrganization", "dataTree"]));
+        return response()->json([
+            'status' => "succes",
+            'message' => "Data berhasil diambil",
+            'data' => $dataTree
+        ], 200);
     }
 
     public function getTableOrganization(Request $request) {
         if (request()->ajax()) {
-            $query = Department::all();
+            $query = Department::with('parent');
 
             // dd($query);
             return DataTables::of($query)

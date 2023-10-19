@@ -48,9 +48,20 @@ class JobPositionController extends Controller
         $dataDivision = Division::all();
         $dataOrganization = Department::all();
 
+        return view("hc.cmt-settings.company.job-position", compact(["dataDivision", "dataOrganization"]));
+    }
+
+    public function getGraph()
+    {
+        $dataDivision = Division::with("parent", "children", "users")->get();
+
         $dataTree = $this->_loopChild($dataDivision)[0];
 
-        return view("hc.cmt-settings.company.job-position", compact(["dataDivision", "dataOrganization", "dataTree"]));
+        return response()->json([
+            'status' => "succes",
+            'message' => "Data berhasil diambil",
+            'data' => $dataTree
+        ], 200);
     }
 
     public function getTableJobPosition(Request $request)

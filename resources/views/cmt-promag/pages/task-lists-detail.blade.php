@@ -113,7 +113,7 @@
                                             <img alt="Pic" src="https://preview.keenthemes.com/metronic8/demo30/assets/media/avatars/300-6.jpg"/>
                                         </div>
                                     </div>
-                                    <form class="w-100">
+                                    <form class="w-100" id="comment-form" >
                                         <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" ></textarea>
                                         <button class="btn btn-info btn-sm mt-5">Save</button>
                                     </form>
@@ -168,7 +168,30 @@
 
 
 <script>
-    $(document ).ready(function() {
-    })
+    $("#comment-form").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+
+        const formData = new FormData(this);
+        $.ajax({
+            url: "{{ route('com.promag.task-list.comment'), ['task_list_id', $task_list_id] }}",
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+                $('#edit_item_modal').modal('hide');
+                $('#modal_edit_item')[0].reset();
+                itemTable.ajax.reload();
+                toastr.success(data.message, 'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    });
 </script>
 @endsection
