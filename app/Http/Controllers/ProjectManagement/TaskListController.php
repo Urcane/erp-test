@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ProjectManagement;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProjectManagement\WorkTaskChecklist;
 use App\Models\ProjectManagement\WorkTaskComment;
 use App\Models\ProjectManagement\WorkTaskList;
 use App\Utils\ErrorHandler;
@@ -79,8 +80,51 @@ class TaskListController extends Controller
 
     public function detailTaskList($work_list_id, $task_list_id)
     {
-        $workTaskList = WorkTaskList::whereId($task_list_id)->with('workList')->first();
-        return view('cmt-promag.pages.task-lists-detail', compact("work_list_id", "workTaskList"));
+        $workTaskList = WorkTaskList::whereId($task_list_id)->with('workList', 'workTaskComment')->first();
+        $comments = WorkTaskComment::where("work_task_list_id", $task_list_id)->orderBy('created_at', 'desc')->with('user')->paginate(10);
+
+        return view('cmt-promag.pages.task-lists-detail', compact("work_list_id", "task_list_id", "workTaskList", "comments"));
+    }
+
+    public function addChecklist(Request $request) {
+        try{
+            $request->validate([
+                'task_name' => 'required',
+            ]);
+
+            $WorkTaskChecklist = WorkTaskChecklist::create([
+                "work_task_list_id" => $request->task_list_id,
+                "task_name" => $request->task_name,
+                "status" => "0",
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil disimpan',
+                'data' => $WorkTaskChecklist,
+            ]);
+        } catch (\Exception $e) {
+            $data = $this->errorHandler->handle($e);
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function updateChecklist(Request $request) {
+
+        try{
+            $WorkTaskChecklist = WorkTaskChecklist::whereId($request->checklist_id)->update([
+                "status" => $request->status,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil disimpan',
+                'data' => $WorkTaskChecklist,
+            ]);
+        } catch (\Exception $e) {
+            $data = $this->errorHandler->handle($e);
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function comment(Request $request, $task_list_id) {
@@ -89,15 +133,16 @@ class TaskListController extends Controller
                 'comment' => 'required',
             ]);
 
-            WorkTaskComment::create([
+            $WorkTaskComment = WorkTaskComment::create([
                 "work_task_list_id" => $task_list_id,
                 "user_id" => auth()->user()->id,
-                "comment" => $request->comment,
+                "comments" => $request->comment,
             ]);
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil disimpan',
+                'data' => $WorkTaskComment,
             ]);
         } catch (\Exception $e) {
             $data = $this->errorHandler->handle($e);

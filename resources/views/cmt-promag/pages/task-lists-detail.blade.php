@@ -82,8 +82,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6 border-end border-secondary">
-                                <div class="row">
+                            <div class="col-lg-6 border-end border-secondary fw-semibold">
+                                <div class="row text-gray-400">
                                     <div class="col-lg-6">
                                         <h6>No. Project</h6>
                                         <span>{{$workTaskList->workList->no_project}}</span>
@@ -100,7 +100,34 @@
                                         <h6>Task Description</h6>
                                         <span>{{$workTaskList->task_description}}</span>
                                     </div>
+                                </div>
 
+                                <div class="d-flex flex-wrap flex-stack pb-8 mt-15 pe-5">
+                                    <h6>Checklist</h6>
+                                    {{-- <div class="d-flex flex-wrap">
+                                        <a class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Add Checklist</a>
+                                    </div> --}}
+                                </div>
+                                <div id="checklist">
+                                    @foreach ($workTaskList->workTaskCheckList as $workTaskCheckList)
+                                        <div>
+                                            <input type="checkbox" class="form-check-input checkbox-real checklist_id" placeholder="" name="checklist_id" value="{{$workTaskCheckList->id}}" @if ($workTaskCheckList->status == 1)
+                                                checked
+                                            @endif>
+                                            <label class="fs-6 form-check-label mb-2 ms-2"
+                                                for="checklist_id">
+                                                <span class="fw-bold">{{$workTaskCheckList->task_name}}</span>
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div id="add" class="mt-8">
+                                    <form id="form-checklist">
+                                        <div class="d-flex justify-content-end pb-8 mt-8 pe-5">
+                                            <input type="text" class="form-control form-control-solid me-5" name="task_name" placeholder="Task Name">
+                                            <button class="btn btn-sm btn-info">Save</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
 
@@ -114,46 +141,41 @@
                                         </div>
                                     </div>
                                     <form class="w-100" id="comment-form" >
-                                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" ></textarea>
+                                        <textarea name="comment" class="form-control" placeholder="Leave a comment here"></textarea>
                                         <button class="btn btn-info btn-sm mt-5">Save</button>
                                     </form>
                                 </div>
+                                <div id="list-comment">
+                                    @foreach ($comments as $comment)
+                                        <div class="card">
+                                            <!--begin::Card body-->
+                                            <div class="card-body d-flex flex-column p-1 pt-3">
+                                                <!--begin::Item-->
+                                                <div class="d-flex align-items-center mb-5">
+                                                    <!--begin::Avatar-->
+                                                    <div class="me-5 position-relative">
+                                                        <!--begin::Image-->
+                                                        <div class="symbol symbol-35px symbol-circle">
+                                                            <img alt="Pic" src="https://preview.keenthemes.com/metronic8/demo30/assets/media/avatars/300-6.jpg"/>
+                                                        </div>
+                                                        <!--end::Image-->
+                                                    </div>
+                                                    <!--end::Avatar-->
 
-                                <div class="card">
-                                    <!--begin::Card body-->
-                                    <div class="card-body d-flex flex-column p-1 pt-3 mb-9">
-                                        <!--begin::Item-->
-                                        <div class="d-flex align-items-center mb-5">
-                                            <!--begin::Avatar-->
-                                            <div class="me-5 position-relative">
-                                                <!--begin::Image-->
-                                                <div class="symbol symbol-35px symbol-circle">
-                                                    <img alt="Pic" src="https://preview.keenthemes.com/metronic8/demo30/assets/media/avatars/300-6.jpg"/>
+                                                    <!--begin::Details-->
+                                                    <div class="fw-semibold" >
+                                                        <span class="fs-5 text-gray-900 text-hover-primary"><span class="fw-bold">{{$comment->user->name}}</span> {{explode(" ", $comment->created_at)[0]}}</span>
+
+                                                        <div class="text-gray-400" >
+                                                            {{$comment->comments}}
+                                                        </div>
+                                                    </div>
+                                                    <!--end::Details-->
                                                 </div>
-                                                <!--end::Image-->
+                                                <!--end::Item-->
                                             </div>
-                                            <!--end::Avatar-->
-
-                                            <!--begin::Details-->
-                                            <div class="fw-semibold" >
-                                                <a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary">Emma Smith</a>
-
-                                                <div class="text-gray-400" >
-                                                    8 Pending &amp;
-                                                    97 Completed
-                                                    Tasks
-                                                </div>
-                                            </div>
-                                            <!--end::Details-->
-
-                                            <!--begin::Badge-->
-                                            <div class="badge badge-light ms-auto" >
-                                                5
-                                            </div>
-                                            <!--end::Badge-->
                                         </div>
-                                        <!--end::Item-->
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -173,18 +195,112 @@
 
         const formData = new FormData(this);
         $.ajax({
-            url: "{{ route('com.promag.task-list.comment'), ['task_list_id', $task_list_id] }}",
+            url: "{{ route('com.promag.task-list.comment', ['task_list_id' => $task_list_id]) }}",
             type: 'POST',
             data: formData,
             contentType: false,
             processData: false,
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
             success: function(data) {
-                $('#edit_item_modal').modal('hide');
-                $('#modal_edit_item')[0].reset();
-                itemTable.ajax.reload();
+                var newComment = data.data;
+                const newCard = `
+                    <div class="card">
+                        <!--begin::Card body-->
+                        <div class="card-body d-flex flex-column p-1 pt-3">
+                            <!--begin::Item-->
+                            <div class="d-flex align-items-center mb-5">
+                                <!--begin::Avatar-->
+                                <div class="me-5 position-relative">
+                                    <!--begin::Image-->
+                                    <div class="symbol symbol-35px symbol-circle">
+                                        <img alt="Pic" src="https://preview.keenthemes.com/metronic8/demo30/assets/media/avatars/300-6.jpg"/>
+                                    </div>
+                                    <!--end::Image-->
+                                </div>
+                                <!--end::Avatar-->
+
+                                <!--begin::Details-->
+                                <div class="fw-semibold" >
+                                    <span class="fs-5 text-gray-900 text-hover-primary"><span class="fw-bold">{{Auth::user()->name}}</span> ${newComment.created_at.split("T")[0]}</span>
+
+                                    <div class="text-gray-400" >
+                                        ${newComment.comments}
+                                    </div>
+                                </div>
+                                <!--end::Details-->
+                            </div>
+                            <!--end::Item-->
+                        </div>
+                    </div>
+                `;
+
+                // append the new card to the list-comment div
+                $('#list-comment').prepend(newCard);
+                toastr.success(data.message, 'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    });
+
+    $(".checklist_id").click(function() {
+        const element = $(this);
+        const isChecked = element.is(":checked");
+        $.ajax({
+            url: "{{ route('com.promag.task-list.checklist.update', ['task_list_id' => $task_list_id]) }}",
+            type: 'POST',
+            data: {
+                checklist_id: element.val(),
+                status: isChecked ? 1 : 0
+            },
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            success: function(data) {
+                toastr.success(data.message, 'Selamat 🚀 !');
+            },
+            error: function(xhr, status, error) {
+                console.log(!isChecked, element)
+                element.prop('checked', !isChecked);
+
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    })
+    $("#form-checklist").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+
+        const formData = new FormData(this);
+        $.ajax({
+            url: "{{ route('com.promag.task-list.checklist.add', ['task_list_id' => $task_list_id]) }}",
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            success: function(data) {
+                var newComment = data.data;
+                const newSelect = `
+                    <div>
+                        <input type="checkbox" class="form-check-input checkbox-real"
+                            placeholder="" name="checklist_id"
+                            id="checklist_id" value="${newComment.id}">
+                        <label class="fs-6 form-check-label mb-2 ms-2"
+                            for="checklist_id">
+                            <span class="fw-bold">${newComment.task_name}</span>
+                        </label>
+                    </div>
+                `;
+
+                // append the new card to the list-comment div
+                $('#checklist').prepend(newSelect);
                 toastr.success(data.message, 'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {
