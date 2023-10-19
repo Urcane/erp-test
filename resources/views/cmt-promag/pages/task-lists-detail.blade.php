@@ -107,7 +107,19 @@
                             {{-- Activity --}}
                             <div class="col-lg-6 px-5">
                                 <h6>Activity</h6>
-                                <div class="card card-flush h-lg-100">
+                                <div class="d-flex align-items-start my-5">
+                                    <div class="me-5 position-relative">
+                                        <div class="symbol symbol-35px symbol-circle">
+                                            <img alt="Pic" src="https://preview.keenthemes.com/metronic8/demo30/assets/media/avatars/300-6.jpg"/>
+                                        </div>
+                                    </div>
+                                    <form class="w-100">
+                                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" ></textarea>
+                                        <button class="btn btn-info btn-sm mt-5">Save</button>
+                                    </form>
+                                </div>
+
+                                <div class="card">
                                     <!--begin::Card body-->
                                     <div class="card-body d-flex flex-column p-1 pt-3 mb-9">
                                         <!--begin::Item-->

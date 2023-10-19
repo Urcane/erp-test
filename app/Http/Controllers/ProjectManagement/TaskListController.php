@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ProjectManagement;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProjectManagement\WorkTaskComment;
 use App\Models\ProjectManagement\WorkTaskList;
 use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
@@ -80,5 +81,27 @@ class TaskListController extends Controller
     {
         $workTaskList = WorkTaskList::whereId($task_list_id)->with('workList')->first();
         return view('cmt-promag.pages.task-lists-detail', compact("work_list_id", "workTaskList"));
+    }
+
+    public function comment(Request $request, $task_list_id) {
+        try{
+            $request->validate([
+                'comment' => 'required',
+            ]);
+
+            WorkTaskComment::create([
+                "work_task_list_id" => $task_list_id,
+                "user_id" => auth()->user()->id,
+                "comment" => $request->comment,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil disimpan',
+            ]);
+        } catch (\Exception $e) {
+            $data = $this->errorHandler->handle($e);
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 }

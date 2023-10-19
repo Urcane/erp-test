@@ -126,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
             Route::post('/{work_list_id}/task-lists/store', 'store')->name('com.promag.task-list.store');
             Route::get('/{work_list_id}/task-lists/detail/{task_list_id}', 'detailTaskList')->name('com.promag.task-list.detail');
+            Route::post('/task-lists/detail/{task_list_id}/comment', 'comment')->name('com.promag.task-list.comment');
             // Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
         });
     });
