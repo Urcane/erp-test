@@ -1,11 +1,19 @@
 <?php
 
+use App\Constants;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateAllInventoryMigrationTable extends Migration
 {
+    private $constants;
+
+    public function __construct()
+    {
+        $this->constants = new Constants();
+    }
+
     /**
      * Run the migrations.
      *
@@ -93,6 +101,7 @@ class CreateAllInventoryMigrationTable extends Migration
         Schema::create('warehouse_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId("warehouse_id")->constrained("warehouses");
+            $table->enum('status', $this->constants->inventory_status);
             $table->string("name", 255);
             $table->softDeletes()->index();
             $table->timestamps();

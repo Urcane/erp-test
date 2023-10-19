@@ -215,10 +215,12 @@ input[type="number"]::-webkit-outer-spin-button {
         $(`#${formId}_form`).validate({
             messages: validationMessages,
             submitHandler: function(form) {
-                var formData = new FormData(form);
+                const formData = new FormData(form);
                 $(`#${formId}_submit`).attr('disabled', 'disabled');
                 $.ajax({
                     data: formData,
+                    processData: false,
+                    contentType: false,
                     headers: {
                         'X-CSRF-TOKEN': "{{csrf_token()}}"
                     },
@@ -235,6 +237,11 @@ input[type="number"]::-webkit-outer-spin-button {
                         const data = JSON.parse(xhr.responseText);
                         toastr.error(errorThrown ,'Opps!');
 
+                        if (data.errors == null) {
+                            toastr.error(data.message ,'Opps!');
+                            return;
+                        }
+
                         if (Object.keys(data.errors).length >= 1) {
                             Object.keys(data.errors).forEach(keyError => {
                                 const error = data.errors[keyError];
@@ -243,7 +250,7 @@ input[type="number"]::-webkit-outer-spin-button {
                                     toastr.error(msg, data.message);
                                 });
                             });
-                            return
+                            return;
                         }
                     }
                 });

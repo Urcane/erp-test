@@ -9,17 +9,22 @@ use App\Models\Customer\Customer;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\ProjectManagement\WorkList;
 use App\Services\ProjectManagement\WorkOrderService;
+use App\Utils\ErrorHandler;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProjectManagementController extends Controller
 {
     protected $workOrderService;
+    protected $errorHandler;
 
-    public function __construct(WorkOrderService $workOrderService) {
+    public function __construct(WorkOrderService $workOrderService, ErrorHandler $errorHandler) {
         $this->workOrderService = $workOrderService;
+        $this->errorHandler = $errorHandler;
     }
 
     public function index()
@@ -28,12 +33,33 @@ class ProjectManagementController extends Controller
     }
 
     function getWorkListTable() : JsonResponse {
-        $query = WorkList::with('users');
+        $query = WorkList::with('users', 'projectStatus');
 
         return DataTables::of($query)
             ->addColumn('assigned', function($q) {
-                $users = $q->users;
-                $result = '<div></div>';
+                $users = $q->users->slice(0,4);
+                $mainpath = asset('sense');
+
+                $listPeople = $users->map(function($user) use($mainpath) {
+                    return '
+                    <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="'.$user->name.'">
+                        <img src="'.$mainpath.'/media/avatars/blank.png" alt="">
+                    </div>
+                    ';
+                })->join('');
+
+                $result = '
+                <div class="symbol-group symbol-hover">
+                    '.$listPeople.'
+                    <div class="symbol symbol-circle symbol-30px">
+                        <a href="#!" data-bs-toggle="modal" data-bs-target="#kt_modal_users_search">
+                            <div class="symbol-label bg-light">
+                                <span class="fs-7"><i class="fa-solid fa-user-plus"></i></span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                ';
 
                 return $result;
             })
@@ -52,8 +78,43 @@ class ProjectManagementController extends Controller
 
                 return $result;
             })
+            ->editColumn('progress', function($q) {
+                return '
+                <div class="d-flex align-items-center w-100 mw-125px">
+                    <div class="progress h-6px w-100 me-2 bg-light-info">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: '.$q->progress.'%" aria-valuenow="'.$q->progress.'" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span class="text-muted fs-8 fw-semibold">
+                        '.round($q->progress, 0).'%
+                    </span>
+                </div>
+                ';
+            })
+            ->editColumn('status', function($q) {
+                switch ($q->status) {
+                    case 'PR':
+                        $color = 'info';
+                        break;
+                    case 'DN':
+                        $color = 'success';
+                        break;
+                    case 'PD':
+                        $color = 'warning';
+                        break;
+                    case 'FR':
+                        $color = 'light';
+                        break;
+                    default:
+                        $color = 'dark';
+                        break;
+                }
+
+                return '
+                    <span class="badge badge-'.$color.' badge-inline badge-pill badge-rounded"><strong>'.$q->projectStatus->name.'</strong></span>
+                ';
+            })
             ->addIndexColumn()
-            ->rawColumns(['action', 'progress', 'assigned'])
+            ->rawColumns(['action', 'progress', 'assigned', 'status'])
             ->make(true);
     }
 
@@ -93,8 +154,9 @@ class ProjectManagementController extends Controller
 
             return redirect(route("com.promag.index"));
         } catch (\Throwable $th) {
-            Log::error($th);
-            return response()->json("Oopss, ada yang salah nih!", 500);
+            $data = $this->errorHandler->handle($th);
+            // Log::error($th);
+            return response()->json($data['data'], $data['code']);
         }
     }
 
