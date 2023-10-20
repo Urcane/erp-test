@@ -110,7 +110,7 @@
 
                                         <div class="unit mb-3 col-lg-2">
                                             <div class="form-control form-control-solid">
-                                                {{ $item->inventoryUnitMaster->name }}
+                                                {{ $item->inventoryUnitMaster->code }}
                                             </div>
                                         </div>
 
