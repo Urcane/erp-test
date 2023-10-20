@@ -15,15 +15,15 @@ class WorkTaskList extends Model
     protected $guarded = [];
 
     function workAttachment() : HasMany {
-        return $this->hasMany(WorkAttachment::class);
+        return $this->hasMany(TaskAttachment::class);
     }
 
-    function workComment() : HasMany {
-        return $this->hasMany(WorkComment::class);
+    function workTaskComment() : HasMany {
+        return $this->hasMany(WorkTaskComment::class);
     }
 
-    function workChecklist() : HasMany {
-        return $this->hasMany(WorkChecklist::class);
+    function workTaskChecklist() : HasMany {
+        return $this->hasMany(WorkTaskChecklist::class);
     }
 
     function projectProgressCategory() : BelongsTo {

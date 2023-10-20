@@ -142,7 +142,7 @@ class CreateAllSurveyMigrationTable extends Migration
 
         Schema::create('survey_requests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_prospect_id')->constrained()->nullable();
+            $table->foreignId('customer_prospect_id')->nullable()->constrained();
             $table->foreignId('service_type_id')->constrained();
             $table->foreignId('type_of_survey_id')->comment('soft survey/hard survey')->constrained();
             $table->unsignedBigInteger('soft_surveyed_by')->nullable();
@@ -453,10 +453,10 @@ class CreateAllSurveyMigrationTable extends Migration
         Schema::dropIfExists('site_survey_other_areas');
         Schema::dropIfExists('site_survey_indoor_areas');
         Schema::dropIfExists('site_survey_outdoor_areas');
-        
+
         // Schema::dropIfExists('site_surveys');
         Schema::dropIfExists('work_orders');
-        
+
         Schema::dropIfExists('soft_surveys');
         Schema::dropIfExists('survey_requests');
         // Schema::dropIfExists('camera_types');
