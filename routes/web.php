@@ -446,6 +446,9 @@ Route::middleware(['auth'])->group(function () {
                         Route::get('/', 'viewInventory')->name('fin.inv.inventory');
                         Route::get('/get-data/table/data-result', 'getTableInventory')->name('fin.inv.inventory-get-table-inventory');
 
+                        Route::get('/detail/{id}', 'viewInventoryDetail')->name('fin.inv.inventory.detail');
+                        Route::post('/adjust-item', 'adJustItem')->name('fin.inv.inventory.adjust-item');
+
                         Route::middleware(['permission:FIN:add-inventory'])->group(function () {
                             Route::prefix('create')->group(function () {
                                 Route::get('/', 'viewAddItem')->name('fin.inv.inventory-create');
