@@ -131,6 +131,11 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/task-lists/detail/{task_list_id}/checklist/update', 'updateChecklist')->name('com.promag.task-list.checklist.update');
             // Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
         });
+        Route::controller(App\Http\Controllers\ProjectManagement\ProcurementController::class)->group(function () {
+            Route::get("{work_list_id}/procurement", 'index')->name('com.promag.procurement');
+            Route::get("{work_list_id}/procurement/table", 'dataTableProcurement')->name('com.promag.procurement.datatable');
+            Route::get("{workList}/procurement/create", 'create')->name('com.promag.procurement.create');
+        });
     });
 
     Route::controller(SurveyController::class)->group(function () {

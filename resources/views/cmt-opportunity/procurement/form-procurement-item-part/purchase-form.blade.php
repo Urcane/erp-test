@@ -25,7 +25,7 @@
                 value="{{ $procurementItem->quantity ?? old('quantity') }}" disabled name="quantity">
         </div>
     </div> --}}
-    <div class="col-lg-4">
+    <div class="col-lg-12">
         <label class="d-flex align-items-center fs-6 form-label mb-2"
             for="need">
             <span class=" fw-bold">Kebutuhan</span>

@@ -17,15 +17,15 @@
             Task Lists
         </a>
     </li>
-    {{-- <li class="nav-item">
+    <li class="nav-item">
         <a
-            class="nav-link text-active-primary py-5 me-6"
-            href="https://preview.keenthemes.com/metronic8/demo30/../demo30/apps/projects/budget.html"
+            class="nav-link text-active-primary py-5 me-6 {{url()->current() == route("com.promag.procurement", ['work_list_id' => $work_list_id]) ? 'active' : ''}}""
+            href="{{route("com.promag.procurement", ['work_list_id' => $work_list_id])}}"
         >
-            Budget
+            Procurement
         </a>
     </li>
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a
             class="nav-link text-active-primary py-5 me-6"
             href="https://preview.keenthemes.com/metronic8/demo30/../demo30/apps/projects/users.html"

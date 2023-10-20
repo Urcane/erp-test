@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('title-apps', 'Detail Procurement')
 @section('sub-title-apps', 'Procurement')
+@section('desc-apps', 'Detail informasi procuremetn')
+@section('icon-apps', 'fa-solid fa-box-open')
 
 @section('navbar')
     @include('layouts.navbar.navbar')

@@ -20,14 +20,14 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-1">
-                                    <a href="{{ route('com.procurement.index') }}" class="fw-bold"><i
-                                            class="fa-solid fa-arrow-left "></i> Back</a>
+                                    <a href="{{ url()->previous() }}" class="fw-bold"><i class="fa-solid fa-arrow-left "></i> Back</a>
                                 </div>
                                 <div class="col-lg-10 text-center mb-9">
                                     <span class="fs-1 fw-bolder text-dark d-block mb-1">Add New Customer Request</span>
                                 </div>
 
                                 <form action="" id="form_procurement">
+                                    <input type="hidden" value="{{$workList->id ?? ""}}" name="work_list_id">
                                     @include("cmt-opportunity.procurement.form-procurement-item-part.basic-form")
                                     <div class="text-center mt-9 mb-10">
                                         <button type="reset" id="modal_status_item_cancel"
@@ -59,7 +59,14 @@
                 type: 'POST',
                 data: formData,
                 success: function(data) {
-                    console.log(data)
+                    toastr.success(data.message,'Selamat 🚀 !');
+                    setTimeout(function() {
+                        @if ($workList->id ?? false)
+                            window.location.href = "{{ route('com.promag.procurement', ['work_list_id' => $workList->id]) }}";
+                        @else
+                            window.location.href = "{{ route('com.procurement.index') }}";
+                        @endif
+                    }, 1000);
                 },
                 error: function(xhr, status, error) {
                     const data = xhr.responseJSON;

@@ -187,11 +187,11 @@
         </div>
     </div>
 
-    <div class="mb-3">
-        <label class="fs-6 form-label mb-2" for="itemable_bill_of_quantity_id">
+    <div class="mb-3 row">
+        <label class="fs-6 form-label mb-2" for="itemable_bill_of_quantity_id col-lg-12">
             <span class="required fw-bold">Bill for Quantity</span>
         </label>
-        <select class="drop-data form-select form-select-solid"
+        <select class="drop-data form-select form-select-solid col-lg-12"
             data-control="itemable_bill_of_quantity_id" required
             name="itemable_bill_of_quantity_id" id="itemable_bill_of_quantity_id" @if (($procurement->itemable_bill_of_quantity_id  ?? old('itemable_bill_of_quantity_id ')))
                 disabled

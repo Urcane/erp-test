@@ -24,6 +24,7 @@ class CreateAllProcurementMigration extends Migration
         Schema::create('procurements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('itemable_bill_of_quantity_id')->constrained('itemable_bill_of_quantities');
+            $table->foreignId('work_list_id')->nullable()->constrained('work_lists');
             $table->enum("type", ["Customer", "Internal"]);
             $table->string('delivery_location');
             $table->string("no_pr");
@@ -50,7 +51,7 @@ class CreateAllProcurementMigration extends Migration
             $table->string('vendor_location')->nullable();
             $table->integer('price');
             $table->integer('shipping_price')->nullable();
-            $table->string('payment_method');
+            $table->string('payment_method')->nullable();
             $table->string('purchase_number')->nullable();
             $table->string('no_po_nota')->nullable();
             $table->string('order_by')->nullable();
