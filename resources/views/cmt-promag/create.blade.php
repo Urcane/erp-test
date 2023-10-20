@@ -76,7 +76,7 @@
                                         <label class="d-flex align-items-center fs-6 form-label mb-2" for="no_project">
                                             <span class="fw-bold">No Project</span>
                                         </label>
-                                        <input type="number" value="{{ old('no_project') }}"
+                                        <input type="text" value="{{ old('no_project') }}"
                                             class="form-control form-control-solid" placeholder="No Project"
                                             name="no_project" id="no_project"
                                             @cannot('HC:update-profile') disabled @endcannot>
@@ -86,7 +86,7 @@
                                         <label class="d-flex align-items-center fs-6 form-label mb-2" for="work_location">
                                             <span class="fw-bold">No PO Customer</span>
                                         </label>
-                                        <input type="number" value="{{ old('no_po_customer') }}"
+                                        <input type="text" value="{{ old('no_po_customer') }}"
                                             class="form-control form-control-solid" placeholder="No PO Customer"
                                             name="no_po_customer" id="no_po_customer"
                                             @cannot('HC:update-profile') disabled @endcannot>

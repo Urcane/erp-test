@@ -11,9 +11,12 @@ use App\Models\Inventory\InventoryGoodStatus;
 use App\Models\Inventory\InventoryUnitMaster;
 use App\Models\Inventory\Warehouse;
 use App\Models\Inventory\WarehouseGood;
+use App\Models\Inventory\WarehouseGoodLog;
 use App\Models\Inventory\WarehouseGoodStock;
 use App\Models\Inventory\WarehouseGoodStockLog;
+use App\Models\Inventory\WarehouseLog;
 use App\Utils\ErrorHandler;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +36,8 @@ class InventoryController extends Controller
     {
         $warehouseCount = Warehouse::count();
 
-        $stocks = WarehouseGoodStock::select(DB::raw('
+        $stocks = WarehouseGoodStock::select(DB::raw(
+            '
             COUNT(CASE WHEN stock >= minimum_stock THEN 1 END) as availableStock,
             COUNT(CASE WHEN stock < minimum_stock AND stock > 0 THEN 1 END) as lowStock,
             COUNT(CASE WHEN stock = 0 THEN 1 END) as outOfStock'
@@ -66,6 +70,28 @@ class InventoryController extends Controller
 
         return view('finance.inventory.logs.index', compact([
             'warehouses'
+        ]));
+    }
+
+    public function viewDetailLog(string $id)
+    {
+        $log = WarehouseLog::whereId($id)->first();
+
+        if (!$log) {
+            abort(404);
+        }
+
+        $name = $log->name;
+
+        $recentLogs = WarehouseGoodStockLog::with([
+            'warehouseGoodLog.warehouseLog.warehouse',
+            'warehouseGoodLog.inventoryGood.inventoryGoodCategory',
+        ])->orderBy('created_at', 'desc')->limit(10)->get();
+
+        $statuses = $this->constants->inventory_status;
+
+        return view('finance.inventory.logs.detail.index', compact([
+            'name', 'recentLogs', 'statuses'
         ]));
     }
 
@@ -337,7 +363,79 @@ class InventoryController extends Controller
 
     public function getTableLogs(Request $request)
     {
-        //
+        if (request()->ajax()) {
+            $statusEnum = $this->constants->inventory_status;
+
+            $query = WarehouseLog::with([
+                'warehouse',
+                'warehouseGoodLogs.warehouseGoodStockLogs',
+            ]);
+
+            $filterWarehouse = $request->filterWarehouse;
+            if ($filterWarehouse !== "*") {
+                $query = $query->where('warehouse_id', $filterWarehouse);
+            }
+
+            $search = $request->search;
+            if ($search) {
+                $query = $query->where(function ($query) use ($search) {
+                    $query->where('name', 'LIKE', '%' . $search . '%')
+                        ->orWhereHas('warehouse', function ($query) use ($search) {
+                            $query->where('name', 'LIKE', '%' . $search . '%');
+                        });
+                });
+            }
+
+            if ($request->date) {
+                $range_date = collect(explode('-', $request->date))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    if ($key === 0) {
+                        return $date->startOfDay()->toDateTimeString();
+                    } else {
+                        return $date->endOfDay()->toDateTimeString();
+                    }
+                })->toArray();
+
+                $query = $query->whereBetween('created_at', $range_date)->orderBy('created_at', 'desc');
+            } else {
+                $query = $query->orderBy('created_at', 'desc');
+            }
+
+            return DataTables::of($query)
+                ->addColumn('name', function ($query) {
+                    return $query->name;
+                })
+                ->addColumn('warehouse', function ($query) {
+                    return $query->warehouse->name;
+                })
+                ->addColumn('item_count', function ($query) {
+                    return $query->warehouseGoodLogs->flatMap(function ($query) {
+                        return $query->warehouseGoodStockLogs;
+                    })->count() . " Item";
+                })
+                ->addColumn('created_at', function ($query) {
+                    $date = explode(" ", explode("T", $query->created_at)[0])[0];
+
+                    $date = Carbon::createFromFormat('Y-m-d', $date);
+                    $formattedDate = $date->format('d-m-Y');
+
+                    return $formattedDate;
+                })
+                ->addColumn('status', function ($query) use ($statusEnum) {
+                    $status = $query->status;
+                    return view('finance.inventory.components.badge', compact([
+                        'status', 'statusEnum'
+                    ]));
+                })
+                ->addColumn('action', function ($query) {
+                    return view('finance.inventory.logs.menu', compact([
+                        'query'
+                    ]));
+                })
+                ->addIndexColumn()
+                ->rawColumns(['action', 'status'])
+                ->make(true);
+        }
     }
 
     public function getTableTransferItem(Request $request)

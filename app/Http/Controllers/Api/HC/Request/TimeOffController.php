@@ -19,6 +19,7 @@ use App\Models\Leave\UserLeaveHistory;
 use App\Models\Leave\UserLeaveQuota;
 use App\Models\Leave\UserLeaveRequest;
 use App\Models\User;
+use App\Utils\ErrorHandler;
 use Carbon\Carbon;
 
 use DateTime;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\HC\Settings\TimeManagement;
 use App\Exceptions\NotFoundError;
 use Illuminate\Http\Request;
 use App\Models\Leave\LeaveRequestCategory;
+use App\Utils\ErrorHandler;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;

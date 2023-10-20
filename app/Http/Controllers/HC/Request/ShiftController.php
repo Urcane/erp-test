@@ -17,6 +17,7 @@ use App\Models\Attendance\UserAttendance;
 use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\UserEmployment;
 use App\Models\Employee\WorkingScheduleShift;
+use App\Utils\ErrorHandler;
 use Illuminate\Support\Facades\DB;
 
 
