@@ -125,7 +125,7 @@
                 <option value="" selected hidden disabled>Select job level</option>
             @endif
             @foreach ($dataRole as $option)
-                <option value="{{ $option->id }}" @if ((!is_null($user) && $user->getRoleNames()[0] == $option->name) || old('role_id') == $option->id) selected @endif>
+                <option value="{{ $option->id }}" @if ((!is_null($user) && $user->getRoleNames()->first() == $option->name) || old('role_id') == $option->id) selected @endif>
                     {{ $option->name }}</option>
             @endforeach
         </select>

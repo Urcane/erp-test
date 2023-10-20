@@ -83,8 +83,9 @@
                                 <span class="required fw-bold text-dark">Role</span>
                             </label>
                             <select name="role_id" class="drop-data form-select form-select-solid" data-control="select2" @cannot("HC:update-profile") disabled @endcannot>
+                                @if(!$user->getRoleNames()->first()) <option value="" selected hidden disabled>Select Role</option> @endif
                                 @foreach ($dataRole as $dr)
-                                <option value="{{$dr->id}}" {{$dr->name == $user->getRoleNames()[0]  ? 'selected' : ''}}>{{$dr->name}}</option>
+                                <option value="{{$dr->id}}" {{$dr->name == $user->getRoleNames()->first()  ? 'selected' : ''}}>{{$dr->name}}</option>
                                 @endforeach
                             </select>
                             <div class="fv-plugins-message-container invalid-feedback"></div>

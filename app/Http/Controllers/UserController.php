@@ -211,7 +211,7 @@ class UserController extends Controller
                 ';
             })
             ->addColumn('DT_RowChecklist', function($check) {
-                if($check->status != 0 && Auth::user()->id != $check->id && Auth::user()->getRoleNames()[0] == 'administrator'){
+                if($check->status != 0 && Auth::user()->id != $check->id && Auth::user()->getRoleNames()->first() == 'administrator'){
                 return '<div class="text-center w-50px"><input name="pegawai_ids" type="checkbox" value="'.$check->id.'"></div>';
                 }else{
                     return '';
