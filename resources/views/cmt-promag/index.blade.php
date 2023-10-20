@@ -140,22 +140,49 @@
         
     })
 
-
     // Handle add user ini terletak ada perbedaan pada pengambilan id untuk worklist nya, silahkan lihat ajax nya
     const handleAddUsersToProject = ({addUserButtonElement}) => {
-        const processs = function(search) {
-            const timeout = setTimeout(function() {
-                const number = KTUtil.getRandomInt(1, 6);
+        // Elements
+        let timeout;
+        let work_list_id;
+        const element = document.querySelector('#kt_modal_users_search_handler');
+
+        const wrapperElement = element.querySelector('[data-kt-search-element="wrapper"]');
+        const suggestionsElement = element.querySelector('[data-kt-search-element="suggestions"]');
+        const resultsElement = element.querySelector('[data-kt-search-element="results"]');
+        const emptyElement = element.querySelector('[data-kt-search-element="empty"]');
+
+        const processs = async function(search) {
+            clearTimeout(timeout);
+            timeout = setTimeout( async function() {
+                const data = await $.ajax({
+                    url: `{{url('')}}/cmt-promag/detail/${work_list_id}/getAllUsers`,
+                    type: 'GET',
+                    data: {
+                        'searchValue': search.getQuery(),
+                    },
+                    dataType: 'json',
+                });
 
                 // Hide recently viewed
+                $('#container-searched-users').html('');
                 suggestionsElement.classList.add("d-none");
 
-                if (number === 3) {
+                if (data && (data.status !== "success" || data.users.length === 0)) {
                     // Hide results
                     resultsElement.classList.add("d-none");
                     // Show empty message
                     emptyElement.classList.remove("d-none");
                 } else {
+                    data.users.forEach(user => {
+                        $('#container-searched-users').append(viewSearchedUser(user));
+
+                        // handled already added user
+                        if (user.work_lists.some(item => item.id == work_list_id)) {
+                            $(`#container-searched-users`).find(`#user-${user.id}`).click();
+                        } 
+                    })
+
                     // Show results
                     resultsElement.classList.remove("d-none");
                     // Hide empty message
@@ -164,7 +191,7 @@
 
                 // Complete search
                 search.complete();
-            }, 1500);
+            }, 1250);
         }
 
         const clear = function(search) {
@@ -193,7 +220,6 @@
         const viewRelatedUser = (user) => {
             const profile_pic = user.foto_file ? `{{asset('sense')}}/media/foto_pegawai/${user.foto_file}` : "{{asset('sense')}}/media/avatars/blank.png"
 
-            console.log(user);
             return `
             <a href="#" class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1">
                 <div class="symbol symbol-35px symbol-circle me-5">
@@ -207,32 +233,62 @@
             `
         }
 
-        // Elements
-        element = document.querySelector('#kt_modal_users_search_handler');
+        const viewSearchedUser = (user) => {
+            const profile_pic = user.foto_file ? `{{asset('sense')}}/media/foto_pegawai/${user.foto_file}` : "{{asset('sense')}}/media/avatars/blank.png"
 
-        wrapperElement = element.querySelector('[data-kt-search-element="wrapper"]');
-        suggestionsElement = element.querySelector('[data-kt-search-element="suggestions"]');
-        resultsElement = element.querySelector('[data-kt-search-element="results"]');
-        emptyElement = element.querySelector('[data-kt-search-element="empty"]');
+            return `
+            <div class="rounded d-flex flex-stack bg-active-lighten p-4" data-user-id="0">
+                <div class="d-flex align-items-center">
+                    <label class="form-check form-check-custom form-check-solid me-5">
+                        <input class="form-check-input" id="user-${user.id}" type="checkbox" name="users" data-kt-check="true" data-kt-check-target="[data-user-id='${user.id}']" value="${user.id}" /> </label>
+                    <div class="symbol symbol-35px symbol-circle">
+                        <img alt="Pic" src="${profile_pic}" />
+                    </div>
+                    <div class="ms-5">
+                        <a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2">${user.name}</a>
+                        <div class="fw-semibold text-muted">
+                            ${user.email}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-bottom border-gray-300 border-bottom-dashed"></div>
+            `;
+        }
 
-        // Initialize search handler
-        searchObject = new KTSearch(element);
+        if (typeof searchObject === "undefined") {
+            // Initialize search handler
+            searchObject = new KTSearch(element);
+            
 
-        // Search handler
-        searchObject.on("kt.search.process", processs);
+            // Search handler
+            searchObject.on("kt.search.process", processs);
 
-        // Clear handler
-        searchObject.on("kt.search.clear", clear);
+            // Clear handler
+            searchObject.on("kt.search.clear", clear);
 
-        // Handle select
-        KTUtil.on(element, '[data-kt-search-element="customer"]', "click", function() {
-            // modal.hide();
-        });
-
+            // Handle select
+            KTUtil.on(element, '[data-kt-search-element="customer"]', "click", function() {
+                // modal.hide();
+            });
+        }
         // Handle input enter keypress
         handleInput();
 
         $(addUserButtonElement).click(function (e) {
+            work_list_id = $(this).data('id');
+
+            submitModal({
+                modalName: 'kt_modal_users_search',
+                tableName: 'kt_table_promag',
+                ajaxLink: `{{url('')}}/cmt-promag/detail/${work_list_id}/assignUser`,
+                successCallback: (data) => {
+                    searchObject.clear();
+                }
+            });
+
+            searchObject.clear();
+
             $.ajax({
                 url: `{{url('')}}/cmt-promag/detail/${$(this).data('id')}/users`,
                 type: 'GET',
@@ -241,7 +297,7 @@
 
                     if (response.data.users.length >= 1) {
                         response.data.users.forEach(user => {
-                            $('#container-related-users').html(viewRelatedUser(user));
+                            $('#container-related-users').append(viewRelatedUser(user));
                         });
                         return
                     }

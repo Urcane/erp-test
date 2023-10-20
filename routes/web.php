@@ -112,6 +112,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/store', 'store')->name('com.promag.store');
             Route::get('/detail/{work_list_id}', 'detail')->name('com.promag.detail');
             Route::get('/detail/{work_list_id}/users', 'getWorklistAsiggnedUsers')->name('com.promag.detail.users');
+            Route::get('/detail/{work_list_id}/getAllUsers', 'getAllUserFiltered')->name('com.promag.detail.getAllUsers');
+            Route::post('/detail/{work_list_id}/assignUser', 'assignUser')->name('com.promag.detail.store.users');
             Route::get('/detail/{work_list_id}/files', 'files')->name('com.promag.detail.files');
 
 

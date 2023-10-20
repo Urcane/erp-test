@@ -8,6 +8,7 @@ use App\Http\Requests\ProjectManagement\WorkOrderRequest;
 use App\Models\Customer\Customer;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\ProjectManagement\WorkList;
+use App\Models\User;
 use App\Services\ProjectManagement\WorkOrderService;
 use App\Utils\ErrorHandler;
 use Exception;
@@ -220,6 +221,41 @@ class ProjectManagementController extends Controller
                 "status" => "Yeay Berhasil!! 💼",
                 "data" => $workList,
             ], 200);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data['code']);
+        }
+    }
+
+    function getAllUserFiltered(Request $request, WorkList $work_list_id) : JsonResponse {
+        try {
+            $search = $request->query('searchValue');
+
+            $users = User::where('name', 'like', "%$search%")->with('workLists')->limit(10)->get();
+
+            return response()->json([
+                'status' => 'success',
+                'users' => $users
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data['code']);
+        }
+    }
+
+    function assignUser(Request $request, WorkList $work_list_id) : JsonResponse {
+        $request->validate([
+            'users' => 'required',
+            'users.*' => 'exists:users,id'
+        ]);
+
+        try {
+            $workList = $work_list_id->users()->attach($request->users);
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $workList,
+            ]);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
             return response()->json($data["data"], $data['code']);

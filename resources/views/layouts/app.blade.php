@@ -195,6 +195,11 @@ input[type="number"]::-webkit-outer-spin-button {
                         const data = JSON.parse(xhr.responseText);
                         toastr.error(errorThrown ,'Opps!');
 
+                        if (data.errors == null) {
+                            toastr.error(data.message ,'Opps!');
+                            return;
+                        }
+
                         if (Object.keys(data.errors).length >= 1) {
                             Object.keys(data.errors).forEach(keyError => {
                                 const error = data.errors[keyError];
@@ -203,7 +208,7 @@ input[type="number"]::-webkit-outer-spin-button {
                                     toastr.error(msg, data.message);
                                 });
                             });
-                            return
+                            return;
                         }
                     }
                 });

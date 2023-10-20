@@ -65,19 +65,49 @@
     })
 
     const handleAddUsersToProject = ({addUserButtonElement}) => {
-        const processs = function(search) {
-            const timeout = setTimeout(function() {
-                const number = KTUtil.getRandomInt(1, 6);
+        // Elements
+        let timeout;
+        const work_list_id = {{$work_list_id}};
+        const element = document.querySelector('#kt_modal_users_search_handler');
+
+        const wrapperElement = element.querySelector('[data-kt-search-element="wrapper"]');
+        const suggestionsElement = element.querySelector('[data-kt-search-element="suggestions"]');
+        const resultsElement = element.querySelector('[data-kt-search-element="results"]');
+        const emptyElement = element.querySelector('[data-kt-search-element="empty"]');
+
+        const processs = async function(search) {
+            clearTimeout(timeout);
+            timeout = setTimeout( async function() {
+                const data = await $.ajax({
+                    url: "{{route('com.promag.detail.getAllUsers', ['work_list_id' => $work_list_id])}}",
+                    type: 'GET',
+                    data: {
+                        'searchValue': search.getQuery(),
+                    },
+                    dataType: 'json',
+                });
+
+                console.log(data.users.length <= 1);
 
                 // Hide recently viewed
+                $('#container-searched-users').html('');
                 suggestionsElement.classList.add("d-none");
 
-                if (number === 3) {
+                if (data && (data.status !== "success" || data.users.length === 0)) {
                     // Hide results
                     resultsElement.classList.add("d-none");
                     // Show empty message
                     emptyElement.classList.remove("d-none");
                 } else {
+                    data.users.forEach(user => {
+                        $('#container-searched-users').append(viewSearchedUser(user));
+
+                        // handled already added user
+                        if (user.work_lists.some(item => item.id == work_list_id)) {
+                            $(`#container-searched-users`).find(`#user-${user.id}`).click();
+                        } 
+                    })
+
                     // Show results
                     resultsElement.classList.remove("d-none");
                     // Hide empty message
@@ -86,7 +116,7 @@
 
                 // Complete search
                 search.complete();
-            }, 1500);
+            }, 1250);
         }
 
         const clear = function(search) {
@@ -115,7 +145,6 @@
         const viewRelatedUser = (user) => {
             const profile_pic = user.foto_file ? `{{asset('sense')}}/media/foto_pegawai/${user.foto_file}` : "{{asset('sense')}}/media/avatars/blank.png"
 
-            console.log(user);
             return `
             <a href="#" class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1">
                 <div class="symbol symbol-35px symbol-circle me-5">
@@ -129,13 +158,28 @@
             `
         }
 
-        // Elements
-        element = document.querySelector('#kt_modal_users_search_handler');
+        const viewSearchedUser = (user) => {
+            const profile_pic = user.foto_file ? `{{asset('sense')}}/media/foto_pegawai/${user.foto_file}` : "{{asset('sense')}}/media/avatars/blank.png"
 
-        wrapperElement = element.querySelector('[data-kt-search-element="wrapper"]');
-        suggestionsElement = element.querySelector('[data-kt-search-element="suggestions"]');
-        resultsElement = element.querySelector('[data-kt-search-element="results"]');
-        emptyElement = element.querySelector('[data-kt-search-element="empty"]');
+            return `
+            <div class="rounded d-flex flex-stack bg-active-lighten p-4" data-user-id="0">
+                <div class="d-flex align-items-center">
+                    <label class="form-check form-check-custom form-check-solid me-5">
+                        <input class="form-check-input" id="user-${user.id}" type="checkbox" name="users[]" data-kt-check="true" data-kt-check-target="[data-user-id='${user.id}']" value="${user.id}" /> </label>
+                    <div class="symbol symbol-35px symbol-circle">
+                        <img alt="Pic" src="${profile_pic}" />
+                    </div>
+                    <div class="ms-5">
+                        <a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2">${user.name}</a>
+                        <div class="fw-semibold text-muted">
+                            ${user.email}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-bottom border-gray-300 border-bottom-dashed"></div>
+            `;
+        }
 
         // Initialize search handler
         searchObject = new KTSearch(element);
@@ -154,7 +198,15 @@
         // Handle input enter keypress
         handleInput();
 
+        submitModal({
+            modalName: 'kt_modal_users_search',
+            tableName: 'kt_table_promag',
+            ajaxLink: "{{ route('com.promag.detail.store.users', ['work_list_id' => $work_list_id]) }}",
+        });
+
         $(addUserButtonElement).click(function (e) {
+            searchObject.clear();
+
             $.ajax({
                 url: "{{route('com.promag.detail.users', ['work_list_id' => $work_list_id])}}",
                 type: 'GET',
@@ -163,7 +215,7 @@
 
                     if (response.data.users.length >= 1) {
                         response.data.users.forEach(user => {
-                            $('#container-related-users').html(viewRelatedUser(user));
+                            $('#container-related-users').append(viewRelatedUser(user));
                         });
                         return
                     }
