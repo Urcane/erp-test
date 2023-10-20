@@ -46,7 +46,7 @@
                                     </tr>
                                     <tr>
                                         <td class="w-25px"><i class="fa-solid fa-map-pin text-gray-500"></i></td>
-                                        <td class=""><span>{{$user->team->team_name}}</span></td>
+                                        <td class=""><span>{{$user->team->team_name ?? "-"}}</span></td>
                                     </tr>
                                 </table>
                             </div>

@@ -383,7 +383,7 @@ class AttendanceController extends RequestController
                     return $query->user->department->department_name;
                 })
                 ->addColumn('job_level', function ($query) {
-                    return $query->user->getRoleNames()[0];
+                    return $query->user->getRoleNames()->first();
                 })
                 ->addColumn('job_position', function ($query) {
                     return $query->user->division->divisi_name;

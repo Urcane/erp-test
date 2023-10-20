@@ -6,7 +6,7 @@
         branch: '{{$query->user->userEmployment->subBranch->name}}',
         org: '{{$query->user->department->department_name}}',
         position: '{{$query->user->division->divisi_name}}',
-        level: '{{$query->user->getRoleNames()[0]}}',
+        level: '{{$query->user->getRoleNames()->first()}}',
         currshift: '{{$shift}}',
         currwork: '{{$workHour}}',
         created: '{{$query->created_at}}',
