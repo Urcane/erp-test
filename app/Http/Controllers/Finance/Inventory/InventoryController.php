@@ -75,23 +75,24 @@ class InventoryController extends Controller
 
     public function viewDetailLog(string $id)
     {
-        $log = WarehouseLog::whereId($id)->first();
+        $log = WarehouseLog::whereId($id)
+            ->with([
+                'warehouse',
+                'warehouseGoodLogs.warehouseGoodStockLogs.inventoryUnitMaster',
+                'warehouseGoodLogs.warehouseGoodStockLogs.inventoryGoodStatus',
+                'warehouseGoodLogs.warehouseGoodStockLogs.inventoryGoodCondition',
+                'warehouseGoodLogs.inventoryGood.inventoryGoodCategory',
+            ])
+            ->first();
 
         if (!$log) {
             abort(404);
         }
 
-        $name = $log->name;
-
-        $recentLogs = WarehouseGoodStockLog::with([
-            'warehouseGoodLog.warehouseLog.warehouse',
-            'warehouseGoodLog.inventoryGood.inventoryGoodCategory',
-        ])->orderBy('created_at', 'desc')->limit(10)->get();
-
         $statuses = $this->constants->inventory_status;
 
         return view('finance.inventory.logs.detail.index', compact([
-            'name', 'recentLogs', 'statuses'
+            'log', 'statuses'
         ]));
     }
 
@@ -127,6 +128,7 @@ class InventoryController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string',
+                'description' => 'nullable|string',
                 'serial_number' => 'nullable|array',
                 'warehouse_id' => 'required|exists:warehouses,id',
                 'inventory_good_id' => 'required|exists:inventory_goods,id',
@@ -157,6 +159,7 @@ class InventoryController extends Controller
 
             $warehouseLog = $warehouse->warehouseLogs()->create([
                 'name' => $request->name,
+                'description' => $request->description,
                 'status' => $this->constants->inventory_status[0],
             ]);
 
@@ -212,6 +215,7 @@ class InventoryController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string',
+                'description' => 'nullable|string',
                 'warehouse_id' => 'required|exists:warehouses,id',
                 'transfer_warehouse_id' => 'required|exists:warehouses,id',
                 'warehouse_good_stock_id' => 'required|array',
@@ -232,11 +236,13 @@ class InventoryController extends Controller
 
             $senderLog = $sender->warehouseLogs()->create([
                 'name' => $request->name,
+                'description' => $request->description,
                 'status' => $this->constants->inventory_status[1],
             ]);
 
             $receiverLog = $receiver->warehouseLogs()->create([
                 'name' => $request->name,
+                'description' => $request->description,
                 'status' => $this->constants->inventory_status[1],
             ]);
 

@@ -28,14 +28,29 @@
                                 <input class="form-control form-control-solid form-control-sm" autocomplete="off"
                                     id="search">
                             </div>
-                            <a href="{{ route('fin.inv.inventory-transfer') }}" class="btn btn-outline btn-outline-info btn-sm me-3 fs-8">
-                                <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                                Transfer Item
-                            </a>
-                            <a href="{{ route('fin.inv.inventory-create') }}" class="btn btn-info btn-sm me-3 fs-8">
-                                <i class="fa-solid fa-plus"></i>
-                                Add Item
-                            </a>
+                            @can('FIN:transfer-inventory')
+                                <a href="{{ route('fin.inv.inventory-transfer') }}"
+                                    class="btn btn-outline btn-outline-info btn-sm me-3 fs-8">
+                                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                    Transfer Item
+                                </a>
+                            @else
+                                <div class="btn btn-outline btn-outline-muted text-muted btn-sm me-3 fs-8 cursor-not-allowed">
+                                    <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                                    Transfer Item (Resisted)
+                                </div>
+                            @endcan
+                            @can('FIN:add-inventory')
+                                <a href="{{ route('fin.inv.inventory-create') }}" class="btn btn-info btn-sm me-3 fs-8">
+                                    <i class="fa-solid fa-plus"></i>
+                                    Add Item
+                                </a>
+                            @else
+                                <div class="btn btn-outline btn-outline-muted text-muted btn-sm me-3 fs-8 cursor cursor-not-allowed">
+                                    <i class="fa-solid fa-plus"></i>
+                                    Add (Resisted)
+                                </div>
+                            @endcan
                         </div>
                     </div>
                 </div>

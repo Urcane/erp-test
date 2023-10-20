@@ -179,7 +179,7 @@
                                         <div class="row">
                                             <div class="col-lg-12 mb-6 mb-lg-0">
                                                 <div class="row">
-                                                    {{-- @canany(['OPR:view-department-assignment', 'OPR:create-department-assignment', 'OPR:change-department-status-assignment']) --}}
+                                                    @can('FIN:view-inventory')
                                                         <div class="col-lg-6">
                                                             <div class="menu-item p-0 m-0">
                                                                 <a href="{{route('fin.inv.dashboard')}}" class="menu-link">
@@ -193,7 +193,7 @@
                                                                 </a>
                                                             </div>
                                                         </div>
-                                                    {{-- @endcanany --}}
+                                                    @endcan
                                                 </div>
                                             </div>
                                         </div>

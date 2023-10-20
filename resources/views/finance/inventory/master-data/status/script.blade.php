@@ -1,11 +1,13 @@
 <script>
-    const onStatusModalOpen = ({
-        id,
-        name
-    }) => {
-        $('#modal_edit_status input[name="id"]').val(id);
-        $('#modal_edit_status input[name="name"]').val(name);
-    }
+    @can('FIN:crud-masterdata-inventory')
+        const onStatusModalOpen = ({
+            id,
+            name
+        }) => {
+            $('#modal_edit_status input[name="id"]').val(id);
+            $('#modal_edit_status input[name="name"]').val(name);
+        }
+    @endcan
 
     const statusInit = () => {
         const statusTable = $('#kt_table_status')
@@ -75,54 +77,56 @@
             }
         });
 
-        $('#modal_add_status').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: "{{ route('fin.inv.master-data.status.create') }}",
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    $('#add_status_modal').modal('hide');
-                    $('#modal_add_status')[0].reset();
-                    statusTable.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
-                }
+        @can('FIN:crud-masterdata-inventory')
+            $('#modal_add_status').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('fin.inv.master-data.status.create') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#add_status_modal').modal('hide');
+                        $('#modal_add_status')[0].reset();
+                        statusTable.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
             });
-        });
 
-        $('#modal_edit_status').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: "{{ route('fin.inv.master-data.status.update') }}",
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    $('#edit_status_modal').modal('hide');
-                    $('#modal_edit_status')[0].reset();
-                    statusTable.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
-                }
+            $('#modal_edit_status').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('fin.inv.master-data.status.update') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#edit_status_modal').modal('hide');
+                        $('#modal_edit_status')[0].reset();
+                        statusTable.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
             });
-        });
+        @endcan
     }
 </script>

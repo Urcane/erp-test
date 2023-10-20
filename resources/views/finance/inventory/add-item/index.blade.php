@@ -36,6 +36,13 @@
 
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="fw-bold">Deskripsi Kegiatan</span>
+                                        </label>
+                                        <textarea type="text" name="description" class="form-control form-control-solid"></textarea>
+                                    </div>
+
+                                    <div class="col-lg-12 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Pilih Warehouse</span>
                                         </label>
                                         <select class="form-select form-select-solid" data-control="select2" required

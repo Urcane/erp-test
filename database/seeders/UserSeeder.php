@@ -26,6 +26,8 @@ class UserSeeder extends Seeder
         ]);
         $superadmin->assignRole('administrator');
         $superadmin->givePermissionTo([
+            'Leap:manage-lead',
+            'Leap:manage-prospect',
             // request
             'HC:view-all-request',
             'HC:change-all-status-request',
@@ -45,6 +47,12 @@ class UserSeeder extends Seeder
             // 'OPR:view-all-assignment',
             'OPR:create-department-assignment',
             'OPR:change-department-status-assignment',
+
+            'FIN:view-inventory',
+            'FIN:crud-masterdata-inventory',
+            'FIN:view-logs',
+            'FIN:transfer-inventory',
+            'FIN:add-inventory',
         ]);
 
         $sofyan = User::create([
