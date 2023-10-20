@@ -15,7 +15,7 @@ class CreateDivisionsTable extends Migration
     {
         Schema::create('divisions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('department_id')->constrained();
+            $table->foreignId('department_id')->nullable()->constrained();
             $table->string('divisi_name');
             $table->string('divisi_alias')->nullable();
             $table->foreignId("parent_id")->nullable()->constrained("divisions");

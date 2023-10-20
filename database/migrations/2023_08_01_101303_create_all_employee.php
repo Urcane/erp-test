@@ -193,7 +193,7 @@ class CreateAllEmployee extends Migration
         Schema::create('user_employment', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("employment_status_id")->constrained("employment_statuses");
+            $table->foreignId("employment_status_id")->nullable()->constrained("employment_statuses");
             $table->string("employee_id", 35);
             $table->date("join_date");
             $table->date("end_date")->nullable()->default(null);
@@ -243,7 +243,7 @@ class CreateAllEmployee extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->string("npwp", 18)->nullable();
-            $table->string("pktp_status", 25);
+            $table->string("pktp_status", 25)->nullable();
             $table->enum("tax_method", $this->constants->tax_method)->nullable();
             $table->enum("tax_salary", $this->constants->tax_salary)->nullable();
             $table->date("taxable_date")->nullable();
