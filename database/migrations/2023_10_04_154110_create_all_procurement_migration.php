@@ -73,7 +73,9 @@ class CreateAllProcurementMigration extends Migration
         Schema::create('procurement_item_payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('procurement_item_id')->constrained('procurement_items');
-            $table->enum("categoty", ["Advance Payment", "Full Payment"]);
+            $table->string("payment_date");
+            $table->string("payment_method");
+            $table->enum("category", ["Advance Payment", "Full Payment"]);
             $table->integer("nominal");
             $table->string("file");
             $table->timestamps();

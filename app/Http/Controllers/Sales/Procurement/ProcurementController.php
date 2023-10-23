@@ -10,6 +10,7 @@ use App\Models\Opportunity\BoQ\ItemStatus;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
 use App\Models\Procurement\Procurement;
 use App\Models\Procurement\ProcurementItem;
+use App\Models\Procurement\ProcurementItemPayment;
 use App\Models\Procurement\ProcurementItemStatus;
 use App\Models\User;
 use App\Utils\ErrorHandler;
@@ -220,15 +221,14 @@ class ProcurementController extends Controller
     public function detailItemProcurement($id) {
         $procurementItem = ProcurementItem::whereId($id)->with("procurementItemStatus", "inventoryGood", "procurementItemPayment")->first();
         // $inventory =
-        $status = $procurementItem->procurementItemStatus->first()->status;
         array_shift($this->constants->item_status);
         $dataStatus = $this->constants->item_status;
-        return view("cmt-opportunity.procurement.detail-item-procurement", compact("procurementItem", "status", "dataStatus"));
+        return view("cmt-opportunity.procurement.detail-item-procurement", compact("procurementItem", "dataStatus"));
     }
 
     public function updateItemProcurement(Request $request) {
         try{
-            $procurementItem = ProcurementItem::whereId($request->id)->first();
+            $procurementItem = ProcurementItem::whereId($request->procurement_item_id)->first();
 
             DB::transaction(function() use ($request, $procurementItem) {
                 if ($request->status == $this->constants->item_status[1]) {
@@ -252,6 +252,21 @@ class ProcurementController extends Controller
                     "status" => $request->status,
                     "description" => $request->description,
                 ]);
+
+                if ($request->nominal) {
+
+                    $file = $request->file('file');
+                    $filename = time() . "_" . $request->user()->name . "." . $file->getClientOriginalExtension();
+                    ProcurementItemPayment::create([
+                        "procurement_item_id" => $procurementItem->id,
+                        "nominal" => $request->nominal,
+                        "payment_date" => $request->payment_date,
+                        "payment_method" => $request->payment_method,
+                        "file" => $filename,
+                    ]);
+
+                    $file->storeAs('payment/procurement', $filename, 'public');
+                }
             });
 
 

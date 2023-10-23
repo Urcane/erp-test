@@ -187,7 +187,7 @@
         </div>
     </div>
 
-    <div class="mb-3 row">
+    <div class="col-lg-12 mb-3 row">
         <label class="fs-6 form-label mb-2" for="itemable_bill_of_quantity_id col-lg-12">
             <span class="required fw-bold">Bill for Quantity</span>
         </label>
