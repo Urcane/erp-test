@@ -1,23 +1,25 @@
 <script>
-    const onItemModalOpen = ({
-        id,
-        good_category_id,
-        good_name,
-        good_type,
-        code_name,
-        spesification,
-        merk,
-        description,
-    }) => {
-        $('#modal_edit_item input[name="id"]').val(id);
-        $('#edit_item_category').val(good_category_id).trigger('change.select2');
-        $('#modal_edit_item input[name="good_name"]').val(good_name);
-        $('#modal_edit_item input[name="good_type"]').val(good_type);
-        $('#modal_edit_item input[name="code_name"]').val(code_name);
-        $('#modal_edit_item input[name="spesification"]').val(spesification);
-        $('#modal_edit_item input[name="merk"]').val(merk);
-        $('#modal_edit_item input[name="description"]').val(description);
-    }
+    @can('FIN:crud-masterdata-inventory')
+        const onItemModalOpen = ({
+            id,
+            good_category_id,
+            good_name,
+            good_type,
+            code_name,
+            spesification,
+            merk,
+            description,
+        }) => {
+            $('#modal_edit_item input[name="id"]').val(id);
+            $('#edit_item_category').val(good_category_id).trigger('change.select2');
+            $('#modal_edit_item input[name="good_name"]').val(good_name);
+            $('#modal_edit_item input[name="good_type"]').val(good_type);
+            $('#modal_edit_item input[name="code_name"]').val(code_name);
+            $('#modal_edit_item input[name="spesification"]').val(spesification);
+            $('#modal_edit_item input[name="merk"]').val(merk);
+            $('#modal_edit_item input[name="description"]').val(description);
+        }
+    @endcan
 
     const itemInit = () => {
         const itemTable = $('#kt_table_item')
@@ -102,85 +104,92 @@
             }
         });
 
-        $('#add_item_category').select2({
-            placeholder: 'Select Kategori',
-            ajax: {
+        @can('FIN:crud-masterdata-inventory')
+            $('#add_item_category').select2({
+                placeholder: 'Select Kategori',
+                ajax: {
+                    url: "{{ route('fin.inv.master-data.category.data') }}",
+                    dataType: 'json',
+                    processResults: function({
+                        data
+                    }) {
+                        return {
+                            results: data.map(({
+                                id,
+                                name
+                            }) => ({
+                                id,
+                                text: name
+                            }))
+                        };
+                    },
+                },
+                minimumInputLength: 0,
+            });
+
+            $.ajax({
                 url: "{{ route('fin.inv.master-data.category.data') }}",
                 dataType: 'json',
-                processResults: function({
+                success: function({
                     data
                 }) {
-                    return {
-                        results: data.map(({
-                            id,
-                            name
-                        }) => ({
-                            id,
-                            text: name
-                        }))
-                    };
-                },
-            },
-            minimumInputLength: 0,
-        });
-
-        $.ajax({
-            url: "{{ route('fin.inv.master-data.category.data') }}",
-            dataType: 'json',
-            success: function ({ data }) {
-                const option = data.reduce((result, { id, name }) => '<option value="' + id + '">' + name + '</option>' + result, '');
-                $('#edit_item_category').append(option)
-            }
-        });
-
-        $('#modal_add_item').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: "{{ route('fin.inv.master-data.item.create') }}",
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    $('#add_item_modal').modal('hide');
-                    $('#modal_add_item')[0].reset();
-                    itemTable.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
+                    const option = data.reduce((result, {
+                        id,
+                        name
+                    }) => '<option value="' + id + '">' + name + '</option>' + result, '');
+                    $('#edit_item_category').append(option)
                 }
             });
-        });
 
-        $('#modal_edit_item').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: "{{ route('fin.inv.master-data.item.update') }}",
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    $('#edit_item_modal').modal('hide');
-                    $('#modal_edit_item')[0].reset();
-                    itemTable.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
-                }
+            $('#modal_add_item').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('fin.inv.master-data.item.create') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#add_item_modal').modal('hide');
+                        $('#modal_add_item')[0].reset();
+                        itemTable.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
             });
-        });
+
+            $('#modal_edit_item').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('fin.inv.master-data.item.update') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#edit_item_modal').modal('hide');
+                        $('#modal_edit_item')[0].reset();
+                        itemTable.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
+            });
+        @endcan
     }
 </script>

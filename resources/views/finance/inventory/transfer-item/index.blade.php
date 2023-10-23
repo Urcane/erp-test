@@ -25,12 +25,7 @@
 
                             <div class="col-lg-12 p-6 m-1 rounded border border-2 border-secondary">
                                 <form class="form row" enctype="multipart/form-data" id="transfer_item_form">
-                                    <div class="col-lg-12 mb-3">
-                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="fw-bold required">Nama Kegiatan</span>
-                                        </label>
-                                        <input type="text" name="name" class="form-control form-control-solid">
-                                    </div>
+                                    <p class="fw-bold fs-4">Deskripsi Transfer</p>
 
                                     <div class="col-lg-6 mb-3">
                                         <label class="d-flex align-items-center fs-4 form-label mb-2">
@@ -56,6 +51,24 @@
                                                 <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
                                             @endforeach
                                         </select>
+                                    </div>
+
+                                    <hr class="mb-5 mt-4">
+
+                                    <p class="fw-bold fs-4">Dekripsi Kegiatan</p>
+
+                                    <div class="col-lg-12 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="fw-bold required">Nama Kegiatan</span>
+                                        </label>
+                                        <input type="text" name="name" class="form-control form-control-solid">
+                                    </div>
+
+                                    <div class="col-lg-12 mb-3">
+                                        <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                            <span class="fw-bold">Deskripsi Kegiatan</span>
+                                        </label>
+                                        <textarea type="text" name="description" class="form-control form-control-solid"></textarea>
                                     </div>
 
                                     <hr class="mb-5 mt-4">

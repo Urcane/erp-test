@@ -1,15 +1,23 @@
-@include('finance.inventory.master-data.category.modal')
+@can('FIN:crud-masterdata-inventory')
+    @include('finance.inventory.master-data.category.modal')
+@endcan
 
 <div class="d-flex justify-content-end mb-5">
     <div class="input-group w-150px w-md-250px mx-4">
         <span class="input-group-text border-0"><i class="fa-solid fa-magnifying-glass"></i></span>
-        <input class="form-control form-control-solid form-control-sm" autocomplete="off"
-            id="category_search">
+        <input class="form-control form-control-solid form-control-sm" autocomplete="off" id="category_search">
     </div>
-    <a href="#add_category_modal" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 fs-8">
-        <i class="fa-solid fa-plus"></i>
-        Add Category
-    </a>
+    @can('FIN:crud-masterdata-inventory')
+        <a href="#add_category_modal" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 fs-8">
+            <i class="fa-solid fa-plus"></i>
+            Add Category
+        </a>
+    @else
+        <div class="btn btn-outline btn-outline-muted text-muted btn-sm me-3 fs-8 cursor-not-allowed">
+            <i class="fa-solid fa-plus"></i>
+            Add Category (Resisted)
+        </div>
+    @endcan
 </div>
 
 <div class="row">

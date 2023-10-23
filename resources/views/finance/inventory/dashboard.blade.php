@@ -87,13 +87,9 @@
                                 </tr>
                             </thead>
                             <tbody class="fs-7">
-                                @php
-                                    $i = 0;
-                                @endphp
-
-                                @foreach($recentLogs as $log)
-                                    <tr class="@if ($i % 2 == 0) even @else odd @endif">
-                                        <td class="text-center">{{ $i + 1 }}</td>
+                                @foreach($recentLogs as $key => $log)
+                                    <tr class="@if ($key % 2 == 0) even @else odd @endif">
+                                        <td class="text-center">{{ $key + 1 }}</td>
                                         <td>{{ $log->warehouseGoodLog->inventoryGood->good_name }}</td>
                                         <td>
                                             @include('finance.inventory.components.badge', [
@@ -104,18 +100,15 @@
                                         <td>{{ $log->warehouseGoodLog->warehouseLog->warehouse->name }}</td>
                                         <td>{{ $log->warehouseGoodLog->inventoryGood->inventoryGoodCategory->name }}</td>
                                         @if($log->stock > 0)
-                                            <td class="text-center text-success">
+                                            <td class="text-center text-success fw-bold">
                                                 + {{ $log->stock }}
                                             </td>
                                         @else
-                                            <td class="text-center text-danger">
+                                            <td class="text-center text-danger fw-bold">
                                                 - {{ $log->stock * -1 }}
                                             </td>
                                         @endif
                                     </tr>
-                                    @php
-                                        $i++;
-                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>
