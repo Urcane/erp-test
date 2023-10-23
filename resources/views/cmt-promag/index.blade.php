@@ -221,7 +221,7 @@
             const profile_pic = user.foto_file ? `{{asset('sense')}}/media/foto_pegawai/${user.foto_file}` : "{{asset('sense')}}/media/avatars/blank.png"
 
             return `
-            <a href="#" class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1">
+            <div class="d-flex align-items-center p-3 rounded mb-1">
                 <div class="symbol symbol-35px symbol-circle me-5">
                     <img alt="Pic" src="${profile_pic}" />
                 </div>
@@ -229,7 +229,10 @@
                     <span class="fs-6 text-gray-800 me-2">${user.name}</span>
                     <span class="badge badge-light">${user.division.divisi_name}</span>
                 </div>
-            </a>
+                <div class="fw-semibold align-self-center ms-auto">
+                    <button type="button" id="revoke-user-${user.id}" class="btn btn-sm btn-active-light-danger" data-id="${user.id}">Revoke</button>
+                </div>
+            </div>
             `
         }
 
@@ -276,6 +279,7 @@
         handleInput();
 
         $(addUserButtonElement).click(function (e) {
+            const thisElement = $(this);
             work_list_id = $(this).data('id');
 
             submitModal({
@@ -283,7 +287,8 @@
                 tableName: 'kt_table_promag',
                 ajaxLink: `{{url('')}}/cmt-promag/detail/${work_list_id}/assignUser`,
                 successCallback: (data) => {
-                    searchObject.clear();
+                    toastr.success(data.status, 'Selamat 🚀 !');
+                    thisElement.click();
                 }
             });
 
@@ -299,6 +304,26 @@
                         response.data.users.forEach(user => {
                             $('#container-related-users').append(viewRelatedUser(user));
                         });
+
+                        $("[id^=revoke-user-]").click(function (e) {
+                            const user_id = $(this).data('id');
+
+                            $.ajax({
+                                url: `/cmt-promag/detail/${work_list_id}/users/${user_id}`,
+                                headers: {
+                                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                                },
+                                type: 'DELETE',
+                                success: function (data) {
+                                    toastr.success(data.status, 'Selamat 🚀 !');
+                                    thisElement.click();
+                                },
+                                error: function (error) {
+                                    toastr.error(data.status, 'Opps!');
+                                    consol.error(error)
+                                }
+                            })
+                        })
                         return
                     }
                     $('#container-related-users').html(`

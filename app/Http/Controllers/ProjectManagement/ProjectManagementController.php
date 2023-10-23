@@ -212,7 +212,7 @@ class ProjectManagementController extends Controller
         }
     }
 
-    function getWorklistAsiggnedUsers(WorkList $work_list_id) : JsonResponse{
+    function getWorklistAssiggnedUsers(WorkList $work_list_id) : JsonResponse{
 
         try {
             $workList = $work_list_id->load('users.department', 'users.division');
@@ -220,6 +220,20 @@ class ProjectManagementController extends Controller
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
                 "data" => $workList,
+            ], 200);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data['code']);
+        }
+    }
+
+    function revokeWorklistAssignedUsers(WorkList $work_list_id, User $user_id) : JsonResponse{
+        try {
+            $data = $work_list_id->users()->detach($user_id->id);
+
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼",
+                "data" => $data,
             ], 200);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
