@@ -182,9 +182,49 @@
 
 <script>
     var sig = $('#sig').signature({syncField: '#pegawai_sign_url', syncFormat: 'PNG'});
-    $('#clear').click(function() {
-        sig.signature('clear');
-        $("#pegawai_sign_url").val('');
+    $(document).ready(function () {
+        $('#clear').click(function() {
+            sig.signature('clear');
+            $("#pegawai_sign_url").val('');
+        });
+
+        $('[name="use_as_residential"]').on('change', function () {
+            $('[name="residential_address"]').val("");
+            $('[name="residential_address"]').prop("disabled", $(this).is(':checked'));
+
+            if ($(this).is(':checked')) {
+                $('[name="residential_address"]').addClass("bg-secondary");
+            } else {
+                $('[name="residential_address"]').removeClass("bg-secondary");
+            }
+        })
+
+        function formatNPWP(v) {
+            if (!v) return v;
+
+            v = v.replace(/\D/g, "");
+
+            if (v.length <= 2) return v;
+
+            if (v.length <= 5) return v.replace(/^(\d{0,2})(\d{0,3})/, "$1.$2");
+
+            if (v.length <= 8) return v.replace(/^(\d{0,2})(\d{0,3})(\d{0,3})/, "$1.$2.$3");
+
+            if (v.length <= 9) return v.replace(/^(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,1})/, "$1.$2.$3.$4");
+
+            if (v.length <= 12) return v.replace(/^(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,1})(\d{0,3})/, "$1.$2.$3.$4-$5");
+
+            return v.replace(/^(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,1})(\d{0,3})(\d{0,3})/, "$1.$2.$3.$4-$5-$6").slice(0, 20);
+        }
+
+        // Listen for input changes
+        $("[name='npwp']").on('input', function() {
+            let inputValue = $(this).val();
+            let formattedValue = formatNPWP(inputValue);
+            $(this).val(formattedValue);
+        });
+
+        $("[name='npwp']").trigger('input');
     });
 </script>
 

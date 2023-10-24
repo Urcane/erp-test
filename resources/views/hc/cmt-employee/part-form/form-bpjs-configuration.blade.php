@@ -1,6 +1,6 @@
 <section class="row">
     <div class="col-lg-12 mb-9">
-        <h4>BPJS Configurtion</h4>
+        <h4>BPJS Configuration</h4>
         <span class="fs-7 fw-semibold text-gray-500">Employee BPJS payment arrangements</span>
     </div>
 

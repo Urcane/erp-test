@@ -1,4 +1,5 @@
 <script src="{{ asset('sense/plugins/custom/leaflet/leaflet.bundle.js') }}"></script>
+<script src="https://unpkg.com/leaflet-geosearch@3.8.0/dist/geosearch.umd.js"></script>
 
 @include('finance.inventory.master-data.warehouse.script')
 @include('finance.inventory.master-data.item.script')

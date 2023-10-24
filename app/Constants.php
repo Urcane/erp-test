@@ -18,49 +18,54 @@ class Constants
 
     // database related
     // procurement {
-        public $procurement_type = ["Customer", "Internal", "Inventory"];
+    public $procurement_type = ["Customer", "Internal", "Inventory"];
     // }
     // item {
-        public $item_status = [
-            "Create Procurement",
-            "Making an order",
-            "Arrived",
-            "Return",
-            "Received",
-            "Payment",
-            "Start Freeze",
-            "End Freeze",
-            "Done",
-            "Other",
-        ];
+    public $item_status = [
+        "Create Procurement",
+        "Making an order",
+        "Arrived",
+        "Return",
+        "Received",
+        "Payment",
+        "Start Freeze",
+        "End Freeze",
+        "Done",
+        "Other",
+    ];
     // }
 
     // employee {
-        public $marital_status = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
-        public $gender = ["Laki-laki", "Perempuan"];
-        public $blood_type = ["A", "B", "AB", "O"];
-        public $religion = ["Islam", "Kristen", "Buddha", "Hindu", "Konghucu", "Katolik", "Lainnya"];
-        public $payment_type = ["Monthly", "Weekly"];
-        public $day = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]; //change the $locale if u wanna change the day language
-        public $month = [
-            "Januari", "Febuari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-        ];
-        public $salary_type = ["Weekly", "Monthly"];
-        public $tax_method = ["Gross", "Gross up", "Netto"];
-        public $tax_salary = ["Taxable", "Non-taxable"];
-        public $jaminan_pensiun_cost = ["Not paid", "By company", "By Employee"];
-        public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
-        public $approve_status = ["Waiting", "Approved", "Rejected", "Canceled"]; // [0] as default // used manually on hc/request/* -> summaries and script
-        public $balance_type = ["Anniversary", "Monthly"];
-        public $leave_quota_history_type = ["minus", "plus"];
+    public $marital_status = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
+    public $gender = ["Laki-laki", "Perempuan"];
+    public $blood_type = ["A", "B", "AB", "O"];
+    public $religion = ["Islam", "Kristen", "Buddha", "Hindu", "Konghucu", "Katolik", "Lainnya"];
+    public $payment_type = ["Monthly", "Weekly"];
+    public $day = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"]; //change the $locale if u wanna change the day language
+    public $month = [
+        "Januari", "Febuari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    public $salary_type = ["Weekly", "Monthly"];
+    public $tax_method = ["Gross", "Gross up", "Netto"];
+    public $tax_salary = ["Taxable", "Non-taxable"];
+    public $jaminan_pensiun_cost = [
+        "Default",
+        "Not Paid",
+        "Paid By Company",
+        "Paid By Employee"
+    ];
+    public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
+    public $approve_status = ["Waiting", "Approved", "Rejected", "Canceled"]; // [0] as default // used manually on hc/request/* -> summaries and script
+    public $balance_type = ["Anniversary", "Monthly"];
+    public $leave_quota_history_type = ["minus", "plus"];
     // }
 
     // assignment {
-        public $assignment_status = ["Waiting", "Approved", "Rejected", "Canceled", "Expired"];
+    public $assignment_status = ["Waiting", "Approved", "Rejected", "Canceled", "Expired"];
     // }
 
     // inventory {
-        public $inventory_status = ["Add", "Transfer", "Adjust", "Other"];
+    public $inventory_status = ["Add", "Transfer", "Adjust", "Other"];
     // }
 
     // system and view
@@ -136,29 +141,31 @@ class Constants
         "Default 3",
     ];
     public $pktp  = [
-        "PKTP Status 1",
-        "PKTP Status 2",
-        "PKTP Status 3",
+        "TK",
+        "K/0",
+        "K/1",
+        "K/2",
+        "K/3",
     ];
     public $ketenagakerjaan_npp = [
-        "NPP 1",
-        "NPP 2",
-        "NPP 3",
+        "Default"
     ];
     public $kesehatan_family = [
-        "Family 1",
-        "Family 2",
-        "Family 3",
+        "0",
+        "1",
+        "2",
+        "3",
     ];
     public $kesehatan_cost = [
-        "Cost 1",
-        "Cost 2",
-        "Cost 3",
+        "Default",
+        "Paid By Company",
+        "Paid By Employee"
     ];
     public $jht_cost = [
-        "JHT Cost 1",
-        "JHT Cost 2",
-        "JHT Cost 3",
+        "Default",
+        "Not Paid",
+        "Paid By Company",
+        "Paid By Employee"
     ];
 
     public $attendance_code_view = [

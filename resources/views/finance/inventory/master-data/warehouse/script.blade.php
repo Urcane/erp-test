@@ -76,6 +76,37 @@
 
                     addMarker(latitude, longitude, false);
                 });
+
+                const provider = new GeoSearch.OpenStreetMapProvider()
+                const search = new GeoSearch.GeoSearchControl({
+                    provider: provider,
+                    style: 'bar',
+                    searchLabel: 'Balikpapan',
+                    autoClose: true,
+                });
+
+                map.addControl(search);
+                const form = $('.leaflet-control-geosearch form');
+                const input = $('.leaflet-control-geosearch form input.glass');
+                const resultEl = $('.leaflet-control-geosearch form .results');
+
+                const test = async (event, value) => {
+                    const results = await provider.search({
+                        query: value
+                    });
+                    event.preventDefault();
+                    addMarker(results[0].y, results[0].x, false)
+                }
+
+                input.keydown(function(e) {
+                    if (e.which == 13) {
+                        test(e, input.val());
+                    }
+                });
+
+                resultEl.click(function(e) {
+                    test(e, input.val());
+                })
             })();
 
             $('[href="#add_warehouse_modal"]').on('click', function() {
@@ -166,6 +197,37 @@
 
                     addMarker(latitude, longitude, false);
                 });
+
+                const provider = new GeoSearch.OpenStreetMapProvider()
+                const search = new GeoSearch.GeoSearchControl({
+                    provider: provider,
+                    style: 'bar',
+                    searchLabel: 'Balikpapan',
+                    autoClose: true,
+                });
+
+                map.addControl(search);
+                const form = $('.leaflet-control-geosearch form');
+                const input = $('.leaflet-control-geosearch form input.glass');
+                const resultEl = $('.leaflet-control-geosearch form .results');
+
+                const test = async (event, value) => {
+                    const results = await provider.search({
+                        query: value
+                    });
+                    event.preventDefault();
+                    addMarker(results[0].y, results[0].x, false)
+                }
+
+                input.keydown(function(e) {
+                    if (e.which == 13) {
+                        test(e, input.val());
+                    }
+                });
+
+                resultEl.click(function(e) {
+                    test(e, input.val());
+                })
             })();
 
             onWarehouseModalOpen = ({

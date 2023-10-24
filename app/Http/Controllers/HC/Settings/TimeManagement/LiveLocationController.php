@@ -56,6 +56,7 @@ class LiveLocationController extends Controller
                     return '
                     <div onclick=\'fillInput(
                         "'. $data->id .'",
+                        "'. $data->name .',
                         "'. $data->latitude .'",
                         "'. $data->longitude .'",
                         "'. $data->radius .'",
@@ -73,6 +74,7 @@ class LiveLocationController extends Controller
     public function createUpdate( $branchId, Request $request) {
         try {
             $request->validate([
+                "name" => "required",
                 "latitude" => "required",
                 "longitude" => "required",
                 "radius" => "required",
@@ -81,6 +83,7 @@ class LiveLocationController extends Controller
             BranchLocation::updateOrCreate([
                 "id" => $request->id,
             ], [
+                "name" => $request->name,
                 "sub_branch_id" => $branchId,
                 "latitude" => $request->latitude,
                 "longitude" => $request->longitude,

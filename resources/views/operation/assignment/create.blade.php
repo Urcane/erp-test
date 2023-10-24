@@ -14,7 +14,7 @@
 
 @section('content')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch@3.8.0/dist/geosearch.css" />
     <div class="row justify-content-center mt-n20">
         <div class="col-lg-12 mt-n20">
             <div class="row justify-content-center">
@@ -196,9 +196,12 @@
     @include('operation.assignment.components.modal')
 
     <script src="{{ asset('sense/plugins/custom/leaflet/leaflet.bundle.js') }}"></script>
+    <script src="https://unpkg.com/leaflet-geosearch@3.8.0/dist/geosearch.umd.js"></script>
     <script>
+        let map;
+
         $(document).ready(function() {
-            let map = L.map('map').setView([-1.2495105, 116.8749959], 7);
+            map = L.map('map').setView([-1.2495105, 116.8749959], 7);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
@@ -271,6 +274,41 @@
             });
         });
     </script>
+
+    <script>
+        const provider = new GeoSearch.OpenStreetMapProvider()
+        const search = new GeoSearch.GeoSearchControl({
+            provider: provider,
+            style: 'bar',
+            searchLabel: 'Balikpapan',
+            autoClose: true,
+        });
+        $(document).ready(function() {
+            map.addControl(search);
+            const form = $('.leaflet-control-geosearch form');
+            const input = $('.leaflet-control-geosearch form input.glass');
+            const resultEl = $('.leaflet-control-geosearch form .results');
+
+            const test = async (event, value) => {
+                const results = await provider.search({
+                    query: value
+                });
+                event.preventDefault();
+                addMarker(results[0].y, results[0].x, false)
+            }
+
+            input.keydown(function(e) {
+                if (e.which == 13) {
+                    test(e, input.val());
+                }
+            });
+
+            resultEl.click(function(e) {
+                test(e, input.val());
+            })
+        });
+    </script>
+
     <script>
         $(document).ready(function() {
             $('#assignment_form').on('submit', function(event) {
