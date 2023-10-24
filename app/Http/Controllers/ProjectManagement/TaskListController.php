@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ProjectManagement\WorkTaskChecklist;
 use App\Models\ProjectManagement\WorkTaskComment;
 use App\Models\ProjectManagement\WorkTaskList;
+use App\Services\Master\FileService;
 use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -13,10 +14,12 @@ use Yajra\DataTables\Facades\DataTables;
 class TaskListController extends Controller
 {
     private $errorHandler;
+    protected $fileService;
 
-    public function __construct()
+    public function __construct(FileService $fileService)
     {
         $this->errorHandler = new ErrorHandler();
+        $this->fileService = $fileService;
     }
 
     public function taskLists($work_list_id)
@@ -80,7 +83,7 @@ class TaskListController extends Controller
 
     public function detailTaskList($work_list_id, $task_list_id)
     {
-        $workTaskList = WorkTaskList::whereId($task_list_id)->with('workList', 'workTaskComment')->first();
+        $workTaskList = WorkTaskList::whereId($task_list_id)->with('workList', 'workTaskComment', 'attachments')->first();
         $comments = WorkTaskComment::where("work_task_list_id", $task_list_id)->orderBy('created_at', 'desc')->with('user')->paginate(10);
 
         return view('cmt-promag.pages.task-lists-detail', compact("work_list_id", "task_list_id", "workTaskList", "comments"));
@@ -120,6 +123,31 @@ class TaskListController extends Controller
                 'status' => 'success',
                 'message' => 'Data berhasil disimpan',
                 'data' => $WorkTaskChecklist,
+            ]);
+        } catch (\Exception $e) {
+            $data = $this->errorHandler->handle($e);
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function createAttachment(Request $request, $task_list_id) {
+        try{
+            $request->validate([
+                'file' => 'required',
+            ]);
+            $filename = $request->file('file')->getClientOriginalName();
+            $WorkTaskAttechment = $this->fileService->storeFile(WorkTaskList::whereId($task_list_id)->first(), [
+                'file' => $request->file,
+                "filePath" => "public/promag/work-task-lists",
+                "user_id" => auth()->user()->id,
+                "additional" => "promag/work_task_lists/". $task_list_id,
+                'fileName' => $request->name ?? $filename,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil disimpan',
+                'data' => $WorkTaskAttechment,
             ]);
         } catch (\Exception $e) {
             $data = $this->errorHandler->handle($e);
