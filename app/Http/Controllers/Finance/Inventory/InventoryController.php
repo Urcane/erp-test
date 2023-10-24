@@ -64,6 +64,27 @@ class InventoryController extends Controller
         ]));
     }
 
+    public function viewInventoryDetail(string $id)
+    {
+        $warehouseGood = WarehouseGood::whereId($id)
+            ->with([
+                'inventoryGood.inventoryGoodCategory'
+            ])
+            ->first();
+
+        if (!$warehouseGood) {
+            abort(404);
+        }
+
+        $units = InventoryUnitMaster::all();
+        $conditions = InventoryGoodCondition::all();
+        $statuses = InventoryGoodStatus::all();
+
+        return view('finance.inventory.inventory.detail.index', compact([
+            'warehouseGood', 'units', 'conditions', 'statuses'
+        ]));
+    }
+
     public function viewLogs()
     {
         $warehouses = Warehouse::all();
@@ -75,23 +96,24 @@ class InventoryController extends Controller
 
     public function viewDetailLog(string $id)
     {
-        $log = WarehouseLog::whereId($id)->first();
+        $log = WarehouseLog::whereId($id)
+            ->with([
+                'warehouse',
+                'warehouseGoodLogs.warehouseGoodStockLogs.inventoryUnitMaster',
+                'warehouseGoodLogs.warehouseGoodStockLogs.inventoryGoodStatus',
+                'warehouseGoodLogs.warehouseGoodStockLogs.inventoryGoodCondition',
+                'warehouseGoodLogs.inventoryGood.inventoryGoodCategory',
+            ])
+            ->first();
 
         if (!$log) {
             abort(404);
         }
 
-        $name = $log->name;
-
-        $recentLogs = WarehouseGoodStockLog::with([
-            'warehouseGoodLog.warehouseLog.warehouse',
-            'warehouseGoodLog.inventoryGood.inventoryGoodCategory',
-        ])->orderBy('created_at', 'desc')->limit(10)->get();
-
         $statuses = $this->constants->inventory_status;
 
         return view('finance.inventory.logs.detail.index', compact([
-            'name', 'recentLogs', 'statuses'
+            'log', 'statuses'
         ]));
     }
 
@@ -127,6 +149,7 @@ class InventoryController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string',
+                'description' => 'nullable|string',
                 'serial_number' => 'nullable|array',
                 'warehouse_id' => 'required|exists:warehouses,id',
                 'inventory_good_id' => 'required|exists:inventory_goods,id',
@@ -157,6 +180,7 @@ class InventoryController extends Controller
 
             $warehouseLog = $warehouse->warehouseLogs()->create([
                 'name' => $request->name,
+                'description' => $request->description,
                 'status' => $this->constants->inventory_status[0],
             ]);
 
@@ -207,11 +231,107 @@ class InventoryController extends Controller
         }
     }
 
+    public function adJustItem(Request $request)
+    {
+        try {
+            $request->validate([
+                'warehouse_id' => 'required|exists:warehouses,id',
+                'name' => 'required|string',
+                'description' => 'nullable|string',
+                'item_id' => 'required|array',
+                'serial_number' => 'nullable|array',
+                'stock' => 'required|array',
+                'minimum_stock' => 'required|array',
+                'add_serial_number' => 'nullable|array',
+                'add_stock' => 'nullable|array',
+                'add_minimum_stock' => 'nullable|array',
+                'add_inventory_unit_master_id' => 'nullable|array',
+                'add_inventory_good_condition_id' => 'nullable|array',
+                'add_inventory_good_status_id' => 'nullable|array',
+            ]);
+
+            DB::beginTransaction();
+
+            $warehouseLog = WarehouseLog::create([
+                'warehouse_id' => $request->warehouse_id,
+                'name' => $request->name,
+                'description' => $request->description,
+                'status' => $this->constants->inventory_status[2],
+            ]);
+
+            $warehouseGoodLog = $warehouseLog->warehouseGoodLogs()->create([
+                'inventory_good_id' => $request->inventory_good_id,
+            ]);
+
+            $adjustedItem = WarehouseGoodStock::whereIn('id', $request->item_id)->get();
+
+            foreach ($adjustedItem as $key => $item) {
+                if ($item->stock != $request->stock[$key]) {
+                    $warehouseGoodLog->warehouseGoodStockLogs()->create([
+                        'inventory_good_condition_id' => $item->inventory_good_condition_id,
+                        'inventory_good_status_id' => $item->inventory_good_status_id,
+                        'inventory_unit_master_id' => $item->inventory_unit_master_id,
+                        'stock' => ($item->stock - $request->stock[$key]) * -1,
+                    ]);
+                }
+
+                $item->update([
+                    'serial_number' => $request->serial_number[$key],
+                    'stock' => $request->stock[$key],
+                    'minimum_stock' => $request->minimum_stock[$key],
+                ]);
+            }
+
+            $warehouseGood = $adjustedItem->first();
+
+            if ($request->add_stock) {
+                foreach ($request->add_stock as $key => $stock) {
+                    $warehouseGood->create([
+                        'warehouse_good_id' => $warehouseGood->warehouse_good_id,
+                        'serial_number' => $request->add_serial_number[$key],
+                        'inventory_good_condition_id' => $request->add_inventory_good_condition_id[$key],
+                        'inventory_good_status_id' => $request->add_inventory_good_status_id[$key],
+                        'inventory_unit_master_id' => $request->add_inventory_unit_master_id[$key],
+                        'minimum_stock' => $request->add_minimum_stock[$key],
+                        'stock' => $stock,
+                    ]);
+
+                    $warehouseGoodLog->warehouseGoodStockLogs()->create([
+                        'inventory_good_condition_id' => $request->add_inventory_good_condition_id[$key],
+                        'inventory_good_status_id' => $request->add_inventory_good_status_id[$key],
+                        'inventory_unit_master_id' => $request->add_inventory_unit_master_id[$key],
+                        'stock' => $stock,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil melakukan adjust item',
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            if ($th instanceof QueryException && $th->errorInfo[1] === 1062) {
+                $data = ErrorHandler::handle(new InvariantError('Dilarang memasukan stock dengan unit, kondisi dan status yang sama lebih dari satu kali'));
+
+                return response()->json($data["data"], $data["code"]);
+            }
+
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function transferItem(Request $request)
     {
         try {
             $request->validate([
                 'name' => 'required|string',
+                'description' => 'nullable|string',
                 'warehouse_id' => 'required|exists:warehouses,id',
                 'transfer_warehouse_id' => 'required|exists:warehouses,id',
                 'warehouse_good_stock_id' => 'required|array',
@@ -232,11 +352,13 @@ class InventoryController extends Controller
 
             $senderLog = $sender->warehouseLogs()->create([
                 'name' => $request->name,
+                'description' => $request->description,
                 'status' => $this->constants->inventory_status[1],
             ]);
 
             $receiverLog = $receiver->warehouseLogs()->create([
                 'name' => $request->name,
+                'description' => $request->description,
                 'status' => $this->constants->inventory_status[1],
             ]);
 

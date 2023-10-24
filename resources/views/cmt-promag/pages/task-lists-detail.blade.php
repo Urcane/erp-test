@@ -24,6 +24,8 @@
 @endsection
 
 @section('content')
+<script src="{{asset("sense/plugins/custom/ckeditor/ckeditor-classic.bundle.js")}}"></script>
+
 <div class="row justify-content-center mt-n20">
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center">
@@ -141,7 +143,8 @@
                                         </div>
                                     </div>
                                     <form class="w-100" id="comment-form" >
-                                        <textarea name="comment" class="form-control" placeholder="Leave a comment here"></textarea>
+                                        <textarea name="comment" id="kt_docs_ckeditor_classic">
+                                        </textarea>
                                         <button class="btn btn-info btn-sm mt-5">Save</button>
                                     </form>
                                 </div>
@@ -167,7 +170,7 @@
                                                         <span class="fs-5 text-gray-900 text-hover-primary"><span class="fw-bold">{{$comment->user->name}}</span> {{explode(" ", $comment->created_at)[0]}}</span>
 
                                                         <div class="text-gray-400" >
-                                                            {{$comment->comments}}
+                                                            {!!$comment->comments!!}
                                                         </div>
                                                     </div>
                                                     <!--end::Details-->
@@ -190,6 +193,13 @@
 
 
 <script>
+    ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic'))
+    .then(editor => {
+        console.log(editor);
+    })
+    .catch(error => {
+        console.error(error);
+    });
     $("#comment-form").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
 

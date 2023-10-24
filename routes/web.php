@@ -55,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['permission:HC:view-employee'])->group(function () {
         Route::controller(EmployeeController::class)->group(function () {
-            Route::prefix('cmt-employee')->group(function () {
+            Route::prefix('employee')->group(function () {
                 Route::post('/store/employee', 'store')->name('hc.emp.store');
                 Route::post('/import/employee', 'import')->name('hc.emp.import');
                 Route::post('/get/schedule/shift', 'getScheduleShift')->name('hc.emp.get.schedule.shift');
@@ -64,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(Attendance\AttendanceController::class)->group(function () {
-        Route::prefix('cmt-attendance')->group(function () {
+        Route::prefix('attendance')->group(function () {
             Route::middleware(['permission:HC:view-attendance'])->group(function () {
                 Route::get('/list', 'index')->name('hc.att.index');
 
@@ -87,7 +87,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(CustomerController::class)->group(function () {
-        Route::prefix('cmt-lead')->group(function () {
+        Route::prefix('lead')->group(function () {
             Route::get('/', 'indexLead')->name('com.lead.index-lead');
 
             Route::post('store/lead', 'storeLead')->name('com.lead.store-lead');
@@ -103,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::prefix('cmt-promag')->group(function () {
+    Route::prefix('promag')->group(function () {
         Route::controller(ProjectManagementController::class)->group(function () {
             Route::get('/', 'index')->name('com.promag.index');
             Route::get('/table', 'getWorkListTable')->name('com.promag.datatable');
@@ -135,10 +135,18 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/task-lists/detail/{task_list_id}/checklist/update', 'updateChecklist')->name('com.promag.task-list.checklist.update');
             // Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
         });
+        Route::controller(App\Http\Controllers\ProjectManagement\ProcurementController::class)->group(function () {
+            Route::get("{work_list_id}/procurement", 'index')->name('com.promag.procurement');
+            Route::get("{work_list_id}/procurement/table", 'dataTableProcurement')->name('com.promag.procurement.datatable');
+            Route::get("{workList}/procurement/create", 'create')->name('com.promag.procurement.create');
+        });
+        Route::controller(App\Http\Controllers\ProjectManagement\ActivityController::class)->group(function () {
+            Route::get("{work_list_id}/activity", 'index')->name('com.promag.activity');
+        });
     });
 
     Route::controller(SurveyController::class)->group(function () {
-        Route::prefix('cmt-survey')->group(function () {
+        Route::prefix('survey')->group(function () {
             Route::get('/', 'index')->name('com.survey.index');
             Route::get('/survey-request/detail/{id}', 'getSurveyRequestById')->name('com.survey-request.detail');
             Route::post('/survey-request', 'storeSurveyRequest')->name('com.survey-request.store');
@@ -163,7 +171,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(Profile\ProfileController::class)->group(function () {
-        Route::prefix('cmt-employee-profile')->group(function () {
+        Route::prefix('employee-profile')->group(function () {
             Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
 
             Route::middleware(['permission:HC:update-profile'])->group(function () {
@@ -177,7 +185,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(Profile\PersonalController::class)->group(function () {
-        Route::prefix('cmt-employee-personal')->group(function () {
+        Route::prefix('employee-personal')->group(function () {
             // family
             Route::get('/get-data/table/family', 'getTableFamily')->name('hc.emp.get-table-family');
             Route::post('/createUpdate/employee/family', 'createUpdateFamily')->name('hc.emp.create-update-family');
@@ -205,19 +213,18 @@ Route::middleware(['auth'])->group(function () {
 
             Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
             Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
+
+            Route::controller(Profile\LeaveController::class)->group(function () {
+                Route::get('/get-data/quotas', 'getUserLeaveQuotas')->name('hc.emp.get-user-leave-quotas');
+                Route::get('/get-data/table/leave/history', 'getTableLeaveHistory')->name('hc.emp.get-table-leave-history');
+                Route::get('/get-data/table/quota/history', 'getTableQuotaLeaveHistory')->name('hc.emp.get-table-quota-history');
+            });
         });
     });
 
-    Route::controller(Profile\LeaveController::class)->group(function () {
-        Route::prefix('cmt-employee-personal')->group(function () {
-            Route::get('/get-data/quotas', 'getUserLeaveQuotas')->name('hc.emp.get-user-leave-quotas');
-            Route::get('/get-data/table/leave/history', 'getTableLeaveHistory')->name('hc.emp.get-table-leave-history');
-            Route::get('/get-data/table/quota/history', 'getTableQuotaLeaveHistory')->name('hc.emp.get-table-quota-history');
-        });
-    });
 
     Route::controller(Profile\FileController::class)->group(function () {
-        Route::prefix('cmt-employee-file')->group(function () {
+        Route::prefix('employee-file')->group(function () {
             //  user file
             Route::get('/get-data/table/user-file', 'getTableUserFile')->name('hc.emp.get-table-user-file');
             Route::post('/createUpdate/employee/user-file', 'createUpdateUserFile')->name('hc.emp.create-update-user-file');
@@ -444,85 +451,116 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('finance')->group(function () {
-        Route::prefix('inventory')->group(function () {
-            Route::controller(Finance\Inventory\InventoryController::class)->group(function () {
-                Route::get('/dashboard', 'viewDashboard')->name('fin.inv.dashboard');
+        Route::middleware(['permission:FIN:view-inventory'])->group(function () {
+            Route::prefix('inventory')->group(function () {
+                Route::controller(Finance\Inventory\InventoryController::class)->group(function () {
+                    Route::get('/dashboard', 'viewDashboard')->name('fin.inv.dashboard');
 
-                Route::prefix('inv')->group(function () {
-                    Route::get('/', 'viewInventory')->name('fin.inv.inventory');
+                    Route::prefix('inv')->group(function () {
+                        Route::get('/', 'viewInventory')->name('fin.inv.inventory');
+                        Route::get('/get-data/table/data-result', 'getTableInventory')->name('fin.inv.inventory-get-table-inventory');
 
-                    Route::get('/create', 'viewAddItem')->name('fin.inv.inventory-create');
-                    Route::post('/create', 'storeItem')->name('fin.inv.inventory-create');
-                    Route::get('/get-data/table/data-result', 'getTableInventory')->name('fin.inv.inventory-get-table-inventory');
+                        Route::get('/detail/{id}', 'viewInventoryDetail')->name('fin.inv.inventory.detail');
+                        Route::post('/adjust-item', 'adJustItem')->name('fin.inv.inventory.adjust-item');
 
-                    Route::prefix('transfer')->group(function () {
-                        Route::get('/', 'viewTransferItem')->name('fin.inv.inventory-transfer');
-                        Route::post('/', 'transferItem')->name('fin.inv.inventory-transfer');
-                        Route::get('/get-data/table/data-result/', 'getTableTransferItem')->name('fin.inv.inventory-get-table-transfer');
-                    });
-                });
+                        Route::middleware(['permission:FIN:add-inventory'])->group(function () {
+                            Route::prefix('create')->group(function () {
+                                Route::get('/', 'viewAddItem')->name('fin.inv.inventory-create');
+                                Route::post('/', 'storeItem')->name('fin.inv.inventory-create');
+                            });
+                        });
 
-                Route::prefix('logs')->group(function () {
-                    Route::get('/', 'viewLogs')->name('fin.inv.logs');
-                    Route::get('/{id}', 'viewDetailLog')->name('fin.inv.logs.detail');
-
-                    Route::get('/get-data/table/data-result', 'getTableLogs')->name('fin.inv.logs-get-table-logs');
-                });
-
-                Route::prefix('master-data')->group(function () {
-                    Route::get('/', 'viewMasterData')->name('fin.inv.master-data');
-
-                    Route::prefix('warehouse')->group(function () {
-                        Route::controller(Finance\Inventory\MasterData\WarehouseController::class)->group(function () {
-                            Route::post('/create', 'create')->name('fin.inv.master-data.warehouse.create');
-                            Route::post('/update', 'update')->name('fin.inv.master-data.warehouse.update');
-                            Route::get('/data', 'getData')->name('fin.inv.master-data.warehouse.data');
-                            Route::get('/get-data/table/warehouse', 'getTable')->name('fin.inv.master-data.warehouse.get-table');
+                        Route::middleware(['permission:FIN:transfer-inventory'])->group(function () {
+                            Route::prefix('transfer')->group(function () {
+                                Route::get('/', 'viewTransferItem')->name('fin.inv.inventory-transfer');
+                                Route::post('/', 'transferItem')->name('fin.inv.inventory-transfer');
+                                Route::get('/get-data/table/data-result/', 'getTableTransferItem')->name('fin.inv.inventory-get-table-transfer');
+                            });
                         });
                     });
 
-                    Route::prefix('item')->group(function () {
-                        Route::controller(Finance\Inventory\MasterData\ItemController::class)->group(function () {
-                            Route::post('/create', 'create')->name('fin.inv.master-data.item.create');
-                            Route::post('/update', 'update')->name('fin.inv.master-data.item.update');
-                            Route::get('/data', 'getData')->name('fin.inv.master-data.item.data');
-                            Route::get('/get-data/table/item', 'getTable')->name('fin.inv.master-data.item.get-table');
+                    Route::middleware(['permission:FIN:view-logs'])->group(function () {
+                        Route::prefix('logs')->group(function () {
+                            Route::get('/', 'viewLogs')->name('fin.inv.logs');
+                            Route::get('/{id}', 'viewDetailLog')->name('fin.inv.logs.detail');
+
+                            Route::get('/get-data/table/data-result', 'getTableLogs')->name('fin.inv.logs-get-table-logs');
                         });
                     });
 
-                    Route::prefix('category')->group(function () {
-                        Route::controller(Finance\Inventory\MasterData\CategoryController::class)->group(function () {
-                            Route::post('/create', 'create')->name('fin.inv.master-data.category.create');
-                            Route::post('/update', 'update')->name('fin.inv.master-data.category.update');
-                            Route::get('/data', 'getData')->name('fin.inv.master-data.category.data');
-                            Route::get('/get-data/table/category', 'getTable')->name('fin.inv.master-data.category.get-table');
-                        });
-                    });
+                    Route::prefix('master-data')->group(function () {
+                        Route::get('/', 'viewMasterData')->name('fin.inv.master-data');
 
-                    Route::prefix('unit')->group(function () {
-                        Route::controller(Finance\Inventory\MasterData\UnitController::class)->group(function () {
-                            Route::post('/create', 'create')->name('fin.inv.master-data.unit.create');
-                            Route::post('/update', 'update')->name('fin.inv.master-data.unit.update');
-                            Route::get('/data', 'getData')->name('fin.inv.master-data.unit.data');
-                            Route::get('/get-data/table/unit', 'getTable')->name('fin.inv.master-data.unit.get-table');
-                        });
-                    });
+                        Route::prefix('warehouse')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\WarehouseController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.warehouse.data');
+                                Route::get('/get-data/table/warehouse', 'getTable')->name('fin.inv.master-data.warehouse.get-table');
 
-                    Route::prefix('condition')->group(function () {
-                        Route::controller(Finance\Inventory\MasterData\ConditionController::class)->group(function () {
-                            Route::post('/create', 'create')->name('fin.inv.master-data.condition.create');
-                            Route::post('/update', 'update')->name('fin.inv.master-data.condition.update');
-                            Route::get('/data', 'getData')->name('fin.inv.master-data.condition.data');
-                            Route::get('/get-data/table/condition', 'getTable')->name('fin.inv.master-data.condition.get-table');
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.warehouse.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.warehouse.update');
+                                });
+                            });
                         });
-                    });
 
-                    Route::prefix('status')->group(function () {
-                        Route::controller(Finance\Inventory\MasterData\StatusController::class)->group(function () {
-                            Route::post('/create', 'create')->name('fin.inv.master-data.status.create');
-                            Route::post('/update', 'update')->name('fin.inv.master-data.status.update');
-                            Route::get('/data', 'getData')->name('fin.inv.master-data.status.data');
-                            Route::get('/get-data/table/status', 'getTable')->name('fin.inv.master-data.status.get-table');
+                        Route::prefix('item')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\ItemController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.item.data');
+                                Route::get('/get-data/table/item', 'getTable')->name('fin.inv.master-data.item.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.item.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.item.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('category')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\CategoryController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.category.data');
+                                Route::get('/get-data/table/category', 'getTable')->name('fin.inv.master-data.category.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.category.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.category.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('unit')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\UnitController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.unit.data');
+                                Route::get('/get-data/table/unit', 'getTable')->name('fin.inv.master-data.unit.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.unit.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.unit.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('condition')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\ConditionController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.condition.data');
+                                Route::get('/get-data/table/condition', 'getTable')->name('fin.inv.master-data.condition.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.condition.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.condition.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('status')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\StatusController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.status.data');
+                                Route::get('/get-data/table/status', 'getTable')->name('fin.inv.master-data.status.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.status.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.status.update');
+                                });
+                            });
                         });
                     });
                 });
@@ -531,7 +569,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(BoQController::class)->group(function () {
-        Route::prefix('cmt-boq')->group(function () {
+        Route::prefix('boq')->group(function () {
             Route::get('/', 'index')->name('com.boq.index');
             Route::get('/get-data/table/data-result', 'getDatatable')->name('com.boq.render.datatable');
 
@@ -552,7 +590,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(ProcurementController::class)->group(function () {
-        Route::prefix('cmt-procurement')->group(function () {
+        Route::prefix('procurement')->group(function () {
             // halaman utama
             Route::get('/', 'index')->name('com.procurement.index');
             Route::get('/get/table', 'getTableProcurement')->name('com.procurement.getTable');
@@ -575,7 +613,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(QuotationController::class)->group(function () {
-        Route::prefix('cmt-quotation')->group(function () {
+        Route::prefix('quotation')->group(function () {
             Route::get('/', 'index')->name('com.quotation.index'); // quotation internet
             Route::get('/quotation-perangkat', 'perangkat')->name('com.quotation.perangkat.index'); // quotation perangkat
 

@@ -1,15 +1,17 @@
 <script>
-    const onCategoryModalOpen = ({
-        id,
-        name,
-        description,
-        code_name
-    }) => {
-        $('#modal_edit_category input[name="id"]').val(id);
-        $('#modal_edit_category input[name="name"]').val(name);
-        $('#modal_edit_category input[name="description"]').val(description);
-        $('#modal_edit_category input[name="code_name"]').val(code_name);
-    }
+    @can('FIN:crud-masterdata-inventory')
+        const onCategoryModalOpen = ({
+            id,
+            name,
+            description,
+            code_name
+        }) => {
+            $('#modal_edit_category input[name="id"]').val(id);
+            $('#modal_edit_category input[name="name"]').val(name);
+            $('#modal_edit_category input[name="description"]').val(description);
+            $('#modal_edit_category input[name="code_name"]').val(code_name);
+        }
+    @endcan
 
     const categoryInit = () => {
         const categoryTable = $('#kt_table_category')
@@ -84,54 +86,56 @@
             }
         });
 
-        $('#modal_add_category').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: "{{ route('fin.inv.master-data.category.create') }}",
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    $('#add_category_modal').modal('hide');
-                    $('#modal_add_category')[0].reset();
-                    categoryTable.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
-                }
+        @can('FIN:crud-masterdata-inventory')
+            $('#modal_add_category').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('fin.inv.master-data.category.create') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#add_category_modal').modal('hide');
+                        $('#modal_add_category')[0].reset();
+                        categoryTable.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
             });
-        });
 
-        $('#modal_edit_category').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: "{{ route('fin.inv.master-data.category.update') }}",
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    $('#edit_category_modal').modal('hide');
-                    $('#modal_edit_category')[0].reset();
-                    categoryTable.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
-                }
+            $('#modal_edit_category').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('fin.inv.master-data.category.update') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#edit_category_modal').modal('hide');
+                        $('#modal_edit_category')[0].reset();
+                        categoryTable.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
             });
-        });
+        @endcan
     }
 </script>

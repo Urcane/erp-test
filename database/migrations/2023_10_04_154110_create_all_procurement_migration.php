@@ -24,7 +24,10 @@ class CreateAllProcurementMigration extends Migration
         Schema::create('procurements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('itemable_bill_of_quantity_id')->constrained('itemable_bill_of_quantities');
-            $table->enum("type", ["Customer", "Internal"]);
+            $table->foreignId('work_list_id')->nullable()->constrained('work_lists');
+            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses');
+            $table->enum("type", $this->constants->procurement_type);
+            $table->string('allocation');
             $table->string('delivery_location');
             $table->string("no_pr");
             $table->string("ref_po_spk_pks")->nullable();
@@ -50,7 +53,7 @@ class CreateAllProcurementMigration extends Migration
             $table->string('vendor_location')->nullable();
             $table->integer('price');
             $table->integer('shipping_price')->nullable();
-            $table->string('payment_method');
+            $table->string('payment_method')->nullable();
             $table->string('purchase_number')->nullable();
             $table->string('no_po_nota')->nullable();
             $table->string('order_by')->nullable();
@@ -72,7 +75,9 @@ class CreateAllProcurementMigration extends Migration
         Schema::create('procurement_item_payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('procurement_item_id')->constrained('procurement_items');
-            $table->enum("categoty", ["Advance Payment", "Full Payment"]);
+            $table->string("payment_date");
+            $table->string("payment_method");
+            $table->enum("category", ["Advance Payment", "Full Payment"]);
             $table->integer("nominal");
             $table->string("file");
             $table->timestamps();

@@ -17,6 +17,6 @@
     }
 @endphp
 
-<span class="badge px-3 py-2 mw-150px {{ $class }}">
+<span class="badge px-3 py-2 {{ $class }}">
     {{ $status }}
 </span>

@@ -17,57 +17,79 @@
                 <div class="col-lg-12 mt-md-n14">
                     <div class="card">
                         <div class="card-body row">
-                            <div class="col-lg-12 text-center mt-5 mb-9">
-                                <span class="fs-3 fw-bolder text-dark d-block mb-1">{{ $name }} Logs</span>
+                            <div class="col-lg-12 mt-5 mb-9 d-flex justify-content-between">
+                                <span class="fs-3 fw-bolder text-dark d-block mb-1">Logs Kegiatan :
+                                    {{ $log->name }}</span>
+                                @include('finance.inventory.components.badge', [
+                                    'status' => $log->status,
+                                    'statusEnum' => $statuses,
+                                ])
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <table class="table align-top border table-rounded gy-5" id="kt_table_inventory">
-                                        <thead class="">
-                                            <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
-                                                <th class="text-center w-50px">#</th>
-                                                <th class="w-150px">Tanggal</th>
-                                                <th class="w-300px">Nama Kegiatan</th>
-                                                <th class="w-150px">Status</th>
-                                                <th class="w-150px">Warehouse</th>
-                                                <th class="w-200px">Jumlah Item</th>
-                                                <th class="w-100px">#</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="fs-7">
-                                            @php
-                                                $i = 0;
-                                            @endphp
 
-                                            @foreach($recentLogs as $log)
-                                                <tr class="@if ($i % 2 == 0) even @else odd @endif">
-                                                    <td class="text-center">{{ $i + 1 }}</td>
-                                                    <td>{{ $log->warehouseGoodLog->inventoryGood->good_name }}</td>
-                                                    <td>
-                                                        @include('finance.inventory.components.badge', [
-                                                            'status' => $log->warehouseGoodLog->warehouseLog->status,
-                                                            'statusEnum' => $statuses
-                                                        ])
-                                                    </td>
-                                                    <td>{{ $log->warehouseGoodLog->warehouseLog->warehouse->name }}</td>
-                                                    <td>{{ $log->warehouseGoodLog->inventoryGood->inventoryGoodCategory->name }}</td>
-                                                    @if($log->stock > 0)
-                                                        <td class="text-center text-success">
-                                                            + {{ $log->stock }}
-                                                        </td>
-                                                    @else
-                                                        <td class="text-center text-danger">
-                                                            - {{ $log->stock * -1 }}
-                                                        </td>
-                                                    @endif
-                                                </tr>
-                                                @php
-                                                    $i++;
-                                                @endphp
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                            <div class="col-lg-12 row p-6 m-1 rounded border border-2 border-secondary">
+                                <p class="fw-bold fs-4">Deskripsi Gudang</p>
+
+                                <div class="col-lg-12 mb-3">
+                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                        <span class="fw-bold">Nama Gudang</span>
+                                    </label>
+                                    <div class="form-control form-control-solid">
+                                        {{ $log->warehouse->name }}
+                                    </div>
                                 </div>
+
+                                <div class="col-lg-12 mb-3">
+                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                        <span class="fw-bold">Keterangan Kegiatan</span>
+                                    </label>
+                                    <div class="form-control form-control-solid">
+                                        {{ $log->description ? $log->description : 'Tidak ada keterangan' }}
+                                    </div>
+                                </div>
+
+                                <hr class="mb-5 mt-4">
+
+                                <p class="fw-bold fs-4">Detail Barang</p>
+
+                                @foreach ($log->warehouseGoodLogs as $warehouseGoodLogs)
+                                    <div class="col-lg-12 row p-6 m-1 rounded border border-2 border-secondary">
+                                        <div class="fw-bold fs-5 d-flex justify-content-between mb-3">
+                                            <div>
+                                                {{ $warehouseGoodLogs->inventoryGood->good_name }}
+                                            </div>
+                                            <div>
+                                                {{ $warehouseGoodLogs->inventoryGood->inventoryGoodCategory->name }}
+                                            </div>
+                                        </div>
+                                        <div class="fs-6 text-muted fw-bold d-flex justify-content-between">
+                                            <div>
+                                                Status - Kondisi Barang
+                                            </div>
+                                            <div>
+                                                Jumlah Barang
+                                            </div>
+                                        </div>
+                                        <hr class="mb-5 mt-4">
+
+                                        @foreach ($warehouseGoodLogs->warehouseGoodStockLogs as $item)
+                                            <div class="fs-6 d-flex justify-content-between">
+                                                <div>
+                                                    {{ $item->inventoryGoodStatus->name }} -
+                                                    {{ $item->inventoryGoodCondition->name }}
+                                                </div>
+                                                @if ($item->stock > 0)
+                                                    <div class="text-success fw-bold">
+                                                        + {{ $item->stock }} {{ $item->inventoryUnitMaster->name }}
+                                                    </div>
+                                                @else
+                                                    <div class="text-danger fw-bold">
+                                                        {{ $item->stock }} {{ $item->inventoryUnitMaster->name }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

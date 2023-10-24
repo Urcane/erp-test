@@ -39,11 +39,7 @@ class UsersImport implements OnEachRow
     {
         $row = $row->toArray();
 
-        if ($row[0] == "name") {
-            return;
-        }
-
-        if (User::where("email", $row[1])->first()) {
+        if ($row[0] == "name" || $row[0] == "hengki") {
             return;
         }
 
@@ -52,7 +48,12 @@ class UsersImport implements OnEachRow
             $department_id = Department::where("department_name", $row[5])->first()->id ?? null;
             $division_id = Division::where("divisi_name", $row[6])->first()->id ?? null;
             $team_id = Team::where("team_name", $row[7])->first()->id ?? null;
-            $user = User::create([
+
+
+            $userId = User::where("email", $row[1])->first()->id ?? null;
+            $user = User::updateOrCreate([
+                "id" => $userId,
+            ], [
                 "name" => $row[0],
                 "email" => $row[1],
                 "password" => Hash::make("12345678"),
@@ -69,7 +70,9 @@ class UsersImport implements OnEachRow
             // }
             // $user->assignRole($row[8]);
 
-            UserPersonalData::create([
+            UserPersonalData::updateOrCreate([
+                "user_id" => $user->id,
+            ], [
                 'user_id' => $user->id,
                 'birthdate' => Carbon::parse(Date::excelToDateTimeObject($row[9]))->format('Y-m-d'),
                 'place_of_birth' => $row[10],
@@ -79,7 +82,9 @@ class UsersImport implements OnEachRow
                 'religion' => $row[14],
             ]);
 
-            UserIdentity::create([
+            UserIdentity::updateOrCreate([
+                "user_id" => $user->id,
+            ], [
                 'user_id' => $user->id,
                 'type' => $row[15],
                 'number' => $row[16],
@@ -96,7 +101,9 @@ class UsersImport implements OnEachRow
             $approval_line = User::where("name", $row[28])->first()->id ?? null;
             $employment_status_id = EmploymentStatus::where("name", $row[22])->first()->id ?? null;
 
-            UserEmployment::create([
+            UserEmployment::updateOrCreate([
+                "user_id" => $user->id,
+            ], [
                 'user_id' => $user->id,
                 'employee_id' => $row[21],
                 'employment_status_id' => $employment_status_id,
@@ -109,23 +116,31 @@ class UsersImport implements OnEachRow
                 'barcode' => $row[29],
             ]);
 
-            UserSalary::create([
+            UserSalary::updateOrCreate([
+                "user_id" => $user->id,
+            ], [
                 'user_id' => $user->id,
                 'basic_salary' => $row[30],
             ]);
 
-            UserBank::create([
+            UserBank::updateOrCreate([
+                "user_id" => $user->id,
+            ], [
                 'user_id' => $user->id,
                 'name' => $row[31],
                 'number' => $row[32],
                 'holder_name' => $row[33],
             ]);
 
-            UserTax::create([
+            UserTax::updateOrCreate([
+                "user_id" => $user->id,
+            ], [
                 'user_id' => $user->id,
             ]);
 
-            UserBpjs::create([
+            UserBpjs::updateOrCreate([
+                "user_id" => $user->id,
+            ], [
                 'user_id' => $user->id,
             ]);
         });

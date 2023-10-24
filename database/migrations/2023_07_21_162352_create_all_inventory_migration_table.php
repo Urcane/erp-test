@@ -103,6 +103,7 @@ class CreateAllInventoryMigrationTable extends Migration
             $table->foreignId("warehouse_id")->constrained("warehouses");
             $table->enum('status', $this->constants->inventory_status);
             $table->string("name", 255);
+            $table->text("description")->nullable();
             $table->softDeletes()->index();
             $table->timestamps();
         });

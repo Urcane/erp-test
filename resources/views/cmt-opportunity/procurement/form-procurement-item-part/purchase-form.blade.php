@@ -1,4 +1,4 @@
-<div class="col-lg-12 row">
+<div class="row">
     {{-- <div class="col-lg-12">
         <div class="form-check">
             <input type="checkbox" class="form-check-input checkbox-real" placeholder="" name="use_inventory" id="use_inventory" onclick="toggleHidden('#auto_overtime')">
@@ -25,13 +25,13 @@
                 value="{{ $procurementItem->quantity ?? old('quantity') }}" disabled name="quantity">
         </div>
     </div> --}}
-    <div class="col-lg-4">
+    <div class="col-lg-12">
         <label class="d-flex align-items-center fs-6 form-label mb-2"
             for="need">
-            <span class=" fw-bold">Kebutuhan</span>
+            <span class="required fw-bold">Kebutuhan</span>
         </label>
         <input type="text" id="need" class="form-control form-control-solid"
-            value="{{ $procurementItem->need ?? old('need') }}" name="need" >
+            value="{{ $procurementItem->need ?? old('need') }}" required name="need" @if($disabled) disabled @endif>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
     <div class="col-lg-12">
@@ -120,26 +120,23 @@
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
     @if (!$disabled)
-        <label class="d-flex align-items-center fs-6 form-label mb-2 mt-10"
-            for="payment_method">
-            <span class="fw-bold">Payment (DP)</span>
-        </label>
-
-        <div class="col-lg-6">
-            <label class="d-flex align-items-center fs-6 form-label mb-2"
-                for="nominal">
-                <span class="fw-bold">Nominal</span>
+        <div class="col-lg-12">
+            <input type="checkbox" class="form-check-input checkbox-real" id="use_payment" placeholder="" name="use_payment">
+            <label class="fs-6 form-check-label mb-2 ms-2"
+                for="use_payment">
+                <span class="fw-bold">Use Payment</span>
             </label>
-            <input type="text" id="nominal" class="form-control form-control-solid" @if($disabled) disabled @endif name="nominal">
-            <div class="fv-plugins-message-container invalid-feedback"></div>
-        </div>
-        <div class="col-lg-6">
-            <label class="d-flex align-items-center fs-6 form-label mb-2"
-                for="file">
-                <span class="fw-bold">Nominal</span>
-            </label>
-            <input type="file" id="file" class="form-control form-control-solid" @if($disabled) disabled @endif name="file">
-            <div class="fv-plugins-message-container invalid-feedback"></div>
         </div>
     @endif
+    <div class="col-lg-12" id="payment" style="display: none">
+        @if (!$disabled)
+            <label class="d-flex align-items-center fs-6 form-label mb-2 mt-10"
+                for="payment_method">
+                <span class="required fw-bold">Payment (DP)</span>
+            </label>
+            @include('cmt-opportunity.procurement.form-procurement-item-part.payment-form', ['required' => false])
+        @endif
+    </div>
 </div>
+
+

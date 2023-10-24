@@ -1,13 +1,15 @@
 <script>
-    const onUnitModalOpen = ({
-        id,
-        name,
-        code
-    }) => {
-        $('#modal_edit_unit input[name="id"]').val(id);
-        $('#modal_edit_unit input[name="name"]').val(name);
-        $('#modal_edit_unit input[name="code"]').val(code);
-    }
+    @can('FIN:crud-masterdata-inventory')
+        const onUnitModalOpen = ({
+            id,
+            name,
+            code
+        }) => {
+            $('#modal_edit_unit input[name="id"]').val(id);
+            $('#modal_edit_unit input[name="name"]').val(name);
+            $('#modal_edit_unit input[name="code"]').val(code);
+        }
+    @endcan
 
     const unitInit = () => {
         const unitTable = $('#kt_table_unit')
@@ -82,54 +84,56 @@
             }
         });
 
-        $('#modal_add_unit').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: "{{ route('fin.inv.master-data.unit.create') }}",
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    $('#add_unit_modal').modal('hide');
-                    $('#modal_add_unit')[0].reset();
-                    unitTable.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
-                }
+        @can('FIN:crud-masterdata-inventory')
+            $('#modal_add_unit').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('fin.inv.master-data.unit.create') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#add_unit_modal').modal('hide');
+                        $('#modal_add_unit')[0].reset();
+                        unitTable.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
             });
-        });
 
-        $('#modal_edit_unit').on('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            $.ajax({
-                url: "{{ route('fin.inv.master-data.unit.update') }}",
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(data) {
-                    $('#edit_unit_modal').modal('hide');
-                    $('#modal_edit_unit')[0].reset();
-                    unitTable.ajax.reload();
-                    toastr.success(data.message, 'Selamat 🚀 !');
-                },
-                error: function(xhr, status, error) {
-                    const data = xhr.responseJSON;
-                    toastr.error(data.message, 'Opps!');
-                }
+            $('#modal_edit_unit').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: "{{ route('fin.inv.master-data.unit.update') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(data) {
+                        $('#edit_unit_modal').modal('hide');
+                        $('#modal_edit_unit')[0].reset();
+                        unitTable.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
             });
-        });
+        @endcan
     }
 </script>

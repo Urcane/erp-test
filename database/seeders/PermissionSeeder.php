@@ -70,6 +70,15 @@ class PermissionSeeder extends Seeder
                 'OPR:create-department-assignment',
                 'OPR:change-department-status-assignment',
                 // 'OPR:change-all-status-assignment',
+            ],
+            [
+                'FIN',
+
+                'FIN:view-inventory', // this required for all inventory
+                'FIN:crud-masterdata-inventory',
+                'FIN:view-logs',
+                'FIN:transfer-inventory',
+                'FIN:add-inventory',
             ]
         ];
 

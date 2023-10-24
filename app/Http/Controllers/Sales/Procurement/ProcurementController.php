@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Sales\Procurement;
 
 use App\Constants;
 use App\Http\Controllers\Controller;
+use App\Models\Inventory\Warehouse;
 use App\Models\Opportunity\BoQ\Item;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\BoQ\ItemStatus;
 use App\Models\Opportunity\Quotation\ItemableQuotationPart;
 use App\Models\Procurement\Procurement;
 use App\Models\Procurement\ProcurementItem;
+use App\Models\Procurement\ProcurementItemPayment;
 use App\Models\Procurement\ProcurementItemStatus;
 use App\Models\User;
 use App\Utils\ErrorHandler;
@@ -62,8 +64,9 @@ class ProcurementController extends Controller
             $query->whereColumn('fulfilled', '<', 'quantity');
         })->with('itemable')->get();
         $users = User::all();
+        $dataProcurementType = $this->constants->procurement_type;
 
-        return view("cmt-opportunity.procurement.detail-procurement", compact("procurement", "boq", "users"));
+        return view("cmt-opportunity.procurement.detail-procurement", compact("procurement", "boq", "users", "dataProcurementType"));
     }
 
     public function getTableItemProcurement(Request $request) {
@@ -77,7 +80,7 @@ class ProcurementController extends Controller
                         <a href="#modal_detail_item" data-bs-toggle="modal" class="btn-detial dropdown-item py-2 text-center px-5 modal-item"><i class="fa-solid fa-eye me-3"></i>Detail Boq Item</a>
                     </div>
                     ';
-                    $detailProquerment = '<a href="'.route("com.procurement.detail.item", ["id" => $action->id]).'" class="btn-detial dropdown-item py-2 text-center px-5 modal-item"><i class="fa-solid fa-eye me-3"></i>Detail Proqurment Item</a>';
+                    $detailProquerment = '<a href="'.route("com.procurement.detail.item", ["id" => $action->id]).'" class="btn-detial dropdown-item py-2 text-center px-5 modal-item"><i class="fa-solid fa-eye me-3"></i>Detail Procurement Item</a>';
                     return '
                     <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                     <ul class="dropdown-menu">
@@ -143,69 +146,95 @@ class ProcurementController extends Controller
         ], 201);
     }
 
+    public function create() {
+        $boq = ItemableBillOfQuantity::whereHas('itemable', function ($query) {
+            $query->whereColumn('fulfilled', '<', 'quantity');
+        })->with('itemable')->get();
+        $users = User::all();
+        $dataWarehouse = Warehouse::all();
+        $dataProcurementType = $this->constants->procurement_type;
+
+        return view('cmt-opportunity.procurement.form-procurement', compact("boq", "users", "dataProcurementType", "dataWarehouse"));
+    }
+
     public function storeProcurement(Request $request) {
-        DB::transaction(function () use ($request) {
-            $procurement = Procurement::create([
-                "itemable_bill_of_quantity_id" => $request->itemable_bill_of_quantity_id,
-                "type" => $request->type ?? "Customer",
-                "need" => $request->need ?? "Pengadaan Gudang",
-                "delivery_location" => $request->delivery_location,
-                "no_pr" => $request->no_pr,
-                "ref_po_spk_pks" => $request->ref_po_spk_pks,
-                "ref_ph" => $request->ref_ph,
-                "request_date" => $request->request_date,
-                "requester" => $request->requester,
-                "customer" => $request->customer,
-                "pic" => Auth::user()->id,
-            ]);
+        $request->validate([
+            "itemable_bill_of_quantity_id" => "required",
+            "delivery_location" => "required",
+            "no_pr" => "required",
+            "ref_po_spk_pks" => "required",
+            "ref_ph" => "required",
+            "request_date" => "required",
+            "requester" => "required",
+            "customer" => "required",
+        ]);
 
-            foreach ($request->item_id as $id) {
-                $item = Item::whereId($id)->first();
-                $procurementItem = ProcurementItem::create([
-                    "procurement_id" => $procurement->id,
-                    "item_id" => $id,
-                    "inventory_good_id" => $item->inventory_good_id,
-                    "quantity" => $item->quantity,
-                    "unit" => $item->unit,
-                    "price" => $item->purchase_price,
-                    "shipping_price" => $item->purchase_delivery_charge,
-                    "payment_method" => $item->payment_type,
+        try {
+            DB::transaction(function () use ($request) {
+                $procurement = Procurement::create([
+                    "itemable_bill_of_quantity_id" => $request->itemable_bill_of_quantity_id,
+                    "work_list_id" => $request->work_list_id,
+                    "warehouse_id" => $request->warehouse_id,
+                    "type" => $request->type,
+                    "allocation" => $request->allocation,
+                    "delivery_location" => $request->delivery_location,
+                    "no_pr" => $request->no_pr,
+                    "ref_po_spk_pks" => $request->ref_po_spk_pks,
+                    "ref_ph" => $request->ref_ph,
+                    "request_date" => $request->request_date,
+                    "requester" => $request->requester,
+                    "customer" => $request->customer,
+                    "pic" => Auth::user()->id,
                 ]);
 
-                ProcurementItemStatus::create([
-                    "procurement_item_id" => $procurementItem->id,
-                    "status" => "Create Procurement",
-                    "description" => "Procurement berhasil dibuat",
-                ]);
-            }
-        });
+                foreach ($request->item_id as $id) {
+                    $item = Item::whereId($id)->first();
+                    $procurementItem = ProcurementItem::create([
+                        "procurement_id" => $procurement->id,
+                        "item_id" => $id,
+                        "inventory_good_id" => $item->inventory_good_id,
+                        "quantity" => $item->quantity,
+                        "unit" => $item->unit,
+                        "price" => $item->purchase_price,
+                        "shipping_price" => $item->purchase_delivery_charge,
+                        "payment_method" => $item->payment_type,
+                    ]);
+
+                    ProcurementItemStatus::create([
+                        "procurement_item_id" => $procurementItem->id,
+                        "status" => "Create Procurement",
+                        "description" => "Procurement berhasil dibuat",
+                    ]);
+                }
+            });
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Procurement berhasil dibuat"
+            ], 201);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function getStatusItem(Request $request) {
         return ItemStatus::where("item_id", $request->id)->get();
     }
 
-    public function create() {
-        $boq = ItemableBillOfQuantity::whereHas('itemable', function ($query) {
-            $query->whereColumn('fulfilled', '<', 'quantity');
-        })->with('itemable')->get();
-        $users = User::all();
-
-        return view('cmt-opportunity.procurement.form-procurement', compact("boq", "users"));
-    }
-
     public function detailItemProcurement($id) {
         $procurementItem = ProcurementItem::whereId($id)->with("procurementItemStatus", "inventoryGood", "procurementItemPayment")->first();
         // $inventory =
-        $status = $procurementItem->procurementItemStatus->first()->status;
         array_shift($this->constants->item_status);
         $dataStatus = $this->constants->item_status;
-        return view("cmt-opportunity.procurement.detail-item-procurement", compact("procurementItem", "status", "dataStatus"));
+
+        return view("cmt-opportunity.procurement.detail-item-procurement", compact("procurementItem", "dataStatus"));
     }
 
     public function updateItemProcurement(Request $request) {
         try{
-            $procurementItem = ProcurementItem::whereId($request->id)->first();
+            $procurementItem = ProcurementItem::whereId($request->procurement_item_id)->first();
 
             DB::transaction(function() use ($request, $procurementItem) {
                 if ($request->status == $this->constants->item_status[1]) {
@@ -229,6 +258,21 @@ class ProcurementController extends Controller
                     "status" => $request->status,
                     "description" => $request->description,
                 ]);
+
+                if ($request->nominal) {
+
+                    $file = $request->file('file');
+                    $filename = time() . "_" . $request->user()->name . "." . $file->getClientOriginalExtension();
+                    ProcurementItemPayment::create([
+                        "procurement_item_id" => $procurementItem->id,
+                        "nominal" => $request->nominal,
+                        "payment_date" => $request->payment_date,
+                        "payment_method" => $request->payment_method,
+                        "file" => $filename,
+                    ]);
+
+                    $file->storeAs('payment/procurement', $filename, 'public');
+                }
             });
 
 
