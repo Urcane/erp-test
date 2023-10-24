@@ -293,7 +293,10 @@
                                 </span>
                             </div>
                         </div> --}}
-                        <a href="{{route("com.promag.index")}}">Promag</a>
+                        <span class="menu-link" onclick='onPromagClick()'>
+                            <a href="{{route("com.promag.index")}}" class="menu-title">Promag</a>
+                            <span class="menu-arrow d-lg-none"></span>
+                        </span>
                     </div>
                     <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                         <span class="menu-link">
@@ -428,3 +431,8 @@
         </div>
     </div>
 </div>
+<script>
+    const onPromagClick = () => {
+        window.location.href = "{{route('com.promag.index')}}"
+    }
+</script>
