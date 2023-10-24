@@ -164,6 +164,22 @@ class CreateAllPromagMigrationTable extends Migration
             $table->timestamps();
         });
 
+
+        Schema::create('work_activity_logs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('work_list_id')->constrained();
+            $table->foreignId('user_id')->constrained();
+            $table->string('description');
+            $table->string('type');
+            $table->timestamps();
+        });
+
+        Schema::create('work_activity_log_files', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('work_list_id')->constrained();
+            $table->foreignId('file_id')->constrained();
+            $table->timestamps();
+        });
         // End: Project Migration
     }
 
@@ -174,6 +190,8 @@ class CreateAllPromagMigrationTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('work_activity_log_files');
+        Schema::dropIfExists('work_activity_logs');
         Schema::dropIfExists('work_task_comments');
         Schema::dropIfExists('work_task_checklists');
         Schema::dropIfExists('work_task_attachments');

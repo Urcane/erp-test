@@ -187,7 +187,7 @@
         </div>
     </div>
 
-    <div class="col-lg-12 mb-3 row">
+    <div class="mb-3 row">
         <label class="fs-6 form-label mb-2" for="itemable_bill_of_quantity_id col-lg-12">
             <span class="required fw-bold">Bill for Quantity</span>
         </label>
@@ -208,92 +208,119 @@
         </select>
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
-    <div id="main-form" class="@if (($procurement->itemable_bill_of_quantity_id ?? old('itemable_bill_of_quantity_id')) == null) d-none @endif row">
-        <div class="col-lg-4 mb-3">
-            <label class="d-flex align-items-center fs-6 form-label mb-2" for="no_pr">
-                <span class="required fw-bold">No. Procurement</span>
-            </label>
-            <input type="number" id="no_pr" class="form-control form-control-solid"
-                placeholder="No. Procurement" required value="{{$procurement->no_pr ?? old("no_pr")}}" @if(($procurement->no_pr ?? old("no_pr"))) disabled @endif name="no_pr">
-            <div class="fv-plugins-message-container invalid-feedback"></div>
-        </div>
-        <div class="col-lg-4 mb-3">
-            <label class="d-flex align-items-center fs-6 form-label mb-2"
-                for="ref_po_spk_pks">
-                <span class="required fw-bold">Ref PO/SPK/PKS Pelanggan</span>
-            </label>
-            <input type="text" id="ref_po_spk_pks"
-                class="form-control form-control-solid"
-                placeholder="Ref PO/SPK/PKS Pelanggan" required value="{{$procurement->ref_po_spk_pks ?? old("ref_po_spk_pks")}}" @if(($procurement->ref_po_spk_pks ?? old("ref_po_spk_pks"))) disabled @endif name="ref_po_spk_pks">
-            <div class="fv-plugins-message-container invalid-feedback"></div>
-        </div>
-        <div class="col-lg-4 mb-3">
-            <label class="d-flex align-items-center fs-6 form-label mb-2" for="ref_ph">
-                <span class="required fw-bold">Ref PH</span>
-            </label>
-            <input type="text" id="ref_ph" class="form-control form-control-solid"
-                placeholder="Ref PH" required value="{{$procurement->ref_ph ?? old("ref_ph")}}" @if(($procurement->ref_ph ?? old("ref_ph"))) disabled @endif name="ref_ph">
-            <div class="fv-plugins-message-container invalid-feedback"></div>
-        </div>
-        <div class="col-lg-4 mb-3">
-            <label class="d-flex align-items-center fs-6 form-label mb-2" for="requester">
-                <span class="required fw-bold">Requester</span>
-            </label>
-            <select class="drop-data form-select form-select-solid"
-                data-control="requester" required
-                name="requester" id="requester" @if (($procurement->requester ?? old('requester')))
-                    disabled
-                @endif>
-                @if (($procurement->requester ?? old('requester')) == null)
-                    <option value="" selected hidden disabled>Select Requester
-                    </option>
-                @endif
-                @if (($procurement->requester ?? old('requester')) == null)
-                    @foreach ($users as $data)
-                        <option value="{{ $data->id }}"
-                            @if (($procurement->requester  ?? old('requester ')) == $data->id) selected @endif>
-                            {{ $data->name }}</option>
+    <div id="main-form" class="col-lg-12 @if (($procurement->itemable_bill_of_quantity_id ?? old('itemable_bill_of_quantity_id')) == null) d-none @endif">
+        <div class="row">
+            <div class="col-lg-4">
+                <label class="d-flex align-items-center fs-6 form-label mb-2"
+                    for="type">
+                    <span class="required fw-bold">Procurement Type</span>
+                </label>
+                <select class="drop-data form-select form-select-solid" data-control="type" required
+                    name="type" id="type" @if($procurement->type ?? old('type')) disabled @endif>
+                    @if (($procurement->type ?? old('type')) == null)
+                        <option value="" selected hidden disabled>Select procurement type</option>
+                    @endif
+                    @foreach ($dataProcurementType as $option)
+                        <option value="{{ $option }}" @if (($procurement->type ?? old('type')) == $option) selected @endif>
+                            {{ $option }}</option>
                     @endforeach
-                @else
-                    <option>{{$procurement->requesterUser->name}}</option>
-                @endif
-            </select>
-            <div class="fv-plugins-message-container invalid-feedback"></div>
-        </div>
-        <div class="col-lg-4 mb-3">
-            <label class="d-flex align-items-center fs-6 form-label mb-2" for="customer">
-                <span class="required fw-bold">Calon Pelanggan</span>
-            </label>
-            <input type="text" id="customer" class="form-control form-control-solid"
-                placeholder="Nama Calon Pelanggan" required value="{{$procurement->customer ?? old("customer")}}" @if(($procurement->customer ?? old("customer"))) disabled @endif name="customer">
-            <div class="fv-plugins-message-container invalid-feedback"></div>
-        </div>
-        <div class="col-lg-4 mb-3">
-            <label class="d-flex align-items-center fs-6 form-label mb-2"
-                for="request_date">
-                <span class="required fw-bold">Tanggal Request</span>
-            </label>
-            <input type="date" id="request_date"
-                class="form-control form-control-solid" required value="{{$procurement->request_date ?? old("request_date")}}" @if(($procurement->request_date ?? old("request_date"))) disabled @endif name="request_date">
-            <div class="fv-plugins-message-container invalid-feedback"></div>
-        </div>
-        <div class="col-lg-4 mb-3">
-            <label class="d-flex align-items-center fs-6 form-label mb-2"
-                for="delivery_location">
-                <span class="required fw-bold">Lokasi Pengiriman</span>
-            </label>
-            <input type="text" id="delivery_location"
-                class="form-control form-control-solid" placeholder="Lokasi Pengiriman"
-                required value="{{$procurement->delivery_location ?? old("delivery_location")}}" @if(($procurement->delivery_location ?? old("delivery_location"))) disabled @endif name="delivery_location">
-            <div class="fv-plugins-message-container invalid-feedback"></div>
+                </select>
+
+                <div class="fv-plugins-message-container invalid-feedback"></div>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label class="d-flex align-items-center fs-6 form-label mb-2" for="no_pr">
+                    <span class="required fw-bold">No. Procurement</span>
+                </label>
+                <input type="number" id="no_pr" class="form-control form-control-solid"
+                    placeholder="No. Procurement" required value="{{$procurement->no_pr ?? old("no_pr")}}" @if(($procurement->no_pr ?? old("no_pr"))) disabled @endif name="no_pr">
+                <div class="fv-plugins-message-container invalid-feedback"></div>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label class="d-flex align-items-center fs-6 form-label mb-2" for="allocation">
+                    <span class="required fw-bold">Allocation</span>
+                </label>
+                <input type="text" id="allocation" class="form-control form-control-solid"
+                    placeholder="Procurement allocation" required value="{{$procurement->allocation ?? old("allocation")}}" @if(($procurement->allocation ?? old("allocation"))) disabled @endif name="allocation">
+                <div class="fv-plugins-message-container invalid-feedback"></div>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label class="d-flex align-items-center fs-6 form-label mb-2"
+                    for="ref_po_spk_pks">
+                    <span class="required fw-bold">Ref PO/SPK/PKS Pelanggan</span>
+                </label>
+                <input type="text" id="ref_po_spk_pks"
+                    class="form-control form-control-solid"
+                    placeholder="Ref PO/SPK/PKS Pelanggan" required value="{{$procurement->ref_po_spk_pks ?? old("ref_po_spk_pks")}}" @if(($procurement->ref_po_spk_pks ?? old("ref_po_spk_pks"))) disabled @endif name="ref_po_spk_pks">
+                <div class="fv-plugins-message-container invalid-feedback"></div>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label class="d-flex align-items-center fs-6 form-label mb-2" for="ref_ph">
+                    <span class="required fw-bold">Ref PH</span>
+                </label>
+                <input type="text" id="ref_ph" class="form-control form-control-solid"
+                    placeholder="Ref PH" required value="{{$procurement->ref_ph ?? old("ref_ph")}}" @if(($procurement->ref_ph ?? old("ref_ph"))) disabled @endif name="ref_ph">
+                <div class="fv-plugins-message-container invalid-feedback"></div>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label class="d-flex align-items-center fs-6 form-label mb-2" for="requester">
+                    <span class="required fw-bold">Requester</span>
+                </label>
+                <select class="drop-data form-select form-select-solid"
+                    data-control="requester" required
+                    name="requester" id="requester" @if (($procurement->requester ?? old('requester')))
+                        disabled
+                    @endif>
+                    @if (($procurement->requester ?? old('requester')) == null)
+                        <option value="" selected hidden disabled>Select Requester
+                        </option>
+                    @endif
+                    @if (($procurement->requester ?? old('requester')) == null)
+                        @foreach ($users as $data)
+                            <option value="{{ $data->id }}"
+                                @if (($procurement->requester  ?? old('requester ')) == $data->id) selected @endif>
+                                {{ $data->name }}</option>
+                        @endforeach
+                    @else
+                        <option>{{$procurement->requesterUser->name}}</option>
+                    @endif
+                </select>
+                <div class="fv-plugins-message-container invalid-feedback"></div>
+            </div>
+            <div class="col-lg-4 mb-3" id="customer_input">
+                <label class="d-flex align-items-center fs-6 form-label mb-2" for="customer">
+                    <span class="required fw-bold">Customer</span>
+                </label>
+                <input type="text" id="customer" class="form-control form-control-solid"
+                    placeholder="Nama Calon Pelanggan" required value="{{$procurement->customer ?? old("customer")}}" @if(($procurement->customer ?? old("customer"))) disabled @endif name="customer">
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label class="d-flex align-items-center fs-6 form-label mb-2"
+                    for="request_date">
+                    <span class="required fw-bold">Tanggal Request</span>
+                </label>
+                <input type="date" id="request_date"
+                    class="form-control form-control-solid" required value="{{$procurement->request_date ?? old("request_date")}}" @if(($procurement->request_date ?? old("request_date"))) disabled @endif name="request_date">
+                <div class="fv-plugins-message-container invalid-feedback"></div>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label class="d-flex align-items-center fs-6 form-label mb-2"
+                    for="delivery_location">
+                    <span class="required fw-bold">Lokasi Pengiriman</span>
+                </label>
+                <input type="text" id="delivery_location"
+                    class="form-control form-control-solid" placeholder="Lokasi Pengiriman"
+                    required value="{{$procurement->delivery_location ?? old("delivery_location")}}" @if(($procurement->delivery_location ?? old("delivery_location"))) disabled @endif name="delivery_location">
+                <div class="fv-plugins-message-container invalid-feedback"></div>
+            </div>
         </div>
         <hr class="my-10">
         @if (($procurement->itemable_bill_of_quantity_id ?? old('itemable_bill_of_quantity_id')) == null)
-            <div class="col-lg-6 mb-9">
+            <div class="col-lg-6">
                 <h4>Item From BOQ</h4>
             </div>
             <div class="col-lg-12">
-                <div class="table-responsive mt-10">
+                <div class="table-responsive">
                     <table class="table align-top table-striped border table-rounded gy-5"
                         id="kt_table_item">
                         <thead class="">
@@ -318,6 +345,36 @@
         @endif
     </div>
     <script>
+        @if (!($procurement->itemable_bill_of_quantity_id  ?? old('itemable_bill_of_quantity_id ')))
+            $("#type").change(function() {
+                var type = $(this).val()
+                if (type == "Inventory") {
+                    $("#customer_input").find("input").remove();
+                    $("#customer_input").append(`
+                    <select id="select_customer" class="drop-data form-select form-select-solid" data-control="select2" required name="customer" data-dropdown-parent="#kt_modal_edit_lead">
+                        <option value="" selected hidden disabled>Select Warehouse</option>
+                        @foreach ($dataWarehouse as $warehouse)
+                            <option value="{{$warehouse->name}}" data-id="{{$warehouse->id}}">{{$warehouse->name}}</option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" name="warehouse_id" id="warehouse_id">
+                    `)
+
+                    $("#select_customer").change(function() {
+                        var id = $("#select_customer option:selected").data("id")
+                        console.log($(this), id);
+                        $("#warehouse_id").val(id)
+                    })
+                } else {
+                    $("#customer_input").find("select").remove();
+                    $("#customer_input").find("input").remove();
+                    $("#customer_input").append(`
+                    <input type="text" id="customer" class="form-control form-control-solid"
+                        placeholder="Nama Calon Pelanggan" required value="{{$procurement->customer ?? old("customer")}}" @if(($procurement->customer ?? old("customer"))) disabled @endif name="customer">
+                    `)
+                }
+            })
+        @endif
         function getDetail(id) {
             $.ajax({
                 url: "{{ route('com.procurement.getDetailItem') }}",

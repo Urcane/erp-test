@@ -59,11 +59,11 @@
                         <div class="card-body">
                             <div class="row">
                                 @include("cmt-opportunity.procurement.form-procurement-item-part.basic-form")
-                                <div class="col-lg-6 mb-9">
+                                <div class="col-lg-6">
                                     <h4>Item From BOQ</h4>
                                 </div>
                                 <div class="col-lg-12">
-                                    <div class="table-responsive mt-10">
+                                    <div class="table-responsive">
                                         <table class="table align-top table-striped border table-rounded gy-5"
                                             id="kt_table_item">
                                             <thead class="">

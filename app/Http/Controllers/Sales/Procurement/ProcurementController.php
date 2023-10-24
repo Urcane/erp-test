@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sales\Procurement;
 
 use App\Constants;
 use App\Http\Controllers\Controller;
+use App\Models\Inventory\Warehouse;
 use App\Models\Opportunity\BoQ\Item;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\BoQ\ItemStatus;
@@ -63,8 +64,9 @@ class ProcurementController extends Controller
             $query->whereColumn('fulfilled', '<', 'quantity');
         })->with('itemable')->get();
         $users = User::all();
+        $dataProcurementType = $this->constants->procurement_type;
 
-        return view("cmt-opportunity.procurement.detail-procurement", compact("procurement", "boq", "users"));
+        return view("cmt-opportunity.procurement.detail-procurement", compact("procurement", "boq", "users", "dataProcurementType"));
     }
 
     public function getTableItemProcurement(Request $request) {
@@ -144,6 +146,17 @@ class ProcurementController extends Controller
         ], 201);
     }
 
+    public function create() {
+        $boq = ItemableBillOfQuantity::whereHas('itemable', function ($query) {
+            $query->whereColumn('fulfilled', '<', 'quantity');
+        })->with('itemable')->get();
+        $users = User::all();
+        $dataWarehouse = Warehouse::all();
+        $dataProcurementType = $this->constants->procurement_type;
+
+        return view('cmt-opportunity.procurement.form-procurement', compact("boq", "users", "dataProcurementType", "dataWarehouse"));
+    }
+
     public function storeProcurement(Request $request) {
         $request->validate([
             "itemable_bill_of_quantity_id" => "required",
@@ -157,12 +170,13 @@ class ProcurementController extends Controller
         ]);
 
         try {
-
             DB::transaction(function () use ($request) {
                 $procurement = Procurement::create([
                     "itemable_bill_of_quantity_id" => $request->itemable_bill_of_quantity_id,
                     "work_list_id" => $request->work_list_id,
-                    "type" => $request->type ?? "Customer",
+                    "warehouse_id" => $request->warehouse_id,
+                    "type" => $request->type,
+                    "allocation" => $request->allocation,
                     "delivery_location" => $request->delivery_location,
                     "no_pr" => $request->no_pr,
                     "ref_po_spk_pks" => $request->ref_po_spk_pks,
@@ -209,20 +223,12 @@ class ProcurementController extends Controller
         return ItemStatus::where("item_id", $request->id)->get();
     }
 
-    public function create() {
-        $boq = ItemableBillOfQuantity::whereHas('itemable', function ($query) {
-            $query->whereColumn('fulfilled', '<', 'quantity');
-        })->with('itemable')->get();
-        $users = User::all();
-
-        return view('cmt-opportunity.procurement.form-procurement', compact("boq", "users"));
-    }
-
     public function detailItemProcurement($id) {
         $procurementItem = ProcurementItem::whereId($id)->with("procurementItemStatus", "inventoryGood", "procurementItemPayment")->first();
         // $inventory =
         array_shift($this->constants->item_status);
         $dataStatus = $this->constants->item_status;
+
         return view("cmt-opportunity.procurement.detail-item-procurement", compact("procurementItem", "dataStatus"));
     }
 

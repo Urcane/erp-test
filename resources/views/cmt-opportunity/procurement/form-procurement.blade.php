@@ -23,7 +23,7 @@
                                     <a href="{{ url()->previous() }}" class="fw-bold"><i class="fa-solid fa-arrow-left "></i> Back</a>
                                 </div>
                                 <div class="col-lg-10 text-center mb-9">
-                                    <span class="fs-1 fw-bolder text-dark d-block mb-1">Add New Customer Request</span>
+                                    <span class="fs-1 fw-bolder text-dark d-block mb-1">Add New Procurement</span>
                                 </div>
 
                                 <form action="" id="form_procurement">

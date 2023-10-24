@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\ProjectManagement;
 
+use App\Constants;
 use App\Http\Controllers\Controller;
+use App\Models\Inventory\Warehouse;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Procurement\Procurement;
 use App\Models\ProjectManagement\WorkList;
@@ -12,6 +14,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ProcurementController extends Controller
 {
+    private $constants;
+
+    public function __construct()
+    {
+        $this->constants = new Constants();
+    }
+
     public function index($work_list_id)
     {
         return view('cmt-promag.pages.procurement', compact('work_list_id'));
@@ -48,7 +57,9 @@ class ProcurementController extends Controller
             $query->whereColumn('fulfilled', '<', 'quantity');
         })->whereId($workList->itemable_bill_of_quantity_id)->with('itemable')->get();
         $users = User::all();
+        $dataProcurementType = $this->constants->procurement_type;
+        $dataWarehouse = Warehouse::all();
 
-        return view('cmt-opportunity.procurement.form-procurement', compact("boq", "users", "workList"));
+        return view('cmt-opportunity.procurement.form-procurement', compact("boq", "users", "workList", "dataProcurementType", "dataWarehouse"));
     }
 }

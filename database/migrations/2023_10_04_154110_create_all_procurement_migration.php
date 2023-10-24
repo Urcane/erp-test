@@ -25,7 +25,9 @@ class CreateAllProcurementMigration extends Migration
             $table->id();
             $table->foreignId('itemable_bill_of_quantity_id')->constrained('itemable_bill_of_quantities');
             $table->foreignId('work_list_id')->nullable()->constrained('work_lists');
-            $table->enum("type", ["Customer", "Internal"]);
+            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses');
+            $table->enum("type", $this->constants->procurement_type);
+            $table->string('allocation');
             $table->string('delivery_location');
             $table->string("no_pr");
             $table->string("ref_po_spk_pks")->nullable();

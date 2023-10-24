@@ -139,6 +139,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get("{work_list_id}/procurement/table", 'dataTableProcurement')->name('com.promag.procurement.datatable');
             Route::get("{workList}/procurement/create", 'create')->name('com.promag.procurement.create');
         });
+        Route::controller(App\Http\Controllers\ProjectManagement\ActivityController::class)->group(function () {
+            Route::get("{work_list_id}/activity", 'index')->name('com.promag.activity');
+        });
     });
 
     Route::controller(SurveyController::class)->group(function () {

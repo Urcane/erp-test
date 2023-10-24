@@ -17,6 +17,9 @@ class Constants
     ]; // [0] as default, [1] always be for personal, sick, etc
 
     // database related
+    // procurement {
+        public $procurement_type = ["Customer", "Internal", "Inventory"];
+    // }
     // item {
         public $item_status = [
             "Create Procurement",

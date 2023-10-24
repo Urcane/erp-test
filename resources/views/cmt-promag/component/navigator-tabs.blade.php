@@ -41,15 +41,15 @@
             Files
         </a>
     </li>
-    {{-- <li class="nav-item">
+    <li class="nav-item">
         <a
-            class="nav-link text-active-primary py-5 me-6"
-            href="https://preview.keenthemes.com/metronic8/demo30/../demo30/apps/projects/activity.html"
+            class="nav-link text-active-primary py-5 me-6 {{url()->current() == route('com.promag.activity', ['work_list_id' => $work_list_id]) ? 'active' : ''}}"
+            href="{{route('com.promag.activity', ['work_list_id' => $work_list_id])}}"
         >
             Activity
         </a>
     </li>
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a
             class="nav-link text-active-primary py-5 me-6"
             href="https://preview.keenthemes.com/metronic8/demo30/../demo30/apps/projects/settings.html"
