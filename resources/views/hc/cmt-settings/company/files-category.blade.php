@@ -186,6 +186,7 @@
                 'X-CSRF-TOKEN': "{{csrf_token()}}"
             },
             success: function(data) {
+                $('#file_category').modal('hide');
                 dataTableFileCategory.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },

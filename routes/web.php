@@ -355,7 +355,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::prefix('holiday')->group(function () {
                         Route::get('/', 'index')->name('hc.setting.holiday.index');
                         Route::get('/table', 'getTable')->name('hc.setting.holiday-get-table');
-                        Route::post('/create/update', 'createUpdate')->name('hc.setting.holiday.createUpdate');
+                        Route::post('/create', 'create')->name('hc.setting.holiday.create');
+                        Route::post('/update', 'update')->name('hc.setting.holiday.update');
                         Route::post('/delete', 'destroy')->name('hc.setting.holiday.delete');
                     });
                 });

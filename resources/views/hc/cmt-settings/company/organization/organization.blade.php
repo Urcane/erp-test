@@ -308,6 +308,7 @@
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
                     success: function(data) {
+                        $('#modal_create_organization').modal('hide');
                         dataTableOrganization.ajax.reload();
                         toastr.success(data.message, 'Selamat 🚀 !');
                     },

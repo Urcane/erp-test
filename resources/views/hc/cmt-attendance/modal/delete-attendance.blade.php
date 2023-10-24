@@ -17,21 +17,21 @@
                             <input type="hidden" name="id" id="delete_attendance_id">
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Nama User</span>
+                                    <span class="fw-bold">Nama User</span>
                                 </label>
                                 <input type="text" class="form-control form-control-solid" id="delete_name" disabled>
                             </div>
 
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Tanggal Attendance</span>
+                                    <span class="fw-bold">Tanggal Attendance</span>
                                 </label>
                                 <input type="text" class="form-control form-control-solid" id="delete_date" disabled>
                             </div>
 
                             <div class="col-lg-6 mt-3 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Check In</span>
+                                    <span class="fw-bold">Check In</span>
                                 </label>
                                 <input type="time" class="form-control form-control-solid"
                                     placeholder="Select Date" id="delete_check_in" disabled>
@@ -39,7 +39,7 @@
 
                             <div class="col-lg-6 mt-3 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Check Out</span>
+                                    <span class="fw-bold">Check Out</span>
                                 </label>
                                 <input type="time" class="form-control form-control-solid"
                                     placeholder="Select Date" id="delete_check_out" disabled>
@@ -56,8 +56,7 @@
                     <div class="text-center mt-9">
                         <button type="reset" id="modal_attendance_delete_modal_cancel"
                             class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" id="modal_attendance_delete_modal_submit" class="btn btn-sm btn-info w-lg-200px"
-                            data-bs-dismiss="modal">
+                        <button type="submit" id="modal_attendance_delete_modal_submit" class="btn btn-sm btn-info w-lg-200px">
                             <span class="indicator-label">Hapus</span>
                         </button>
                     </div>

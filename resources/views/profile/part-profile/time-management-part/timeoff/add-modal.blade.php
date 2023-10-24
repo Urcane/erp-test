@@ -141,7 +141,7 @@
             } = leaveRequestCategory.find(({ id }) => id == $(this).val());
 
             if (attachment) {
-                $('[name="file"]').prop('required', true);
+                $('#modal_create_time_off_request [name="file"]').prop('required', true);
                 $('#file_label').addClass('required');
                 $('#attachment').fadeIn();
             } else {
@@ -169,17 +169,17 @@
                 $('#working_start_box').trigger('change');
                 $('#working_end_box').prop('checked', false);
                 $('#working_end_box').trigger('change');
-                $('[name="date"]').prop('required', true);
-                $('[name="start_date"]').prop('required', false);
+                $('#modal_create_time_off_request [name="date"]').prop('required', true);
+                $('#modal_create_time_off_request [name="start_date"]').prop('required', false);
                 $('#date_section [name="end_date"]').prop('required', false);
 
                 if (min_notice) {
-                    $('[name="date"]').attr('min', moment().add(min_notice, 'days').format('YYYY-MM-DD'));
+                    $('#modal_create_time_off_request [name="date"]').attr('min', moment().add(min_notice, 'days').format('YYYY-MM-DD'));
                     $('#min_notice_warn').fadeIn();
                     $('#min_notice_amount').text(min_notice);
                 } else {
                     $('#min_notice_warn').hide();
-                    $('[name="date"]').removeAttr('min');
+                    $('#modal_create_time_off_request [name="date"]').removeAttr('min');
                 }
 
                 $('#duration_warn').hide();
@@ -190,8 +190,8 @@
                 $('#working_start_box').trigger('change');
                 $('#working_end_box').prop('checked', false);
                 $('#working_end_box').trigger('change');
-                $('[name="date"]').prop('required', false);
-                $('[name="start_date"]').prop('required', true);
+                $('#modal_create_time_off_request [name="date"]').prop('required', false);
+                $('#modal_create_time_off_request [name="start_date"]').prop('required', true);
                 $('#date_section [name="end_date"]').prop('required', true);
 
                 if (minus_amount) {
@@ -201,12 +201,12 @@
                 }
 
                 if (min_notice) {
-                    $('[name="start_date"]').attr('min', moment().add(min_notice, 'days').format('YYYY-MM-DD'));
+                    $('#modal_create_time_off_request [name="start_date"]').attr('min', moment().add(min_notice, 'days').format('YYYY-MM-DD'));
                     $('#min_notice_warn').fadeIn();
                     $('#min_notice_amount').text(min_notice);
                 } else {
                     $('#min_notice_warn').hide();
-                    $('[name="start_date"]').removeAttr('min');
+                    $('#modal_create_time_off_request [name="start_date"]').removeAttr('min');
                 }
 
                 if (duration) {
@@ -214,7 +214,7 @@
                     $('#duration_amount').text(duration);
                     $('#date_section [name="end_date"]').attr('disabled', true);
 
-                    $('[name="start_date"]').on("change", function() {
+                    $('#modal_create_time_off_request [name="start_date"]').on("change", function() {
                         let date = moment($(this).val());
                         date = date.add(duration, 'days').format('YYYY-MM-DD');
 
@@ -222,7 +222,7 @@
                     });
                 } else {
                     $('#duration_warn').hide();
-                    $('[name="start_date"]').off("change");
+                    $('#modal_create_time_off_request [name="start_date"]').off("change");
                     $('#date_section [name="end_date"]').attr('disabled', false);
                 }
             }
@@ -230,7 +230,7 @@
             $('#modal_create_time_off_request input').val('');
         });
 
-        $('select[name="leave_request_category_id"]').trigger('change');
+        $('#modal_create_time_off_request select[name="leave_request_category_id"]').trigger('change');
 
         $('#working_start_box').on('change', function() {
             if ($(this).is(':checked')) {

@@ -4,17 +4,31 @@
 </button>
 <ul class="dropdown-menu">
     <li>
-        <div class="btn-edit" onclick="">
-            <a href="#modal_create_schedule" data-bs-toggle="modal" class="dropdown-item py-2">
+        <div
+            onclick="onEditModalOpen({
+            id: '{{ $query->id }}',
+            name: '{{ $query->name }}',
+            start_date: '{{ $query->start_date }}',
+            end_date: '{{ $query->end_date }}',
+        })">
+            <a href="#modal_edit_holiday" data-bs-toggle="modal" class="dropdown-item py-2">
                 <i class="fa-solid fa-pen me-3"></i>
                 Edit
             </a>
         </div>
     </li>
     <li>
-        <button onclick="" class="dropdown-item py-2">
-            <i class="fa-solid fa-trash me-3"></i>
-            Delete
-        </button>
+        <div
+            onclick="onDeleteModalOpen({
+            id: '{{ $query->id }}',
+            name: '{{ $query->name }}',
+            start_date: '{{ $query->start_date }}',
+            end_date: '{{ $query->end_date }}',
+        })">
+            <a href="#modal_delete_holiday" data-bs-toggle="modal" class="dropdown-item py-2">
+                <i class="fa-solid fa-trash me-3"></i>
+                Delete
+            </a>
+        </div>
     </li>
 </ul>

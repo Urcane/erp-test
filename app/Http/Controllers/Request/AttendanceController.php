@@ -29,6 +29,9 @@ class AttendanceController extends RequestController
                 "file" => "nullable",
                 "check_in" => "nullable|date_format:H:i|required_without_all:check_out",
                 "check_out" => "nullable|date_format:H:i|required_without_all:check_in",
+            ], [
+                "check_in.required_without_all" => "Check in atau check out harus diisi",
+                "check_out.required_without_all" => "Check in atau check out harus diisi",
             ]);
 
             $userEmployment = Auth::user()->userEmployment;
