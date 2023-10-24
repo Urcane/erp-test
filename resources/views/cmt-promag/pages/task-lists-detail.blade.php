@@ -148,7 +148,7 @@
                                                 <span>{{$attachment->name}}</span> <br>
                                             </div>
                                             <div>
-                                                <a href="{{explode("public/", asset($attachment->path))[0] . "storage/" . explode("public/", asset($attachment->path))[1]}}" class="btn btn-primary btn-sm" target="_blank">
+                                                <a href="{{str_replace("public/", "storage/", asset($attachment->path))}}" class="btn btn-primary btn-sm" target="_blank">
                                                     <i class="fa-solid fa-file-invoice"></i> File
                                                 </a>
                                             </div>

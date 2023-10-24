@@ -115,8 +115,6 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/detail/{work_list_id}/users/{user_id}', 'revokeWorklistAssignedUsers')->name('com.promag.detail.delete.users');
             Route::get('/detail/{work_list_id}/getAllUsers', 'getAllUserFiltered')->name('com.promag.detail.getAllUsers');
             Route::post('/detail/{work_list_id}/assignUser', 'assignUser')->name('com.promag.detail.store.users');
-            Route::get('/detail/{work_list_id}/files', 'files')->name('com.promag.detail.files');
-
 
             Route::post('/work-order/approve', 'approveWorkOrder')->name('com.work-order.approve');
             Route::post('/work-order/store', 'createWorkOrderSurvey')->name('com.work-order-survey.store');
@@ -143,6 +141,11 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::controller(App\Http\Controllers\ProjectManagement\ActivityController::class)->group(function () {
             Route::get("{work_list_id}/activity", 'index')->name('com.promag.activity');
+        });
+        Route::controller(App\Http\Controllers\ProjectManagement\FileController::class)->group(function () {
+            Route::get("{work_list_id}/file", 'index')->name('com.promag.file');
+            Route::post("{work_list_id}/file/create", 'createFile')->name('com.promag.file.create');
+            Route::post("{work_list_id}/file/delete", 'deleteFile')->name('com.promag.file.delete');
         });
     });
 

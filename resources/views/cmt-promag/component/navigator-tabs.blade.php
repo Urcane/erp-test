@@ -35,8 +35,8 @@
     </li> --}}
     <li class="nav-item">
         <a
-            class="nav-link text-active-primary py-5 me-6 {{url()->current() == route('com.promag.detail.files', ['work_list_id' => $work_list_id]) ? 'active' : ''}}"
-            href="{{route('com.promag.detail.files', ['work_list_id' => $work_list_id])}}"
+            class="nav-link text-active-primary py-5 me-6 {{url()->current() == route('com.promag.file', ['work_list_id' => $work_list_id]) ? 'active' : ''}}"
+            href="{{route('com.promag.file', ['work_list_id' => $work_list_id])}}"
         >
             Files
         </a>

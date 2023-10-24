@@ -166,11 +166,6 @@ class ProjectManagementController extends Controller
         return view('cmt-promag.pages.overview', compact("work_list_id"));
     }
 
-    public function files(Request $request)
-    {
-        return view('cmt-promag.pages.files');
-    }
-
     function createWorkOrderSurvey(WorkOrderRequest $request) : JsonResponse {
         try {
             $result = $this->workOrderService->storeWorkOrderSurvey($request);
