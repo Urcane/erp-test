@@ -45,7 +45,7 @@ class HolidayController extends TimeManagementController
         }
     }
 
-    public function createUpdate(Request $request) {
+    public function create(Request $request) {
         try {
             $request->validate([
                 "name" => 'required',
@@ -70,8 +70,48 @@ class HolidayController extends TimeManagementController
         }
     }
 
-    public function destroy(Request $request) {
+    public function update(Request $request) {
+        try {
+            $request->validate([
+                "id" => 'required|exists:global_day_offs,id',
+                "name" => 'required',
+                "start_date" => 'required',
+                "end_date" => 'required'
+            ]);
 
+            GlobalDayOff::where('id', $request->id)->update([
+                "name" => $request->name,
+                "start_date" => $request->start_date,
+                "end_date" => $request->end_date
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil mengubah Hari Libur"
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
+    public function destroy(Request $request) {
+        try {
+            $request->validate([
+                "id" => 'required|exists:global_day_offs,id'
+            ]);
+
+            GlobalDayOff::where('id', $request->id)->delete();
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil menghapus Hari Libur"
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
 }

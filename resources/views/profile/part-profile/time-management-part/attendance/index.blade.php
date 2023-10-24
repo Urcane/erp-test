@@ -249,6 +249,7 @@
                     id: $('#attendance-request-id').val(),
                 },
                 success: function(data) {
+                    $('#attendance_request_modal').modal('hide');
                     attendanceTable.draw();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },

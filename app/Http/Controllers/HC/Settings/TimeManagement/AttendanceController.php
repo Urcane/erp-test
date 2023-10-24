@@ -90,67 +90,73 @@ class AttendanceController extends Controller
     }
 
     public function createUpdateSchedule(Request $request) {
-        $request->validate([
-            "name" => "required",
-            "effective_date" => "required",
-            "shift_id" => "required",
-        ]);
-
-        DB::transaction(function () use ($request) {
-            $workingSchedule = WorkingSchedule::updateOrCreate([
-                "id" => $request->id,
-            ], [
-                'name' => $request->name,
-                "effective_date" => $request->effective_date,
-                "override_national_holiday" => $request->override_national_holiday,
-                "override_company_holiday" => $request->override_company_holiday,
-                "override_special_holiday" => $request->override_special_holiday,
+        try {
+            $request->validate([
+                "name" => "required",
+                "effective_date" => "required",
+                "shift_id" => "required",
             ]);
 
-
-            $count = WorkingScheduleShift::orderBy('id','desc')->first()->id;
-            $next = $count + 2;
-
-            if ($request->shift_id && $request->id == null) {
-
-                foreach ($request->shift_id as $shift) {
-                    WorkingScheduleShift::create([
-                        'working_schedule_id' => $workingSchedule->id,
-                        'working_shift_id' => $shift["shift_id"],
-                        "next" => $next,
-                    ]);
-
-                    $next++;
-                    if($next > $count + count($request->shift_id)) $next = $count+1;
-                }
-            }
-
-            $workingScheduleShifts = $workingSchedule->workingScheduleShifts;
-            $workingScheduleShiftCount = $workingScheduleShifts->count();
-            if (count($request->shift_id) > $workingScheduleShiftCount) {
-                $workingScheduleShifts->last()->update([
-                    "next" => $next - 1
+            DB::transaction(function () use ($request) {
+                $workingSchedule = WorkingSchedule::updateOrCreate([
+                    "id" => $request->id,
+                ], [
+                    'name' => $request->name,
+                    "effective_date" => $request->effective_date,
+                    "override_national_holiday" => $request->override_national_holiday,
+                    "override_company_holiday" => $request->override_company_holiday,
+                    "override_special_holiday" => $request->override_special_holiday,
                 ]);
 
-                $newShift = array_slice($request->shift_id, $workingScheduleShiftCount);
-                foreach ($newShift as $shift) {
-                    if($next > $count + count($newShift)) $next = $workingScheduleShifts->first()->id;
 
-                    WorkingScheduleShift::create([
-                        'working_schedule_id' => $workingSchedule->id,
-                        'working_shift_id' => $shift["shift_id"],
-                        "next" => $next,
+                $count = WorkingScheduleShift::orderBy('id','desc')->first()->id;
+                $next = $count + 2;
+
+                if ($request->shift_id && $request->id == null) {
+
+                    foreach ($request->shift_id as $shift) {
+                        WorkingScheduleShift::create([
+                            'working_schedule_id' => $workingSchedule->id,
+                            'working_shift_id' => $shift["shift_id"],
+                            "next" => $next,
+                        ]);
+
+                        $next++;
+                        if($next > $count + count($request->shift_id)) $next = $count+1;
+                    }
+                }
+
+                $workingScheduleShifts = $workingSchedule->workingScheduleShifts;
+                $workingScheduleShiftCount = $workingScheduleShifts->count();
+                if (count($request->shift_id) > $workingScheduleShiftCount) {
+                    $workingScheduleShifts->last()->update([
+                        "next" => $next - 1
                     ]);
 
-                    $next++;
-                }
-            }
+                    $newShift = array_slice($request->shift_id, $workingScheduleShiftCount);
+                    foreach ($newShift as $shift) {
+                        if($next > $count + count($newShift)) $next = $workingScheduleShifts->first()->id;
 
-            return response()->json([
-                'status' => "success",
-                'message' => "Data berhasil disimpan",
-            ], 200);
-        });
+                        WorkingScheduleShift::create([
+                            'working_schedule_id' => $workingSchedule->id,
+                            'working_shift_id' => $shift["shift_id"],
+                            "next" => $next,
+                        ]);
+
+                        $next++;
+                    }
+                }
+
+                return response()->json([
+                    'status' => "success",
+                    'message' => "Data berhasil disimpan",
+                ], 200);
+            });
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function updateShiftFromSchedule(Request $request) {

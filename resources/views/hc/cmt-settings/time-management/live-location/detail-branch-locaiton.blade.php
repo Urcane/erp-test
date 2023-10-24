@@ -126,7 +126,7 @@
             if (openPopup) {
                 marker.bindPopup('You are here!').openPopup();
             }
-            map.setView([lat, lng], 13);
+            map.setView([lat, lng], 20);
 
             $('#latitude').val(lat);
             $('#longitude').val(lng);
@@ -139,7 +139,9 @@
         })
 
         $(document).ready(function() {
-            map = L.map('map').setView([-1.2495105, 116.8749959], 7);
+            var existingCircle = null;
+            let circleCenter = null;
+            map = L.map('map').setView([-1.2495105, 116.8749959], 14);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
@@ -190,7 +192,32 @@
                 let latitude = e.latlng.lat.toFixed(6);
                 let longitude = e.latlng.lng.toFixed(6);
 
+                if (existingCircle) {
+                    map.removeLayer(existingCircle);
+                }
+
+                circleCenter = [latitude, longitude];
+                existingCircle = L.circle([latitude, longitude], {
+                    color: 'orange',
+                    fillColor: 'orange',
+                    fillOpacity: 0.2,
+                    radius: $('[name="radius"]').val() ? $('[name="radius"]').val() : 0
+                }).addTo(map);
+
                 addMarker(latitude, longitude, false);
+            });
+
+            $('[name="radius"]').on('keyup', function() {
+                if (existingCircle) {
+                    map.removeLayer(existingCircle);
+                }
+
+                existingCircle = L.circle(circleCenter, {
+                    color: 'orange',
+                    fillColor: 'orange',
+                    fillOpacity: 0.2,
+                    radius: $('[name="radius"]').val() ? $('[name="radius"]').val() : 0
+                }).addTo(map);
             });
 
             $('#myModal').on('show.bs.modal', function() {
@@ -330,6 +357,7 @@
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
                     success: function(data) {
+                        $('#modal_location').modal('hide');
                         dataTableLocation.ajax.reload();
                         toastr.success(data.message, 'Selamat 🚀 !');
                     },

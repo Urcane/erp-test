@@ -292,16 +292,16 @@
 
 
             let content = $(`<tr id="shift-${shift.id}-edit">
-                                <td>
-                                    <select class="form-select select-shift" data-id="${data.id}" data-shift-id="${shift.id}" data-id-db="${data.id}">
-                                    </select>
-                                </td>
-                                <td id="working_hour_${shift.id}">${working_start +" - "+ working_end}</td>
-                                <td id="break_${shift.id}">${break_start +" - "+ break_end}</td>
-                                <td id="ot_before_${shift.id}">${ot_before}</td>
-                                <td id="ot_after_${shift.id}">${ot_after}</td>
-                                <td onclick="removeShiftComponent('#shift-${shift.id}-edit')" data-id="${shift.id}" data-working-schedule="${id}"><i class="fa-solid fa-circle-minus"></i></td>
-                            </tr>`);
+                <td>
+                    <select class="form-select select-shift" data-id="${data.id}" data-shift-id="${shift.id}" data-id-db="${data.id}">
+                    </select>
+                </td>
+                <td id="working_hour_${shift.id}">${working_start +" - "+ working_end}</td>
+                <td id="break_${shift.id}">${break_start +" - "+ break_end}</td>
+                <td id="ot_before_${shift.id}">${ot_before}</td>
+                <td id="ot_after_${shift.id}">${ot_after}</td>
+                <td onclick="removeShiftComponent('#shift-${shift.id}-edit')" data-id="${shift.id}" data-working-schedule="${id}"><i class="fa-solid fa-circle-minus"></i></td>
+            </tr>`);
             $("#table-shift").append(content);
             $(`select[data-id="${data.id}"]`).append(option)
 
@@ -520,6 +520,7 @@
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
                 success: function(data) {
+                    $('#modal_create_schedule').modal('hide');
                     dataTableSchedule.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },
@@ -528,6 +529,8 @@
                     toastr.error(data.message, 'Opps!');
                 }
             });
+        } else {
+            toastr.error("Shift tidak boleh kosong", 'Opps!');
         }
 
     });
