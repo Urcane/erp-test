@@ -13,17 +13,6 @@ class CreateAllSurveyMigrationTable extends Migration
      */
     public function up()
     {
-        Schema::create('files', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->index();
-            $table->morphs('fileable');
-            $table->string('additional')->nullable()->index();
-            $table->string('path')->index();
-            $table->foreignId('user_id')->constrained();
-            $table->softDeletes()->index();
-            $table->timestamps();
-        });
-
         Schema::create('service_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');

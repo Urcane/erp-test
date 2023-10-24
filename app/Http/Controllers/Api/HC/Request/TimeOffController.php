@@ -191,7 +191,7 @@ class TimeOffController extends RequestController
 
         collect($schedule["takenDates"])->map(function ($data) use (
             $userId,
-            $leaveCategoryCode,
+            $leaveCategoryCode
         ) {
             $this->_updateAttendance(
                 $userId,
