@@ -194,6 +194,21 @@
                                                             </div>
                                                         </div>
                                                     @endcan
+                                                    {{-- @can('FIN:view-inventory') --}}
+                                                        <div class="col-lg-6">
+                                                            <div class="menu-item p-0 m-0">
+                                                                <a href="{{route('fin.inv.dashboard')}}" class="menu-link">
+                                                                    <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                        <i class="fa-solid fa-file-invoice-dollar text-success fs-3"></i>
+                                                                    </span>
+                                                                    <span class="d-flex flex-column">
+                                                                        <span class="fs-6 fw-bold text-dark">Billing</span>
+                                                                        <span class="fs-7 fw-semibold text-gray-500">Data Penagihan</span>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    {{-- @endcan --}}
                                                 </div>
                                             </div>
                                         </div>
