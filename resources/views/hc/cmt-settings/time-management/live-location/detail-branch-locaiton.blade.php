@@ -38,6 +38,13 @@
                             data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
                             data-kt-scroll-dependencies="#modal_create_job_position_header"
                             data-kt-scroll-wrappers="#modal_create_job_position_scroll" data-kt-scroll-offset="300px">
+                            <div class="col-lg-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class="required fw-bold">Name</span>
+                                </label>
+                                <input type="text" class="form-control form-control-solid" placeholder="name" required
+                                    name="name">
+                            </div>
                             <div class="row mb-9">
                                 <div class="col-lg-12 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -93,6 +100,7 @@
                                         <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                             {{-- <th class="text-center w-50px">#</th> --}}
                                             <th class="text-center w-50px">#</th>
+                                            <th class="w-150px">name</th>
                                             <th class="w-150px">latitude</th>
                                             <th class="w-150px">longitude</th>
                                             <th class="w-150px">Radius</th>
@@ -319,6 +327,9 @@
                         data: 'DT_RowIndex'
                     },
                     {
+                        data: 'name'
+                    },
+                    {
                         data: 'latitude'
                     },
                     {
@@ -337,7 +348,7 @@
                         className: 'text-center',
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         orderable: false,
                         searchable: false,
                         className: 'text-center',

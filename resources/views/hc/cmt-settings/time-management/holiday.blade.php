@@ -21,7 +21,7 @@
             </div>
             <div class="modal-body mx-5 mx-lg-15 mb-7">
                 <form id="form_create_holiday" class="form fv-plugins-bootstrap5 fv-plugins-framework"
-                    enctype="multipart/form-data" autocomplete="false">
+                    enctype="multipart/form-data" autocomplete="off">
                     <input type="hidden" name="id" value="">
                     <div class="scroll-y me-n10 pe-10" id="modal_create_time_off_scroll" data-kt-scroll="true"
                         data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"

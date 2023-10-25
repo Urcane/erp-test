@@ -44,7 +44,7 @@ class CreateAllEmployee extends Migration
             $table->string("province", 30);
             $table->longText("address");
             $table->integer("umr")->nullable();
-            $table->string("npwp", 20);
+            $table->string("npwp", 30);
             $table->string("tax_name");
             $table->string("tax_person_npwp");
             $table->string("tax_person_name");
@@ -58,6 +58,7 @@ class CreateAllEmployee extends Migration
         Schema::create('branch_locations', function (Blueprint $table) {
             $table->id();
             $table->foreignId("sub_branch_id")->nullable()->constrained("sub_branches");
+            $table->string("name", 100);
             $table->string("latitude", 50);
             $table->string("longitude", 50);
             $table->integer("radius")->default(40); // meter
