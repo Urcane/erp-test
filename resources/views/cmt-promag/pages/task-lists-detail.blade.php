@@ -193,7 +193,21 @@
 
 
 <script>
-    ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic'))
+    ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic'), {
+        toolbar: ['ckfinder', 'bold', 'italic', '|', 'undo', 'redo', '-', 'numberedList', 'bulletedList'],
+        shouldNotGroupWhenFull: false,
+        ckfinder: {
+            connectorHeaders: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                'X-Requested-With': 'XMLHttpRequest' // Set header X-Requested-With
+            },
+            uploadUrl: '/promag/{{$work_list_id}}/task-lists/store-pic',
+            options: {
+                resourceType: 'Images'
+            },
+            openerMethod: 'popup',
+        }
+    })
     .then(editor => {
         console.log(editor);
     })
