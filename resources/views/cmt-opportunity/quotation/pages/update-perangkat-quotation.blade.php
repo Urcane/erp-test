@@ -549,7 +549,7 @@
                             // Handle the response from the server, e.g., show a success message
                             toastr.success(response.message);
                             setTimeout(() => {
-                                window.location.href = `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
+                                window.location.href = `quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
                             }, 800);
                         },
                         error: function(error) {

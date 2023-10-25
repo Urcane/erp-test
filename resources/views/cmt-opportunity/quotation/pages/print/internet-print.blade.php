@@ -56,7 +56,7 @@
             </div>
             <div class="h-425px"></div>
             <div class="col-12">
-                <p>Link Reference to Bill Of Quantity, <a href="{{ url("cmt-boq/review-done-boq?boq_id=". $dataQuotation->boq_id) }}">Click Here</a></p>
+                <p>Link Reference to Bill Of Quantity, <a href="{{ url("boq/review-done-boq?boq_id=". $dataQuotation->boq_id) }}">Click Here</a></p>
                 <table class="table table-bordered border">
                     <thead class="thead bg-warning border">
                         <tr class="border">

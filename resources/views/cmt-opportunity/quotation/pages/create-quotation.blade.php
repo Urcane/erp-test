@@ -898,7 +898,7 @@
                             console.log(response);
                             setTimeout(() => {
                                 window.location.href =
-                                    `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
+                                    `quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
                             }, 800);
                         },
                         error: function(error) {

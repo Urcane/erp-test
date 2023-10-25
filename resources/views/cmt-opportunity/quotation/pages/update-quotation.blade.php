@@ -921,7 +921,7 @@
                             console.log(response);
                             setTimeout(() => {
                                 window.location.href =
-                                    `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
+                                    `quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
                             }, 800);
                         },
                         error: function(error) {
@@ -954,7 +954,7 @@
                     ajaxLink: "{{ route('com.quotation.store.po') }}",
                     successCallback: function(response) {
                         // Redirect ke halaman yang sesuai setelah operasi berhasil
-                        window.location.href = `{!! url("cmt-quotation/review-done-quotation?quotation_id=". $dataQuotation['quotationData']->id ."&quotation=internet") !!}`;
+                        window.location.href = `{!! url("quotation/review-done-quotation?quotation_id=". $dataQuotation['quotationData']->id ."&quotation=internet") !!}`;
                     }
                 })
 
