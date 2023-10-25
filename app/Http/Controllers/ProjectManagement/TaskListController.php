@@ -78,6 +78,21 @@ class TaskListController extends Controller
         }
     }
 
+    public function storePic(Request $request, $work_list_id)
+    {
+        dd($request);
+
+        try{
+            return response()->json([
+                'status' => 'success',
+                'message' => $request,
+            ]);
+        } catch (\Exception $e) {
+            $data = $this->errorHandler->handle($e);
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function detailTaskList($work_list_id, $task_list_id)
     {
         $workTaskList = WorkTaskList::whereId($task_list_id)->with('workList', 'workTaskComment')->first();
