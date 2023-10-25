@@ -30,18 +30,19 @@
 
 <body>
     <div class="max-w-[210mm] text-lg">
-        <div class="items-center justify-center mt-4 flex">
-            <div class="mr-7">
-                <img src="{{ asset('/sense/media/logos/logo-comtel.png') }}" class="h-[110px]" />
+        <div class="items-center justify-center mt-7 mb-2 flex">
+            <div class="mr-7 grow">
+                <img src="{{ asset('/sense/media/logos/logo-full-30.png') }}" class="h-[80px]" />
             </div>
-            <div class="mx-4 text-center text-base">
+            <div class="mx-4 text-end text-sm">
                 <div>
                     <p class="font-bold text-xl p-0 m-[-8px]">PT. COMTELINDO</p>
-                    <p class="p-0 m-[-8px]">Jl. Let Kol. Pol. HM. Asnawi Arbain RT.30 No.161 Kelurahan Sungai</p>
-                    <p class="p-0 m-[-8px]">Nangka Kecamatan Balikpapan Selatan 76114, Telepon: 0542 8706777</p>
-                    <p class="p-0 m-[-8px]">Website : <a class="underline decoration-blue-600"
+                    <p class="m-[-4px]">Jl. Letkol. Pol. Asnawi Arbain No. 161 RT. 30,</p>
+                    <p class="m-[-4px]">Sungai Nangka, Balikpapan 76114</p>
+                    <p class="m-[-4px]">Ph. +62542-8706777</p>
+                    <p class="m-[-4px]">Website : <a class="underline decoration-blue-600 text-blue-700"
                             href="www.comtelindo.com">www.comtelindo.com</a></p>
-                    <p class="p-0 m-[-8px]">Email : <a class="underline decoration-blue-600"
+                    <p class="m-[-4px]">Email : <a class="underline decoration-blue-600 text-blue-700"
                             href="mailto: info@comtelindo.com">info@comtelindo.com</a></p>
                 </div>
             </div>
@@ -50,16 +51,16 @@
         <hr class="border-1 border-black mt-1" />
         <hr class="border-2 border-black mt-1" />
 
-        <div class="mt-3 mb-12">
+        <div class="mt-3 mb-10 mx-5 text-[16px]">
             <div class="text-center">
-                <p class="underline decoration-2 font-semibold text-2xl">SURAT TUGAS</p>
-                <p>{{ $assignment->number }}</p>
+                <p class="underline decoration-2 font-semibold text-2xl font-serif">SURAT TUGAS</p>
+                <p>Nomor  : {{ $assignment->number }}</p>
             </div>
 
             <div class="mt-4">
                 <div>
                     <span class="mr-40">Perihal</span>
-                    : Surat Tugas Perjalanan Dinas
+                    : Surat Tugas
                 </div>
                 <div>
                     <span class="mr-7">Durasi Perjalanan Dinas</span>
@@ -112,10 +113,10 @@
 
             <div class="mt-6">
                 <p>
-                    untuk {{ $assignment->purpose }} dengan durasi kerja
+                    untuk {{ $assignment->purpose }} dari tanggal
                     <span class="font-bold">
                         {{ date('d M Y', strtotime($assignment->start_date)) }}
-                        s.d
+                        sampai
                         {{ date('d M Y', strtotime($assignment->end_date)) }}
                     </span>
                 </p>
@@ -126,17 +127,18 @@
                     terima kasih.</p>
             </div>
 
+            {{-- @php
+                $signed = $assignment->signedBy->sign_file
+            @endphp --}}
+
             <div class="mt-9">
                 <div class="flex flex-1 justify-end">
-                    <div class="text-center">
+                    <div class="">
                         <p>Balikpapan, {{ $assignment->created_at->format('d M Y') }}</p>
                         <p class="font-bold">PT. COMTELINDO</p>
-                        <img class="h-[120px]"
-                            @php
-                                $signed = $assignment->signedBy->sign_file
-                            @endphp
-                            src='{{ asset("sense/media/sign_pegawai/$signed") }}'
-                            alt="ttd" />
+                        {{-- <img class="h-[120px]"
+                            src='{{ asset("sense/media/sign_pegawai/$signed") }}' alt="ttd" /> --}}
+                        <div class="h-[100px]"></div>
                         <p class="uppercase">{{ $assignment->signedBy->name }}</p>
                         <p class="font-bold uppercase">{{ $assignment->signedBy->division->divisi_name }}</p>
                     </div>
@@ -148,7 +150,7 @@
         <hr class="border-2 border-black mt-1" />
         <hr class="border-1 border-black mt-1" />
 
-        <p class="text-[12px] text-center mt-1">Dedicated Internet | Broadband Internet | Connectivity Services | Voice
+        <p class="text-[13.6px] text-center mt-1">Dedicated Internet | Broadband Internet | Connectivity Services | Voice
             Services | IT Solutions | VoIP | Call Center | GPS Tracking</p>
 
     </div>
