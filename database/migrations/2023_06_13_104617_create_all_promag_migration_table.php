@@ -157,7 +157,7 @@ class CreateAllPromagMigrationTable extends Migration
         });
 
 
-        Schema::create('work_activity_logs', function (Blueprint $table) {
+        Schema::create('work_activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('work_list_id')->constrained();
             $table->foreignId('user_id')->constrained();
@@ -166,9 +166,9 @@ class CreateAllPromagMigrationTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('work_act_log_files', function (Blueprint $table) {
+        Schema::create('work_activity_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('work_list_id')->constrained();
+            $table->foreignId('work_activity_id')->constrained();
             $table->foreignId('file_id')->constrained();
             $table->timestamps();
         });

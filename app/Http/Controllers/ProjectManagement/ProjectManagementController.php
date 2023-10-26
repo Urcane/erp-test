@@ -7,6 +7,7 @@ use App\Http\Requests\ProjectManagement\WorkOrderApprovalRequest;
 use App\Http\Requests\ProjectManagement\WorkOrderRequest;
 use App\Models\Customer\Customer;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
+use App\Models\ProjectManagement\WorkActivity;
 use App\Models\ProjectManagement\WorkList;
 use App\Models\User;
 use App\Services\ProjectManagement\WorkOrderService;
@@ -139,7 +140,7 @@ class ProjectManagementController extends Controller
                 "work_desc" => "required",
             ]);
 
-            WorkList::create([
+            $workList = WorkList::create([
                 "itemable_bill_of_quantity_id" => $request->itemable_bill_of_quantities_id,
                 "no_project" => $request->no_project,
                 "work_name" => $request->work_name,
@@ -151,6 +152,13 @@ class ProjectManagementController extends Controller
                 "status" => "PR",
                 "last_progress_category" => "BOQ",
                 "start_date" => date("Y-m-d"),
+            ]);
+
+            WorkActivity::create([
+                "work_list_id" => $workList->id,
+                "user_id" => auth()->user()->id,
+                "description" => auth()->user()->name . " created work list " . $workList->work_name,
+                "type" => "work_list",
             ]);
 
             return redirect(route("com.promag.index"));
@@ -222,20 +230,6 @@ class ProjectManagementController extends Controller
         }
     }
 
-    function revokeWorklistAssignedUsers(WorkList $work_list_id, User $user_id) : JsonResponse{
-        try {
-            $data = $work_list_id->users()->detach($user_id->id);
-
-            return response()->json([
-                "status" => "Yeay Berhasil!! 💼",
-                "data" => $data,
-            ], 200);
-        } catch (\Throwable $th) {
-            $data = ErrorHandler::handle($th);
-            return response()->json($data["data"], $data['code']);
-        }
-    }
-
     function getAllUserFiltered(Request $request, WorkList $work_list_id) : JsonResponse {
         try {
             $search = $request->query('searchValue');
@@ -261,10 +255,38 @@ class ProjectManagementController extends Controller
         try {
             $workList = $work_list_id->users()->attach($request->users);
 
+            WorkActivity::create([
+                "work_list_id" => $work_list_id->id,
+                "user_id" => auth()->user()->id,
+                "description" => auth()->user()->name . " assigned user to work list " . $work_list_id->work_name,
+                "type" => "work_list",
+            ]);
+
             return response()->json([
                 'status' => 'success',
                 'data' => $workList,
             ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data['code']);
+        }
+    }
+
+    function revokeWorklistAssignedUsers(WorkList $work_list_id, User $user_id) : JsonResponse{
+        try {
+            $data = $work_list_id->users()->detach($user_id->id);
+
+            WorkActivity::create([
+                "work_list_id" => $work_list_id->id,
+                "user_id" => auth()->user()->id,
+                "description" => auth()->user()->name . " revoked user to work list " . $work_list_id->work_name,
+                "type" => "work_list",
+            ]);
+
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼",
+                "data" => $data,
+            ], 200);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
             return response()->json($data["data"], $data['code']);

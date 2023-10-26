@@ -11,7 +11,7 @@ class WorkTaskChecklist extends Model
     use HasFactory;
     protected $guarded = [];
 
-    function taskList() : BelongsTo {
+    function workTaskList() : BelongsTo {
         return $this->belongsTo(WorkTaskList::class);
     }
 }

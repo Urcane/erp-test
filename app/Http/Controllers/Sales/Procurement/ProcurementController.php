@@ -13,6 +13,8 @@ use App\Models\Procurement\Procurement;
 use App\Models\Procurement\ProcurementItem;
 use App\Models\Procurement\ProcurementItemPayment;
 use App\Models\Procurement\ProcurementItemStatus;
+use App\Models\ProjectManagement\WorkActivity;
+use App\Models\ProjectManagement\WorkList;
 use App\Models\User;
 use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
@@ -186,6 +188,16 @@ class ProcurementController extends Controller
                     "customer" => $request->customer,
                     "pic" => Auth::user()->id,
                 ]);
+
+                if ($request->work_list_id) {
+                    $workList = WorkList::whereId($request->work_list_id)->first();
+                    WorkActivity::create([
+                        "work_list_id" => $request->work_list_id,
+                        "user_id" => auth()->user()->id,
+                        "description" => auth()->user()->name . " added procurement " . $procurement->no_pr . " on work list " . $workList->work_name,
+                        "type" => "procurement",
+                    ]);
+                }
 
                 foreach ($request->item_id as $id) {
                     $item = Item::whereId($id)->first();

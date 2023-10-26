@@ -144,8 +144,8 @@
                                     @foreach ($workTaskList->attachments as $attachment)
                                         <div class="d-flex flex-row justify-content-between mt-5">
                                             <div>
-                                                <h4>{{$attachment->created_at}}</h4>
-                                                <span>{{$attachment->name}}</span> <br>
+                                                <h4>{{$attachment->name}}</h4>
+                                                <span>{{$attachment->created_at}}</span> <br>
                                             </div>
                                             <div>
                                                 <a href="{{str_replace("public/", "storage/", asset($attachment->path))}}" class="btn btn-primary btn-sm" target="_blank">
