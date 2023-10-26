@@ -26,6 +26,56 @@
 @section('content')
 <script src="{{asset("sense/plugins/custom/ckeditor/ckeditor-classic.bundle.js")}}"></script>
 
+<div class="modal fade" id="modal_task_list_attechment" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mw-650px">
+        <div class="modal-content">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="modal-body mx-5 mx-lg-15 mb-7">
+                <form id="task_list_attachment_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
+                    enctype="multipart/form-data">
+                    <div class="col-lg-12 text-center mb-9">
+                        <span class="fs-1 fw-bolder text-dark d-block mb-1">Add Attechment</span>
+                        {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
+                    </div>
+                    <div class="scroll-y me-n10 pe-10" id="modal_task_list_attechment_scroll" data-kt-scroll="true"
+                        data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
+                        data-kt-scroll-dependencies="#modal_task_list_attechment_header"
+                        data-kt-scroll-wrappers="#modal_task_list_attechment_scroll" data-kt-scroll-offset="300px">
+                        <div class="row mb-9">
+                            <div class="col-lg-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class="required fw-bold">Attachment</span>
+                                </label>
+                                <input type="file" class="form-control form-control-solid"
+                                    required name="file">
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class="required fw-bold">Display Name</span>
+                                </label>
+                                <input type="text" class="form-control form-control-solid"
+                                    required name="name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-9">
+                        <button type="reset" id="modal_task_list_attechment_cancel"
+                            class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="modal_task_list_attechment_submit"
+                            class="btn btn-sm btn-info w-lg-200px">
+                            <span class="indicator-label">Simpan</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row justify-content-center mt-n20">
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center">
@@ -38,28 +88,6 @@
                             </h3>
 
                             <div class="d-flex flex-wrap my-1">
-                                {{-- <ul class="nav nav-pills me-5" role="tablist">
-                                    <li class="nav-item m-0" role="presentation">
-                                        <a class="btn btn-sm btn-icon btn-light btn-color-muted btn-active-primary me-3" data-bs-toggle="tab" href="#kt_project_targets_card_pane" aria-selected="false" role="tab" tabindex="-1">
-                                            <i class="fas fa-tablet"></i>
-                                        </a>
-                                    </li>
-
-                                    <li class="nav-item m-0" role="presentation">
-                                        <a class="btn btn-sm btn-icon btn-light btn-color-muted btn-active-primary active" data-bs-toggle="tab" href="#kt_project_targets_table_pane" aria-selected="true" role="tab">
-                                            <i class="fas fa-table-columns"></i>
-                                        </a>
-                                    </li>
-                                </ul> --}}
-
-                                {{-- <div class="my-0">
-                                    <select name="status" data-control="select2" data-hide-search="true" class="form-select form-select-sm form-select-solid w-150px select2-hidden-accessible" data-select2-id="select2-data-7-smn8" tabindex="-1" aria-hidden="true" data-kt-initialized="1">
-                                        <option value="1" selected="" data-select2-id="select2-data-9-nm7b">Recently Updated</option>
-                                        <option value="2">Last Month</option>
-                                        <option value="3">Last Quarter</option>
-                                        <option value="4">Last Year</option>
-                                    </select><span class="select2 select2-container select2-container--bootstrap5" dir="ltr" data-select2-id="select2-data-8-g6s3" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single form-select form-select-sm form-select-solid w-150px" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-status-14-container" aria-controls="select2-status-14-container"><span class="select2-selection__rendered" id="select2-status-14-container" role="textbox" aria-readonly="true" title="Recently Updated">Recently Updated</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
-                                </div> --}}
                                 <a class="btn btn-info btn-sm" data-bs-toggle="modal" href="#modal_task_list" aria-selected="true">
                                     {{-- <i class="fas fa-plus"></i>  --}}
                                     Action
@@ -102,6 +130,30 @@
                                         <h6>Task Description</h6>
                                         <span>{{$workTaskList->task_description}}</span>
                                     </div>
+                                </div>
+
+                                <div class="d-flex flex-wrap flex-stack pb-8 mt-15 pe-5">
+                                    <h6>Attachment</h6>
+                                    <div class="d-flex flex-wrap">
+                                        <a class="btn btn-info btn-sm" data-bs-toggle="modal" href="#modal_task_list_attechment" aria-selected="true">
+                                            <i class="fas fa-plus"></i> Add Attachment
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="pe-5">
+                                    @foreach ($workTaskList->attachments as $attachment)
+                                        <div class="d-flex flex-row justify-content-between mt-5">
+                                            <div>
+                                                <h4>{{$attachment->name}}</h4>
+                                                <span>{{$attachment->created_at}}</span> <br>
+                                            </div>
+                                            <div>
+                                                <a href="{{str_replace("public/", "storage/", asset($attachment->path))}}" class="btn btn-primary btn-sm" target="_blank">
+                                                    <i class="fa-solid fa-file-invoice"></i> File
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
 
                                 <div class="d-flex flex-wrap flex-stack pb-8 mt-15 pe-5">
@@ -226,6 +278,33 @@
     .catch(error => {
         console.error(error);
     });
+
+    $('#task_list_attachment_form').submit(function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        $.ajax({
+            url: "{{ route('com.promag.task-list.attachment.create', ['task_list_id' => $task_list_id]) }}",
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            success: function(data) {
+                toastr.success(data.message, 'Selamat 🚀 !');
+
+                // relode current page
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    })
+
     $("#comment-form").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
 

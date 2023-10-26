@@ -19,13 +19,31 @@
                 <div class="card bgi-no-repeat mb-6" style="background-position: bottom 0 right 0; background-size: 125px; background-image:url('{{asset('sense')}}/media/svg/general/rhone.svg')">
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-lg-12 text-center">
-                                <div class="symbol symbol-circle symbol-125px mt-6">
-                                    @if ($user->foto_file == null)
-                                    <img alt="User" src="{{asset('sense')}}/media/avatars/blank.png" />
-                                    @else
-                                    <img alt="User" src="{{asset('sense')}}/media/foto_pegawai/{{$user_foto_file}}" />
-                                    @endif
+                            <div class="col-lg-12 text-center mt-10">
+                                <div class="image-input image-input-outline" style="background-image: url('{{asset('sense')}}/media/avatars/blank.png')">
+                                    <!--begin::Preview existing avatar-->
+                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url({{asset('sense')}}/media/avatars/blank.png)"></div>
+                                    <!--end::Preview existing avatar-->
+
+                                    <!--begin::Label-->
+                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" aria-label="Change avatar" data-bs-original-title="Change avatar" data-kt-initialized="1">
+                                        <i class="fa-solid fa-pen fs-7"></i>
+                                        <!--begin::Inputs-->
+                                        <input type="file" name="avatar" accept=".png, .jpg, .jpeg">
+                                        <input type="hidden" name="avatar_remove">
+                                        <!--end::Inputs-->
+                                    </label>
+                                    <!--end::Label-->
+
+                                    <!--begin::Cancel-->
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" aria-label="Cancel avatar" data-bs-original-title="Cancel avatar" data-kt-initialized="1">
+                                        <i class="fa-solid fa-xmark fa-sm "></i>
+                                    <!--end::Cancel-->
+
+                                    <!--begin::Remove-->
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" aria-label="Remove avatar" data-bs-original-title="Remove avatar" data-kt-initialized="1">
+                                        <i class="fa-solid fa-xmark fa-sm "></i>
+                                    <!--end::Remove-->
                                 </div>
                                 <div class="mt-4">
                                     <span class="fw-bolder align-items-center fs-2 d-block">{{$user->name}}</span>
