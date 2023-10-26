@@ -123,6 +123,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/work-order/detail/{work_list_id}', 'getWorkOrderById')->name('com.work-order.detail');
             Route::get('/get-data/table/work-order', 'getDatatableWorkOrder')->name('com.work-order.datatable');
             Route::get('/get-data/table/work-order-survey', 'getDataTableWorkOrderSurvey')->name('com.work-order-survey.datatable');
+
+            Route::get('/detail/{work_list_id}/getSummaryCountPromag', 'getSummaryCountPromag')->name('com.promag.detail.getSummaryCountPromag');
+            Route::get('/detail/{work_list_id}/getTaskOverview', 'getTaskOverview')->name('com.promag.detail.getTaskOverview');
         });
 
         Route::controller(TaskListController::class)->group(function () {

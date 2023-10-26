@@ -193,6 +193,18 @@
 
 
 <script>
+    (function(XHR) {
+        var open = XHR.prototype.open;
+        XHR.prototype.open = function(method, url, async, user, pass) {
+            this.addEventListener('readystatechange', function() {
+                if (this.readyState == 1) {  // OPENED
+                    this.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
+                }
+            }, false);
+            open.call(this, method, url, async, user, pass);
+        };
+    })(XMLHttpRequest);
+
     ClassicEditor.create(document.querySelector('#kt_docs_ckeditor_classic'), {
         toolbar: ['ckfinder', 'bold', 'italic', '|', 'undo', 'redo', '-', 'numberedList', 'bulletedList'],
         shouldNotGroupWhenFull: false,

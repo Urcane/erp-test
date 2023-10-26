@@ -80,8 +80,7 @@ class TaskListController extends Controller
 
     public function storePic(Request $request, $work_list_id)
     {
-        dd($request);
-
+        return response()->json(['url' => "https://mantapbetul"]);
         try{
             return response()->json([
                 'status' => 'success',

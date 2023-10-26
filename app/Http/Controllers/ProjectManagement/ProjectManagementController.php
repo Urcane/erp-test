@@ -8,12 +8,14 @@ use App\Http\Requests\ProjectManagement\WorkOrderRequest;
 use App\Models\Customer\Customer;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\ProjectManagement\WorkList;
+use App\Models\ProjectManagement\WorkTaskList;
 use App\Models\User;
 use App\Services\ProjectManagement\WorkOrderService;
 use App\Utils\ErrorHandler;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -269,6 +271,45 @@ class ProjectManagementController extends Controller
             return response()->json([
                 'status' => 'success',
                 'data' => $workList,
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data['code']);
+        }
+    }
+
+    function getSummaryCountPromag(WorkList $work_list_id) : JsonResponse {
+        try {
+            $taskList = WorkTaskList::where('work_list_id', $work_list_id->id)
+                ->select([
+                    DB::raw('COUNT(*) as total'),
+                    DB::raw('SUM(CASE WHEN status = "PR" THEN 1 ELSE 0 END) as progress'),
+                    DB::raw('SUM(CASE WHEN status = "DN" THEN 1 ELSE 0 END) as done'),
+                    DB::raw('SUM(CASE WHEN status = "PD" THEN 1 ELSE 0 END) as pending'),
+                    DB::raw('SUM(CASE WHEN status = "FR" THEN 1 ELSE 0 END) as freeze')
+                ])
+                ->first();
+            
+            return response()->json([
+                'status' => 'success',
+                'data' => $taskList->toArray(),
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data['code']);
+        }
+    }
+
+    function getTaskOverview(WorkList $work_list_id) : JsonResponse {
+        try {
+            $taskList = WorkTaskList::where('work_list_id', $work_list_id->id)
+                ->select(DB::raw('DAYOFWEEK(created_at) as day_of_week'), DB::raw('COUNT(*) as total'))
+                ->groupBy('day_of_week')
+                ->paginate();
+            
+            return response()->json([
+                'status' => 'success',
+                'data' => $taskList,
             ]);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
