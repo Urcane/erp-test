@@ -62,6 +62,8 @@
     }
 
     function handleGraphicsHeatmap(data) {
+        console.log(data);
+
         var options = {
             series: [{
                     name: 'Minggu',
@@ -139,9 +141,8 @@
             url: "{{route('com.promag.detail.getTaskOverview', ['work_list_id' => $work_list_id])}}",
             type: 'GET',
         })
-        console.log(data);
 
-        handleGraphicsHeatmap(data);
+        handleGraphicsHeatmap(data.data);
     })
 
     

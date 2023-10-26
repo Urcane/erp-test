@@ -298,10 +298,36 @@ class ProjectManagementController extends Controller
 
     function getTaskOverview(WorkList $work_list_id) : JsonResponse {
         try {
-            $taskList = WorkTaskList::where('work_list_id', $work_list_id->id)
-                ->select(DB::raw('DAYOFWEEK(created_at) as day_of_week'), DB::raw('COUNT(*) as total'))
-                ->groupBy('day_of_week')
-                ->paginate();
+            $taskList = WorkActivity::where('work_list_id', $work_list_id->id)
+                ->select(
+                    DB::raw('DAYOFWEEK(created_at) as day_of_week'), 
+                    DB::raw("DATE_FORMAT(created_at, '%Y-%m') AS month"),
+                    DB::raw("DATE_FORMAT(created_at, '%U') AS week_number"), 
+                    DB::raw('COUNT(*) as total')
+                )
+                ->groupBy('day_of_week', 'week_number', 'month')
+                ->paginate(92);
+
+            // Initialize an array to store the grouped data
+            $groupedData = [];
+
+            // Group the results by day_of_week
+            foreach ($taskList->items() as $task) {
+                $dayOfWeek = $task->day_of_week;
+
+                if (!isset($groupedData[$dayOfWeek])) {
+                    $groupedData[$dayOfWeek] = [];
+                }
+
+                $groupedData[$dayOfWeek][] = [
+                    'day_of_week' => $task->day_of_week,
+                    'month' => $task->month,
+                    'week_number' => $task->week_number,
+                    'total' => $task->total,
+                ];
+            }
+
+            $taskList->setCollection(collect($groupedData));
             
             return response()->json([
                 'status' => 'success',
