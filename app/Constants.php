@@ -68,6 +68,10 @@ class Constants
     public $inventory_status = ["Add", "Transfer", "Adjust", "Other"];
     // }
 
+    // invoice {
+    public $invoice_status = ["In Progress", "Paid", "Due Date", "Freeze", "Dismantle"];
+    // }
+
     // system and view
     public $filter_status_attendance = [
         "On Time",

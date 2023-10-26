@@ -12,13 +12,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class TaskListController extends Controller
 {
-    private $errorHandler;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
-
     public function taskLists($work_list_id)
     {
         return view('cmt-promag.pages.task-lists', compact("work_list_id"));
@@ -73,7 +66,7 @@ class TaskListController extends Controller
                 'message' => 'Data berhasil disimpan',
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }
@@ -88,7 +81,7 @@ class TaskListController extends Controller
                 'message' => $request,
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }
@@ -119,7 +112,7 @@ class TaskListController extends Controller
                 'data' => $WorkTaskChecklist,
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }
@@ -137,7 +130,7 @@ class TaskListController extends Controller
                 'data' => $WorkTaskChecklist,
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }
@@ -160,7 +153,7 @@ class TaskListController extends Controller
                 'data' => $WorkTaskComment,
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }

@@ -568,6 +568,28 @@ Route::middleware(['auth'])->group(function () {
                 });
             });
         });
+
+        Route::prefix('invoice')->group(function () {
+            Route::controller(Finance\Invoice\InvoiceController::class)->group(function () {
+                Route::get('/', 'viewDashboard')->name('fin.invc.dashboard');
+
+                Route::prefix('invc')->group(function () {
+                    Route::get('/', 'viewInvoice')->name('fin.invc.invoice');
+                });
+
+                Route::prefix('journal')->group(function () {
+                    Route::get('/', 'viewJournal')->name('fin.invc.journal');
+                });
+
+                Route::prefix('master-data')->group(function () {
+                    Route::get('/', 'viewMasterdata')->name('fin.invc.master-data');
+                });
+
+                Route::prefix('logs')->group(function () {
+                    Route::get('/', 'viewLogs')->name('fin.invc.logs');
+                });
+            });
+        });
     });
 
     Route::controller(BoQController::class)->group(function () {

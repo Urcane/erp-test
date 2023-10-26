@@ -161,7 +161,7 @@
                                                             <div class="menu-item p-0 m-0">
                                                                 <a href="{{route('opt.asign.index')}}" class="menu-link">
                                                                     <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
-                                                                        <i class="fa-solid fa-file-alt text-warning fs-3"></i>
+                                                                        <i class="fa-solid fa-file-alt text-warning fs-2"></i>
                                                                     </span>
                                                                     <span class="d-flex flex-column">
                                                                         <span class="fs-6 fw-bold text-dark">Assignment</span>
@@ -197,12 +197,12 @@
                                                     {{-- @can('FIN:view-inventory') --}}
                                                         <div class="col-lg-6">
                                                             <div class="menu-item p-0 m-0">
-                                                                <a href="{{route('fin.inv.dashboard')}}" class="menu-link">
+                                                                <a href="{{route('fin.invc.dashboard')}}" class="menu-link">
                                                                     <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
-                                                                        <i class="fa-solid fa-file-invoice-dollar text-success fs-3"></i>
+                                                                        <i class="fa-solid fa-receipt text-success fs-2"></i>
                                                                     </span>
                                                                     <span class="d-flex flex-column">
-                                                                        <span class="fs-6 fw-bold text-dark">Billing</span>
+                                                                        <span class="fs-6 fw-bold text-dark">Invoice</span>
                                                                         <span class="fs-7 fw-semibold text-gray-500">Data Penagihan</span>
                                                                     </span>
                                                                 </a>
