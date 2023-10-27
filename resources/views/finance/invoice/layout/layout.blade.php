@@ -13,9 +13,7 @@
 
 @section('content')
     <style>
-        .cursor-not-allowed {
-            cursor: not-allowed;
-        }
+
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <div class="row justify-content-center mt-n20">
