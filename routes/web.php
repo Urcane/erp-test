@@ -115,14 +115,15 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/detail/{work_list_id}/users/{user_id}', 'revokeWorklistAssignedUsers')->name('com.promag.detail.delete.users');
             Route::get('/detail/{work_list_id}/getAllUsers', 'getAllUserFiltered')->name('com.promag.detail.getAllUsers');
             Route::post('/detail/{work_list_id}/assignUser', 'assignUser')->name('com.promag.detail.store.users');
-            Route::get('/detail/{work_list_id}/files', 'files')->name('com.promag.detail.files');
-
 
             Route::post('/work-order/approve', 'approveWorkOrder')->name('com.work-order.approve');
             Route::post('/work-order/store', 'createWorkOrderSurvey')->name('com.work-order-survey.store');
             Route::get('/work-order/detail/{work_list_id}', 'getWorkOrderById')->name('com.work-order.detail');
             Route::get('/get-data/table/work-order', 'getDatatableWorkOrder')->name('com.work-order.datatable');
             Route::get('/get-data/table/work-order-survey', 'getDataTableWorkOrderSurvey')->name('com.work-order-survey.datatable');
+
+            Route::get('/detail/{work_list_id}/getSummaryCountPromag', 'getSummaryCountPromag')->name('com.promag.detail.getSummaryCountPromag');
+            Route::get('/detail/{work_list_id}/getTaskOverview', 'getTaskOverview')->name('com.promag.detail.getTaskOverview');
         });
 
         Route::controller(TaskListController::class)->group(function () {
@@ -135,6 +136,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/task-lists/detail/{task_list_id}/checklist', 'addChecklist')->name('com.promag.task-list.checklist.add');
             Route::post('/task-lists/detail/{task_list_id}/checklist/update', 'updateChecklist')->name('com.promag.task-list.checklist.update');
             // Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
+            Route::post('/task-lists/detail/{task_list_id}/attachment', 'createAttachment')->name('com.promag.task-list.attachment.create');
         });
         Route::controller(App\Http\Controllers\ProjectManagement\ProcurementController::class)->group(function () {
             Route::get("{work_list_id}/procurement", 'index')->name('com.promag.procurement');
@@ -143,6 +145,11 @@ Route::middleware(['auth'])->group(function () {
         });
         Route::controller(App\Http\Controllers\ProjectManagement\ActivityController::class)->group(function () {
             Route::get("{work_list_id}/activity", 'index')->name('com.promag.activity');
+        });
+        Route::controller(App\Http\Controllers\ProjectManagement\FileController::class)->group(function () {
+            Route::get("{work_list_id}/file", 'index')->name('com.promag.file');
+            Route::post("{work_list_id}/file/create", 'createFile')->name('com.promag.file.create');
+            Route::post("{work_list_id}/file/delete", 'deleteFile')->name('com.promag.file.delete');
         });
     });
 
@@ -176,6 +183,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
 
             Route::middleware(['permission:HC:update-profile'])->group(function () {
+                Route::post('/update/employee/avatar', 'updateAvatar')->name('hc.emp.update.avatar');
                 Route::post('/update/employee/employment', 'updateEmployment')->name('hc.emp.update.employment');
                 Route::post('/update/employee/salary', 'updateSalary')->name('hc.emp.update.salary');
                 Route::post('/update/employee/bank', 'updateBank')->name('hc.emp.update.bank');

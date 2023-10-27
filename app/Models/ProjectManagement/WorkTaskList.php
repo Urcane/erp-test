@@ -2,6 +2,7 @@
 
 namespace App\Models\ProjectManagement;
 
+use App\Traits\HasFile;
 use App\Traits\HasUser;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,12 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class WorkTaskList extends Model
 {
-    use HasFactory, HasUser;
+    use HasFactory, HasUser, HasFile;
     protected $guarded = [];
-
-    function workAttachment() : HasMany {
-        return $this->hasMany(TaskAttachment::class);
-    }
 
     function workTaskComment() : HasMany {
         return $this->hasMany(WorkTaskComment::class);

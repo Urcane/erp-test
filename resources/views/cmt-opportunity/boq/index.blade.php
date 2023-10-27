@@ -48,7 +48,7 @@
                                 <div class="col-lg-6 d-flex justify-content-end">
                                     <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
                                         <div class="">
-                                            <a href="{{ url('cmt-boq/create-draft-boq') }}"
+                                            <a href="{{ url('boq/create-draft-boq') }}"
                                                 class="btn btn-info btn-sm me-3 btn_tambah_boq" id="create_boq">
                                                 <i class="fa-solid fa-plus"></i>Create BoQ
                                             </a>

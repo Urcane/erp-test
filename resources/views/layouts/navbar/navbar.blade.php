@@ -209,6 +209,19 @@
                                                             </div>
                                                         </div>
                                                     {{-- @endcan --}}
+                                                    <div class="col-lg-6">
+                                                        <div class="menu-item p-0 m-0">
+                                                            <a href="{{route('fin.inv.dashboard')}}" class="menu-link">
+                                                                <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                    <i class="fa-regular fa-thumbs-up text-success fs-3"></i>
+                                                                </span>
+                                                                <span class="d-flex flex-column">
+                                                                    <span class="fs-6 fw-bold text-dark">Approval</span>
+                                                                    <span class="fs-7 fw-semibold text-gray-500">Setuju untuk beli sesuatu.</span>
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

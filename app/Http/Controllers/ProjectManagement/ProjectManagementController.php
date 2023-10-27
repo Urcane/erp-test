@@ -7,13 +7,16 @@ use App\Http\Requests\ProjectManagement\WorkOrderApprovalRequest;
 use App\Http\Requests\ProjectManagement\WorkOrderRequest;
 use App\Models\Customer\Customer;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
+use App\Models\ProjectManagement\WorkActivity;
 use App\Models\ProjectManagement\WorkList;
+use App\Models\ProjectManagement\WorkTaskList;
 use App\Models\User;
 use App\Services\ProjectManagement\WorkOrderService;
 use App\Utils\ErrorHandler;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
@@ -137,7 +140,7 @@ class ProjectManagementController extends Controller
                 "work_desc" => "required",
             ]);
 
-            WorkList::create([
+            $workList = WorkList::create([
                 "itemable_bill_of_quantity_id" => $request->itemable_bill_of_quantities_id,
                 "no_project" => $request->no_project,
                 "work_name" => $request->work_name,
@@ -151,6 +154,13 @@ class ProjectManagementController extends Controller
                 "start_date" => date("Y-m-d"),
             ]);
 
+            WorkActivity::create([
+                "work_list_id" => $workList->id,
+                "user_id" => auth()->user()->id,
+                "description" => auth()->user()->name . " created work list " . $workList->work_name,
+                "type" => "work_list",
+            ]);
+
             return redirect(route("com.promag.index"));
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
@@ -162,11 +172,6 @@ class ProjectManagementController extends Controller
     public function detail($work_list_id )
     {
         return view('cmt-promag.pages.overview', compact("work_list_id"));
-    }
-
-    public function files(Request $request)
-    {
-        return view('cmt-promag.pages.files');
     }
 
     function createWorkOrderSurvey(WorkOrderRequest $request) : JsonResponse {
@@ -225,20 +230,6 @@ class ProjectManagementController extends Controller
         }
     }
 
-    function revokeWorklistAssignedUsers(WorkList $work_list_id, User $user_id) : JsonResponse{
-        try {
-            $data = $work_list_id->users()->detach($user_id->id);
-
-            return response()->json([
-                "status" => "Yeay Berhasil!! 💼",
-                "data" => $data,
-            ], 200);
-        } catch (\Throwable $th) {
-            $data = ErrorHandler::handle($th);
-            return response()->json($data["data"], $data['code']);
-        }
-    }
-
     function getAllUserFiltered(Request $request, WorkList $work_list_id) : JsonResponse {
         try {
             $search = $request->query('searchValue');
@@ -264,10 +255,103 @@ class ProjectManagementController extends Controller
         try {
             $workList = $work_list_id->users()->attach($request->users);
 
+            WorkActivity::create([
+                "work_list_id" => $work_list_id->id,
+                "user_id" => auth()->user()->id,
+                "description" => auth()->user()->name . " assigned user to work list " . $work_list_id->work_name,
+                "type" => "work_list",
+            ]);
+
             return response()->json([
                 'status' => 'success',
                 'data' => $workList,
             ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data['code']);
+        }
+    }
+
+    function getSummaryCountPromag(WorkList $work_list_id) : JsonResponse {
+        try {
+            $taskList = WorkTaskList::where('work_list_id', $work_list_id->id)
+                ->select([
+                    DB::raw('COUNT(*) as total'),
+                    DB::raw('SUM(CASE WHEN status = "PR" THEN 1 ELSE 0 END) as progress'),
+                    DB::raw('SUM(CASE WHEN status = "DN" THEN 1 ELSE 0 END) as done'),
+                    DB::raw('SUM(CASE WHEN status = "PD" THEN 1 ELSE 0 END) as pending'),
+                    DB::raw('SUM(CASE WHEN status = "FR" THEN 1 ELSE 0 END) as freeze')
+                ])
+                ->first();
+            
+            return response()->json([
+                'status' => 'success',
+                'data' => $taskList->toArray(),
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data['code']);
+        }
+    }
+
+    function getTaskOverview(WorkList $work_list_id) : JsonResponse {
+        try {
+            $taskList = WorkActivity::where('work_list_id', $work_list_id->id)
+                ->select(
+                    DB::raw('DAYOFWEEK(created_at) as day_of_week'), 
+                    DB::raw("DATE_FORMAT(created_at, '%Y-%m') AS month"),
+                    DB::raw("DATE_FORMAT(created_at, '%U') AS week_number"), 
+                    DB::raw('COUNT(*) as total')
+                )
+                ->groupBy('day_of_week', 'week_number', 'month')
+                ->paginate(92);
+
+            // Initialize an array to store the grouped data
+            $groupedData = [];
+
+            // Group the results by day_of_week
+            foreach ($taskList->items() as $task) {
+                $dayOfWeek = $task->day_of_week;
+
+                if (!isset($groupedData[$dayOfWeek])) {
+                    $groupedData[$dayOfWeek] = [];
+                }
+
+                $groupedData[$dayOfWeek][] = [
+                    'day_of_week' => $task->day_of_week,
+                    'month' => $task->month,
+                    'week_number' => $task->week_number,
+                    'total' => $task->total,
+                ];
+            }
+
+            $taskList->setCollection(collect($groupedData));
+            
+            return response()->json([
+                'status' => 'success',
+                'data' => $taskList,
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+            return response()->json($data["data"], $data['code']);
+        }
+    }
+    
+    function revokeWorklistAssignedUsers(WorkList $work_list_id, User $user_id) : JsonResponse{
+        try {
+            $data = $work_list_id->users()->detach($user_id->id);
+
+            WorkActivity::create([
+                "work_list_id" => $work_list_id->id,
+                "user_id" => auth()->user()->id,
+                "description" => auth()->user()->name . " revoked user to work list " . $work_list_id->work_name,
+                "type" => "work_list",
+            ]);
+
+            return response()->json([
+                "status" => "Yeay Berhasil!! 💼",
+                "data" => $data,
+            ], 200);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
             return response()->json($data["data"], $data['code']);

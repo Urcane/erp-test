@@ -140,14 +140,6 @@ class CreateAllPromagMigrationTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('work_task_attachments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('work_task_list_id')->constrained();
-            $table->foreignId('work_list_id')->constrained();
-            $table->string('url');
-            $table->timestamps();
-        });
-
         Schema::create('work_task_checklists', function (Blueprint $table) {
         $table->id();
             $table->foreignId('work_task_list_id')->constrained();
@@ -165,7 +157,7 @@ class CreateAllPromagMigrationTable extends Migration
         });
 
 
-        Schema::create('work_activity_logs', function (Blueprint $table) {
+        Schema::create('work_activities', function (Blueprint $table) {
             $table->id();
             $table->foreignId('work_list_id')->constrained();
             $table->foreignId('user_id')->constrained();
@@ -174,10 +166,20 @@ class CreateAllPromagMigrationTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('work_activity_log_files', function (Blueprint $table) {
+        Schema::create('work_activity_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('work_list_id')->constrained();
+            $table->foreignId('work_activity_id')->constrained();
             $table->foreignId('file_id')->constrained();
+            $table->timestamps();
+        });
+
+        Schema::create('spendings', function (Blueprint $table) {
+            $table->id();
+            $table->string('nominal')->index();
+            $table->string('desc');
+            $table->morphs('spendingable');
+            $table->string('additional')->nullable()->index();
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
         // End: Project Migration

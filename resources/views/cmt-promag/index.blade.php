@@ -156,7 +156,7 @@
             clearTimeout(timeout);
             timeout = setTimeout( async function() {
                 const data = await $.ajax({
-                    url: `{{url('')}}/cmt-promag/detail/${work_list_id}/getAllUsers`,
+                    url: `{{url('')}}/promag/detail/${work_list_id}/getAllUsers`,
                     type: 'GET',
                     data: {
                         'searchValue': search.getQuery(),
@@ -285,7 +285,7 @@
             submitModal({
                 modalName: 'kt_modal_users_search',
                 tableName: 'kt_table_promag',
-                ajaxLink: `{{url('')}}/cmt-promag/detail/${work_list_id}/assignUser`,
+                ajaxLink: `{{url('')}}/promag/detail/${work_list_id}/assignUser`,
                 successCallback: (data) => {
                     toastr.success(data.status, 'Selamat 🚀 !');
                     thisElement.click();
@@ -295,7 +295,7 @@
             searchObject.clear();
 
             $.ajax({
-                url: `{{url('')}}/cmt-promag/detail/${$(this).data('id')}/users`,
+                url: `{{url('')}}/promag/detail/${$(this).data('id')}/users`,
                 type: 'GET',
                 success: function(response) {
                     $('#container-related-users').html("");
@@ -309,7 +309,7 @@
                             const user_id = $(this).data('id');
 
                             $.ajax({
-                                url: `/cmt-promag/detail/${work_list_id}/users/${user_id}`,
+                                url: `/promag/detail/${work_list_id}/users/${user_id}`,
                                 headers: {
                                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                                 },

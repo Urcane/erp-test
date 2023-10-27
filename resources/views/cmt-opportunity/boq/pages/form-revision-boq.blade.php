@@ -595,7 +595,7 @@
                             toastr.success(response.message);
 
                             setTimeout(() => {
-                                window.location.href = `cmt-boq/update-draft-boq?boq_id=${response.data.id}`;
+                                window.location.href = `boq/update-draft-boq?boq_id=${response.data.id}`;
                             }, 800);          
                         },
                         error: function(error) {

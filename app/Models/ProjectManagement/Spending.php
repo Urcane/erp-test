@@ -4,14 +4,15 @@ namespace App\Models\ProjectManagement;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class WorkTaskChecklist extends Model
+class Spending extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
-    function workTaskList() : BelongsTo {
-        return $this->belongsTo(WorkTaskList::class);
+    function spendingable() : MorphTo {
+        return $this->morphTo();
     }
 }

@@ -378,7 +378,7 @@
                     prospectIds = [];
                     const surveyRequestId = $(this).data('id');
 
-                    $.get(`{{url('')}}/cmt-survey/survey-request/detail/${id}`, function (data) {
+                    $.get(`{{url('')}}/survey/survey-request/detail/${id}`, function (data) {
                         form_edit.find('input[name="survey_request_id"]').val(surveyRequestId);
                         form_edit.find('input[name="no_survey"]').val(data.no_survey);
                         form_edit.find('select[name="type_of_survey_id"]').val(data.type_of_survey_id).trigger('change');
@@ -596,7 +596,7 @@
     //                 surveyRequestIds = [];
     //                 const workOrderId = $(this).data('id');
 
-    //                 $.get(`{{url('')}}/cmt-promag/work-order/detail/${id}`, function (data) {
+    //                 $.get(`{{url('')}}/promag/work-order/detail/${id}`, function (data) {
     //                     form_edit.find('input[name="work_order_id"]').val(workOrderId);
     //                     form_edit.find('input[name="no_wo"]').val(data.no_wo);
     //                     form_edit.find('input[name="task_description"]').val(data.task_description);

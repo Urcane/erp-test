@@ -19,13 +19,32 @@
                 <div class="card bgi-no-repeat mb-6" style="background-position: bottom 0 right 0; background-size: 125px; background-image:url('{{asset('sense')}}/media/svg/general/rhone.svg')">
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-lg-12 text-center">
-                                <div class="symbol symbol-circle symbol-125px mt-6">
-                                    @if ($user->foto_file == null)
-                                    <img alt="User" src="{{asset('sense')}}/media/avatars/blank.png" />
+                            <div class="col-lg-12 text-center mt-10">
+                                <div class="image-input image-input-outline" style="background-image: url('{{asset('sense')}}/media/avatars/blank.png')">
+                                    <!--begin::Preview existing avatar-->
+                                    @if ($user->foto_file != null)
+                                        <div class="image-input-wrapper w-125px h-125px" style="background-image: url('{{asset('storage/personal/avatar/'.$user->foto_file)}}')"></div>
                                     @else
-                                    <img alt="User" src="{{asset('sense')}}/media/foto_pegawai/{{$user_foto_file}}" />
+                                        <div class="image-input-wrapper w-125px h-125px" style="background-image: url('{{asset('sense')}}/media/avatars/blank.png')"></div>
                                     @endif
+                                    <!--end::Preview existing avatar-->
+
+                                    <!--begin::Label-->
+                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" aria-label="Change avatar" data-bs-original-title="Change avatar" data-kt-initialized="1">
+                                        <i class="fa-solid fa-pen fs-7"></i>
+                                        <form id="avatar_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
+                                            enctype="multipart/form-data">
+                                            <!--begin::Inputs-->
+                                            <input type="file" name="avatar" accept=".png, .jpg, .jpeg" id="avatar">
+                                            <!--end::Inputs-->
+                                        </form>
+                                    </label>
+                                    <!--end::Label-->
+
+                                    <!--begin::Cancel-->
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" aria-label="Cancel avatar" data-bs-original-title="Cancel avatar" data-kt-initialized="1">
+                                        <i class="fa-solid fa-xmark fa-sm "></i>
+                                    <!--end::Cancel-->
                                 </div>
                                 <div class="mt-4">
                                     <span class="fw-bolder align-items-center fs-2 d-block">{{$user->name}}</span>
@@ -226,6 +245,31 @@
 
         $("[name='npwp']").trigger('input');
     });
+
+    $("#avatar").change(function () {
+        const avatar = new FormData($("#avatar_form")[0]);
+
+        $.ajax({
+            url: "{{ route('hc.emp.update.avatar') }}",
+            type: 'POST',
+            data: avatar,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            success: function(data) {
+                toastr.success(data.message, 'Selamat 🚀 !');
+
+                // relode current page
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    })
 </script>
 
 

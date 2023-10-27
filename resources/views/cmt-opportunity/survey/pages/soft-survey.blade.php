@@ -156,7 +156,7 @@
                     prospectIds = [];
                     const surveyRequestId = $(this).data('id');
 
-                    $.get(`{{url('')}}/cmt-survey/survey-request/detail/${id}`, function (data) {
+                    $.get(`{{url('')}}/survey/survey-request/detail/${id}`, function (data) {
                         form_edit.find('input[name="survey_request_id"]').val(surveyRequestId);
                         form_edit.find('input[name="no_survey"]').val(data.no_survey);
                         form_edit.find('select[name="type_of_survey_id"]').val(data.type_of_survey_id).trigger('change');
