@@ -18,8 +18,8 @@
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Pilih Tanggal Attendance</span>
                                 </label>
-                                <input type="date" class="form-control form-control-solid" placeholder="Select Date"
-                                    required name="date">
+                                <input required type="date" class="form-control form-control-solid"
+                                    placeholder="Select Date" name="date">
                             </div>
                             {{-- <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -57,17 +57,16 @@
                             </div>
                             <div class="col-lg-12 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Notes</span>
+                                    <span class="fw-bold">Notes</span>
                                 </label>
                                 <textarea class="form-control form-control-solid" name="notes"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="text-center mt-9">
-                        <button type="reset"
-                            class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-sm btn-info w-lg-200px"
-                            data-bs-dismiss="modal">
+                        <button type="reset" class="btn btn-sm btn-light me-3 w-lg-200px"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-info w-lg-200px">
                             <span class="indicator-label">Simpan</span>
                         </button>
                     </div>

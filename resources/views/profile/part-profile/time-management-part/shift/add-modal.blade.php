@@ -20,16 +20,15 @@
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
                                         <span class="required fw-bold">Pilih Tanggal Shift</span>
                                     </label>
-                                    <input type="date" class="form-control form-control-solid"
+                                    <input type="date" class="form-control form-control-solid required"
                                         placeholder="Select Date" required name="date">
                                 </div>
                                 <div class="col-lg-12 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                        <span class="required fw-bold">Shift Saat ini</span>
+                                        <span class="fw-bold">Shift Saat ini</span>
                                     </label>
                                     <input type="text" class="form-control form-control-solid"
-                                        value="{{ $user->userCurrentShift->workingScheduleShift->workingShift->name ?? ""}}"
-                                        name="dweadawd" disabled>
+                                        value="{{ $user->userCurrentShift->workingScheduleShift->workingShift->name ?? ""}}" disabled>
                                 </div>
                                 <div class="col-lg-12 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -55,7 +54,7 @@
                                 class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
                             @if (!$dataShift->isEmpty())
                                 <button type="submit" id="shift_request_modal_submit"
-                                    class="btn btn-sm btn-info w-lg-200px" data-bs-dismiss="modal">
+                                    class="btn btn-sm btn-info w-lg-200px">
                                     <span class="indicator-label">Request</span>
                                 </button>
                             @endif

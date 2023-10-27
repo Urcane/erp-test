@@ -29,7 +29,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="mx-5 mx-lg-15 my-9">
-                            <form id="kt_create_emp_form" class="form fv-plugins-bootstrap5 fv-plugins-framework">
+                            <form id="kt_create_emp_form" class="form" autocomplete="off">
                                 <div class="row rounded">
                                     <div class="col-lg-1">
                                         <a href="{{route("hc.emp.index")}}" class="fw-bold"><i class="fa-solid fa-arrow-left "></i> Back</a>
@@ -242,6 +242,44 @@
 
             return;
         }
+
+        $('[name="use_as_residential"]').on('change', function () {
+            $('[name="residential_address"]').val("");
+            $('[name="residential_address"]').prop("disabled", $(this).is(':checked'));
+
+            if ($(this).is(':checked')) {
+                $('[name="residential_address"]').addClass("bg-secondary");
+            } else {
+                $('[name="residential_address"]').removeClass("bg-secondary");
+            }
+        })
+
+        function formatNPWP(v) {
+            if (!v) return v;
+
+            v = v.replace(/\D/g, "");
+
+            if (v.length <= 2) return v;
+
+            if (v.length <= 5) return v.replace(/^(\d{0,2})(\d{0,3})/, "$1.$2");
+
+            if (v.length <= 8) return v.replace(/^(\d{0,2})(\d{0,3})(\d{0,3})/, "$1.$2.$3");
+
+            if (v.length <= 9) return v.replace(/^(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,1})/, "$1.$2.$3.$4");
+
+            if (v.length <= 12) return v.replace(/^(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,1})(\d{0,3})/, "$1.$2.$3.$4-$5");
+
+            return v.replace(/^(\d{0,2})(\d{0,3})(\d{0,3})(\d{0,1})(\d{0,3})(\d{0,3})/, "$1.$2.$3.$4-$5-$6").slice(0, 20);
+        }
+
+        // Listen for input changes
+        $("[name='npwp']").on('input', function() {
+            let inputValue = $(this).val();
+            let formattedValue = formatNPWP(inputValue);
+            $(this).val(formattedValue);
+        });
+
+        $("[name='npwp']").trigger('input');
     })
 </script>
 @endsection

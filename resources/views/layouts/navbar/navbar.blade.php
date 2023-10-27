@@ -207,6 +207,21 @@
                                                             </a>
                                                         </div>
                                                     </div>
+                                                    {{-- @can('FIN:view-inventory') --}}
+                                                        <div class="col-lg-6">
+                                                            <div class="menu-item p-0 m-0">
+                                                                <a href="{{route('fin.inv.dashboard')}}" class="menu-link">
+                                                                    <span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-35px h-35px me-4 bg-light">
+                                                                        <i class="fa-solid fa-file-invoice-dollar text-success fs-3"></i>
+                                                                    </span>
+                                                                    <span class="d-flex flex-column">
+                                                                        <span class="fs-6 fw-bold text-dark">Billing</span>
+                                                                        <span class="fs-7 fw-semibold text-gray-500">Data Penagihan</span>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    {{-- @endcan --}}
                                                 </div>
                                             </div>
                                         </div>
@@ -306,7 +321,10 @@
                                 </span>
                             </div>
                         </div> --}}
-                        <a href="{{route("com.promag.index")}}">Promag</a>
+                        <span class="menu-link" onclick='onPromagClick()'>
+                            <a href="{{route("com.promag.index")}}" class="menu-title">Promag</a>
+                            <span class="menu-arrow d-lg-none"></span>
+                        </span>
                     </div>
                     <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                         <span class="menu-link">
@@ -441,3 +459,8 @@
         </div>
     </div>
 </div>
+<script>
+    const onPromagClick = () => {
+        window.location.href = "{{route('com.promag.index')}}"
+    }
+</script>

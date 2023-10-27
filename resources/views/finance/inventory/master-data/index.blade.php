@@ -5,6 +5,7 @@
 
 @section('main_content')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch@3.8.0/dist/geosearch.css" />
     <div class="col-lg-9 mt-md-n14">
         <div class="card">
             <div class="card-body">

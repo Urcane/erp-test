@@ -556,6 +556,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(data) {
+                        $('#attendance_edit_modal').modal('hide');
                         tableAttendance.draw();
                         renderSummaries();
                         toastr.success(data.message,'Selamat 🚀 !');
@@ -578,6 +579,7 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(data) {
+                        $('#attendance_delete_modal').modal('hide');
                         tableAttendance.draw();
                         renderSummaries();
                         toastr.success(data.message,'Selamat 🚀 !');
@@ -616,6 +618,21 @@
             const rangeDate = $('#range_date_export').val();
             const filterDivisi = $('#filter_divisi_export').val();
             const filterDepartment = $('#filter_department_export').val();
+
+            if (rangeDate === "") {
+                toastr.error('Range Date is required', 'Opps!');
+                return;
+            }
+
+            if (filterDivisi === "") {
+                toastr.error('Divisi is required', 'Opps!');
+                return;
+            }
+
+            if (filterDepartment === "") {
+                toastr.error('Department is required', 'Opps!');
+                return;
+            }
 
             window.open(`{{ route('hc.att.export.all') }}?rangeDate=${rangeDate}&filterDivisi=${filterDivisi}&filterDepartment=${filterDepartment}`, '_blank');
         });

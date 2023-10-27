@@ -121,12 +121,16 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/work-order/detail/{work_list_id}', 'getWorkOrderById')->name('com.work-order.detail');
             Route::get('/get-data/table/work-order', 'getDatatableWorkOrder')->name('com.work-order.datatable');
             Route::get('/get-data/table/work-order-survey', 'getDataTableWorkOrderSurvey')->name('com.work-order-survey.datatable');
+
+            Route::get('/detail/{work_list_id}/getSummaryCountPromag', 'getSummaryCountPromag')->name('com.promag.detail.getSummaryCountPromag');
+            Route::get('/detail/{work_list_id}/getTaskOverview', 'getTaskOverview')->name('com.promag.detail.getTaskOverview');
         });
 
         Route::controller(TaskListController::class)->group(function () {
             Route::get('/{work_list_id}/task-lists', 'taskLists')->name('com.promag.task-lists');
             Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
             Route::post('/{work_list_id}/task-lists/store', 'store')->name('com.promag.task-list.store');
+            Route::post('/{work_list_id}/task-lists/store-pic', 'storePic')->name('com.promag.task-list.store-pic');
             Route::get('/{work_list_id}/task-lists/detail/{task_list_id}', 'detailTaskList')->name('com.promag.task-list.detail');
             Route::post('/task-lists/detail/{task_list_id}/comment', 'comment')->name('com.promag.task-list.comment');
             Route::post('/task-lists/detail/{task_list_id}/checklist', 'addChecklist')->name('com.promag.task-list.checklist.add');
@@ -360,7 +364,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::prefix('holiday')->group(function () {
                         Route::get('/', 'index')->name('hc.setting.holiday.index');
                         Route::get('/table', 'getTable')->name('hc.setting.holiday-get-table');
-                        Route::post('/create/update', 'createUpdate')->name('hc.setting.holiday.createUpdate');
+                        Route::post('/create', 'create')->name('hc.setting.holiday.create');
+                        Route::post('/update', 'update')->name('hc.setting.holiday.update');
                         Route::post('/delete', 'destroy')->name('hc.setting.holiday.delete');
                     });
                 });

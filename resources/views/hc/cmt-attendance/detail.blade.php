@@ -407,6 +407,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
+                    $('#attendance_edit_modal').modal('hide');
                     tableAttendance.draw();
                     renderSummaries();
                     toastr.success(data.message,'Selamat 🚀 !');
@@ -429,6 +430,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
+                    $('#attendance_delete_modal').modal('hide');
                     tableAttendance.draw();
                     renderSummaries();
                     toastr.success(data.message,'Selamat 🚀 !');
@@ -444,8 +446,11 @@
 
         $('#modal_attendance_export_submit').on('click', function() {
             const rangeDate = $('#range_date_export').val();
-            const filterDivisi = $('#filter_divisi_export').val();
-            const filterDepartment = $('#filter_department_export').val();
+
+            if (!rangeDate) {
+                toastr.error('Range Date is required', 'Opps!');
+                return;
+            }
 
             window.open(`{{ route('hc.att.export.personal') }}?userId={{$user->id}}&rangeDate=${rangeDate}`, '_blank');
         });

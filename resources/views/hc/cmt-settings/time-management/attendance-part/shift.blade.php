@@ -297,6 +297,7 @@
                 'X-CSRF-TOKEN': "{{csrf_token()}}"
             },
             success: function(data) {
+                $('#modal_create_shift').modal('hide');
                 dataTableJobShift.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },
@@ -321,7 +322,7 @@
             error: function(xhr, status, error) {
                 const data = xhr.responseJSON;
                 toastr.error(data.message, 'Opps!');
-                $('#show_id_request_table_' + id).prop('checked', false);
+                $(`#show_id_request_table_${id}`).prop('checked', !$(`#show_id_request_table_${id}`).is(':checked'));
             }
         });
     }

@@ -192,6 +192,7 @@
                 'X-CSRF-TOKEN': "{{csrf_token()}}"
             },
             success: function(data) {
+                $('#modal_create_employment_status').modal('hide');
                 dataTableEmploymentStatus.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },

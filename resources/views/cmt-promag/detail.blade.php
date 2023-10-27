@@ -229,7 +229,7 @@
                             const user_id = $(this).data('id');
 
                             $.ajax({
-                                url: `/cmt-promag/detail/{{$work_list_id}}/users/${user_id}`,
+                                url: `/promag/detail/{{$work_list_id}}/users/${user_id}`,
                                 headers: {
                                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                                 },
@@ -239,8 +239,8 @@
                                     $(addUserButtonElement).click();
                                 },
                                 error: function (error) {
+                                    console.error(error)
                                     toastr.error(data.status, 'Opps!');
-                                    consol.error(error)
                                 }
                             })
                         })

@@ -90,6 +90,20 @@ class TaskListController extends Controller
         }
     }
 
+    public function storePic(Request $request, $work_list_id)
+    {
+        return response()->json(['url' => "https://mantapbetul"]);
+        try{
+            return response()->json([
+                'status' => 'success',
+                'message' => $request,
+            ]);
+        } catch (\Exception $e) {
+            $data = $this->errorHandler->handle($e);
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function detailTaskList($work_list_id, $task_list_id)
     {
         $workTaskList = WorkTaskList::whereId($task_list_id)->with('workList', 'workTaskComment', 'attachments')->first();

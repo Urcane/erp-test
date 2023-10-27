@@ -324,7 +324,7 @@
             ajaxLink: "{{route('com.survey-result.store')}}",
             successCallback: function(data) {
                 setTimeout(() => {
-                    window.location.href = `${window.location.origin}/cmt-survey/detail/${data.data.serviceTypeId}/${data.data.surveyResultId}`;
+                    window.location.href = `${window.location.origin}/survey/detail/${data.data.serviceTypeId}/${data.data.surveyResultId}`;
                 }, 800);
             }
             // validationMessages: workOrderValidationMessages,

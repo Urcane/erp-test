@@ -81,15 +81,16 @@ class HCDataSeeder extends Seeder
         });
 
         collect([
-            [1, "-1.249637", "116.877503", 30],
-            [2, "-1.249637", "116.877503", 30],
-            [3, "-1.249637", "116.877503", 30],
+            [1, "-1.249637", "116.877503", 30, "Kantor 1"],
+            [2, "-1.249637", "116.877503", 30, "Kantor 1"],
+            [3, "-1.249637", "116.877503", 30, "Kantor 1"],
         ])->map(function ($data) {
             BranchLocation::create([
                 "sub_branch_id" => $data[0],
                 "latitude" => $data[1],
                 "longitude" => $data[2],
-                "radius" => $data[3]
+                "radius" => $data[3],
+                "name" => $data[4],
             ]);
         });
 

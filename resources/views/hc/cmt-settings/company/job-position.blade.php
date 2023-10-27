@@ -298,6 +298,7 @@
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
                 success: function(data) {
+                    $('#modal_create_job_position').modal('hide');
                     dataTableJobPosition.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },

@@ -908,7 +908,7 @@
                         if (response.data.is_final == 1) {
                             setTimeout(() => {
                                 window.location.href =
-                                    `cmt-boq/on-review-boq?boq_id=${response.data.id}`;
+                                    `boq/on-review-boq?boq_id=${response.data.id}`;
                             }, 800);
                         } else {
                             setTimeout(() => {
@@ -1847,7 +1847,7 @@
                             toastr.success(response.message);
                             setTimeout(() => {
                                 window.location.href =
-                                    `cmt-quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
+                                    `quotation/update-quotation?quotation_id=${response.data.id}&quotation=internet`;
                             }, 800);
                         },
                         error: function(error) {
