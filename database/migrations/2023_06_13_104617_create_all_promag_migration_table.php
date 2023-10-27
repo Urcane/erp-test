@@ -172,6 +172,16 @@ class CreateAllPromagMigrationTable extends Migration
             $table->foreignId('file_id')->constrained();
             $table->timestamps();
         });
+
+        Schema::create('spendings', function (Blueprint $table) {
+            $table->id();
+            $table->string('nominal')->index();
+            $table->string('desc');
+            $table->morphs('spendingable');
+            $table->string('additional')->nullable()->index();
+            $table->foreignId('user_id')->constrained();
+            $table->timestamps();
+        });
         // End: Project Migration
     }
 

@@ -102,6 +102,34 @@ class ProfileController extends Controller
 
     }
 
+    public function updateAvatar(Request $request) {
+        try {
+            $request->validate([
+                'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            $user = Auth::user();
+
+            $file = $request->file('avatar');
+            $filename = time() . "_" . $user->name . "." . $file->getClientOriginalExtension();
+
+            $user->update([
+                'foto_file' => $filename
+            ]);
+
+            $file->storeAs('personal/avatar', $filename, 'public');
+
+
+            return response()->json([
+                'status' => "success",
+                'message' => "Data berhasil disimpan",
+            ], 200);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
     public function updateEmployment(Request $request)
     {
         try {

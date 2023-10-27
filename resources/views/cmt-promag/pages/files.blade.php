@@ -106,6 +106,7 @@
     <script>
         var dataTablefile = null;
         $('#work_list_file_form').submit(function (e) {
+            console.log(this)
             e.preventDefault();
 
             const formData = new FormData(this);

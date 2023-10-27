@@ -179,6 +179,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
 
             Route::middleware(['permission:HC:update-profile'])->group(function () {
+                Route::post('/update/employee/avatar', 'updateAvatar')->name('hc.emp.update.avatar');
                 Route::post('/update/employee/employment', 'updateEmployment')->name('hc.emp.update.employment');
                 Route::post('/update/employee/salary', 'updateSalary')->name('hc.emp.update.salary');
                 Route::post('/update/employee/bank', 'updateBank')->name('hc.emp.update.bank');
