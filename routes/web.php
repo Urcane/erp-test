@@ -183,6 +183,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
 
             Route::middleware(['permission:HC:update-profile'])->group(function () {
+                Route::post('/update/employee/avatar', 'updateAvatar')->name('hc.emp.update.avatar');
                 Route::post('/update/employee/employment', 'updateEmployment')->name('hc.emp.update.employment');
                 Route::post('/update/employee/salary', 'updateSalary')->name('hc.emp.update.salary');
                 Route::post('/update/employee/bank', 'updateBank')->name('hc.emp.update.bank');
@@ -572,6 +573,28 @@ Route::middleware(['auth'])->group(function () {
                             });
                         });
                     });
+                });
+            });
+        });
+
+        Route::prefix('invoice')->group(function () {
+            Route::controller(Finance\Invoice\InvoiceController::class)->group(function () {
+                Route::get('/', 'viewDashboard')->name('fin.invc.dashboard');
+
+                Route::prefix('invc')->group(function () {
+                    Route::get('/', 'viewInvoice')->name('fin.invc.invoice');
+                });
+
+                Route::prefix('journal')->group(function () {
+                    Route::get('/', 'viewJournal')->name('fin.invc.journal');
+                });
+
+                Route::prefix('master-data')->group(function () {
+                    Route::get('/', 'viewMasterdata')->name('fin.invc.master-data');
+                });
+
+                Route::prefix('logs')->group(function () {
+                    Route::get('/', 'viewLogs')->name('fin.invc.logs');
                 });
             });
         });

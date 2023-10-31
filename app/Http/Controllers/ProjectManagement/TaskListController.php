@@ -15,12 +15,10 @@ use Yajra\DataTables\Facades\DataTables;
 
 class TaskListController extends Controller
 {
-    private $errorHandler;
     protected $fileService;
 
     public function __construct(FileService $fileService)
     {
-        $this->errorHandler = new ErrorHandler();
         $this->fileService = $fileService;
     }
 
@@ -85,7 +83,7 @@ class TaskListController extends Controller
                 'message' => 'Data berhasil disimpan',
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }
@@ -99,7 +97,7 @@ class TaskListController extends Controller
                 'message' => $request,
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }
@@ -139,7 +137,7 @@ class TaskListController extends Controller
                 'data' => $workTaskChecklist,
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }
@@ -165,7 +163,7 @@ class TaskListController extends Controller
                 'data' => $workTaskChecklist,
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }
@@ -204,7 +202,7 @@ class TaskListController extends Controller
                 'data' => $WorkTaskAttechment,
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }
@@ -236,7 +234,7 @@ class TaskListController extends Controller
                 'data' => $WorkTaskComment,
             ]);
         } catch (\Exception $e) {
-            $data = $this->errorHandler->handle($e);
+            $data = ErrorHandler::handle($e);
             return response()->json($data["data"], $data["code"]);
         }
     }

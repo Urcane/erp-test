@@ -25,11 +25,9 @@ use Yajra\DataTables\Facades\DataTables;
 class ProjectManagementController extends Controller
 {
     protected $workOrderService;
-    protected $errorHandler;
 
-    public function __construct(WorkOrderService $workOrderService, ErrorHandler $errorHandler) {
+    public function __construct(WorkOrderService $workOrderService) {
         $this->workOrderService = $workOrderService;
-        $this->errorHandler = $errorHandler;
     }
 
     public function index()
@@ -166,7 +164,7 @@ class ProjectManagementController extends Controller
 
             return redirect(route("com.promag.index"));
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
             // Log::error($th);
             return response()->json($data['data'], $data['code']);
         }
