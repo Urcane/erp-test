@@ -681,7 +681,7 @@ class AssignmentController extends Controller
             return abort(404);
         }
 
-        $userAssignment = $assignment->userAssignments()->where("user_id", $user)->first();
+        $userAssignment = $assignment->userAssignments()->whereId($user)->first();
 
         if (!$userAssignment) {
             return abort(404);

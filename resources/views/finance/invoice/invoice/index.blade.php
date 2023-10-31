@@ -42,7 +42,7 @@
                     </div>
 
                     {{-- @can('FIN:add-inventory') --}}
-                        <a href="{{ route('fin.inv.inventory-create') }}" class="btn btn-info btn-sm me-3 fs-8">
+                        <a href="{{ route('fin.invc.invoice.create') }}" class="btn btn-info btn-sm me-3 fs-8">
                             <i class="fa-solid fa-plus"></i>
                             Add Invoice
                         </a>

@@ -179,14 +179,18 @@
                                                     </div>
                                                     @if ($assignment->status == $statusEnum[1])
                                                         <div class="col-lg-1">
-                                                            <a href="{{ route('opt.asign.export-pdf', [
-                                                                'assignment' => $assignment->id,
-                                                                'user' => $user->user->id,
-                                                            ]) }}"
-                                                                target="_blank"
+                                                            <div id="print-{{ $user->id }}" hidden></div>
+                                                            <button type="button"
+                                                                onclick="(() => {
+                                                                    const element = `<iframe src='{{ route('opt.asign.export-pdf', [
+                                                                        'assignment' => $assignment->id,
+                                                                        'user' => $user->id,
+                                                                    ]) }}'></iframe>`;
+                                                                    $('#print-{{ $user->id }}').html(element);
+                                                                })()"
                                                                 class="btn btn-danger btn-sm me-4 d-flex justify-content-center align-items-center">
                                                                 <p class="mb-0">Pdf</p>
-                                                            </a>
+                                                            </button>
                                                         </div>
                                                     @else
                                                         <div class="col-lg-1">
@@ -209,14 +213,18 @@
                                                     </div>
                                                     @if ($assignment->status == $statusEnum[1])
                                                         <div class="col-lg-1">
-                                                            <a href="{{ route('opt.asign.export-pdf', [
-                                                                'assignment' => $assignment->id,
-                                                                'user' => $user->user->id,
-                                                            ]) }}"
-                                                                target="_blank"
+                                                            <div id="print-{{ $user->id }}" hidden></div>
+                                                            <button type="button"
+                                                                onclick="(() => {
+                                                                    const element = `<iframe src='{{ route('opt.asign.export-pdf', [
+                                                                        'assignment' => $assignment->id,
+                                                                        'user' => $user->id,
+                                                                    ]) }}'></iframe>`;
+                                                                    $('#print-{{ $user->id }}').html(element);
+                                                                })()"
                                                                 class="btn btn-danger btn-sm me-4 d-flex justify-content-center align-items-center">
                                                                 <p class="mb-0">Pdf</p>
-                                                            </a>
+                                                            </button>
                                                         </div>
                                                     @else
                                                         <div class="col-lg-1">
@@ -310,7 +318,7 @@
         });
     </script>
     @can('OPR:change-department-status-assignment')
-        @if ($assignment->status == $statusEnum[0] && true)
+        @if ($assignment->status == $statusEnum[0])
             <script>
                 $(document).ready(function() {
                     $('#assignment_reject').on('click', function() {

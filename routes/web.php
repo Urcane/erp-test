@@ -583,6 +583,16 @@ Route::middleware(['auth'])->group(function () {
 
                 Route::prefix('invc')->group(function () {
                     Route::get('/', 'viewInvoice')->name('fin.invc.invoice');
+
+                    Route::get('/detail/{id}', 'viewInvoiceDetail')->name('fin.invc.invoice.detail');
+
+                    Route::get('/detail/{id}/export-invoice', 'exportInvoice')->name('fin.invc.invoice.export.invoice');
+                    Route::get('/detail/{id}/export-receipt', 'exportReceipt')->name('fin.invc.invoice.export.receipt');
+
+                    Route::prefix('create')->group(function () {
+                        Route::get('/', 'viewAddInvoice')->name('fin.invc.invoice.create');
+
+                    });
                 });
 
                 Route::prefix('journal')->group(function () {
@@ -595,6 +605,8 @@ Route::middleware(['auth'])->group(function () {
 
                 Route::prefix('logs')->group(function () {
                     Route::get('/', 'viewLogs')->name('fin.invc.logs');
+
+                    Route::get('/detail/{id}', 'viewDetailLog')->name('fin.invc.logs.detail');
                 });
             });
         });
