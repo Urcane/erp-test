@@ -33,6 +33,10 @@ use App\Http\Controllers\ProjectManagement\TaskListController;
 |
 */
 
+Route::get('/privacy', function () {
+    return view('privacy');
+});
+
 Route::middleware(['auth'])->group(function () {
 
     Route::controller(HomeController::class)->group(function () {
