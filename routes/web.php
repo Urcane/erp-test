@@ -43,6 +43,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'index')->name('dashboard');
     });
 
+    Route::post('/change-password', [UserController::class, 'changePassword'])->name('hc.emp.change-password');
+
     Route::middleware(['permission:HC:view-employee'])->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::prefix('cmt-employee')->group(function () {
