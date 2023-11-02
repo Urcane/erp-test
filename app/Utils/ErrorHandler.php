@@ -14,7 +14,7 @@ class ErrorHandler
             return [
                 "data" => [
                     "status" => "fail",
-                    "message" => "Input Error | " . $error->getMessage(),
+                    "message" => "User Error | " . $error->getMessage(),
                 ],
                 "code" => $error->getCode(),
             ];

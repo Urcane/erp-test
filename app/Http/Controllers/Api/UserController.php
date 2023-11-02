@@ -13,7 +13,7 @@ use App\Utils\ErrorHandler;
 
 class UserController extends Controller
 {
-    public function changeFirstPassword(Request $request)
+    public function changePassword(Request $request)
     {
         try {
             $request->validate([

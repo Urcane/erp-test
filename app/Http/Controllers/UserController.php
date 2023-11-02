@@ -16,6 +16,7 @@ use App\Models\Employee\TaxStatus;
 
 use App\Constants;
 use App\Exceptions\InvariantError;
+use App\Exceptions\NotFoundError;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -61,6 +62,39 @@ class UserController extends Controller
             return response()->json([
                 "status" => "success",
                 "message" => "Password berhasil diubah"
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function resetUserPassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required',
+            ]);
+
+            $user = User::whereId($request->id)->first();
+
+            if (!$user) {
+                throw new NotFoundError("User Tidak ditemukan");
+            }
+
+            if ($user->is_new) {
+                throw new InvariantError("Password sudah direset");
+            }
+
+            $user->update([
+                'password' => bcrypt(12345678),
+                'is_new' => true,
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Password berhasil direset menjadi (12345678)"
             ]);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);

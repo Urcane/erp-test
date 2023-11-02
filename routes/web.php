@@ -49,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::prefix('cmt-employee')->group(function () {
                 Route::get('/', 'index')->name('hc.emp.index');
+                Route::post('/reset-pass', 'resetUserPassword')->name('hc.emp.reset-user-pass');
 
                 Route::get('/create/employee', 'create')->name('hc.emp.create');
                 Route::post('/update-status/employee', 'statusPegawai')->name('hc.emp.update-status');
