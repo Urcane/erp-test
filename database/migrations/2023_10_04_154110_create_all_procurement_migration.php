@@ -71,17 +71,6 @@ class CreateAllProcurementMigration extends Migration
             $table->string("description")->nullable();
             $table->timestamps();
         });
-
-        Schema::create('procurement_item_payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('procurement_item_id')->constrained('procurement_items');
-            $table->string("payment_date");
-            $table->string("payment_method");
-            $table->enum("category", ["Advance Payment", "Full Payment"]);
-            $table->integer("nominal");
-            $table->string("file");
-            $table->timestamps();
-        });
     }
 
     /**
@@ -91,7 +80,6 @@ class CreateAllProcurementMigration extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('procurement_item_payments');
         Schema::dropIfExists('procurement_item_statuses');
         Schema::dropIfExists('procurement_items');
         Schema::dropIfExists('procurements');

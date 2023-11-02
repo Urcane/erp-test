@@ -28,7 +28,7 @@
 
                                 <form action="" id="form_procurement">
                                     <input type="hidden" value="{{$workList->id ?? ""}}" name="work_list_id">
-                                    @include("cmt-opportunity.procurement.form-procurement-item-part.basic-form")
+                                    @include("finance.procurement.form-procurement-item-part.basic-form")
                                     <div class="text-center mt-9 mb-10">
                                         <button type="reset" id="modal_status_item_cancel"
                                             class="btn btn-sm btn-light me-3 w-lg-200px"

@@ -267,7 +267,7 @@
                     <span class="required fw-bold">Requester</span>
                 </label>
                 <select class="drop-data form-select form-select-solid"
-                    data-control="requester" required
+                    data-control="select2" required
                     name="requester" id="requester" @if (($procurement->requester ?? old('requester')))
                         disabled
                     @endif>

@@ -20,6 +20,12 @@ class Constants
     // procurement {
     public $procurement_type = ["Customer", "Internal", "Inventory"];
     // }
+
+    // payment {
+    public $payment_status = ["Waiting", "Paid", "Due Date", "Freeze", "Dismantle", "Rejected"];
+    public $payment_category = ["Down Payment", "Full Payment", "Repayment", "Credit"];
+    // }
+
     // item {
     public $item_status = [
         "Create Procurement",

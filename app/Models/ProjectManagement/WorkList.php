@@ -3,6 +3,7 @@
 namespace App\Models\ProjectManagement;
 
 use App\Traits\HasFile;
+use App\Traits\HasPayment;
 use App\Traits\HasUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Http\Client\Request;
 
 class WorkList extends Model
 {
-    use HasFactory, HasUser, HasFile;
+    use HasFactory, HasUser, HasFile, HasPayment;
     protected $guarded = [];
 
     function projectProgressCategory() : BelongsTo {

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Sales\Procurement;
+namespace App\Http\Controllers\Finance\Procurement;
 
 use App\Constants;
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\Warehouse;
+use App\Models\Master\Payment;
 use App\Models\Opportunity\BoQ\Item;
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\Opportunity\BoQ\ItemStatus;
@@ -16,6 +17,7 @@ use App\Models\Procurement\ProcurementItemStatus;
 use App\Models\ProjectManagement\WorkActivity;
 use App\Models\ProjectManagement\WorkList;
 use App\Models\User;
+use App\Services\Master\FileService;
 use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,14 +27,15 @@ use Yajra\DataTables\Facades\DataTables;
 class ProcurementController extends Controller
 {
     private $constants;
+    protected $fileService;
 
-
-    public function __construct()
+    public function __construct(FileService $fileService)
     {
+        $this->fileService = $fileService;
         $this->constants = new Constants();
     }
     public function index() {
-        return view("cmt-opportunity.procurement.index");
+        return view("finance.procurement.index");
     }
 
     public function getTableProcurement() {
@@ -67,8 +70,56 @@ class ProcurementController extends Controller
         })->with('itemable')->get();
         $users = User::all();
         $dataProcurementType = $this->constants->procurement_type;
+        $paymentCategory = $this->constants->payment_category;
 
-        return view("cmt-opportunity.procurement.detail-procurement", compact("procurement", "boq", "users", "dataProcurementType"));
+        return view("finance.procurement.detail-procurement", compact("procurement", "boq", "users", "dataProcurementType", "paymentCategory"));
+    }
+
+    public function addPaymentProcurement(Request $request, $id) {
+        try {
+            $request->validate([
+                "payment_type" => "required",
+                "nominal" => "required",
+                "payment_date" => "required",
+                "payment_method" => "required",
+                "file" => "required",
+                "description" => "required",
+            ]);
+
+            $procurement = Procurement::whereId($id)->first();
+            DB::transaction(function () use ($request, $procurement) {
+
+                $payment = $procurement->payment()->save(new Payment([
+                    "payment_type" => $request->payment_type,
+                    "nominal" => $request->nominal,
+                    "payment_date" => $request->payment_date,
+                    "additional" => "payment/procurement/". $procurement->id,
+                    "payment_method" => $request->payment_method,
+                    "desc" => $request->description,
+                    "status" => $this->constants->payment_status[0],
+                    "user_id" => auth()->user()->id,
+                ]));
+
+                $filename = $request->file('file')->getClientOriginalName();
+
+                $this->fileService->storeFile($payment, [
+                    'file' => $request->file,
+                    "filePath" => "public/payment/work-task-lists",
+                    "user_id" => auth()->user()->id,
+                    "additional" => "payment/procurement/". $procurement->id,
+                    'fileName' => $filename,
+                ]);
+            });
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Payment berhasil diajukan"
+            ], 201);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function getTableItemProcurement(Request $request) {
@@ -156,7 +207,7 @@ class ProcurementController extends Controller
         $dataWarehouse = Warehouse::all();
         $dataProcurementType = $this->constants->procurement_type;
 
-        return view('cmt-opportunity.procurement.form-procurement', compact("boq", "users", "dataProcurementType", "dataWarehouse"));
+        return view('finance.procurement.form-procurement', compact("boq", "users", "dataProcurementType", "dataWarehouse"));
     }
 
     public function storeProcurement(Request $request) {
@@ -236,34 +287,62 @@ class ProcurementController extends Controller
     }
 
     public function detailItemProcurement($id) {
-        $procurementItem = ProcurementItem::whereId($id)->with("procurementItemStatus", "inventoryGood", "procurementItemPayment")->first();
+        $procurementItem = ProcurementItem::whereId($id)->with("procurementItemStatus", "inventoryGood")->first();
         // $inventory =
         array_shift($this->constants->item_status);
         $dataStatus = $this->constants->item_status;
 
-        return view("cmt-opportunity.procurement.detail-item-procurement", compact("procurementItem", "dataStatus"));
+        return view("finance.procurement.detail-item-procurement", compact("procurementItem", "dataStatus"));
     }
 
     public function updateItemProcurement(Request $request) {
+        $request->validate([
+            "need" => "required",
+            "purchase_number" => "required",
+            "no_po_nota" => "required",
+            "receipt_number" => "required",
+            "price" => "required",
+            "quantity" => "required",
+            "vendor" => "required",
+            "vendor_location" => "required",
+            "expedition" => "required",
+            "shipping_price" => "required",
+        ]);
+
         try{
             $procurementItem = ProcurementItem::whereId($request->procurement_item_id)->first();
 
             DB::transaction(function() use ($request, $procurementItem) {
-                if ($request->status == $this->constants->item_status[1]) {
-                    $procurementItem->update([
-                        "need" => $request->need,
-                        "purchase_number" => $request->purchase_number,
-                        "no_po_nota" => $request->no_po_nota,
-                        "receipt_number" => $request->receipt_number,
-                        "price" => $request->price,
-                        "quantity" => $request->quantity,
-                        "vendor" => $request->vendor,
-                        "vendor_location" => $request->vendor_location,
-                        "expedition" => $request->expedition,
-                        "shipping_price" => $request->shipping_price,
-                        "payment_method" => $request->payment_method,
-                    ]);
-                }
+                $procurementItem->update([
+                    "need" => $request->need,
+                    "purchase_number" => $request->purchase_number,
+                    "no_po_nota" => $request->no_po_nota,
+                    "receipt_number" => $request->receipt_number,
+                    "price" => $request->price,
+                    "quantity" => $request->quantity,
+                    "vendor" => $request->vendor,
+                    "vendor_location" => $request->vendor_location,
+                    "expedition" => $request->expedition,
+                    "shipping_price" => $request->shipping_price,
+                ]);
+            });
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Item procurement berhasil disimpan"
+            ], 201);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function updateStatusItemProcurement(Request $request) {
+        try{
+            $procurementItem = ProcurementItem::whereId($request->procurement_item_id)->first();
+
+            DB::transaction(function() use ($request, $procurementItem) {
 
                 ProcurementItemStatus::create([
                     "procurement_item_id" => $procurementItem->id,
@@ -275,13 +354,13 @@ class ProcurementController extends Controller
 
                     $file = $request->file('file');
                     $filename = time() . "_" . $request->user()->name . "." . $file->getClientOriginalExtension();
-                    ProcurementItemPayment::create([
-                        "procurement_item_id" => $procurementItem->id,
-                        "nominal" => $request->nominal,
-                        "payment_date" => $request->payment_date,
-                        "payment_method" => $request->payment_method,
-                        "file" => $filename,
-                    ]);
+                    // ProcurementItemPayment::create([
+                    //     "procurement_item_id" => $procurementItem->id,
+                    //     "nominal" => $request->nominal,
+                    //     "payment_date" => $request->payment_date,
+                    //     "payment_method" => $request->payment_method,
+                    //     "file" => $filename,
+                    // ]);
 
                     $file->storeAs('payment/procurement', $filename, 'public');
                 }

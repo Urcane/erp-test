@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="modal-body mx-5 mx-lg-15 mb-7">
-                    <form method="POST" class="form fv-plugins-bootstrap5 fv-plugins-framework" id="update_procurement_form" enctype="multipart/form-data">
+                    <form method="POST" class="form fv-plugins-bootstrap5 fv-plugins-framework" id="update_status_procurement_form" enctype="multipart/form-data">
                         @csrf
                         <div class="scroll-y me-n10 pe-10" id="update_status_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#update_status_header" data-kt-scroll-wrappers="#update_status_scroll" data-kt-scroll-offset="300px">
                             <div class="row mb-9">
@@ -34,15 +34,13 @@
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
                                         <span class="required fw-bold">Status</span>
                                     </label>
-                                    <select class="drop-data form-select form-select-solid"
+                                    <select class="drop-data form-select form-select-solid" data-control="select2"
                                         name="status" id="status" required>
                                         <option value="" selected hidden disabled>Pilih status terbaru</option>
                                         @foreach ($dataStatus as $data)
                                             <option value="{{ $data }}">{{ $data }}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                                <div class="col-lg-12" id="main_form">
                                 </div>
                                 <div class="col-lg-12 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
@@ -110,25 +108,23 @@
                                             value="{{ $procurementItem->inventoryGood->description }}" disabled>
                                     </div>
                                 </div>
-                                <h4 class="mt-10">Order Information</h4>
-                                @include("cmt-opportunity.procurement.form-procurement-item-part.purchase-form", ["disabled" => true])
+                                <form id="update_procurement_form">
+                                    <h4 class="mt-10">Order Information</h4>
+                                    @if (false)
+                                        @include("finance.procurement.form-procurement-item-part.purchase-form", ["disabled" => true])
+                                    @else
+                                        @include("finance.procurement.form-procurement-item-part.purchase-form", ["disabled" => false])
+                                    @endif
+
+                                    <div class="text-center mt-9">
+                                        <a href="{{ route('com.procurement.detail', ["id" => $procurementItem->procurement_id]) }}" id="update_status_cancel" class="btn btn-sm btn-light me-3 w-lg-200px">Cancel</a>
+                                        <button type="submit" id="update_status_submit" class="btn btn-sm btn-info w-lg-200px">
+                                            <span class="indicator-label">Simpan</span>
+                                        </button>
+                                    </div>
+                                </form>
                                 <hr class="my-10">
-                                <div class="col-lg-6">
-                                    <h4>Payment</h4>
-                                    @foreach ($procurementItem->procurementItemPayment as $itemPayment)
-                                        <div class="col-lg-12 d-flex flex-row justify-content-between mt-5 @if($loop->iteration == 1) text-success @endif">
-                                            <div>
-                                                <h4 class="@if($loop->iteration == 1) text-success @endif">{{$itemPayment->created_at}}</h4>
-                                                <span>{{$itemPayment->category}}</span> <br>
-                                                <span>Rp. {{$itemPayment->nominal}}, {{$itemPayment->payment_method}}</span>
-                                            </div>
-                                            <div>
-                                                <a href="{{asset("storage/payment/procurement/" . $itemPayment->file)}}" class="btn btn-primary btn-sm"><i class="fa-solid fa-file-invoice"></i> File</a>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                                <div class="col-lg-6 row">
+                                <div class="col-lg-12 row">
                                     <h4>Status</h4>
                                     @foreach ($procurementItem->procurementItemStatus as $itemStatus)
                                         <div class="col-lg-12 d-flex flex-row mt-5 ms-5 @if($loop->iteration == 1) text-success @endif">
@@ -151,26 +147,7 @@
     </div>
 
     <script>
-        $('#status').change(function () {
-            $("#main_form").html(``);
-            if ($(this).val() == "Making an order") {
-                $("#main_form").html(`@include("cmt-opportunity.procurement.form-procurement-item-part.purchase-form", ["disabled" => false])`);
-
-                $("#use_payment").click(function() {
-                    if(this.checked) {
-                        $("#payment").show();
-                        $("#payment input").attr("required", true);
-                    }else{
-                        $("#payment").hide();
-                        $("#payment input").attr("required", false);
-                    }
-                });
-            } if( $(this).val() == "Payment") {
-                $("#main_form").html(`@include("cmt-opportunity.procurement.form-procurement-item-part.payment-form", ["required" => true])`);
-            }
-        })
-
-        $("#update_procurement_form").submit(function(e) {
+        $('#update_procurement_form').submit(function (e) {
             e.preventDefault();
             var formData = new FormData(this);
             formData.append("procurement_item_id", "{{ $procurementItem->id }}");
@@ -179,44 +156,48 @@
                 url: "{{ route('com.procurement.updateItemProcurement', ['id' => $procurementItem->id]) }}",
                 type: "POST",
                 data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    if (data.status == "success") {
-                        Swal.fire({
-                            text: data.message,
-                            icon: "success",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok",
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        }).then(function() {
-                            window.location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            text: data.message,
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok",
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        });
-                    }
+                    toastr.success(data.message,'Selamat 🚀 !');
+                    setTimeout(function() {
+                        window.location.href = "{{ route('com.procurement.detail', ['id' => $procurementItem->id]) }}";
+                    }, 1000);
                 },
-                error: function(data) {
-                    Swal.fire({
-                        text: data.message,
-                        icon: "error",
-                        buttonsStyling: false,
-                        confirmButtonText: "Ok",
-                        customClass: {
-                            confirmButton: "btn btn-primary"
-                        }
-                    });
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
+        })
+        $("#update_status_procurement_form").submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            formData.append("procurement_item_id", "{{ $procurementItem->id }}");
+
+            $.ajax({
+                url: "{{ route('com.procurement.updateStatusItemProcurement', ['id' => $procurementItem->id]) }}",
+                type: "POST",
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    toastr.success(data.message,'Selamat 🚀 !');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
                 }
             });
         });

@@ -4,6 +4,7 @@ namespace App\Models\Procurement;
 
 use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use App\Models\User;
+use App\Traits\HasPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Procurement extends Model
 {
-    use HasFactory;
+    use HasFactory, HasPayment;
+
     protected $guarded = [];
     protected $table = 'procurements';
 

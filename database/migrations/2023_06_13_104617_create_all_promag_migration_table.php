@@ -1,11 +1,19 @@
 <?php
 
+use App\Constants;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateAllPromagMigrationTable extends Migration
 {
+    private $constants;
+
+    public function __construct()
+    {
+        $this->constants = new Constants();
+    }
+
     /**
      * Run the migrations.
      *
@@ -173,11 +181,15 @@ class CreateAllPromagMigrationTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('spendings', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->string('nominal')->index();
             $table->string('desc');
-            $table->morphs('spendingable');
+            $table->date("payment_date");
+            $table->string("payment_method");
+            $table->string("payment_type");
+            $table->enum("status", $this->constants->payment_status)->default($this->constants->payment_status[0]);
+            $table->morphs('paymentable');
             $table->string('additional')->nullable()->index();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
@@ -192,8 +204,9 @@ class CreateAllPromagMigrationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('work_activity_log_files');
-        Schema::dropIfExists('work_activity_logs');
+        Schema::dropIfExists('payments');
+        Schema::dropIfExists('work_activity_files');
+        Schema::dropIfExists('work_activities');
         Schema::dropIfExists('work_task_comments');
         Schema::dropIfExists('work_task_checklists');
         Schema::dropIfExists('work_task_attachments');

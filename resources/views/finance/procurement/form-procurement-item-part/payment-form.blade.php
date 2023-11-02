@@ -23,7 +23,7 @@
         <input type="text" id="payment_method" value="" class="form-control form-control-solid" @if ($required) required @endif name="payment_method">
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-6" id="recipe">
         <label class="d-flex align-items-center fs-6 form-label mb-2"
             for="file">
             <span class="required fw-bold">Payment Recipe</span>

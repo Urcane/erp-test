@@ -119,24 +119,6 @@
             value="{{ $procurementItem->shipping_price ?? old('shipping_price') }}" @if($disabled) disabled @endif required name="shipping_price">
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
-    @if (!$disabled)
-        <div class="col-lg-12">
-            <input type="checkbox" class="form-check-input checkbox-real" id="use_payment" placeholder="" name="use_payment">
-            <label class="fs-6 form-check-label mb-2 ms-2"
-                for="use_payment">
-                <span class="fw-bold">Use Payment</span>
-            </label>
-        </div>
-    @endif
-    <div class="col-lg-12" id="payment" style="display: none">
-        @if (!$disabled)
-            <label class="d-flex align-items-center fs-6 form-label mb-2 mt-10"
-                for="payment_method">
-                <span class="required fw-bold">Payment (DP)</span>
-            </label>
-            @include('cmt-opportunity.procurement.form-procurement-item-part.payment-form', ['required' => false])
-        @endif
-    </div>
 </div>
 
 

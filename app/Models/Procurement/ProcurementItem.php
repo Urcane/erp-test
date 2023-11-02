@@ -3,7 +3,6 @@
 namespace App\Models\Procurement;
 
 use App\Models\Inventory\InventoryGood;
-use App\Models\Opportunity\BoQ\ItemableBillOfQuantity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,10 +15,6 @@ class ProcurementItem extends Model
 
     public function procurementItemStatus() : HasMany {
         return $this->hasMany(ProcurementItemStatus::class)->orderByDesc("id");
-    }
-
-    public function procurementItemPayment() : HasMany {
-        return $this->hasMany(ProcurementItemPayment::class);
     }
 
     public function procurement() : BelongsTo {

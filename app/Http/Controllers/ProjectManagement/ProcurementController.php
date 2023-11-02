@@ -60,6 +60,6 @@ class ProcurementController extends Controller
         $dataProcurementType = $this->constants->procurement_type;
         $dataWarehouse = Warehouse::all();
 
-        return view('cmt-opportunity.procurement.form-procurement', compact("boq", "users", "workList", "dataProcurementType", "dataWarehouse"));
+        return view('finance.procurement.form-procurement', compact("boq", "users", "workList", "dataProcurementType", "dataWarehouse"));
     }
 }

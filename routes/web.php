@@ -6,7 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Sales\Opportunity\Quotation\QuotationController;
 use App\Http\Controllers\Sales\Customer\CustomerController;
 use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
-use App\Http\Controllers\Sales\Procurement\ProcurementController;
+use App\Http\Controllers\Finance\Procurement\ProcurementController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
 use App\Http\Controllers\Profile;
@@ -577,6 +577,22 @@ Route::middleware(['auth'])->group(function () {
             });
         });
 
+        Route::prefix('approval')->group(function () {
+            Route::controller(Finance\Approval\ApprovalController::class)->group(function () {
+                Route::get('/', 'index')->name('fin.approval.index');
+            });
+            Route::prefix('procurement')->group(function () {
+                Route::controller(Finance\Approval\ProcurementController::class)->group(function () {
+                    Route::get('/get-data/table', 'getTableApproval')->name('fin.approval.procurement.get-table');
+                });
+            });
+            Route::prefix('spending')->group(function () {
+                Route::controller(Finance\Approval\SpendingController::class)->group(function () {
+                    Route::get('/get-data/table', 'getTableApproval')->name('fin.approval.spending.get-table');
+                });
+            });
+        });
+
         Route::prefix('invoice')->group(function () {
             Route::controller(Finance\Invoice\InvoiceController::class)->group(function () {
                 Route::get('/', 'viewDashboard')->name('fin.invc.dashboard');
@@ -636,8 +652,10 @@ Route::middleware(['auth'])->group(function () {
 
             // halaman detail
             Route::get('/detail/{id}', 'detailProcurement')->name('com.procurement.detail');
+            Route::post('/{id}/add/payment/', 'addPaymentProcurement')->name('com.procurement.addPaymentProcurement');
             Route::get('/table/item/procurement', 'getTableItemProcurement')->name('com.procurement.getTableItemProcurement');
             Route::post('/update/item/procurement/{id}', 'updateItemProcurement')->name('com.procurement.updateItemProcurement');
+            Route::post('/update/item/procurement/{id}/status', 'updateStatusItemProcurement')->name('com.procurement.updateStatusItemProcurement');
 
             // halaman detail item procurement
             Route::get('/detail/item/{id}', 'detailItemProcurement')->name('com.procurement.detail.item');
