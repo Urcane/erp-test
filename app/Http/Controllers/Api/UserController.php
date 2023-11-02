@@ -13,9 +13,32 @@ use App\Utils\ErrorHandler;
 
 class UserController extends Controller
 {
+    public function changePassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'password' => 'required|min:8',
+            ]);
 
+            if (!$request->user()->is_new) {
+                throw new InvariantError("Password sudah pernah diubah");
+            }
 
+            $request->user()->update([
+                'password' => bcrypt($request->password),
+                'is_new' => false,
+            ]);
 
+            return response()->json([
+                "status" => "success",
+                "message" => "Password berhasil diubah"
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
 
     public function login(Request $request)
     {
@@ -38,6 +61,7 @@ class UserController extends Controller
             return response()->json([
                 "status" => "success",
                 "data" => [
+                    "is_new" => $request->user()->is_new,
                     "token" => $token
                 ]
             ]);

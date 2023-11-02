@@ -12,6 +12,46 @@
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+@if(Auth::user()->id == $user->id && $user->is_new)
+    <div class="modal fade" id="reset-pass" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <div class="modal-content">
+                <div class="modal-header pb-0 border-0 justify-content-end">
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="modal-body mx-5 mx-lg-15 mb-7">
+                    <form id="reset-pass-form" class="form fv-plugins-bootstrap5 fv-plugins-framework" autocomplete="off">
+                        <div class="scroll-y me-n10 pe-10" data-kt-scroll-max-height="auto" data-kt-scroll-offset="300px">
+                            <div class="row mb-9">
+                                <div class="col-lg-12 text-center mb-9">
+                                    <span class="fs-1 fw-bolder text-dark d-block mb-1">Reset Password</span>
+                                </div>
+                                <div class="col-lg-12 mb-3">
+                                    <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                        <span class="required fw-bold">Masukan Password Baru</span>
+                                    </label>
+                                    <input type="text" class="form-control form-control-solid"
+                                        required name="password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-9">
+                            <button type="reset"
+                                class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-sm btn-info w-lg-200px">
+                                <span class="indicator-label">Simpan</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 <div class="row justify-content-center mt-n20">
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center mt-md-n20">
@@ -72,6 +112,13 @@
                         </div>
                     </div>
                 </div>
+                @if(Auth::user()->id == $user->id && $user->is_new)
+                    <div class="col-lg-12 mb-3">
+                        <a href="#reset-pass" data-bs-toggle="modal" class="btn btn-warning w-100">
+                            Silahkan Ganti Password Anda!
+                        </a>
+                    </div>
+                @endif
                 <div class="card bg-secondary">
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-3">
@@ -202,6 +249,30 @@
 <script>
     var sig = $('#sig').signature({syncField: '#pegawai_sign_url', syncFormat: 'PNG'});
     $(document).ready(function () {
+        @if(Auth::user()->id == $user->id && $user->is_new)
+            $('#reset-pass-form').submit(function (e) {
+                e.preventDefault();
+                const data = $(this).serialize();
+                $.ajax({
+                    url: "{{ route('hc.emp.change-password') }}",
+                    type: 'POST',
+                    data: data,
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                        $('#reset-pass').modal('hide');
+                        document.getElementById('logout-form').submit();
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
+            });
+        @endif
+
         $('#clear').click(function() {
             sig.signature('clear');
             $("#pegawai_sign_url").val('');

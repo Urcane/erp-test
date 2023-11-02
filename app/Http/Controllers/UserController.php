@@ -15,7 +15,8 @@ use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
 
 use App\Constants;
-
+use App\Exceptions\InvariantError;
+use App\Exceptions\NotFoundError;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,7 @@ use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\File\File;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Permission;
+use App\Utils\ErrorHandler;
 
 class UserController extends Controller
 {
@@ -37,6 +39,68 @@ class UserController extends Controller
         $dataPlacement= Team::all();
 
         return view('hc.cmt-employee.index',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
+    }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'password' => 'required|min:8',
+            ]);
+
+            $user = Auth::user();
+
+            if (!$user->is_new) {
+                throw new InvariantError("Password sudah pernah diubah");
+            }
+
+            User::whereId($user->id)->first()->update([
+                'password' => bcrypt($request->password),
+                'is_new' => false,
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Password berhasil diubah"
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function resetUserPassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required',
+            ]);
+
+            $user = User::whereId($request->id)->first();
+
+            if (!$user) {
+                throw new NotFoundError("User Tidak ditemukan");
+            }
+
+            if ($user->is_new) {
+                throw new InvariantError("Password sudah direset");
+            }
+
+            $user->update([
+                'password' => bcrypt(12345678),
+                'is_new' => true,
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Password berhasil direset menjadi (12345678)"
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function create() {

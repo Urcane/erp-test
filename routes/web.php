@@ -33,16 +33,23 @@ use App\Http\Controllers\ProjectManagement\TaskListController;
 |
 */
 
+Route::get('/privacy', function () {
+    return view('privacy');
+});
+
 Route::middleware(['auth'])->group(function () {
 
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');
     });
 
+    Route::post('/change-password', [UserController::class, 'changePassword'])->name('hc.emp.change-password');
+
     Route::middleware(['permission:HC:view-employee'])->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::prefix('cmt-employee')->group(function () {
                 Route::get('/', 'index')->name('hc.emp.index');
+                Route::post('/reset-pass', 'resetUserPassword')->name('hc.emp.reset-user-pass');
 
                 Route::get('/create/employee', 'create')->name('hc.emp.create');
                 Route::post('/update-status/employee', 'statusPegawai')->name('hc.emp.update-status');
@@ -599,6 +606,16 @@ Route::middleware(['auth'])->group(function () {
 
                 Route::prefix('invc')->group(function () {
                     Route::get('/', 'viewInvoice')->name('fin.invc.invoice');
+
+                    Route::get('/detail/{id}', 'viewInvoiceDetail')->name('fin.invc.invoice.detail');
+
+                    Route::get('/detail/{id}/export-invoice', 'exportInvoice')->name('fin.invc.invoice.export.invoice');
+                    Route::get('/detail/{id}/export-receipt', 'exportReceipt')->name('fin.invc.invoice.export.receipt');
+
+                    Route::prefix('create')->group(function () {
+                        Route::get('/', 'viewAddInvoice')->name('fin.invc.invoice.create');
+
+                    });
                 });
 
                 Route::prefix('journal')->group(function () {
@@ -611,6 +628,8 @@ Route::middleware(['auth'])->group(function () {
 
                 Route::prefix('logs')->group(function () {
                     Route::get('/', 'viewLogs')->name('fin.invc.logs');
+
+                    Route::get('/detail/{id}', 'viewDetailLog')->name('fin.invc.logs.detail');
                 });
             });
         });

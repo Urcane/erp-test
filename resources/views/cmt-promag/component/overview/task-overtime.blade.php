@@ -45,7 +45,7 @@
 </div>
 
 <script>
-    function generateData(count, yrange) {
+    function generateDataRandom(count, yrange) {
         var i = 0;
         var series = [];
         while (i < count) {
@@ -61,70 +61,103 @@
         return series;
     }
 
+    function generateData(count, dayData) {
+        var i = 0;
+        var series = [];
+        while (i < count) {    
+            const x = 'W' + (i + 1).toString();
+            if (dayData) {
+                const dataValue = dayData.filter(item => item.week_number == i+1)[0] ? dayData.filter(item => item.week_number == i+1)[0].total : 0;
+                const y = dataValue;
+
+                series.push({
+                    x,
+                    y
+                });
+                i++;
+                continue;
+            }
+            series.push({
+                x,
+                y: 0,
+            });
+            i++;
+            
+        }
+        return series;
+
+        // const series = dayData.map((item, index) => {
+        //     return {
+        //         x: `W${item.week_number}`,
+        //         y: item.total
+        //     }
+        // })
+        
+        // return series;
+    }
+
     function handleGraphicsHeatmap(data) {
-        console.log(data);
+        const dataReal = data.data;
 
         var options = {
             series: [{
-                    name: 'Minggu',
-                    data: generateData(12, {
-                        min: 0,
-                        max: 90
-                    })
+                    name: 'Sunday',
+                    data: generateData(13, dataReal.Sunday)
                 },
                 {
-                    name: 'Sabtu',
-                    data: generateData(12, {
-                        min: 0,
-                        max: 90
-                    })
+                    name: 'Saturday',
+                    data: generateData(13, dataReal.Saturday)
                 },
                 {
-                    name: 'Jumat',
-                    data: generateData(12, {
-                        min: 0,
-                        max: 90
-                    })
+                    name: 'Friday',
+                    data: generateData(13, dataReal.Friday)
                 },
                 {
-                    name: 'Kamis',
-                    data: generateData(12, {
-                        min: 0,
-                        max: 90
-                    })
+                    name: 'Thursday',
+                    data: generateData(13, dataReal.Thursday)
                 },
                 {
-                    name: "Rabu",
-                    data: generateData(12, {
-                        min: 0,
-                        max: 90
-                    })
+                    name: "Wednesday",
+                    data: generateData(13, dataReal.Wednesday)
                 },
                 {
-                    name: 'Selasa',
-                    data: generateData(12, {
-                        min: 0,
-                        max: 90
-                    })
+                    name: 'Tuesday',
+                    data: generateData(13, dataReal.Tuesday)
                 },
                 {
-                    name: 'Senin',
-                    data: generateData(12, {
-                        min: 0,
-                        max: 90
-                    })
+                    name: 'Monday',
+                    data: generateData(13, dataReal.Monday)
                 },
             ],
             chart: {
                 height: 350,
                 type: 'heatmap',
             },
-            yaxis: {
+            xaxis: {
                 type: 'category',
-                categories: ['Senin', 'Selasa']
+                categories: ['W1', 'W2', 'W3', 'W4','W5','W6','W7','W8','W9','W10','W11','W12','W13']
             },
             dataLabels: {
-                enabled: false
+                enabled: true
+            },
+            tooltip: {
+                custom: function({ series, seriesIndex, dataPointIndex, w }) {
+                    const dataFromGraph = dataReal[options.series[seriesIndex].name][dataPointIndex];
+
+                    return `
+                    <div class="m-2"> 
+                        <div class="px-5">
+                            <span class="fs-7">${options.series[seriesIndex].name}, ${dataFromGraph.date}: </span> 
+                            <div class="fs-7">
+                                <ul>
+                                    <li>
+                                        <span class="fw-bold fs-6 m-0">${series[seriesIndex][dataPointIndex]}</span> Activity Reached
+                                    </li>
+                                </ul>
+                            </div> 
+                        </div>
+                    </div>`;
+                }
             },
             colors: ["#7239EA"],
             title: {

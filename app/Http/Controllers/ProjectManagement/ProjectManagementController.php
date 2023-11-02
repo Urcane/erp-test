@@ -13,6 +13,7 @@ use App\Models\ProjectManagement\WorkTaskList;
 use App\Models\User;
 use App\Services\ProjectManagement\WorkOrderService;
 use App\Utils\ErrorHandler;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -294,42 +295,69 @@ class ProjectManagementController extends Controller
         }
     }
 
-    function getTaskOverview(WorkList $work_list_id) : JsonResponse {
+    function getTaskOverview(Request $request, WorkList $work_list_id) : JsonResponse {
         try {
-            $taskList = WorkActivity::where('work_list_id', $work_list_id->id)
+
+            $activityList = DB::table('work_activities')
                 ->select(
-                    DB::raw('DAYOFWEEK(created_at) as day_of_week'), 
-                    DB::raw("DATE_FORMAT(created_at, '%Y-%m') AS month"),
-                    DB::raw("DATE_FORMAT(created_at, '%U') AS week_number"), 
+                    DB::raw('DAYNAME(created_at) as day_of_week'), 
+                    DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d') AS date"),
+                    DB::raw("(DATE_FORMAT(created_at, '%U') % 13) AS week_number"), 
                     DB::raw('COUNT(*) as total')
                 )
-                ->groupBy('day_of_week', 'week_number', 'month')
+                ->where('work_list_id', $work_list_id->id)
+                ->groupBy('day_of_week', 'week_number')
                 ->paginate(92);
+                    
+            $startDate = Carbon::parse('2023-10-01')->locale('en_US')->startOfWeek();
+            $endDate = Carbon::parse('2023-12-31')->locale('en_US')->startOfWeek();
 
-            // Initialize an array to store the grouped data
+            $dataWithDate = [];
+
+            while ($startDate->lessThanOrEqualTo($endDate)) {
+                $dataFiltered = collect($activityList->items())->filter(function ($item) use($startDate) {
+                    return Carbon::parse($item->date)->equalTo($startDate);
+                });
+                
+
+                if (!(count($dataFiltered) > 0)) {
+                    $dataWithDate[] = [
+                        'day_of_week' => $startDate->englishDayOfWeek,
+                        'date' => $startDate->toDateString(),
+                        'week_number' => $startDate->week() % 13,
+                        'total' => 0,
+                    ];
+                    $startDate->addDay();
+                    continue;
+                }
+                foreach ($dataFiltered->all() as $key => $value) {
+                    $dataWithDate[] = collect($value)->all();
+                };
+                $startDate->addDay();
+            }
+
             $groupedData = [];
 
-            // Group the results by day_of_week
-            foreach ($taskList->items() as $task) {
-                $dayOfWeek = $task->day_of_week;
+            foreach ($dataWithDate as $task) {
+                $dayOfWeek = $task['day_of_week'];
 
                 if (!isset($groupedData[$dayOfWeek])) {
                     $groupedData[$dayOfWeek] = [];
                 }
 
                 $groupedData[$dayOfWeek][] = [
-                    'day_of_week' => $task->day_of_week,
-                    'month' => $task->month,
-                    'week_number' => $task->week_number,
-                    'total' => $task->total,
+                    'day_of_week' => $task['day_of_week'],
+                    'date' => $task['date'],
+                    'week_number' => $task['week_number'],
+                    'total' => $task['total'],
                 ];
             }
 
-            $taskList->setCollection(collect($groupedData));
+            $activityList->setCollection(collect($groupedData));
             
             return response()->json([
                 'status' => 'success',
-                'data' => $taskList,
+                'data' => $activityList,
             ]);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);

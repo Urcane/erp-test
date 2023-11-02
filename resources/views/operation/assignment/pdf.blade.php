@@ -63,7 +63,7 @@
                     : Surat Tugas
                 </div>
                 <div>
-                    <span class="mr-7">Durasi Perjalanan Dinas</span>
+                    <span class="mr-10">Durasi Perjalanan Dinas</span>
                     :
                     {{ $diff }}
                     ({{ str_replace(
