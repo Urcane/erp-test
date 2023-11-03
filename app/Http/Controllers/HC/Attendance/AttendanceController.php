@@ -169,13 +169,23 @@ class AttendanceController extends Controller
         try {
             $request->validate([
                 "id" => "required",
+                "attendance_code" => "required",
+                "working_start" => "nullable",
+                "working_end" => "nullable",
                 "check_in" => "nullable",
                 "check_out" => "nullable",
                 "reason" => "nullable"
             ]);
 
-            $checkIn = $request->check_in ? Carbon::parse($request->check_in) : null;
-            $checkOut = $request->check_out ? Carbon::parse($request->check_out) : null;
+            $checkIn = null;
+            $checkOut = null;
+
+            if ($request->attendance_code == $this->constants->attendance_code[0]
+                || $request->attendance_code == $this->constants->attendance_code[4]
+            ) {
+                $checkIn = $request->check_in ? Carbon::parse($request->check_in) : null;
+                $checkOut = $request->check_out ? Carbon::parse($request->check_out) : null;
+            }
 
             DB::beginTransaction();
 
@@ -185,6 +195,12 @@ class AttendanceController extends Controller
                 "user_id" => Auth::user()->id,
                 "attendance_id" => $request->id,
                 "date" => $userAttendance->date,
+                "old_attendance_code" => $userAttendance->attendance_code ,
+                "new_attendance_code" => $request->attendance_code,
+                "old_working_start" => $userAttendance->working_start,
+                "old_working_end" => $userAttendance->working_end,
+                "new_working_start" => $request->working_start,
+                "new_working_end" => $request->working_end,
                 "action" => "USER EDIT",
                 "old_check_in" => $userAttendance->check_in,
                 "old_check_out" => $userAttendance->check_out,
@@ -195,7 +211,10 @@ class AttendanceController extends Controller
 
             $userAttendance->update([
                 "check_in" => $checkIn,
-                "check_out" => $checkOut
+                "check_out" => $checkOut,
+                "attendance_code" => $request->attendance_code,
+                "working_start" => $request->working_start,
+                "working_end" => $request->working_end
             ]);
 
             DB::commit();

@@ -113,6 +113,12 @@ class CreateAllAttendance extends Migration
             $table->foreignId("attendance_id")->constrained("user_attendances");
             $table->date("date")->index();
             $table->string("action", 30);
+            $table->string("old_attendance_code", 30)->nullable();
+            $table->string("new_attendance_code", 30)->nullable();
+            $table->time("old_working_start")->nullable();
+            $table->time("old_working_end")->nullable();
+            $table->time("new_working_start")->nullable();
+            $table->time("new_working_end")->nullable();
             $table->timestamp("old_check_in")->nullable();
             $table->timestamp("old_check_out")->nullable();
             $table->timestamp("new_check_in")->nullable();
