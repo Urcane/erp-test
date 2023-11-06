@@ -15,6 +15,28 @@
         $('[name="received_at"]').val(received_at);
     }
 
+    const updateAvailableQuota = () => {
+        $.ajax({
+            url: '{{ route('hc.setting.leave.get-user-leave-quotas') }}',
+            method: 'POST',
+            data: {
+                user_id: '{{ $user->id }}'
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType: 'json',
+            success: function(data) {
+                $("#available_quota").text(data.data);
+            },
+            error: function(xhr, status, error) {
+                $('#available_quota').text("-");
+                const data = xhr.responseJSON;
+                toastr.error(data.message, 'Opps!');
+            }
+        });
+    }
+
     let tableHistory;
     let tableQuota;
 
@@ -166,6 +188,7 @@
                     $('#edit_quota_modal').modal('hide');
                     tableHistory.draw();
                     tableQuota.draw();
+                    updateAvailableQuota();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },
                 error: function(xhr, status, error) {
@@ -174,5 +197,7 @@
                 }
             });
         });
+
+        updateAvailableQuota();
     });
 </script>

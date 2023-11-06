@@ -387,6 +387,7 @@ Route::middleware(['auth'])->group(function () {
                         Route::prefix('detail')->group(function () {
                             Route::get('/{id}', 'detail')->name('hc.setting.leave.detail');
                             Route::post('/quota/update', 'editUserQuota')->name('hc.setting.leave.update-quota');
+                            Route::post('/quota/balance', 'getUserLeaveQuotas')->name('hc.setting.leave.get-user-leave-quotas');
 
                             Route::get('/get-data/table-history', 'getTableLeaveHistory')->name('hc.setting.leave-get-table-history');
                             Route::get('/get-data/table-quota', 'getTableQuotaLeaveHistory')->name('hc.setting.leave-get-table-quota');

@@ -53,7 +53,7 @@
                                 <div class="col-12 mb-3">
                                     <div class="m-0 p-0 d-flex align-items-center">
                                         <div class="fw-semibold fs-6 text-gray-600 my-auto me-3 p-0">Sisa Cuti :</div>
-                                        <p class="text-info fw-bolder me-2 my-auto" style="font-size: 31px;" id="available_quota">12</p>
+                                        <p class="text-info fw-bolder me-2 my-auto" style="font-size: 31px;" id="available_quota"></p>
                                         <p class="text-gray-800 my-auto" style="font-size: 13px;">Hari</p>
                                     </div>
                                 </div>

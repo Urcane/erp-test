@@ -124,6 +124,27 @@ class LeaveController extends Controller
         }
     }
 
+    public function getUserLeaveQuotas(Request $request)
+    {
+        try {
+            $request->validate([
+                "user_id" => "required",
+            ]);
+
+            $userQuotas = UserLeaveQuota::where('user_id', $request->user_id)
+                ->where('expired_date', '>=', Carbon::now())->sum("quotas");
+
+            return response()->json([
+                "status" => "success",
+                "data" => $userQuotas
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
     public function getTableLeaveQuotas(Request $request)
     {
         if (request()->ajax()) {
