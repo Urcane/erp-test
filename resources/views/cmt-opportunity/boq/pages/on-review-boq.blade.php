@@ -52,7 +52,7 @@
                                 </div>
 
                                 <div class="p-3">
-                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_sales) && (auth()->user()->division_id == 5))
+                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_sales) && (auth()->user()->division_id == 59))
                                         <a href="#kt_modal_review_manager_sales_boq_commercial"
                                             data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
                                             data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
@@ -62,7 +62,7 @@
                                 </div>
 
                                 <div class="p-3">
-                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_operation) && (auth()->user()->division_id == 16))
+                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_manager_operation) && (auth()->user()->division_id == 48))
                                         <a href="#kt_modal_review_manager_operation_boq_commercial"
                                             data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
                                             data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
@@ -72,7 +72,7 @@
                                 </div>
 
                                 <div class="p-3">
-                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_finman) && (auth()->user()->division_id == 9))
+                                    @if (!isset($dataReviewBoq['dataCompanyItem'][0]->approval_finman) && (auth()->user()->division_id == 37))
                                         <a href="#kt_modal_review_finman_boq_commercial"
                                             data-boq-id="{{ $dataReviewBoq['dataCompanyItem'][0]->id }}"
                                             data-remark="{{ $dataReviewBoq['dataCompanyItem'][0]->remark }}"
