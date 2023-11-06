@@ -385,7 +385,11 @@ Route::middleware(['auth'])->group(function () {
                         Route::get('/get-data/table', 'getTableLeaveQuotas')->name('hc.setting.leave-get-table');
 
                         Route::prefix('detail')->group(function () {
-                            Route::get('/', 'detail')->name('hc.setting.leave.detail');
+                            Route::get('/{id}', 'detail')->name('hc.setting.leave.detail');
+                            Route::post('/quota/update', 'editUserQuota')->name('hc.setting.leave.update-quota');
+
+                            Route::get('/get-data/table-history', 'getTableLeaveHistory')->name('hc.setting.leave-get-table-history');
+                            Route::get('/get-data/table-quota', 'getTableQuotaLeaveHistory')->name('hc.setting.leave-get-table-quota');
                         });
                     });
                 });
