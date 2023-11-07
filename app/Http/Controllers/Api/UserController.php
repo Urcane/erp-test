@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Exceptions\AuthenticationError;
 use App\Exceptions\InvariantError;
 use App\Http\Controllers\Controller;
+use App\Models\Leave\UserLeaveHistory;
 use App\Models\Leave\UserLeaveQuota;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -167,7 +168,7 @@ class UserController extends Controller
         }
     }
 
-    public function getUserLeaveQuotas(Request $request)
+    public function getUserAvailableLeaveQuotas(Request $request)
     {
         try {
             $userQuotas = UserLeaveQuota::where('user_id', $request->user()->id)
@@ -176,6 +177,46 @@ class UserController extends Controller
             return response()->json([
                 "status" => "success",
                 "data" => $userQuotas
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getUserLeaveQuotaDetail(Request $request)
+    {
+        try {
+            $query = UserLeaveQuota::where('user_id', $request->user()->id)->orderBy('expired_date', 'desc')->get();
+
+            return response()->json([
+                "status" => "success",
+                "data" => $query
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function getUserLeaveQuotaHistory(Request $request)
+    {
+        try {
+            $page = $request->page ?? 1;
+            $itemCount = $request->itemCount ?? 10;
+
+            $query = UserLeaveHistory::where('user_id', $request->user()->id)->orderBy('created_at', 'desc')
+                ->paginate($itemCount, ['*'], 'page', $page);
+
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "currentPage" => $query->currentPage(),
+                    "itemCount" => $itemCount,
+                    "history" => $query->items(),
+                ]
             ]);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);

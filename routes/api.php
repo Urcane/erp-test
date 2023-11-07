@@ -57,6 +57,12 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/payroll/bank/data', 'getUserBank');
             Route::get('/payroll/tax/data', 'getUserTax');
             Route::get('/payroll/bpjs/data', 'getUserBpjs');
+
+            Route::prefix('leave/quota')->group(function () {
+                Route::get('/available', 'getUserAvailableLeaveQuotas');
+                Route::get('/detail', 'getUserLeaveQuotaDetail');
+                Route::get('/history', 'getUserLeaveQuotaHistory');
+            });
         });
         Route::controller(PersonalController::class)->group(function () {
             Route::post('/update/personal/data', 'updatePersonal');
