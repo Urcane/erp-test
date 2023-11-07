@@ -166,4 +166,21 @@ class UserController extends Controller
             return response()->json($data["data"], $data["code"]);
         }
     }
+
+    public function getUserLeaveQuotas(Request $request)
+    {
+        try {
+            $userQuotas = UserLeaveQuota::where('user_id', $request->user()->id)
+                ->where('expired_date', '>=', Carbon::now())->sum("quotas");
+
+            return response()->json([
+                "status" => "success",
+                "data" => $userQuotas
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
 }
