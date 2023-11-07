@@ -127,7 +127,7 @@ class TimeOffController extends RequestController
         ];
     }
 
-    private function _updateSchedule(mixed $leaveRequest)
+    private function _updateSchedule($leaveRequest)
     {
         $userId = $leaveRequest->user->id;
 
