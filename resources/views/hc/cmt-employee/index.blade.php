@@ -82,7 +82,7 @@
                                 @can("HC:update-profile")
                                     <div>
                                         <a href="#modal_import_emp" data-bs-toggle="modal" class="btn btn-light-success btn-sm me-3 btn_tambah_job_level"><i class="fa-solid fa-plus"></i>Import Employee</a>
-                                        <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
+                                        {{-- <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
                                         <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start pb-3" id="action_pegawai" data-kt-menu="true" style="">
                                             <div class="d-flex flex-column bgi-no-repeat rounded-top">
                                                 <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Mass Action Options</span>
@@ -104,7 +104,7 @@
                                                     <span class="menu-title text-dark">Reset Password</span>
                                                 </a>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 @endcan
                                 <div>
