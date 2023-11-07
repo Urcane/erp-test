@@ -34,11 +34,11 @@ class QuotationService
                 <ul class="dropdown-menu">'; 
                     if (isset($request->filters['calledFrom'])) {
                         if ($request->filters['calledFrom'] == 'Internet') {
-                            $actions .= '<li><a href="' . url("cmt-quotation/update-quotation?quotation_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
+                            $actions .= '<li><a href="' . url("quotation/update-quotation?quotation_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
                                     <i class="fa-solid fa-list-check me-3"></i>Update Quotation Internet</a></li>';
                         }
                         elseif ($request->filters['calledFrom'] == 'Perangkat') {
-                            $actions .= '<li><a href="' . url("cmt-quotation/update-quotation?quotation_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
+                            $actions .= '<li><a href="' . url("quotation/update-quotation?quotation_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
                                     <i class="fa-solid fa-list-check me-3"></i>Update Quotation Perangkat</a></li>';
                         }
                     } else {                    
@@ -53,11 +53,11 @@ class QuotationService
                 <ul class="dropdown-menu">'; 
                     if (isset($request->filters['calledFrom'])) {
                         if ($request->filters['calledFrom'] == 'Internet') {
-                            $actions .= '<li><a href="' . url("cmt-quotation/review-done-quotation?quotation_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
+                            $actions .= '<li><a href="' . url("quotation/review-done-quotation?quotation_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
                                     <i class="fa-solid fa-list-check me-3"></i>Done Quotation Internet</a></li>';
                         }
                         elseif ($request->filters['calledFrom'] == 'Perangkat') {
-                            $actions .= '<li><a href="' . url("cmt-quotation/review-done-quotation?quotation_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
+                            $actions .= '<li><a href="' . url("quotation/review-done-quotation?quotation_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
                                     <i class="fa-solid fa-list-check me-3"></i>Done Quotation Perangkat</a></li>';
                         }
                     } else {                    
@@ -71,7 +71,7 @@ class QuotationService
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/get-revision-quotation?quotation_id=". $query->id) . '" class="dropdown-item py-2">
+                                <li><a href="' . url("boq/get-revision-quotation?quotation_id=". $query->id) . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Recreate Quotation</a></li>
                             </ul>';
             })

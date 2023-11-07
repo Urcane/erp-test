@@ -37,7 +37,7 @@ class BoqService
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/update-draft-boq?boq_id=". $query->id . "&is_draft=". $query->is_draft) .'" class="dropdown-item py-2">
+                                <li><a href="' . url("boq/update-draft-boq?boq_id=". $query->id . "&is_draft=". $query->is_draft) .'" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Update BoQ</a></li>
                             </ul>';
             })
@@ -45,14 +45,14 @@ class BoqService
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/on-review-boq?boq_id=". $query->id) .'" class="dropdown-item py-2">
+                                <li><a href="' . url("boq/on-review-boq?boq_id=". $query->id) .'" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Approval BoQ</a></li>
                             </ul>';
             })
             ->addColumn('action_done', function ($query) {
                 return '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/review-done-boq?boq_id=". $query->id) .'" class="dropdown-item py-2">
+                                <li><a href="' . url("boq/review-done-boq?boq_id=". $query->id) .'" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Review Done</a></li>
                             </ul>';
             })
@@ -61,11 +61,11 @@ class BoqService
                             <ul class="dropdown-menu">'; 
                 if (isset($request->filters['called_from']) && $request->user()->hasPermissionTo('Quot:manage-quot')) {
                     if ($request->filters['called_from'] == 'Internet') {
-                        $actions .= '<li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
+                        $actions .= '<li><a href="' . url("quotation/create-quotation?boq_id=". $query->id ."&quotation=internet ") . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create Quotation Internet</a></li>';
                     }
                     elseif ($request->filters['called_from'] == 'Perangkat') {
-                        $actions .= '<li><a href="' . url("cmt-quotation/create-quotation?boq_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
+                        $actions .= '<li><a href="' . url("quotation/create-quotation?boq_id=". $query->id ."&quotation=perangkat ") . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Create Quotation Perangkat</a></li>';
                     }
                 } else {                    
@@ -82,7 +82,7 @@ class BoqService
                 return 
                 '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a href="' . url("cmt-boq/get-revision-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
+                                <li><a href="' . url("boq/get-revision-boq?boq_id=". $query->id) . '" class="dropdown-item py-2">
                                 <i class="fa-solid fa-list-check me-3"></i>Recreate BoQ</a></li>
                             </ul>';
             })
