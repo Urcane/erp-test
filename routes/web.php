@@ -376,11 +376,29 @@ Route::middleware(['auth'])->group(function () {
                         Route::post('/delete', 'destroy')->name('hc.setting.holiday.delete');
                     });
                 });
+
+                Route::controller(Settings\TimeManagement\LeaveController::class)->group(function () {
+                    Route::prefix('leave')->group(function () {
+                        Route::get('/', 'index')->name('hc.setting.leave.index');
+                        Route::post('/update', 'update')->name('hc.setting.leave.update');
+
+                        Route::get('/get-data/table', 'getTableLeaveQuotas')->name('hc.setting.leave-get-table');
+
+                        Route::prefix('detail')->group(function () {
+                            Route::get('/{id}', 'detail')->name('hc.setting.leave.detail');
+                            Route::post('/quota/update', 'editUserQuota')->name('hc.setting.leave.update-quota');
+                            Route::post('/quota/balance', 'getUserLeaveQuotas')->name('hc.setting.leave.get-user-leave-quotas');
+
+                            Route::get('/get-data/table-history', 'getTableLeaveHistory')->name('hc.setting.leave-get-table-history');
+                            Route::get('/get-data/table-quota', 'getTableQuotaLeaveHistory')->name('hc.setting.leave-get-table-quota');
+                        });
+                    });
+                });
             });
         });
     });
 
-    Route::prefix('cmt-request')->group(function () {
+    Route::prefix('hc/request')->group(function () {
         Route::middleware(['permission:Approval:view-request|HC:view-all-request'])->group(function () {
             Route::controller(HCRequest\IndexController::class)->group(function () {
                 Route::get('/list', 'index')->name('hc.request.index');

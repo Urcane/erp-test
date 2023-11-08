@@ -229,6 +229,7 @@
                 },
                 success: function(data) {
                     attendanceTable.ajax.reload();
+                    $('#attendance_request_modal').modal('hide');
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },
                 error: function(xhr, status, error) {

@@ -31,14 +31,14 @@ class ShiftController extends RequestController
             $now = Carbon::now();
             $diff = $now->diffInDays($requestDate);
             $countOfSchedule = $workingScheduleShift->count();
-            $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+            $distance = $diff - (floor($diff / $countOfSchedule) * $countOfSchedule);
 
             $primaryScheduleShift = $workingScheduleShift->find($userCurrentShift->working_schedule_shift_id);
-            for ($i=0; $i < $distance; $i++) {
+            for ($i = 0; $i < $distance; $i++) {
                 if ($requestDate > $now) {
                     $primaryScheduleShift = $workingScheduleShift->find($primaryScheduleShift->next);
                 } else {
-                    $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift){
+                    $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift) {
                         return $scheduleShift->next == $primaryScheduleShift->id;
                     })->first();
                 }
@@ -95,6 +95,7 @@ class ShiftController extends RequestController
             if ($user->hasPermissionTo('HC:view-all-request')) {
                 $userRequests = UserShiftRequest::whereIn('status', array_slice($this->constants->approve_status, 0, 3))
                     ->with(['user.division', 'user.department'])
+                    ->orderByRaw("FIELD(status, ?, ?, ?)", array_slice($this->constants->approve_status, 0, 3))
                     ->paginate($itemCount, ['*'], 'page', $page);
             } else if ($user->hasPermissionTo('Approval:view-request')) {
                 $userRequests = UserShiftRequest::where(function ($query) use ($user) {
@@ -105,6 +106,7 @@ class ShiftController extends RequestController
                             });
                     })->orWhere('approval_line', $user->id);
                 })->with(['user.division', 'user.department'])
+                    ->orderByRaw("FIELD(status, ?, ?, ?)", array_slice($this->constants->approve_status, 0, 3))
                     ->paginate($itemCount, ['*'], 'page', $page);
             } else {
                 throw new AuthorizationError("Anda tidak berhak mengakses ini");

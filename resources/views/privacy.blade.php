@@ -6,6 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        body {
+            background: #F6F6F6;
+            font-size: 16px;
+            line-height: 24px;
+            color: #333;
+        }
+
+        a {
+            color: #333;
+        }
+
+        a .icon {
+            line-height: 1.428571429;
+        }
+
+        a:hover .icon {
+            text-decoration: none;
+        }
+
+        button {
+            outline: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 0 0 18px 0;
+            font-weight: 400;
+        }
+
+        p {
+            margin: 0 0 20px 0;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+
+        body {
+            padding: 25px;
+        }
+    </style>
 </head>
 
 <body>

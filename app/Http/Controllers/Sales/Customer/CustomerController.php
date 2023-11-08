@@ -533,7 +533,7 @@ class CustomerController extends Controller
                 }
 
                 if ($request->filters['calledFrom'] == 'BOQ' && $request->user()->hasPermissionTo('Boq:create-draft-boq')) {
-                    $actions .= '<li><a href="' . url("cmt-boq/create-draft-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
+                    $actions .= '<li><a href="' . url("boq/create-draft-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
                             <i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
                             ';
                 }

@@ -195,11 +195,11 @@
 
 <script>
     const attendanceCodeEnum = @json($constants->attendance_code_view);
+    const attendanceCodeEnumValue = @json($constants->attendance_code);
 </script>
 
 @can('HC:edit-delete-attendance')
     @include('hc.cmt-attendance.modal.edit-attendance')
-    @include('hc.cmt-attendance.modal.delete-attendance')
 @endcan
 
 @include('hc.cmt-attendance.modal.export-attendance')
@@ -568,28 +568,28 @@
                 });
             });
 
-            $('#modal_attendance_delete_modal').submit(function(event) {
-                event.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    url: "{{ route('hc.att.delete') }}",
-                    type: 'PUT',
-                    data: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(data) {
-                        $('#attendance_delete_modal').modal('hide');
-                        tableAttendance.draw();
-                        renderSummaries();
-                        toastr.success(data.message,'Selamat 🚀 !');
-                    },
-                    error: function(xhr, status, error) {
-                        const data = xhr.responseJSON;
-                        toastr.error(data.message, 'Opps!');
-                    }
-                });
-            });
+            // $('#modal_attendance_delete_modal').submit(function(event) {
+            //     event.preventDefault();
+            //     var formData = $(this).serialize();
+            //     $.ajax({
+            //         url: "{{ route('hc.att.delete') }}",
+            //         type: 'PUT',
+            //         data: formData,
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         },
+            //         success: function(data) {
+            //             $('#attendance_delete_modal').modal('hide');
+            //             tableAttendance.draw();
+            //             renderSummaries();
+            //             toastr.success(data.message,'Selamat 🚀 !');
+            //         },
+            //         error: function(xhr, status, error) {
+            //             const data = xhr.responseJSON;
+            //             toastr.error(data.message, 'Opps!');
+            //         }
+            //     });
+            // });
 
         @endcan
 

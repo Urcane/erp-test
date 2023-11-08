@@ -361,7 +361,7 @@
                 }
             });
 
-            tableQuota = $(kt_table_quota).DataTable({
+            tableQuota = $('#kt_table_quota').DataTable({
                 processing: true,
                 serverSide: true,
                 retrieve: true,
