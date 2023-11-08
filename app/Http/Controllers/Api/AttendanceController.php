@@ -297,6 +297,10 @@ class AttendanceController extends Controller
                 ], 201);
             }
 
+            if ($attendanceToday && $attendanceToday->attendance_code != $this->constants->attendance_code[0]) {
+                throw new InvariantError("Hari ini bukan hari kerja");
+            }
+
             // global checkup
             $globalDayOff = GlobalDayOff::where('start_date', '<=', $today)
                 ->where('end_date', '>=', $today)->first();
@@ -501,6 +505,10 @@ class AttendanceController extends Controller
                     "status" => "success",
                     "message" => "Berhasil Melakukan Check Out ($now)"
                 ], 201);
+            }
+
+            if ($attendanceToday && $attendanceToday->attendance_code != $this->constants->attendance_code[0]) {
+                throw new InvariantError("Hari ini bukan hari kerja");
             }
 
             // global checkup
