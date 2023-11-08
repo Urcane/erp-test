@@ -107,16 +107,26 @@
                             </select>
                             <div class="fv-plugins-message-container invalid-feedback"></div>
                         </div>
+                        @can('HC:update-profile')
                         <div class="col-lg-12 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                 <span class="fw-bold text-dark">Password</span>
                             </label>
                         </div>
-                        <div class="col-lg-12 mt-3">
-                            <button id="btn_reset_pass" type="button" class="btn btn-sm btn-warning">
-                                Reset User Password
-                            </button>
-                        </div>
+                        @if($user->is_new)
+                            <div class="col-lg-12 mt-3">
+                                <button type="button" class="btn btn-sm btn-warning" disabled>
+                                    Password sudah direset
+                                </button>
+                            </div>
+                        @else
+                            <div class="col-lg-12 mt-3">
+                                <button id="btn_reset_pass" type="button" class="btn btn-sm btn-warning">
+                                    Reset User Password
+                                </button>
+                            </div>
+                        @endif
+                        @endcan
                         @can('HC:update-profile')
                             <div class="col-lg-12 mt-9 text-end">
                                 <button type="submit" id="kt_personal_data_submit"
