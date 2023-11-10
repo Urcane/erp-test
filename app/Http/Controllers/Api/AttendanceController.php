@@ -127,13 +127,6 @@ class AttendanceController extends Controller
                 ]);
             }
 
-            if ($attendance->attendance_code != $this->constants->attendance_code[0]) {
-                return response()->json([
-                    "status" => "success",
-                    "message" => "Hari ini bukan hari kerja"
-                ]);
-            }
-
             $attendance["check_in_file"] = $attendance->check_in_file ? asset("storage/attendance/checkin/$attendance->check_in_file") : null;
             $attendance["check_out_file"] = $attendance->check_out_file ? asset("storage/attendance/checkout/$attendance->check_out_file") : null;
 
