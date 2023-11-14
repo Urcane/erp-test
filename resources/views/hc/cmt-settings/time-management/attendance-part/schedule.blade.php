@@ -60,13 +60,6 @@
                                     <span class="fw-bold">Override Special Holiday</span>
                                 </label>
                             </div>
-
-                            <div class="col-lg-12">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="fw-bold">Day Off</span>
-                                </label>
-                            </div>
-
                             <div class="col-lg-12 mt-6 mb-3">
                                 <h4>Set Shift</h4>
                                 <span class="fs-7 fw-semibold text-gray-500">Set your shift combination for this

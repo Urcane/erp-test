@@ -31,7 +31,7 @@
                                         <input type="hidden" name="company_id" value="{{$subBranch->branch_id ?? old('company_id')}}">
                                         <section class="row">
                                             <div class="col-12 mb-3 d-flex justify-content-center mt-5">
-                                                <img src="{{$subBranch->logo ? asset("storage/branch-logo/" . $subBranch->logo) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFmDTZFCydgh_teJfzp3Gxq88OgTC_VYdUUg&usqp=CAU"}}" class="rounded-circle m-auto" style="width: 150px;" alt="Avatar" />
+                                                <img src="{{$subBranch->logo ? asset("storage/branch-logo/" . $subBranch->logo) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFmDTZFCydgh_teJfzp3Gxq88OgTC_VYdUUg&usqp=CAU"}}" class="m-auto" style="width: 150px;" alt="Avatar" />
                                             </div>
                                             <div class="col-12 d-flex justify-content-center mt-5">
                                                 <label class="align-items-center fs-6 form-label" for="logo">
