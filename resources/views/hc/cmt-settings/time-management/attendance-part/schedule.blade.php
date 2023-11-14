@@ -34,7 +34,7 @@
                                     required name="effective_date">
                             </div>
 
-                            <div class="col-lg-12">
+                            {{-- <div class="col-lg-12">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Settings</span>
                                 </label>
@@ -59,7 +59,7 @@
                                 <label class="fs-6 form-check-label mb-2" for="override_special_holiday">
                                     <span class="fw-bold">Override Special Holiday</span>
                                 </label>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-12 mt-6 mb-3">
                                 <h4>Set Shift</h4>
                                 <span class="fs-7 fw-semibold text-gray-500">Set your shift combination for this
