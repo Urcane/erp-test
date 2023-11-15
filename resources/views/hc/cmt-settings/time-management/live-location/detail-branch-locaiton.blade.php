@@ -150,9 +150,9 @@
             }, 500);
         })
 
+        var existingCircle = null;
+        let circleCenter = null;
         $(document).ready(function() {
-            var existingCircle = null;
-            let circleCenter = null;
             map = L.map('map').setView([-1.2495105, 116.8749959], 14);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -288,7 +288,10 @@
             $("[name=\'name\']").val(name);
             $("[name=\'latitude\']").val(latitude);
             $("[name=\'longitude\']").val(longitude);
-            $("[name=\'radius\']").val(radius);
+
+            circleCenter = [latitude, longitude];
+            $("[name=\'radius\']").val(radius).trigger('keyup');
+
 
             addMarker(latitude, longitude, false);
             setTimeout(function() {
