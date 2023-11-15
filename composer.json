@@ -26,6 +26,7 @@
         "fakerphp/faker": "^1.9.1",
         "getsolaris/laravel-make-service": "^1.1",
         "jason-guru/laravel-make-repository": "^0.0.3",
+        "kevincobain2000/laravel-erd": "^1.6",
         "laravel/breeze": "^1.9",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
