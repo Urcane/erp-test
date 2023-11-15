@@ -45,6 +45,13 @@
                                 <input type="text" class="form-control form-control-solid" placeholder="name" required
                                     name="name">
                             </div>
+                            <div class="col-lg-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class="required fw-bold">Radius (Meter)</span>
+                                </label>
+                                <input type="number" class="form-control form-control-solid" placeholder="radius" required
+                                    name="radius">
+                            </div>
                             <div class="row mb-9">
                                 <div class="col-lg-12 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -54,13 +61,6 @@
                                     <input type="text" id="latitude" name="latitude" readonly hidden required>
                                     <input type="text" id="longitude" name="longitude" readonly hidden required>
                                 </div>
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Radius</span>
-                                </label>
-                                <input type="number" class="form-control form-control-solid" placeholder="radius" required
-                                    name="radius">
                             </div>
                         </div>
                         <div class="text-center mt-9">
@@ -144,6 +144,10 @@
             $("input").val("");
 
             map.removeLayer(marker);
+
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 500);
         })
 
         $(document).ready(function() {
@@ -265,8 +269,6 @@
                 addMarker(results[0].y, results[0].x, false)
             }
 
-            console.log(input)
-            console.log(form)
             input.keydown(function(e) {
                 if (e.which == 13) {
                     test(e, input.val());
@@ -281,14 +283,14 @@
     <script>
         let dataTableLocation
 
-        function fillInput(id, latitude, longitude, radius ) {
+        function fillInput(id, name, latitude, longitude, radius) {
             $("[name=\'id\']").val(id);
+            $("[name=\'name\']").val(name);
             $("[name=\'latitude\']").val(latitude);
             $("[name=\'longitude\']").val(longitude);
             $("[name=\'radius\']").val(radius);
 
             addMarker(latitude, longitude, false);
-
             setTimeout(function() {
                 map.invalidateSize()
             }, 400);

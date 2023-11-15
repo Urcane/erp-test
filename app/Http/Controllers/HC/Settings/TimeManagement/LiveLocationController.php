@@ -53,17 +53,9 @@ class LiveLocationController extends Controller
 
             return DataTables::of($branchLocation)
                 ->addColumn('action', function ($data) {
-                    return '
-                    <div onclick=\'fillInput(
-                        "'. $data->id .'",
-                        "'. $data->name .',
-                        "'. $data->latitude .'",
-                        "'. $data->longitude .'",
-                        "'. $data->radius .'",
-                        )\'>
-                        <a href="#modal_location" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-gear"></i> Edit Location</a>
-                    </div>
-                    ';
+                    return view('hc.cmt-settings.time-management.live-location.menu', compact([
+                        'data'
+                    ]));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])
