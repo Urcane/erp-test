@@ -7,11 +7,11 @@
             <li class="nav-item">
                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="shift" href="#shift_content">Shift</a>
             </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="overtime" href="#overtime_content">Overtime</a>
-            </li> --}}
             <li class="nav-item">
-                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="time_off" href="#time_off_content">Time Off</a>
+                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0" data-bs-toggle="tab" id="time_off" href="#time_off_content">Time Off</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-danger rounded-bottom-0" data-bs-toggle="tab" id="assignment" href="#assignment_content">Assignment</a>
             </li>
         </ul>
     </div>
@@ -21,9 +21,9 @@
 
         @include('profile.part-profile.time-management-part.shift.index')
 
-        {{-- @include('profile.part-profile.time-management-part.overtime') --}}
-
         @include('profile.part-profile.time-management-part.timeoff.index')
+
+        @include('profile.part-profile.time-management-part.assignment.index')
 
     </div>
 </div>

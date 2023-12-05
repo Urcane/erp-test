@@ -279,12 +279,10 @@ class AssignmentController extends Controller
                 }
             }
 
-            if ($request->work_schedule) {
-                foreach ($request->work_schedule as $day) {
-                    $assignment->assignmentWorkSchedules()->create([
-                        "day" => $day,
-                    ]);
-                }
+            foreach ($request->work_schedule as $day) {
+                $assignment->assignmentWorkSchedules()->create([
+                    "day" => $day,
+                ]);
             }
 
             DB::commit();
@@ -316,8 +314,10 @@ class AssignmentController extends Controller
         $authUser = Auth::user();
 
         if (
-            !$authUser->hasPermissionTo('OPR:view-department-assignment')
-            && $assignment->user->department_id != $authUser->department_id
+            ($authUser->hasPermissionTo('OPR:view-department-assignment') ||
+                $assignment->user->department_id != $authUser->department_id) &&
+            ($authUser->id !== $assignment->user_id &&
+                !$assignment->userAssignments->contains('user_id', $authUser->id))
         ) {
             abort(403);
         }
@@ -349,8 +349,10 @@ class AssignmentController extends Controller
             ->with(['userEmployment', 'division'])
             ->get();
 
+        $days = $this->constants->day;
+
         return view('operation.assignment.edit', compact([
-            'assignment', 'users'
+            'assignment', 'users', 'days'
         ]));
     }
 
@@ -494,7 +496,15 @@ class AssignmentController extends Controller
                     $assignments = $assignments->where('status', $this->constants->assignment_status[4]);
                     break;
                 default:
-                    $assignments = $assignments->orderByRaw("FIELD(status, ?, ?, ?, ?, ?)", $this->constants->assignment_status);
+                    $assignments = $assignments->orderByRaw(
+                        "FIELD(status, ?, ?, ?, ?, ?)",
+                        $this->constants->assignment_status
+                        // [
+                        //     $this->constants->assignment_status[1],
+                        //     $this->constants->assignment_status[0],
+                        //     ...array_slice($this->constants->assignment_status, 2, count($this->constants->assignment_status))
+                        // ]
+                    );
                     break;
             }
 
@@ -692,7 +702,7 @@ class AssignmentController extends Controller
 
         if (
             !($authUser->hasPermissionTo('OPR:view-department-assignment')
-            || $authUser->id == $userAssignment->user_id)
+                || $authUser->id == $userAssignment->user_id)
         ) {
             abort(403);
         }

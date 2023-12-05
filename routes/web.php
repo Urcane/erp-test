@@ -462,6 +462,19 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.time-off.get-table-me');
                 });
             });
+
+            Route::controller(Request\AssignmentController::class)->group(function () {
+                Route::prefix('/assignment')->group(function () {
+                    Route::get('/create', 'create')->name('req.assignment.create');
+                    Route::get('/edit/{id}', 'edit')->name('req.assignment.edit');
+
+                    Route::post('/store', 'makeRequest')->name('req.assignment.store');
+                    Route::post('/update', 'update')->name('req.assignment.update');
+                    Route::post('/cancel', 'cancelRequest')->name('req.assignment.cancel');
+                    Route::get('/get-data/table/active', 'showActiveRequest')->name('req.assignment.get-table-active');
+                    Route::get('/get-data/table/request', 'showRequestTable')->name('req.assignment.get-table-request');
+                });
+            });
         });
     });
 

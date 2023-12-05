@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="card-body row">
                             <div class="col-lg-12 mb-6 text-center">
-                                <h4>Edit Assignment</h4>
+                                <h4>Edit Assignment Request</h4>
                             </div>
 
                             <div class="col-lg-12 p-6 m-1 rounded border border-2 border-secondary">
@@ -133,7 +133,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-6 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working Start</span>
                                             </label>
@@ -142,7 +142,7 @@
                                                 name="working_start">
                                         </div>
 
-                                        <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-6 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working End</span>
                                             </label>
@@ -182,79 +182,11 @@
                                             placeholder="Maintenance Perangkat xxx di xxx PT.xxx" required name="purpose">
                                     </div>
 
-                                    <hr class="mb-5 mt-4">
-
-                                    <div class="col-lg-12 mb-6">
-                                        <h4 class="required">Assign To</h4>
-                                    </div>
-
-                                    <div class="col-lg-12 mb-3" id="people_container">
-                                        @foreach ($assignment->userAssignments as $user)
-                                            @if ($user->user_id)
-                                                <div class="col-lg-12 row justify-content-center mb-3"
-                                                    id="people-X{{ $user->id }}">
-                                                    <input type="text" class="form-control form-control-solid"
-                                                        name="cmt_id[]" value="{{ $user->user->id }}" disabled hidden>
-                                                    <div class="col-lg-4">
-                                                        <input type="text" class="form-control form-control-solid"
-                                                            value="{{ $user->user->name }}" disabled>
-                                                    </div>
-                                                    <div class="col-lg-3">
-                                                        <input type="text" class="form-control form-control-solid"
-                                                            value="{{ $user->user->userEmployment->employee_id }}"
-                                                            disabled>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <input type="text" class="form-control form-control-solid"
-                                                            value="{{ $user->user->division->divisi_name }}" disabled>
-                                                    </div>
-                                                    <div class="col-lg-1 d-flex justify-content-start items-center">
-                                                        <button type="button" class="btn btn-danger btn-sm btn-icon"
-                                                            onClick="$('#people-X{{ $user->id }}').remove()">
-                                                            <i class="fa-solid fa-delete-left"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div class="col-lg-12 row justify-content-center mb-3"
-                                                    id="people-X{{ $user->id }}">
-                                                    <div class="col-lg-4">
-                                                        <input type="text" class="form-control form-control-solid"
-                                                            name="people_name[]" value="{{ $user->name }}" disabled>
-                                                    </div>
-                                                    <div class="col-lg-3">
-                                                        <input type="text" class="form-control form-control-solid"
-                                                            name="people_nik[]" value="{{ $user->nik }}" disabled>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <input type="text" class="form-control form-control-solid"
-                                                            name="people_position[]" value="{{ $user->position }}"
-                                                            disabled>
-                                                    </div>
-                                                    <div class="col-lg-1 d-flex justify-content-start items-center">
-                                                        <button type="button" class="btn btn-danger btn-sm btn-icon"
-                                                            onClick="$('#people-X{{ $user->id }}').remove()">
-                                                            <i class="fa-solid fa-delete-left"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                    </div>
-
-                                    <div class="col-lg-12 mb-3">
-                                        <a href="#add_assigned_people_modal" data-bs-toggle="modal"
-                                            class="btn btn-light-info btn-sm me-3">
-                                            <i class="fas fa-plus"></i>
-                                            Add People
-                                        </a>
-                                    </div>
-
                                     <div class="col-lg-12 mt-8 mb-4 d-flex justify-content-center">
-                                        <a type="reset" id="cancel" href="{{ route('opt.asign.index') }}"
+                                        <button type="reset" id="cancel" onclick="window.history.back();"
                                             class="btn btn-outline btn-sm px-9 me-7">
                                             Cancel
-                                        </a>
+                                        </button>
                                         <button id="submit" class="btn btn-outline btn-outline-info btn-sm px-9">
                                             Submit
                                         </button>
@@ -268,8 +200,6 @@
             </div>
         </div>
     </div>
-
-    @include('operation.assignment.components.modal')
 
     <script src="{{ asset('sense/plugins/custom/leaflet/leaflet.bundle.js') }}"></script>
     <script src="https://unpkg.com/leaflet-geosearch@3.8.0/dist/geosearch.umd.js"></script>
@@ -389,17 +319,8 @@
                 event.preventDefault();
                 const formData = $(this).serializeArray();
 
-                $(this).find(':disabled').each(function() {
-                    if ($(this).attr('name')) {
-                        formData.push({
-                            name: this.name,
-                            value: this.value
-                        });
-                    }
-                });
-
                 $.ajax({
-                    url: "{{ route('opt.asign.update') }}",
+                    url: "{{ route('req.assignment.update') }}",
                     headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
@@ -408,7 +329,7 @@
                     success: function(data) {
                         toastr.success(data.message, 'Selamat 🚀 !');
                         setTimeout(function() {
-                            window.location.href = "{{ route('opt.asign.index') }}";
+                            window.history.back();
                         }, 2500);
                     },
                     error: function(xhr, status, error) {

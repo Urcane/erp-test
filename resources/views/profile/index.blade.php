@@ -176,22 +176,22 @@
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="employment" href="#employment_content">Employment</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="payroll" href="#payroll_content">Payroll</a>
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="payroll" href="#payroll_content">Payroll</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="time_management" href="#time_management_content">Time Management</a>
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-danger rounded-bottom-0" data-bs-toggle="tab" id="time_management" href="#time_management_content">Time Management</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="finance" href="#finance_content">Finance</a>
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-info rounded-bottom-0" data-bs-toggle="tab" id="finance" href="#finance_content">Finance</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="files" href="#files_content">Files</a>
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0" data-bs-toggle="tab" id="files" href="#files_content">Files</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="assets" href="#assets_content">Assets</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="history" href="#history_content">History</a>
+                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0" data-bs-toggle="tab" id="history" href="#history_content">History</a>
                                             </li>
                                         </ul>
                                     </div>
