@@ -49,7 +49,7 @@ class AssignmentController extends Controller
         }
 
         if ($assignment->status != $this->constants->assignment_status[0]) {
-            return abort(404);
+            return abort(400);
         }
 
         if ($assignment->user_id != Auth::user()->id) {

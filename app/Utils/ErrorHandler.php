@@ -14,7 +14,7 @@ class ErrorHandler
             return [
                 "data" => [
                     "status" => "fail",
-                    "message" => "User Error | " . $error->getMessage(),
+                    "message" => $error->getMessage(),
                 ],
                 "code" => $error->getCode(),
             ];
@@ -30,7 +30,7 @@ class ErrorHandler
             return [
                 "data" => [
                     "status" => "fail",
-                    "message" => 'Validation Error | ' . $errorsArray[0],
+                    "message" => $errorsArray[0],
                 ],
                 "code" => 400,
             ];

@@ -164,6 +164,20 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::post('/cancel', 'cancelRequest');
                 });
             });
+
+            Route::prefix('assignment')->group(function () {
+                Route::controller(Request\AssignmentController::class)->group(function () {
+                    Route::get('/get/active', 'showActiveRequest');
+                    Route::get('/get/request', 'showOwnRequest');
+                    Route::get('/get/detail/{id}', 'getDetail');
+                    Route::get('/export/{assignmentId}/{userId}', 'exportPdf');
+
+                    Route::get('/get/create-data', 'create');
+                    Route::post('/store', 'store');
+                    Route::post('/cancel', 'cancelRequest');
+                    Route::post('/update', 'update');
+                });
+            });
         });
     });
 });

@@ -133,7 +133,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-6 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working Start</span>
                                             </label>
@@ -142,7 +142,7 @@
                                                 name="working_start">
                                         </div>
 
-                                        <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-6 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working End</span>
                                             </label>

@@ -336,7 +336,7 @@ class AssignmentController extends Controller
         }
 
         if ($assignment->status != $this->constants->assignment_status[0]) {
-            return abort(404);
+            return abort(400);
         }
 
         if ($assignment->user_id != Auth::user()->id) {
@@ -688,7 +688,7 @@ class AssignmentController extends Controller
         }
 
         if ($assignment->status != $this->constants->assignment_status[1]) {
-            return abort(404);
+            return abort(400);
         }
 
         $userAssignment = $assignment->userAssignments()->whereId($user)->first();
@@ -704,7 +704,9 @@ class AssignmentController extends Controller
             !($authUser->hasPermissionTo('OPR:view-department-assignment')
                 || $authUser->id == $userAssignment->user_id)
         ) {
-            abort(403);
+            if ($userAssignment->user_id !== $authUser->id) {
+                abort(403);
+            }
         }
 
         if ($userAssignment->user_id) {
