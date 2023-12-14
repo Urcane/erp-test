@@ -24,15 +24,128 @@
         <tr>
             <th>Summaries</th>
         </tr>
+
         <tr></tr>
-        @for ($i = 0; $i < count($constants->summaries_attendance); $i++)
+        <tr>
+            <th>TOTAL HADIR</th>
+            <th>{{ $summaries[$constants->summaries_attendance[0]] + $summaries[$constants->summaries_attendance[1]] + $summaries[$constants->summaries_attendance[2]]}}</th>
+            <th>Todal hadir pegawai (sudah melakukan checkin dan checkout)</th>
+        </tr>
+
+        <tr>
+            <th>Detail Hadir</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[0] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[0]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[0] }}</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[1] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[1]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[1] }}</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[2] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[2]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[2] }}</th>
+        </tr>
+
+        <tr>
+            <th></th>
+        </tr>
+
+        <tr>
+            <th>TOTAL ABSEN</th>
+            <th>{{ $summaries[$constants->summaries_attendance[3]] + $summaries[$constants->summaries_attendance[4]] + $summaries[$constants->summaries_attendance[5]]}}</th>
+            <th>Total absen pegawai (antara tidak melakukan checkin/checkout)</th>
+        </tr>
+
+        <tr>
+            <th>Detail Absen</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[3] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[3]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[3] }}</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[4] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[4]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[4] }}</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[5] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[5]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[5] }}</th>
+        </tr>
+
+        <tr>
+            <th></th>
+        </tr>
+
+        <tr>
+            <th>TOTAL IZIN/CUTI</th>
+            <th>{{ $summaries[$constants->summaries_attendance[6]] + $summaries[$constants->summaries_attendance[7]] }}</th>
+            <th>Total ijin/cuti yang diambil pegawai</th>
+        </tr>
+
+        <tr>
+            <th>Detail Izin</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[6] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[6]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[6] }}</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[7] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[7]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[7] }}</th>
+        </tr>
+
+        <tr>
+            <th></th>
+        </tr>
+
+        <tr>
+            <th>TOTAL DINAS</th>
+            <th>{{ $summaries[$constants->summaries_attendance[8]] + $summaries[$constants->summaries_attendance[9]] }}</th>
+            <th>Total dinas yang diambil pegawai</th>
+        </tr>
+
+        <tr>
+            <th>Detail dinas</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[6] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[6]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[6] }}</th>
+        </tr>
+
+        <tr>
+            <th>{{ $constants->summaries_attendance[7] }}</th>
+            <th>{{ $summaries[$constants->summaries_attendance[7]] }}</th>
+            <th>{{ $constants->summaries_attendance_information[7] }}</th>
+        </tr>
+
+        {{-- @for ($i = 0; $i < count($constants->summaries_attendance); $i++)
             <tr>
                 <th>{{ $constants->summaries_attendance[$i] }}</th>
                 <th>{{ $summaries[$constants->summaries_attendance[$i]] }}</th>
                 <th></th>
                 <th>{{ $constants->summaries_attendance_information[$i] }}</th>
             </tr>
-        @endfor
+        @endfor --}}
     </thead>
 </table>
 

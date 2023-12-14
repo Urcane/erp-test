@@ -67,14 +67,14 @@
                                             value="{{ $assignment->end_date }}">
                                     </div>
 
-                                    <div class="col-lg-6 mb-3">
+                                    <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="fw-bold required">Coordinate</span>
                                         </label>
                                         <div id="map" style="height: 350px"></div>
                                     </div>
 
-                                    <div class="col-lg-6 row mb-3">
+                                    {{-- <div class="col-lg-12 row mb-3"> --}}
                                         <div class="col-lg-12 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Lokasi</span>
@@ -83,7 +83,7 @@
                                                 value="{{ $assignment->location }}">
                                         </div>
 
-                                        <div class="col-lg-12 mb-8">
+                                        <div class="col-lg-12 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Radius (meter)</span>
                                             </label>
@@ -91,17 +91,17 @@
                                                 value="{{ $assignment->radius }}">
                                         </div>
 
-                                        <div class="col-lg-12 mb-3">
+                                        {{-- <div class="col-lg-12 mb-3">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
-                                                    disabled @if ($assignment->overide_holiday) checked @endif>
+                                                    disabled @if ($assignment->override_holiday) checked @endif>
                                                 <label class="fs-7 form-check-label mb-2" for="override_holiday">
                                                     <span class="fw-bold">Kerja di hari libur</span>
                                                 </label>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
-                                        <div class="col-lg-12 mb-3">
+                                        {{-- <div class="col-lg-12 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Hari Penugasan</span>
                                             </label>
@@ -119,9 +119,9 @@
                                                     </div>
                                                 @endforeach
                                             </div>
-                                        </div>
+                                        </div> --}}
 
-                                        <div class="col-lg-6 mb-3">
+                                        {{-- <div class="col-lg-6 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working Start</span>
                                             </label>
@@ -135,11 +135,11 @@
                                             </label>
                                             <input type="time" class="form-control form-control-solid" disabled
                                                 value="{{ date('H:i', strtotime($assignment->working_end)) }}">
-                                        </div>
-                                    </div>
+                                        </div> --}}
+                                    {{-- </div> --}}
 
                                     <div class="col-lg-12 mb-3">
-                                        <label class="d-flex align-items-center fs-6 mb-2 required">
+                                        <label class="d-flex align-items-center fs-6 mb-2">
                                             <span class="fw-bold textd-dark">Signed By</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid" disabled
