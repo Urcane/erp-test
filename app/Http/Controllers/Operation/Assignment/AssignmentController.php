@@ -17,6 +17,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
 use App\Models\User;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -737,8 +738,15 @@ class AssignmentController extends Controller
             ];
         }
 
+        $url = route('validate-letter.assignment', [
+            'assignment' => encrypt($assignment->id),
+            'userId' => encrypt($userAssignment->id),
+        ]);
+
+        $qrCode = QrCode::size(100)->generate($url);
+
         return view('operation.assignment.pdf', compact([
-            'assignment', 'user', 'signed'
+            'assignment', 'user', 'signed', 'qrCode'
         ]));
     }
 }

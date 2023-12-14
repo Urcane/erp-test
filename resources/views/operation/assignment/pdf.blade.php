@@ -136,9 +136,7 @@
                     <div class="">
                         <p>Balikpapan, {{ $assignment->created_at->format('d M Y') }}</p>
                         <p class="font-bold">PT. COMTELINDO</p>
-                        {{-- <img class="h-[120px]"
-                            src='{{ asset("sense/media/sign_pegawai/$signed") }}' alt="ttd" /> --}}
-                        <div class="h-[100px]"></div>
+                        {{ $qrCode }}
                         <p class="uppercase">{{ $assignment->signedBy->name }}</p>
                         <p class="font-bold uppercase">{{ $assignment->signedBy->division->divisi_name }}</p>
                     </div>
