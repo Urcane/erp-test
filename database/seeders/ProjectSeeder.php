@@ -33,7 +33,7 @@ class ProjectSeeder extends Seeder
                 'name' => 'Pending',
                 'code' => 'PD',
             ],
-        ])->map(function($item) { 
+        ])->map(function($item) {
             WorkStatus::create($item);
         });
 
@@ -54,7 +54,11 @@ class ProjectSeeder extends Seeder
                 'name' => 'Purchase Order',
                 'code' => 'PCO',
             ],
-        ])->map(function($item) { 
+            [
+                'name' => 'Pra-Development',
+                'code' => 'PRD',
+            ],
+        ])->map(function($item) {
             WorkProgressCategory::create($item);
         });
 
@@ -79,8 +83,8 @@ class ProjectSeeder extends Seeder
                 'name' => 'Spare',
                 'code' => 'SP',
             ],
-            
-        ])->map(function($item) { 
+
+        ])->map(function($item) {
             WorkOrderCategory::create($item);
         });
     }

@@ -14,6 +14,7 @@ use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserShiftRequest;
 use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\WorkingScheduleShift;
+use App\Utils\ErrorHandler;
 use Carbon\Carbon;
 
 class ShiftController extends RequestController
@@ -66,7 +67,7 @@ class ShiftController extends RequestController
                 "message" => "Berhasil melakukan request shift"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -98,7 +99,7 @@ class ShiftController extends RequestController
                 "message" => "Berhasil cancel request shift"
             ],);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

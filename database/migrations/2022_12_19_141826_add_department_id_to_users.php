@@ -14,9 +14,9 @@ class AddDepartmentIdToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('department_id')->constrained();
-            $table->foreignId('division_id')->constrained();
-            $table->foreignId('team_id')->constrained();
+            $table->foreignId('department_id')->nullable()->constrained();
+            $table->foreignId('division_id')->nullable()->constrained();
+            $table->foreignId('team_id')->nullable()->constrained();
             $table->timestamps();
         });
     }

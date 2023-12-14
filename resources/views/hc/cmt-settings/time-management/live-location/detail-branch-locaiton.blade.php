@@ -38,6 +38,20 @@
                             data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
                             data-kt-scroll-dependencies="#modal_create_job_position_header"
                             data-kt-scroll-wrappers="#modal_create_job_position_scroll" data-kt-scroll-offset="300px">
+                            <div class="col-lg-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class="required fw-bold">Name</span>
+                                </label>
+                                <input type="text" class="form-control form-control-solid" placeholder="name" required
+                                    name="name">
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class="required fw-bold">Radius (Meter)</span>
+                                </label>
+                                <input type="number" class="form-control form-control-solid" placeholder="radius" required
+                                    name="radius">
+                            </div>
                             <div class="row mb-9">
                                 <div class="col-lg-12 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -47,13 +61,6 @@
                                     <input type="text" id="latitude" name="latitude" readonly hidden required>
                                     <input type="text" id="longitude" name="longitude" readonly hidden required>
                                 </div>
-                            </div>
-                            <div class="col-lg-12 mb-3">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="required fw-bold">Radius</span>
-                                </label>
-                                <input type="number" class="form-control form-control-solid" placeholder="radius" required
-                                    name="radius">
                             </div>
                         </div>
                         <div class="text-center mt-9">
@@ -93,6 +100,7 @@
                                         <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
                                             {{-- <th class="text-center w-50px">#</th> --}}
                                             <th class="text-center w-50px">#</th>
+                                            <th class="w-150px">name</th>
                                             <th class="w-150px">latitude</th>
                                             <th class="w-150px">longitude</th>
                                             <th class="w-150px">Radius</th>
@@ -126,7 +134,7 @@
             if (openPopup) {
                 marker.bindPopup('You are here!').openPopup();
             }
-            map.setView([lat, lng], 13);
+            map.setView([lat, lng], 20);
 
             $('#latitude').val(lat);
             $('#longitude').val(lng);
@@ -136,10 +144,16 @@
             $("input").val("");
 
             map.removeLayer(marker);
+
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 500);
         })
 
+        var existingCircle = null;
+        let circleCenter = null;
         $(document).ready(function() {
-            map = L.map('map').setView([-1.2495105, 116.8749959], 7);
+            map = L.map('map').setView([-1.2495105, 116.8749959], 14);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
@@ -190,7 +204,32 @@
                 let latitude = e.latlng.lat.toFixed(6);
                 let longitude = e.latlng.lng.toFixed(6);
 
+                if (existingCircle) {
+                    map.removeLayer(existingCircle);
+                }
+
+                circleCenter = [latitude, longitude];
+                existingCircle = L.circle([latitude, longitude], {
+                    color: 'orange',
+                    fillColor: 'orange',
+                    fillOpacity: 0.2,
+                    radius: $('[name="radius"]').val() ? $('[name="radius"]').val() : 0
+                }).addTo(map);
+
                 addMarker(latitude, longitude, false);
+            });
+
+            $('[name="radius"]').on('keyup', function() {
+                if (existingCircle) {
+                    map.removeLayer(existingCircle);
+                }
+
+                existingCircle = L.circle(circleCenter, {
+                    color: 'orange',
+                    fillColor: 'orange',
+                    fillOpacity: 0.2,
+                    radius: $('[name="radius"]').val() ? $('[name="radius"]').val() : 0
+                }).addTo(map);
             });
 
             $('#myModal').on('show.bs.modal', function() {
@@ -230,8 +269,6 @@
                 addMarker(results[0].y, results[0].x, false)
             }
 
-            console.log(input)
-            console.log(form)
             input.keydown(function(e) {
                 if (e.which == 13) {
                     test(e, input.val());
@@ -246,14 +283,17 @@
     <script>
         let dataTableLocation
 
-        function fillInput(id, latitude, longitude, radius ) {
+        function fillInput(id, name, latitude, longitude, radius) {
             $("[name=\'id\']").val(id);
+            $("[name=\'name\']").val(name);
             $("[name=\'latitude\']").val(latitude);
             $("[name=\'longitude\']").val(longitude);
-            $("[name=\'radius\']").val(radius);
+
+            circleCenter = [latitude, longitude];
+            $("[name=\'radius\']").val(radius).trigger('keyup');
+
 
             addMarker(latitude, longitude, false);
-
             setTimeout(function() {
                 map.invalidateSize()
             }, 400);
@@ -292,6 +332,9 @@
                         data: 'DT_RowIndex'
                     },
                     {
+                        data: 'name'
+                    },
+                    {
                         data: 'latitude'
                     },
                     {
@@ -310,7 +353,7 @@
                         className: 'text-center',
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         orderable: false,
                         searchable: false,
                         className: 'text-center',
@@ -330,6 +373,7 @@
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
                     success: function(data) {
+                        $('#modal_location').modal('hide');
                         dataTableLocation.ajax.reload();
                         toastr.success(data.message, 'Selamat 🚀 !');
                     },

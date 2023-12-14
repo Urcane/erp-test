@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class ErrorHandler
 {
-    public function handle($error)
+    public static function handle($error)
     {
         if ($error instanceof ClientError) {
             return [
@@ -30,7 +30,7 @@ class ErrorHandler
             return [
                 "data" => [
                     "status" => "fail",
-                    "message" => 'Validation Error ' . implode(', ', $errorsArray),
+                    "message" => $errorsArray[0],
                 ],
                 "code" => 400,
             ];
@@ -41,7 +41,7 @@ class ErrorHandler
         return [
             "data" => [
                 "status" => "error",
-                "message" => "Something Went Wrong",
+                "message" => "Server Error | Something Went Wrong",
             ],
             "code" => 500,
         ];

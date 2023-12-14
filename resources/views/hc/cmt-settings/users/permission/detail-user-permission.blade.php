@@ -55,7 +55,7 @@
                                         <div class="col-lg-4">
                                             <span><i style="color: rgb(114,57,234)"
                                                     class="me-2 mb-2 fa-regular fa-id-card"></i> Job Level</span>
-                                            <h5>{{ $user->getRoleNames()[0] }}</h5>
+                                            <h5>{{ $user->getRoleNames()->first() }}</h5>
                                         </div>
                                         <div class="col-lg-4">
                                             <span><i style="color: rgb(114,57,234)"

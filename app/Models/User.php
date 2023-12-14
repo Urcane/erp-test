@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Assignment\Assignment;
+use App\Models\Assignment\UserAssignment;
 use App\Traits\HasProject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,6 +45,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    function sales() : HasOne{
+        return $this->hasOne(Sales::class);
+    }
+
+    function technician() : HasOne{
+        return $this->hasOne(Technician::class);
+    }
+
+    function procurement() : HasOne{
+        return $this->hasOne(Procurement::class);
+    }
 
     public function division(): BelongsTo
     {
@@ -172,5 +186,15 @@ class User extends Authenticatable
     public function userLeaveQuotas(): HasMany
     {
         return $this->hasMany(Leave\UserLeaveQuota::class);
+    }
+
+    public function assignment(): HasMany
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
+    public function userAssignments(): BelongsToMany
+    {
+        return $this->belongsToMany(Assignment::class, UserAssignment::class);
     }
 }

@@ -19,20 +19,20 @@ use App\Models\Employee\UserSalary;
 use App\Models\Employee\UserTax;
 
 use App\Constants;
+use App\Imports\UsersImport;
 use App\Models\Employee\WorkingScheduleShift;
 use App\Utils\ErrorHandler;
+use Maatwebsite\Excel\Facades\Excel;
 
 class EmployeeController extends Controller
 {
     private $constants;
-    private $errorHandler;
+
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     public function getScheduleShift(Request $request) {
         $workingScheduleShift = WorkingScheduleShift::where('working_schedule_id', $request->working_schedule_id)->get();
         return response()->json([
@@ -228,9 +228,20 @@ class EmployeeController extends Controller
 
             return $transaction;
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
+    }
+
+    public function import(Request $request) {
+        $request->validate([
+            'file' => 'required|mimes:xls,xlsx',
+        ]);
+
+        $file = $request->file('file');
+        Excel::import(new UsersImport, $file);
+
+        return back()->with('success', 'Data berhasil diimport');
     }
 }

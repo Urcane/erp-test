@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Sales\Opportunity\Quotation\QuotationController;
+use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
 use App\Http\Controllers\Api;
 use App\Http\Controllers\Profile\PersonalController;
 
@@ -18,6 +20,27 @@ use App\Http\Controllers\Tests;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::controller(BoQController::class)->group(function () {
+    Route::prefix('cmt-boq')->group(function (){
+        Route::post('/store-data-boq','saveAndStoreBoq')->name('com.boq.store.boq');
+        Route::post('/store-approval-boq','storeApprovalBoq')->name('com.boq.store.approval.boq');
+        Route::post('/create-revision-boq','createRevisionBoq')->name('com.boq.revision.boq');
+        Route::get('/update-draft-boq','updateDraftBoq')->name('com.boq.update-draft-boq');
+        Route::get('/create-draft-boq','createDraftBoq')->name('com.boq.create-draft-boq');
+    });
+});
+
+Route::controller(QuotationController::class)->group(function(){
+    Route::prefix('cmt-quotation')->group(function(){
+        Route::get('/', 'index')->name('com.quotation.index');
+        Route::get('/get-data/table/data-result','getDatatable')->name('com.quotation.render.datatable');
+        Route::get('/create-quotation','createQuotation')->name('com.quotation.create.quotation');
+        Route::get('/update-quotation','updateQuotation')->name('com.quotation.update.quotation');
+        Route::post('/store-data-quotation','saveAndStoreQuotation')->name('com.quotation.store.quotation');
+        Route::get('/get-internet-bundling', 'getInternetBundling')->name('com.quotation.get.internet.bundling');
+        Route::post('/update-internet-bundling', 'updateInternetBundling')->name('com.quotation.update.internet.bundling');
+    });
+});
 
 Route::controller(Api\UserController::class)->group(function () {
     Route::post('/login', 'login');
@@ -26,6 +49,7 @@ Route::controller(Api\UserController::class)->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('user')->group(function () {
         Route::controller(Api\UserController::class)->group(function () {
+            Route::post('/change-pass', 'changePassword');
             Route::get('/me', 'getUserProfile');
             Route::get('/personal/data', 'getUserPersonalData');
             Route::get('/employment/data', 'getUserEmploymentData');
@@ -33,6 +57,12 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/payroll/bank/data', 'getUserBank');
             Route::get('/payroll/tax/data', 'getUserTax');
             Route::get('/payroll/bpjs/data', 'getUserBpjs');
+
+            Route::prefix('leave/quota')->group(function () {
+                Route::get('/available', 'getUserAvailableLeaveQuotas');
+                Route::get('/detail', 'getUserLeaveQuotaDetail');
+                Route::get('/history', 'getUserLeaveQuotaHistory');
+            });
         });
         Route::controller(PersonalController::class)->group(function () {
             Route::post('/update/personal/data', 'updatePersonal');
@@ -132,6 +162,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
                     Route::post('/make', 'makeRequest');
                     Route::post('/cancel', 'cancelRequest');
+                });
+            });
+
+            Route::prefix('assignment')->group(function () {
+                Route::controller(Request\AssignmentController::class)->group(function () {
+                    Route::get('/get/active', 'showActiveRequest');
+                    Route::get('/get/request', 'showOwnRequest');
+                    Route::get('/get/detail/{id}', 'getDetail');
+                    Route::get('/export/{assignmentId}/{userId}', 'exportPdf');
+
+                    Route::get('/get/create-data', 'create');
+                    Route::post('/store', 'store');
+                    Route::post('/cancel', 'cancelRequest');
+                    Route::post('/update', 'update');
                 });
             });
         });

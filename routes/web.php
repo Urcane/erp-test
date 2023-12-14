@@ -1,11 +1,14 @@
 <?php
 
-use App\Http\Controllers\Sales\Customer\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Sales\Opportunity\Quotation\QuotationController;
+use App\Http\Controllers\Sales\Customer\CustomerController;
+use App\Http\Controllers\Sales\Opportunity\BoQ\BoQController;
+use App\Http\Controllers\Finance\Procurement\ProcurementController;
 use App\Http\Controllers\Sales\Opportunity\Survey\SurveyController;
 use App\Http\Controllers\ProjectManagement\ProjectManagementController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\Profile;
 
 use App\Http\Controllers\Request;
@@ -14,6 +17,10 @@ use App\Http\Controllers\HC\Attendance;
 use App\Http\Controllers\HC\Employee\EmployeeController;
 use App\Http\Controllers\HC\Settings;
 use App\Http\Controllers\HC\Request as HCRequest;
+
+use App\Http\Controllers\Operation;
+use App\Http\Controllers\Finance;
+use App\Http\Controllers\ProjectManagement\TaskListController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,16 +33,23 @@ use App\Http\Controllers\HC\Request as HCRequest;
 |
 */
 
+Route::get('/privacy', function () {
+    return view('privacy');
+});
+
 Route::middleware(['auth'])->group(function () {
 
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'index')->name('dashboard');
     });
 
+    Route::post('/change-password', [UserController::class, 'changePassword'])->name('hc.emp.change-password');
+
     Route::middleware(['permission:HC:view-employee'])->group(function () {
         Route::controller(UserController::class)->group(function () {
             Route::prefix('cmt-employee')->group(function () {
                 Route::get('/', 'index')->name('hc.emp.index');
+                Route::post('/reset-pass', 'resetUserPassword')->name('hc.emp.reset-user-pass');
 
                 Route::get('/create/employee', 'create')->name('hc.emp.create');
                 Route::post('/update-status/employee', 'statusPegawai')->name('hc.emp.update-status');
@@ -48,15 +62,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['permission:HC:view-employee'])->group(function () {
         Route::controller(EmployeeController::class)->group(function () {
-            Route::prefix('cmt-employee')->group(function () {
+            Route::prefix('employee')->group(function () {
                 Route::post('/store/employee', 'store')->name('hc.emp.store');
+                Route::post('/import/employee', 'import')->name('hc.emp.import');
                 Route::post('/get/schedule/shift', 'getScheduleShift')->name('hc.emp.get.schedule.shift');
             });
         });
     });
 
     Route::controller(Attendance\AttendanceController::class)->group(function () {
-        Route::prefix('cmt-attendance')->group(function () {
+        Route::prefix('attendance')->group(function () {
             Route::middleware(['permission:HC:view-attendance'])->group(function () {
                 Route::get('/list', 'index')->name('hc.att.index');
 
@@ -79,7 +94,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(CustomerController::class)->group(function () {
-        Route::prefix('cmt-lead')->group(function () {
+        Route::prefix('lead')->group(function () {
             Route::get('/', 'indexLead')->name('com.lead.index-lead');
 
             Route::post('store/lead', 'storeLead')->name('com.lead.store-lead');
@@ -95,27 +110,75 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::controller(ProjectManagementController::class)->group(function () {
-        Route::prefix('cmt-promag')->group(function () {
+    Route::prefix('promag')->group(function () {
+        Route::controller(ProjectManagementController::class)->group(function () {
             Route::get('/', 'index')->name('com.promag.index');
-            Route::get('/detail', 'detail')->name('com.promag.detail');
-            Route::get('/detail/files', 'files')->name('com.promag.detail.files');
-            Route::get('/detail/task-lists', 'taskLists')->name('com.promag.detail.task-lists');
+            Route::get('/table', 'getWorkListTable')->name('com.promag.datatable');
 
+            Route::get('/create', 'create')->name('com.promag.create');
+            Route::post('/store', 'store')->name('com.promag.store');
+            Route::get('/detail/{work_list_id}', 'detail')->name('com.promag.detail');
+            Route::get('/detail/{work_list_id}/users', 'getWorklistAssiggnedUsers')->name('com.promag.detail.users');
+            Route::delete('/detail/{work_list_id}/users/{user_id}', 'revokeWorklistAssignedUsers')->name('com.promag.detail.delete.users');
+            Route::get('/detail/{work_list_id}/getAllUsers', 'getAllUserFiltered')->name('com.promag.detail.getAllUsers');
+            Route::post('/detail/{work_list_id}/assignUser', 'assignUser')->name('com.promag.detail.store.users');
+
+            Route::post('/work-order/approve', 'approveWorkOrder')->name('com.work-order.approve');
             Route::post('/work-order/store', 'createWorkOrderSurvey')->name('com.work-order-survey.store');
-            Route::get('/work-order/detail/{id}', 'getWorkOrderById')->name('com.work-order.detail');
+            Route::get('/work-order/detail/{work_list_id}', 'getWorkOrderById')->name('com.work-order.detail');
             Route::get('/get-data/table/work-order', 'getDatatableWorkOrder')->name('com.work-order.datatable');
+            Route::get('/get-data/table/work-order-survey', 'getDataTableWorkOrderSurvey')->name('com.work-order-survey.datatable');
+
+            Route::get('/detail/{work_list_id}/getSummaryCountPromag', 'getSummaryCountPromag')->name('com.promag.detail.getSummaryCountPromag');
+            Route::get('/detail/{work_list_id}/getTaskOverview', 'getTaskOverview')->name('com.promag.detail.getTaskOverview');
+        });
+
+        Route::controller(TaskListController::class)->group(function () {
+            Route::get('/{work_list_id}/task-lists', 'taskLists')->name('com.promag.task-lists');
+            Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
+            Route::post('/{work_list_id}/task-lists/store', 'store')->name('com.promag.task-list.store');
+            Route::post('/{work_list_id}/task-lists/store-pic', 'storePic')->name('com.promag.task-list.store-pic');
+            Route::get('/{work_list_id}/task-lists/detail/{task_list_id}', 'detailTaskList')->name('com.promag.task-list.detail');
+            Route::post('/task-lists/detail/{task_list_id}/comment', 'comment')->name('com.promag.task-list.comment');
+            Route::post('/task-lists/detail/{task_list_id}/checklist', 'addChecklist')->name('com.promag.task-list.checklist.add');
+            Route::post('/task-lists/detail/{task_list_id}/checklist/update', 'updateChecklist')->name('com.promag.task-list.checklist.update');
+            // Route::get('/{work_list_id}/task-lists/table', 'dataTableTaskList')->name('com.promag.task-list.datatable');
+            Route::post('/task-lists/detail/{task_list_id}/attachment', 'createAttachment')->name('com.promag.task-list.attachment.create');
+        });
+        Route::controller(App\Http\Controllers\ProjectManagement\ProcurementController::class)->group(function () {
+            Route::get("{work_list_id}/procurement", 'index')->name('com.promag.procurement');
+            Route::get("{work_list_id}/procurement/table", 'dataTableProcurement')->name('com.promag.procurement.datatable');
+            Route::get("{workList}/procurement/create", 'create')->name('com.promag.procurement.create');
+        });
+        Route::controller(App\Http\Controllers\ProjectManagement\ActivityController::class)->group(function () {
+            Route::get("{work_list_id}/activity", 'index')->name('com.promag.activity');
+        });
+        Route::controller(App\Http\Controllers\ProjectManagement\FileController::class)->group(function () {
+            Route::get("{work_list_id}/file", 'index')->name('com.promag.file');
+            Route::post("{work_list_id}/file/create", 'createFile')->name('com.promag.file.create');
+            Route::post("{work_list_id}/file/delete", 'deleteFile')->name('com.promag.file.delete');
         });
     });
 
     Route::controller(SurveyController::class)->group(function () {
-        Route::prefix('cmt-survey')->group(function () {
+        Route::prefix('survey')->group(function () {
             Route::get('/', 'index')->name('com.survey.index');
-            Route::get('/detail/{id}', 'detail')->name('com.survey.detail');
             Route::get('/survey-request/detail/{id}', 'getSurveyRequestById')->name('com.survey-request.detail');
             Route::post('/survey-request', 'storeSurveyRequest')->name('com.survey-request.store');
+
+            Route::get('/soft-survey', 'indexSoftSurvey')->name('com.soft-survey.index');
+            Route::get('/soft-survey/{surveyRequest}', 'detailSoftSurvey')->name('com.soft-survey.detail');
             Route::post('/soft-survey', 'storeSoftSurvey')->name('com.soft-survey.store');
-            Route::post('/survey-result', 'storeSurveyResult')->name('com.survey-result.store');
+
+            Route::get('/survey-result-internet', 'indexSurveyResultInternet')->name('com.site-survey.internet.index');
+            Route::get('/survey-result-cctv', 'indexSurveyResultCctv')->name('com.site-survey.cctv.index');
+            Route::get('/survey-result-gb', 'indexSurveyResultGb')->name('com.site-survey.gb.index');
+            Route::get('/survey-result-store/{workOrder}', 'createSurveyResult')->name('com.survey-result.create');
+            Route::get('/detail/{serviceType}/{id}', 'detail')->name('com.survey.detail');
+            Route::post('/survey-result-draft', 'draftSurveyResult')->name('com.survey-result.draft');
+            Route::post('/survey-result-store', 'storeSurveyResult')->name('com.survey-result.store');
+
+            Route::get('/survey-result-export/{serviceType}/{id}', 'exportSurveyResult')->name('com.survey-result.export');
 
             Route::get('/get-data/table/survey-request', 'getDatatableSurveyRequest')->name('com.survey-request.datatable');
             Route::get('/get-data/table/survey-result', 'getDatatableSurveyResult')->name('com.survey-result.datatable');
@@ -123,10 +186,11 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(Profile\ProfileController::class)->group(function () {
-        Route::prefix('cmt-employee-profile')->group(function () {
+        Route::prefix('employee-profile')->group(function () {
             Route::get('/{id}/profile', 'profile')->name('hc.emp.profile');
 
             Route::middleware(['permission:HC:update-profile'])->group(function () {
+                Route::post('/update/employee/avatar', 'updateAvatar')->name('hc.emp.update.avatar');
                 Route::post('/update/employee/employment', 'updateEmployment')->name('hc.emp.update.employment');
                 Route::post('/update/employee/salary', 'updateSalary')->name('hc.emp.update.salary');
                 Route::post('/update/employee/bank', 'updateBank')->name('hc.emp.update.bank');
@@ -137,7 +201,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(Profile\PersonalController::class)->group(function () {
-        Route::prefix('cmt-employee-personal')->group(function () {
+        Route::prefix('employee-personal')->group(function () {
             // family
             Route::get('/get-data/table/family', 'getTableFamily')->name('hc.emp.get-table-family');
             Route::post('/createUpdate/employee/family', 'createUpdateFamily')->name('hc.emp.create-update-family');
@@ -165,19 +229,18 @@ Route::middleware(['auth'])->group(function () {
 
             Route::post('/update/employee/personal', 'updatePersonal')->name('hc.emp.update.personal');
             Route::post('/update/employee/identity', 'updateIdentity')->name('hc.emp.update.identity');
+
+            Route::controller(Profile\LeaveController::class)->group(function () {
+                Route::get('/get-data/quotas', 'getUserLeaveQuotas')->name('hc.emp.get-user-leave-quotas');
+                Route::get('/get-data/table/leave/history', 'getTableLeaveHistory')->name('hc.emp.get-table-leave-history');
+                Route::get('/get-data/table/quota/history', 'getTableQuotaLeaveHistory')->name('hc.emp.get-table-quota-history');
+            });
         });
     });
 
-    Route::controller(Profile\LeaveController::class)->group(function () {
-        Route::prefix('cmt-employee-personal')->group(function () {
-            Route::get('/get-data/quotas', 'getUserLeaveQuotas')->name('hc.emp.get-user-leave-quotas');
-            Route::get('/get-data/table/leave/history', 'getTableLeaveHistory')->name('hc.emp.get-table-leave-history');
-            Route::get('/get-data/table/quota/history', 'getTableQuotaLeaveHistory')->name('hc.emp.get-table-quota-history');
-        });
-    });
 
     Route::controller(Profile\FileController::class)->group(function () {
-        Route::prefix('cmt-employee-file')->group(function () {
+        Route::prefix('employee-file')->group(function () {
             //  user file
             Route::get('/get-data/table/user-file', 'getTableUserFile')->name('hc.emp.get-table-user-file');
             Route::post('/createUpdate/employee/user-file', 'createUpdateUserFile')->name('hc.emp.create-update-user-file');
@@ -209,6 +272,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::prefix('organization')->group(function () {
                         Route::get('/', 'index')->name('hc.setting.organization.index');
                         Route::get('/table/organization', 'getTableOrganization')->name('hc.emp.getTableOrganization');
+                        Route::get('/graph/organization', 'getGraph')->name('hc.emp.organization.getGraph');
                         Route::post('/create/update', 'createUpdate')->name('hc.setting.organization.createUpdate');
                         Route::post('/delete', 'delete')->name('hc.setting.organization.delete');
                     });
@@ -225,6 +289,7 @@ Route::middleware(['auth'])->group(function () {
                     Route::prefix('job-position')->group(function () {
                         Route::get('/', 'index')->name('hc.setting.job-position.index');
                         Route::get('/table/job-position', 'getTableJobPosition')->name('hc.emp.getTableJobPosition');
+                        Route::get('/graph/organization', 'getGraph')->name('hc.emp.job-position.getGraph');
                         Route::post('/create/update', 'createUpdate')->name('hc.setting.job-position.createUpdate');
                         Route::post('/delete', 'delete')->name('hc.setting.job-position.delete');
                     });
@@ -306,15 +371,34 @@ Route::middleware(['auth'])->group(function () {
                     Route::prefix('holiday')->group(function () {
                         Route::get('/', 'index')->name('hc.setting.holiday.index');
                         Route::get('/table', 'getTable')->name('hc.setting.holiday-get-table');
-                        Route::post('/create/update', 'createUpdate')->name('hc.setting.holiday.createUpdate');
+                        Route::post('/create', 'create')->name('hc.setting.holiday.create');
+                        Route::post('/update', 'update')->name('hc.setting.holiday.update');
                         Route::post('/delete', 'destroy')->name('hc.setting.holiday.delete');
+                    });
+                });
+
+                Route::controller(Settings\TimeManagement\LeaveController::class)->group(function () {
+                    Route::prefix('leave')->group(function () {
+                        Route::get('/', 'index')->name('hc.setting.leave.index');
+                        Route::post('/update', 'update')->name('hc.setting.leave.update');
+
+                        Route::get('/get-data/table', 'getTableLeaveQuotas')->name('hc.setting.leave-get-table');
+
+                        Route::prefix('detail')->group(function () {
+                            Route::get('/{id}', 'detail')->name('hc.setting.leave.detail');
+                            Route::post('/quota/update', 'editUserQuota')->name('hc.setting.leave.update-quota');
+                            Route::post('/quota/balance', 'getUserLeaveQuotas')->name('hc.setting.leave.get-user-leave-quotas');
+
+                            Route::get('/get-data/table-history', 'getTableLeaveHistory')->name('hc.setting.leave-get-table-history');
+                            Route::get('/get-data/table-quota', 'getTableQuotaLeaveHistory')->name('hc.setting.leave-get-table-quota');
+                        });
                     });
                 });
             });
         });
     });
 
-    Route::prefix('cmt-request')->group(function () {
+    Route::prefix('hc/request')->group(function () {
         Route::middleware(['permission:Approval:view-request|HC:view-all-request'])->group(function () {
             Route::controller(HCRequest\IndexController::class)->group(function () {
                 Route::get('/list', 'index')->name('hc.request.index');
@@ -378,6 +462,276 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('/get-data/table/me', 'showRequestTableById')->name('req.time-off.get-table-me');
                 });
             });
+
+            Route::controller(Request\AssignmentController::class)->group(function () {
+                Route::prefix('/assignment')->group(function () {
+                    Route::get('/create', 'create')->name('req.assignment.create');
+                    Route::get('/edit/{id}', 'edit')->name('req.assignment.edit');
+
+                    Route::post('/store', 'makeRequest')->name('req.assignment.store');
+                    Route::post('/update', 'update')->name('req.assignment.update');
+                    Route::post('/cancel', 'cancelRequest')->name('req.assignment.cancel');
+                    Route::get('/get-data/table/active', 'showActiveRequest')->name('req.assignment.get-table-active');
+                    Route::get('/get-data/table/request', 'showRequestTable')->name('req.assignment.get-table-request');
+                });
+            });
+        });
+    });
+
+    Route::prefix('operation')->group(function () {
+        Route::controller(Operation\Assignment\AssignmentController::class)->group(function () {
+            Route::prefix('assignment')->group(function () {
+                Route::get('/', 'index')->name('opt.asign.index');
+                Route::get('/create', 'create')->name('opt.asign.create');
+                Route::post('/create', 'store')->name('opt.asign.store');
+                Route::get('/detail/{id}', 'show')->name('opt.asign.detail');
+                Route::get('/edit/{id}', 'edit')->name('opt.asign.edit');
+                Route::post('/update', 'update')->name('opt.asign.update');
+                Route::post('/cancel', 'cancel')->name('opt.asign.cancel');
+
+                Route::post('/update-status', 'updateStatus')->name('opt.asign.update-status');
+
+                Route::get('/get-data/table/data-result', 'getTableAssignment')->name('opt.asign.get-table-assignment');
+
+                Route::get('/pdf/{assignment}/{user}', 'exportPdf')->name('opt.asign.export-pdf');
+            });
+        });
+    });
+
+    Route::prefix('finance')->group(function () {
+        Route::middleware(['permission:FIN:view-inventory'])->group(function () {
+            Route::prefix('inventory')->group(function () {
+                Route::controller(Finance\Inventory\InventoryController::class)->group(function () {
+                    Route::get('/dashboard', 'viewDashboard')->name('fin.inv.dashboard');
+
+                    Route::prefix('inv')->group(function () {
+                        Route::get('/', 'viewInventory')->name('fin.inv.inventory');
+                        Route::get('/get-data/table/data-result', 'getTableInventory')->name('fin.inv.inventory-get-table-inventory');
+
+                        Route::get('/detail/{id}', 'viewInventoryDetail')->name('fin.inv.inventory.detail');
+                        Route::post('/adjust-item', 'adJustItem')->name('fin.inv.inventory.adjust-item');
+
+                        Route::middleware(['permission:FIN:add-inventory'])->group(function () {
+                            Route::prefix('create')->group(function () {
+                                Route::get('/', 'viewAddItem')->name('fin.inv.inventory-create');
+                                Route::post('/', 'storeItem')->name('fin.inv.inventory-create');
+                            });
+                        });
+
+                        Route::middleware(['permission:FIN:transfer-inventory'])->group(function () {
+                            Route::prefix('transfer')->group(function () {
+                                Route::get('/', 'viewTransferItem')->name('fin.inv.inventory-transfer');
+                                Route::post('/', 'transferItem')->name('fin.inv.inventory-transfer');
+                                Route::get('/get-data/table/data-result/', 'getTableTransferItem')->name('fin.inv.inventory-get-table-transfer');
+                            });
+                        });
+                    });
+
+                    Route::middleware(['permission:FIN:view-logs'])->group(function () {
+                        Route::prefix('logs')->group(function () {
+                            Route::get('/', 'viewLogs')->name('fin.inv.logs');
+                            Route::get('/{id}', 'viewDetailLog')->name('fin.inv.logs.detail');
+
+                            Route::get('/get-data/table/data-result', 'getTableLogs')->name('fin.inv.logs-get-table-logs');
+                        });
+                    });
+
+                    Route::prefix('master-data')->group(function () {
+                        Route::get('/', 'viewMasterData')->name('fin.inv.master-data');
+
+                        Route::prefix('warehouse')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\WarehouseController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.warehouse.data');
+                                Route::get('/get-data/table/warehouse', 'getTable')->name('fin.inv.master-data.warehouse.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.warehouse.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.warehouse.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('item')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\ItemController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.item.data');
+                                Route::get('/get-data/table/item', 'getTable')->name('fin.inv.master-data.item.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.item.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.item.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('category')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\CategoryController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.category.data');
+                                Route::get('/get-data/table/category', 'getTable')->name('fin.inv.master-data.category.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.category.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.category.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('unit')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\UnitController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.unit.data');
+                                Route::get('/get-data/table/unit', 'getTable')->name('fin.inv.master-data.unit.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.unit.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.unit.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('condition')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\ConditionController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.condition.data');
+                                Route::get('/get-data/table/condition', 'getTable')->name('fin.inv.master-data.condition.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.condition.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.condition.update');
+                                });
+                            });
+                        });
+
+                        Route::prefix('status')->group(function () {
+                            Route::controller(Finance\Inventory\MasterData\StatusController::class)->group(function () {
+                                Route::get('/data', 'getData')->name('fin.inv.master-data.status.data');
+                                Route::get('/get-data/table/status', 'getTable')->name('fin.inv.master-data.status.get-table');
+
+                                Route::middleware(['permission:FIN:crud-masterdata-inventory'])->group(function () {
+                                    Route::post('/create', 'create')->name('fin.inv.master-data.status.create');
+                                    Route::post('/update', 'update')->name('fin.inv.master-data.status.update');
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        Route::prefix('approval')->group(function () {
+            Route::controller(Finance\Approval\ApprovalController::class)->group(function () {
+                Route::get('/', 'index')->name('fin.approval.index');
+            });
+            Route::prefix('procurement')->group(function () {
+                Route::controller(Finance\Approval\ProcurementController::class)->group(function () {
+                    Route::get('/get-data/table', 'getTableApproval')->name('fin.approval.procurement.get-table');
+                });
+            });
+            Route::prefix('spending')->group(function () {
+                Route::controller(Finance\Approval\SpendingController::class)->group(function () {
+                    Route::get('/get-data/table', 'getTableApproval')->name('fin.approval.spending.get-table');
+                });
+            });
+        });
+
+        Route::prefix('invoice')->group(function () {
+            Route::controller(Finance\Invoice\InvoiceController::class)->group(function () {
+                Route::get('/', 'viewDashboard')->name('fin.invc.dashboard');
+
+                Route::prefix('invc')->group(function () {
+                    Route::get('/', 'viewInvoice')->name('fin.invc.invoice');
+
+                    Route::get('/detail/{id}', 'viewInvoiceDetail')->name('fin.invc.invoice.detail');
+
+                    Route::get('/detail/{id}/export-invoice', 'exportInvoice')->name('fin.invc.invoice.export.invoice');
+                    Route::get('/detail/{id}/export-receipt', 'exportReceipt')->name('fin.invc.invoice.export.receipt');
+
+                    Route::prefix('create')->group(function () {
+                        Route::get('/', 'viewAddInvoice')->name('fin.invc.invoice.create');
+
+                    });
+                });
+
+                Route::prefix('journal')->group(function () {
+                    Route::get('/', 'viewJournal')->name('fin.invc.journal');
+                });
+
+                Route::prefix('master-data')->group(function () {
+                    Route::get('/', 'viewMasterdata')->name('fin.invc.master-data');
+                });
+
+                Route::prefix('logs')->group(function () {
+                    Route::get('/', 'viewLogs')->name('fin.invc.logs');
+
+                    Route::get('/detail/{id}', 'viewDetailLog')->name('fin.invc.logs.detail');
+                });
+            });
+        });
+    });
+
+    Route::controller(BoQController::class)->group(function () {
+        Route::prefix('boq')->group(function () {
+            Route::get('/', 'index')->name('com.boq.index');
+            Route::get('/get-data/table/data-result', 'getDatatable')->name('com.boq.render.datatable');
+
+            Route::post('/batal-boq', 'batalBoQ')->name('com.boq.batal-boq');
+            Route::get('/create-draft-boq', 'createDraftBoq')->name('com.boq.create-draft-boq');
+            Route::get('/update-draft-boq', 'updateDraftBoq')->name('com.boq.update-draft-boq');
+            Route::post('/create-revision-boq', 'createRevisionBoq')->name('com.boq.revision.boq');
+            Route::get('/get-revision-boq', 'getApprovalBoq')->name('com.boq.get.revision.boq');
+            Route::post('/store-data-boq', 'saveAndStoreBoq')->name('com.boq.store.boq');
+            Route::post('/store-approval-boq', 'storeApprovalBoq')->name('com.boq.store.approval.boq');
+
+            Route::get('/on-review-boq', 'onReviewBoq')->name('com.boq.on.review.boq');
+            Route::get('/review-done-boq', 'reviewDoneBoq')->name('com.boq.review.done.boq');
+
+            Route::get('/get-merk-type', 'getMerkType')->name('get.merk.type');
+            Route::get('/get-survey-company-item-inventory', 'getSurveyCompanyItemInventory')->name('get.survey.company.item.inventory');
+        });
+    });
+
+    Route::controller(ProcurementController::class)->group(function () {
+        Route::prefix('procurement')->group(function () {
+            // halaman utama
+            Route::get('/', 'index')->name('com.procurement.index');
+            Route::get('/get/table', 'getTableProcurement')->name('com.procurement.getTable');
+
+            // halaman create
+            Route::get('/create', 'create')->name('com.procurement.create');
+            Route::post('/item/status', 'getStatusItem')->name('com.procurement.getStatusItem');
+            Route::get('/table/item/boq', 'getTableItemFromBOQ')->name('com.procurement.getTableItemFromBOQ');
+            Route::post('/store', 'storeProcurement')->name('com.procurement.storeProcurement');
+            Route::post('/get/detail/item/boq', 'getDetailItem')->name('com.procurement.getDetailItem');
+
+            // halaman detail
+            Route::get('/detail/{id}', 'detailProcurement')->name('com.procurement.detail');
+            Route::post('/{id}/add/payment/', 'addPaymentProcurement')->name('com.procurement.addPaymentProcurement');
+            Route::get('/table/item/procurement', 'getTableItemProcurement')->name('com.procurement.getTableItemProcurement');
+            Route::post('/update/item/procurement/{id}', 'updateItemProcurement')->name('com.procurement.updateItemProcurement');
+            Route::post('/update/item/procurement/{id}/status', 'updateStatusItemProcurement')->name('com.procurement.updateStatusItemProcurement');
+
+            // halaman detail item procurement
+            Route::get('/detail/item/{id}', 'detailItemProcurement')->name('com.procurement.detail.item');
+        });
+    });
+
+    Route::controller(QuotationController::class)->group(function () {
+        Route::prefix('quotation')->group(function () {
+            Route::get('/', 'index')->name('com.quotation.index'); // quotation internet
+            Route::get('/quotation-perangkat', 'perangkat')->name('com.quotation.perangkat.index'); // quotation perangkat
+
+            Route::get('/get-data/table/data-result', 'getDatatable')->name('com.quotation.render.datatable');
+
+            Route::get('/quotation-result-export/{isQuotation}/{id}', 'exportQuotationResult')->name('com.quotation.result.export');
+
+            Route::get('/create-quotation', 'createQuotation')->name('com.quotation.create.quotation');
+            Route::get('/update-quotation', 'updateQuotation')->name('com.quotation.update.quotation');
+            Route::get('/review-done-quotation', 'reviewDoneQuotation')->name('com.quotation.review.done.quotation');
+
+            Route::post('/store-po-quotation', 'storePurchaseOrder')->name('com.quotation.store.po');
+            Route::post('/store-data-quotation', 'saveAndStoreQuotation')->name('com.quotation.store.quotation');
+
+            Route::post('/cancel-quotation', 'cancelQuotation')->name('com.quotation.cancel.quotation');
+
+            Route::get('/get-internet-bundling', 'getInternetBundling')->name('com.quotation.get.internet.bundling');
+            Route::post('/update-internet-bundling', 'updateInternetBundling')->name('com.quotation.update.internet.bundling');
         });
     });
 });

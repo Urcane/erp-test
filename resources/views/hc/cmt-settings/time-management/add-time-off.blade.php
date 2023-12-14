@@ -240,7 +240,6 @@
                                 </form>
                             </div>
 
-
                         </div>
                     </div>
                 </div>
@@ -389,7 +388,7 @@
                         toastr.success(data.message, 'Selamat 🚀 !');
                         setTimeout(function() {
                             window.location.href = "{{ route("hc.setting.timeoff.index") }}";
-                        }, 2500);
+                        }, 1000);
                     },
                     error: function(xhr, status, error) {
                         const data = xhr.responseJSON;

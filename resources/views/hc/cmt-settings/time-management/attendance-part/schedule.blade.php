@@ -34,7 +34,7 @@
                                     required name="effective_date">
                             </div>
 
-                            <div class="col-lg-12">
+                            {{-- <div class="col-lg-12">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
                                     <span class="required fw-bold">Settings</span>
                                 </label>
@@ -59,14 +59,7 @@
                                 <label class="fs-6 form-check-label mb-2" for="override_special_holiday">
                                     <span class="fw-bold">Override Special Holiday</span>
                                 </label>
-                            </div>
-
-                            <div class="col-lg-12">
-                                <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class="fw-bold">Day Off</span>
-                                </label>
-                            </div>
-
+                            </div> --}}
                             <div class="col-lg-12 mt-6 mb-3">
                                 <h4>Set Shift</h4>
                                 <span class="fs-7 fw-semibold text-gray-500">Set your shift combination for this
@@ -292,16 +285,16 @@
 
 
             let content = $(`<tr id="shift-${shift.id}-edit">
-                                <td>
-                                    <select class="form-select select-shift" data-id="${data.id}" data-shift-id="${shift.id}" data-id-db="${data.id}">
-                                    </select>
-                                </td>
-                                <td id="working_hour_${shift.id}">${working_start +" - "+ working_end}</td>
-                                <td id="break_${shift.id}">${break_start +" - "+ break_end}</td>
-                                <td id="ot_before_${shift.id}">${ot_before}</td>
-                                <td id="ot_after_${shift.id}">${ot_after}</td>
-                                <td onclick="removeShiftComponent('#shift-${shift.id}-edit')" data-id="${shift.id}" data-working-schedule="${id}"><i class="fa-solid fa-circle-minus"></i></td>
-                            </tr>`);
+                <td>
+                    <select class="form-select select-shift" data-id="${data.id}" data-shift-id="${shift.id}" data-id-db="${data.id}">
+                    </select>
+                </td>
+                <td id="working_hour_${shift.id}">${working_start +" - "+ working_end}</td>
+                <td id="break_${shift.id}">${break_start +" - "+ break_end}</td>
+                <td id="ot_before_${shift.id}">${ot_before}</td>
+                <td id="ot_after_${shift.id}">${ot_after}</td>
+                <td onclick="removeShiftComponent('#shift-${shift.id}-edit')" data-id="${shift.id}" data-working-schedule="${id}"><i class="fa-solid fa-circle-minus"></i></td>
+            </tr>`);
             $("#table-shift").append(content);
             $(`select[data-id="${data.id}"]`).append(option)
 
@@ -520,6 +513,7 @@
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
                 success: function(data) {
+                    $('#modal_create_schedule').modal('hide');
                     dataTableSchedule.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },
@@ -528,6 +522,8 @@
                     toastr.error(data.message, 'Opps!');
                 }
             });
+        } else {
+            toastr.error("Shift tidak boleh kosong", 'Opps!');
         }
 
     });

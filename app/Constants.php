@@ -13,9 +13,35 @@ class Constants
         "leave",         // Leaves including personal, sick, etc.
         "off_schedule", // Day not on working schedule
         "holiday",      // Public or company-recognized holiday
+        "assigned",     // Assigned by supervisor
     ]; // [0] as default, [1] always be for personal, sick, etc
 
     // database related
+    // procurement {
+    public $procurement_type = ["Customer", "Internal", "Inventory"];
+    // }
+
+    // payment {
+    public $payment_status = ["Waiting", "Paid", "Due Date", "Freeze", "Dismantle", "Rejected"];
+    public $payment_category = ["Down Payment", "Full Payment", "Repayment", "Credit"];
+    // }
+
+    // item {
+    public $item_status = [
+        "Create Procurement",
+        "Making an order",
+        "Arrived",
+        "Return",
+        "Received",
+        "Payment",
+        "Start Freeze",
+        "End Freeze",
+        "Done",
+        "Other",
+    ];
+    // }
+
+    // employee {
     public $marital_status = ["Belum Kawin", "Kawin", "Cerai Hidup", "Cerai Mati"];
     public $gender = ["Laki-laki", "Perempuan"];
     public $blood_type = ["A", "B", "AB", "O"];
@@ -28,11 +54,29 @@ class Constants
     public $salary_type = ["Weekly", "Monthly"];
     public $tax_method = ["Gross", "Gross up", "Netto"];
     public $tax_salary = ["Taxable", "Non-taxable"];
-    public $jaminan_pensiun_cost = ["Not paid", "By company", "By Employee"];
+    public $jaminan_pensiun_cost = [
+        "Default",
+        "Not Paid",
+        "Paid By Company",
+        "Paid By Employee"
+    ];
     public $grade = ["SD/MI", "SMP/MTs", "SMA/SMK/MA", "D1", "D2", "D3", "S1/D4", "S2", "S3"];
     public $approve_status = ["Waiting", "Approved", "Rejected", "Canceled"]; // [0] as default // used manually on hc/request/* -> summaries and script
     public $balance_type = ["Anniversary", "Monthly"];
     public $leave_quota_history_type = ["minus", "plus"];
+    // }
+
+    // assignment {
+    public $assignment_status = ["Waiting", "Approved", "Rejected", "Canceled", "Expired"];
+    // }
+
+    // inventory {
+    public $inventory_status = ["Add", "Transfer", "Adjust", "Other"];
+    // }
+
+    // invoice {
+    public $invoice_status = ["In Progress", "Paid", "Due Date", "Freeze", "Dismantle"];
+    // }
 
     // system and view
     public $filter_status_attendance = [
@@ -54,7 +98,9 @@ class Constants
         "No Check In",
         "No Check Out",
         "Day Off",
-        "Time Off"
+        "Time Off",
+        "Dinas (Masuk)",
+        "Dinas (Tidak Absen)"
     ];
 
     public $summaries_attendance_information = [
@@ -65,7 +111,9 @@ class Constants
         "Tidak check-in",
         "Tidak check-out",
         "Hari libur kerja/nasional",
-        "Izin dan cuti"
+        "Izin dan cuti",
+        "Memiliki jadwal dinas dan melakukan absen",
+        "Memiliki jadwal dinas dan tidak melakukan absen"
     ];
 
     // only view
@@ -103,29 +151,31 @@ class Constants
         "Default 3",
     ];
     public $pktp  = [
-        "PKTP Status 1",
-        "PKTP Status 2",
-        "PKTP Status 3",
+        "TK",
+        "K/0",
+        "K/1",
+        "K/2",
+        "K/3",
     ];
     public $ketenagakerjaan_npp = [
-        "NPP 1",
-        "NPP 2",
-        "NPP 3",
+        "Default"
     ];
     public $kesehatan_family = [
-        "Family 1",
-        "Family 2",
-        "Family 3",
+        "0",
+        "1",
+        "2",
+        "3",
     ];
     public $kesehatan_cost = [
-        "Cost 1",
-        "Cost 2",
-        "Cost 3",
+        "Default",
+        "Paid By Company",
+        "Paid By Employee"
     ];
     public $jht_cost = [
-        "JHT Cost 1",
-        "JHT Cost 2",
-        "JHT Cost 3",
+        "Default",
+        "Not Paid",
+        "Paid By Company",
+        "Paid By Employee"
     ];
 
     public $attendance_code_view = [
@@ -133,6 +183,7 @@ class Constants
         "Izin/Cuti", // Leaves including personal, sick, etc.
         "Libur Kerja", // Day not on working schedule
         "Hari Libur", // Public or company-recognized holiday
+        "Dinas", // Assigned by supervisor
     ];
 
     public function attendanceCodeTranslator($code)

@@ -18,6 +18,7 @@ use App\Models\Attendance\UserAttendance;
 use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\UserEmployment;
 use App\Models\Employee\WorkingScheduleShift;
+use App\Utils\ErrorHandler;
 use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends RequestController
@@ -72,6 +73,12 @@ class AttendanceController extends RequestController
                 "attendance_id" => $attendance->id,
                 "date" => $date,
                 "action" => "SYSTEM EDIT",
+                "old_attendance_code" => null,
+                "new_attendance_code" => $this->constants->attendance_code[0],
+                "old_working_start" => null,
+                "old_working_end" => null,
+                "new_working_start" => $workingShift->working_start,
+                "new_working_end" => $workingShift->working_end,
                 "old_check_in" => null,
                 "old_check_out" => null,
                 "new_check_in" => $checkIn ?? null,
@@ -89,6 +96,12 @@ class AttendanceController extends RequestController
                 "attendance_id" => $userAttendance->id,
                 "date" => $userAttendance->date,
                 "action" => "SYSTEM EDIT",
+                "old_attendance_code" => $userAttendance->attendance_code,
+                "new_attendance_code" => $userAttendance->attendance_code,
+                "old_working_start" => $userAttendance->working_start,
+                "old_working_end" => $userAttendance->working_end,
+                "new_working_start" => null,
+                "new_working_end" => null,
                 "old_check_in" => $userAttendance->check_in,
                 "old_check_out" => $userAttendance->check_out,
                 "new_check_in" => $checkIn ?? $userAttendance->check_in,
@@ -172,7 +185,7 @@ class AttendanceController extends RequestController
                 "message" => "berhasil melakukan update status request attendance"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -268,7 +281,7 @@ class AttendanceController extends RequestController
                 ]
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -382,7 +395,7 @@ class AttendanceController extends RequestController
                     return $query->user->department->department_name;
                 })
                 ->addColumn('job_level', function ($query) {
-                    return $query->user->getRoleNames()[0];
+                    return $query->user->getRoleNames()->first();
                 })
                 ->addColumn('job_position', function ($query) {
                     return $query->user->division->divisi_name;

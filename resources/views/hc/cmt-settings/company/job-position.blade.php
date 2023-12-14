@@ -57,10 +57,10 @@
                                 </div>
                                 <div class="col-lg-6 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                        <span class="required fw-bold">Alias</span>
+                                        <span class="fw-bold">Alias</span>
                                     </label>
                                     <input type="text" class="form-control form-control-solid" placeholder="Name"
-                                        required name="divisi_alias">
+                                        name="divisi_alias">
                                 </div>
                                 <div class="col-lg-6 mb-3">
                                     <label class="d-flex align-items-center fs-6 form-label mb-2">
@@ -81,7 +81,7 @@
                                     </label>
                                     <select class="drop-data form-select form-select-solid" data-control="parent_id"
                                         name="parent_id" required>
-                                        @foreach ($dataOrganization as $option)
+                                        @foreach ($dataDivision as $option)
                                             <option value="{{ $option->id }}"
                                                 @if (old('parent_id') == $option->id) selected @endif>{{ $option->divisi_name }}
                                             </option>
@@ -132,7 +132,7 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0"
-                                                data-bs-toggle="tab" id="shift" href="#chart">Chart</a>
+                                                data-bs-toggle="tab" id="chart_tab" href="#chart">Chart</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -168,26 +168,38 @@
         </div>
     </div>
 
-    <script src="{{ asset('sense') }}/plugins/custom/OrgChart/js/jquery.orgchart.js"></script>
     <script>
-        'use strict';
+        $(document).ready(() => {
+            const initChart = (datascource) => {
+                orgInit();
+                (($) => {
+                $(function() {
+                    var oc = $('#chart-container').orgchart({
+                        'pan': true,
+                        'data': datascource,
+                        'nodeContent': 'count',
+                        'zoom': true,
+                    });
 
-        (function($) {
-
-            $(function() {
-
-                var datascource = @json($dataTree);
-                console.log(datascource)
-                var oc = $('#chart-container').orgchart({
-                    'pan': true,
-                    'data': datascource,
-                    'nodeContent': 'count',
-                    'zoom': true,
                 });
 
-            });
+                })(jQuery);
+            }
 
-        })(jQuery);
+            $("#chart_tab").one("click", function() {
+                $.ajax({
+                    url: "{{ route('hc.emp.job-position.getGraph') }}",
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+
+                        (() => initChart(data.data))()
+                    }
+                });
+            });
+        })
     </script>
 
     <script>
@@ -286,6 +298,7 @@
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
                 success: function(data) {
+                    $('#modal_create_job_position').modal('hide');
                     dataTableJobPosition.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },
@@ -301,4 +314,5 @@
         'route' => route('hc.setting.job-position.delete'),
     ])
 
+    @include("hc.cmt-settings.company.script.init-orgchart")
 @endsection

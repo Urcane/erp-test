@@ -210,6 +210,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(data) {
+                    $('#shift_request_modal').modal('hide');
                     shiftTable.ajax.reload();
                     toastr.success(data.message, 'Selamat 🚀 !');
                 },

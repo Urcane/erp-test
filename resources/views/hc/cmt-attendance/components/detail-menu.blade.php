@@ -43,7 +43,7 @@
                 </a>
             </div>
         </li>
-        <li>
+        {{-- <li>
             <div
                 onclick="onDeleteButtonClick({
             id: {{ $userAttendances->id }},
@@ -57,6 +57,6 @@
                     Hapus
                 </a>
             </div>
-        </li>
+        </li> --}}
     @endcan
 </ul>

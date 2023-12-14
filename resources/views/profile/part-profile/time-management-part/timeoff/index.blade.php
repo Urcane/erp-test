@@ -114,79 +114,6 @@
         return daysDifference;
     }
 
-    // const onTimeOffModalOpen = ({
-    //     id,
-    //     taken = "-",
-    //     file = "-",
-    //     type = "-",
-    //     created = "-",
-    //     notes = "-",
-    //     startDate = "-",
-    //     endDate = "-",
-    //     status,
-    //     fileLink = "-",
-    //     fileName = "-"
-    // }) => {
-    //     const createdFormated = formatDateTime(created);
-    //     const startDateFormated = formatDate(startDate);
-    //     const endDateFormated = formatDate(endDate);
-
-    //     switch (status) {
-    //         case approveStatusEnum[0]:
-    //             $('#timeoff_approved_button').hide();
-    //             $('#timeoff_rejected_button').hide();
-    //             $('#timeoff_cancel_button').show();
-    //             $('#timeoff_canceled_button').hide();
-
-    //             $('#timeoff_comment').hide();
-    //             $('#att_timeoff_label').hide();
-    //             break;
-    //         case approveStatusEnum[1]:
-    //             $('#timeoff_approved_button').show();
-    //             $('#timeoff_rejected_button').hide();
-    //             $('#timeoff_cancel_button').hide();
-    //             $('#timeoff_canceled_button').hide();
-
-    //             $('#att_timeoff_label').show();
-    //             $('#timeoff_comment').show();
-    //             $('#timeoff_comment').val(comment);
-    //             break;
-    //         case approveStatusEnum[2]:
-    //             $('#timeoff_approved_button').hide();
-    //             $('#timeoff_rejected_button').show();
-    //             $('#timeoff_cancel_button').hide();
-    //             $('#timeoff_canceled_button').hide();
-
-    //             $('#att_timeoff_label').show();
-    //             $('#timeoff_comment').show();
-    //             $('#timeoff_comment').val(comment);
-    //             break;
-    //         case approveStatusEnum[3]:
-    //             $('#timeoff_approved_button').hide();
-    //             $('#timeoff_rejected_button').hide();
-    //             $('#timeoff_cancel_button').hide();
-    //             $('#timeoff_canceled_button').show();
-
-    //             $('#timeoff_comment').hide();
-    //             $('#att_timeoff_label').hide();
-    //             break;
-    //     }
-
-    //     $('#tmoff-type-modal').text(type);
-    //     $('#tmoff-file-modal').text(file);
-    //     $('#tmoff-taken-modal').text(`${taken} Day(s)`);
-    //     $('#tmoff-date-modal').text(`${startDateFormated} - ${endDateFormated}`);
-    //     $('#tmoff-created-modal').text(createdFormated);
-    //     $('#tmoff-notes-modal').text(notes);
-    //     $('#timeoff-request-id').val(id)
-
-    //     if (fileName !== "-") {
-    //         $('#tmoff-file-modal').attr('href', fileLink);
-    //     }
-
-    //     $('#tmoff-file-modal').text(fileName);
-    // };
-
     const onTimeOffModalOpen = ({
         id = "-",
         taken = "-",
@@ -434,7 +361,7 @@
                 }
             });
 
-            tableQuota = $(kt_table_quota).DataTable({
+            tableQuota = $('#kt_table_quota').DataTable({
                 processing: true,
                 serverSide: true,
                 retrieve: true,

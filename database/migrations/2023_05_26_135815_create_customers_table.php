@@ -31,6 +31,13 @@ class CreateCustomersTable extends Migration
             $table->softDeletes()->index();
             $table->timestamps();
         });
+
+        Schema::create("customer_bills", function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('customer_id')->constrained();
+
+            $table->timestamps();
+        });
     }
 
     /**

@@ -2,14 +2,14 @@
 
 namespace App\Models\Customer;
 
-use App\Models\Team\City;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BussinesType;
+use App\Models\Team\City;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Model
 {
@@ -24,6 +24,11 @@ class Customer extends Model
         return $this->belongsTo(User::class, 'user_follow_up', 'id');
     }
 
+
+    function bussinesType() : BelongsTo {
+        return $this->belongsTo(BussinesType::class, 'bussines_type_id', 'id');
+    }
+    
     function city() : BelongsTo {
         return $this->belongsTo(City::class);
     }

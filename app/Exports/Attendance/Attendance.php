@@ -10,7 +10,6 @@ use Carbon\Carbon;
 class Attendance
 {
     protected $constants;
-    protected $errorHandler;
     protected $rangeDate;
 
     protected $userId;
@@ -23,7 +22,6 @@ class Attendance
     public function __construct($rangeDate)
     {
         $this->constants = new Constants();
-        $this->errorHandler = new ErrorHandler();
         $this->rangeDate = $rangeDate;
     }
 
@@ -64,7 +62,7 @@ class Attendance
         return $userAttendances;
     }
 
-    private function _summariesQuery($query1, $query2, $query3, $query4, $query5, $query6, $query7, $query8)
+    private function _summariesQuery($query1, $query2, $query3, $query4, $query5, $query6, $query7, $query8, $query9, $query10)
     {
         $now = now();
 
@@ -146,6 +144,19 @@ class Attendance
 
             $this->constants->summaries_attendance[7] => $query8->where('attendance_code', '=', $this->constants->attendance_code[1])
                 ->count(),
+
+            $this->constants->summaries_attendance[8] => $query9->where('attendance_code', '=', $this->constants->attendance_code[4])
+                ->whereDate('date', '<=', $now)
+                ->where(function ($query) {
+                    $query->whereNotNull('check_in')
+                        ->orWhereNotNull('check_out');
+                })->count(),
+
+            $this->constants->summaries_attendance[9] => $query10->where('attendance_code', '=', $this->constants->attendance_code[4])
+                ->whereDate('date', '<', $now)
+                ->whereNull('check_in')
+                ->whereNull('check_out')
+                ->count(),
         ]);
     }
 
@@ -162,10 +173,12 @@ class Attendance
                 clone $userAttendances,
                 clone $userAttendances,
                 clone $userAttendances,
+                clone $userAttendances,
+                clone $userAttendances,
                 clone $userAttendances
             );
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -178,7 +191,7 @@ class Attendance
 
             return $userAttendances->orderBy('date', 'desc')->get();
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

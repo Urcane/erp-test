@@ -50,6 +50,7 @@ class="d-flex flex-wrap flex-sm-nowrap mb-6"
                     class="btn btn-sm btn-bg-light btn-active-color-primary me-3"
                     data-bs-toggle="modal"
                     data-bs-target="#kt_modal_users_search"
+                    id="add-users"
                     >Add User</a
                 >
 

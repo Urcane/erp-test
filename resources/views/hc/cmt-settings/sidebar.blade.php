@@ -39,13 +39,14 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{route("hc.setting.schedule.index")}}">Attendance</a></li>
                             <li><a class="dropdown-item" href="{{route("hc.setting.live-location.index")}}">Live Location</a></li>
-                            <li><a class="dropdown-item" href="#">Portal</a></li>
+                            {{-- <li><a class="dropdown-item" href="#">Portal</a></li> --}}
+                            <li><a class="dropdown-item" href="{{route("hc.setting.leave.index")}}">Leave</a></li>
                             <li><a class="dropdown-item" href="{{route("hc.setting.timeoff.index")}}">Time Off</a></li>
-                            <li><a class="dropdown-item" href="#">Overtime</a></li>
+                            {{-- <li><a class="dropdown-item" href="#">Overtime</a></li> --}}
                             <li><a class="dropdown-item" href="{{route("hc.setting.holiday.index")}}">Holiday</a></li>
                         </ul>
                     </div>
-                    <div class="dropend mb-8">
+                    {{-- <div class="dropend mb-8">
                         <a class="menu-link row rounded" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="col-2 fa-solid fa-credit-card text-info fs-3"></i>
                             <span class="col-7">
@@ -92,7 +93,7 @@
                             <li><a class="dropdown-item" href="#">Action two</a></li>
                             <li><a class="dropdown-item" href="#">Action three</a></li>
                         </ul>
-                    </div>
+                    </div> --}}
                     <div class="dropend mb-8">
                         <a class="menu-link row rounded" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="col-2 fa-solid fa-user-group text-info fs-3"></i>

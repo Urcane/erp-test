@@ -16,12 +16,10 @@ use App\Models\Attendance\UserAttendance;
 
 class AttendanceController extends Controller
 {
-    private $errorHandler;
     private $constants;
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
 
@@ -44,17 +42,17 @@ class AttendanceController extends Controller
                                         ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
                                 });
                             });
-                    })->orWhere(function($query) use ($now) {
+                    })->orWhere(function ($query) use ($now) {
                         $query->whereDate('date', '<', $now)
                             ->where('attendance_code', '=', $this->constants->attendance_code[0])
                             ->whereNotNull('check_in')
                             ->whereNotNull('check_out')
-                            ->where(function($query) {
+                            ->where(function ($query) {
                                 $query->whereRaw('TIME(check_in) <= TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))')
                                     ->whereRaw('TIME(check_out) >= TIME(DATE_SUB(working_end, INTERVAL late_check_out MINUTE))');
                             });
                     });
-            })->count(),
+                })->count(),
 
             "lateCheckInCount" => $query2->whereDate('date', '<=', $now)
                 ->where('attendance_code', '=', $this->constants->attendance_code[0])
@@ -74,7 +72,7 @@ class AttendanceController extends Controller
                         $query->whereDate('date', '<', $now)
                             ->where(function ($query) {
                                 $query->whereNull('check_in')
-                                ->orWhereNull('check_out');
+                                    ->orWhereNull('check_out');
                             });
                     })->orWhere(function ($query) use ($now) {
                         $query->whereDate('date', '=', $now)
@@ -89,7 +87,7 @@ class AttendanceController extends Controller
                 ->where(function ($query) use ($now) {
                     $query->whereDate('date', '<', $now)->orWhere(function ($query) use ($now) {
                         $query->whereDate('date', '=', $now)
-                        ->whereRaw('TIME(?) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))', [$now]);
+                            ->whereRaw('TIME(?) > TIME(DATE_ADD(working_start, INTERVAL late_check_in MINUTE))', [$now]);
                     });
                 })
                 ->count(),
@@ -99,10 +97,10 @@ class AttendanceController extends Controller
                 ->whereNull('check_out')
                 ->count(),
 
-            "dayOffCount" => $query7->where(function($query) {
-                    $query->where('attendance_code', '=', $this->constants->attendance_code[2])
+            "dayOffCount" => $query7->where(function ($query) {
+                $query->where('attendance_code', '=', $this->constants->attendance_code[2])
                     ->orWhere('attendance_code', '=', $this->constants->attendance_code[3]);
-                })
+            })
                 ->count(),
 
             "timeOffCount" => $query8->where('attendance_code', '=', $this->constants->attendance_code[1])
@@ -129,13 +127,6 @@ class AttendanceController extends Controller
                 ]);
             }
 
-            if ($attendance->attendance_code != $this->constants->attendance_code[0]) {
-                return response()->json([
-                    "status" => "success",
-                    "message" => "Hari ini bukan hari kerja"
-                ]);
-            }
-
             $attendance["check_in_file"] = $attendance->check_in_file ? asset("storage/attendance/checkin/$attendance->check_in_file") : null;
             $attendance["check_out_file"] = $attendance->check_out_file ? asset("storage/attendance/checkout/$attendance->check_out_file") : null;
 
@@ -144,7 +135,7 @@ class AttendanceController extends Controller
                 "data" => $attendance
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -167,7 +158,7 @@ class AttendanceController extends Controller
                 ]
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -200,7 +191,7 @@ class AttendanceController extends Controller
                 ]
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -215,7 +206,8 @@ class AttendanceController extends Controller
             ]);
 
             $userInLocation = $request->user()->userEmployment->subBranch->branchLocations()
-                ->selectRaw("branch_locations.*,
+                ->selectRaw(
+                    "branch_locations.*,
                     (6371000 * acos(cos(radians(?))
                     * cos(radians(latitude))
                     * cos(radians(longitude) - radians(?))
@@ -234,7 +226,7 @@ class AttendanceController extends Controller
                 "message" => "Anda berada dalam radius kantor ($userInLocation->distance meter)"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -253,6 +245,54 @@ class AttendanceController extends Controller
             $timestamp = now();
             $now = Carbon::now();
             $today = $now->toDateString();
+
+            $attendanceToday = UserAttendance::where('date', $today)->where('user_id', $request->user()->id)->first();
+
+            if ($attendanceToday && $attendanceToday->attendance_code == $this->constants->attendance_code[4]) {
+                if ($attendanceToday->checkIn) {
+                    throw new InvariantError("Anda sudah melakukan check in, Hubungi Admin jika ini kesalahan");
+                }
+
+                $userInLocation = $request->user()->userAssignments()
+                    ->where(function ($query) use ($today) {
+                        $query->where('start_date', '<=', $today)
+                            ->where('end_date', '>=', $today);
+                    })
+                    ->where('status', $this->constants->assignment_status[1])
+                    ->selectRaw(
+                        "assignments.radius,
+                        (6371000 * acos(cos(radians(?))
+                        * cos(radians(latitude))
+                        * cos(radians(longitude) - radians(?))
+                        + sin(radians(?))
+                        * sin(radians(latitude)))) AS distance",
+                        [$request->latitude, $request->longitude, $request->latitude]
+                    )->orderBy('distance')->first();
+
+                if ($userInLocation->distance > $userInLocation->radius) {
+                    throw new InvariantError("Anda diluar radius wilayah dinas ($userInLocation->distance meter)");
+                }
+
+                $file = $request->file('file');
+                $filename = time() . "_" . $request->user()->name . "." . $file->getClientOriginalExtension();
+                $file->storeAs('attendance/checkin', $filename, 'public');
+
+                $attendanceToday->update([
+                    'check_in' => $timestamp,
+                    'check_in_latitude' => $request->latitude,
+                    'check_in_longitude' => $request->longitude,
+                    'check_in_file' => $filename,
+                ]);
+
+                return response()->json([
+                    "status" => "success",
+                    "message" => "Berhasil Melakukan Check in ($now)"
+                ], 201);
+            }
+
+            if ($attendanceToday && $attendanceToday->attendance_code != $this->constants->attendance_code[0]) {
+                throw new InvariantError("Hari ini bukan hari kerja");
+            }
 
             // global checkup
             $globalDayOff = GlobalDayOff::where('start_date', '<=', $today)
@@ -316,7 +356,8 @@ class AttendanceController extends Controller
 
             // check location
             $userInLocation = $employmentData->subBranch->branchLocations()
-                ->selectRaw("branch_locations.*,
+                ->selectRaw(
+                    "branch_locations.*,
                     (6371000 * acos(cos(radians(?))
                     * cos(radians(latitude))
                     * cos(radians(longitude) - radians(?))
@@ -402,7 +443,7 @@ class AttendanceController extends Controller
                 ], 201);
             }
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -421,6 +462,47 @@ class AttendanceController extends Controller
             $timestamp = now();
             $now = Carbon::now();
             $today = $now->toDateString();
+
+            $attendanceToday = UserAttendance::where('date', $today)->where('user_id', $request->user()->id)->first();
+
+            if ($attendanceToday && $attendanceToday->attendance_code == $this->constants->attendance_code[4]) {
+                $userInLocation = $request->user()->userAssignments->whereBetween('start_date', [$today, $today])
+                    ->whereBetween('end_date', [$today, $today])
+                    ->where('status', $this->constants->assignment_status[1])
+                    ->selectRaw(
+                        "user_assignments.*,
+                        (6371000 * acos(cos(radians(?))
+                        * cos(radians(latitude))
+                        * cos(radians(longitude) - radians(?))
+                        + sin(radians(?))
+                        * sin(radians(latitude)))) AS distance",
+                        [$request->latitude, $request->longitude, $request->latitude]
+                    )->orderBy('distance')->first();
+
+                if ($userInLocation->distance > $userInLocation->radius) {
+                    throw new InvariantError("Anda diluar radius wilayah dinas ($userInLocation->distance meter)");
+                }
+
+                $file = $request->file('file');
+                $filename = time() . "_" . $request->user()->name . "." . $file->getClientOriginalExtension();
+                $file->storeAs('attendance/checkin', $filename, 'public');
+
+                $attendanceToday->update([
+                    'check_out' => $timestamp,
+                    'check_out_latitude' => $request->latitude,
+                    'check_out_longitude' => $request->longitude,
+                    'check_out_file' => $filename,
+                ]);
+
+                return response()->json([
+                    "status" => "success",
+                    "message" => "Berhasil Melakukan Check Out ($now)"
+                ], 201);
+            }
+
+            if ($attendanceToday && $attendanceToday->attendance_code != $this->constants->attendance_code[0]) {
+                throw new InvariantError("Hari ini bukan hari kerja");
+            }
 
             // global checkup
             $globalDayOff = GlobalDayOff::where('start_date', '<=', $today)
@@ -484,7 +566,8 @@ class AttendanceController extends Controller
 
             // check location
             $userInLocation = $employmentData->subBranch->branchLocations()
-                ->selectRaw("branch_locations.*,
+                ->selectRaw(
+                    "branch_locations.*,
                     (6371000 * acos(cos(radians(?))
                     * cos(radians(latitude))
                     * cos(radians(longitude) - radians(?))
@@ -568,7 +651,7 @@ class AttendanceController extends Controller
                 ], 201);
             }
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

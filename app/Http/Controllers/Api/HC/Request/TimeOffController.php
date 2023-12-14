@@ -19,6 +19,7 @@ use App\Models\Leave\UserLeaveHistory;
 use App\Models\Leave\UserLeaveQuota;
 use App\Models\Leave\UserLeaveRequest;
 use App\Models\User;
+use App\Utils\ErrorHandler;
 use Carbon\Carbon;
 
 use DateTime;
@@ -29,7 +30,8 @@ use Illuminate\Support\Facades\DB;
 class TimeOffController extends RequestController
 {
     // get user shift after cycle with date
-    private function _getWorkingScheduleShift($userId, $startDate) {
+    private function _getWorkingScheduleShift($userId, $startDate)
+    {
         $userCurrentShift = UserCurrentShift::where('user_id', $userId)->with("workingScheduleShift")->first();
         $workingScheduleShifts = WorkingScheduleShift::where('working_schedule_id', $userCurrentShift->workingScheduleShift->working_schedule_id)->get();
 
@@ -38,14 +40,14 @@ class TimeOffController extends RequestController
         $now = Carbon::now();
         $diff = $now->diffInDays($requestDate);
         $countOfSchedule = $workingScheduleShifts->count();
-        $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+        $distance = $diff - (floor($diff / $countOfSchedule) * $countOfSchedule);
 
         $workingScheduleShift = $workingScheduleShifts->find($userCurrentShift->working_schedule_shift_id);
-        for ($i=0; $i < $distance; $i++) {
+        for ($i = 0; $i < $distance; $i++) {
             if ($requestDate > $now) {
                 $workingScheduleShift = $workingScheduleShifts->find($workingScheduleShift->next);
             } else {
-                $workingScheduleShift = $workingScheduleShifts->filter(function ($scheduleShift) use ($workingScheduleShift){
+                $workingScheduleShift = $workingScheduleShifts->filter(function ($scheduleShift) use ($workingScheduleShift) {
                     return $scheduleShift->next == $workingScheduleShift->id;
                 })->first();
             }
@@ -107,7 +109,7 @@ class TimeOffController extends RequestController
             $currentDate = $startDate->copy();
 
             if (!in_array($currentDate->toDateString(), $holidayDates)) {
-                if (!$workingScheduleShift->is_working) {
+                if (!$workingScheduleShift->workingShift->is_working) {
                     array_push($dayOffDates, $currentDate->format('Y-m-d'));
                 } else {
                     array_push($takenDates, $currentDate->format('Y-m-d'));
@@ -126,7 +128,7 @@ class TimeOffController extends RequestController
         ];
     }
 
-    private function _updateSchedule(mixed $leaveRequest)
+    private function _updateSchedule($leaveRequest)
     {
         $userId = $leaveRequest->user->id;
 
@@ -190,7 +192,7 @@ class TimeOffController extends RequestController
 
         collect($schedule["takenDates"])->map(function ($data) use (
             $userId,
-            $leaveCategoryCode,
+            $leaveCategoryCode
         ) {
             $this->_updateAttendance(
                 $userId,
@@ -625,7 +627,7 @@ class TimeOffController extends RequestController
                     $date = $leaveRequestCategory->half_day ?
                         Carbon::createFromFormat('Y-m-d', $leaveRequest->date)->format('d/m/Y')
                         : Carbon::createFromFormat('Y-m-d', $leaveRequest->start_date)->format('d/m/Y')
-                            . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
+                        . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
 
                     UserLeaveHistory::create([
                         "type" => $this->constants->leave_quota_history_type[0],
@@ -689,7 +691,7 @@ class TimeOffController extends RequestController
                 $date = $leaveRequestCategory->half_day ?
                     Carbon::createFromFormat('Y-m-d', $leaveRequest->date)->format('d/m/Y')
                     : Carbon::createFromFormat('Y-m-d', $leaveRequest->start_date)->format('d/m/Y')
-                        . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
+                    . " - " . Carbon::createFromFormat('Y-m-d', $leaveRequest->end_date)->format('d/m/Y');
 
                 UserLeaveHistory::create([
                     "type" => $this->constants->leave_quota_history_type[0],
@@ -729,7 +731,7 @@ class TimeOffController extends RequestController
             ]);
         } catch (\Throwable $th) {
             DB::rollback();
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -747,6 +749,7 @@ class TimeOffController extends RequestController
             if ($user->hasPermissionTo('HC:view-all-request')) {
                 $userRequests = UserLeaveRequest::whereIn('status', array_slice($this->constants->approve_status, 0, 3))
                     ->with(['user.division', 'user.department'])
+                    ->orderByRaw("FIELD(status, ?, ?, ?)", array_slice($this->constants->approve_status, 0, 3))
                     ->paginate($itemCount, ['*'], 'page', $page);
             } else if ($user->hasPermissionTo('Approval:view-request')) {
                 $userRequests = UserLeaveRequest::where(function ($query) use ($user) {
@@ -757,6 +760,7 @@ class TimeOffController extends RequestController
                             });
                     })->orWhere('approval_line', $user->id);
                 })->with(['user.division', 'user.department'])
+                    ->orderByRaw("FIELD(status, ?, ?, ?)", array_slice($this->constants->approve_status, 0, 3))
                     ->paginate($itemCount, ['*'], 'page', $page);
             } else {
                 throw new AuthorizationError("Anda tidak berhak mengakses ini");
@@ -771,7 +775,7 @@ class TimeOffController extends RequestController
                 ],
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -813,7 +817,7 @@ class TimeOffController extends RequestController
                 "data" => $userRequest
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

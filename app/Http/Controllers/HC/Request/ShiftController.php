@@ -17,6 +17,7 @@ use App\Models\Attendance\UserAttendance;
 use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\UserEmployment;
 use App\Models\Employee\WorkingScheduleShift;
+use App\Utils\ErrorHandler;
 use Illuminate\Support\Facades\DB;
 
 
@@ -160,7 +161,7 @@ class ShiftController extends RequestController
                 "message" => "berhasil melakukan update status request shift"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -256,7 +257,7 @@ class ShiftController extends RequestController
                 ]
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -381,7 +382,7 @@ class ShiftController extends RequestController
                     return $query->user->department->department_name;
                 })
                 ->addColumn('job_level', function ($query) {
-                    return $query->user->getRoleNames()[0];
+                    return $query->user->getRoleNames()->first();
                 })
                 ->addColumn('job_position', function ($query) {
                     return $query->user->division->divisi_name;

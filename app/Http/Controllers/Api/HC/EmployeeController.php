@@ -9,15 +9,8 @@ use App\Models\User;
 
 class EmployeeController extends Controller
 {
-    private $errorHandler;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
-
     function getAllEmployee(Request $request) {
-        // try {
+        try {
             $page = $request->page ?? 1;
             $itemCount = $request->itemCount ?? 10;
 
@@ -31,10 +24,10 @@ class EmployeeController extends Controller
                     "employee" => $employee->items(),
                 ]
             ]);
-        // } catch (\Throwable $th) {
-        //     $data = $this->errorHandler->handle($th);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
 
-        //     return response()->json($data["data"], $data["code"]);
-        // }
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 }

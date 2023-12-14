@@ -39,7 +39,8 @@
                                     <span class="input-group-text border-0"><i class="fa-solid fa-calendar"></i></span>
                                     <input class="form-control form-control-solid form-control-sm" autocomplete="off" name="range_date" id="range_date">
                                 </div>
-                                @role('administrator')
+                                {{-- @role('administrator') --}}
+                                @can('Leap:manage-prospect')
                                 <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
                                     <div class="menu menu-sub menu-sub-dropdown w-300px text-start pb-3" id="action_lead" data-kt-menu="true" style="">
@@ -74,7 +75,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                @endrole
+                                @endcan
+                                {{-- @endrole --}}
                                 {{-- <div class="tab_all_menu_lead">
                                     <button type="button" class="btn btn-light-info btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-filter me-2"></i>Filter</button>
                                     <div class="menu menu-sub menu-sub-dropdown w-300px text-start" id="filter_pegawai" data-kt-menu="true" style="">
@@ -111,11 +113,13 @@
                                         </div>
                                     </div>
                                 </div> --}}
-                                @role('administrator')
+                                {{-- @role('administrator') --}}
+                                @can('Leap:manage-lead')
                                 <div class="tab_all_menu_lead">
                                     <a href="#kt_modal_tambah_lead" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_lead"><i class="fa-solid fa-plus"></i>Lead Baru</a>
                                 </div>
-                                @endrole
+                                @endcan
+                                {{-- @endrole --}}
                             </div>
                         </div>
                         <div class="row">
@@ -123,16 +127,21 @@
                                 <div class="mb-6 hover-scroll-x">
                                     <div class="d-grid">
                                         <ul class="nav nav-tabs flex-nowrap text-nowrap">
+                                            @can('Leap:manage-lead')
                                             <li class="nav-item">
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0 active" data-bs-toggle="tab" id="tab_all" href="#tab_all_content">Lead</a>
                                             </li>
+                                            @endcan
+                                            @can('Leap:manage-prospect')
                                             <li class="nav-item">
                                                 <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="tab_prospect" href="#tab_prospect_content">Prospected</a>
                                             </li>
+                                            @endcan
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="tab-content" id="myTabContent">
+                                    @can('Leap:manage-lead')
                                     <div class="tab-pane fade show active" id="tab_all_content" role="tabpanel">
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -172,6 +181,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endcan
+                                    @can('Leap:manage-prospect')
                                     <div class="tab-pane fade" id="tab_prospect_content" role="tabpanel">
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -194,6 +205,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endcan
                                 </div>
                             </div>
                         </div>
@@ -204,13 +216,13 @@
     </div>
 </div>
 
-@role('administrator')
+{{-- @role('administrator') --}}
 @include('cmt-customer.lead.add.modal-tambah-lead')
 @include('cmt-customer.lead.add.modal-edit-lead')
 @include('cmt-customer.lead.add.modal-tindak-lanjut-lead')
 @include('cmt-customer.lead.add.modal-update-prospect')
 @include('cmt-customer.lead.add.modal-batal-prospect')
-@endrole
+{{-- @endrole --}}
 
 <script>
     $(document ).ready(function() {
@@ -440,18 +452,20 @@
                 city_id: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Kota perusahaan/badan usaha wajib dipilih</span>",
                 },
-                customer_contact_name: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Nama wajib diisi</span>",
-                },
-                customer_contact_job: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Jabatan wajib diisi</span>",
-                },
+                // customer_contact_name: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Nama wajib diisi</span>",
+                // },
+                // customer_contact_job: {
+                //     required: "<span class='fw-semibold fs-8 text-danger'>Jabatan wajib diisi</span>",
+                // },
                 customer_contact_email: {
                     email: "<span class='fw-semibold fs-8 text-danger'>Email user belum sesusai format</span>",
                 },
                 customer_contact_phone: {
-                    required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    // required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
+                
                 },
             },
             submitHandler: function(form) {
@@ -485,7 +499,7 @@
             $('#kt_modal_edit_lead_submit').removeAttr('disabled','disabled');
             var id = $(this).data('id')
             var form_edit = $('#kt_modal_edit_lead_form')
-            $.get(`{{url('')}}/cmt-lead/get-data/edit/lead/${id}`, function (data) {
+            $.get(`{{url('')}}/lead/get-data/edit/lead/${id}`, function (data) {
                 form_edit.find("input[name='lead_id']").val(id)
                 form_edit.find("input[name='customer_name']").val(data.customer_name)
                 form_edit.find("select[name='bussines_type_id']").val(data.bussines_type_id).trigger('change');
@@ -528,7 +542,8 @@
                 },
                 customer_contact_phone: {
                     required: "<span class='fw-semibold fs-8 text-danger'>Nomor wajib diisi</span>",
-                    minlength: "<span class='fw-semibold fs-8 text-danger'>Kontak tidak sesuai format</span>",
+                    minlength: "<span class='fw-semibold fs-8 text-danger'> Kontak minimal memiliki 9 karakter</span>",
+                    maxlength: "<span class='fw-semibold fs-8 text-danger'> Kontak maksimal memiliki 13 karakter</span>",
                 },
             },
             submitHandler: function(form) {
@@ -586,6 +601,13 @@
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                        if(lead_ids.length === 0){
+                            $('#kt_modal_tindak_lanjut_lead_cancel').click();
+                             toastr.error('Tidak Ada Data Lead Yang Dipilih', 'Opps!');
+                        return;
+                        }
+
                         $('#kt_modal_tindak_lanjut_lead_cancel').click();
                         toastr.success(data.status,'Selamat 🚀 !');
                         location.reload();
@@ -606,7 +628,7 @@
             var id = $(this).data('id')
             var prospectId = $(this).data('prospectid')
             var form_edit = $('#kt_modal_update_prospect_form')
-            $.get(`{{url('')}}/cmt-lead/get-data/edit/lead/${id}`, function (data) {
+            $.get(`{{url('')}}/lead/get-data/edit/lead/${id}`, function (data) {
                 form_edit.find("input[name='customer_prospect_id']").val(prospectId);
                 form_edit.find("input[name='lead_id']").val(id);
             })
@@ -676,6 +698,13 @@
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                        if(prospect_ids.length === 0){
+                            $('#kt_modal_batal_prospect_cancel').click();
+                             toastr.error('Tidak Ada Prospect Yang Dipilih', 'Opps!');
+                        return;
+                        }
+
                         $('#kt_modal_batal_prospect_cancel').click();
                         toastr.success(data.status,'Selamat 🚀 !');
                         location.reload();

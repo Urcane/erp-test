@@ -119,7 +119,7 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0"
-                                                data-bs-toggle="tab" id="shift" href="#chart">Chart</a>
+                                                data-bs-toggle="tab" id="chart_tab" href="#chart">Chart</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -155,41 +155,65 @@
     </div>
 
     <script src="{{ asset('sense') }}/plugins/custom/OrgChart/js/jquery.orgchart.js"></script>
+
     <script>
-        'use strict';
-
-        (function($) {
-
-            $(function() {
-
-                var datascource = @json($dataTree);
-
-                var oc = $('#chart-container').orgchart({
-                    'pan': true,
-                    'data': datascource,
-                    'zoom': true,
-                    'nodeContent': 'count',
-                    'createNode': function($node, data) {
-                        $node.on('click', function(event) {
-                            if (!$(event.target).is('.edge, .toggleBtn')) {
-                                var $this = $(this);
-                                var $chart = $this.closest('.orgchart');
-                                var newX = window.parseInt(($chart.outerWidth(true) / 2) - (
-                                    $this.offset().left - $chart.offset().left) - (
-                                    $this.outerWidth(true) / 2));
-                                var newY = window.parseInt(($chart.outerHeight(true) / 2) -
-                                    ($this.offset().top - $chart.offset().top) - ($this
-                                        .outerHeight(true) / 2));
-                                $chart.css('transform', 'matrix(1, 0, 0, 1, ' + newX +
-                                    ', ' + newY + ')');
+        $(document).ready(function() {
+            const initChart = (datascource) => {
+                orgInit();
+                (($) => {
+                    $(function() {
+                        var oc = $('#chart-container').orgchart({
+                            'pan': true,
+                            'data': datascource,
+                            'zoom': true,
+                            'nodeContent': 'count',
+                            'createNode': function($node, data) {
+                                $node.on('click', function(event) {
+                                    if (!$(event.target).is(
+                                            '.edge, .toggleBtn')) {
+                                        var $this = $(this);
+                                        var $chart = $this.closest('.orgchart');
+                                        var newX = window.parseInt(($chart
+                                            .outerWidth(
+                                                true) / 2) - (
+                                            $this.offset().left - $chart
+                                            .offset()
+                                            .left) - (
+                                            $this.outerWidth(true) / 2));
+                                        var newY = window.parseInt(($chart
+                                                .outerHeight(
+                                                    true) / 2) -
+                                            ($this.offset().top - $chart
+                                                .offset().top) -
+                                            ($this
+                                                .outerHeight(true) / 2));
+                                        $chart.css('transform',
+                                            'matrix(1, 0, 0, 1, ' +
+                                            newX +
+                                            ', ' + newY + ')');
+                                    }
+                                });
                             }
                         });
+
+                    });
+                })(jQuery);
+            }
+
+            $("#chart_tab").one("click", function() {
+                $.ajax({
+                    url: "{{ route('hc.emp.organization.getGraph') }}",
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+
+                        (() => initChart(data.data))()
                     }
                 });
-
             });
-
-        })(jQuery);
+        });
     </script>
 
     <script>
@@ -272,10 +296,35 @@
                     },
                 ],
             });
+
+            $('#modal_create_organization_form').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    url: "{{ route('hc.setting.organization.createUpdate') }}",
+                    type: 'POST',
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        $('#modal_create_organization').modal('hide');
+                        dataTableOrganization.ajax.reload();
+                        toastr.success(data.message, 'Selamat 🚀 !');
+                    },
+                    error: function(xhr, status, error) {
+                        const data = xhr.responseJSON;
+                        toastr.error(data.message, 'Opps!');
+                    }
+                });
+            });
         })
     </script>
 
-    @include('components.delete-confirmation', ["id" => "Organization", "route" => route('hc.setting.organization.delete')])
+    @include('components.delete-confirmation', [
+        'id' => 'Organization',
+        'route' => route('hc.setting.organization.delete'),
+    ])
 
-
+    @include("hc.cmt-settings.company.script.init-orgchart")
 @endsection

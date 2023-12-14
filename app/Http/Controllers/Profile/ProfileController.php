@@ -34,14 +34,12 @@ use App\Utils\ErrorHandler;
 class ProfileController extends Controller
 {
     private $constants;
-    private $errorHandler;
+
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     public function profile($id) {
         /** @var \App\Models\User $auth */
         $auth = Auth::user();
@@ -64,7 +62,11 @@ class ProfileController extends Controller
         $dataEmploymentStatus = EmploymentStatus::all();
         $dataSubBranch = SubBranch::all();
         $dataTaxStatus = TaxStatus::all();
-        $dataWorkingScheduleShifts = $user->userEmployment->workingSchedule->workingScheduleShifts;
+        if ($user->userEmployment) {
+            $dataWorkingScheduleShifts = $user->userEmployment->workingSchedule->workingScheduleShifts;
+        } else {
+            $dataWorkingScheduleShifts = [];
+        }
         $dataWorkingSchedule = WorkingSchedule::all();
         $dataShift = WorkingShift::where('show_in_request', true)->get();
 
@@ -100,6 +102,34 @@ class ProfileController extends Controller
 
     }
 
+    public function updateAvatar(Request $request) {
+        try {
+            $request->validate([
+                'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            $user = Auth::user();
+
+            $file = $request->file('avatar');
+            $filename = time() . "_" . $user->name . "." . $file->getClientOriginalExtension();
+
+            $user->update([
+                'foto_file' => $filename
+            ]);
+
+            $file->storeAs('personal/avatar', $filename, 'public');
+
+
+            return response()->json([
+                'status' => "success",
+                'message' => "Data berhasil disimpan",
+            ], 200);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
     public function updateEmployment(Request $request)
     {
         try {
@@ -116,7 +146,8 @@ class ProfileController extends Controller
                 'join_date' => 'required|date',
                 'end_date' => 'nullable|date',
                 'sub_branch_id' => 'nullable|exists:sub_branches,id',
-                'working_schedule_shift_id' => 'required|exists:working_schedules,id',
+                'working_schedule_id' => 'required|exists:working_schedules,id',
+                'start_shift' => 'required|exists:working_shifts,id',
                 'approval_line' => 'nullable|exists:users,id',
                 'barcode' => 'nullable|string|max:255',
             ]);
@@ -137,7 +168,8 @@ class ProfileController extends Controller
                 'join_date' => $request->join_date,
                 'end_date' => $request->end_date,
                 'sub_branch_id' => $request->sub_branch_id,
-                'working_schedule_shift_id' => $request->working_schedule_shift_id,
+                'working_schedule_id' => $request->working_schedule_id,
+                'start_shift' => $request->start_shift,
                 'approval_line' => $request->approval_line,
                 'barcode' => $request->barcode,
             ]);
@@ -147,7 +179,7 @@ class ProfileController extends Controller
                 'message' => "Data berhasil disimpan",
             ], 200);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -183,7 +215,7 @@ class ProfileController extends Controller
                 "message" => "Data berhasil disimpan"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -209,7 +241,7 @@ class ProfileController extends Controller
                 "message" => "Data berhasil disimpan"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -245,7 +277,7 @@ class ProfileController extends Controller
                 "message" => "Data berhasil disimpan"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -285,7 +317,7 @@ class ProfileController extends Controller
                 "message" => "Data berhasil disimpan"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

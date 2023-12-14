@@ -14,6 +14,7 @@ use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserAttendanceRequest;
 use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\WorkingScheduleShift;
+use App\Utils\ErrorHandler;
 use Illuminate\Support\Carbon;
 
 class AttendanceController extends RequestController
@@ -31,14 +32,14 @@ class AttendanceController extends RequestController
             $now = Carbon::now();
             $diff = $now->diffInDays($requestDate);
             $countOfSchedule = $workingScheduleShift->count();
-            $distance = $diff - (floor($diff/$countOfSchedule) * $countOfSchedule);
+            $distance = $diff - (floor($diff / $countOfSchedule) * $countOfSchedule);
 
             $primaryScheduleShift = $workingScheduleShift->find($userCurrentShift->working_schedule_shift_id);
-            for ($i=0; $i < $distance; $i++) {
+            for ($i = 0; $i < $distance; $i++) {
                 if ($requestDate > $now) {
                     $primaryScheduleShift = $workingScheduleShift->find($primaryScheduleShift->next);
                 } else {
-                    $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift){
+                    $primaryScheduleShift = $workingScheduleShift->filter(function ($scheduleShift) use ($primaryScheduleShift) {
                         return $scheduleShift->next == $primaryScheduleShift->id;
                     })->first();
                 }
@@ -68,6 +69,12 @@ class AttendanceController extends RequestController
                 "attendance_id" => $attendance->id,
                 "date" => $date,
                 "action" => "SYSTEM EDIT",
+                "old_attendance_code" => null,
+                "new_attendance_code" => $this->constants->attendance_code[0],
+                "old_working_start" => null,
+                "old_working_end" => null,
+                "new_working_start" => $workingShift->working_start,
+                "new_working_end" => $workingShift->working_end,
                 "old_check_in" => null,
                 "old_check_out" => null,
                 "new_check_in" => $checkIn ?? null,
@@ -85,6 +92,12 @@ class AttendanceController extends RequestController
                 "attendance_id" => $userAttendance->id,
                 "date" => $userAttendance->date,
                 "action" => "SYSTEM EDIT",
+                "old_attendance_code" => $userAttendance->attendance_code,
+                "new_attendance_code" => $userAttendance->attendance_code,
+                "old_working_start" => $userAttendance->working_start,
+                "old_working_end" => $userAttendance->working_end,
+                "new_working_start" => null,
+                "new_working_end" => null,
                 "old_check_in" => $userAttendance->check_in,
                 "old_check_out" => $userAttendance->check_out,
                 "new_check_in" => $checkIn ?? $userAttendance->check_in,
@@ -106,6 +119,7 @@ class AttendanceController extends RequestController
             if ($user->hasPermissionTo('HC:view-all-request')) {
                 $userRequests = UserAttendanceRequest::whereIn('status', array_slice($this->constants->approve_status, 0, 3))
                     ->with(['user.division', 'user.department'])
+                    ->orderByRaw("FIELD(status, ?, ?, ?)", array_slice($this->constants->approve_status, 0, 3))
                     ->paginate($itemCount, ['*'], 'page', $page);
             } else if ($user->hasPermissionTo('Approval:view-request')) {
                 $userRequests = UserAttendanceRequest::where(function ($query) use ($user) {
@@ -116,6 +130,7 @@ class AttendanceController extends RequestController
                             });
                     })->orWhere('approval_line', $user->id);
                 })->with(['user.division', 'user.department'])
+                    ->orderByRaw("FIELD(status, ?, ?, ?)", array_slice($this->constants->approve_status, 0, 3))
                     ->paginate($itemCount, ['*'], 'page', $page);
             } else {
                 throw new AuthorizationError("Anda tidak berhak mengakses ini");
@@ -130,7 +145,7 @@ class AttendanceController extends RequestController
                 ],
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -175,7 +190,7 @@ class AttendanceController extends RequestController
                 "data" => $userRequest
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -256,7 +271,7 @@ class AttendanceController extends RequestController
                 "message" => "berhasil melakukan update status request attendance"
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

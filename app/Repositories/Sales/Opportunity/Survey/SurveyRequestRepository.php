@@ -34,11 +34,32 @@ class SurveyRequestRepository
     }
 
     function getAll(Request $request) : EloquentBuilder {
-        return SurveyRequest::with('customerProspect.customer', 'serviceType', 'typeOfSurvey');
+        $filters = $request->filters;
+        $model = $this->model->with(['customerProspect.customer', 'serviceType', 'typeOfSurvey']);
+        
+        if ($filters['status'] == 'ST') {
+            $model = $model->unProcess();
+        }
+        if ($filters['status'] == 'PR') {
+            $model = $model->onProcess();
+        }
+        if ($filters['status'] == 'DN') {
+            $model = $model->done();
+        }
+
+        if (isset($filters['only-soft-survey']) && $filters['only-soft-survey'] == 'true') {
+            $model->where('type_of_survey_id', 1);
+        }
+
+        if (isset($filters['only-site-survey']) && $filters['only-site-survey'] == 'true') {
+            $model->where('type_of_survey_id', 2);
+        }
+
+        return $model;
     }
 
     function getById(int $id) : EloquentBuilder {
-        return $this->getByIdWithoutRelationship($id)->with('customerProspect.customer', 'serviceType', 'typeOfSurvey');
+        return $this->getByIdWithoutRelationship($id)->with('customerProspect.customer.customerContact', 'serviceType', 'typeOfSurvey');
     }
 
     function getByIdWithoutRelationship(int $id) : EloquentBuilder {

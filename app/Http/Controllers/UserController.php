@@ -15,7 +15,8 @@ use App\Models\Employee\ProrateSetting;
 use App\Models\Employee\TaxStatus;
 
 use App\Constants;
-
+use App\Exceptions\InvariantError;
+use App\Exceptions\NotFoundError;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,8 @@ use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\File\File;
 use Yajra\DataTables\Facades\DataTables;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
+use App\Utils\ErrorHandler;
 
 class UserController extends Controller
 {
@@ -37,6 +39,68 @@ class UserController extends Controller
         $dataPlacement= Team::all();
 
         return view('hc.cmt-employee.index',compact('dataDivision','dataPlacement','dataRole','dataUser','dataDepartment'));
+    }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'password' => 'required|min:8',
+            ]);
+
+            $user = Auth::user();
+
+            if (!$user->is_new) {
+                throw new InvariantError("Password sudah pernah diubah");
+            }
+
+            User::whereId($user->id)->first()->update([
+                'password' => bcrypt($request->password),
+                'is_new' => false,
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Password berhasil diubah"
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
+    }
+
+    public function resetUserPassword(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required',
+            ]);
+
+            $user = User::whereId($request->id)->first();
+
+            if (!$user) {
+                throw new NotFoundError("User Tidak ditemukan");
+            }
+
+            if ($user->is_new) {
+                throw new InvariantError("Password sudah direset");
+            }
+
+            $user->update([
+                'password' => bcrypt(12345678),
+                'is_new' => true,
+            ]);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Password berhasil direset menjadi (12345678)"
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function create() {
@@ -149,23 +213,19 @@ class UserController extends Controller
     public function getTableEmployee(Request $request)
     {
         if (request()->ajax()) {
-            $query = DB::table('users')
-            ->join('departments','departments.id','users.department_id')
-            ->join('divisions','divisions.id','users.division_id')
-            ->select('users.*','departments.department_name','divisions.divisi_name')
-            ->where('users.status',1)
-            ->orderBy('users.id','DESC');
+
+            $query = User::where('status',1)->with('department','division','team')->orderBy('users.id','DESC');
 
             $filterDivisi = $request->filters['filterDivisi'];
             if(!empty($filterDivisi) && $filterDivisi !== '*'){
-                $query->where('users.division_id', $filterDivisi);
+                $query->where('division_id', $filterDivisi);
             }else{
                 $query;
             }
 
             $filterDepartment = $request->filters['filterDepartment'];
             if(!empty($filterDepartment) && $filterDepartment !== '*'){
-                $query->where('users.department_id', $filterDepartment);
+                $query->where('department_id', $filterDepartment);
             }else{
                 $query;
             }
@@ -197,11 +257,13 @@ class UserController extends Controller
                     return '';
                 }
             })
-            ->addColumn('dept', function ($dept){
-                return '<span class="badge px-3 py-2 badge-light-primary">'.$dept->department_name.'</span>';
+            ->addColumn('dept', function ($user){
+                $dept = $user->department ? $user->department->department_name : "-";
+                return '<span class="badge px-3 py-2 badge-light-primary">'. $dept .'</span>';
             })
-            ->addColumn('div', function ($div){
-                return '<span class="badge px-3 py-2 badge-light-warning">'.$div->divisi_name.'</span>';
+            ->addColumn('div', function ($user){
+                $div = $user->division ? $user->division->divisi_name : "-";
+                return '<span class="badge px-3 py-2 badge-light-warning">'. $div .'</span>';
             })
             ->addColumn('action', function ($action) {
                 $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
@@ -213,7 +275,7 @@ class UserController extends Controller
                 ';
             })
             ->addColumn('DT_RowChecklist', function($check) {
-                if($check->status != 0 && Auth::user()->id != $check->id && Auth::user()->getRoleNames()[0] == 'administrator'){
+                if($check->status != 0 && Auth::user()->id != $check->id && Auth::user()->getRoleNames()->first() == 'administrator'){
                 return '<div class="text-center w-50px"><input name="pegawai_ids" type="checkbox" value="'.$check->id.'"></div>';
                 }else{
                     return '';

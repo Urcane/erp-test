@@ -13,6 +13,7 @@
 @section('content')
 {{-- <link rel="stylesheet" href="{{ asset('sense/plugins/custom/leaflet/leaflet.bundle.css') }}"> --}}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-geosearch@3.8.0/dist/geosearch.css" />
 <style>
     #map {
     height: 400px;
@@ -41,7 +42,7 @@
                                         <section class="row">
                                             <div class="col-12 mb-3 d-flex justify-content-center mt-5">
                                                 <img src="{{ $subBranch->logo ?? null ? asset('storage/branch-logo/' . $subBranch->logo) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFmDTZFCydgh_teJfzp3Gxq88OgTC_VYdUUg&usqp=CAU' }}"
-                                                    class="rounded-circle m-auto" style="width: 150px;"
+                                                    class="m-auto" style="width: 150px;"
                                                     alt="Avatar" />
                                             </div>
                                             <div class="col-12 d-flex justify-content-center mt-5">
@@ -53,64 +54,72 @@
                                                 <input type="file" style="width: 112px"
                                                     class="form-control form-control-solid"
                                                     placeholder="Logo Perusahaan" name="logo" id="logo"
-                                                    @unlessrole('administrator') disabled @endcannot>
+                                                    @cannot('HC:setting') disabled @endcannot>
                                             </div>
-
+                                            @if ($errors->any())
+                                                <div class="alert alert-danger">
+                                                    <ul>
+                                                        @foreach ($errors->all() as $error)
+                                                            <li>{{ $error }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
                                             <div class="col-lg-6 mb-3 mt-5">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="name">
-                                                    <span class="fw-bold">Branch Name</span>
+                                                    <span class="required fw-bold">Branch Name</span>
                                                 </label>
                                                 <input type="text" value="{{ $subBranch->name ?? old('name') }}"
                                                     class="form-control form-control-solid"
                                                     placeholder="Nama Perusahaan" name="name" id="name"
-                                                    @unlessrole('administrator') disabled @endcannot>
+                                                    @cannot('HC:setting') disabled @endcannot required>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                             <div class="col-lg-6 mb-3 mt-5">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="phone_number">
-                                                    <span class="fw-bold">Branch Phone Number</span>
+                                                    <span class="fw-bold required">Branch Phone Number</span>
                                                 </label>
                                                 <input type="number"
                                                     value="{{ $subBranch->phone_number ?? old('phone_number') }}"
                                                     class="form-control form-control-solid"
                                                     placeholder="Nomor yang dapat dihubungi" name="phone_number"
                                                     id="phone_number"
-                                                    @unlessrole('administrator') disabled @endcannot>
+                                                    @cannot('HC:setting') disabled @endcannot required>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
                                             <div class="col-lg-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="email">
-                                                    <span class="fw-bold">Email</span>
+                                                    <span class="fw-bold required">Email</span>
                                                 </label>
                                                 <input type="email" value="{{ $subBranch->email ?? old('email') }}"
                                                     class="form-control form-control-solid" placeholder="Email cabang"
                                                     name="email" id="email"
-                                                    @unlessrole('administrator') disabled @endcannot>
+                                                    @cannot('HC:setting') disabled @endcannot required>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
                                             <div class="col-lg-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="umr">
-                                                    <span class="fw-bold">UMR</span>
+                                                    <span class="fw-bold required">UMR</span>
                                                 </label>
                                                 <input type="number" value="{{ $subBranch->umr ?? old('umr') }}"
                                                     class="form-control form-control-solid" placeholder="UMR"
                                                     name="umr" id="umr"
-                                                    @unlessrole('administrator') disabled @endcannot>
+                                                    @cannot('HC:setting') disabled @endcannot required>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
                                             <div class="col-lg-6 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="name">
-                                                    <span class="fw-bold">Address</span>
+                                                    <span class="fw-bold required">Address</span>
                                                 </label>
                                                 <textarea name="address" class="form-control form-control-solid" placeholder="Alamat lengkap perusahaan" id="address"
-                                                    cols="30" rows="5" @unlessrole('administrator') disabled @endcannot>{{ $subBranch->address ?? old('address') }}</textarea>
+                                                    cols="30" rows="5" @cannot('HC:setting') disabled @endcannot required>{{ $subBranch->address ?? old('address') }}</textarea>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
@@ -119,26 +128,26 @@
                                                     <div class="col-lg-12 mb-3">
                                                         <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                             for="city">
-                                                            <span class="fw-bold">City</span>
+                                                            <span class="fw-bold required">City</span>
                                                         </label>
                                                         <input type="text"
                                                             value="{{ $subBranch->city ?? old('city') }}"
                                                             class="form-control form-control-solid" placeholder="Kota"
                                                             name="city" id="city"
-                                                            @unlessrole('administrator') disabled @endcannot>
+                                                            @cannot('HC:setting') disabled @endcannot required>
                                                         <div class="fv-plugins-message-container invalid-feedback">
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-12 mb-3">
                                                         <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                             for="province">
-                                                            <span class="fw-bold">Province</span>
+                                                            <span class="fw-bold required">Province</span>
                                                         </label>
                                                         <input type="text"
                                                             value="{{ $subBranch->province ?? old('province') }}"
                                                             class="form-control form-control-solid"
                                                             placeholder="Provinsi" name="province" id="province"
-                                                            @unlessrole('administrator') disabled @endcannot>
+                                                            @cannot('HC:setting') disabled @endcannot required>
                                                         <div class="fv-plugins-message-container invalid-feedback">
                                                         </div>
                                                     </div>
@@ -150,42 +159,30 @@
                                                     <span class="fw-bold required">Coordinate</span>
                                                 </label>
                                                 <div id="map"></div>
-                                                <input type="text" id="latitude" name="latitude" readonly hidden required>
-                                                <input type="text" id="longitude" name="longitude" readonly hidden required>
+                                                <input type="text" id="latitude" name="latitude" value="{{ ($subBranch->branchLocations ?? false) ? $subBranch->branchLocations->first()->latitude : old('latitude') }}" readonly hidden required>
+                                                <input type="text" id="longitude" name="longitude" value="{{ ($subBranch->branchLocations ?? false) ? $subBranch->branchLocations->first()->longitude : old('longitude') }}" readonly hidden required>
                                             </div>
 
                                             <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                    for="email">
-                                                    <span class="fw-bold">Office Radius (Meter)</span>
+                                                    for="coordinate_radius">
+                                                    <span class="fw-bold required">Office Radius (Meter)</span>
                                                 </label>
-                                                <input type="number" value="{{ $subBranch->coordinate_radius ?? old('coordinate_radius') }}"
+                                                <input type="number" value="{{ ($subBranch->branchLocations ?? false) ? $subBranch->branchLocations->first()->radius : old('coordinate_radius') }}"
                                                     class="form-control form-control-solid" placeholder="40"
                                                     name="coordinate_radius" id="coordinate_radius"
-                                                    @unlessrole('administrator') disabled @endcannot>
-                                                <div class="fv-plugins-message-container invalid-feedback"></div>
-                                            </div>
-
-                                            <div class="col-lg-6 mb-3">
-                                                <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                    for="email">
-                                                    <span class="fw-bold">Email</span>
-                                                </label>
-                                                <input type="email" value="{{ $subBranch->email ?? old('email') }}"
-                                                    class="form-control form-control-solid" placeholder="Email cabang"
-                                                    name="email" id="email"
-                                                    @unlessrole('administrator') disabled @endcannot>
+                                                    @cannot('HC:setting') disabled @endcannot required>
                                                 <div class="fv-plugins-message-container invalid-feedback"></div>
                                             </div>
 
                                             <div class="col-lg-12 mb-3">
                                                 <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                     for="parent_id">
-                                                    <span class="fw-bold">Branch Parent</span>
+                                                    <span class="fw-bold required">Branch Parent</span>
                                                 </label>
                                                 <select class="drop-data form-select form-select-solid"
                                                     data-control="parent_id" name="parent_id" id="parent_id"
-                                                    @unlessrole('administrator') disabled @endcannot>
+                                                    @cannot('HC:setting') disabled @endcannot required>
                                                     @foreach ($dataParent as $option)
                                                         <option value="{{ $option->id }}"
                                                             @if ($subBranch->parent_id ?? old('parent_id') == $option->id) selected @endif>
@@ -204,63 +201,79 @@
                                                             id="npwp_same_parent">
                                                         <label class="fs-6 form-check-label mb-2"
                                                             for="npwp_same_parent">
-                                                            <span class="fw-bold">NPWP same with Parent Branch</span>
+                                                            <span class="fw-bold required">NPWP same with Parent Branch</span>
                                                         </label>
                                                         <div class="fv-plugins-message-container invalid-feedback">
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="col-lg-6 mb-3">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                        for="npwp">
-                                                        <span class="fw-bold">Branch NPWP</span>
-                                                    </label>
-                                                    <input type="number"
-                                                        value="{{ $subBranch->npwp ?? old('npwp') }}"
-                                                        class="form-control form-control-solid"
-                                                        placeholder="Company NPWP" name="npwp" id="npwp"
-                                                        @unlessrole('administrator') disabled @endcannot>
-                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                <div id="tax" class="col-12 row">
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="npwp">
+                                                            <span class="fw-bold required">Branch NPWP</span>
+                                                        </label>
+                                                        <input type="number"
+                                                            value="{{ $subBranch->npwp ?? old('npwp') }}"
+                                                            class="form-control form-control-solid"
+                                                            placeholder="Company NPWP" name="npwp" id="npwp"
+                                                            @cannot('HC:setting') disabled @endcannot required>
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="tax_name">
+                                                            <span class="fw-bold required">Branch Tax Name</span>
+                                                        </label>
+                                                        <input type="text"
+                                                            value="{{ $subBranch->tax_name ?? old('tax_name') }}"
+                                                            class="form-control form-control-solid" name="tax_name"
+                                                            id="tax_name"
+                                                            @cannot('HC:setting') disabled @endcannot required>
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="tax_person_name">
+                                                            <span class="fw-bold required">Tax Person</span>
+                                                        </label>
+                                                        <input type="text"
+                                                            value="{{ $subBranch->tax_person_name ?? old('tax_person_name') }}"
+                                                            class="form-control form-control-solid"
+                                                            placeholder="Nama Perusahaan" name="tax_person_name"
+                                                            id="tax_person_name"
+                                                            @cannot('HC:setting') disabled @endcannot required>
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
+                                                    <div class="col-lg-6 mb-3">
+                                                        <label class="d-flex align-items-center fs-6 form-label mb-2"
+                                                            for="tax_person_npwp">
+                                                            <span class="fw-bold required">Tax Person NPWP</span>
+                                                        </label>
+                                                        <input type="number"
+                                                            value="{{ $subBranch->tax_person_npwp ?? old('tax_person_npwp') }}"
+                                                            class="form-control form-control-solid"
+                                                            placeholder="Tax Person NPWP" name="tax_person_npwp"
+                                                            id="tax_person_npwp"
+                                                            @cannot('HC:setting') disabled @endcannot required>
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                        for="tax_name">
-                                                        <span class="fw-bold">Branch Tax Name</span>
-                                                    </label>
-                                                    <input type="text"
-                                                        value="{{ $subBranch->tax_name ?? old('tax_name') }}"
-                                                        class="form-control form-control-solid" name="tax_name"
-                                                        id="tax_name"
-                                                        @unlessrole('administrator') disabled @endcannot>
-                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
-                                                </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                        for="tax_person_name">
-                                                        <span class="fw-bold">Tax Person</span>
-                                                    </label>
-                                                    <input type="text"
-                                                        value="{{ $subBranch->tax_person_name ?? old('tax_person_name') }}"
-                                                        class="form-control form-control-solid"
-                                                        placeholder="Nama Perusahaan" name="tax_person_name"
-                                                        id="tax_person_name"
-                                                        @unlessrole('administrator') disabled @endcannot>
-                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
-                                                </div>
-                                                <div class="col-lg-6 mb-3">
-                                                    <label class="d-flex align-items-center fs-6 form-label mb-2"
-                                                        for="tax_person_npwp">
-                                                        <span class="fw-bold">Tax Person NPWP</span>
-                                                    </label>
-                                                    <input type="number"
-                                                        value="{{ $subBranch->tax_person_npwp ?? old('tax_person_npwp') }}"
-                                                        class="form-control form-control-solid"
-                                                        placeholder="Nomor rekening" name="tax_person_npwp"
-                                                        id="tax_person_npwp"
-                                                        @unlessrole('administrator') disabled @endcannot>
-                                                    <div class="fv-plugins-message-container invalid-feedback"></div>
-                                                </div>
+                                                <script>
+                                                    $("#npwp_same_parent").on("change", function() {
+                                                        console.log($(this).val())
+                                                        if ($(this).is(':checked')) {
+                                                            $("#tax").hide();
+                                                            $('#tax input').prop('disabled', true)
+                                                            $('#tax input').prop('required', false)
+                                                        } else {
+                                                            $("#tax").show();
+                                                            $('#tax input').prop('disabled', false);
+                                                            $('#tax input').prop('required', true)
+                                                        }
+                                                    });
+                                                </script>
                                             </section>
 
                                             {{-- Other Info --}}
@@ -268,31 +281,31 @@
                                                 <div class="col-lg-12 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                         for="klu">
-                                                        <span class="fw-bold">Kode KLU (Klasifikasi Lapangan
+                                                        <span class="fw-bold required">Kode KLU (Klasifikasi Lapangan
                                                             Usaha)</span>
                                                     </label>
                                                     <input type="text" value="{{ $subBranch->klu ?? old('klu') }}"
                                                         class="form-control form-control-solid"
-                                                        placeholder="Nomor rekening" name="klu" id="klu"
-                                                        @unlessrole('administrator') disabled @endcannot>
+                                                        placeholder="Kode KLU (Klasifikasi Lapangan Usaha)" name="klu" id="klu"
+                                                        @cannot('HC:setting') disabled @endcannot required>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
 
-                                                <div class="col-lg-6 mb-3">
+                                                {{-- <div class="col-lg-6 mb-3">
                                                     <label class="d-flex align-items-center fs-6 form-label mb-2"
                                                         for="signature">
-                                                        <span class="fw-bold">Signature</span>
+                                                        <span class="fw-bold required">Signature</span>
                                                     </label>
                                                     <input type="file"
                                                         value="{{ $subBranch->signature ?? old('signature') }}"
                                                         class="form-control form-control-solid"
                                                         placeholder="Nama Perusahaan" name="signature" id="signature"
-                                                        @unlessrole('administrator') disabled @endcannot>
+                                                        @cannot('HC:setting') disabled @endcannot required>
                                                     <div class="fv-plugins-message-container invalid-feedback"></div>
                                                 </div>
                                                 <div class="col-lg-6 mb-3">
                                                     ini priview
-                                                </div>
+                                                </div> --}}
                                             </section>
 
                                             <div class="mt-6 d-flex justify-content-center">
@@ -327,9 +340,11 @@
 </div>
 
 <script src="{{ asset('sense/plugins/custom/leaflet/leaflet.bundle.js') }}"></script>
+<script src="https://unpkg.com/leaflet-geosearch@3.8.0/dist/geosearch.umd.js"></script>
 <script>
+    let map;
     $(document).ready(function () {
-        let map = L.map('map').setView([-1.2495105, 116.8749959], 7);
+        map = L.map('map').setView([-1.2495105, 116.8749959], 7);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
@@ -398,6 +413,44 @@
 
             addMarker(latitude, longitude, false);
         });
+
+        @if($subBranch->branchLocations ?? false)
+            addMarker("{{ $subBranch->branchLocations->first()->latitude ?? old('latitude') }}", "{{ $subBranch->branchLocations->first()->longitude ?? old('longitude') }}", false);
+        @endif
+    });
+</script>
+
+<script>
+    const provider = new GeoSearch.OpenStreetMapProvider()
+    const search = new GeoSearch.GeoSearchControl({
+        provider: provider,
+        style: 'bar',
+        searchLabel: 'Balikpapan',
+        autoClose: true,
+    });
+    $(document).ready(function() {
+        map.addControl(search);
+        const form = $('.leaflet-control-geosearch form');
+        const input = $('.leaflet-control-geosearch form input.glass');
+        const resultEl = $('.leaflet-control-geosearch form .results');
+
+        const test = async (event, value) => {
+            const results = await provider.search({
+                query: value
+            });
+            event.preventDefault();
+            addMarker(results[0].y, results[0].x, false)
+        }
+
+        input.keydown(function(e) {
+            if (e.which == 13) {
+                test(e, input.val());
+            }
+        });
+
+        resultEl.click(function(e) {
+            test(e, input.val());
+        })
     });
 </script>
 

@@ -32,14 +32,12 @@ use App\Models\PersonalInfo\UserWorkingExperience;
 class PersonalController extends Controller
 {
     private $constants;
-    private $errorHandler;
+
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
-
     // family
     // {
         public function getTableFamily(Request $request) {
@@ -135,7 +133,7 @@ class PersonalController extends Controller
                     'message' => "Data berhasil disimpan",
                 ], 200);
             } catch (\Throwable $th) {
-                $data = $this->errorHandler->handle($th);
+                $data = ErrorHandler::handle($th);
 
                 return response()->json($data["data"], $data["code"]);
             }
@@ -151,7 +149,7 @@ class PersonalController extends Controller
                 ], 200);
 
             } catch (\Throwable $th) {
-                $data = $this->errorHandler->handle($th);
+                $data = ErrorHandler::handle($th);
 
                 return response()->json($data["data"], $data["code"]);
             }
@@ -226,7 +224,7 @@ class PersonalController extends Controller
                     'message' => "Data berhasil disimpan",
                 ], 200);
             } catch (\Throwable $th) {
-                $data = $this->errorHandler->handle($th);
+                $data = ErrorHandler::handle($th);
 
                 return response()->json($data["data"], $data["code"]);
             }
@@ -241,7 +239,7 @@ class PersonalController extends Controller
                     'message' => "Data berhasil dihapus",
                 ], 200);
             } catch (\Throwable $th) {
-                $data = $this->errorHandler->handle($th);
+                $data = ErrorHandler::handle($th);
 
                 return response()->json($data["data"], $data["code"]);
             }
@@ -566,7 +564,7 @@ class PersonalController extends Controller
                     'message' => "Data berhasil disimpan",
                 ], 200);
             } catch (\Throwable $th) {
-                $data = $this->errorHandler->handle($th);
+                $data = ErrorHandler::handle($th);
 
                 return response()->json($data["data"], $data["code"]);
             }
@@ -581,7 +579,7 @@ class PersonalController extends Controller
                     'message' => "Data berhasil dihapus",
                 ], 200);
             } catch (\Throwable $th) {
-                $data = $this->errorHandler->handle($th);
+                $data = ErrorHandler::handle($th);
 
                 return response()->json($data["data"], $data["code"]);
             }
@@ -655,7 +653,7 @@ class PersonalController extends Controller
                 "status" => "Yeay Berhasil!! 💼",
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -686,7 +684,7 @@ class PersonalController extends Controller
                 "message" => "Data berhasil disimpan"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

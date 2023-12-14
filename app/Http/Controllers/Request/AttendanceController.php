@@ -15,6 +15,7 @@ use App\Models\Attendance\UserAttendance;
 use App\Models\Attendance\UserAttendanceRequest;
 use App\Models\Employee\UserCurrentShift;
 use App\Models\Employee\WorkingScheduleShift;
+use App\Utils\ErrorHandler;
 use Carbon\Carbon;
 
 class AttendanceController extends RequestController
@@ -28,6 +29,9 @@ class AttendanceController extends RequestController
                 "file" => "nullable",
                 "check_in" => "nullable|date_format:H:i|required_without_all:check_out",
                 "check_out" => "nullable|date_format:H:i|required_without_all:check_in",
+            ], [
+                "check_in.required_without_all" => "Check in atau check out harus diisi",
+                "check_out.required_without_all" => "Check in atau check out harus diisi",
             ]);
 
             $userEmployment = Auth::user()->userEmployment;
@@ -67,7 +71,7 @@ class AttendanceController extends RequestController
                 "message" => "Berhasil melakukan request attendance"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -99,7 +103,7 @@ class AttendanceController extends RequestController
                 "message" => "Berhasil cancel request attendance"
             ],);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

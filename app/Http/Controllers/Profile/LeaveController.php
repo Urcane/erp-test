@@ -16,12 +16,10 @@ use Yajra\DataTables\DataTables;
 
 class LeaveController extends Controller
 {
-    protected $errorHandler;
     protected $constants;
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
 
@@ -35,7 +33,7 @@ class LeaveController extends Controller
                 "data" => $userQuotas
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

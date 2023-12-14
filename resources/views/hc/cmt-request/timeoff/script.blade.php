@@ -294,10 +294,12 @@
             $('#filter_status_timeoff').val("*").trigger("change")
         });
 
-        $('#search_timeoff').on('input', function() {
-            tableTimeOff.draw();
-            deleteTimeOffSummaries();
-            getTimeOffSummaries();
+        $('#search_timeoff').on('keyup', function(e) {
+            if (e.keyCode === 13) {
+                tableTimeOff.draw();
+                deleteTimeOffSummaries();
+                getTimeOffSummaries();
+            }
         });
 
         const onTimeOffModalClose = () => {

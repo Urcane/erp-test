@@ -7,17 +7,14 @@ use App\Models\Feature;
 use App\Models\User;
 use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
 class PermissionController extends Controller
 {
-    private $errorHandler;
 
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
+
+
 
     function index()
     {
@@ -72,7 +69,7 @@ class PermissionController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

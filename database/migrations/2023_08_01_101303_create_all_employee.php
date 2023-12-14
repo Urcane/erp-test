@@ -37,17 +37,17 @@ class CreateAllEmployee extends Migration
             $table->id();
             $table->foreignId("branch_id")->nullable()->constrained("branches");
             $table->foreignId("parent_id")->nullable()->constrained("sub_branches");
-            $table->string("name", 40);
+            $table->string("name");
             $table->string("phone_number", 15);
             $table->string("email", 40);
             $table->string("city", 30);
             $table->string("province", 30);
-            $table->string("address", 30);
+            $table->longText("address");
             $table->integer("umr")->nullable();
-            $table->string("npwp", 20);
-            $table->string("tax_name", 25);
-            $table->string("tax_person_npwp", 25);
-            $table->string("tax_person_name", 25);
+            $table->string("npwp", 30);
+            $table->string("tax_name");
+            $table->string("tax_person_npwp");
+            $table->string("tax_person_name");
             $table->string("klu", 15);
             $table->string("signature")->nullable();
             $table->string("logo")->nullable();
@@ -58,6 +58,7 @@ class CreateAllEmployee extends Migration
         Schema::create('branch_locations', function (Blueprint $table) {
             $table->id();
             $table->foreignId("sub_branch_id")->nullable()->constrained("sub_branches");
+            $table->string("name", 100);
             $table->string("latitude", 50);
             $table->string("longitude", 50);
             $table->integer("radius")->default(40); // meter
@@ -90,7 +91,7 @@ class CreateAllEmployee extends Migration
             $table->time("overtime_before")->nullable();
             $table->time("overtime_after")->nullable();
             $table->boolean("show_in_request")->default(0);
-            $table->boolean("is_working")->default(1);
+            $table->boolean("is_working");
             $table->softDeletes()->index();
             $table->timestamps();
         });
@@ -193,7 +194,7 @@ class CreateAllEmployee extends Migration
         Schema::create('user_employment', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained("users");
-            $table->foreignId("employment_status_id")->constrained("employment_statuses");
+            $table->foreignId("employment_status_id")->nullable()->constrained("employment_statuses");
             $table->string("employee_id", 35);
             $table->date("join_date");
             $table->date("end_date")->nullable()->default(null);
@@ -243,7 +244,7 @@ class CreateAllEmployee extends Migration
             $table->id();
             $table->foreignId("user_id")->constrained("users");
             $table->string("npwp", 18)->nullable();
-            $table->string("pktp_status", 25);
+            $table->string("pktp_status", 25)->nullable();
             $table->enum("tax_method", $this->constants->tax_method)->nullable();
             $table->enum("tax_salary", $this->constants->tax_salary)->nullable();
             $table->date("taxable_date")->nullable();

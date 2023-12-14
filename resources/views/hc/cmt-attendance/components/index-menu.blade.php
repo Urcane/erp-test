@@ -42,6 +42,9 @@
             date: '{{ $userAttendances->date }}',
             checkIn: '{{ $checkIn }}',
             checkOut: '{{ $checkOut }}',
+            scheduleIn: '{{ $userAttendances->working_start }}',
+            scheduleOut: '{{ $userAttendances->working_end }}',
+            code: '{{ $userAttendances->attendance_code }}'
         })">
                 <a href="#attendance_edit_modal" class="dropdown-item py-2" data-bs-toggle="modal">
                     <i class="fa-solid fa-pencil me-3"></i>
@@ -49,7 +52,7 @@
                 </a>
             </div>
         </li>
-        <li>
+        {{-- <li>
             <div
                 onclick="onDeleteButtonClick({
             id: {{ $userAttendances->id }},
@@ -63,6 +66,6 @@
                     Hapus
                 </a>
             </div>
-        </li>
+        </li> --}}
     @endcan
 </ul>

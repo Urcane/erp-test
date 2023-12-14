@@ -53,7 +53,11 @@
             type: 'POST',
             data: formData,
             success: function(data) {
-                dataTable{{$id}}.ajax.reload();
+                if (dataTable{{$id}}) {
+                    dataTable{{$id}}.ajax.reload();
+                } else {
+                    window.location.reload();
+                }
                 toastr.success(data.message, 'Selamat 🚀 !');
             },
             error: function(xhr, status, error) {

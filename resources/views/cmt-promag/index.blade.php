@@ -37,130 +37,29 @@
                             <div class="col-lg-6 d-flex justify-content-end">
                                 <div class="d-flex align-items-center gap-2 mb-3 mb-md-0">
                                     <div class="d-flex align-items-center">
-                                        <span class="fs-7 fw-bolder badge badge-info px-3 py-2 text-white me-4 text-nowrap d-none d-lg-block">In Progress</span>
-                                    </div>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        
+                                        <a href="{{ route('com.promag.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Project Baru</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="mb-6 hover-scroll-x">
-                                    <div class="d-grid">
-                                        <ul class="nav nav-tabs flex-nowrap text-nowrap">
-                                            <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-primary rounded-bottom-0 active" data-bs-toggle="tab" id="tab_all" href="#tab_all_content">Oppoturnity</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0" data-bs-toggle="tab" id="tab_prospect" href="#tab_prospect_content">Customer Project</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="tab_all_content" role="tabpanel">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <table class="table align-middle table-striped border table-rounded gy-5" id="kt_table_inp">
-                                                    <thead>
-                                                        <tr class="fw-bold fs-7 text-muted text-uppercase">
-                                                            <th class="text-center w-50px">#</th>
-                                                            <th class="">Work List</th>
-                                                            <th class="w-150px">No Project</th>
-                                                            <th class="w-150px">PO/SPK/PKS</th>
-                                                            <th class="w-150px">Assigned</th>
-                                                            <th class="w-100px">Progress</th>
-                                                            <th class="w-100px">Status</th>
-                                                            <th class="w-100px text-center">#</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="fs-7">
-                                                        <tr>
-                                                            <td class="text-center">1</td>
-                                                            <td>
-                                                                <span class="fw-bold">Pembuatan Aplikasi Internal CMT - PT. COMTELINDO</span>
-                                                            </td>
-                                                            <td>C0167-TEL-20221201</td>
-                                                            <td>C0167-TEL-20221201</td>
-                                                            <td>
-                                                                <div class="symbol-group symbol-hover">
-                                                                    {{-- <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
-                                                                        <img src="{{asset('sense')}}/media/avatars/blank.png" alt="">
-                                                                    </div> --}}
-                                                                    <div class="symbol symbol-circle symbol-30px" data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
-                                                                        <div class="symbol-label bg-warning">
-                                                                            <span class="fs-7 text-white">E</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="symbol symbol-circle symbol-30px">
-                                                                        <div class="symbol-label bg-dark">
-                                                                            <span class="fs-7 text-inverse-dark">+0</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="symbol symbol-circle symbol-30px">
-                                                                        <a href="#!" data-bs-toggle="modal" >
-                                                                            <div class="symbol-label bg-light">
-                                                                                <span class="fs-7"><i class="fa-solid fa-user-plus"></i></span>
-                                                                            </div>
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div class="d-flex align-items-center w-100 mw-125px">  
-                                                                    <div class="progress h-6px w-100 me-2 bg-light-info">
-                                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 44%" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                    </div>
-                                                                    <span class="text-muted fs-8 fw-semibold">
-                                                                        44%
-                                                                    </span>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <span class="badge badge-light-info px-3 py-2">Progress</span>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                                                                <ul class="dropdown-menu w-150px">
-                                                                    {{-- <li><a href="{{route('gm.promag.detail',['id'=>'1'])}}" class="dropdown-item py-2"><i class="fa-solid fa-eye me-4"></i>Detail</a></li> --}}
-                                                                    <li><a href="{{route('com.promag.detail')}}" class="btn_edit_karyawan dropdown-item py-2" data-id="'.$action->id.'"><i class="fa-solid fa-pen me-4"></i>Edit</a></li>
-                                                                    <li><a class="dropdown-item py-2 text-success"><i class="fa-solid fa-bars-progress me-4 text-success"></i>Progress</a></li>
-                                                                    <div class="separator my-2"></div>
-                                                                    <li><a class="dropdown-item py-2"><i class="fa-solid fa-file-lines me-4"></i>Terbitkan <b class="text-warning">WO</b></a></li>
-                                                                </ul>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="tab_prospect_content" role="tabpanel">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <table class="table align-top table-striped border table-rounded gy-5" id="kt_table_prospect">
-                                                    <thead class="">
-                                                        <tr class="fw-bold fs-7 text-gray-500 text-uppercase">
-                                                            <th class="text-center w-50px">#</th>
-                                                            <th class="text-center w-50px">#</th>
-                                                            <th class="w-200px">Perusahaan</th>
-                                                            <th class="w-150px">Penindaklanjut</th>
-                                                            <th class="">Progress</th>
-                                                            <th class="w-150px">Next Action</th>
-                                                            <th class="w-100px text-center">#</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="fs-7">
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <table class="table align-middle table-striped border table-rounded gy-5" id="kt_table_promag">
+                                    <thead>
+                                        <tr class="fw-bold fs-7 text-muted text-uppercase">
+                                            <th class="text-center w-50px">#</th>
+                                            <th class="">Work List</th>
+                                            <th class="w-150px">No Project</th>
+                                            <th class="w-150px">PO/SPK/PKS</th>
+                                            <th class="w-150px">Assigned</th>
+                                            <th class="w-100px">Progress</th>
+                                            <th class="w-100px">Status</th>
+                                            <th class="w-100px text-center">#</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="fs-7">
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -170,12 +69,272 @@
     </div>
 </div>
 
-@role('administrator')
-@endrole
+@include('cmt-promag.modal.modal-user-search')
 
 <script>
-    $(document ).ready(function() {
-    })    
+    $(document).ready(function () {
+        var dataTablePromag = $('#kt_table_promag').DataTable({
+            processing: true,
+            serverSide: true,
+            retrieve: true,
+            deferRender: true,
+            responsive: false,
+            aaSorting : [],
+            buttons: [],
+            drawCallback: () => {
+                handleAddUsersToProject({addUserButtonElement: ".add-users"})
+            },
+            ajax: {
+                url : "{{route('com.promag.datatable')}}",
+            },
+            language: {
+                "lengthMenu": "Show _MENU_",
+                "emptyTable" : "Tidak ada data terbaru 📁",
+                "zeroRecords": "Data tidak ditemukan 😞",
+            },
+            dom:
+            "<'row mb-2'" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
+            "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start 'f>" +
+            ">" +
+
+            "<'table-responsive'tr>" +
+
+            "<'row'" +
+            "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+            "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+            ">",
+
+            columns: [
+                { data: 'DT_RowIndex'},
+                { data: 'work_name'},
+                { data: 'no_project'},
+                { data: 'no_po_customer'},
+                { data: 'assigned'},
+                { data: 'progress'},
+                { data: 'status'},
+                { data: 'action'},
+            ],
+
+            columnDefs: [
+            {
+                targets: 0,
+                searchable : false,
+                className: 'text-center',
+            },
+            {
+                targets: 6,
+                orderable : false,
+                searchable : false,
+                className : 'text-center',
+            },
+            {
+                targets: -1,
+                orderable : false,
+                searchable : false,
+                className : 'text-center',
+            },
+            ],
+        });
+
+        
+    })
+
+    // Handle add user ini terletak ada perbedaan pada pengambilan id untuk worklist nya, silahkan lihat ajax nya
+    const handleAddUsersToProject = ({addUserButtonElement}) => {
+        // Elements
+        let timeout;
+        let work_list_id;
+        const element = document.querySelector('#kt_modal_users_search_handler');
+
+        const wrapperElement = element.querySelector('[data-kt-search-element="wrapper"]');
+        const suggestionsElement = element.querySelector('[data-kt-search-element="suggestions"]');
+        const resultsElement = element.querySelector('[data-kt-search-element="results"]');
+        const emptyElement = element.querySelector('[data-kt-search-element="empty"]');
+
+        const processs = async function(search) {
+            clearTimeout(timeout);
+            timeout = setTimeout( async function() {
+                const data = await $.ajax({
+                    url: `{{url('')}}/promag/detail/${work_list_id}/getAllUsers`,
+                    type: 'GET',
+                    data: {
+                        'searchValue': search.getQuery(),
+                    },
+                    dataType: 'json',
+                });
+
+                // Hide recently viewed
+                $('#container-searched-users').html('');
+                suggestionsElement.classList.add("d-none");
+
+                if (data && (data.status !== "success" || data.users.length === 0)) {
+                    // Hide results
+                    resultsElement.classList.add("d-none");
+                    // Show empty message
+                    emptyElement.classList.remove("d-none");
+                } else {
+                    data.users.forEach(user => {
+                        $('#container-searched-users').append(viewSearchedUser(user));
+
+                        // handled already added user
+                        if (user.work_lists.some(item => item.id == work_list_id)) {
+                            $(`#container-searched-users`).find(`#user-${user.id}`).click();
+                        } 
+                    })
+
+                    // Show results
+                    resultsElement.classList.remove("d-none");
+                    // Hide empty message
+                    emptyElement.classList.add("d-none");
+                }
+
+                // Complete search
+                search.complete();
+            }, 1250);
+        }
+
+        const clear = function(search) {
+            // Show recently viewed
+            suggestionsElement.classList.remove("d-none");
+            // Hide results
+            resultsElement.classList.add("d-none");
+            // Hide empty message
+            emptyElement.classList.add("d-none");
+        }
+
+        // Input handler
+        const handleInput = () => {
+            // Select input field
+            const inputField = element.querySelector('[data-kt-search-element="input"]');
+
+            // Handle keyboard press event
+            inputField.addEventListener("keydown", e => {
+                // Only apply action to Enter key press
+                if(e.key === "Enter"){
+                    e.preventDefault(); // Stop form from submitting
+                }
+            });
+        }
+
+        const viewRelatedUser = (user) => {
+            const profile_pic = user.foto_file ? `{{asset('sense')}}/media/foto_pegawai/${user.foto_file}` : "{{asset('sense')}}/media/avatars/blank.png"
+
+            return `
+            <div class="d-flex align-items-center p-3 rounded mb-1">
+                <div class="symbol symbol-35px symbol-circle me-5">
+                    <img alt="Pic" src="${profile_pic}" />
+                </div>
+                <div class="fw-semibold">
+                    <span class="fs-6 text-gray-800 me-2">${user.name}</span>
+                    <span class="badge badge-light">${user.division.divisi_name}</span>
+                </div>
+                <div class="fw-semibold align-self-center ms-auto">
+                    <button type="button" id="revoke-user-${user.id}" class="btn btn-sm btn-active-light-danger" data-id="${user.id}">Revoke</button>
+                </div>
+            </div>
+            `
+        }
+
+        const viewSearchedUser = (user) => {
+            const profile_pic = user.foto_file ? `{{asset('sense')}}/media/foto_pegawai/${user.foto_file}` : "{{asset('sense')}}/media/avatars/blank.png"
+
+            return `
+            <div class="rounded d-flex flex-stack bg-active-lighten p-4" data-user-id="0">
+                <div class="d-flex align-items-center">
+                    <label class="form-check form-check-custom form-check-solid me-5">
+                        <input class="form-check-input" id="user-${user.id}" type="checkbox" name="users" data-kt-check="true" data-kt-check-target="[data-user-id='${user.id}']" value="${user.id}" /> </label>
+                    <div class="symbol symbol-35px symbol-circle">
+                        <img alt="Pic" src="${profile_pic}" />
+                    </div>
+                    <div class="ms-5">
+                        <a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary mb-2">${user.name}</a>
+                        <div class="fw-semibold text-muted">
+                            ${user.email}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-bottom border-gray-300 border-bottom-dashed"></div>
+            `;
+        }
+
+        if (typeof searchObject === "undefined") {
+            // Initialize search handler
+            searchObject = new KTSearch(element);
+            
+
+            // Search handler
+            searchObject.on("kt.search.process", processs);
+
+            // Clear handler
+            searchObject.on("kt.search.clear", clear);
+
+            // Handle select
+            KTUtil.on(element, '[data-kt-search-element="customer"]', "click", function() {
+                // modal.hide();
+            });
+        }
+        // Handle input enter keypress
+        handleInput();
+
+        $(addUserButtonElement).click(function (e) {
+            const thisElement = $(this);
+            work_list_id = $(this).data('id');
+
+            submitModal({
+                modalName: 'kt_modal_users_search',
+                tableName: 'kt_table_promag',
+                ajaxLink: `{{url('')}}/promag/detail/${work_list_id}/assignUser`,
+                successCallback: (data) => {
+                    toastr.success(data.status, 'Selamat 🚀 !');
+                    thisElement.click();
+                }
+            });
+
+            searchObject.clear();
+
+            $.ajax({
+                url: `{{url('')}}/promag/detail/${$(this).data('id')}/users`,
+                type: 'GET',
+                success: function(response) {
+                    $('#container-related-users').html("");
+
+                    if (response.data.users.length >= 1) {
+                        response.data.users.forEach(user => {
+                            $('#container-related-users').append(viewRelatedUser(user));
+                        });
+
+                        $("[id^=revoke-user-]").click(function (e) {
+                            const user_id = $(this).data('id');
+
+                            $.ajax({
+                                url: `/promag/detail/${work_list_id}/users/${user_id}`,
+                                headers: {
+                                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                                },
+                                type: 'DELETE',
+                                success: function (data) {
+                                    toastr.success(data.status, 'Selamat 🚀 !');
+                                    thisElement.click();
+                                },
+                                error: function (error) {
+                                    toastr.error(data.status, 'Opps!');
+                                    consol.error(error)
+                                }
+                            })
+                        })
+                        return
+                    }
+                    $('#container-related-users').html(`
+                        <div class="text-muted mx-auto text-center">No User has been added yet.</div>
+                    `);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        })
+    }
 </script>
 @endsection
-                

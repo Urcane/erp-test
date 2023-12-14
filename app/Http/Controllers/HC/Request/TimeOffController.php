@@ -25,6 +25,7 @@ use App\Models\Leave\LeaveRequestCategory;
 use App\Models\Leave\UserLeaveCategoryQuota;
 use App\Models\Leave\UserLeaveQuota;
 use App\Models\User;
+use App\Utils\ErrorHandler;
 use DateTime;
 use DateInterval;
 use DatePeriod;
@@ -110,7 +111,7 @@ class TimeOffController extends RequestController
             $currentDate = $startDate->copy();
 
             if (!in_array($currentDate->toDateString(), $holidayDates)) {
-                if (!$workingScheduleShift->is_working) {
+                if (!$workingScheduleShift->workingShift->is_working) {
                     array_push($dayOffDates, $currentDate->format('Y-m-d'));
                 } else {
                     array_push($takenDates, $currentDate->format('Y-m-d'));
@@ -186,7 +187,7 @@ class TimeOffController extends RequestController
 
         collect($schedule["takenDates"])->map(function ($data) use (
             $userId,
-            $leaveCategoryCode,
+            $leaveCategoryCode
         ) {
             $this->_updateAttendance(
                 $userId,
@@ -466,7 +467,7 @@ class TimeOffController extends RequestController
                         ]);
 
                         if ($newQuota + $userCategoryQuota->quotas < $balanceTaken) {
-                            throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                            throw new InvariantError("Kuota $leaveCategory->name pegawai tidak mencukupi!");
                         }
 
                         $query["user_leave_category_quotas"] = [
@@ -475,7 +476,7 @@ class TimeOffController extends RequestController
                         ];
                     } else {
                         if ($userCategoryQuota->quotas < $balanceTaken) {
-                            throw new InvariantError("Kuota $leaveCategory->name anda tidak mencukupi!");
+                            throw new InvariantError("Kuota $leaveCategory->name pegawai tidak mencukupi!");
                         }
 
                         $query["user_leave_category_quotas"] = [
@@ -725,7 +726,7 @@ class TimeOffController extends RequestController
             ]);
         } catch (\Throwable $th) {
             DB::rollback();
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -821,7 +822,7 @@ class TimeOffController extends RequestController
                 ]
             ]);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -935,7 +936,7 @@ class TimeOffController extends RequestController
                     return $query->user->department->department_name;
                 })
                 ->addColumn('job_level', function ($query) {
-                    return $query->user->getRoleNames()[0];
+                    return $query->user->getRoleNames()->first();
                 })
                 ->addColumn('job_position', function ($query) {
                     return $query->user->division->divisi_name;

@@ -32,7 +32,7 @@
 
                         <div class="col-lg-12 mb-3">
                             <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                <span class="required fw-bold">Shift Nama</span>
+                                <span class="required fw-bold">Shift Name</span>
                             </label>
                             <input type="text" class="form-control form-control-solid" placeholder="Name" required name="name">
                         </div>
@@ -79,13 +79,13 @@
                         <div class="row" id="attendance_validation">
                             <div class="col-lg-6 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class= fw-bold">Min. Clock in time</span>
+                                    <span class= fw-bold">Min. Clock in time (Minute)</span>
                                 </label>
                                 <input type="number" class="form-control form-control-solid" placeholder="Schedule In" name="start_attend">
                             </div>
                             <div class="col-lg-6 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class= fw-bold">Max. Clock out time</span>
+                                    <span class= fw-bold">Max. Clock out time (Minute)</span>
                                 </label>
                                 <input type="number" class="form-control form-control-solid" placeholder="Schedule Out" name="end_attend">
                             </div>
@@ -103,13 +103,13 @@
                         <div class="row" id="grace_period">
                             <div class="col-lg-6 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class= fw-bold">Clock in dispensation</span>
+                                    <span class= fw-bold">Clock in dispensation (Minute)</span>
                                 </label>
                                 <input type="number" class="form-control form-control-solid" placeholder="Clock in dispensation" name="late_check_in">
                             </div>
                             <div class="col-lg-6 mb-3">
                                 <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                    <span class= fw-bold">Clock out dispensation</span>
+                                    <span class= fw-bold">Clock out dispensation (Minute)</span>
                                 </label>
                                 <input type="number" class="form-control form-control-solid" placeholder="Clock out dispensation" name="late_check_out">
                             </div>
@@ -204,6 +204,10 @@
 
     function toggleHidden(id) {
         $(id).toggleClass("d-none");
+        $(id + " input").map(function(){
+            console.log($(this).val(""))
+
+        });
     }
 
     $(document).ready(function () {
@@ -293,6 +297,7 @@
                 'X-CSRF-TOKEN': "{{csrf_token()}}"
             },
             success: function(data) {
+                $('#modal_create_shift').modal('hide');
                 dataTableJobShift.ajax.reload();
                 toastr.success(data.message,'Selamat 🚀 !');
             },
@@ -317,7 +322,7 @@
             error: function(xhr, status, error) {
                 const data = xhr.responseJSON;
                 toastr.error(data.message, 'Opps!');
-                $('#show_id_request_table_' + id).prop('checked', false);
+                $(`#show_id_request_table_${id}`).prop('checked', !$(`#show_id_request_table_${id}`).is(':checked'));
             }
         });
     }

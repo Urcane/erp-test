@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title-apps','CMT-EMP')
+@section('title-apps','Employee')
 @section('sub-title-apps','HC & Legal')
 @section('desc-apps','Database Pegawai Comtelindo')
 @section('icon-apps','fa-solid fa-users')
@@ -24,6 +24,50 @@
 @endsection
 
 @section('content')
+<div class="modal fade" id="modal_import_emp" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mw-650px">
+        <div class="modal-content">
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="modal-body mx-5 mx-lg-15 mb-7">
+                <form action="{{route("hc.emp.import")}}" method="POST" id="modal_import_emp_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="scroll-y me-n10 pe-10" id="modal_import_emp_scroll" data-kt-scroll="true"
+                        data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto"
+                        data-kt-scroll-dependencies="#modal_import_emp_header"
+                        data-kt-scroll-wrappers="#modal_import_emp_scroll" data-kt-scroll-offset="300px">
+                        <div class="row mb-9">
+                            <div class="col-lg-12 text-center mb-9">
+                                <span class="fs-1 fw-bolder text-dark d-block mb-1">Import Employee</span>
+                                {{-- <span class="fs-7 fw-semibold text-gray-500">Keanggotaan keluarga anda</span> --}}
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                    <span class="required fw-bold">File</span>
+                                </label>
+                                <input type="file" class="form-control form-control-solid" required name="file">
+                            </div>
+                            <a href="{{asset("sense/media/contoh-format-import-excel.xlsx")}}"><i class="fa-solid fa-file-arrow-down fs-3 p-3"></i> Contoh Format</a>
+                        </div>
+                    </div>
+                    <div class="text-center mt-9">
+                        <button type="reset" id="modal_import_emp_cancel"
+                            class="btn btn-sm btn-light me-3 w-lg-200px" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="modal_import_emp_submit"
+                            class="btn btn-sm btn-info w-lg-200px">
+                            <span class="indicator-label">Simpan</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row justify-content-center mt-n20">
     <div class="col-lg-12 mt-n20">
         <div class="row justify-content-center">
@@ -35,33 +79,34 @@
                                 <span class="fs-7 text-uppercase fw-bolder text-dark d-none d-md-block">List Pegawai</span>
                             </div>
                             <div class="col-lg-6 d-flex justify-content-end">
-                                @role('administrator')
-                                <div>
-                                    <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
-                                    <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start pb-3" id="action_pegawai" data-kt-menu="true" style="">
-                                        <div class="d-flex flex-column bgi-no-repeat rounded-top">
-                                            <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Mass Action Options</span>
-                                        </div>
-                                        <div class="separator mb-6"></div>
-                                        <div class="menu-item px-3">
-                                            <a href="#kt_modal_nonaktif_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_nonaktif_pegawai">
-                                                <span class="menu-icon">
-                                                    <i class="fa-solid fa-user-xmark text-danger"></i>
-                                                </span>
-                                                <span class="menu-title text-danger">Non Aktif Pegawai</span>
-                                            </a>
-                                        </div>
-                                        <div class="menu-item px-3">
-                                            <a href="#kt_modal_reset_password_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_reset_password_pegawai">
-                                                <span class="menu-icon">
-                                                    <i class="fa-solid fa-key text-gray-500"></i>
-                                                </span>
-                                                <span class="menu-title text-dark">Reset Password</span>
-                                            </a>
-                                        </div>
+                                @can("HC:update-profile")
+                                    <div>
+                                        <a href="#modal_import_emp" data-bs-toggle="modal" class="btn btn-light-success btn-sm me-3 btn_tambah_job_level"><i class="fa-solid fa-plus"></i>Import Employee</a>
+                                        {{-- <button type="button" class="btn btn-light-primary btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-gear me-2"></i>Mass Action</button>
+                                        <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start pb-3" id="action_pegawai" data-kt-menu="true" style="">
+                                            <div class="d-flex flex-column bgi-no-repeat rounded-top">
+                                                <span class="fs-6 text-dark fw-bolder px-8 mt-6 mb-3">Mass Action Options</span>
+                                            </div>
+                                            <div class="separator mb-6"></div>
+                                            <div class="menu-item px-3">
+                                                <a href="#kt_modal_nonaktif_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_nonaktif_pegawai">
+                                                    <span class="menu-icon">
+                                                        <i class="fa-solid fa-user-xmark text-danger"></i>
+                                                    </span>
+                                                    <span class="menu-title text-danger">Non Aktif Pegawai</span>
+                                                </a>
+                                            </div>
+                                            <div class="menu-item px-3">
+                                                <a href="#kt_modal_reset_password_pegawai" data-bs-toggle="modal" class="menu-link" id="btn_reset_password_pegawai">
+                                                    <span class="menu-icon">
+                                                        <i class="fa-solid fa-key text-gray-500"></i>
+                                                    </span>
+                                                    <span class="menu-title text-dark">Reset Password</span>
+                                                </a>
+                                            </div>
+                                        </div> --}}
                                     </div>
-                                </div>
-                                @endrole
+                                @endcan
                                 <div>
                                     <button type="button" class="btn btn-light-info btn-sm me-3" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i class="fa-solid fa-filter me-2"></i>Filter</button>
                                     <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px text-start" id="filter_pegawai" data-kt-menu="true" style="">
@@ -93,16 +138,16 @@
                                                 </select>
                                             </div>
                                             <div class="col-lg-12 mt-6 text-end">
-                                                <button class="btn btn-sm btn-light" id="btn_reset_filter">Reset</button>
+                                                <button class="btn btn-sm btn-warning" id="btn_reset_filter">Reset</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @role('administrator')
-                                <div>
-                                    <a href="{{ route('hc.emp.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
-                                </div>
-                                @endrole
+                                @can("HC:update-profile")
+                                    <div>
+                                        <a href="{{ route('hc.emp.create') }}" class="btn btn-info btn-sm me-3 btn_tambah_pegawai"><i class="fa-solid fa-plus"></i>Pegawai Baru</a>
+                                    </div>
+                                @endcan
                             </div>
                         </div>
                         <div class="row">
@@ -362,6 +407,8 @@
         });
 
         $('body').on('click', '#btn_nonaktif_pegawai', function () {
+
+
             $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
             $('#containerUserNonAktif').html('');
             const form_edit = $('#kt_modal_nonaktif_pegawai_form');
@@ -379,28 +426,48 @@
             submitHandler: function(form) {
                 var formData = new FormData(form);
                 $('#kt_modal_nonaktif_pegawai_submit').attr('disabled', 'disabled');
+
+                var form_edit = $('#kt_modal_nonaktif_pegawai_form');
+            $.each(pegawai_ids, function(index, rowId) {
+                form_edit.find('#containerUserNonAktif').append(
+                $('<input>')
+                .attr('type', 'hidden')
+                .attr('name', 'pegawai_id[]')
+                .val(rowId)
+                );
+            });
+
                 $.ajax({
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    url: '{{route("hc.emp.update-status")}}',
-                    type: "POST",
-                    dataType: 'json',
-                    success: function (data) {
+                data: formData,
+                processData: false,
+                contentType: false,
+                url: '{{route("hc.emp.update-status")}}',
+                type: "POST",
+                dataType: 'json',
+                success: function(data) {
+
+                     // Check Selected Pegawai
+                    if (pegawai_ids.length === 0) {
                         $('#kt_modal_nonaktif_pegawai_cancel').click();
-                        var oTable = $('#kt_table_pegawai').dataTable();
-                        pegawai_ids = [];
-                        oTable.fnDraw(false);
-                        toastr.success(data.status,'Selamat 🚀 !');
-                    },
-                    error: function (xhr, status, errorThrown) {
-                        $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled','disabled');
-                        const data = JSON.parse(xhr.responseText);
-                        toastr.error(errorThrown ,'Opps!');
+                        toastr.error('Tidak Ada Data Pegawai Yang Dipilih', 'Opps!');
+                        return;
                     }
+
+                    $('#kt_modal_nonaktif_pegawai_cancel').click();
+                    var oTable = $('#kt_table_pegawai').dataTable();
+                    pegawai_ids = [];
+                    oTable.fnDraw(false);
+                    toastr.success(data.status, 'Selamat 🚀 !');
+                },
+                error: function(xhr, status, errorThrown) {
+                    $('#kt_modal_nonaktif_pegawai_submit').removeAttr('disabled');
+                    const data = JSON.parse(xhr.responseText);
+                    toastr.error(errorThrown, 'Opps!');
+                }
                 });
             }
         });
+
 
         $('body').on('click', '#btn_reset_password_pegawai', function () {
             $('#kt_modal_reset_password_pegawai_submit').removeAttr('disabled','disabled');
@@ -428,6 +495,14 @@
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
+
+                         // Check Selected Pegawai
+                        if (pegawai_ids.length === 0) {
+                            $('#kt_modal_reset_password_pegawai_cancel').click();
+                            toastr.error('Tidak Ada Password Pegawai Yang Dipilih', 'Opps!');
+                            return;
+                        }
+
                         $('#kt_modal_reset_password_pegawai_cancel').click();
                         var oTable = $('#kt_table_pegawai').dataTable();
                         pegawai_ids = [];

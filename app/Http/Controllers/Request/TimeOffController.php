@@ -19,6 +19,7 @@ use App\Models\Leave\UserLeaveCategoryQuota;
 use App\Models\Leave\UserLeaveQuota;
 use App\Models\Leave\UserLeaveRequest;
 use App\Models\User;
+use App\Utils\ErrorHandler;
 use Carbon\Carbon;
 
 use DateTime;
@@ -408,7 +409,7 @@ class TimeOffController extends RequestController
                 "message" => "Berhasil melakukan request time off"
             ], 201);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }
@@ -440,7 +441,7 @@ class TimeOffController extends RequestController
                 "message" => "Berhasil cancel request attendance"
             ],);
         } catch (\Throwable $th) {
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

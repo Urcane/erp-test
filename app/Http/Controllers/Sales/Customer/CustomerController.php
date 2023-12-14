@@ -21,7 +21,7 @@ use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Facades\DataTables;
 use Spatie\Permission\Models\Role;
 
-class CustomerController extends Controller    
+class CustomerController extends Controller
 {
     public function indexLead()
     {
@@ -30,10 +30,11 @@ class CustomerController extends Controller
         $getBussines = BussinesType::get();
         return view('cmt-customer.lead.index', compact('getLead','getBussines','getCity'));
     }
-     
+
     public function storeLead(Request $request)
     {
         try {
+            DB::beginTransaction();
             $company = Customer::create([
                 'user_id' => Auth::user()->id,
                 'customer_name' => $request->customer_name,
@@ -44,24 +45,29 @@ class CustomerController extends Controller
                 'lat' => $request->lat,
                 'lng' => $request->lng,
             ]);
+
+            Log::info($request->all());
+
             $contact = CustomerContact::create([
                 'customer_id' => $company->id,
-                'customer_contact_name' => $request->customer_contact_name,
-                'customer_contact_job' => $request->customer_contact_job,
-                'customer_contact_email' => $request->customer_contact_email,
-                'customer_contact_phone' => $request->customer_contact_phone,
+                'customer_contact_name' => $request->input('customer_contact_name', '-') ?? '-',
+                'customer_contact_job' => $request->input('customer_contact_job', '-') ?? '-',
+                'customer_contact_email' => $request->input('customer_contact_email'),
+                'customer_contact_phone' => $request->input('customer_contact_phone', '00000000000') ?? '00000000000',
             ]);
-            
+
+            DB::commit();
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        } 
+        }
         catch (\Throwable $th) {
+            DB::rollBack();
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
     }
-    
+
     public function updateLead(Request $request)
     {
         try {
@@ -80,17 +86,17 @@ class CustomerController extends Controller
                 'customer_contact_email' => $request->customer_contact_email,
                 'customer_contact_phone' => $request->customer_contact_phone,
             ]);
-            
+
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        } 
+        }
         catch (\Throwable $th) {
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
     }
-    
+
     public function tindakLanjutLead(Request $request)
     {
         try {
@@ -118,11 +124,11 @@ class CustomerController extends Controller
                     ]);
                 }
             }
-            
+
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        } 
+        }
         catch (\Throwable $th) {
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
@@ -150,11 +156,11 @@ class CustomerController extends Controller
                 'next_action_plan_date' => Carbon::parse($request->next_action_plan_date . $request->next_action_plan_time)->toDateTimeString(),
                 'status' => $request->prospect_status,
             ]);
-            
+
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        } 
+        }
         catch (\Throwable $th) {
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
@@ -178,30 +184,29 @@ class CustomerController extends Controller
                     ]);
                 }
             }
-            
             return response()->json([
                 "status" => "Yeay Berhasil!! 💼",
             ]);
-        } 
+        }
         catch (\Throwable $th) {
             Log::error($th);
             return response()->json("Oopss, ada yang salah nih!", 500);
         }
     }
-    
+
     public function getEditLead($id)
     {
         $lead = DB::table('customers')
-        ->join('customer_contacts','customer_contacts.id','customers.id')
+        ->join('customer_contacts','customer_contacts.customer_id','customers.id')
         ->select('customers.*','customer_contacts.customer_contact_name','customer_contacts.customer_contact_job','customer_contacts.customer_contact_phone','customer_contacts.customer_contact_email')
         ->where('customers.id',$id)
         ->first();
-        
+
         return response()->json($lead);
     }
-    
+
     public function getTableLead(Request $request)
-    {  
+    {
         if (request()->ajax()) {
             $query = DB::table('customers')
             ->join('users','users.id','customers.user_id')
@@ -230,7 +235,7 @@ class CustomerController extends Controller
 
                 $query->whereBetween('customers.created_at', $range_date);
             }
-            
+
             $query = $query->get();
             return DataTables::of($query)
             ->addColumn('customer', function ($customer){
@@ -250,19 +255,19 @@ class CustomerController extends Controller
                 if($status->prospect_status == 0 && $status->status == 1){
                     $badge = 'primary';
                     $icon = 'fa-pen';
-                    $text = 'Lead'; 
+                    $text = 'Lead';
                 }elseif($status->prospect_status != 0 && $status->status == 1){
                     $badge = 'warning';
                     $icon = 'fa-building-circle-check';
-                    $text = 'Prospek'; 
-                }elseif($status->prospect_status != 0 && $status->status == 2){
+                    $text = 'Prospek';
+                }elseif($status->status == 2){
                     $badge = 'success';
                     $icon = 'fa-check';
-                    $text = 'Goal'; 
+                    $text = 'Goal';
                 }else{
                     $badge = 'danger';
                     $icon = 'fa-times';
-                    $text = 'Batal'; 
+                    $text = 'Batal';
                 }
                 return '<span class="badge px-3 py-2 badge-light-'.$badge.'"><i class="fa-solid text-'.$badge.' '.$icon.' me-3"></i>'.$text.'</span>';
             })
@@ -270,7 +275,7 @@ class CustomerController extends Controller
                 $mnue = '
                 <li><a href="#kt_modal_edit_lead" class="dropdown-item py-2 btn_edit_lead" data-bs-toggle="modal" data-id="'.$action->id.'"><i class="fa-solid fa-edit me-3"></i>Edit</a></li>
                 ';
-                return '     
+                return '
                 <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 <ul class="dropdown-menu">
                 '.$mnue.'
@@ -278,11 +283,12 @@ class CustomerController extends Controller
                 ';
             })
             ->addColumn('DT_RowChecklist', function($check) {
-                if(Auth::user()->getRoleNames()[0] == 'administrator' && $check->prospect_status == null){
+                // Auth::user()->getRoleNames()->first() == 'administrator' &&
+                if($check->prospect_status == null){
                     return '<div class="text-center w-50px"><input name="checkbox_lead_ids" type="checkbox" value="'.$check->id.'"></div>';
-                }else{
-                    return '';
                 }
+                    // return '';
+                // }
             })
             //kebutuhan export
             ->addColumn('lead_year', function ($lead_year){
@@ -324,13 +330,13 @@ class CustomerController extends Controller
             })
             ->addColumn('lead_status', function ($lead_status){
                 if($lead_status->prospect_status == 0 && $lead_status->status == 1){
-                    $text = 'Lead'; 
+                    $text = 'Lead';
                 }elseif($lead_status->prospect_status != 0 && $lead_status->status == 1){
-                    $text = 'Prospek'; 
-                }elseif($lead_status->prospect_status != 0 && $lead_status->status == 2){
-                    $text = 'Goal'; 
+                    $text = 'Prospek';
+                }elseif($lead_status->status == 2){
+                    $text = 'Goal';
                 }else{
-                    $text = 'Batal'; 
+                    $text = 'Batal';
                 }
                 return $text;
             })
@@ -355,7 +361,7 @@ class CustomerController extends Controller
             ->make(true);
         }
     }
-    
+
     public function getTableProspect(Request $request)
     {
         if (request()->ajax()) {
@@ -366,8 +372,8 @@ class CustomerController extends Controller
             ->select(
                 'customers.*',
                 'users.name as sales_name',
-                'cities.city_name', 
-                'customer_prospects.prospect_title', 
+                'cities.city_name',
+                'customer_prospects.prospect_title',
                 'customer_prospects.id as prospect_id',
             )
             ->where('customers.deleted_at',null)
@@ -381,7 +387,7 @@ class CustomerController extends Controller
 
                 $query->whereBetween('customers.created_at', $range_date);
             }
-            
+
             $query = $query->get();
 
             $pluck_prospect_id = $query->pluck('prospect_id');
@@ -414,7 +420,7 @@ class CustomerController extends Controller
                         <div class="timeline-line w-35px"></div>
                         <div class="timeline-icon symbol symbol-circle symbol-35px">
                             <div class="symbol-label bg-light-'.$statusPrg.'">
-                                <i class="fa-solid '.$iconPrg.' text-'.$statusPrg.'"></i>    
+                                <i class="fa-solid '.$iconPrg.' text-'.$statusPrg.'"></i>
                             </div>
                         </div>
                         <div class="timeline-content">
@@ -432,7 +438,7 @@ class CustomerController extends Controller
             })
             ->addColumn('next_action', function ($next_action) use ($getLogs){
                 $getLastAction = $getLogs->where('customer_prospect_id', $next_action->prospect_id)->first();
-                return 
+                return
                 '
                     <span class="fw-bold d-block">'.$getLastAction->prospect_next_action.'</span>
                     <p class="text-gray-500 mb-0">'.$getLastAction->next_action_plan_date.'</p>
@@ -440,8 +446,9 @@ class CustomerController extends Controller
             })
             ->addColumn('DT_RowChecklist', function($check) use($getLogs) {
                 $latest_value_in_spesific_prospect_id = $getLogs->where('customer_prospect_id', $check->prospect_id)->first();
-                
-                if($latest_value_in_spesific_prospect_id->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $check->user_follow_up == Auth::user()->id){
+
+                // Auth::user()->getRoleNames()->first() == 'administrator' &&
+                if($latest_value_in_spesific_prospect_id->status == 1 && $check->user_follow_up == Auth::user()->id){
                     return '<div class="text-center w-50px"><input name="checkbox_prospect_ids" type="checkbox" value="'.$check->prospect_id.'"></div>';
                 }else{
                     return '';
@@ -450,7 +457,8 @@ class CustomerController extends Controller
             ->addColumn('action', function ($action) use($getLogs) {
                 $latest_value_in_spesific_prospect_id = $getLogs->where('customer_prospect_id', $action->prospect_id)->first();
 
-                if($latest_value_in_spesific_prospect_id->status == 1 && Auth::user()->getRoleNames()[0] == 'administrator' && $action->user_follow_up == Auth::user()->id){
+                // Auth::user()->getRoleNames()->first() == 'administrator' &&
+                if($latest_value_in_spesific_prospect_id->status == 1 && $action->user_follow_up == Auth::user()->id){
                     $mnue = '
                     <li><a href="#kt_modal_update_prospect" class="dropdown-item py-2 btn_update_prospect" data-bs-toggle="modal" data-prospectid="'.$action->prospect_id.'" data-id="'.$action->id.'"><i class="fa-solid fa-list-check me-3"></i>Update Progress</a></li>
                     ';
@@ -459,7 +467,7 @@ class CustomerController extends Controller
                     <li><span class="dropdown-item py-2">No Action</span></li>
                     ';
                 }
-                return '     
+                return '
                 <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 <ul class="dropdown-menu">
                 '.$mnue.'
@@ -475,12 +483,13 @@ class CustomerController extends Controller
     function getTableProspectDone(Request $request) : JsonResponse {
         if ($request->ajax()) {
             $query = CustomerProspect::with([
-                'customer.customerContact', 
-                'customer.userFollowUp', 
-                'latestCustomerProspectLog'
+                'customer.customerContact',
+                'customer.userFollowUp',
+                'latestCustomerProspectLog',
+                'customer.bussinesType'
             ])->whereHas('customerProspectLogs', function ($logs) {
                 $logs->where('status', 2);
-            });
+            })->doesntHave('itemableBillOfQuantity')->orderBy('id', 'DESC');
 
             return DataTables::of($query->get())
             ->addColumn('DT_RowChecklist', function($check) {
@@ -499,7 +508,7 @@ class CustomerController extends Controller
                         <div class="timeline-line w-35px"></div>
                         <div class="timeline-icon symbol symbol-circle symbol-35px">
                             <div class="symbol-label bg-light-success">
-                                <i class="fa-solid fa-check text-success"></i>    
+                                <i class="fa-solid fa-check text-success"></i>
                             </div>
                         </div>
                         <div class="timeline-content">
@@ -512,14 +521,27 @@ class CustomerController extends Controller
                 </div>
                 ';
             })
-            ->addColumn('action', function ($query) {
-                return '     
-                <button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <ul class="dropdown-menu">
+            ->addColumn('action', function ($query) use($request) {
+                $actions = '<button type="button" class="btn btn-secondary btn-icon btn-sm" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <ul class="dropdown-menu">
+                            ';
+
+                if ($request->filters['calledFrom'] == 'SURVEY' && $request->user()->hasPermissionTo('Survey:manage-survey-request')) {
+                    $actions .= '
                     <li><a href="#kt_modal_request_survey" class="dropdown-item py-2 btn_request_survey" data-bs-toggle="modal" data-id="'.$query->id.'"><i class="fa-solid fa-list-check me-3"></i>Request Survey</a></li>
-                </ul>
-                ';
+                    ';
+                }
+
+                if ($request->filters['calledFrom'] == 'BOQ' && $request->user()->hasPermissionTo('Boq:create-draft-boq')) {
+                    $actions .= '<li><a href="' . url("boq/create-draft-boq?prospect_id=". $query->id) . '" class="dropdown-item py-2">
+                            <i class="fa-solid fa-list-check me-3"></i>Create BoQ</a></li>
+                            ';
+                }
+
+                $actions .= '</ul>';
+                return $actions;
             })
+
             ->addIndexColumn()
             ->rawColumns(['DT_RowChecklist', 'action', 'next_action_pretified', 'progress_pretified'])
             ->make(true);

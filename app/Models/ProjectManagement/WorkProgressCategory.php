@@ -10,9 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class WorkProgressCategory extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 
     function taskList() : HasMany {
-        return $this->hasMany(TaskList::class, 'progress_category', 'code');
+        return $this->hasMany(WorkTaskList::class, 'progress_category', 'code');
     }
 
     function workList() : HasMany {

@@ -12,13 +12,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class LiveLocationController extends Controller
 {
-    private $errorHandler;
-
-    public function __construct()
-    {
-        $this->errorHandler = new ErrorHandler();
-    }
-
     function index()
     {
         return view('hc.cmt-settings.time-management.live-location.live-location');
@@ -60,16 +53,9 @@ class LiveLocationController extends Controller
 
             return DataTables::of($branchLocation)
                 ->addColumn('action', function ($data) {
-                    return '
-                    <div onclick=\'fillInput(
-                        "'. $data->id .'",
-                        "'. $data->latitude .'",
-                        "'. $data->longitude .'",
-                        "'. $data->radius .'",
-                        )\'>
-                        <a href="#modal_location" data-bs-toggle="modal" class="dropdown-item py-2"><i class="fa-solid fa-gear"></i> Edit Location</a>
-                    </div>
-                    ';
+                    return view('hc.cmt-settings.time-management.live-location.menu', compact([
+                        'data'
+                    ]));
                 })
                 ->addIndexColumn()
                 ->rawColumns(['action', 'DT_RowChecklist'])
@@ -80,6 +66,7 @@ class LiveLocationController extends Controller
     public function createUpdate( $branchId, Request $request) {
         try {
             $request->validate([
+                "name" => "required",
                 "latitude" => "required",
                 "longitude" => "required",
                 "radius" => "required",
@@ -88,6 +75,7 @@ class LiveLocationController extends Controller
             BranchLocation::updateOrCreate([
                 "id" => $request->id,
             ], [
+                "name" => $request->name,
                 "sub_branch_id" => $branchId,
                 "latitude" => $request->latitude,
                 "longitude" => $request->longitude,
@@ -100,7 +88,7 @@ class LiveLocationController extends Controller
             ], 200);
         } catch (\Throwable $th) {
 
-            $data = $this->errorHandler->handle($th);
+            $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
         }

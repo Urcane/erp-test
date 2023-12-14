@@ -16,12 +16,11 @@ use App\Models\Attendance\UserAttendance;
 
 class AttendanceController extends Controller
 {
-    private $errorHandler;
+
     private $constants;
 
     public function __construct()
     {
-        $this->errorHandler = new ErrorHandler();
         $this->constants = new Constants();
     }
 }

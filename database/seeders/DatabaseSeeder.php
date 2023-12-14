@@ -20,10 +20,15 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             PermissionSeeder::class,
             UserSeeder::class,
+
             ProjectSeeder::class,
+            InventorySeeder::class,
             HolidaySeeder::class,
             HCDataSeeder::class,
-            LeaveSeeder::class
+            LeaveSeeder::class,
+
+            AssignmentSeeder::class,
+            OpportunitySeeder::class,
         ]);
     }
 }
