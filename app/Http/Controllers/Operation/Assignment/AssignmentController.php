@@ -64,7 +64,7 @@ class AssignmentController extends Controller
         $startDate = Carbon::parse($assignment->start_date);
         $endDate = Carbon::parse($assignment->end_date);
 
-        $holidayDates = $assignment->override_holiday ? $this->_getGlobalDayOff($startDate, $endDate) : [];
+        $holidayDates = $assignment->override_holiday ? [] : $this->_getGlobalDayOff($startDate, $endDate);
 
         $dayNames = [
             'Minggu',
@@ -214,9 +214,9 @@ class AssignmentController extends Controller
             }
 
             $request->validate([
-                'number' => 'required|string|max:255|unique:assignments',
+                'number' => 'required|string|max:255',
                 'signed_by' => 'required|exists:users,id',
-                'start_date' => 'required|date|after_or_equal:today',
+                'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
                 'override_holiday' => 'nullable',
                 'name' => 'required|string|max:255',
@@ -374,9 +374,9 @@ class AssignmentController extends Controller
             }
 
             $request->validate([
-                'number' => ['required', 'string', 'max:255', Rule::unique('assignments')->ignore($assignment->id)],
+                'number' => ['required', 'string', 'max:255'],
                 'signed_by' => 'required|exists:users,id',
-                'start_date' => 'required|date|after_or_equal:today',
+                'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
                 'override_holiday' => 'nullable',
                 'name' => 'required|string|max:255',
@@ -648,15 +648,15 @@ class AssignmentController extends Controller
             DB::beginTransaction();
 
             if ($request->status == $this->constants->assignment_status[1]) {
-                if (Carbon::parse($assignment->start_date)->addDay()->lt(Carbon::now())) {
-                    $assignment->update([
-                        "status" => $this->constants->assignment_status[4],
-                        "approval_line" => null,
-                    ]);
+                // if (Carbon::parse($assignment->start_date)->addDay()->lt(Carbon::now())) {
+                //     $assignment->update([
+                //         "status" => $this->constants->assignment_status[4],
+                //         "approval_line" => null,
+                //     ]);
 
-                    DB::commit();
-                    throw new InvariantError("Tidak dapat melakukan menyetujui, Penugasan sudah expired");
-                }
+                //     DB::commit();
+                //     throw new InvariantError("Tidak dapat melakukan menyetujui, Penugasan sudah expired");
+                // }
                 $this->_updateAttendance($assignment);
             }
 

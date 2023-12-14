@@ -70,18 +70,18 @@
                                             value="{{ $assignment->end_date }}" name="end_date">
                                     </div>
 
-                                    <div class="col-lg-6 mb-3">
+                                    <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="fw-bold required">Coordinate</span>
                                         </label>
-                                        <div id="map" style="height: 350px"></div>
+                                        <div id="map" style="height: 300px"></div>
                                         <input type="text" id="latitude" name="latitude" readonly hidden required
                                             value="{{ $assignment->latitude }}">
                                         <input type="text" id="longitude" name="longitude" readonly hidden required
                                             value="{{ $assignment->longitude }}">
                                     </div>
 
-                                    <div class="col-lg-6 row mb-3">
+                                    {{-- <div class="col-lg-12 row mb-3"> --}}
                                         <div class="col-lg-12 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="required fw-bold">Lokasi</span>
@@ -91,7 +91,7 @@
                                                 value="{{ $assignment->location }}">
                                         </div>
 
-                                        <div class="col-lg-12 mb-8">
+                                        <div class="col-lg-12 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="required fw-bold">Radius (meter)</span>
                                             </label>
@@ -100,7 +100,17 @@
                                                 name="radius">
                                         </div>
 
-                                        <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-12 mb-3" hidden>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
+                                                    name="override_holiday" id="override_holiday" checked>
+                                                <label class="fs-7 form-check-label mb-2" for="override_holiday">
+                                                    <span class="fw-bold">Kerja di hari libur Nasional</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        {{-- <div class="col-lg-12 mb-3">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input checkbox-real" placeholder=""
                                                     name="override_holiday" id="override_holiday"
@@ -109,9 +119,9 @@
                                                     <span class="fw-bold">Kerja di hari libur</span>
                                                 </label>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
-                                        <div class="col-lg-12 mb-3">
+                                        {{-- <div class="col-lg-12 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Hari Penugasan</span>
                                             </label>
@@ -131,9 +141,28 @@
                                                     </div>
                                                 @endforeach
                                             </div>
+                                        </div> --}}
+
+                                        <div class="col-lg-12 mb-3" hidden>
+                                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <span class="required fw-bold">Hari Penugasan</span>
+                                            </label>
+                                            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                                                @foreach ($days as $day)
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input"
+                                                            name="work_schedule[]" value="{{ $day }}"
+                                                            checked >
+                                                        <label class="fs-7 form-check-label mb-2"
+                                                            for="work_schedule[]">
+                                                            <span class="fw-bold">{{ $day }}</span>
+                                                        </label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
 
-                                        <div class="col-lg-6 mb-3">
+                                        {{-- <div class="col-lg-6 mb-3">
                                             <label class="d-flex align-items-center fs-6 form-label mb-2">
                                                 <span class="fw-bold">Working Start</span>
                                             </label>
@@ -149,10 +178,26 @@
                                             <input type="time" class="form-control form-control-solid"
                                                 value="{{ date('H:i', strtotime($assignment->working_end)) }}"
                                                 name="working_end">
-                                        </div>
-                                    </div>
+                                        </div> --}}
 
-                                    <div class="col-lg-12 mb-3">
+                                        <div class="col-lg-6 mb-3" hidden>
+                                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <span class="fw-bold">Working Start</span>
+                                            </label>
+                                            <input type="time" class="form-control form-control-solid"
+                                                name="working_start" value="00:02">
+                                        </div>
+
+                                        <div class="col-lg-6 mb-3" hidden>
+                                            <label class="d-flex align-items-center fs-6 form-label mb-2">
+                                                <span class="fw-bold">Working End</span>
+                                            </label>
+                                            <input type="time" class="form-control form-control-solid"
+                                                name="working_end" value="23:58">
+                                        </div>
+                                    {{-- </div> --}}
+
+                                    {{-- <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 mb-2 required">
                                             <span class="fw-bold textd-dark">Signed By</span>
                                         </label>
@@ -168,6 +213,25 @@
                                                     data-nik="{{ $user->userEmployment->employee_id }}"
                                                     data-position="{{ $user->division->divisi_name }}">
                                                     {{ $user->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div> --}}
+
+                                    <div class="col-lg-12 mb-3">
+                                        <label class="d-flex align-items-center fs-6 mb-2 required">
+                                            <span class="fw-bold textd-dark">Signed By</span>
+                                        </label>
+                                        <select class="form-select form-select-solid" data-control="select2" required
+                                            id="signed_by" name="signed_by">
+                                            <option value="{{ $assignment->signedBy->id }}">
+                                                {{ $assignment->signedBy->name }} | {{ $assignment->signedBy->division->divisi_name }}
+                                            </option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}" data-name="{{ $user->name }}"
+                                                    data-nik="{{ $user->userEmployment->employee_id }}"
+                                                    data-position="{{ $user->division->divisi_name }}">
+                                                    {{ $user->name }} | {{ $user->division->divisi_name }}
                                                 </option>
                                             @endforeach
                                         </select>

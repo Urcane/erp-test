@@ -61,6 +61,8 @@
 
     <ul>
         <li>Teladan Android Apps</li>
+        <li>CloudRaya Android Apps</li>
+        <li>ChickMed Android Apps</li>
     </ul>
 
     <p>At Comtelindo ERP, accessible from https://erp.comtelindo.com/, one of our main priorities is the privacy of our

@@ -73,7 +73,7 @@ class AllAttendance extends Attendance implements FromView, WithEvents
                 $event->sheet->getColumnDimension('K')->setWidth(10);
 
                 $data = $this->_getAttendances();
-                $rowIndex = 23;
+                $rowIndex = 34;
 
                 foreach ($data as $row) {
                     $attendanceCodeEnum = $this->constants->attendance_code;
