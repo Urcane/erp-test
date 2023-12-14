@@ -252,7 +252,7 @@
                         searchable: false
                     },
                     {
-                        data: 'DT_RowIndex'
+                        data: 'DT_RowIndex', searchable: false
                     },
                     {
                         data: 'divisi_name'
