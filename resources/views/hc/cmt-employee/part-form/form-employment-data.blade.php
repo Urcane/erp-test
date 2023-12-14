@@ -109,7 +109,7 @@
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif
             @foreach ($dataDivision as $option)
-                <option value="{{ $option->id }}" @if (($user->division_id ?? old('division_id')) == $option->name) selected @endif>
+                <option value="{{ $option->id }}" @if (($user->division_id ?? old('division_id')) == $option->id) selected @endif>
                     {{ $option->divisi_name }}</option>
             @endforeach
         </select>
@@ -202,7 +202,7 @@
                     const shift = data.working_shift;
                     $("#scheduleShift").append(`
                         <div class="form-check col-lg-3 col-md-4 mb-3">
-                            <input class="form-check-input" type="radio" name="start_shift" value="${data.id}" required>
+                            <input class="form-check-input" type="radio" name="start_shift" value="${shift.id}" required>
                             <label class="form-check-label" for="flexRadioDefault1">
                             ${shift.name}, ${(shift.working_start ?? "").split(":").slice(0, 2).join(":")} - ${(shift.working_end ?? "").split(":").slice(0, 2).join(":")}
                             </label>

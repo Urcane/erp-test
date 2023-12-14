@@ -104,10 +104,10 @@ class AttendanceController extends Controller
             ], [
                 'name' => $request->name,
                 "effective_date" => $request->effective_date,
-                "override_national_holiday" => $request->override_national_holiday,
-                "override_company_holiday" => $request->override_company_holiday,
-                "override_special_holiday" => $request->override_special_holiday,
             ]);
+            // "override_national_holiday" => $request->override_national_holiday,
+            // "override_company_holiday" => $request->override_company_holiday,
+            // "override_special_holiday" => $request->override_special_holiday,
 
 
             $count = WorkingScheduleShift::orderBy('id','desc')->first()->id;
