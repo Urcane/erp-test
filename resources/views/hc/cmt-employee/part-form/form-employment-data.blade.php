@@ -208,7 +208,7 @@
                     const shift = data.working_shift;
                     $("#scheduleShift").append(`
                         <div class="form-check col-lg-3 col-md-4 mb-3">
-                            <input class="form-check-input" type="radio" name="start_shift" value="${shift.id}" required>
+                            <input class="form-check-input" type="radio" name="start_shift" value="${data.id}" required>
                             <label class="form-check-label" for="flexRadioDefault1">
                             ${shift.name}, ${(shift.working_start ?? "").split(":").slice(0, 2).join(":")} - ${(shift.working_end ?? "").split(":").slice(0, 2).join(":")}
                             </label>
@@ -251,7 +251,7 @@
                     `);
                     const workingScheduleShift = data.workingScheduleShift.map(function(data) {
                             const shift = data.working_shift;
-                            const checked = "{{$user->userEmployment->start_shift ?? ""}}" == data.id ? "checked" : ""
+                            const checked = "{{$user->userEmployment->start_shift ?? ''}}" == data.id ? "checked" : ""
                             $("#scheduleShift").append(`
                             <div class="form-check col-lg-3 col-md-4 mb-3">
                                 <input class="form-check-input" type="radio" name="start_shift" value="${data.id}" required ${checked}>
