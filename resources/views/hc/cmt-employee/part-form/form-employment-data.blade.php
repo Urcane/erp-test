@@ -109,7 +109,7 @@
                 <option value="" selected hidden disabled>Select employment status</option>
             @endif
             @foreach ($dataDivision as $option)
-                <option value="{{ $option->id }}" @if (($user->division_id ?? old('division_id')) == $option->name) selected @endif>
+                <option value="{{ $option->id }}" @if (($user->division_id ?? old('division_id')) == $option->id) selected @endif>
                     {{ $option->divisi_name }}</option>
             @endforeach
         </select>
@@ -251,7 +251,7 @@
                     `);
                     const workingScheduleShift = data.workingScheduleShift.map(function(data) {
                             const shift = data.working_shift;
-                            const checked = "{{$user->userEmployment->start_shift ?? ""}}" == data.id ? "checked" : ""
+                            const checked = "{{$user->userEmployment->start_shift ?? ''}}" == data.id ? "checked" : ""
                             $("#scheduleShift").append(`
                             <div class="form-check col-lg-3 col-md-4 mb-3">
                                 <input class="form-check-input" type="radio" name="start_shift" value="${data.id}" required ${checked}>

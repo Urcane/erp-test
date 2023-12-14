@@ -147,7 +147,7 @@ class ProfileController extends Controller
                 'end_date' => 'nullable|date',
                 'sub_branch_id' => 'nullable|exists:sub_branches,id',
                 'working_schedule_id' => 'required|exists:working_schedules,id',
-                'start_shift' => 'required|exists:working_shifts,id',
+                'start_shift' => 'required|exists:working_schedule_shifts,id',
                 'approval_line' => 'nullable|exists:users,id',
                 'barcode' => 'nullable|string|max:255',
             ]);
