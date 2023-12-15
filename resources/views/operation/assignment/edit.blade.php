@@ -38,7 +38,7 @@
 
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Nama Project</span>
+                                            <span class="required fw-bold">Nama Penugasan</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid"
                                             value="{{ $assignment->name }}" placeholder="Projek Maintenance" required
@@ -47,7 +47,7 @@
 
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Nomor Project</span>
+                                            <span class="required fw-bold">Nomor Surat</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid"
                                             value="{{ $assignment->number }}" placeholder="000/CMT-XX/XXX/VIII/0000"

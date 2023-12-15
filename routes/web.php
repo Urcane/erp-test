@@ -21,6 +21,7 @@ use App\Http\Controllers\HC\Request as HCRequest;
 use App\Http\Controllers\Operation;
 use App\Http\Controllers\Finance;
 use App\Http\Controllers\ProjectManagement\TaskListController;
+use App\Http\Controllers\ValidateLetterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,16 @@ use App\Http\Controllers\ProjectManagement\TaskListController;
 
 Route::get('/privacy', function () {
     return view('privacy');
+});
+
+Route::prefix('/validate-letter')->group(function () {
+    // !!! THE URL MUST BE DECODED FIRST BEFORE PASSING TO THE CONTROLLER !!!
+
+    Route::controller(ValidateLetterController::class)->group(function () {
+        Route::get('/SGVsbG8sIFdvcmxkIQ==22DSA/{assignment}/{userId}', 'assignment')->name('validate-letter.assignment');
+    });
+
+    // !!! THE URL MUST BE DECODED FIRST BEFORE PASSING TO THE CONTROLLER !!!
 });
 
 Route::middleware(['auth'])->group(function () {

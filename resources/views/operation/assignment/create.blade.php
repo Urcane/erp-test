@@ -29,7 +29,7 @@
                                 <form class="form row" enctype="multipart/form-data" id="assignment_form">
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Nama Project</span>
+                                            <span class="required fw-bold">Nama Penugasan</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid"
                                             placeholder="Projek Maintenance" required name="name">
@@ -37,7 +37,7 @@
 
                                     <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
-                                            <span class="required fw-bold">Nomor Project</span>
+                                            <span class="required fw-bold">Nomor Surat</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid"
                                             placeholder="000/CMT-XX/XXX/VIII/0000" required name="number">
