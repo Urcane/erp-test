@@ -171,6 +171,7 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::get('/get/request', 'showOwnRequest');
                     Route::get('/get/detail/{id}', 'getDetail');
                     Route::get('/export/{assignmentId}/{userId}', 'exportPdf');
+                    Route::get('get/signedby', 'getSignedBy');
 
                     Route::get('/get/create-data', 'create');
                     Route::post('/store', 'store');

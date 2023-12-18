@@ -94,7 +94,7 @@ class UserController extends Controller
         try {
             return response()->json([
                 "status" => "success",
-                "data" => $request->user()->load('userEmployment')
+                "data" => $request->user()->load('userEmployment', "division", "department")
             ]);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
