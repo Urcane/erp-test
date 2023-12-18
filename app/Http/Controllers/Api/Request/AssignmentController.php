@@ -30,6 +30,7 @@ class AssignmentController extends Controller
             ->has('userEmployment')->has('division')
             ->with(['userEmployment', 'division'])
             ->get();
+        $users = [Auth::user()->userEmployment->approvalLine];
 
         $days = $this->constants->day;
 
