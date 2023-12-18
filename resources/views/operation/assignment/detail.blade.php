@@ -238,7 +238,7 @@
                                         @switch($assignment->status)
                                             @case($statusEnum[0])
                                                 @if ($assignment->user_id == Auth::user()->id)
-                                                    <button type="reset" id="timeoff_reject"
+                                                    <button type="reset" id="assignment_cancel"
                                                         class="btn btn-outline btn-outline-warning btn-sm me-3"
                                                         data-bs-dismiss="modal">
                                                         <i class="fas fa-times text-warning"></i>
@@ -317,6 +317,32 @@
             L.marker([latitude, longitude]).addTo(map)
         });
     </script>
+    @if ($assignment->user_id == Auth::user()->id)
+    <script>
+        $('#assignment_cancel').on('click', function() {
+            $.ajax({
+                url: "{{ route('opt.asign.cancel') }}",
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                type: 'POST',
+                data: {
+                    id: '{{ $assignment->id }}'
+                },
+                success: function(data) {
+                    toastr.success(data.message, 'Selamat 🚀 !');
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                },
+                error: function(xhr, status, error) {
+                    const data = xhr.responseJSON;
+                    toastr.error(data.message, 'Opps!');
+                }
+            });
+        });
+    </script>
+    @endif
     @can('OPR:change-department-status-assignment')
         @if ($assignment->status == $statusEnum[0])
             <script>

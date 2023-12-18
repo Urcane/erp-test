@@ -10,7 +10,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Assignment\Assignment;
 use App\Models\User;
 use App\Utils\ErrorHandler;
+use App\Utils\RomanNumber;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -23,56 +26,96 @@ class AssignmentController extends Controller
         $this->constants = new Constants();
     }
 
+    private function getAssignmentNumber()
+    {
+        $lastAssignment = Assignment::whereHas('user', function ($query) {
+            $query->where('department_id', Auth::user()->department_id);
+        })
+            ->whereBetween('created_at', [
+                Carbon::now()->startOfMonth()->toDateTimeString(),
+                Carbon::now()->endOfMonth()->toDateTimeString(),
+            ])
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $numericMonth = Carbon::now()->format('m');
+        $romanMonth = RomanNumber::convertToRoman($numericMonth);
+
+        $department = Auth::user()->department->department_alias;
+
+        if (!$lastAssignment) {
+            return "001/{$department}/{$romanMonth}/" . Carbon::now()->format('Y');
+        }
+
+        $lastAssignmentNumber = intval(explode('/', $lastAssignment->number)[0]) + 1;
+
+        $threeDigitNumber = str_pad($lastAssignmentNumber, 3, '0', STR_PAD_LEFT);
+
+        return "{$threeDigitNumber}/{$department}/{$romanMonth}/" . Carbon::now()->format('Y');
+    }
+
     public function create(Request $request)
     {
-        $users = User::where('department_id', $request->user()->department_id)
-            ->has('userEmployment')->has('division')
-            ->with(['userEmployment', 'division'])
-            ->get();
+        try {
+            // $users = User::where('department_id', $request->user()->department_id)
+            //     ->has('userEmployment')->has('division')
+            //     ->with(['userEmployment', 'division'])
+            //     ->get();
 
-        $days = $this->constants->day;
+            $days = $this->constants->day;
 
-        return response()->json([
-            "status" => "success",
-            "data" => [
-                "users" => $users,
-                "days" => $days
-            ]
-        ]);
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "users" => [$request->user()->userEmployment->approvalLine],
+                    "days" => $days
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 
     public function getDetail(Request $request, string $id)
     {
-        $assignment = Assignment::whereId($id)->first();
+        try {
+            $assignment = Assignment::whereId($id)->with([
+                'signedBy', 'userAssignments.user', 'userAssignments.user.userEmployment', 'userAssignments.user.division'
+            ])->first();
 
-        if (!$assignment) {
-            throw new NotFoundError("Penugasan Tidak ditemukan");
+            if (!$assignment) {
+                throw new NotFoundError("Penugasan Tidak ditemukan");
+            }
+
+            $authUser = $request->user();
+
+            if ($authUser->id !== $assignment->user_id) {
+                if (
+                    !$assignment->userAssignments->contains('user_id', $authUser->id) ||
+                    $assignment->status != $this->constants->assignment_status[1]
+                ) {
+                    throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
+                }
+            }
+
+            $days = $this->constants->day;
+            $statusEnum = $this->constants->assignment_status;
+
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "status" => $statusEnum,
+                    "days" => $days,
+                    "assignment" => $assignment
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
         }
-
-        if ($assignment->status != $this->constants->assignment_status[0]) {
-            throw new InvariantError("Penugasan Belum disetujui");
-        }
-
-        if ($assignment->user_id != $request->user()->id) {
-            throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
-        }
-
-        $users = User::where('department_id', $request->user()->department_id)
-            ->where('id', '!=', $request->user()->id)
-            ->has('userEmployment')->has('division')
-            ->with(['userEmployment', 'division'])
-            ->get();
-
-        $days = $this->constants->day;
-
-        return response()->json([
-            "status" => "success",
-            "data" => [
-                "users" => $users,
-                "days" => $days,
-                "assignment" => $assignment
-            ]
-        ]);
     }
 
     public function update(Request $request)
@@ -93,7 +136,6 @@ class AssignmentController extends Controller
             }
 
             $request->validate([
-                'number' => ['required', 'string', 'max:255'],
                 'signed_by' => 'required|exists:users,id',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
@@ -112,7 +154,6 @@ class AssignmentController extends Controller
             DB::beginTransaction();
 
             $assignment->update([
-                "number" => $request->number,
                 "signed_by" => $request->signed_by,
                 "start_date" => $request->start_date,
                 "end_date" => $request->end_date,
@@ -155,7 +196,6 @@ class AssignmentController extends Controller
     {
         try {
             $request->validate([
-                'number' => 'required|string|max:255',
                 'signed_by' => 'required|exists:users,id',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
@@ -174,7 +214,7 @@ class AssignmentController extends Controller
             DB::beginTransaction();
 
             $assignment = Assignment::create([
-                "number" => $request->number,
+                "number" => $this->getAssignmentNumber(),
                 "signed_by" => $request->signed_by,
                 "user_id" => $request->user()->id,
                 "start_date" => $request->start_date,
@@ -254,6 +294,8 @@ class AssignmentController extends Controller
     {
         try {
             $user = $request->user();
+            $page = $request->page ?? 1;
+            $itemCount = $request->itemCount ?? 10;
 
             if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
                 throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
@@ -264,11 +306,15 @@ class AssignmentController extends Controller
             })->where('status', $this->constants->assignment_status[1])
                 ->orderBy('created_at', 'desc')
                 ->with(['user', 'signedBy', 'userAssignments'])
-                ->get();
+                ->paginate($itemCount, ['*'], 'page', $page);
 
             return response()->json([
                 "status" => "success",
-                "data" => $assignments
+                "data" => [
+                    "assignments" => $assignments->items(),
+                    "currentPage" => $assignments->currentPage(),
+                    "itemCount" => $itemCount,
+                ]
             ]);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
@@ -281,21 +327,28 @@ class AssignmentController extends Controller
     {
         try {
             $user = $request->user();
+            $page = $request->page ?? 1;
+            $itemCount = $request->itemCount ?? 10;
 
             if (!($user->id == $request->user_id || $user->hasPermissionTo('HC:view-attendance'))) {
                 throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
             }
 
-            $assignments = Assignment::where('user_id', $request->user_id)
+            $assignments = Assignment::where('user_id', $request->user()->id)
                 ->orderByRaw(
                     "FIELD(status, ?, ?, ?, ?, ?)",
                     $this->constants->assignment_status
                 )
-                ->with(['user', 'signedBy', 'userAssignments']);
+                ->with(['user', 'signedBy', 'userAssignments'])
+                ->paginate($itemCount, ['*'], 'page', $page);
 
             return response()->json([
                 "status" => "success",
-                "data" => $assignments
+                "data" => [
+                    "assignments" => $assignments->items(),
+                    "currentPage" => $assignments->currentPage(),
+                    "itemCount" => $itemCount,
+                ]
             ]);
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
@@ -306,63 +359,69 @@ class AssignmentController extends Controller
 
     public function exportPdf(Request $request, string $assignmentId, string $userId)
     {
-        $assignment = Assignment::whereId($assignmentId)->first();
+        try {
+            $assignment = Assignment::whereId($assignmentId)->first();
 
-        if (!$assignment) {
-            throw new NotFoundError("Penugasan Tidak ditemukan");
-        }
-
-        if ($assignment->status != $this->constants->assignment_status[1]) {
-            throw new NotFoundError("Penugasan Tidak ditemukan");
-        }
-
-        $userAssignment = $assignment->userAssignments()->whereId($userId)->first();
-
-        if (!$userAssignment) {
-            throw new NotFoundError("Penugasan Tidak ditemukan");
-        }
-
-        $authUser = $request->user();
-
-        if (
-            !($authUser->hasPermissionTo('OPR:view-department-assignment')
-                || $authUser->id == $userAssignment->user_id)
-        ) {
-            if ($userAssignment->user_id !== $authUser->id) {
-                abort(403);
+            if (!$assignment) {
+                throw new NotFoundError("Penugasan Tidak ditemukan");
             }
-        }
 
-        if ($userAssignment->user_id) {
-            $user = [
-                'name' => $userAssignment->user->name,
-                'nik' => $userAssignment->user->userEmployment->employee_id,
-                'position' => $userAssignment->user->division->divisi_name,
-            ];
-        } else {
-            $user = [
-                'name' => $userAssignment->name,
-                'nik' => $userAssignment->nik,
-                'position' => $userAssignment->position,
-            ];
-        }
+            if ($assignment->status != $this->constants->assignment_status[1]) {
+                throw new NotFoundError("Penugasan Tidak ditemukan");
+            }
 
-        if ($assignment->signed_by) {
-            $signed = [
-                'name' => $assignment->signedBy->name,
-                'nik' => $assignment->signedBy->userEmployment->employee_id,
-                'position' => $assignment->signedBy->division->divisi_name,
-            ];
-        } else {
-            $signed = [
-                'name' => $assignment->user->name,
-                'nik' => $assignment->user->userEmployment->employee_id,
-                'position' => $assignment->user->division->divisi_name,
-            ];
-        }
+            $userAssignment = $assignment->userAssignments()->whereId($userId)->first();
 
-        return view('operation.assignment.pdf', compact([
-            'assignment', 'user', 'signed'
-        ]));
+            if (!$userAssignment) {
+                throw new NotFoundError("Penugasan Tidak ditemukan");
+            }
+
+            $authUser = $request->user();
+
+            if (
+                !($authUser->hasPermissionTo('OPR:view-department-assignment')
+                    || $authUser->id == $userAssignment->user_id)
+            ) {
+                if ($userAssignment->user_id !== $authUser->id) {
+                    abort(403);
+                }
+            }
+
+            if ($userAssignment->user_id) {
+                $user = [
+                    'name' => $userAssignment->user->name,
+                    'nik' => $userAssignment->user->userEmployment->employee_id,
+                    'position' => $userAssignment->user->division->divisi_name,
+                ];
+            } else {
+                $user = [
+                    'name' => $userAssignment->name,
+                    'nik' => $userAssignment->nik,
+                    'position' => $userAssignment->position,
+                ];
+            }
+
+            if ($assignment->signed_by) {
+                $signed = [
+                    'name' => $assignment->signedBy->name,
+                    'nik' => $assignment->signedBy->userEmployment->employee_id,
+                    'position' => $assignment->signedBy->division->divisi_name,
+                ];
+            } else {
+                $signed = [
+                    'name' => $assignment->user->name,
+                    'nik' => $assignment->user->userEmployment->employee_id,
+                    'position' => $assignment->user->division->divisi_name,
+                ];
+            }
+
+            return view('operation.assignment.pdf', compact([
+                'assignment', 'user', 'signed'
+            ]));
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
+        }
     }
 }

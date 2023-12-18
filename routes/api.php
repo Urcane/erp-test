@@ -7,6 +7,7 @@ use App\Http\Controllers\Api;
 use App\Http\Controllers\Profile\PersonalController;
 
 use App\Http\Controllers\Api\HC;
+use App\Http\Controllers\Api\Operation;
 use App\Http\Controllers\Api\Request;
 use App\Http\Controllers\Tests;
 
@@ -130,6 +131,18 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::post('/update/status', 'updateRequestStatusById')
                         ->middleware(['permission:Approval:change-status-request|HC:change-all-status-request']);
                 });
+            });
+        });
+
+        Route::prefix('assignment')->group(function () {
+            Route::controller(Operation\Request\AssignmentController::class)->group(function () {
+                Route::get('/get', 'getAssignment');
+                Route::get('/get/detail/{id}', 'show');
+
+                Route::get('/get/create-data', 'create');
+                Route::post('/update', 'update');
+                Route::post('/update/status', 'updateStatus');
+                Route::post('/store', 'store');
             });
         });
 

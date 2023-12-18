@@ -1,27 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Operation\Assignment;
-
-use Illuminate\Http\Request;
-
-use Carbon\Carbon;
-use Yajra\DataTables\Facades\DataTables;
+namespace App\Http\Controllers\Api\Operation\Request;
 
 use App\Constants;
 use App\Exceptions\AuthorizationError;
 use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
-use App\Models\Assignment\Assignment;
-use App\Utils\ErrorHandler;
 use App\Http\Controllers\Controller;
+use App\Models\Assignment\Assignment;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
 use App\Models\User;
+use App\Utils\ErrorHandler;
 use App\Utils\RomanNumber;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Carbon\Carbon;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -195,42 +191,97 @@ class AssignmentController extends Controller
         return "{$threeDigitNumber}/{$department}/{$romanMonth}/" . Carbon::now()->format('Y');
     }
 
-    public function index()
+    public function getAssignment(Request $request)
     {
-        /** @var \App\Models\User $authUser */
-        $authUser = Auth::user();
+        try {
+            if (!$request->user()->hasPermissionTo('OPR:view-department-assignment')) {
+                throw new AuthorizationError("Anda tidak berhak melihat penugasan");
+            }
 
-        if (!$authUser->hasPermissionTo('OPR:view-department-assignment')) {
-            abort(403);
+            $page = $request->page ?? 1;
+            $itemCount = $request->itemCount ?? 10;
+
+            $assignments = Assignment::whereHas('user', function ($query) use ($request) {
+                $query->where('department_id', $request->user()->department->id);
+            })
+                ->with(['user', 'signedBy', 'userAssignments']);
+
+            if ($request->filterDate) {
+                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item, $key) {
+                    $date = Carbon::parse($item);
+                    if ($key === 0) {
+                        return $date->startOfDay()->toDateTimeString();
+                    } else {
+                        return $date->endOfDay()->toDateTimeString();
+                    }
+                })->toArray();
+
+                $assignments = $assignments->whereBetween('created_at', $range_date)->orderBy('created_at', 'desc');
+            } else {
+                $assignments = $assignments->orderBy('created_at', 'desc');
+            }
+
+            $search = $request->search;
+            if (!empty($search)) {
+                $assignments = $assignments->where(function ($query) use ($search) {
+                    $query->where('name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('location', 'LIKE', '%' . $search . '%')
+                        ->orWhere('number', 'LIKE', '%' . $search . '%')
+                        ->orWhereHas('user', function ($query) use ($search) {
+                            $query->where('name', 'LIKE', '%' . $search . '%');
+                        })
+                        ->orWhereHas('signedBy', function ($query) use ($search) {
+                            $query->where('name', 'LIKE', '%' . $search . '%');
+                        });
+                });
+            }
+
+            $assignments = $assignments->paginate($itemCount, ['*'], 'page', $page);
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil mengambil data penugasan",
+                "data" => [
+                    "assignment" => $assignments->items(),
+                    "currentPage" => $assignments->currentPage(),
+                    "itemCount" => $itemCount,
+                    "assignmentStatus" => $this->constants->assignment_status
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
         }
-
-        $assignmentStatus = $this->constants->assignment_status;
-        // $dataDepartment = Department::all();
-
-        return view('operation.assignment.index', compact([
-            'assignmentStatus'
-        ]));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        /** @var \App\Models\User $authUser */
-        $authUser = Auth::user();
+        try {
+            if (!$request->user()->hasPermissionTo('OPR:create-department-assignment')) {
+                abort(403);
+            }
 
-        if (!$authUser->hasPermissionTo('OPR:create-department-assignment')) {
-            abort(403);
+            $days = $this->constants->day;
+
+            $users = User::where('department_id', Auth::user()->department_id)
+                ->has('userEmployment')->has('division')
+                ->with(['userEmployment', 'division'])
+                ->get();
+
+            return response()->json([
+                "status" => "success",
+                "message" => "Berhasil mengambil data penugasan",
+                "data" => [
+                    "users" => $users,
+                    "days" => $days,
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
         }
-
-        $days = $this->constants->day;
-
-        $users = User::where('department_id', Auth::user()->department_id)
-            ->has('userEmployment')->has('division')
-            ->with(['userEmployment', 'division'])
-            ->get();
-
-        return view('operation.assignment.create', compact([
-            'users', 'days'
-        ]));
     }
 
     public function store(Request $request)
@@ -329,58 +380,42 @@ class AssignmentController extends Controller
         }
     }
 
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        $assignment = Assignment::whereId($id)->first();
-        $statusEnum = $this->constants->assignment_status;
-        $days = $this->constants->day;
+        try {
+            $authUser = $request->user();
 
-        if (!$assignment) {
-            return abort(404);
+            $assignment = Assignment::whereId($id)->with([
+                'signedBy', 'userAssignments.user', 'userAssignments.user.userEmployment', 'userAssignments.user.division'
+            ])->first();
+
+            if (!$assignment) {
+                throw new NotFoundError("Penugasan Tidak ditemukan");
+            }
+
+            if (
+                !$authUser->hasPermissionTo('OPR:view-department-assignment') &&
+                $assignment->user->department_id != $authUser->department_id
+            ) {
+                throw new AuthorizationError("Anda tidak berhak melihat penugasan");
+            }
+
+            $days = $this->constants->day;
+            $statusEnum = $this->constants->assignment_status;
+
+            return response()->json([
+                "status" => "success",
+                "data" => [
+                    "status" => $statusEnum,
+                    "days" => $days,
+                    "assignment" => $assignment
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            $data = ErrorHandler::handle($th);
+
+            return response()->json($data["data"], $data["code"]);
         }
-
-        /** @var \App\Models\User $authUser */
-        $authUser = Auth::user();
-
-        if (
-            !$authUser->hasPermissionTo('OPR:view-department-assignment') &&
-            $assignment->user->department_id != $authUser->department_id
-        ) {
-            abort(403);
-        }
-
-        return view('operation.assignment.detail', compact([
-            'assignment', 'statusEnum', 'days'
-        ]));
-    }
-
-    public function edit(string $id)
-    {
-        $assignment = Assignment::whereId($id)->first();
-
-        if (!$assignment) {
-            return abort(404);
-        }
-
-        if ($assignment->status != $this->constants->assignment_status[0]) {
-            return abort(400);
-        }
-
-        if ($assignment->user_id != Auth::user()->id) {
-            return abort(403);
-        }
-
-        $users = User::where('department_id', Auth::user()->department_id)
-            ->where('id', '!=', Auth::user()->id)
-            ->has('userEmployment')->has('division')
-            ->with(['userEmployment', 'division'])
-            ->get();
-
-        $days = $this->constants->day;
-
-        return view('operation.assignment.edit', compact([
-            'assignment', 'users', 'days'
-        ]));
     }
 
     public function update(Request $request)
@@ -392,7 +427,7 @@ class AssignmentController extends Controller
                 throw new NotFoundError("Penugasan tidak ditemukan");
             }
 
-            if ($assignment->user_id != Auth::user()->id) {
+            if ($assignment->user_id != $request->user()->id) {
                 throw new AuthorizationError("Anda tidak berhak mengubah penugasan ini");
             }
 
@@ -401,7 +436,6 @@ class AssignmentController extends Controller
             }
 
             $request->validate([
-                'number' => ['required', 'string', 'max:255'],
                 'signed_by' => 'required|exists:users,id',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
@@ -428,7 +462,6 @@ class AssignmentController extends Controller
             DB::beginTransaction();
 
             $assignment->update([
-                "number" => $request->number,
                 "signed_by" => $request->signed_by,
                 "start_date" => $request->start_date,
                 "end_date" => $request->end_date,
@@ -485,162 +518,6 @@ class AssignmentController extends Controller
             ], 200);
         } catch (\Throwable $th) {
             DB::rollBack();
-            $data = ErrorHandler::handle($th);
-
-            return response()->json($data["data"], $data["code"]);
-        }
-    }
-
-    public function getTableAssignment(Request $request)
-    {
-        if (request()->ajax()) {
-            /** @var \App\Models\User $authUser */
-            $authUser = Auth::user();
-
-            if (!$authUser->hasPermissionTo('OPR:view-department-assignment')) {
-                throw new AuthorizationError("Anda tidak berhak melihat penugasan");
-            }
-
-            $assignments = Assignment::whereHas('user', function ($query) use ($authUser) {
-                $query->where('department_id', $authUser->department->id);
-            })
-                ->with(['user', 'signedBy', 'userAssignments']);
-
-            switch ($request->filters['filterStatus']) {
-                case $this->constants->assignment_status[0]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[0]);
-                    break;
-                case $this->constants->assignment_status[1]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[1]);
-                    break;
-                case $this->constants->assignment_status[2]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[2]);
-                    break;
-                case $this->constants->assignment_status[3]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[3]);
-                    break;
-                case $this->constants->assignment_status[4]:
-                    $assignments = $assignments->where('status', $this->constants->assignment_status[4]);
-                    break;
-                default:
-                    $assignments = $assignments->orderByRaw(
-                        "FIELD(status, ?, ?, ?, ?, ?)",
-                        $this->constants->assignment_status
-                        // [
-                        //     $this->constants->assignment_status[1],
-                        //     $this->constants->assignment_status[0],
-                        //     ...array_slice($this->constants->assignment_status, 2, count($this->constants->assignment_status))
-                        // ]
-                    );
-                    break;
-            }
-
-            if ($request->filters['filterDate']) {
-                $range_date = collect(explode('-', $request->filters['filterDate']))->map(function ($item, $key) {
-                    $date = Carbon::parse($item);
-                    if ($key === 0) {
-                        return $date->startOfDay()->toDateTimeString();
-                    } else {
-                        return $date->endOfDay()->toDateTimeString();
-                    }
-                })->toArray();
-
-                $assignments = $assignments->whereBetween('created_at', $range_date)->orderBy('created_at', 'desc');
-            } else {
-                $assignments = $assignments->orderBy('created_at', 'desc');
-            }
-
-            $search = $request->filters['search'];
-            if (!empty($search)) {
-                $assignments = $assignments->where(function ($query) use ($search) {
-                    $query->where('name', 'LIKE', '%' . $search . '%')
-                        ->orWhere('location', 'LIKE', '%' . $search . '%')
-                        ->orWhere('number', 'LIKE', '%' . $search . '%')
-                        ->orWhereHas('user', function ($query) use ($search) {
-                            $query->where('name', 'LIKE', '%' . $search . '%');
-                        })
-                        ->orWhereHas('signedBy', function ($query) use ($search) {
-                            $query->where('name', 'LIKE', '%' . $search . '%');
-                        });
-                });
-            }
-
-            // $filterDepartment = $request->filters['filterDepartment'];
-            // if (!empty($filterDepartment) && $filterDepartment !== '*') {
-            //     $assignments = $assignments->whereHas('user', function ($query) use ($filterDepartment) {
-            //         $query->where('department_id', $filterDepartment);
-            //     });
-            // }
-
-            return DataTables::of($assignments)
-                ->addColumn('name', function ($query) {
-                    return $query->name;
-                })
-                ->addColumn('date', function ($query) {
-                    return Carbon::parse($query->start_date)->format('d/m/Y') . ' - ' . Carbon::parse($query->end_date)->format('d/m/Y');
-                })
-                ->addColumn('created_at', function ($query) {
-                    $date = explode(" ", explode("T", $query->created_at)[0])[0];
-
-                    $date = Carbon::createFromFormat('Y-m-d', $date);
-                    $formattedDate = $date->format('d-m-Y');
-
-                    return $formattedDate;
-                })
-                ->addColumn('signed_by', function ($query) {
-                    return $query->signedBy->name;
-                })
-                ->addColumn('assigned', function ($query) {
-                    return $query->userAssignments->count() . " Employee(s)";
-                })
-                ->addColumn('action', function ($query) {
-                    $statusEnum = $this->constants->assignment_status;
-
-                    return view('operation.assignment.components.menu', compact(['query', 'statusEnum']));
-                })
-                ->addColumn('status', function ($query) {
-                    $statusEnum = $this->constants->assignment_status;
-                    $status = $query->status;
-
-                    return view('operation.assignment.components.status', compact([
-                        'status', 'statusEnum'
-                    ]));
-                })
-                ->addColumn('created_by', function ($query) {
-                    return $query->user->name;
-                })
-                ->addIndexColumn()
-                ->rawColumns(['action', 'status'])
-                ->make(true);
-        }
-    }
-
-    public function cancel(Request $request)
-    {
-        try {
-            $assignment = Assignment::whereId($request->id)->first();
-
-            if (!$assignment) {
-                throw new NotFoundError("Penugasan tidak ditemukan");
-            }
-
-            if ($assignment->user_id != Auth::user()->id) {
-                throw new AuthorizationError("Anda tidak berhak membatalkan penugasan ini");
-            }
-
-            if ($assignment->status != $this->constants->assignment_status[0]) {
-                throw new InvariantError("Tidak dapat membatalkan penugasan, Penugasan sudah $assignment->status");
-            }
-
-            $assignment->update([
-                "status" => $this->constants->assignment_status[3],
-            ]);
-
-            return response()->json([
-                "status" => "success",
-                "message" => "Berhasil membatalkan penugasan",
-            ], 200);
-        } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);
@@ -704,75 +581,5 @@ class AssignmentController extends Controller
 
             return response()->json($data["data"], $data["code"]);
         }
-    }
-
-    public function exportPdf(string $assignment, string $user)
-    {
-        $assignment = Assignment::whereId($assignment)->first();
-
-        if (!$assignment) {
-            return abort(404);
-        }
-
-        if ($assignment->status != $this->constants->assignment_status[1]) {
-            return abort(400);
-        }
-
-        $userAssignment = $assignment->userAssignments()->whereId($user)->first();
-
-        if (!$userAssignment) {
-            return abort(404);
-        }
-
-        /** @var \App\Models\User $authUser */
-        $authUser = Auth::user();
-
-        if (
-            !($authUser->hasPermissionTo('OPR:view-department-assignment')
-                || $authUser->id == $userAssignment->user_id)
-        ) {
-            if ($userAssignment->user_id !== $authUser->id) {
-                abort(403);
-            }
-        }
-
-        if ($userAssignment->user_id) {
-            $user = [
-                'name' => $userAssignment->user->name,
-                'nik' => $userAssignment->user->userEmployment->employee_id,
-                'position' => $userAssignment->user->division->divisi_name,
-            ];
-        } else {
-            $user = [
-                'name' => $userAssignment->name,
-                'nik' => $userAssignment->nik,
-                'position' => $userAssignment->position,
-            ];
-        }
-
-        if ($assignment->signed_by) {
-            $signed = [
-                'name' => $assignment->signedBy->name,
-                'nik' => $assignment->signedBy->userEmployment->employee_id,
-                'position' => $assignment->signedBy->division->divisi_name,
-            ];
-        } else {
-            $signed = [
-                'name' => $assignment->user->name,
-                'nik' => $assignment->user->userEmployment->employee_id,
-                'position' => $assignment->user->division->divisi_name,
-            ];
-        }
-
-        $url = route('validate-letter.assignment', [
-            'assignment' => encrypt($assignment->id),
-            'userId' => encrypt($userAssignment->id),
-        ]);
-
-        $qrCode = QrCode::size(100)->generate($url);
-
-        return view('operation.assignment.pdf', compact([
-            'assignment', 'user', 'signed', 'qrCode'
-        ]));
     }
 }

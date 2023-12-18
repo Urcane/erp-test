@@ -35,13 +35,13 @@
                                             placeholder="Projek Maintenance" required name="name">
                                     </div>
 
-                                    <div class="col-lg-12 mb-3">
+                                    {{-- <div class="col-lg-12 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">
                                             <span class="required fw-bold">Nomor Surat</span>
                                         </label>
                                         <input type="text" class="form-control form-control-solid"
                                             placeholder="000/CMT-XX/XXX/VIII/0000" required name="number">
-                                    </div>
+                                    </div> --}}
 
                                     <div class="col-lg-6 mb-3">
                                         <label class="d-flex align-items-center fs-6 form-label mb-2">

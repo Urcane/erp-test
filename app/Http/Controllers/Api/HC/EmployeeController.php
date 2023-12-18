@@ -14,7 +14,7 @@ class EmployeeController extends Controller
             $page = $request->page ?? 1;
             $itemCount = $request->itemCount ?? 10;
 
-            $employee = User::paginate($itemCount, ['*'], 'page', $page);
+            $employee = User::where("name", "like", '%'.$request->name.'%')->with('division', 'department')->paginate($itemCount, ['*'], 'page', $page);
 
             return response()->json([
                 "status" => "success",

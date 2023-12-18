@@ -478,6 +478,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::prefix('/assignment')->group(function () {
                     Route::get('/create', 'create')->name('req.assignment.create');
                     Route::get('/edit/{id}', 'edit')->name('req.assignment.edit');
+                    Route::get('/detail/{id}', 'show')->name('req.assignment.detail');
 
                     Route::post('/store', 'makeRequest')->name('req.assignment.store');
                     Route::post('/update', 'update')->name('req.assignment.update');
