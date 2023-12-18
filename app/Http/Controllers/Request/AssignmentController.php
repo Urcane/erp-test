@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Assignment\Assignment;
 use App\Models\User;
 use App\Utils\ErrorHandler;
+use App\Utils\RomanNumber;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,34 @@ class AssignmentController extends Controller
     public function __construct()
     {
         $this->constants = new Constants();
+    }
+
+    private function getAssignmentNumber()
+    {
+        $lastAssignment = Assignment::whereHas('user', function ($query) {
+            $query->where('department_id', Auth::user()->department_id);
+        })
+            ->whereBetween('created_at', [
+                Carbon::now()->startOfMonth()->toDateTimeString(),
+                Carbon::now()->endOfMonth()->toDateTimeString(),
+            ])
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $numericMonth = Carbon::now()->format('m');
+        $romanMonth = RomanNumber::convertToRoman($numericMonth);
+
+        $department = Auth::user()->department->department_alias;
+
+        if (!$lastAssignment) {
+            return "001/{$department}/{$romanMonth}/" . Carbon::now()->format('Y');
+        }
+
+        $lastAssignmentNumber = intval(explode('/', $lastAssignment->number)[0]) + 1;
+
+        $threeDigitNumber = str_pad($lastAssignmentNumber, 3, '0', STR_PAD_LEFT);
+
+        return "{$threeDigitNumber}/{$department}/{$romanMonth}/" . Carbon::now()->format('Y');
     }
 
     public function create()
@@ -87,7 +116,6 @@ class AssignmentController extends Controller
             }
 
             $request->validate([
-                'number' => ['required', 'string', 'max:255'],
                 'signed_by' => 'required|exists:users,id',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
@@ -106,7 +134,6 @@ class AssignmentController extends Controller
             DB::beginTransaction();
 
             $assignment->update([
-                "number" => $request->number,
                 "signed_by" => $request->signed_by,
                 "start_date" => $request->start_date,
                 "end_date" => $request->end_date,
@@ -149,7 +176,6 @@ class AssignmentController extends Controller
     {
         try {
             $request->validate([
-                'number' => 'required|string|max:255',
                 'signed_by' => 'required|exists:users,id',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
@@ -168,7 +194,7 @@ class AssignmentController extends Controller
             DB::beginTransaction();
 
             $assignment = Assignment::create([
-                "number" => $request->number,
+                "number" => $this->getAssignmentNumber(),
                 "signed_by" => $request->signed_by,
                 "user_id" => Auth::user()->id,
                 "start_date" => $request->start_date,
