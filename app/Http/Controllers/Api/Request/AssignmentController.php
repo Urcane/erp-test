@@ -11,6 +11,7 @@ use App\Models\Assignment\Assignment;
 use App\Models\User;
 use App\Utils\ErrorHandler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
@@ -43,7 +44,7 @@ class AssignmentController extends Controller
 
     public function getDetail(Request $request, string $id)
     {
-        $assignment = Assignment::whereId($id)->first();
+        $assignment = Assignment::whereId($id)->with('signedBy')->first();
 
         if (!$assignment) {
             throw new NotFoundError("Penugasan Tidak ditemukan");
@@ -286,12 +287,12 @@ class AssignmentController extends Controller
                 throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
             }
 
-            $assignments = Assignment::where('user_id', $request->user_id)
+            $assignments = Assignment::where('user_id', $request->user()->id)
                 ->orderByRaw(
                     "FIELD(status, ?, ?, ?, ?, ?)",
                     $this->constants->assignment_status
                 )
-                ->with(['user', 'signedBy', 'userAssignments']);
+                ->with(['user', 'signedBy', 'userAssignments'])->get();
 
             return response()->json([
                 "status" => "success",
@@ -364,5 +365,16 @@ class AssignmentController extends Controller
         return view('operation.assignment.pdf', compact([
             'assignment', 'user', 'signed'
         ]));
+    }
+
+    public function getSignedBy () {
+        $users = Auth::user()->userEmployment->approvalLine;
+
+        return response()->json([
+            "status" => "success",
+            "data" => [
+                $users
+            ]
+        ]);
     }
 }
