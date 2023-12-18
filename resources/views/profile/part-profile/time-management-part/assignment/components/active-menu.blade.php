@@ -4,7 +4,7 @@
 </button>
 <ul class="dropdown-menu">
     <li>
-        <a href="{{ route('opt.asign.detail', ['id' => $query->id]) }}" class="dropdown-item py-2">
+        <a href="{{ route('req.assignment.detail', ['id' => $query->id]) }}" class="dropdown-item py-2">
             <i class="fa-solid fa-eye me-3"></i>
             View
         </a>

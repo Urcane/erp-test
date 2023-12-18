@@ -212,6 +212,33 @@ class AssignmentController extends Controller
         }
     }
 
+    public function show(string $id)
+    {
+        $assignment = Assignment::whereId($id)->first();
+        $statusEnum = $this->constants->assignment_status;
+        $days = $this->constants->day;
+
+        if (!$assignment) {
+            return abort(404);
+        }
+
+        /** @var \App\Models\User $authUser */
+        $authUser = Auth::user();
+
+        if ($authUser->id !== $assignment->user_id) {
+            if (
+                !$assignment->userAssignments->contains('user_id', $authUser->id) ||
+                $assignment->status != $this->constants->assignment_status[1]
+            ) {
+                abort(403);
+            }
+        }
+
+        return view('operation.assignment.detail', compact([
+            'assignment', 'statusEnum', 'days'
+        ]));
+    }
+
     public function cancelRequest(Request $request)
     {
         try {
