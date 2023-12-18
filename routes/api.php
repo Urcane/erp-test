@@ -7,6 +7,7 @@ use App\Http\Controllers\Api;
 use App\Http\Controllers\Profile\PersonalController;
 
 use App\Http\Controllers\Api\HC;
+use App\Http\Controllers\Api\Operation;
 use App\Http\Controllers\Api\Request;
 use App\Http\Controllers\Tests;
 
@@ -133,6 +134,18 @@ Route::middleware('auth:sanctum')->group(function () {
             });
         });
 
+        Route::prefix('assignment')->group(function () {
+            Route::controller(Operation\Request\AssignmentController::class)->group(function () {
+                Route::get('/get', 'getAssignment');
+                Route::get('/get/detail/{id}', 'show');
+
+                Route::get('/get/create-data', 'create');
+                Route::post('/update', 'update');
+                Route::post('/update/status', 'updateStatus');
+                Route::post('/store', 'store');
+            });
+        });
+
         Route::prefix('personal')->group(function () {
             Route::prefix('attendance')->group(function () {
                 Route::controller(Request\AttendanceController::class)->group(function () {
@@ -171,7 +184,6 @@ Route::middleware('auth:sanctum')->group(function () {
                     Route::get('/get/request', 'showOwnRequest');
                     Route::get('/get/detail/{id}', 'getDetail');
                     Route::get('/export/{assignmentId}/{userId}', 'exportPdf');
-                    Route::get('get/signedby', 'getSignedBy');
 
                     Route::get('/get/create-data', 'create');
                     Route::post('/store', 'store');

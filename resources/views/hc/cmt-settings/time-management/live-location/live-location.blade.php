@@ -94,7 +94,7 @@
                     ">",
 
                 columns: [
-                    { data: 'DT_RowIndex'},
+                    { data: 'DT_RowIndex', searchable: false},
                     { data: 'branch'},
                     { data: 'location'},
                     { data: 'action'},

@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="mt-4">
                                     <span class="fw-bolder align-items-center fs-2 d-block">{{$user->name}}</span>
-                                    <p class="text-gray-500 fs-8">{{$user->nip}}</p>
+                                    <p class="text-gray-500 fs-8">{{$user->userEmployment ? $user->userEmployment->employee_id : ""}}</p>
                                     <span class="badge badge-light-warning px-3 py-2">{{$user->divisi_name}}</span>
                                 </div>
                             </div>

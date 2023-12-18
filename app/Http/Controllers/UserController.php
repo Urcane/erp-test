@@ -265,6 +265,9 @@ class UserController extends Controller
                 $div = $user->division ? $user->division->divisi_name : "-";
                 return '<span class="badge px-3 py-2 badge-light-warning">'. $div .'</span>';
             })
+            ->addColumn('nip', function ($user){
+                return $user->userEmployment ? $user->userEmployment->employee_id : "-";
+            })
             ->addColumn('action', function ($action) {
                 $mnue = '<li><a href="'.route('hc.emp.profile',['id'=>$action->id]).'" class="dropdown-item py-2"><i class="fa-solid fa-id-badge me-3"></i>Profile</a></li>';
                 return '

@@ -52,7 +52,7 @@
                                         name="range_date" id="range_date">
                                 </div>
 
-                                <div>
+                                {{-- <div>
                                     <button type="button" class="btn btn-light-info btn-sm me-3"
                                         data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-start"><i
                                             class="fa-solid fa-filter me-2"></i>Filter</button>
@@ -83,30 +83,101 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                             </div>
 
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <table class="table align-top border table-rounded gy-5" id="kt_table_assignment">
-                                        <thead class="">
-                                            <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
-                                                <th class="text-center w-50px">#</th>
-                                                <th class="w-100px">Created At</th>
-                                                <th class="w-150px">Project Name</th>
-                                                <th class="w-150px">Created By</th>
-                                                <th class="w-150px">Signed By</th>
-                                                <th class="w-150px">Assignment Date</th>
-                                                <th class="w-150px">Location</th>
-                                                <th class="w-100px">Assigned</th>
-                                                <th class="w-50px">Status</th>
-                                                <th class="w-50px">#</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="fs-7">
-                                        </tbody>
-                                    </table>
+                            <div class="d-grid">
+                                <ul class="nav nav-tabs flex-nowrap text-nowrap">
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-warning rounded-bottom-0 active"
+                                            data-bs-toggle="tab" href="#waiting">Need Approval</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-success rounded-bottom-0"
+                                            data-bs-toggle="tab" href="#approve">Approved</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link fw-semibold btn btn-active-light btn-color-muted btn-active-color-danger rounded-bottom-0"
+                                            data-bs-toggle="tab" href="#reject">Rejected</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tab-content mt-5" id="myTabContent">
+                                <div class="tab-pane fade show active" id="waiting" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <table class="table align-top border table-rounded gy-5" id="kt_table_assignment_waiting">
+                                                <thead class="">
+                                                    <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
+                                                        <th class="text-center w-50px">#</th>
+                                                        <th class="w-100px">Created At</th>
+                                                        <th class="w-150px">Project Name</th>
+                                                        <th class="w-150px">Created By</th>
+                                                        <th class="w-150px">Signed By</th>
+                                                        <th class="w-150px">Assignment Date</th>
+                                                        <th class="w-150px">Location</th>
+                                                        <th class="w-100px">Assigned</th>
+                                                        <th class="w-50px">Status</th>
+                                                        <th class="w-50px">#</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="fs-7">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="approve" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <table class="table align-top border table-rounded gy-5" id="kt_table_assignment_approved">
+                                                <thead class="">
+                                                    <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
+                                                        <th class="text-center w-50px">#</th>
+                                                        <th class="w-100px">Created At</th>
+                                                        <th class="w-150px">Project Name</th>
+                                                        <th class="w-150px">Created By</th>
+                                                        <th class="w-150px">Signed By</th>
+                                                        <th class="w-150px">Assignment Date</th>
+                                                        <th class="w-150px">Location</th>
+                                                        <th class="w-100px">Assigned</th>
+                                                        <th class="w-50px">Status</th>
+                                                        <th class="w-50px">#</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="fs-7">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="reject" role="tabpanel">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <table class="table align-top border table-rounded gy-5" id="kt_table_assignment_rejected">
+                                                <thead class="">
+                                                    <tr class="fw-bold fs-7 text-gray-500 text-uppercase overflow-y-auto">
+                                                        <th class="text-center w-50px">#</th>
+                                                        <th class="w-100px">Created At</th>
+                                                        <th class="w-150px">Project Name</th>
+                                                        <th class="w-150px">Created By</th>
+                                                        <th class="w-150px">Signed By</th>
+                                                        <th class="w-150px">Assignment Date</th>
+                                                        <th class="w-150px">Location</th>
+                                                        <th class="w-100px">Assigned</th>
+                                                        <th class="w-50px">Status</th>
+                                                        <th class="w-50px">#</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="fs-7">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -120,12 +191,12 @@
 </div>
 
 <script>
-    const getFilter = () => {
+    const getFilter = (status) => {
         return {
             'filterDate': $('#range_date').val(),
             'search': $('#search').val(),
             // 'filterDepartment': $('#filter_department').val(),
-            'filterStatus': $('#filter_status').val(),
+            'filterStatus': status,
         };
     };
 
@@ -150,7 +221,9 @@
         });
     }
 
-    let tableAssignment;
+    let tableWaiting;
+    let tableApproved;
+    let tableRejected;
 
     $(document).ready(function () {
         $('input[name="range_date"]').daterangepicker({
@@ -169,7 +242,7 @@
 
         $('#range_date').val(moment().subtract(29, 'days').format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
 
-        tableAssignment =  $('#kt_table_assignment')
+        tableWaiting =  $('#kt_table_assignment_waiting')
         .DataTable({
             processing: true,
             serverSide: true,
@@ -189,7 +262,7 @@
             ajax: {
                 url: "{{ route('opt.asign.get-table-assignment') }}",
                 data: function(data) {
-                    data.filters = getFilter()
+                    data.filters = getFilter('{{ $assignmentStatus[0] }}')
                 },
             },
             language: {
@@ -200,7 +273,217 @@
             buttons: [{
                 extend: 'excel',
                 className: 'btn btn-light-success btn-sm ms-3',
-                title: 'Data Absen Pegawai Comtelindo',
+                title: 'Data Assignment Comtelindo',
+                exportOptions: {
+                    columns: [1]
+                }
+            }, ],
+            dom: "<'row mb-2'" +
+                "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
+                "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start '>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+                "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+                ">",
+
+            columns: [{
+                    data: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'created_at',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'name',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'created_by',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'signed_by',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'date',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'location',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'assigned',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'status',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'action',
+                    orderable: false,
+                    searchable: false
+                },
+            ],
+            columnDefs: [{
+                targets: [0, 1, 7, 8],
+                className: 'text-center',
+            }, ],
+        });
+
+        tableApproved =  $('#kt_table_assignment_approved')
+        .DataTable({
+            processing: true,
+            serverSide: true,
+            retrieve: true,
+            deferRender: true,
+            responsive: false,
+            aaSorting: [],
+            drawCallback: function() {
+                $('body').on('click', 'input[name=\'pegawai_ids\']', function() {
+                    if ($(this).is(":checked")) {
+                        pegawai_ids.push($(this).val());
+                    } else {
+                        removeFrom(pegawai_ids, $(this).val());
+                    }
+                });
+            },
+            ajax: {
+                url: "{{ route('opt.asign.get-table-assignment') }}",
+                data: function(data) {
+                    data.filters = getFilter('{{ $assignmentStatus[1] }}')
+                },
+            },
+            language: {
+                "lengthMenu": "Show _MENU_",
+                "emptyTable": "Tidak ada data terbaru 📁",
+                "zeroRecords": "Data tidak ditemukan 😞",
+            },
+            buttons: [{
+                extend: 'excel',
+                className: 'btn btn-light-success btn-sm ms-3',
+                title: 'Data Assignment Comtelindo',
+                exportOptions: {
+                    columns: [1]
+                }
+            }, ],
+            dom: "<'row mb-2'" +
+                "<'col-12 col-lg-6 d-flex align-items-center justify-content-start'l B>" +
+                "<'col-12 col-lg-6 d-flex align-items-center justify-content-lg-end justify-content-start '>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-12 col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start'i>" +
+                "<'col-12 col-lg-7 d-flex align-items-center justify-content-center justify-content-lg-end'p>" +
+                ">",
+
+            columns: [{
+                    data: 'DT_RowIndex',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'created_at',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'name',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'created_by',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'signed_by',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'date',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'location',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'assigned',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'status',
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: 'action',
+                    orderable: false,
+                    searchable: false
+                },
+            ],
+            columnDefs: [{
+                targets: [0, 1, 7, 8],
+                className: 'text-center',
+            }, ],
+        });
+
+        tableRejected =  $('#kt_table_assignment_rejected')
+        .DataTable({
+            processing: true,
+            serverSide: true,
+            retrieve: true,
+            deferRender: true,
+            responsive: false,
+            aaSorting: [],
+            drawCallback: function() {
+                $('body').on('click', 'input[name=\'pegawai_ids\']', function() {
+                    if ($(this).is(":checked")) {
+                        pegawai_ids.push($(this).val());
+                    } else {
+                        removeFrom(pegawai_ids, $(this).val());
+                    }
+                });
+            },
+            ajax: {
+                url: "{{ route('opt.asign.get-table-assignment') }}",
+                data: function(data) {
+                    data.filters = getFilter('{{ $assignmentStatus[2] }}')
+                },
+            },
+            language: {
+                "lengthMenu": "Show _MENU_",
+                "emptyTable": "Tidak ada data terbaru 📁",
+                "zeroRecords": "Data tidak ditemukan 😞",
+            },
+            buttons: [{
+                extend: 'excel',
+                className: 'btn btn-light-success btn-sm ms-3',
+                title: 'Data Assignment Comtelindo',
                 exportOptions: {
                     columns: [1]
                 }
@@ -276,26 +559,32 @@
 
         $('#search').on('keyup', function(e) {
             if (e.keyCode === 13) {
-                tableAssignment.draw();
+                tableWaiting.draw();
+                tableApproved.draw();
+                tableRejected.draw();
             }
         });
 
         $('#range_date').on('apply.daterangepicker', function(ev, picker) {
-            tableAssignment.draw();
+            tableWaiting.draw();
+            tableApproved.draw();
+            tableRejected.draw();
         });
 
         // $('#filter_department').on('change', function() {
         //     tableAssignment.draw();
         // });
 
-        $('#filter_status').on('change', function() {
-            tableAssignment.draw();
-        });
+        // $('#filter_status').on('change', function() {
+        //     tableWaiting.draw();
+        //     tableApproved.draw();
+        //     tableRejected.draw();
+        // });
 
-        $('#btn_reset_filter').on('click', function () {
-            // $('#filter_department').val("*").trigger('change');
-            $('#filter_status').val("*").trigger('change');
-        });
+        // $('#btn_reset_filter').on('click', function () {
+        //     // $('#filter_department').val("*").trigger('change');
+        //     $('#filter_status').val("*").trigger('change');
+        // });
     });
 </script>
 
