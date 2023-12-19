@@ -401,7 +401,6 @@ class AssignmentController extends Controller
             }
 
             $request->validate([
-                'number' => ['required', 'string', 'max:255'],
                 'signed_by' => 'required|exists:users,id',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',
