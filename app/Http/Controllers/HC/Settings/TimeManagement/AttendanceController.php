@@ -233,10 +233,14 @@ class AttendanceController extends Controller
     public function deleteSchedule(Request $request)
     {
         try {
-            $workingSchedule = WorkingSchedule::whereId($request->id);
+            $workingSchedule = WorkingSchedule::whereId($request->id)->first();
 
             if (!$workingSchedule) {
                 throw new NotFoundError("working schedule tidak ditemukan");
+            }
+
+            if ($workingSchedule->userEmployments->count() > 0) {
+                throw new InvariantError("Masih ada user yang menggunakan schedule");
             }
 
             $workingSchedule->delete();
