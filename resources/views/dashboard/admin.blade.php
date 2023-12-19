@@ -30,33 +30,7 @@
 					</div>
 					<div class="col-lg-4">
 						<div class="row">
-							<div class="col-lg-12 mb-0 mb-md-6">
-								<div class="row">
-									<div class="col-lg-6 col-6 mb-6 mb-md-0">
-										<a href="#!">
-											<div class="card bg-muted text-center h-200px">
-												<div class="card-body d-flex flex-column justify-content-between">
-													<img class="mx-auto w-100px mb-3" src="{{asset('sense')}}/media/logos/logo-comtel-nig.png" alt="">
-													<span class="fs-3 fw-bolder text-white">Coming Soon
-													</span>
-												</div>
-											</div>
-										</a>
-									</div>
-									<div class="col-lg-6 col-6 mb-6 mb-md-0">
-										<a href="#!">
-											<div class="card text-center h-200px bg-muted">
-												<div class="card-body d-flex flex-column justify-content-between">
-													<img class="mx-auto w-100px mb-3" src="{{asset('sense')}}/media/logos/logo-comtel-nig.png" alt="">
-													<span class="fs-3 fw-bolder text-white">Coming Soon
-													</span>
-												</div>
-											</div>
-										</a>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-12 mb-6 mb-md-0">
+							<div class="col-lg-12 mb-6 mb-md-6">
 								<a href="{{route("hc.emp.index")}}">
 									<div class="card h-200px" style="background-color:#9367EF">
 										<div class="card-body">
@@ -75,6 +49,32 @@
 								</a>
 							</div>
 						</div>
+                        <div class="col-lg-12 mb-0">
+                            <div class="row">
+                                <div class="col-lg-6 col-6 mb-6 mb-md-0">
+                                    <a href="#!">
+                                        <div class="card bg-gray-500 text-center h-200px">
+                                            <div class="card-body d-flex flex-column justify-content-between">
+                                                <img class="mx-auto w-100px mb-3" src="{{asset('sense')}}/media/logos/logo-comtel-nig.png" alt="">
+                                                <span class="fs-3 fw-bolder text-white">Coming Soon
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-lg-6 col-6 mb-6 mb-md-0">
+                                    <a href="#!">
+                                        <div class="card text-center h-200px bg-gray-500">
+                                            <div class="card-body d-flex flex-column justify-content-between">
+                                                <img class="mx-auto w-100px mb-3" src="{{asset('sense')}}/media/logos/logo-comtel-nig.png" alt="">
+                                                <span class="fs-3 fw-bolder text-white">Coming Soon
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
 					</div>
 					{{-- <div class="col-lg-4">
 						<div class="row">
