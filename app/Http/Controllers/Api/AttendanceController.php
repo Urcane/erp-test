@@ -147,7 +147,29 @@ class AttendanceController extends Controller
             $page = $request->page ?? 1;
             $itemCount = $request->itemCount ?? 10;
 
-            $attendance = $request->user()->userAttendances()->orderBy('date', 'desc')->paginate($itemCount, ['*'], 'page', $page);
+            // $filterMonth = $request->filterMonth ?? Carbon::now()->format('m');
+
+            $filterMonth = $request->input('filterMonth', Carbon::now()->format('m'));
+            $filterYear = $request->input('filterYear', Carbon::now()->format('Y'));
+
+            if (!is_numeric($filterMonth) || $filterMonth < 1 || $filterMonth > 12) {
+                $filterMonth = Carbon::now()->format('m');
+            }
+
+            if (!is_numeric($filterYear) || $filterYear < 2020 || $filterYear > Carbon::now()->format('Y')) {
+                $filterYear = Carbon::now()->format('Y');
+            }
+
+            $startDate = Carbon::create($filterYear, $filterMonth, 26)->subMonth();
+
+            $endDate = ($filterMonth == 12)
+                ? Carbon::create($filterYear + 1, 12, 26)->subMonth()
+                : Carbon::create($filterYear, $filterMonth + 1, 27)->subMonth();
+
+            $attendance = $request->user()->userAttendances()
+                ->whereBetween('date', [$startDate, $endDate])
+                ->orderBy('date', 'desc')
+                ->paginate($itemCount, ['*'], 'page', $page);
 
             return response()->json([
                 "status" => "success",
