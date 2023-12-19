@@ -60,7 +60,7 @@ class AssignmentController extends Controller
         return $holidayDates->unique()->toArray();
     }
 
-    private function _updateAttendance(mixed $assignment)
+    private function _updateAttendance($assignment)
     {
         $workSchedules = $assignment->assignmentWorkSchedules->pluck('day')->toArray();
         $startDate = Carbon::parse($assignment->start_date);
@@ -401,7 +401,6 @@ class AssignmentController extends Controller
             }
 
             $request->validate([
-                'number' => ['required', 'string', 'max:255'],
                 'signed_by' => 'required|exists:users,id',
                 'start_date' => 'required|date',
                 'end_date' => 'required|date|after:start_date',

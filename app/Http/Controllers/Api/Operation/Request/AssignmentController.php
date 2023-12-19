@@ -56,7 +56,7 @@ class AssignmentController extends Controller
         return $holidayDates->unique()->toArray();
     }
 
-    private function _updateAttendance(mixed $assignment)
+    private function _updateAttendance($assignment)
     {
         $workSchedules = $assignment->assignmentWorkSchedules->pluck('day')->toArray();
         $startDate = Carbon::parse($assignment->start_date);
