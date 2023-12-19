@@ -405,6 +405,7 @@ class TimeOffController extends RequestController
                     Rule::requiredIf(function () use ($request) {
                         return !empty($request->date) && empty($request->working_start);
                     }),
+                    "after:working_start"
                 ],
             ]);
 
