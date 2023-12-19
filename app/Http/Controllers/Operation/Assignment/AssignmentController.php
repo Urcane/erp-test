@@ -427,7 +427,6 @@ class AssignmentController extends Controller
             DB::beginTransaction();
 
             $assignment->update([
-                "number" => $request->number,
                 "signed_by" => $request->signed_by,
                 "start_date" => $request->start_date,
                 "end_date" => $request->end_date,
