@@ -45,7 +45,8 @@
         </label>
         <input type="date" value="{{ $user->userEmployment->end_date ?? old('end_date') }}"
             class="form-control form-control-solid" name="end_date" id="end_date"
-            @cannot('HC:update-profile') disabled @endcannot>
+            {{-- @cannot('HC:update-profile') disabled @endcannot> --}}
+            >
         <div class="fv-plugins-message-container invalid-feedback"></div>
     </div>
 
@@ -180,11 +181,11 @@
 </section>
 
 <script>
-    $("#employment_status_id").change(function() {
-        console.log($(this).find(':selected').data('end'));
-        $("#end_date").prop('required', $(this).find(':selected').data('end') == 1);
-        $(this).find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
-    })
+    // $("#employment_status_id").change(function() {
+    //      console.log($(this).find(':selected').data('end'));
+    //     $("#end_date").prop('required', $(this).find(':selected').data('end') == 1);
+    //     $(this).find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
+    // })
 
     $("#working_schedule_id").change(function() {
         const working_schedule_id = $(this).val()
@@ -225,9 +226,9 @@
     });
 
     $(document).ready(function() {
-        console.log($("#employment_status_id").find(':selected').data('end'));
-        $("#end_date").prop('required', $("#employment_status_id").find(':selected').data('end') == 1);
-        $("#employment_status_id").find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
+        // console.log($("#employment_status_id").find(':selected').data('end'));
+        // $("#end_date").prop('required', $("#employment_status_id").find(':selected').data('end') == 1);
+        // $("#employment_status_id").find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
 
 
         const working_schedule_id = $("#working_schedule_id").val()

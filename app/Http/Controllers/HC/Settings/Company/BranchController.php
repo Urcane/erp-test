@@ -103,7 +103,7 @@ class BranchController extends Controller
                     "tax_person_npwp" => $parent->tax_person_npwp,
                 ]);
             }
-    
+
             DB::transaction(function () use ($request) {
                 $subBranch = SubBranch::updateOrCreate([
                     "id" => $request->company_id,
@@ -123,7 +123,7 @@ class BranchController extends Controller
                     "branch_id" => null,
                     "parent_id" => $request->parent_id,
                 ]);
-    
+
                 $branchLocation = BranchLocation::where("sub_branch_id", $subBranch->id)->first();
                 if ($branchLocation) {
                     $branchLocation->update([
@@ -133,13 +133,14 @@ class BranchController extends Controller
                     ]);
                 } else {
                     BranchLocation::create([
+                        "name" => $subBranch->name,
                         "sub_branch_id" => $subBranch->id,
                         "latitude" => $request->latitude,
                         "longitude" => $request->longitude,
                         "radius" => $request->coordinate_radius,
                     ]);
                 }
-    
+
                 if ($request->logo) {
                     $file = $request->file('logo');
                     $filename = time() . '_' . $request->name;
@@ -147,7 +148,7 @@ class BranchController extends Controller
                         $filename = $subBranch->logo;
                     }
                     $file->storeAs('branch-logo', $filename, 'public');
-    
+
                     $subBranch->update([
                         "logo" => $filename,
                     ]);
@@ -160,14 +161,14 @@ class BranchController extends Controller
                         $filename = $subBranch->logo;
                     }
                     $file->storeAs('branch-signature', $filename, 'public');
-    
+
                     $subBranch->update([
                         "signature" => $filename,
                     ]);
                 }
             });
 
-            return redirect(route("hc.setting.branch.index"));        
+            return redirect(route("hc.setting.branch.index"));
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
             return response()->json($data["data"], $data["code"]);
