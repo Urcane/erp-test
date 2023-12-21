@@ -786,6 +786,7 @@ class TimeOffController extends RequestController
         try {
             $userRequest = UserLeaveRequest::whereId($request->id)
                 ->with([
+                    'leaveRequestCategory',
                     'user.division',
                     'user.department',
                     'user.userEmployment.approvalLine'
