@@ -47,6 +47,10 @@ Route::controller(Api\UserController::class)->group(function () {
     Route::post('/login', 'login');
 });
 
+Route::prefix("letter")->group(function () {
+    Route::get("/FE93890j03f038NIJNko1l320k/{assignmentId}/{userId}", [Request\AssignmentController::class, "exportPdf"])->name("letter.assignment");
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('user')->group(function () {
         Route::controller(Api\UserController::class)->group(function () {

@@ -71,12 +71,12 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    Route::middleware(['permission:HC:view-employee'])->group(function () {
-        Route::controller(EmployeeController::class)->group(function () {
-            Route::prefix('employee')->group(function () {
+    Route::controller(EmployeeController::class)->group(function () {
+        Route::prefix('employee')->group(function () {
+            Route::post('/get/schedule/shift', 'getScheduleShift')->name('hc.emp.get.schedule.shift');
+            Route::middleware(['permission:HC:view-employee'])->group(function () {
                 Route::post('/store/employee', 'store')->name('hc.emp.store');
                 Route::post('/import/employee', 'import')->name('hc.emp.import');
-                Route::post('/get/schedule/shift', 'getScheduleShift')->name('hc.emp.get.schedule.shift');
             });
         });
     });
@@ -657,7 +657,6 @@ Route::middleware(['auth'])->group(function () {
 
                     Route::prefix('create')->group(function () {
                         Route::get('/', 'viewAddInvoice')->name('fin.invc.invoice.create');
-
                     });
                 });
 

@@ -109,7 +109,11 @@ class AssignmentController extends Controller
                 "data" => [
                     "status" => $statusEnum,
                     "days" => $days,
-                    "assignment" => $assignment
+                    "assignment" => $assignment,
+                    "pdf" => route('letter.assignment', [
+                        'assignmentId' => encrypt($assignment->id),
+                        'userId' => encrypt($assignment->user_id),
+                    ]),
                 ]
             ]);
         } catch (\Throwable $th) {
@@ -361,15 +365,18 @@ class AssignmentController extends Controller
     public function exportPdf(Request $request, string $assignmentId, string $userId)
     {
         try {
+            $assignmentId = decrypt($assignmentId);
+            $userId = decrypt($userId);
+
             $assignment = Assignment::whereId($assignmentId)->first();
 
             if (!$assignment) {
                 throw new NotFoundError("Penugasan Tidak ditemukan");
             }
 
-            if ($assignment->status != $this->constants->assignment_status[1]) {
-                throw new NotFoundError("Penugasan Belum disetujui");
-            }
+            // if ($assignment->status != $this->constants->assignment_status[1]) {
+            //     throw new NotFoundError("Penugasan Belum disetujui");
+            // }
 
             $userAssignment = $assignment->userAssignments()->whereId($userId)->first();
 
@@ -379,14 +386,14 @@ class AssignmentController extends Controller
 
             $authUser = $request->user();
 
-            if (
-                !($authUser->hasPermissionTo('OPR:view-department-assignment')
-                    || $authUser->id == $userAssignment->user_id)
-            ) {
-                if ($userAssignment->user_id !== $authUser->id) {
-                    throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
-                }
-            }
+            // if (
+            //     !($authUser->hasPermissionTo('OPR:view-department-assignment')
+            //         || $authUser->id == $userAssignment->user_id)
+            // ) {
+            //     if ($userAssignment->user_id !== $authUser->id) {
+            //         throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
+            //     }
+            // }
 
             if ($userAssignment->user_id) {
                 $user = [

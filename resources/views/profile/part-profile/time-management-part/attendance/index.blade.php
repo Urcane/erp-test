@@ -5,15 +5,10 @@
             <span class="fs-7 fw-semibold text-gray-500">Your attendance information</span>
         </div>
         <div class="col-lg-6 ">
-            <div class="row">
-                <div class="col-2"></div>
-                <div class="col-6 d-flex justify-content-end">
-                    <a href="#attendance_request_modal" class="btn btn-info btn-sm me-3 fs-9" data-bs-toggle="modal"><i
-                            class="fa-solid fa-plus"></i>Request Attendance</a>
-                </div>
-                <div class="col-4">
-                    <a href="{{ route('hc.att.detail', ['id' => $user->id]) }}" class="btn btn-info btn-sm me-3 fs-8"><i class="fa-solid fa-eye"></i>View Log</a>
-                </div>
+            <div class="d-flex justify-content-end">
+                <a href="#attendance_request_modal" class="btn btn-info btn-sm me-3 fs-8" data-bs-toggle="modal"><i
+                    class="fa-solid fa-plus"></i>Request Attendance</a>
+                <a href="{{ route('hc.att.detail', ['id' => $user->id]) }}" class="btn btn-info btn-sm me-3 fs-8"><i class="fa-solid fa-eye"></i>View Log</a>
             </div>
         </div>
         <div class="col-lg-12">

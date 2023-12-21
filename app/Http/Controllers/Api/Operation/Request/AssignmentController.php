@@ -8,6 +8,7 @@ use App\Exceptions\InvariantError;
 use App\Exceptions\NotFoundError;
 use App\Http\Controllers\Controller;
 use App\Models\Assignment\Assignment;
+use App\Models\Assignment\UserAssignment;
 use App\Models\Attendance\GlobalDayOff;
 use App\Models\Attendance\UserAttendance;
 use App\Models\User;
@@ -386,7 +387,7 @@ class AssignmentController extends Controller
             $authUser = $request->user();
 
             $assignment = Assignment::whereId($id)->with([
-                'signedBy', 'userAssignments.user', 'userAssignments.user.userEmployment', 'userAssignments.user.division'
+                'signedBy'
             ])->first();
 
             if (!$assignment) {
@@ -400,6 +401,10 @@ class AssignmentController extends Controller
                 throw new AuthorizationError("Anda tidak berhak melihat penugasan");
             }
 
+            $user = UserAssignment::where('assignment_id', $id)->with([
+                'user.userEmployment', 'user.division'
+            ])->get();
+
             $days = $this->constants->day;
             $statusEnum = $this->constants->assignment_status;
 
@@ -408,7 +413,13 @@ class AssignmentController extends Controller
                 "data" => [
                     "status" => $statusEnum,
                     "days" => $days,
-                    "assignment" => $assignment
+                    "assignment" => $assignment,
+                    "user" => $user->each(function ($item) {
+                        $item->pdf = route('letter.assignment', [
+                            'assignmentId' => encrypt($item->assignment_id),
+                            'userId' => encrypt($item->user_id),
+                        ]);
+                    }),
                 ]
             ]);
         } catch (\Throwable $th) {
