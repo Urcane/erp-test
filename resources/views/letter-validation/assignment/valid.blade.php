@@ -29,7 +29,7 @@
 <body>
     <div class="min-h-screen flex flex-col justify-center items-center">
         <img src="{{ asset('sense/media/logos/logo-full-30.png') }}" alt="Logo" class="mb-8 h-12" />
-        <img src="{{ asset('sense/media/images/valid.svg') }}" alt="Logo" class="mb-8 h-44 md:hidden" />
+        <img src="{{ asset('sense/media/images/Valid.svg') }}" alt="Logo" class="mb-8 h-44 md:hidden" />
         <div class="md:flex md:justify-between mb-4 md:items-center">
             <div class="hidden md:block">
                 <img src="{{ asset('sense/media/images/valid.svg') }}" alt="Logo" class="mb-8 h-60" />

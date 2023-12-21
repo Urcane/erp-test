@@ -12,10 +12,12 @@ use App\Models\User;
 use App\Utils\ErrorHandler;
 use App\Utils\RomanNumber;
 use Carbon\Carbon;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AssignmentController extends Controller
 {
@@ -108,7 +110,11 @@ class AssignmentController extends Controller
                 "data" => [
                     "status" => $statusEnum,
                     "days" => $days,
-                    "assignment" => $assignment
+                    "assignment" => $assignment,
+                    "pdf" => route('letter.assignment', [
+                        'assignmentId' => encrypt($assignment->id),
+                        'userId' => encrypt($assignment->user_id),
+                    ]),
                 ]
             ]);
         } catch (\Throwable $th) {
@@ -360,6 +366,9 @@ class AssignmentController extends Controller
     public function exportPdf(Request $request, string $assignmentId, string $userId)
     {
         try {
+            $assignmentId = decrypt($assignmentId);
+            $userId = decrypt($userId);
+
             $assignment = Assignment::whereId($assignmentId)->first();
 
             if (!$assignment) {
@@ -367,24 +376,13 @@ class AssignmentController extends Controller
             }
 
             if ($assignment->status != $this->constants->assignment_status[1]) {
-                throw new NotFoundError("Penugasan Tidak ditemukan");
+                throw new NotFoundError("Penugasan Belum disetujui");
             }
 
             $userAssignment = $assignment->userAssignments()->whereId($userId)->first();
 
             if (!$userAssignment) {
-                throw new NotFoundError("Penugasan Tidak ditemukan");
-            }
-
-            $authUser = $request->user();
-
-            if (
-                !($authUser->hasPermissionTo('OPR:view-department-assignment')
-                    || $authUser->id == $userAssignment->user_id)
-            ) {
-                if ($userAssignment->user_id !== $authUser->id) {
-                    abort(403);
-                }
+                throw new NotFoundError("User tidak ditemukan");
             }
 
             if ($userAssignment->user_id) {
@@ -415,10 +413,24 @@ class AssignmentController extends Controller
                 ];
             }
 
+            $url = route('validate-letter.assignment', [
+                'assignment' => encrypt($assignment->id),
+                'userId' => encrypt($userAssignment->id),
+            ]);
+
+            $qrCode = QrCode::size(100)->generate($url);
+
             return view('operation.assignment.pdf', compact([
-                'assignment', 'user', 'signed'
+                'assignment', 'user', 'signed', 'qrCode'
             ]));
         } catch (\Throwable $th) {
+            if ($th instanceof DecryptException) {
+                return response()->json([
+                    "status" => "fail",
+                    "message" => "Assignment Tidak Valid",
+                ], 400);
+            }
+
             $data = ErrorHandler::handle($th);
 
             return response()->json($data["data"], $data["code"]);

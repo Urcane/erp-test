@@ -1,3 +1,4 @@
+@can('HC:update-profile')
 <div class="modal fade" id="modal_create_formal_education" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <div class="modal-content">
@@ -76,17 +77,20 @@
         </div>
     </div>
 </div>
+@endcan
 
 {{-- formal education experience content --}}
 <div class="col-lg-6 mb-9">
     <h4>Formal Education</h4>
     <span class="fs-7 fw-semibold text-gray-500">Your formal education experience information</span>
 </div>
+@can('HC:update-profile')
 <div class="col-lg-6 d-flex justify-content-end">
     <div>
         <a href="#modal_create_formal_education" data-bs-toggle="modal" class="btn btn-info btn-sm me-3 btn_tambah_formal"><i class="fa-solid fa-plus"></i>Add Formal Education</a>
     </div>
 </div>
+@endcan
 <div class="col-lg-12">
     <table class="table align-top table-striped border table-rounded gy-5" id="tb_formal_education_content">
         <thead class="">
@@ -99,7 +103,9 @@
                 <th class="w-150px">End Year</th>
                 <th class="w-150px">Score</th>
                 <th class="w-150px">Certificate</th>
+                @can('HC:update-profile')
                 <th class="w-100px">#</th>
+                @endcan
             </tr>
         </thead>
         <tbody class="fs-7">
@@ -109,12 +115,12 @@
 
 <script>
     var dataTableFormal;
-
+    @can('HC:update-profile')
     $(".btn_tambah_formal").on( "click", function() {
         $("[name='id']").val("")
         $("input:not([name='user_id'])").val("")
     })
-
+    @endcan
     $( "#education_experience" ).on( "click", function() {
         dataTableFormal = $('#tb_formal_education_content').DataTable({
             processing: true,
@@ -157,7 +163,9 @@
             { data: 'end_year'},
             { data: 'score'},
             { data: 'certificate'},
+            @can('HC:update-profile')
             { data: 'action'},
+            @endcan
             ],
         });
     });

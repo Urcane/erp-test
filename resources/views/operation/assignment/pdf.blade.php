@@ -156,6 +156,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", (event) => {
             window.print();
+            setTimeout(() => {
+                document.querySelector('html').remove();
+            }, 1);
         });
     </script>
 </body>

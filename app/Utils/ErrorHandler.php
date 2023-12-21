@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use App\Exceptions\ClientError;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 

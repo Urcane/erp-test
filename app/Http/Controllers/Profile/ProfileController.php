@@ -161,7 +161,6 @@ class ProfileController extends Controller
             ]);
 
             $user->first()->assignRole($request->role_id);
-
             UserEmployment::where('user_id', $request->user_id)->update([
                 'employee_id' => $request->employee_id,
                 'employment_status_id' => $request->employment_status_id,

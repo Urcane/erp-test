@@ -180,11 +180,12 @@
 </section>
 
 <script>
-    $("#employment_status_id").change(function() {
-        console.log($(this).find(':selected').data('end'));
-        $("#end_date").prop('required', $(this).find(':selected').data('end') == 1);
-        $(this).find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
-    })
+    @can('HC:update-profile')
+    // $("#employment_status_id").change(function() {
+    //     console.log($(this).find(':selected').data('end'));
+    //     $("#end_date").prop('required', $(this).find(':selected').data('end') == 1);
+    //     $(this).find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
+    // })
 
     $("#working_schedule_id").change(function() {
         const working_schedule_id = $(this).val()
@@ -223,11 +224,12 @@
             }
         });
     });
+    @endcan
 
     $(document).ready(function() {
-        console.log($("#employment_status_id").find(':selected').data('end'));
-        $("#end_date").prop('required', $("#employment_status_id").find(':selected').data('end') == 1);
-        $("#employment_status_id").find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
+        // console.log($("#employment_status_id").find(':selected').data('end'));
+        // $("#end_date").prop('required', $("#employment_status_id").find(':selected').data('end') == 1);
+        // $("#employment_status_id").find(':selected').data('end') == 1 ? $("#end_date_label").addClass('required') : $("#end_date_label").removeClass('required')
 
 
         const working_schedule_id = $("#working_schedule_id").val()
@@ -254,7 +256,10 @@
                             const checked = "{{$user->userEmployment->start_shift ?? ''}}" == data.id ? "checked" : ""
                             $("#scheduleShift").append(`
                             <div class="form-check col-lg-3 col-md-4 mb-3">
-                                <input class="form-check-input" type="radio" name="start_shift" value="${data.id}" required ${checked}>
+                                <input class="form-check-input" type="radio" name="start_shift" value="${data.id}" required ${checked}
+                                @cannot('HC:update-profile')
+                                    disabled
+                                @endcannot>
                                     <label class="form-check-label" for="flexRadioDefault1">
                                     ${shift.name}, ${(shift.working_start ?? "").split(":").slice(0, 2).join(":")} - ${(shift.working_end ?? "").split(":").slice(0, 2).join(":")}
                                     </label>
