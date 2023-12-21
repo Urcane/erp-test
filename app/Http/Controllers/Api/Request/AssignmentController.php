@@ -385,17 +385,6 @@ class AssignmentController extends Controller
                 throw new NotFoundError("User tidak ditemukan");
             }
 
-            $authUser = $request->user();
-
-            if (
-                !($authUser->hasPermissionTo('OPR:view-department-assignment')
-                    || $authUser->id == $userAssignment->user_id)
-            ) {
-                if ($userAssignment->user_id !== $authUser->id) {
-                    throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
-                }
-            }
-
             if ($userAssignment->user_id) {
                 $user = [
                     'name' => $userAssignment->user->name,
