@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AssignmentController extends Controller
 {
@@ -367,13 +368,13 @@ class AssignmentController extends Controller
             }
 
             if ($assignment->status != $this->constants->assignment_status[1]) {
-                throw new NotFoundError("Penugasan Tidak ditemukan");
+                throw new NotFoundError("Penugasan Belum disetujui");
             }
 
             $userAssignment = $assignment->userAssignments()->whereId($userId)->first();
 
             if (!$userAssignment) {
-                throw new NotFoundError("Penugasan Tidak ditemukan");
+                throw new NotFoundError("User tidak ditemukan");
             }
 
             $authUser = $request->user();
@@ -383,7 +384,7 @@ class AssignmentController extends Controller
                     || $authUser->id == $userAssignment->user_id)
             ) {
                 if ($userAssignment->user_id !== $authUser->id) {
-                    abort(403);
+                    throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
                 }
             }
 
@@ -415,8 +416,15 @@ class AssignmentController extends Controller
                 ];
             }
 
+            $url = route('validate-letter.assignment', [
+                'assignment' => encrypt($assignment->id),
+                'userId' => encrypt($userAssignment->id),
+            ]);
+
+            $qrCode = QrCode::size(100)->generate($url);
+
             return view('operation.assignment.pdf', compact([
-                'assignment', 'user', 'signed'
+                'assignment', 'user', 'signed', 'qrCode'
             ]));
         } catch (\Throwable $th) {
             $data = ErrorHandler::handle($th);
