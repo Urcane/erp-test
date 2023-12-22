@@ -54,7 +54,7 @@ class ShiftController extends RequestController
             UserAttendance::create([
                 'user_id' => $userId,
                 'date' => $date,
-                'attendance_code' => $this->constants->attendance_code[0],
+                'attendance_code' => $workingShift->is_working ? $this->constants->attendance_code[0] : $this->constants->attendance_code[2],
                 'primary_shift_name' => $primaryShift->name,
                 'primary_working_start' => $primaryShift->working_start,
                 'primary_working_end' => $primaryShift->working_end,
@@ -64,13 +64,14 @@ class ShiftController extends RequestController
                 'working_end' => $workingShift->working_end,
                 'overtime_before' => $workingShift->overtime_before,
                 'overtime_after' => $workingShift->overtime_after,
-                'late_check_in' => $workingShift->late_check_in,
-                'late_check_out' => $workingShift->late_check_out,
+                'late_check_in' => $workingShift->late_check_in ?? 0,
+                'late_check_out' => $workingShift->late_check_out ?? 0,
                 'start_attend' => $workingShift->start_attend,
                 'end_attend' => $workingShift->end_attend,
             ]);
         } else {
             $userAttendance->update([
+                'attendance_code' => $workingShift->is_working ? $this->constants->attendance_code[0] : $this->constants->attendance_code[2],
                 'primary_shift_name' => $userAttendance->shift_name,
                 'primary_working_start' => $userAttendance->working_start,
                 'primary_working_end' => $userAttendance->working_end,
@@ -80,8 +81,8 @@ class ShiftController extends RequestController
                 'working_end' => $workingShift->working_end,
                 'overtime_before' => $workingShift->overtime_before,
                 'overtime_after' => $workingShift->overtime_after,
-                'late_check_in' => $workingShift->late_check_in,
-                'late_check_out' => $workingShift->late_check_out,
+                'late_check_in' => $workingShift->late_check_in ?? 0,
+                'late_check_out' => $workingShift->late_check_out ?? 0,
                 'start_attend' => $workingShift->start_attend,
                 'end_attend' => $workingShift->end_attend,
             ]);
@@ -285,15 +286,6 @@ class ShiftController extends RequestController
             } else {
                 throw new AuthorizationError("Anda tidak berhak mengakses ini");
             }
-
-            $query = UserShiftRequest::where(function ($query) {
-                $query->where(function ($query) {
-                    $query->where('status', $this->constants->approve_status[0])
-                        ->whereHas('user.userEmployment', function ($query) {
-                            $query->where('approval_line', Auth::user()->id);
-                        });
-                })->orWhere('approval_line', Auth::user()->id);
-            })->with(['user.division', 'user.department', 'user.userEmployment.subBranch']);
 
             switch ($request->filters['filterStatus']) {
                 case $this->constants->approve_status[0]:
