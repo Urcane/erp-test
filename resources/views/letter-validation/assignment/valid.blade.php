@@ -32,7 +32,7 @@
         <img src="{{ asset('sense/media/images/Valid.svg') }}" alt="Logo" class="mb-8 h-44 md:hidden" />
         <div class="md:flex md:justify-between mb-4 md:items-center">
             <div class="hidden md:block">
-                <img src="{{ asset('sense/media/images/valid.svg') }}" alt="Logo" class="mb-8 h-60" />
+                <img src="{{ asset('sense/media/images/Valid.svg') }}" alt="Logo" class="mb-8 h-60" />
             </div>
             <div class="mx-3 md:mx-6 p-6 bg-white border border-gray-200 rounded-lg shadow">
                 <div class="text-xl md:text-2xl font-bold">
